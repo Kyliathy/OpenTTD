@@ -2,6 +2,7 @@
 
 @file launch_facility_render_checks.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group19B.
 The retained paid host is immutable. Explicit component pose inputs claim no
 ordinary paid progress; the native renderer runs with its actual 8bpp cache.
 """
@@ -11,10 +12,13 @@ import copy
 import json
 from pathlib import Path
 import subprocess
-import shutil
-import time
+import re
+import sys
 from PIL import Image, ImageDraw
-from support.artifact_paths import create_run_context
+sys.path.insert(0, str(Path(__file__).resolve().parent / "support"))
+from artifact_paths import contained
+from artifact_rebuild import identity
+from runner import run_native, save_native_capture
 import launch_facility_selector_checks as component
 
 ROOT = component.ROOT
@@ -29,9 +33,10 @@ def bound_image(reference):
     @return Detached original image including its native DOS palette.
     @throws ValueError On stale or substituted source bytes.
     """
-    if component.art.source.identity(ROOT / reference["path"]) != reference:
+    path = contained(ROOT / reference["path"], ROOT)
+    if identity(path, ROOT) != reference:
         raise ValueError("frozen raster source changed: " + reference["path"])
-    with Image.open(ROOT / reference["path"]) as image:
+    with Image.open(path) as image:
         return image.copy()
 
 
@@ -54,9 +59,10 @@ def expected_scene(entry, facility, rockets, atlas):
     # current C++ sort boxes cannot define their own passing pixel fixture.
     for name in ("components", "foreground"):
         reference = facility["ownership"][direction][name]
-        if art.source.identity(ROOT / reference["path"]) != reference:
+        path = contained(ROOT / reference["path"], ROOT)
+        if identity(path, ROOT) != reference:
             raise ValueError("frozen occupied ownership map changed")
-        masks[name] = (ROOT / reference["path"]).read_bytes()
+        masks[name] = path.read_bytes()
     row = next(row for row in rockets["sprites"] if row["direction"] == direction and row["state"] == art.STATES[entry["state"]] and row["frame"] == entry["frame"])
     x, y, width, height = row["box"]
     actor = atlas.crop((x, y, x + width, y + height))
@@ -99,6 +105,12 @@ def qualified_observations(document):
     # physical view; component poses also cannot claim earned ordinary progress.
     if actual != expected or document["simulation_ticks"] != 0 or document["ordinary_game_reviewed"] or not document["component_pose_inputs"]:
         raise ValueError("incomplete or misleading occupied native matrix")
+    # Each logical scene must name its own native frame. A matching scene
+    # count cannot substitute another viewport or an out-of-owner file.
+    for row in document["observations"]:
+        expected_name = "view-" + str(row["rotation"]) + "-" + row["scene"] + ".ppm"
+        if row["image"] != expected_name:
+            raise ValueError("occupied scene names another native frame")
     return document["observations"]
 
 
@@ -115,18 +127,17 @@ def compare_pixels(actual, expected):
     return len(actual)
 
 
-def verify_rasters(context):
+def verify_rasters(context, facility, rockets, atlas):
     """Compare complete native facility/occupied viewports with frozen source pixels.
 
     @param context Actual native invocation with its declared image/report outputs.
+    @param facility Explicit current selected facility report with original source/ownership maps.
+    @param rockets Explicit current selected rocket source report, separate from native observations.
+    @param atlas Detached approved indexed rocket source image.
     @return Per-scene observations and explicit detached malformed-evidence refusals.
     @throws ValueError On missing scenes, source drift or any changed viewport pixel.
     """
     art = component.art
-    handoff = art.read_json(component.rocket.HANDOFF)
-    facility = art.read_json(ROOT / handoff["sources"]["facility.launch-center"]["report"]["path"])
-    rockets = art.read_json(ROOT / handoff["sources"]["vehicle.model-14"]["report"]["path"])
-    atlas = bound_image(handoff["sources"]["vehicle.model-14"]["atlas"])
     document = art.read_json(context.reports / "native-occupied-matrix.json")
     entries = qualified_observations(document)
     results = []
@@ -141,7 +152,6 @@ def verify_rasters(context):
         opaque = Image.frombytes("L", scene.size, bytes(255 if value else 0 for value in scene.tobytes()))
         expected.paste(scene, tuple(offset), opaque)
         count = compare_pixels(actual_bytes, expected.tobytes())
-        Image.open(context.images / entry["image"]).save((context.images / entry["image"]).with_suffix(".png"))
         results.append(dict(rotation=entry["rotation"], scene=entry["scene"], source_pixels=sum(bool(value) for value in scene.tobytes()), screen_pixels=count, mismatches=0))
     space = [(context.images / ("view-" + str(rotation) + "-space.indexed")).read_bytes() for rotation in range(4)]
     for raster in space[1:]:
@@ -190,117 +200,80 @@ def contact_sheet(context):
     return output
 
 
-def run(configuration):
-    """Load the explicitly qualified paid host and collect actual native rasters.
+def run(context, configuration, application, host, facility, rockets, atlas, terminal):
+    """Capture the original occupied matrix using explicit current source/world/build inputs.
 
-    @param configuration Existing Debug or RelWithDebInfo isolated art application.
-    @return Completed process context and native terminal for independent source checking.
-    @throws ValueError On changed source owners, host identity or failed/overdue capture.
+    @param context Fresh capture invocation and configuration-specific native process home.
+    @param configuration Actual independently built Debug or RelWithDebInfo application.
+    @param application Exact current isolated Space-art executable closed by the stage owner.
+    @param host Hash-verified retained original fixture world, never the current GZVEEH save.
+    @param facility Selected current facility source/ownership report with approved original pixels.
+    @param rockets Selected current rocket source report with independent pose expectations.
+    @param atlas Detached original approved indexed rocket source image.
+    @param terminal Fresh required current native transcript in this invocation's evidence owner.
+    @return Actual native process, complete raster comparisons, frames and derived review sheet.
     """
-    _, before = component.boundary()
-    host = ROOT / HOST
-    if component.art.source.identity(host)["sha256"] != HOST_SHA:
-        raise ValueError("qualified retained paid host changed")
-    ledger = component.art.read_json(ROOT / "logs/phase-ledger-verification.json")
-    if dict(path=HOST, sha256=HOST_SHA) not in ledger["artifacts"]:
-        raise ValueError("paid host is absent from original qualified phase ledger")
-    context = create_run_context("multilayer-art", "launch-facility-render", run_id="facility-render-" + str(time.time_ns()), root=ROOT, profile="launch-fleet-art", process=configuration.lower())
-    context.prepare_runtime()
-    (context.runtime_dir / "scripts/game_start.scr").write_text("launch_facility_render\n", encoding="utf-8")
-    env = context.environment()
-    env["OTTD_LAUNCH_RENDER_SOURCE"] = str(host)
-    application = ROOT / "build" / configuration / "openttd_space_art_test.exe"
-    terminal = ROOT / ("logs/launch-facility-render-" + configuration + ".log")
-    with terminal.open("w", encoding="utf-8") as output:
-        result = subprocess.run([str(application), "[.launch-facility-render]", "--reporter", "console", "--durations", "yes"], cwd=ROOT / "build", env=env, stdout=output, stderr=subprocess.STDOUT, timeout=60, check=False, creationflags=subprocess.CREATE_NO_WINDOW)
-    print("native exit", result.returncode, "review", context.images.relative_to(ROOT), flush=True)
-    if result.returncode:
-        raise ValueError("native occupied viewport failed; inspect " + str(terminal))
-    if component.boundary()[1] != before:
-        raise ValueError("occupied viewport changed protected source or native owners")
-    verification = verify_rasters(context)
-    contact_sheet(context)
-    sources = component.SOURCES + ("src/launch_sprite.h", "src/launch_sprite.cpp", "src/tests/native_art_render_fixture.h", "src/tests/launch_facility_render.cpp", "src/tests/multilayer/launch_facility_render_checks.py", "CMakeLists.txt", "src/tests/CMakeLists.txt")
-    proof = dict(_documentation=__doc__, configuration=configuration, complete=True, full_renderer_reviewed=True,
-                 component_pose_inputs=True, ordinary_game_reviewed=False, simulation_ticks=0,
-                 paid_host=dict(path=HOST, sha256=HOST_SHA), application=component.art.source.identity(application),
-                 sources=[component.art.source.identity(ROOT / name) for name in sources],
-                 native_observations=component.art.source.identity(context.reports / "native-occupied-matrix.json"),
-                 native_terminal=component.art.source.identity(terminal), verification=verification,
-                 protected_boundary=before, images=[component.art.source.identity(path) for path in sorted(context.images.iterdir())])
-    output = component.OUTPUT / ("render-" + configuration + ".json")
-    output.write_text(json.dumps(proof, indent=2) + "\n", encoding="utf-8")
-    print(output.relative_to(ROOT), flush=True)
-    return context, terminal
-
-
-def finalize():
-    """Bind both native configurations and preserve their actual qualified binaries.
-
-    @return Complete current group receipt after source/artifact/cross-build verification.
-    @throws ValueError On stale sources, applications, native reports or different raster bytes.
-    """
-    art = component.art
-    proofs = []
-    applications = []
-    renders = []
-    for configuration in ("Debug", "RelWithDebInfo"):
-        for stage in ("current-components", "render"):
-            path = component.OUTPUT / (stage + "-" + configuration + ".json")
-            proof = art.read_json(path)
-            if not proof["complete"]:
-                raise ValueError("incomplete current native launch qualification")
-            references = [proof["application"]]
-            if stage == "render":
-                references += proof["sources"] + proof["images"] + [proof["native_observations"], proof["native_terminal"]]
-                renders.append(proof)
-            else:
-                references += proof["boundary"]["facility_sources"] + [proof["terminal"]]
-            # Current input identities must actually still match their executed
-            # sources/application/images; a stale passing receipt cannot qualify.
-            for reference in references:
-                if art.source.identity(ROOT / reference["path"]) != reference:
-                    raise ValueError("stale native launch receipt: " + reference["path"])
-            proofs.append(art.source.identity(path))
-        retained = component.OUTPUT / ("qualified-space-art-" + configuration + ".exe")
-        current = ROOT / proof["application"]["path"]
-        if retained.exists():
-            if art.source.identity(retained)["sha256"] != proof["application"]["sha256"]:
-                raise ValueError("refusing to replace earlier qualified launch native application")
-        else:
-            shutil.copyfile(current, retained)
-        applications.append(dict(observed=proof["application"], retained=art.source.identity(retained)))
-    for left, right in zip(renders[0]["verification"]["scenes"], renders[1]["verification"]["scenes"], strict=True):
-        key = "view-" + str(left["rotation"]) + "-" + left["scene"] + ".ppm.indexed"
-        native = []
-        for proof in renders:
-            reference = next(row for row in proof["images"] if Path(row["path"]).name == key)
-            native.append((ROOT / reference["path"]).read_bytes())
-        compare_pixels(native[0], native[1])
-    component.boundary()
-    receipt = dict(_documentation=__doc__, complete=True, group="62JB", native_cases_per_configuration=10,
-                   native_assertions_per_configuration=14926, full_renderer_reviewed=True,
-                   component_pose_inputs=True, ordinary_game_reviewed=False, public_runtime_activated=False,
-                   source_pixels_per_configuration=435472, complete_screen_pixels_per_configuration=8985600,
-                   cross_configuration_viewports=36, proofs=proofs, applications=applications)
-    destination = component.OUTPUT / "final-verification.json"
-    destination.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    print(destination.relative_to(ROOT), flush=True)
-    return receipt
+    observation = context.reports / "native-occupied-matrix.json"
+    # Fixed C++ frame/report names belong to one fresh capture run. Refuse
+    # existing observations before any runtime or source world can be touched.
+    if observation.exists() or terminal.exists() or any(context.images.iterdir()):
+        raise ValueError("occupied native capture already exists; select a fresh capture run")
+    before = identity(ROOT / "media/baseset/openttd.grf", ROOT)
+    config = context.prepare_runtime()
+    runtime = context.runtime_dir / "baseset/openttd.grf"
+    if identity(runtime, ROOT)["sha256"] != before["sha256"]:
+        raise ValueError("occupied viewport runtime GRF differs from canonical shipping bytes")
+    startup = context.runtime_dir / "scripts/game_start.scr"
+    startup.write_text("# @see r2fc-file-cleanup3.md19B; original zero-tick occupied component observer.\nlaunch_facility_render\n", encoding="utf-8")
+    environment = context.environment()
+    environment.update(OTTD_LAUNCH_RENDER_SOURCE=str(host), OTTD_TEST_CONFIGURATION=configuration)
+    with terminal.open("x", encoding="utf-8") as output:
+        result = run_native(context, [str(application), "[.launch-facility-render]", "--reporter", "console", "--durations", "yes"],
+                            native_producer=Path(__file__).resolve().relative_to(ROOT).as_posix(),
+                            cwd=ROOT / "build", env=environment, stdout=output,
+                            stderr=subprocess.STDOUT, timeout=60, check=False)
+    text = terminal.read_text(encoding="utf-8", errors="replace")
+    passed = re.search(r"All tests passed \(([\d,]+) assertions in 1 test case\)", text)
+    # Actual full native drawing, source restoration and zero-tick checks
+    # must complete; an empty filter or partial process cannot qualify pixels.
+    if result.returncode != 0 or passed is None:
+        raise ValueError("actual occupied native viewport failed: " + str(terminal))
+    verification = verify_rasters(context, facility, rockets, atlas)
+    process = component.art.read_json(ROOT / result.native_report["path"])
+    if identity(observation, ROOT) not in process["artifacts"]:
+        raise ValueError("native occupied observations lack actual child provenance")
+    frames = []
+    # Select only containers actually written by this exact child. The
+    # shared conversion owner binds unchanged PNG pixels to their real process;
+    # the later contact sheet is a separate derived review product.
+    for reference in process["artifacts"]:
+        path = contained(ROOT / reference["path"], ROOT)
+        if path.suffix != ".ppm":
+            continue
+        contained(path, context.images)
+        target = path.with_suffix(".png")
+        with Image.open(path) as raster:
+            save_native_capture(context, raster, path, target)
+        frames.append(dict(identity(target, ROOT), feature=context.feature, scenario=context.scenario,
+                           run_id=context.run_id, name=path.stem))
+    sheet = contact_sheet(context)
+    # Rendering cannot replace canonical content or rewrite its runtime copy;
+    # the immutable input host is closed by the caller and shared runner too.
+    if identity(ROOT / "media/baseset/openttd.grf", ROOT) != before or identity(runtime, ROOT)["sha256"] != before["sha256"]:
+        raise ValueError("occupied viewport changed canonical/runtime content")
+    return dict(native_process=result.native_report, native_observations=identity(observation, ROOT),
+                native_terminal=identity(terminal, ROOT), assertions=int(passed.group(1).replace(",", "")),
+                verification=verification, frames=frames, derived_review_sheet=identity(sheet, ROOT),
+                runtime_config=identity(config, ROOT), runtime_payload=identity(runtime, ROOT))
 
 
 def main():
-    """Run the selected actual native raster configuration from the repository."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--configuration", choices=("Debug", "RelWithDebInfo"))
-    parser.add_argument("--finalize", action="store_true")
-    args = parser.parse_args()
-    if args.finalize:
-        finalize()
-    elif args.configuration:
-        run(args.configuration)
-    else:
-        parser.error("choose --configuration or --finalize")
+    """Dispatch one current occupied viewport using explicit source/selector/build inputs.
+
+    @return None; legacy executable-copy finalization is not an active producer.
+    """
+    from launch_viewport_review import main as selected_main
+    selected_main()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,212 @@
+{
+  "_documentation": "Build/run only the active native tube terminal producer or cargo checks.\n\n@file tube_terminal_checks.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.5.\nRetain exact source/application identities and protect completed ground/Space\nevidence. Native processes allow a full minute without agent interaction.\n",
+  "passed": true,
+  "mode": "run",
+  "configuration": "Debug",
+  "commands": [],
+  "application": {
+    "path": "build/Debug/openttd_tube_test.exe",
+    "sha256": "fde19e91b869c1b88c66de6070028d9d7ca858d2008c4cfcaadafdf80b71d636"
+  },
+  "observation": {
+    "exit_code": 0,
+    "terminal": {
+      "path": "logs/underground-tubes/20261021-terminal-01/final-debug/native.log",
+      "sha256": "afa63edbaba9f4e110c3c661c61ebbaaaa840dc9a94e34e8af6195911a6ac56a"
+    },
+    "run_id": "tube-terminal-1792572291497820400",
+    "filter": "[transport-tube-model],[transport-tube-construction],[transport-tube-readiness],[transport-tube-platform-geometry],[transport-tube-meter],[transport-tube-interchange-geometry],[transport-tube-interchange],[transport-tube-interchange-delivery]",
+    "assertions": 8687,
+    "cases": 24,
+    "seconds": 4.594
+  },
+  "inputs": [
+    {
+      "path": "src/tests/multilayer/tube_terminal_checks.py",
+      "sha256": "3927de49825a5a4be4c7d9ee64a48d85b6dc59f1b6269acea2478baddb28fe23"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "0a6bba14a7350d421d74197ce28a5b0a987f6315f6008a1ba46a02acc95b626d"
+    },
+    {
+      "path": "src/CMakeLists.txt",
+      "sha256": "93161262a8f8fba2edcbf0f2816368c3db31b74926590e3cb10c8aa41f5b4616"
+    },
+    {
+      "path": "src/cargopacket.cpp",
+      "sha256": "31589a66b6a0f727348a96f32ec11bbbb9db6be44e4e37fa4bcdf57ed0ddbdbc"
+    },
+    {
+      "path": "src/tests/tube_test_environment.cpp",
+      "sha256": "947a0635abe2d5aaf6983d8190a7d0cebc65c8fd919376aaa47e8cec1e1b481d"
+    },
+    {
+      "path": "src/tests/movement_fixture.h",
+      "sha256": "85999c1c8d4ac08b111c1bf93f33d0d75667b0e7ff1ec1e8063011c0ec2728c0"
+    },
+    {
+      "path": "src/transport_tube.cpp",
+      "sha256": "46309e1bd3a98a32b0b9dca00a9611391248154b8e8e1d94c147a120617c0af7"
+    },
+    {
+      "path": "src/transport_tube.h",
+      "sha256": "663730a6335a2e93d898d013819909f11d52a6abff929f8c236d62c7c479c59f"
+    },
+    {
+      "path": "src/transport_tube_cargo.cpp",
+      "sha256": "a4f474cc2c2a934a43779f2ff606a2a0b4aa99fdc87689c95633c2c2659a912f"
+    },
+    {
+      "path": "src/transport_tube_cargo.h",
+      "sha256": "b32bcb8c6387e61d1e163a208614ea7ec3d511dec8708bf74012d1e7cdeced3e"
+    },
+    {
+      "path": "src/transport_tube_construction.cpp",
+      "sha256": "f0c50961e4793e75bb3417ee7ec66b94a79648e7ac6f5eb7a7a31e530071b894"
+    },
+    {
+      "path": "src/transport_tube_engine.cpp",
+      "sha256": "4a11381256e5c0848df7a77286fa584c5a56c4e02f3bb709e4df5732faa12803"
+    },
+    {
+      "path": "src/transport_tube_model.h",
+      "sha256": "0e8956a9c9bec2d844bc862df9c37af0a3f41ec2f9c439d3bfc616c475bd2ea2"
+    },
+    {
+      "path": "src/transport_tube_power.cpp",
+      "sha256": "ccebe52959f7a2ee1bb551f93311c0cc90f32625376c78051bd49dd2c64710c1"
+    },
+    {
+      "path": "src/transport_tube_readiness.cpp",
+      "sha256": "fc9146ee55fc9179dd6e68fbd4474fb038f1da6871bfb1b35af7daa893b18ebe"
+    },
+    {
+      "path": "src/transport_tube_runtime.cpp",
+      "sha256": "173fc25a2d22bc29c4fbbb5f7123d2de22f736dd74102efee854a20bd5f0f2c0"
+    },
+    {
+      "path": "src/transport_tube_topology.cpp",
+      "sha256": "83ba6afe72cad8974433881f19ed36151b8489cb1577dac98b4f5184951df48d"
+    },
+    {
+      "path": "src/tests/transport_tube_art_geometry.cpp",
+      "sha256": "ffd5dfb9af542276e44e738c238c6d2b2660d83b9edf77e5b479576b86234228"
+    },
+    {
+      "path": "src/tests/transport_tube_construction.cpp",
+      "sha256": "60bb36a711370e8cd6f9e2d90b76b57e50bbab3c2036c19a88b1eb0962c053f0"
+    },
+    {
+      "path": "src/tests/transport_tube_fixture.h",
+      "sha256": "8ff35acb4b392ea8e1284cbdf2ab5d110c7f48e206efcfdd6db89044702ad3da"
+    },
+    {
+      "path": "src/tests/transport_tube_freight_fixture.h",
+      "sha256": "d663e71e5bd77d1834e62c79703d1b685f018a940b6907b37fcfc37e654db05c"
+    },
+    {
+      "path": "src/tests/transport_tube_interchange.cpp",
+      "sha256": "8b92939718adffcce5f2bcb7dff39bd35d2152a2871dbe195c91106e8ac06029"
+    },
+    {
+      "path": "src/tests/transport_tube_interchange_delivery.cpp",
+      "sha256": "31e269b34ddfc09036fea4eebabbef1d7c9221d55e00da1c00ed46c41cd1b68b"
+    },
+    {
+      "path": "src/tests/transport_tube_interchange_geometry.cpp",
+      "sha256": "531e6054b1bff90dd58a8dd3811811cc484d41911db7d3095e28378100d7ebf8"
+    },
+    {
+      "path": "src/tests/transport_tube_meter.cpp",
+      "sha256": "b37969b1463476fbdd45a793428ec8b7c3a8349ca414aaed39b6b702f456c1ec"
+    },
+    {
+      "path": "src/tests/transport_tube_meter_fixture.h",
+      "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+    },
+    {
+      "path": "src/tests/transport_tube_model.cpp",
+      "sha256": "3f41e3f0d9ecce99b8a539bbf220f99325052e9295b66227145c9fd95a76da06"
+    },
+    {
+      "path": "src/tests/transport_tube_power.cpp",
+      "sha256": "7909976a118b882590d43b3ebb8b70316d9d873af53601bad5dde5851433d8f2"
+    },
+    {
+      "path": "src/tests/transport_tube_power_fixture.h",
+      "sha256": "42206462a742f5d06835b2b145a3a592a3a868216cda992e612225486b9489d5"
+    },
+    {
+      "path": "src/tests/transport_tube_power_load.cpp",
+      "sha256": "54916b9fc4e6520ba1d63f50cb92afb0f76f6a264d66bfcbede27eaf6a163964"
+    },
+    {
+      "path": "src/tests/transport_tube_prototype.cpp",
+      "sha256": "545ca16594b5a49a17888952b6d60802d61e0ca80094de42297c5c7bb9c46645"
+    },
+    {
+      "path": "src/tests/transport_tube_readiness.cpp",
+      "sha256": "3d38b0eb0cb59fbf0229905337c35fbf8b120544907bf0c1c27ae6c557a5ad1d"
+    },
+    {
+      "path": "src/tests/transport_tube_recovery.cpp",
+      "sha256": "8e6dd565d012ec55e5e628768b06c2af185b452e7318674762051c6061d905af"
+    },
+    {
+      "path": "src/tests/transport_tube_registry.cpp",
+      "sha256": "f67780546297d8fe0e0e3769c5b200a7f72dfc6f614be32a7ced48af653549f3"
+    },
+    {
+      "path": "src/tests/transport_tube_reservations.cpp",
+      "sha256": "c03b299d7643f4997520e4d84e562af3dbccd63a00499bffd5e4531c074c7463"
+    }
+  ],
+  "baseline": {
+    "path": "logs/underground-tubes/20261021-terminal-01/before.json",
+    "sha256": "d524e23d62ecd20b79ffd35e405c0607aa36df3f54ce040f959f5b76d3ee060b"
+  },
+  "preserved_file_count": 2318,
+  "transitions": [
+    {
+      "before": {
+        "path": "CMakeLists.txt",
+        "sha256": "0292bf6d5789ac4c1565a860a2f830a8cc03cfafe14ed16d67b7f9f92d17234e"
+      },
+      "after": {
+        "path": "CMakeLists.txt",
+        "sha256": "0a6bba14a7350d421d74197ce28a5b0a987f6315f6008a1ba46a02acc95b626d"
+      }
+    },
+    {
+      "before": {
+        "path": "src/cargopacket.cpp",
+        "sha256": "114e75f1729a3133d8d5dbcee7394b51aa2e4dddd0a3e6731fc4beeab2850bc8"
+      },
+      "after": {
+        "path": "src/cargopacket.cpp",
+        "sha256": "31589a66b6a0f727348a96f32ec11bbbb9db6be44e4e37fa4bcdf57ed0ddbdbc"
+      }
+    },
+    {
+      "before": {
+        "path": "src/CMakeLists.txt",
+        "sha256": "9862b1bb22f08e026ca92ccb569d73b6b0eb44a3407b71f3d675500170edcc82"
+      },
+      "after": {
+        "path": "src/CMakeLists.txt",
+        "sha256": "93161262a8f8fba2edcbf0f2816368c3db31b74926590e3cb10c8aa41f5b4616"
+      }
+    },
+    {
+      "before": {
+        "path": "src/tests/CMakeLists.txt",
+        "sha256": "ee3fafefebb65d791dd1459e10a37ce7df0270c125f6d807fe69804072074cf0"
+      },
+      "after": {
+        "path": "src/tests/CMakeLists.txt",
+        "sha256": "2d06c2162d2e66bf28aaa2704b2f86b5ca3990e191b87dca053b509c9713b644"
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md8; exact original-save aliases; no deletion permission.",
+  "schema_version": 1,
+  "kind": "space_checkpoint_migration",
+  "aliases": [
+    {
+      "original": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+        "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215547-fa0b1bae22/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+        "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+      }
+    }
+  ]
+}

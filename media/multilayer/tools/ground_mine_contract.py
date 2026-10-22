@@ -3,6 +3,7 @@
 @file ground_mine_contract.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups27B/27-35.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DB, historical source geometry only.
 Definitions, geological claims, construction stages and physical Industry output
 remain existing owners. This handoff grants no sprite range or mine activation.
 """
@@ -27,10 +28,11 @@ OWNERS = ("src/layer_industry_definitions.cpp", "src/layer_industry_policy.cpp",
           "src/tests/layer_mine_presentation.cpp")
 
 
-def validate_geometry(document):
+def validate_geometry(document, source_only=False):
     """Require complete compiled catalogue geometry and current native state/drawing owners.
 
     @param document Candidate or checked native mine descriptor.
+    @param source_only Reconstruct frozen physical art; grants no current native qualification.
     @return Same descriptor after exact geometry and successful proof validation.
     @throws ValueError On stale, partial, duplicated or foreign native geometry/provenance.
     """
@@ -40,9 +42,15 @@ def validate_geometry(document):
             or document.get("native_source_hash_policy") != "utf8_lf"
             or set(document.get("native_source_sha256", {})) != set(OWNERS)):
         raise ValueError("native mine descriptor ownership/schema mismatch")
-    for name in OWNERS:
-        if document["native_source_sha256"][name] != source_digest(ROOT / name):
-            raise ValueError("native mine geometry/presentation owner changed: " + name)
+    if source_only:
+        from ground_source_facts import verify_original_descriptor
+        verify_original_descriptor(document, DESCRIPTOR)
+    else:
+        # Current native consumers still require every actual state/drawing
+        # owner. Historical source reconstruction alone cannot qualify them.
+        for name in OWNERS:
+            if document["native_source_sha256"][name] != source_digest(ROOT / name):
+                raise ValueError("native mine geometry/presentation owner changed: " + name)
     proof = document.get("native_proof", {})
     # Cold checkouts need not retain ignored executables/logs. Published source
     # geometry must still identify one complete successful native six-case run.
@@ -70,12 +78,13 @@ def validate_geometry(document):
     return document
 
 
-def load_geometry():
+def load_geometry(source_only=False):
     """Read the complete checked native producer before dependent source operations.
 
-    @return Validated ten-resource geometry and native proof descriptor.
+    @param source_only Explicit frozen-art role; default native freshness remains strict.
+    @return Validated ten-resource geometry with its explicitly historical proof descriptor.
     """
-    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")))
+    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")), source_only=source_only)
 
 
 def mine_contract(resource):

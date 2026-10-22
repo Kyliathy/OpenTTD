@@ -2,19 +2,22 @@
 
 @file artifact_paths_check.py No native simulation or full regression suite.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups9-10.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 """
 
 import json
+import hashlib
 import os
 from pathlib import Path
 import tempfile
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
 from artifact_paths import contained, create_run_context, repository_root, resolve_input_path
-from runner import collect_native_screenshots, console_executable
+from runner import collect_native_screenshots, console_executable, run_native
 
 
 class ArtifactPathTests(unittest.TestCase):
@@ -28,7 +31,7 @@ class ArtifactPathTests(unittest.TestCase):
 
         @return None; register cleanup only for the newly allocated scratch tree.
         """
-        scratch = repository_root() / "mlm/runtime/routing-checks"
+        scratch = repository_root() / "test-cache/cleanup/routing-checks"
         scratch.mkdir(parents=True, exist_ok=True)
         self.temporary = tempfile.TemporaryDirectory(dir=scratch)
         self.addCleanup(self.temporary.cleanup)
@@ -102,7 +105,8 @@ class ArtifactPathTests(unittest.TestCase):
         fixture = self.root / "src/tests/fixtures/haulage/parking/original.sav"
         fixture.write_bytes(b"immutable old save")
         key = "src/tests/fixtures/haulage/original.sav"
-        manifest = {"inputs": {key: {"path": fixture.relative_to(self.root).as_posix()}}}
+        manifest = {"schema_version": 2, "inputs": {key: {"path": fixture.relative_to(self.root).as_posix(),
+                    "sha256": hashlib.sha256(fixture.read_bytes()).hexdigest()}}}
         (self.root / "src/tests/fixtures/multilayer-inputs.json").write_text(json.dumps(manifest), encoding="utf-8")
         context = create_run_context("tbm", "parking", root=self.root)
         self.assertEqual(resolve_input_path(key, root=self.root), fixture)
@@ -112,6 +116,48 @@ class ArtifactPathTests(unittest.TestCase):
         self.assertEqual(fixture.read_bytes(), b"immutable old save")
         with self.assertRaises(ValueError):
             resolve_input_path(self.root / "CMakeLists.txt", root=self.root)
+
+    def test_retained_alias_precedes_stale_existing_original_and_requires_hash(self):
+        """Migrated stable keys cannot be satisfied by an existing old save.
+
+        @param self Active isolated test.
+        @return None; missing/tampered retained inputs fail with the old path present.
+        """
+        old = self.root / "mlm/reviews/space/original/run/saves/current.sav"
+        retained = self.root / "savegames/retained/current.sav"
+        old.parent.mkdir(parents=True)
+        retained.parent.mkdir(parents=True)
+        old.write_bytes(b"stale existing original")
+        retained.write_bytes(b"independent retained original")
+        key = old.relative_to(self.root).as_posix()
+        manifest = {"schema_version": 2, "inputs": {key: {"path": retained.relative_to(self.root).as_posix(),
+                    "sha256": hashlib.sha256(retained.read_bytes()).hexdigest()}}}
+        (self.root / "src/tests/fixtures/multilayer-inputs.json").write_text(json.dumps(manifest), encoding="utf-8")
+        self.assertEqual(resolve_input_path(key, self.root), retained)
+        retained.write_bytes(b"tampered retained original")
+        with self.assertRaisesRegex(ValueError, "hash changed"):
+            resolve_input_path(key, self.root)
+        retained.unlink()
+        with self.assertRaisesRegex(ValueError, "missing"):
+            resolve_input_path(key, self.root)
+        self.assertEqual(old.read_bytes(), b"stale existing original")
+
+    def test_unindexed_prior_run_stays_explicit_and_catalogue_epoch_refreshes(self):
+        """A newly selected prior run is direct, while changed keys refresh their hash.
+
+        @param self Active isolated test.
+        @return None; no latest-file selection or stale parsed-catalogue fallback.
+        """
+        prior = self.root / "mlm/reviews/tbm/motion/explicit-run/saves/current.sav"
+        prior.parent.mkdir(parents=True)
+        prior.write_bytes(b"explicit prior run")
+        manifest_path = self.root / "src/tests/fixtures/multilayer-inputs.json"
+        manifest_path.write_text(json.dumps(dict(schema_version=2, inputs={})), encoding="utf-8")
+        self.assertEqual(resolve_input_path(prior, self.root), prior)
+        reference = dict(path=prior.relative_to(self.root).as_posix(), sha256="0" * 64)
+        manifest_path.write_text(json.dumps(dict(schema_version=2, inputs={reference["path"]: reference})), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "hash changed"):
+            resolve_input_path(prior, self.root)
 
     def test_peer_runtime_preparation_preserves_templates_and_startup(self):
         """Give host/client separate writable config and content directories.
@@ -205,6 +251,78 @@ class ArtifactPathTests(unittest.TestCase):
                            env=environment, creationflags=subprocess.CREATE_NO_WINDOW, check=True, capture_output=True)
         with self.assertRaises(ValueError):
             contained(link / "original.sav", owner)
+
+    def test_generated_data_and_evidence_roles_preserve_frame_guards(self):
+        """Generated payload/transcript owners preserve run isolation and image routing.
+
+        @param self Active isolated ownership test.
+        @return None; general evidence never becomes a fixture/frame write bypass.
+        """
+        context = create_run_context("tbm", "planning", root=self.root)
+        for role in ("data", "evidence"):
+            path = context.output(role, "current.bin")
+            self.assertTrue(path.parent.is_dir())
+            self.assertEqual(path.parent, getattr(context, role))
+            path.write_bytes(b"current selected payload or observation")
+        proof = context.write_report("roles.json", "routing-only-test", [context.data / "current.bin", context.evidence / "current.bin"])
+        self.assertEqual(len(json.loads(proof.read_text(encoding="utf-8"))["artifacts"]), 2)
+        image = context.output("data", "frame.png")
+        image.write_bytes(b"wrongly routed frame fixture")
+        with self.assertRaisesRegex(ValueError, "images owner"):
+            context.write_report("invalid.json", "routing-only-test", [image])
+        with self.assertRaises(ValueError):
+            context.output("evidence", "../fixture.sav")
+
+    def test_native_transcript_evidence_excludes_previous_appended_log_bytes(self):
+        """Required process output survives removing optional logs and omits prior bytes.
+
+        @param self Active isolated test invoking a tiny Python child, never the game.
+        @return None; receipt/artifact identities refer to current-run evidence only.
+        """
+        build = self.root / "build"
+        build.mkdir()
+        (build / "native-art.cfg").write_text("# @see r2fc-file-cleanup3.md; isolated config.\n", encoding="utf-8")
+        context = create_run_context("tbm", "transcript", root=self.root)
+        child = self.root / "transcript_child.py"
+        child.write_text('"""@file transcript_child.py @see r2fc-file-cleanup3.md; isolated output fixture."""\nprint("current child output")\n', encoding="utf-8")
+        log = context.output("logs", "diagnostic.log")
+        log.write_bytes(b"prior unrelated process output\n")
+        with log.open("ab") as sink:
+            result = run_native(context, [sys.executable, "-B", str(child)],
+                                stdout=sink, stderr=subprocess.STDOUT, timeout=15, env=self.process_environment)
+        self.assertEqual(result.returncode, 0, log.read_text(encoding="utf-8", errors="replace"))
+        report, = context.reports.glob("native-*.json")
+        receipt = json.loads(report.read_text(encoding="utf-8"))
+        transcript, = receipt["transcripts"]
+        path = self.root / transcript["path"]
+        self.assertEqual(path.parent, context.evidence)
+        self.assertEqual(path.read_bytes().splitlines(), [b"current child output"])
+        self.assertEqual(transcript["sha256"], hashlib.sha256(path.read_bytes()).hexdigest())
+        self.assertIn(transcript, receipt["artifacts"])
+        log.unlink()
+        self.assertTrue(path.is_file())
+
+    def test_captured_streams_have_separate_current_run_evidence(self):
+        """PIPE text output retains stdout/stderr as independently named evidence.
+
+        @param self Active isolated test invoking only a tiny Python child.
+        @return None; captured output remains available to the original caller too.
+        """
+        build = self.root / "build"
+        build.mkdir()
+        (build / "native-art.cfg").write_text("# @see r2fc-file-cleanup3.md; isolated config.\n", encoding="utf-8")
+        context = create_run_context("geology", "transcript", root=self.root)
+        child = self.root / "transcript_child.py"
+        child.write_text('"""@file transcript_child.py @see r2fc-file-cleanup3.md; isolated output fixture."""\nimport sys\nprint("stdout")\nprint("stderr", file=sys.stderr)\n', encoding="utf-8")
+        result = run_native(context, [sys.executable, "-B", str(child)],
+                            capture_output=True, text=True, timeout=15, env=self.process_environment)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip(), "stdout")
+        self.assertEqual(result.stderr.strip(), "stderr")
+        report, = context.reports.glob("native-*.json")
+        receipt = json.loads(report.read_text(encoding="utf-8"))
+        self.assertEqual(len(receipt["transcripts"]), 2)
+        self.assertEqual({(self.root / row["path"]).read_text(encoding="utf-8").strip() for row in receipt["transcripts"]}, {"stdout", "stderr"})
 
 
 if __name__ == "__main__":

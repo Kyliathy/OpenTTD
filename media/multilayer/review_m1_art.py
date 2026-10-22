@@ -1,6 +1,7 @@
 """Build the selected M1 gallery from verified native renderer evidence.
 
 @file review_m1_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group16.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group85B
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.8
 Original frame/source bytes remain immutable; the contact sheet only arranges
@@ -21,9 +22,9 @@ from PIL import Image, ImageDraw
 import activate_m1_art as activation
 
 ROOT = activation.ROOT
-REVIEWS = activation.CACHE / "gallery"
+REVIEWS = None
 REPORTS = ("terrain", "control", "loop-deep", "loop-underground", "facility", "geology")
-GALLERY = REVIEWS / "m1-runtime-gallery.json"
+GALLERY = None
 
 
 def configure(selection):
@@ -34,7 +35,7 @@ def configure(selection):
     """
     global REVIEWS, GALLERY
     GALLERY = selection.output("gallery")
-    REVIEWS = GALLERY.parent
+    REVIEWS = selection.context.images
 
 
 def scene_name(path):
@@ -73,6 +74,8 @@ def related_frames(asset, frames):
         terms = ("m1-survey-" + asset.split(".")[1] + "-",)
     elif asset.startswith("control."):
         terms = ("m1-controls-layer-", "m1-job-inspection-")
+    # Purchase icons and cargo icons share the real purchase/cargo UI scene;
+    # the gallery must link that implemented consumer for both asset families.
     elif asset.startswith("purchase.") or asset.startswith("cargo."):
         terms = ("m1-purchase-cargo",)
     elif asset.startswith("vehicle."):
@@ -121,7 +124,7 @@ def validate(public, packed, runtime, reports):
         activation.evidence().validate_capture(report)
         assert report["simulation_owners_unchanged_during_render"]
         assert activation.digest(ROOT / report["source"]) == report["source_sha256"], "gallery source save changed"
-        evidence = activation.read_evidence(ROOT / report["log"])
+        evidence = activation.read_evidence(ROOT / activation.evidence().capture_terminal(report))
         assert "All tests passed" in evidence, "native gallery scenario did not pass"
         # Both driven scenarios must retain physical drilling, load, coupling,
         # Surface disposal, empty return, transparency and genuine body picking.
@@ -220,7 +223,7 @@ def write_html(rows, reports, identity):
              '<p>Direction sheets query the actual renderer without rotating vehicles. Drilling, exchange, turns and occlusion use driven world frames. Service depots were constructed through normal commands on already paid-open ground.</p>',
              '<p>This gallery samples actual states and does not capture every Cartesian source pose. Complete source/packed coverage is separately verified. Later mines, fleet, launch, module, tube and geothermal families retain their own pending gallery work.</p>',
              '<p>Payload SHA256: <code>' + identity['sha256'] + '</code></p>',
-             '<p><a href="m1-runtime-gallery.json">Exact provenance and acceptance record</a> · <a href="m1-runtime-contact-sheet.png">Native contact sheet</a> · <a href="' + relative_url(activation.PUBLIC.relative_to(ROOT).as_posix()) + '">Public manifest</a></p>',
+             '<p><a href="' + relative_url(GALLERY.relative_to(ROOT).as_posix()) + '">Exact provenance and acceptance record</a> · <a href="m1-runtime-contact-sheet.png">Native contact sheet</a> · <a href="' + relative_url(activation.PUBLIC.relative_to(ROOT).as_posix()) + '">Public manifest</a></p>',
              '<table><tr><th>Manifest ID</th><th>Native range / count</th><th>Actual consumer</th><th>Scenes</th></tr>']
     # Each family has direct native links and its real implementation location;
     # shared scenes remain shared evidence rather than fabricated unique poses.
@@ -233,7 +236,7 @@ def write_html(rows, reports, identity):
     # original PNGs and their hashes are presented without JavaScript or edits.
     for name, report in zip(REPORTS, reports):
         parts.append('<details><summary>' + html.escape(name) + ' — ' + str(len(report['frames'])) + ' actual frames</summary><p><a href="' +
-                     relative_url(report['source']) + '">Source save</a> · <a href="' + relative_url(report['log']) + '">Native log</a></p><div class="frames">')
+                     relative_url(report['source']) + '">Source save</a> · <a href="' + relative_url(activation.evidence().capture_terminal(report)) + '">Native log</a></p><div class="frames">')
         for frame in report['frames']:
             label = Path(frame['path']).name
             parts.append('<figure><a href="' + relative_url(frame['path']) + '"><img loading="lazy" src="' + relative_url(frame['path']) +
@@ -273,6 +276,8 @@ def main():
         except AssertionError:
             continue
         raise AssertionError('gallery corruption was accepted: ' + fault)
+    # Either explicit mode writes the selected generated gallery. Updating
+    # authored review status still requires the separate publication flag.
     if args.publish or args.cache_only:
         contact = contact_sheet(frames)
         write_html(rows, reports, packed['packed_grf'])

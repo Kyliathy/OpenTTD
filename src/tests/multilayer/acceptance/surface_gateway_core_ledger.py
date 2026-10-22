@@ -4,15 +4,15 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CB.
 Native SPSTjob packet lists alone own deliveries; metadata owns no extra stock.
 Current440 retains the exact438 SPSTlayout, verified against its live writer.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 from pathlib import Path
-import runpy
 import struct
 
 from space_preview_checks import ROOT, chunks, read_stream
 
 DIRECTORY = Path(__file__).resolve().parent
-LAYOUT = runpy.run_path(str(DIRECTORY / "orbital_save_checks-1.py"))["structures"]
+from space_saved_state import structures as LAYOUT
 
 
 def blueprint(path, allow_construction=False):

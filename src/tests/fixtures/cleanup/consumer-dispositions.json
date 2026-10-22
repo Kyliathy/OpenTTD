@@ -1,0 +1,1642 @@
+{
+  "_documentation": "Read-only consumer and retained-source audit for r2fc-file-cleanup3.md Group5.\n\n@file capture_consumers.py Disposable execution aid; no imports of acceptance drivers.\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups5-6/9/21-22.\n",
+  "schema_version": 1,
+  "consumers": [
+    {
+      "reader": "multilayer_profile_save_fixture.main/prior_artifact",
+      "source": "src/tests/multilayer_profile_save_fixture.py",
+      "selector": "--packages-only --prior-run <exact-id>",
+      "role": "five prior editor/metadata acceptance/refusal logs and exact accepted-save presence",
+      "disposition": "regenerate_selected_prior_stage_or_retain_minimal_independent_semantic_fixture"
+    },
+    {
+      "reader": "geology_save_fixture.main/prior_artifact",
+      "source": "src/tests/geology_save_fixture.py",
+      "selector": "--refusals-only --prior-run <exact-id>",
+      "role": "native/reload/partial/partial-reload/legacy accepted logs and saves",
+      "disposition": "regenerate_selected_prior_stage_or_retain_minimal_independent_semantic_fixture"
+    },
+    {
+      "reader": "multilayer_state_fixture.save_path/run_case",
+      "source": "src/tests/multilayer_state_fixture.py",
+      "selector": "explicit fixture or reserved same-run output; no latest fallback",
+      "role": "immutable save-format input versus newly generated output",
+      "disposition": "retain_curated_save_and_regenerate_owned_outputs"
+    },
+    {
+      "reader": "native_feedback.main",
+      "source": "src/tests/multilayer/tbm/native_feedback.py",
+      "selector": "--reload-accepted --prior-run <exact-id>",
+      "role": "one accepted prior save and FEEDBACK_RESULT line for uninterrupted/reload equality",
+      "disposition": "run_owned_evidence_and_explicit_prior_stage_preparation"
+    },
+    {
+      "reader": "native_motion.main",
+      "source": "src/tests/multilayer/tbm/native_motion.py",
+      "selector": "--replay <kind> / --pace-check-layer <layer> --prior-run <exact-id>",
+      "role": "matching native motion/pacing log markers, saved fractions and frame observations",
+      "disposition": "run_owned_evidence_and_explicit_prior_stage_preparation"
+    },
+    {
+      "reader": "pacing_files.verify_migration/main",
+      "source": "src/tests/multilayer/tbm/pacing_files.py",
+      "selector": "explicit retained 393/394 rate-migration pairs",
+      "role": "fraction-only schema expectations and malformed-copy preview/startup refusals",
+      "disposition": "retain_curated_pair_and_regenerate_malformed_copies"
+    },
+    {
+      "reader": "phase_pair_index_checks-1.main/read_bound",
+      "source": "src/tests/multilayer/acceptance/phase_pair_index_checks-1.py",
+      "selector": "both explicit configurations plus --handling-release/--handling-debug",
+      "role": "paid-probe/descent progress steps and module prior_positive_release/report identities; distinguish genuine paid from seeded handling",
+      "disposition": "seal_historical_paid_pairs_or_explicitly_prepare_selected_synthetic_fixture_never_replay_paid_work"
+    }
+  ],
+  "candidate_owners": [
+    {
+      "owner": "logs",
+      "disposition": "seal_required_facts/export_all_saves/preserve_unique_source_epochs_then_regenerate_diagnostics"
+    },
+    {
+      "owner": "test-cache",
+      "disposition": "preserve_unique_source_epochs/export_all_saves_then_regenerate_declared_prerequisites"
+    },
+    {
+      "owner": "mlm/reviews",
+      "disposition": "export_all_saves/seal_required_facts_then_regenerate_selected_review_outputs"
+    },
+    {
+      "owner": "mlm/runtime",
+      "disposition": "export_all_saves/preserve_unique_config/source_epochs_then_recreate_every_profile"
+    },
+    {
+      "owner": "build",
+      "disposition": "export_all_saves/preserve_configs_and_portable_requirements_then_rebuild_exact_declared_root"
+    },
+    {
+      "owner": "OpenTTD-baseline",
+      "disposition": "retain_existing_minimal_independent_source_archive"
+    },
+    {
+      "owner": "!kit",
+      "disposition": "retain_valuable_ignored_distribution_and_legacy_saves"
+    }
+  ],
+  "producer_dispositions": [
+    {
+      "producer": "src/tests/artifact_paths.cpp",
+      "catalogue_json_pointer": "/producers/0",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/depot_file_fixture.h",
+      "catalogue_json_pointer": "/producers/1",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/excavation_pass_save_fixture.py",
+      "catalogue_json_pointer": "/producers/2",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/excavation_save_fixture.py",
+      "catalogue_json_pointer": "/producers/3",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geology_generation_fixture.py",
+      "catalogue_json_pointer": "/producers/4",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geology_save_fixture.py",
+      "catalogue_json_pointer": "/producers/5",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geology_surface_fixture.py",
+      "catalogue_json_pointer": "/producers/6",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_allocation_load.cpp",
+      "catalogue_json_pointer": "/producers/7",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_collector_load.cpp",
+      "catalogue_json_pointer": "/producers/8",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_path_load.cpp",
+      "catalogue_json_pointer": "/producers/9",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks.py",
+      "catalogue_json_pointer": "/producers/10",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-1.py",
+      "catalogue_json_pointer": "/producers/11",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-2.py",
+      "catalogue_json_pointer": "/producers/12",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-3.py",
+      "catalogue_json_pointer": "/producers/13",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks-4.py",
+      "catalogue_json_pointer": "/producers/14",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_riser_load.cpp",
+      "catalogue_json_pointer": "/producers/15",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_heat_load.cpp",
+      "catalogue_json_pointer": "/producers/16",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_save_fixture.py",
+      "catalogue_json_pointer": "/producers/17",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_site_load.cpp",
+      "catalogue_json_pointer": "/producers/18",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/geothermal_utility_load.cpp",
+      "catalogue_json_pointer": "/producers/19",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/layer_mine_save_fixture.py",
+      "catalogue_json_pointer": "/producers/20",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/layer_processor_save_fixture.py",
+      "catalogue_json_pointer": "/producers/21",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_control_capture.py",
+      "catalogue_json_pointer": "/producers/22",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_control_runtime.cpp",
+      "catalogue_json_pointer": "/producers/23",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_facility_capture.py",
+      "catalogue_json_pointer": "/producers/24",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_facility_runtime.cpp",
+      "catalogue_json_pointer": "/producers/25",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_loader_fixture.py",
+      "catalogue_json_pointer": "/producers/26",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_loop_capture.py",
+      "catalogue_json_pointer": "/producers/27",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_profile_save_fixture.py",
+      "catalogue_json_pointer": "/producers/28",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_state_fixture.py",
+      "catalogue_json_pointer": "/producers/29",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_terrain_capture.py",
+      "catalogue_json_pointer": "/producers/30",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_terrain_runtime.cpp",
+      "catalogue_json_pointer": "/producers/31",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/native_art_loop_fixture.h",
+      "catalogue_json_pointer": "/producers/32",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/portal_acceptance_save_fixture.py",
+      "catalogue_json_pointer": "/producers/33",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/portal_save_fixture.py",
+      "catalogue_json_pointer": "/producers/34",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_depot_save.cpp",
+      "catalogue_json_pointer": "/producers/35",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_exit_replay.h",
+      "catalogue_json_pointer": "/producers/36",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_feedback_runtime.cpp",
+      "catalogue_json_pointer": "/producers/37",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_hangar_input.h",
+      "catalogue_json_pointer": "/producers/38",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_crash.cpp",
+      "catalogue_json_pointer": "/producers/39",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_queue.cpp",
+      "catalogue_json_pointer": "/producers/40",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_runtime.cpp",
+      "catalogue_json_pointer": "/producers/41",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_save.cpp",
+      "catalogue_json_pointer": "/producers/42",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_save_fixture.py",
+      "catalogue_json_pointer": "/producers/43",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_logistics_stalls.cpp",
+      "catalogue_json_pointer": "/producers/44",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_motion_reload.cpp",
+      "catalogue_json_pointer": "/producers/45",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/tbm_planning_seed.cpp",
+      "catalogue_json_pointer": "/producers/46",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/transport_tube_power_load.cpp",
+      "catalogue_json_pointer": "/producers/47",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/underground_save_fixture.py",
+      "catalogue_json_pointer": "/producers/48",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_heat_load.cpp",
+      "catalogue_json_pointer": "/producers/49",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_effect_load.cpp",
+      "catalogue_json_pointer": "/producers/50",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_load.cpp",
+      "catalogue_json_pointer": "/producers/51",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-1.py",
+      "catalogue_json_pointer": "/producers/52",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-2.py",
+      "catalogue_json_pointer": "/producers/53",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-3.py",
+      "catalogue_json_pointer": "/producers/54",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-4.py",
+      "catalogue_json_pointer": "/producers/55",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-5.py",
+      "catalogue_json_pointer": "/producers/56",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-6.py",
+      "catalogue_json_pointer": "/producers/57",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-7.py",
+      "catalogue_json_pointer": "/producers/58",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture-8.py",
+      "catalogue_json_pointer": "/producers/59",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_save_fixture.py",
+      "catalogue_json_pointer": "/producers/60",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/utility_power_transfer_load.cpp",
+      "catalogue_json_pointer": "/producers/61",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_lineage_file_checks.py",
+      "catalogue_json_pointer": "/producers/62",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/demo_checkpoint.py",
+      "catalogue_json_pointer": "/producers/63",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/final_checks.py",
+      "catalogue_json_pointer": "/producers/64",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/native_ground.py",
+      "catalogue_json_pointer": "/producers/65",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/geology/native_checks.py",
+      "catalogue_json_pointer": "/producers/66",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/geology/network_checks.py",
+      "catalogue_json_pointer": "/producers/67",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/exit_checks.py",
+      "catalogue_json_pointer": "/producers/68",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/hangar_acceptance.py",
+      "catalogue_json_pointer": "/producers/69",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/hangar_files.py",
+      "catalogue_json_pointer": "/producers/70",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_advice.py",
+      "catalogue_json_pointer": "/producers/71",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_feedback.py",
+      "catalogue_json_pointer": "/producers/72",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_motion.py",
+      "catalogue_json_pointer": "/producers/73",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_parking.py",
+      "catalogue_json_pointer": "/producers/74",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/native_release.py",
+      "catalogue_json_pointer": "/producers/75",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/pacing_files.py",
+      "catalogue_json_pointer": "/producers/76",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/tbm/whole_spoil.py",
+      "catalogue_json_pointer": "/producers/77",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_collector_file_checks.py",
+      "catalogue_json_pointer": "/producers/78",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_riser_file_checks.py",
+      "catalogue_json_pointer": "/producers/79",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/geothermal_site_file_checks.py",
+      "catalogue_json_pointer": "/producers/80",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_allocation_file_checks.py",
+      "catalogue_json_pointer": "/producers/81",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_file_checks.py",
+      "catalogue_json_pointer": "/producers/82",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/heat_topology_file_checks.py",
+      "catalogue_json_pointer": "/producers/83",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/meter_file_checks.py",
+      "catalogue_json_pointer": "/producers/84",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/power_file_checks.py",
+      "catalogue_json_pointer": "/producers/85",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/readiness_file_checks.py",
+      "catalogue_json_pointer": "/producers/86",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/recovery_file_checks.py",
+      "catalogue_json_pointer": "/producers/87",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/thermal_file_checks.py",
+      "catalogue_json_pointer": "/producers/88",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/utilities/utility_path_file_checks.py",
+      "catalogue_json_pointer": "/producers/89",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "media/multilayer/tools/sprite_quantize.py",
+      "catalogue_json_pointer": "/producers/90",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "media/multilayer/tools/capture_art.ps1",
+      "catalogue_json_pointer": "/producers/91",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "mlm/tools/run/ottd_window.ps1",
+      "catalogue_json_pointer": "/producers/92",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "mlm/tools/run/native_launch.py",
+      "catalogue_json_pointer": "/producers/93",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "mlm/tools/run/window_context.py",
+      "catalogue_json_pointer": "/producers/94",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "media/multilayer/regenerate_art_proofs.py",
+      "catalogue_json_pointer": "/producers/95",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer_collector_runtime.cpp",
+      "catalogue_json_pointer": "/producers/96",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/collector_runtime_checks.py",
+      "catalogue_json_pointer": "/producers/97",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/underground_demo_checks.py",
+      "catalogue_json_pointer": "/producers/98",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_preview.cpp",
+      "catalogue_json_pointer": "/producers/99",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_preview_checks.py",
+      "catalogue_json_pointer": "/producers/100",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_mining.cpp",
+      "catalogue_json_pointer": "/producers/101",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_mining_checks.py",
+      "catalogue_json_pointer": "/producers/102",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_population_checks.py",
+      "catalogue_json_pointer": "/producers/103",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_center_checks.py",
+      "catalogue_json_pointer": "/producers/104",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/surface_handling_checks.py",
+      "catalogue_json_pointer": "/producers/105",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_order_checks.py",
+      "catalogue_json_pointer": "/producers/106",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_orders.cpp",
+      "catalogue_json_pointer": "/producers/107",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/launch_production.cpp",
+      "catalogue_json_pointer": "/producers/108",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_logistics.cpp",
+      "catalogue_json_pointer": "/producers/109",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/launch_flight.cpp",
+      "catalogue_json_pointer": "/producers/110",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_logistics_checks.py",
+      "catalogue_json_pointer": "/producers/111",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_flight_checks.py",
+      "catalogue_json_pointer": "/producers/112",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_descent.cpp",
+      "catalogue_json_pointer": "/producers/113",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_descent_checks.py",
+      "catalogue_json_pointer": "/producers/114",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_survey.cpp",
+      "catalogue_json_pointer": "/producers/115",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_survey_checks.py",
+      "catalogue_json_pointer": "/producers/116",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_resupply.cpp",
+      "catalogue_json_pointer": "/producers/117",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_resupply_checks.py",
+      "catalogue_json_pointer": "/producers/118",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_construction.cpp",
+      "catalogue_json_pointer": "/producers/119",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_construction_checks.py",
+      "catalogue_json_pointer": "/producers/120",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_core.cpp",
+      "catalogue_json_pointer": "/producers/121",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_core_checks-1.py",
+      "catalogue_json_pointer": "/producers/122",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_core_checks-2.py",
+      "catalogue_json_pointer": "/producers/123",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_service.cpp",
+      "catalogue_json_pointer": "/producers/124",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-1.py",
+      "catalogue_json_pointer": "/producers/125",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-2.py",
+      "catalogue_json_pointer": "/producers/126",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_service_checks-3.py",
+      "catalogue_json_pointer": "/producers/127",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_module_reservation.cpp",
+      "catalogue_json_pointer": "/producers/128",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-1.py",
+      "catalogue_json_pointer": "/producers/129",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_module_assembly.cpp",
+      "catalogue_json_pointer": "/producers/130",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-2.py",
+      "catalogue_json_pointer": "/producers/131",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-3.py",
+      "catalogue_json_pointer": "/producers/132",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-3-1.py",
+      "catalogue_json_pointer": "/producers/133",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-4.py",
+      "catalogue_json_pointer": "/producers/134",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-4-1.py",
+      "catalogue_json_pointer": "/producers/135",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_module_checks-5.py",
+      "catalogue_json_pointer": "/producers/136",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_module_activation.cpp",
+      "catalogue_json_pointer": "/producers/137",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-1.py",
+      "catalogue_json_pointer": "/producers/138",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-2.py",
+      "catalogue_json_pointer": "/producers/139",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-3.py",
+      "catalogue_json_pointer": "/producers/140",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_activation_checks-4.py",
+      "catalogue_json_pointer": "/producers/141",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_approach.cpp",
+      "catalogue_json_pointer": "/producers/142",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-1.py",
+      "catalogue_json_pointer": "/producers/143",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-2.py",
+      "catalogue_json_pointer": "/producers/144",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-3.py",
+      "catalogue_json_pointer": "/producers/145",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_approach_checks-4.py",
+      "catalogue_json_pointer": "/producers/146",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_dock.cpp",
+      "catalogue_json_pointer": "/producers/147",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_utility_retirement.cpp",
+      "catalogue_json_pointer": "/producers/148",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_dock_native.cpp",
+      "catalogue_json_pointer": "/producers/149",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_dock_checks-1.py",
+      "catalogue_json_pointer": "/producers/150",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_dock_checks-2.py",
+      "catalogue_json_pointer": "/producers/151",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_removal.cpp",
+      "catalogue_json_pointer": "/producers/152",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_removal_native.cpp",
+      "catalogue_json_pointer": "/producers/153",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_removal_checks-1.py",
+      "catalogue_json_pointer": "/producers/154",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_removal_checks-2.py",
+      "catalogue_json_pointer": "/producers/155",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_evacuation.cpp",
+      "catalogue_json_pointer": "/producers/156",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_evacuation_native.cpp",
+      "catalogue_json_pointer": "/producers/157",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_evacuation_checks-1.py",
+      "catalogue_json_pointer": "/producers/158",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_module_lifecycle.cpp",
+      "catalogue_json_pointer": "/producers/159",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_lifecycle_checks-1.py",
+      "catalogue_json_pointer": "/producers/160",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_freight_native.cpp",
+      "catalogue_json_pointer": "/producers/161",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-1.py",
+      "catalogue_json_pointer": "/producers/162",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-2.py",
+      "catalogue_json_pointer": "/producers/163",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-3.py",
+      "catalogue_json_pointer": "/producers/164",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_freight_failure.cpp",
+      "catalogue_json_pointer": "/producers/165",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-4.py",
+      "catalogue_json_pointer": "/producers/166",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-5.py",
+      "catalogue_json_pointer": "/producers/167",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-6.py",
+      "catalogue_json_pointer": "/producers/168",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-7.py",
+      "catalogue_json_pointer": "/producers/169",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/orbital_freight_checks-8.py",
+      "catalogue_json_pointer": "/producers/170",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_release_admission.cpp",
+      "catalogue_json_pointer": "/producers/171",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/release_admission_checks-1.py",
+      "catalogue_json_pointer": "/producers/172",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/descent_custody_native.cpp",
+      "catalogue_json_pointer": "/producers/173",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/descent_custody_checks-1.py",
+      "catalogue_json_pointer": "/producers/174",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/cargo_return_native.cpp",
+      "catalogue_json_pointer": "/producers/175",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/cargo_return_checks-1.py",
+      "catalogue_json_pointer": "/producers/176",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/space_company_custody_native.cpp",
+      "catalogue_json_pointer": "/producers/177",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_company_checks-1.py",
+      "catalogue_json_pointer": "/producers/178",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/launch_failure_phase_native.cpp",
+      "catalogue_json_pointer": "/producers/179",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_failure_checks-1.py",
+      "catalogue_json_pointer": "/producers/180",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/launch_retirement_native.cpp",
+      "catalogue_json_pointer": "/producers/181",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_retirement_checks-1.py",
+      "catalogue_json_pointer": "/producers/182",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/paid_probe_phase_native.cpp",
+      "catalogue_json_pointer": "/producers/183",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/paid_probe_phase_checks-1.py",
+      "catalogue_json_pointer": "/producers/184",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/handling_phase_checks-1.py",
+      "catalogue_json_pointer": "/producers/185",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/phase_pair_index_checks-1.py",
+      "catalogue_json_pointer": "/producers/186",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/surface_space_loop_native.cpp",
+      "catalogue_json_pointer": "/producers/187",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/commodity_loop_checks-1.py",
+      "catalogue_json_pointer": "/producers/188",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/orbital_release_geometry.cpp",
+      "catalogue_json_pointer": "/producers/189",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/release_command_order_checks-1.py",
+      "catalogue_json_pointer": "/producers/190",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/surface_collection_native.cpp",
+      "catalogue_json_pointer": "/producers/191",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/surface_collection_checks-1.py",
+      "catalogue_json_pointer": "/producers/192",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/hub_circulation_native.cpp",
+      "catalogue_json_pointer": "/producers/193",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/hub_circulation_checks-1.py",
+      "catalogue_json_pointer": "/producers/194",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/asteroid_catalogue.cpp",
+      "catalogue_json_pointer": "/producers/195",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_catalogue_checks-1.py",
+      "catalogue_json_pointer": "/producers/196",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/launch_site.cpp",
+      "catalogue_json_pointer": "/producers/197",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/launch_site_checks-1.py",
+      "catalogue_json_pointer": "/producers/198",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/asteroid_generation.cpp",
+      "catalogue_json_pointer": "/producers/199",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/asteroid_generation_native.cpp",
+      "catalogue_json_pointer": "/producers/200",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-1.py",
+      "catalogue_json_pointer": "/producers/201",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-2.py",
+      "catalogue_json_pointer": "/producers/202",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_generation_checks-3.py",
+      "catalogue_json_pointer": "/producers/203",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_motion_checks-1.py",
+      "catalogue_json_pointer": "/producers/204",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_motion_checks-2.py",
+      "catalogue_json_pointer": "/producers/205",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_depletion_checks-1.py",
+      "catalogue_json_pointer": "/producers/206",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/asteroid_band_checks-1.py",
+      "catalogue_json_pointer": "/producers/207",
+      "disposition": "regenerate_through_original_owner",
+      "needs_bounded_recipe": true,
+      "ordinary_paid_continuation_requires_source_plan": true
+    }
+  ],
+  "stale_native_descriptors": [
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "path": "src/multilayer_industry.h",
+      "expected_sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+      "current_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "head_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "path": "src/industry_cmd.cpp",
+      "expected_sha256": "990ab77ccdcba3c4c8df430a21cf5ca336674211397d16cf15c5da2fda0c71ec",
+      "current_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "head_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "path": "src/multilayer_sprite.cpp",
+      "expected_sha256": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+      "current_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "head_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/multilayer_recipe.cpp",
+      "expected_sha256": "4d1d23036474b6627374e2a98abfb01f861babac460b411dfd5ee4382c95b158",
+      "current_sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57",
+      "head_sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/multilayer_recipe.h",
+      "expected_sha256": "48e7b50e08d270ab5f5199cd3ac46df43255a037cf05acb8543012808691bd3a",
+      "current_sha256": "2e7b74de6dabbd948f74072c2eb7ab64f96cb6c052e0f7ee8a35d11810f2fb4d",
+      "head_sha256": "2e7b74de6dabbd948f74072c2eb7ab64f96cb6c052e0f7ee8a35d11810f2fb4d",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/multilayer_industry.h",
+      "expected_sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+      "current_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "head_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/industry_cmd.cpp",
+      "expected_sha256": "990ab77ccdcba3c4c8df430a21cf5ca336674211397d16cf15c5da2fda0c71ec",
+      "current_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "head_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/multilayer_sprite.cpp",
+      "expected_sha256": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+      "current_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "head_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/CMakeLists.txt",
+      "expected_sha256": "e89195bdff7dc5a91b826c308e6e9d0b082341d7a76c4a7bf7d822d5d2eba2d0",
+      "current_sha256": "3a75a6b59f5f05bc82b886e8394b65d73c9861616b43e202b4a3d689c96df61f",
+      "head_sha256": "3a75a6b59f5f05bc82b886e8394b65d73c9861616b43e202b4a3d689c96df61f",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "path": "src/tests/CMakeLists.txt",
+      "expected_sha256": "44820ac4fcbc91065f67d63096a8db8be7e414f51a290a997f4fa54977f6f03a",
+      "current_sha256": "33429d01ad8f101684a4014ea385baacb44fafb5949fdb7ed41680550c5940fd",
+      "head_sha256": "33429d01ad8f101684a4014ea385baacb44fafb5949fdb7ed41680550c5940fd",
+      "predates_cleanup": true,
+      "disposition": "owner_led_native_refresh_required"
+    }
+  ],
+  "source_epoch_candidates": 5636,
+  "source_epoch_bytes": 71329916,
+  "python_reader_writer_files": 726,
+  "python_io_calls": 3512,
+  "required_unknown_policy": "Unknown save-like/config/original source material remains protected; no disposition here grants deletion.",
+  "historical_space_issues": "Superseded ancestor source/operation schemas and old missing consoles are historical provenance; current reader has zero unresolved required identities.",
+  "underground_status": "Group10 provisional five-model code is not built/tested; preserve both before.json and before-definitions.json epochs; do not resume."
+}

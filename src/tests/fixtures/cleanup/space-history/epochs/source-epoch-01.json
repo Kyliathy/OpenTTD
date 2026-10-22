@@ -1,0 +1,29 @@
+{
+  "_documentation": "Exact consumed source/application bytes before Plan11Group15CSGZVD; owner docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/farm-backhaul-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "056b48bbe90b75a53fee6593dcf2a8ed1db0a27698968afb8fbdb4b504620641",
+      "bytes": 7545
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+      "path": "test-cache/surface-entry/farm-backhaul-before-edit/1-surface_gateway_component_delivery_ledger.py",
+      "sha256": "3dfdf3861c041937619d80c9d53bde2f2e7e4b9f005929cf5e2f0d9ebafbb7cb",
+      "bytes": 24198
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/farm-backhaul-before-edit/2-openttd_surface_capital_test.exe",
+      "sha256": "3071aaa88929e43d80c50d8d053fc88527a67509e9ded86bcc67fd9af819cdd8",
+      "bytes": 23697408
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/farm-backhaul-before-edit/3-openttd_surface_capital_test.exe",
+      "sha256": "9c30605285fe34a24641fe22014a85b5e3492a72e5f324116e69c5840bb33828",
+      "bytes": 55984128
+    }
+  ]
+}

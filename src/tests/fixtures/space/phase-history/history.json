@@ -1,0 +1,1604 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md9/r2mlvs9 Group17; independent original phase observations; no financial replay authorization.",
+  "schema_version": 1,
+  "kind": "historical_phase_pairs",
+  "live_retained_inputs": [
+    {
+      "original": {
+        "path": "mlm/reviews/space/phase-pair-index/20261014-123013-61cbad237c/reports/phase-pair-index.json",
+        "sha256": "ac74d5dca1b260412093a9916f0adbe264333cb3b70816f58ed36de06480f5df"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/original-index.json",
+        "sha256": "ac74d5dca1b260412093a9916f0adbe264333cb3b70816f58ed36de06480f5df"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/paid-probe-phase-release-progress.json",
+        "sha256": "1c34310a52b14a2ddc7aa995fdce9849077a95dd5fda3fa753626678f5f8b592"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/1c34310a52b14a2d-paid-probe-phase-release-progress.json",
+        "sha256": "1c34310a52b14a2ddc7aa995fdce9849077a95dd5fda3fa753626678f5f8b592"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-preparing/20261014-122357-441519346a/reports/paid-probe-phase.json",
+        "sha256": "6c0afa36ca89c7b37ef806c7614c62bfa513859ba5eb3fb937b71de11bbd9e97"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/6c0afa36ca89c7b3-paid-probe-phase.json",
+        "sha256": "6c0afa36ca89c7b37ef806c7614c62bfa513859ba5eb3fb937b71de11bbd9e97"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-ascent/20261014-122454-cc6a261537/reports/paid-probe-phase.json",
+        "sha256": "bf1e332a2e4e82d6cbf228f17a17f9079143348b86861cfc3179085304fdd8ed"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/bf1e332a2e4e82d6-paid-probe-phase.json",
+        "sha256": "bf1e332a2e4e82d6cbf228f17a17f9079143348b86861cfc3179085304fdd8ed"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-delivery/20261014-122503-32e7f2ab72/reports/paid-probe-phase.json",
+        "sha256": "aa172175b3d359d205dd56a7c58774a5296e2fb6cebc04764040bb2670ffb430"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/aa172175b3d359d2-paid-probe-phase.json",
+        "sha256": "aa172175b3d359d205dd56a7c58774a5296e2fb6cebc04764040bb2670ffb430"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-return/20261014-122511-e179f1e40e/reports/paid-probe-phase.json",
+        "sha256": "218ba32e2a72b9c610f82459d62e4a2375673d0cca8de830aabaaba775de4619"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/218ba32e2a72b9c6-paid-probe-phase.json",
+        "sha256": "218ba32e2a72b9c610f82459d62e4a2375673d0cca8de830aabaaba775de4619"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-turnaround/20261014-122519-ae2c6c2c19/reports/paid-probe-phase.json",
+        "sha256": "1eafbe133420445a56a6711f55905bb8fbc9b25b9c41a8c57c892a303faf2587"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/1eafbe133420445a-paid-probe-phase.json",
+        "sha256": "1eafbe133420445a56a6711f55905bb8fbc9b25b9c41a8c57c892a303faf2587"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-complete/20261014-122529-d67e85300f/reports/paid-probe-phase.json",
+        "sha256": "dfa5c426f214705fcc703ede90a1900ce7e9d261c58ea61ef3d38c00b1fbc799"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/dfa5c426f214705f-paid-probe-phase.json",
+        "sha256": "dfa5c426f214705fcc703ede90a1900ce7e9d261c58ea61ef3d38c00b1fbc799"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/descent-custody-release-progress.json",
+        "sha256": "83cee8f1d8b9dbfe9cddd3a6c339ab04d773f102c4dcc0b4c6460be887c0fb90"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/83cee8f1d8b9dbfe-descent-custody-release-progress.json",
+        "sha256": "83cee8f1d8b9dbfe9cddd3a6c339ab04d773f102c4dcc0b4c6460be887c0fb90"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-release/20261014-090201-b09c8c33be/reports/descent-custody.json",
+        "sha256": "c3e1b3bda2e62b3d37ec7c656aaf6b698413838927577fae4bb1a277cd009250"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/c3e1b3bda2e62b3d-descent-custody.json",
+        "sha256": "c3e1b3bda2e62b3d37ec7c656aaf6b698413838927577fae4bb1a277cd009250"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-first/20261014-090205-87509b36a7/reports/descent-custody.json",
+        "sha256": "64b5c8fdb0d580254f365178a2e705add131b4eea5ec82365ec6c61537a25f38"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/64b5c8fdb0d58025-descent-custody.json",
+        "sha256": "64b5c8fdb0d580254f365178a2e705add131b4eea5ec82365ec6c61537a25f38"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-first/20261014-090209-6db1145d70/reports/descent-custody.json",
+        "sha256": "93bc55b8d7b1745855963e959d824f8c2e4e9cce1defbb145219bc5a77f0253a"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/93bc55b8d7b17458-descent-custody.json",
+        "sha256": "93bc55b8d7b1745855963e959d824f8c2e4e9cce1defbb145219bc5a77f0253a"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-second/20261014-090214-aaa7b82775/reports/descent-custody.json",
+        "sha256": "0b7ab6b089549cafd3c3568722d4159a97f870d5ccd3e79d804370f8614650cd"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/0b7ab6b089549caf-descent-custody.json",
+        "sha256": "0b7ab6b089549cafd3c3568722d4159a97f870d5ccd3e79d804370f8614650cd"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-second/20261014-090219-b4e0cfd1b2/reports/descent-custody.json",
+        "sha256": "8e4f26c6dc0d3c2457b2b28a40b2cfdb68cef8efe9e91872f4a7e9796ca2abbe"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/8e4f26c6dc0d3c24-descent-custody.json",
+        "sha256": "8e4f26c6dc0d3c2457b2b28a40b2cfdb68cef8efe9e91872f4a7e9796ca2abbe"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-service/20261014-090224-dc4921d40b/reports/descent-custody.json",
+        "sha256": "50c85444490515618131608d8afd24626cc0764bdbd2317aaf5af8e3a06b1c3a"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/50c8544449051561-descent-custody.json",
+        "sha256": "50c85444490515618131608d8afd24626cc0764bdbd2317aaf5af8e3a06b1c3a"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-service/20261014-090229-002adafcac/reports/descent-custody.json",
+        "sha256": "d10d187d90e41e32c265ea7b4b1a88058e471609dfbd9a2346fc72b2eb22d28a"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/d10d187d90e41e32-descent-custody.json",
+        "sha256": "d10d187d90e41e32c265ea7b4b1a88058e471609dfbd9a2346fc72b2eb22d28a"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-complete-service/20261014-090234-f131c44573/reports/descent-custody.json",
+        "sha256": "0520297e29d1f71daa3f6970bdff47cb0a89933575acec5eb1d89b03bed5e07a"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/0520297e29d1f71d-descent-custody.json",
+        "sha256": "0520297e29d1f71daa3f6970bdff47cb0a89933575acec5eb1d89b03bed5e07a"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/descent-custody-release-extra-progress.json",
+        "sha256": "f1a68cc1409ed47557201ef0dd89006b1e1401ccc1f0a0bb1b40edb4d7ef8222"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/f1a68cc1409ed475-descent-custody-release-extra-progress.json",
+        "sha256": "f1a68cc1409ed47557201ef0dd89006b1e1401ccc1f0a0bb1b40edb4d7ef8222"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-retarget/20261014-091139-9fcec98a6a/reports/descent-custody.json",
+        "sha256": "9567b23928092c70acb1d0869212174d4734fa1fde2bbca5eb3dac9985356772"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/9567b23928092c70-descent-custody.json",
+        "sha256": "9567b23928092c70acb1d0869212174d4734fa1fde2bbca5eb3dac9985356772"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-replacement/20261014-091143-d8e13f15f6/reports/descent-custody.json",
+        "sha256": "a7739d1321dd3314f2f2781df5a2c6eb08af02a4b3f8c0496c0af20fc3eec95f"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/a7739d1321dd3314-descent-custody.json",
+        "sha256": "a7739d1321dd3314f2f2781df5a2c6eb08af02a4b3f8c0496c0af20fc3eec95f"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/handling-phase-verify/20261014-122212-d156c7018b/reports/handling-phase.json",
+        "sha256": "2222f51beff29b73936bbe29b97238ae3545c19cd29be3e3db0fac675f93c2b2"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/2222f51beff29b73-handling-phase.json",
+        "sha256": "2222f51beff29b73936bbe29b97238ae3545c19cd29be3e3db0fac675f93c2b2"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/paid-probe-phase-debug-progress.json",
+        "sha256": "6b7b0fb928cc2d99550ac57702eb6a7d51c4362807794e5449ab3f080bfcd568"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/6b7b0fb928cc2d99-paid-probe-phase-debug-progress.json",
+        "sha256": "6b7b0fb928cc2d99550ac57702eb6a7d51c4362807794e5449ab3f080bfcd568"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-preparing/20261014-122556-fe7a300f24/reports/paid-probe-phase.json",
+        "sha256": "aaca590f398d0cdad437fe24dbdbf8b15e30eb67fdfc9c3511ae492be9cde2bc"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/aaca590f398d0cda-paid-probe-phase.json",
+        "sha256": "aaca590f398d0cdad437fe24dbdbf8b15e30eb67fdfc9c3511ae492be9cde2bc"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-ascent/20261014-122630-1d37d9f77b/reports/paid-probe-phase.json",
+        "sha256": "091c813d571fb868fece683b3cc44eb803abbde0b941fca4560692e32e6c156b"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/091c813d571fb868-paid-probe-phase.json",
+        "sha256": "091c813d571fb868fece683b3cc44eb803abbde0b941fca4560692e32e6c156b"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-delivery/20261014-122659-d2c54a283d/reports/paid-probe-phase.json",
+        "sha256": "9c2be5fd51824e0baf3e66835b0c477288d64b303f036963222e2456b50ceb11"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/9c2be5fd51824e0b-paid-probe-phase.json",
+        "sha256": "9c2be5fd51824e0baf3e66835b0c477288d64b303f036963222e2456b50ceb11"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-return/20261014-122732-6c2478b828/reports/paid-probe-phase.json",
+        "sha256": "097f5596188addf9024c6812df48510a58225fe49dd4f21a16ef0ee303ab7185"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/097f5596188addf9-paid-probe-phase.json",
+        "sha256": "097f5596188addf9024c6812df48510a58225fe49dd4f21a16ef0ee303ab7185"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-turnaround/20261014-122756-caafeb5007/reports/paid-probe-phase.json",
+        "sha256": "08f8e8be50945ca68f9306dd2fcae5e553f55ada420c7c5cb0fdf4dd32fe9e1c"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/08f8e8be50945ca6-paid-probe-phase.json",
+        "sha256": "08f8e8be50945ca68f9306dd2fcae5e553f55ada420c7c5cb0fdf4dd32fe9e1c"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/paid-probe-phase-verify-complete/20261014-122825-bedbe1aee9/reports/paid-probe-phase.json",
+        "sha256": "758a7266fc93adcb5d832a3eecd170d943b0615be4563bb35d5bbfb74078cabf"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/758a7266fc93adcb-paid-probe-phase.json",
+        "sha256": "758a7266fc93adcb5d832a3eecd170d943b0615be4563bb35d5bbfb74078cabf"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/descent-custody-debug-progress.json",
+        "sha256": "b23b26657b4ac28669e3bf430ffc657e74d6a45c562191a086ee25f5c288cfd1"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/b23b26657b4ac286-descent-custody-debug-progress.json",
+        "sha256": "b23b26657b4ac28669e3bf430ffc657e74d6a45c562191a086ee25f5c288cfd1"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-release/20261014-090439-2abe13fa0f/reports/descent-custody.json",
+        "sha256": "02b4a59df7dea776b3d0a27c439c762066c44b0e50d85d61e0c7dd919d24ed64"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/02b4a59df7dea776-descent-custody.json",
+        "sha256": "02b4a59df7dea776b3d0a27c439c762066c44b0e50d85d61e0c7dd919d24ed64"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-first/20261014-090456-5918b8bcf1/reports/descent-custody.json",
+        "sha256": "6bfa4c741ca397e8457c5fccbf963b70387d063f2a099dd810349a6b34da89db"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/6bfa4c741ca397e8-descent-custody.json",
+        "sha256": "6bfa4c741ca397e8457c5fccbf963b70387d063f2a099dd810349a6b34da89db"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-first/20261014-090508-5e30be0c81/reports/descent-custody.json",
+        "sha256": "ff94ec19e955289a92e2e75ba5c0fca94bec03a28d1a9bddee5710e93a9d19a2"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/ff94ec19e955289a-descent-custody.json",
+        "sha256": "ff94ec19e955289a92e2e75ba5c0fca94bec03a28d1a9bddee5710e93a9d19a2"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-second/20261014-090525-eaa3d50e3e/reports/descent-custody.json",
+        "sha256": "f83eb39728dc1bf19a5dee0c829bd34d25aef1c36228560ea213d168698bfbfd"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/f83eb39728dc1bf1-descent-custody.json",
+        "sha256": "f83eb39728dc1bf19a5dee0c829bd34d25aef1c36228560ea213d168698bfbfd"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-second/20261014-090542-2b21b75b14/reports/descent-custody.json",
+        "sha256": "ae23a61486ab5563df690a97e0722d0f853749759fe3aff04df97c63b92dc4fc"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/ae23a61486ab5563-descent-custody.json",
+        "sha256": "ae23a61486ab5563df690a97e0722d0f853749759fe3aff04df97c63b92dc4fc"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-service/20261014-090558-78cd08cd7c/reports/descent-custody.json",
+        "sha256": "9eda9f22fd70f4ed56611942b11876a636f9ab1b96272cfdf06e39fbd04cf046"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/9eda9f22fd70f4ed-descent-custody.json",
+        "sha256": "9eda9f22fd70f4ed56611942b11876a636f9ab1b96272cfdf06e39fbd04cf046"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-service/20261014-090615-4984fc895f/reports/descent-custody.json",
+        "sha256": "b35323def91f08ae74acddcbbba5060b7e21c5d3abcff10c9fe1ac72f9bc7985"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/b35323def91f08ae-descent-custody.json",
+        "sha256": "b35323def91f08ae74acddcbbba5060b7e21c5d3abcff10c9fe1ac72f9bc7985"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-complete-service/20261014-090631-8e548ce296/reports/descent-custody.json",
+        "sha256": "2af706d6b7e4ad0bb09c97b3dd4ad07f3d8db14c59a0073761c94dbaea64bfb6"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/2af706d6b7e4ad0b-descent-custody.json",
+        "sha256": "2af706d6b7e4ad0bb09c97b3dd4ad07f3d8db14c59a0073761c94dbaea64bfb6"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/descent-custody-debug-extra-progress.json",
+        "sha256": "8b23ecc2d738b82074fc29ec5709a4709c8caff78b38071ffe4872787b28e637"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/8b23ecc2d738b820-descent-custody-debug-extra-progress.json",
+        "sha256": "8b23ecc2d738b82074fc29ec5709a4709c8caff78b38071ffe4872787b28e637"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-retarget/20261014-091354-b16a88f7d3/reports/descent-custody.json",
+        "sha256": "cb6478936b5113a1c82d35e369474c29daa367199cb76f5ec65c7420c7161a93"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/cb6478936b5113a1-descent-custody.json",
+        "sha256": "cb6478936b5113a1c82d35e369474c29daa367199cb76f5ec65c7420c7161a93"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/descent-custody-verify-replacement/20261014-091411-a9b8b9f3ed/reports/descent-custody.json",
+        "sha256": "d56ccbb2a636c9bd7f8ad7828524441fb729a8b0a6d13b344214d93f254fd83e"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/d56ccbb2a636c9bd-descent-custody.json",
+        "sha256": "d56ccbb2a636c9bd7f8ad7828524441fb729a8b0a6d13b344214d93f254fd83e"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/handling-phase-verify/20261014-122606-b6296e9d0a/reports/handling-phase.json",
+        "sha256": "ebea4239d0bbed914451c5d9171e723f64f38dd13918ad0867b680e474eadea5"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/ebea4239d0bbed91-handling-phase.json",
+        "sha256": "ebea4239d0bbed914451c5d9171e723f64f38dd13918ad0867b680e474eadea5"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/module-flight-verification.json",
+        "sha256": "a908a918cba9848aeacd829f430462ada1cfbb8496c27626010922112c48e926"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/a908a918cba9848a-module-flight-verification.json",
+        "sha256": "a908a918cba9848aeacd829f430462ada1cfbb8496c27626010922112c48e926"
+      }
+    },
+    {
+      "original": {
+        "path": "logs/module-flight-release-verification.json",
+        "sha256": "477ccc5df358cb40acefb664e81fcb9d17bfd7e9802e86128bcf077956675015"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/477ccc5df358cb40-module-flight-release-verification.json",
+        "sha256": "477ccc5df358cb40acefb664e81fcb9d17bfd7e9802e86128bcf077956675015"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/module-flight-prepare-verify/20261014-062932-94f944ed66/reports/orbital-module-flight-prepare.json",
+        "sha256": "7c3650ce42a49460faac12d30ca39d84235de37d28ba1329fad980223d164603"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/7c3650ce42a49460-orbital-module-flight-prepare.json",
+        "sha256": "7c3650ce42a49460faac12d30ca39d84235de37d28ba1329fad980223d164603"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/module-flight-complete-verify/20261014-063018-e1298ab590/reports/orbital-module-flight-complete.json",
+        "sha256": "44cbd7133b12db5e9d1a684a338772064359db15f9c70c03f6c6cf6e8b33074b"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/44cbd7133b12db5e-orbital-module-flight-complete.json",
+        "sha256": "44cbd7133b12db5e9d1a684a338772064359db15f9c70c03f6c6cf6e8b33074b"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/module-flight-prepare-verify/20261014-080114-8c7717c1aa/reports/orbital-module-flight-prepare.json",
+        "sha256": "8b7d284b214e2c3f0c52c6f8ec4689dcb934334f74439267d6825ad6aed510ef"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/8b7d284b214e2c3f-orbital-module-flight-prepare.json",
+        "sha256": "8b7d284b214e2c3f0c52c6f8ec4689dcb934334f74439267d6825ad6aed510ef"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/reviews/space/module-flight-complete-verify/20261014-080119-8aaa17194a/reports/orbital-module-flight-complete.json",
+        "sha256": "dda7e94d3e99f03030e23e7fb3c1920936f26e5206dc651fae09b5847f774435"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/space/phase-history/reports/dda7e94d3e99f030-orbital-module-flight-complete.json",
+        "sha256": "dda7e94d3e99f03030e23e7fb3c1920936f26e5206dc651fae09b5847f774435"
+      }
+    }
+  ],
+  "unresolved_historical_reports": [],
+  "pairs": [
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "preparing",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122357-441519346a/saves/probe-flight-preparing-before-423.sav",
+        "sha256": "ce2a813ee83b867133e63e25917221fa6ceec054c2b1020796b9b01a630fa460"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122357-441519346a/saves/probe-flight-preparing-after-423.sav",
+        "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "ascent",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-ascent/20261014-122454-cc6a261537/saves/probe-flight-ascent-before-423.sav",
+        "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-ascent/20261014-122454-cc6a261537/saves/probe-flight-ascent-after-423.sav",
+        "sha256": "fc9ffd5ece6b2cfcbddc07dbf44fe545b01de8bf22d1b0e0836f73bc2a2c3e95"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "delivery",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-delivery/20261014-122503-32e7f2ab72/saves/probe-flight-delivery-before-423.sav",
+        "sha256": "fc9ffd5ece6b2cfcbddc07dbf44fe545b01de8bf22d1b0e0836f73bc2a2c3e95"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-delivery/20261014-122503-32e7f2ab72/saves/probe-flight-delivery-after-423.sav",
+        "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "return",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122511-e179f1e40e/saves/probe-flight-return-before-423.sav",
+        "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122511-e179f1e40e/saves/probe-flight-return-after-423.sav",
+        "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "turnaround",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122519-ae2c6c2c19/saves/probe-flight-turnaround-before-423.sav",
+        "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122519-ae2c6c2c19/saves/probe-flight-turnaround-after-423.sav",
+        "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "RelWithDebInfo",
+      "phase": "complete",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-complete/20261014-122529-d67e85300f/saves/probe-flight-complete-before-423.sav",
+        "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-complete/20261014-122529-d67e85300f/saves/probe-flight-complete-after-423.sav",
+        "sha256": "24695a086ccb9be971645eeb8a13a62b9a1d1c721fa60e5490158ca612b9d7c7"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "release",
+      "before": {
+        "path": "src/tests/fixtures/demos/space/space-descent-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-release/20261014-090201-b09c8c33be/saves/descent-release-423.sav",
+        "sha256": "4b8b5ed7b567f0b30704e9598f6fa079b8bdd733b7a31cfd79a6eb52f4fd342c"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "before-first",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-release/20261014-090201-b09c8c33be/saves/descent-release-423.sav",
+        "sha256": "4b8b5ed7b567f0b30704e9598f6fa079b8bdd733b7a31cfd79a6eb52f4fd342c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-first/20261014-090205-87509b36a7/saves/descent-before-first-423.sav",
+        "sha256": "ff70edca464dbd5a9869329a39812087b22f696a912363c0184cfed4278b3828"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "first",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-first/20261014-090205-87509b36a7/saves/descent-before-first-423.sav",
+        "sha256": "ff70edca464dbd5a9869329a39812087b22f696a912363c0184cfed4278b3828"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-first/20261014-090209-6db1145d70/saves/descent-first-423.sav",
+        "sha256": "c019d1324cb8db49f3158426ce8984cd76d3549aa158ee39aedba96c6e053bab"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "before-second",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-first/20261014-090209-6db1145d70/saves/descent-first-423.sav",
+        "sha256": "c019d1324cb8db49f3158426ce8984cd76d3549aa158ee39aedba96c6e053bab"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-second/20261014-090214-aaa7b82775/saves/descent-before-second-423.sav",
+        "sha256": "da98ca6080beb385ea8c2351219bac6a11877ef5ba9953d3d88128cf2deeee9a"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "second",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-second/20261014-090214-aaa7b82775/saves/descent-before-second-423.sav",
+        "sha256": "da98ca6080beb385ea8c2351219bac6a11877ef5ba9953d3d88128cf2deeee9a"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-second/20261014-090219-b4e0cfd1b2/saves/descent-second-423.sav",
+        "sha256": "2da0177bce92e3e1b6f79b9e2e9fce878f0f586878c11e492c5e82a743db8900"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-second/20261014-090219-b4e0cfd1b2/saves/descent-second-423.sav",
+        "sha256": "2da0177bce92e3e1b6f79b9e2e9fce878f0f586878c11e492c5e82a743db8900"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-service/20261014-090224-dc4921d40b/saves/descent-service-423.sav",
+        "sha256": "f9f9192143aa40f3adc1f406212bb21095e462c4b95b125f0e7b8d87b7e66c55"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "before-service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-service/20261014-090224-dc4921d40b/saves/descent-service-423.sav",
+        "sha256": "f9f9192143aa40f3adc1f406212bb21095e462c4b95b125f0e7b8d87b7e66c55"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-service/20261014-090229-002adafcac/saves/descent-before-service-423.sav",
+        "sha256": "4c84873bb44abfd133dbf450aa2b3c0c9234d17042f8c0749c2f9200595c3cd8"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "complete-service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-service/20261014-090229-002adafcac/saves/descent-before-service-423.sav",
+        "sha256": "4c84873bb44abfd133dbf450aa2b3c0c9234d17042f8c0749c2f9200595c3cd8"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090234-f131c44573/saves/descent-complete-service-423.sav",
+        "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "retarget",
+      "before": {
+        "path": "src/tests/fixtures/demos/space/space-descent-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-retarget/20261014-091139-9fcec98a6a/saves/descent-retarget-423.sav",
+        "sha256": "a9f0493f8e1adc4f064a570ce524c61eabd88d573462402d48328a0195543af3"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "RelWithDebInfo",
+      "phase": "replacement",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090234-f131c44573/saves/descent-complete-service-423.sav",
+        "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-replacement/20261014-091143-d8e13f15f6/saves/descent-replacement-423.sav",
+        "sha256": "049edf2efe695e5c3299a663e0f0b8d53ed5fd86ab8a9a0f417cb6776ec7d018"
+      }
+    },
+    {
+      "kind": "seeded_packet_handling_boundary",
+      "configuration": "RelWithDebInfo",
+      "phase": "completion",
+      "before": {
+        "path": "mlm/reviews/space/handling-phase-prepare/20261014-122212-d156c7018b/saves/launch-center-413.sav",
+        "sha256": "0d0afae003e791b63357a399cdb0909cc494054fc389a926a7a7dabe4754a1ca"
+      },
+      "after": {
+        "path": "mlm/reviews/space/handling-phase-continue/20261014-122212-d156c7018b/saves/launch-center-413.sav",
+        "sha256": "2a953bb9fb27e90934da1af93d8b57604f99a6f31d81ed94d065d8f2b894ac10"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "preparing",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-before-423.sav",
+        "sha256": "ce2a813ee83b867133e63e25917221fa6ceec054c2b1020796b9b01a630fa460"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-after-423.sav",
+        "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "ascent",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-ascent/20261014-122630-1d37d9f77b/saves/probe-flight-ascent-before-423.sav",
+        "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-ascent/20261014-122630-1d37d9f77b/saves/probe-flight-ascent-after-423.sav",
+        "sha256": "fc9ffd5ece6b2cfcbddc07dbf44fe545b01de8bf22d1b0e0836f73bc2a2c3e95"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "delivery",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-delivery/20261014-122659-d2c54a283d/saves/probe-flight-delivery-before-423.sav",
+        "sha256": "fc9ffd5ece6b2cfcbddc07dbf44fe545b01de8bf22d1b0e0836f73bc2a2c3e95"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-delivery/20261014-122659-d2c54a283d/saves/probe-flight-delivery-after-423.sav",
+        "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "return",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122732-6c2478b828/saves/probe-flight-return-before-423.sav",
+        "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122732-6c2478b828/saves/probe-flight-return-after-423.sav",
+        "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "turnaround",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-before-423.sav",
+        "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-after-423.sav",
+        "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+      }
+    },
+    {
+      "kind": "genuine_paid_probe",
+      "configuration": "Debug",
+      "phase": "complete",
+      "before": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-complete/20261014-122825-bedbe1aee9/saves/probe-flight-complete-before-423.sav",
+        "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/paid-probe-phase-native-complete/20261014-122825-bedbe1aee9/saves/probe-flight-complete-after-423.sav",
+        "sha256": "24695a086ccb9be971645eeb8a13a62b9a1d1c721fa60e5490158ca612b9d7c7"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "release",
+      "before": {
+        "path": "src/tests/fixtures/demos/space/space-descent-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-release/20261014-090439-2abe13fa0f/saves/descent-release-423.sav",
+        "sha256": "4b8b5ed7b567f0b30704e9598f6fa079b8bdd733b7a31cfd79a6eb52f4fd342c"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "before-first",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-release/20261014-090439-2abe13fa0f/saves/descent-release-423.sav",
+        "sha256": "4b8b5ed7b567f0b30704e9598f6fa079b8bdd733b7a31cfd79a6eb52f4fd342c"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-first/20261014-090456-5918b8bcf1/saves/descent-before-first-423.sav",
+        "sha256": "ff70edca464dbd5a9869329a39812087b22f696a912363c0184cfed4278b3828"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "first",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-first/20261014-090456-5918b8bcf1/saves/descent-before-first-423.sav",
+        "sha256": "ff70edca464dbd5a9869329a39812087b22f696a912363c0184cfed4278b3828"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-first/20261014-090508-5e30be0c81/saves/descent-first-423.sav",
+        "sha256": "c019d1324cb8db49f3158426ce8984cd76d3549aa158ee39aedba96c6e053bab"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "before-second",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-first/20261014-090508-5e30be0c81/saves/descent-first-423.sav",
+        "sha256": "c019d1324cb8db49f3158426ce8984cd76d3549aa158ee39aedba96c6e053bab"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-second/20261014-090525-eaa3d50e3e/saves/descent-before-second-423.sav",
+        "sha256": "da98ca6080beb385ea8c2351219bac6a11877ef5ba9953d3d88128cf2deeee9a"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "second",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-second/20261014-090525-eaa3d50e3e/saves/descent-before-second-423.sav",
+        "sha256": "da98ca6080beb385ea8c2351219bac6a11877ef5ba9953d3d88128cf2deeee9a"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-second/20261014-090542-2b21b75b14/saves/descent-second-423.sav",
+        "sha256": "2da0177bce92e3e1b6f79b9e2e9fce878f0f586878c11e492c5e82a743db8900"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-second/20261014-090542-2b21b75b14/saves/descent-second-423.sav",
+        "sha256": "2da0177bce92e3e1b6f79b9e2e9fce878f0f586878c11e492c5e82a743db8900"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-service/20261014-090558-78cd08cd7c/saves/descent-service-423.sav",
+        "sha256": "f9f9192143aa40f3adc1f406212bb21095e462c4b95b125f0e7b8d87b7e66c55"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "before-service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-service/20261014-090558-78cd08cd7c/saves/descent-service-423.sav",
+        "sha256": "f9f9192143aa40f3adc1f406212bb21095e462c4b95b125f0e7b8d87b7e66c55"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-before-service/20261014-090615-4984fc895f/saves/descent-before-service-423.sav",
+        "sha256": "4c84873bb44abfd133dbf450aa2b3c0c9234d17042f8c0749c2f9200595c3cd8"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "complete-service",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-before-service/20261014-090615-4984fc895f/saves/descent-before-service-423.sav",
+        "sha256": "4c84873bb44abfd133dbf450aa2b3c0c9234d17042f8c0749c2f9200595c3cd8"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090631-8e548ce296/saves/descent-complete-service-423.sav",
+        "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "retarget",
+      "before": {
+        "path": "src/tests/fixtures/demos/space/space-descent-414.sav",
+        "sha256": "46fa2a166184269ca89e8af53c302bcb771a63827ac5ee1d1ca53878668235d3"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-retarget/20261014-091354-b16a88f7d3/saves/descent-retarget-423.sav",
+        "sha256": "a9f0493f8e1adc4f064a570ce524c61eabd88d573462402d48328a0195543af3"
+      }
+    },
+    {
+      "kind": "genuine_paid_descent_service",
+      "configuration": "Debug",
+      "phase": "replacement",
+      "before": {
+        "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090631-8e548ce296/saves/descent-complete-service-423.sav",
+        "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+      },
+      "after": {
+        "path": "mlm/reviews/space/descent-custody-native-replacement/20261014-091411-a9b8b9f3ed/saves/descent-replacement-423.sav",
+        "sha256": "049edf2efe695e5c3299a663e0f0b8d53ed5fd86ab8a9a0f417cb6776ec7d018"
+      }
+    },
+    {
+      "kind": "seeded_packet_handling_boundary",
+      "configuration": "Debug",
+      "phase": "completion",
+      "before": {
+        "path": "mlm/reviews/space/handling-phase-prepare/20261014-122606-b6296e9d0a/saves/launch-center-413.sav",
+        "sha256": "0d0afae003e791b63357a399cdb0909cc494054fc389a926a7a7dabe4754a1ca"
+      },
+      "after": {
+        "path": "mlm/reviews/space/handling-phase-continue/20261014-122606-b6296e9d0a/saves/launch-center-413.sav",
+        "sha256": "2a953bb9fb27e90934da1af93d8b57604f99a6f31d81ed94d065d8f2b894ac10"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/preburn->ascent",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-preburn-423.sav",
+        "sha256": "2f14789c7028a38c01a38629f708ec4e309004b0f9489ada443b0f8ec5e99989"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-ascent-423.sav",
+        "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/ascent->delivery",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-ascent-423.sav",
+        "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-delivery-423.sav",
+        "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/delivery->approach",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-delivery-423.sav",
+        "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-approach-423.sav",
+        "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/approach->unloaded",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-approach-423.sav",
+        "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-unloaded-423.sav",
+        "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/unloaded->turnaround",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-unloaded-423.sav",
+        "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-turnaround-423.sav",
+        "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "RelWithDebInfo",
+      "phase": "module/turnaround->complete",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-turnaround-423.sav",
+        "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-complete-423.sav",
+        "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/preburn->ascent",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-preburn-423.sav",
+        "sha256": "2f14789c7028a38c01a38629f708ec4e309004b0f9489ada443b0f8ec5e99989"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-ascent-423.sav",
+        "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/ascent->delivery",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-ascent-423.sav",
+        "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-delivery-423.sav",
+        "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/delivery->approach",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-delivery-423.sav",
+        "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-approach-423.sav",
+        "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/approach->unloaded",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-approach-423.sav",
+        "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-unloaded-423.sav",
+        "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/unloaded->turnaround",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-unloaded-423.sav",
+        "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-turnaround-423.sav",
+        "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+      }
+    },
+    {
+      "kind": "genuine_paid_module_freight",
+      "configuration": "Debug",
+      "phase": "module/turnaround->complete",
+      "before": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-turnaround-423.sav",
+        "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+      },
+      "after": {
+        "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-complete-423.sav",
+        "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+      }
+    }
+  ],
+  "normalized_probe_ledgers": {
+    "probe/preparing": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 1,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3415045,
+          "rocket_profit": -128000,
+          "probe_profit": 0,
+          "fuel": 15,
+          "burned": 0,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 2,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414275,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 1,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3415045,
+          "rocket_profit": -128000,
+          "probe_profit": 0,
+          "fuel": 15,
+          "burned": 0,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 2,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414275,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ]
+    },
+    "probe/ascent": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 2,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414275,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 3,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 2,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414275,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 3,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ]
+    },
+    "probe/delivery": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 3,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 4,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 3,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 5,
+          "burned": 10,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 4,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ]
+    },
+    "probe/return": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 4,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 5,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413895,
+          "rocket_profit": -320000,
+          "probe_profit": -76800,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 4,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3414235,
+          "rocket_profit": -320000,
+          "probe_profit": 0,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 5,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413895,
+          "rocket_profit": -320000,
+          "probe_profit": -76800,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ]
+    },
+    "probe/turnaround": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 5,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413895,
+          "rocket_profit": -320000,
+          "probe_profit": -76800,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413282,
+          "rocket_profit": -448000,
+          "probe_profit": -102400,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 5,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413895,
+          "rocket_profit": -320000,
+          "probe_profit": -76800,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 0,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413282,
+          "rocket_profit": -448000,
+          "probe_profit": -102400,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        }
+      ]
+    },
+    "probe/complete": {
+      "RelWithDebInfo": [
+        {
+          "edge": "before",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413282,
+          "rocket_profit": -448000,
+          "probe_profit": -102400,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413278,
+          "rocket_profit": -448000,
+          "probe_profit": -103424,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 4
+        }
+      ],
+      "Debug": [
+        {
+          "edge": "before",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413282,
+          "rocket_profit": -448000,
+          "probe_profit": -102400,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 0
+        },
+        {
+          "edge": "after",
+          "phase": 0,
+          "rocket": 15,
+          "rocket_generation": 1,
+          "probe": 16,
+          "probe_generation": 2,
+          "money": 3413278,
+          "rocket_profit": -448000,
+          "probe_profit": -103424,
+          "fuel": 0,
+          "burned": 15,
+          "started": 2,
+          "completed": 1,
+          "canceled": 1,
+          "cargo": 0,
+          "pods": 2,
+          "pad_remainder": 0,
+          "probe_remainder": 4
+        }
+      ]
+    }
+  },
+  "seeded_kind": "seeded_packet_handling_boundary",
+  "genuine_kinds": [
+    "genuine_paid_probe",
+    "genuine_paid_module_freight",
+    "genuine_paid_descent_service"
+  ],
+  "fresh_application_ran": false,
+  "gameplay_ticks_executed": 0
+}

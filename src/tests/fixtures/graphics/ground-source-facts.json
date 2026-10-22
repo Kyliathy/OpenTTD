@@ -1,0 +1,6254 @@
+{
+  "_documentation": "Preserve independent ground source facts without retaining a publication archive.\n\n@file ground_source_facts.py Export only from exact original scoped source reports.\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups17D/17DB-17DE.\nOrdinary verification reads the immutable fixture and durable source owners.\nHistorical native descriptor/source epochs remain facts, never a current pass.\n",
+  "schema_version": 1,
+  "kind": "independent_ground_source_facts",
+  "scope": {
+    "path": "media/multilayer/ground-pack-scope.json",
+    "sha256": "06e8e705b0efe233f79537d95d905c06dba5337d84f05435ae339c17285af4ac"
+  },
+  "historical_baseline": {
+    "path": "logs/graphics/selected-ground-pack/20261021-append-01/before.json",
+    "sha256": "2be356c4df4daf53b7bc7179eab8f54077066dc5b2e50333b5274d12690681d1"
+  },
+  "historical_source_audit": {
+    "path": "logs/graphics/selected-ground-status/20261021-source-closure-01/verification.json",
+    "sha256": "b1b63441618c9e3310fcb2ddf7dcc9397e4524ccda6328f2c7cb47e40737b1bf"
+  },
+  "native_start": 7791,
+  "native_end_exclusive": 22045,
+  "pose_fields": [
+    "state",
+    "frame",
+    "direction",
+    "tile_variant",
+    "part",
+    "box",
+    "anchor",
+    "native_packed_anchor",
+    "native_graphics",
+    "native_track_bits",
+    "world_cell",
+    "native_layout",
+    "native_origin",
+    "native_contact",
+    "alias_of",
+    "foreground_policy",
+    "structurally_absent",
+    "source_pixels_sha256",
+    "company_color_pixels",
+    "company_color_mask_sha256"
+  ],
+  "selected_public_facts": {
+    "mine.COAL": {
+      "asset_id": "mine.COAL",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/coal-machinery-a-v2.png",
+        "sha256": "1cd7965c2374e3052f256418846236eeb4296e8edebf9cae85b37cc16316cf90",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.IORE": {
+      "asset_id": "mine.IORE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/iron-machinery-a-v2.png",
+        "sha256": "13b031d8d1fbfb9a7e57add2870812be66cd6147990595007c6d1f3cb686dfa3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.CORE": {
+      "asset_id": "mine.CORE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/copper-machinery-a-v1.png",
+        "sha256": "5ddfde1ffc481a44147b46d6d03d10712321e5d0fd8f879992e04b7f40380d2c",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.SALT": {
+      "asset_id": "mine.SALT",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/salt-machinery-a-v1.png",
+        "sha256": "c849f0626b98699a769319868748bfbbe33447b3732568d6f382d4aa52ad00f6",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.LITH": {
+      "asset_id": "mine.LITH",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/lithium-machinery-a-v1.png",
+        "sha256": "f05d12f670f5e366487ba12aeda765439843470c77ea4d80daf9b757530b19a6",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.COBT": {
+      "asset_id": "mine.COBT",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cobalt-machinery-a-v2.png",
+        "sha256": "903f0de8f3de67bbdc6ab575b7421127cde3cabb4023d97f50ab3b71054efc9a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "mine.RARE": {
+      "asset_id": "mine.RARE",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "working",
+        "blocked",
+        "depleted"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/rare-earth-machinery-a-v1.png",
+        "sha256": "da8a4cd2e07d2420a9b27ba7aa3bc2c2593dae6e2ce7dcc75497a21d7a885754",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.metal-refinery": {
+      "asset_id": "facility.metal-refinery",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/metal-refinery-machinery-a-v2.png",
+        "sha256": "f648af11666b862a3f98c9857b3327afa731f3fd8e82a15c76c729f928fd8537",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.chemical-works": {
+      "asset_id": "facility.chemical-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/chemical-works-day-tank-v1.png",
+        "sha256": "c849036e029e996e6e9bcd77a7b95cfd15b5b549c16897b8e619bf84021e162d",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.battery-works": {
+      "asset_id": "facility.battery-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/battery-works-machinery-a-v3.png",
+        "sha256": "9148245cea839dcbb2e97657ff7b73acebe5eaaaf688b76eba698aeb12f5e0af",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.electronics-works": {
+      "asset_id": "facility.electronics-works",
+      "consumer": 6,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/electronics-works-machinery-a-v2.png",
+        "sha256": "e9db13c79b60c4868db62181860fc76ddbda62e8336269a44910d4229a07737a",
+        "provenance": "first_party_original_model_and_compatible_components",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-04": {
+      "asset_id": "vehicle.model-04",
+      "consumer": 5,
+      "states": [
+        "idle",
+        "moving",
+        "working",
+        "blocked",
+        "service"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/m1/raw/spoil-hauler-v1.png",
+        "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-04": {
+      "asset_id": "purchase.model-04",
+      "consumer": 5,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/m1/raw/spoil-hauler-v1.png",
+        "sha256": "6005db8dc74ee660fdb2482db928841c4182e4ae2fb6fd7f08d90eec78071dcd",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-05": {
+      "asset_id": "vehicle.model-05",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 17,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mineral-wagon-empty-n-ne-se-s-v1.png",
+        "sha256": "9164bdf2df8c109399504b6f18315a7c30752d775142bf1ae10d6775a15b8cd2",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-05": {
+      "asset_id": "purchase.model-05",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mineral-wagon-empty-e-v2.png",
+        "sha256": "6c6beb2fd012588eabbb1a652e587014d2c0495e168247e8b71e183870be4b11",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-06": {
+      "asset_id": "vehicle.model-06",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-wagon-empty-n-ne-se-s-v1.png",
+        "sha256": "ce8764de5ddc19614a767118d94abd67e7d20fe37f6a0ca71958971ae8010837",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-06": {
+      "asset_id": "purchase.model-06",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-wagon-empty-e-v1.png",
+        "sha256": "44a6f8fafa1e0ad04c8651f4452dc6f4fa2528ea98910bc005a51b0fa734cd1a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-07": {
+      "asset_id": "vehicle.model-07",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 10,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mine-truck-empty-n-v1.png",
+        "sha256": "270f47bb6ad2d17ca908bab53add6cfd8fd5beae11ce5f2e4b8996e27c33af1b",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-07": {
+      "asset_id": "purchase.model-07",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mine-truck-empty-e-v1.png",
+        "sha256": "54fc81417c209b49ef75482cad6897d061bae350a59b090feb7901fc3fec8e49",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-08": {
+      "asset_id": "vehicle.model-08",
+      "consumer": 7,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service",
+        "blocked"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-road-empty-n-ne-se-s-v2.png",
+        "sha256": "36716ea6147c6f84edd36e8383e175ca4ceb0c4fbca965fec481fd886a9a9b2a",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-08": {
+      "asset_id": "purchase.model-08",
+      "consumer": 7,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/sealed-road-empty-e-v1.png",
+        "sha256": "0d7138f87aa21ca619b0287083b5f7003888f1c9838cc32c769358a528be4d12",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-09": {
+      "asset_id": "vehicle.model-09",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mole-views-v1.png",
+        "sha256": "98713b7ea83278d5977e72251e29b645794ea237dab80e496d0ca25a28c61c6b",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-09": {
+      "asset_id": "purchase.model-09",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/mole-base-e-v1.png",
+        "sha256": "dbf51aa59a2313fb11412fbe67885e85573f1826d7e8819d739acb8a28acfb61",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-10": {
+      "asset_id": "vehicle.model-10",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/crate-native-n-ne-s-sw-v1.png",
+        "sha256": "135edbc4ddaa157e3905ac75f4b21e806b859dff83174c7c825a071ba188f195",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-10": {
+      "asset_id": "purchase.model-10",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/crate-base-e-v1.png",
+        "sha256": "ef82883eda756c92a9169d87f2903b936713d4409b9bf7baab41db58dd967d56",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-11": {
+      "asset_id": "vehicle.model-11",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cistern-n-ne-s-sw-v1.png",
+        "sha256": "fbcf056d122a528e5365de4afd740e24a5a73e4e4073a5c0e85b025cb31216f3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-11": {
+      "asset_id": "purchase.model-11",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/cistern-base-e-v1.png",
+        "sha256": "4214ab0aeeec608cc7b1c2b8721c3d24ca800be1b45124f747b8d2416664f1cd",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-12": {
+      "asset_id": "vehicle.model-12",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/shield-n-ne-s-sw-v1.png",
+        "sha256": "b11a49b36cf2184e3b946a2ef855e20c5947ee6041a3c8897f3330522cb6d6ec",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-12": {
+      "asset_id": "purchase.model-12",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/shield-base-e-v1.png",
+        "sha256": "ebe6f2ad2901559c0ef98f3761791351d34996cd28ca4386f2a59376e13373db",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "vehicle.model-13": {
+      "asset_id": "vehicle.model-13",
+      "consumer": 17,
+      "states": [
+        "empty",
+        "partial",
+        "full",
+        "service-empty",
+        "service-partial",
+        "service-full",
+        "blocked-empty",
+        "blocked-partial",
+        "blocked-full"
+      ],
+      "frames": 2,
+      "directions": [
+        "N",
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        48
+      ],
+      "anchor": [
+        -32,
+        -32
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "geometry": "per_view",
+      "company_colors": "explicit_mask",
+      "animation_colors": "forbidden",
+      "kind": "vehicle",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        48
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/forge-n-ne-s-sw-v1.png",
+        "sha256": "4795a5122d6fe557e905cb8339a5eb81fb07d8377c5bba98d41977f93f14ee1d",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "purchase.model-13": {
+      "asset_id": "purchase.model-13",
+      "consumer": 17,
+      "states": [
+        "available",
+        "locked"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/forge-base-e-v1.png",
+        "sha256": "4a2129a717448b7883862f1f2c10913938da4d42dca1976d0ceab6527e0a9f8c",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.rail-station": {
+      "asset_id": "facility.rail-station",
+      "consumer": 7,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front",
+        "roof",
+        "glass"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/station-loader-x-base-v4.png",
+        "sha256": "0a1cca1abfe2ebf36f600ed45015a7f8d97bd772bc61d93fb9a2e1f0928d3cf3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.road-terminal": {
+      "asset_id": "facility.road-terminal",
+      "consumer": 7,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW",
+        "X",
+        "Y"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "parent-0",
+        "parent-1",
+        "parent-2"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/terminal-se-loader-v1.png",
+        "sha256": "7528f900831ab4cb3e21e320f9bcd389927f52e574b8e5f7782824709ec4e361",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.tube-terminal": {
+      "asset_id": "facility.tube-terminal",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+        "sha256": "b991c09dbf49b4e8d6855ffc956b474277dda07c71e4875ab58bbc10f054e417",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.tube-service": {
+      "asset_id": "facility.tube-service",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/m1/raw/exchange-bay-one-tile-v2.png",
+        "sha256": "9afa6979c7b847d70e9b53c0814aedcb0be4e41b1859e76f5429849d60c202a1",
+        "provenance": "first_party_retained_compatible_model_reuse",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.tube-interchange": {
+      "asset_id": "facility.tube-interchange",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-terminal-construction-v1.png",
+        "sha256": "b991c09dbf49b4e8d6855ffc956b474277dda07c71e4875ab58bbc10f054e417",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.vent-collector": {
+      "asset_id": "facility.vent-collector",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 9,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        3,
+        3
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/collector-construction-0-ne-v1.png",
+        "sha256": "ea8eda879a49155c9065c7c88a047f163920c87cfe0275c34484da779c019bc3",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.vent-powerhouse": {
+      "asset_id": "facility.vent-powerhouse",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked",
+        "heat_starved"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/venttap-construction-0-views-v1.png",
+        "sha256": "7a1b54b8e1293009522b3c0807f4638f9e2d915477482b30547d0c6b5c43ba73",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.magma-powerhouse": {
+      "asset_id": "facility.magma-powerhouse",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked",
+        "heat_starved"
+      ],
+      "frames": 4,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 16,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        4,
+        4
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/magma-construction-0-ne-v1.png",
+        "sha256": "acfcfd0b7a2231dd91e4d0460d066f65e2423a1cf0fc9f40bcfece3c52094e50",
+        "provenance": "first_party_original_model_and_component_assembly",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "facility.utility-riser": {
+      "asset_id": "facility.utility-riser",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "ready",
+        "working",
+        "blocked"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 4,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        64
+      ],
+      "anchor": [
+        -31,
+        -33
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "geometry": "per_tile",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "building",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "source": {
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/utility-riser-authored.png",
+        "provenance": "first_party_original",
+        "rights": "first_party_original_imagegen",
+        "sha256": "25b8146abb0649587d190f49d7cdce6ca04851161f0d95db28e50a616a322778",
+        "manifest": "logs/proofs/mlm/native-art/ground/utility-riser-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
+      }
+    },
+    "geothermal.vent": {
+      "asset_id": "geothermal.vent",
+      "consumer": 18,
+      "states": [
+        "hidden",
+        "surveyed",
+        "excavated"
+      ],
+      "frames": 4,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/vent-natural-phases-v1.png",
+        "sha256": "0bc2af7dab8661cf2391258da4aaeaa18a5b92ba5a201b21c956d8a1d157c20b",
+        "provenance": "first_party_original_natural_overlay",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "geothermal.conduit": {
+      "asset_id": "geothermal.conduit",
+      "consumer": 18,
+      "states": [
+        "construction",
+        "connected",
+        "unconnected"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 2,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/utility-conduit-authored.png",
+        "provenance": "first_party_original",
+        "rights": "first_party_original_imagegen",
+        "sha256": "595946cd1a98d27037a1918b6383558bb7c7cad25b06be2134ebe859ad50c978",
+        "manifest": "logs/proofs/mlm/native-art/ground/utility-conduit-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
+      }
+    },
+    "tube.straight": {
+      "asset_id": "tube.straight",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "tube.bend45": {
+      "asset_id": "tube.bend45",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "N",
+        "S",
+        "W",
+        "E"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-curve-states-v1.png",
+        "sha256": "995c9bed314b6390d2e87b7a1294e1425ccf1a7c19054c16782f5a8a9eedd8e0",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "tube.junction": {
+      "asset_id": "tube.junction",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 54,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original",
+        "conversion": "composition_of_retained_authored_primitives"
+      }
+    },
+    "tube.end": {
+      "asset_id": "tube.end",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-end-positive-states-v1.png",
+        "sha256": "ffdf52069100f88c9c85fb8be58eb5689f6a4bf153ab8a2ab1a1e0b1310e797f",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "tube.crossing": {
+      "asset_id": "tube.crossing",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "back",
+        "front"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-straight-states-v1.png",
+        "sha256": "dfffc78d23038b19e153d152d803e1e1f97b424693e2688bdb47deb84987ad16",
+        "provenance": "first_party_original_source_composition",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "tube.conduit": {
+      "asset_id": "tube.conduit",
+      "consumer": 17,
+      "states": [
+        "construction",
+        "powered",
+        "unpowered"
+      ],
+      "frames": 1,
+      "directions": [
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        64,
+        31
+      ],
+      "anchor": [
+        -31,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "terrain",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        64,
+        31
+      ],
+      "source": {
+        "status": "authored",
+        "path": "media/multilayer/source/ground/raw/tube-conduit-states-v1.png",
+        "sha256": "80b06d3f46525b465ece239700dc936e3cd4b05fc2dcde790f1f7ac0e7816db0",
+        "provenance": "first_party_original_builtin_image_gen",
+        "rights": "first_party_generated_original"
+      }
+    },
+    "control.tube": {
+      "asset_id": "control.tube",
+      "consumer": 7,
+      "states": [
+        "enabled",
+        "disabled",
+        "pressed"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/control-tube-authored.png",
+        "provenance": "first_party_original",
+        "rights": "first_party_original_imagegen",
+        "sha256": "6c673433974d8ec41202755cad336157750dbfb8ce6d2e549b390b3f47d842b9",
+        "manifest": "logs/proofs/mlm/native-art/ground/control-tube-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
+      }
+    },
+    "control.geothermal": {
+      "asset_id": "control.geothermal",
+      "consumer": 7,
+      "states": [
+        "enabled",
+        "disabled",
+        "pressed"
+      ],
+      "frames": 1,
+      "directions": [
+        "none"
+      ],
+      "tile_variants": 1,
+      "parts": [
+        "body"
+      ],
+      "native_size": [
+        20,
+        20
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "geometry": "per_view",
+      "company_colors": "none",
+      "animation_colors": "forbidden",
+      "kind": "icon",
+      "palette": "dos_8bpp",
+      "transparent_index": 0,
+      "bounds": [
+        0,
+        0,
+        20,
+        20
+      ],
+      "source": {
+        "status": "authored",
+        "path": "logs/proofs/mlm/native-art/ground/control-geothermal-authored.png",
+        "provenance": "first_party_original",
+        "rights": "first_party_original_imagegen",
+        "sha256": "3e172610c442fb8a851878d1274bdecfa20e69a74e2412708bb70f033523ef3e",
+        "manifest": "logs/proofs/mlm/native-art/ground/control-geothermal-source-manifest.json",
+        "source_coverage_complete": true,
+        "runtime_activated": false
+      }
+    }
+  },
+  "native_prefix": [
+    {
+      "asset_id": "terrain.underground",
+      "geometry": {
+        "asset_id": "terrain.underground",
+        "consumer": 2,
+        "states": [
+          "solid",
+          "cut_face",
+          "excavating",
+          "excavated"
+        ],
+        "frames": 3,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 74,
+        "sprite_count": 12
+      }
+    },
+    {
+      "asset_id": "terrain.deep",
+      "geometry": {
+        "asset_id": "terrain.deep",
+        "consumer": 2,
+        "states": [
+          "solid",
+          "cut_face",
+          "excavating",
+          "excavated"
+        ],
+        "frames": 3,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 86,
+        "sprite_count": 12
+      }
+    },
+    {
+      "asset_id": "survey.COAL",
+      "geometry": {
+        "asset_id": "survey.COAL",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 98,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.IORE",
+      "geometry": {
+        "asset_id": "survey.IORE",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 101,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.CORE",
+      "geometry": {
+        "asset_id": "survey.CORE",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 104,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.BAUX",
+      "geometry": {
+        "asset_id": "survey.BAUX",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 107,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.SALT",
+      "geometry": {
+        "asset_id": "survey.SALT",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 110,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.LITH",
+      "geometry": {
+        "asset_id": "survey.LITH",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 113,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.NORE",
+      "geometry": {
+        "asset_id": "survey.NORE",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 116,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.COBT",
+      "geometry": {
+        "asset_id": "survey.COBT",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 119,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.RARE",
+      "geometry": {
+        "asset_id": "survey.RARE",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 122,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "survey.URAN",
+      "geometry": {
+        "asset_id": "survey.URAN",
+        "consumer": 2,
+        "states": [
+          "unknown",
+          "surveyed",
+          "depleted"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 125,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "vehicle.model-00",
+      "geometry": {
+        "asset_id": "vehicle.model-00",
+        "consumer": 4,
+        "states": [
+          "idle",
+          "moving",
+          "working",
+          "blocked",
+          "reversing",
+          "service"
+        ],
+        "frames": 4,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body",
+          "support"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 200,
+        "sprite_count": 384
+      }
+    },
+    {
+      "asset_id": "purchase.model-00",
+      "geometry": {
+        "asset_id": "purchase.model-00",
+        "consumer": 4,
+        "states": [
+          "available",
+          "locked"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 584,
+        "sprite_count": 2
+      }
+    },
+    {
+      "asset_id": "vehicle.model-01",
+      "geometry": {
+        "asset_id": "vehicle.model-01",
+        "consumer": 4,
+        "states": [
+          "idle",
+          "moving",
+          "working",
+          "blocked",
+          "reversing",
+          "service"
+        ],
+        "frames": 4,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body",
+          "support"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 586,
+        "sprite_count": 384
+      }
+    },
+    {
+      "asset_id": "purchase.model-01",
+      "geometry": {
+        "asset_id": "purchase.model-01",
+        "consumer": 4,
+        "states": [
+          "available",
+          "locked"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 970,
+        "sprite_count": 2
+      }
+    },
+    {
+      "asset_id": "vehicle.model-02",
+      "geometry": {
+        "asset_id": "vehicle.model-02",
+        "consumer": 5,
+        "states": [
+          "empty",
+          "partial",
+          "full",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 972,
+        "sprite_count": 80
+      }
+    },
+    {
+      "asset_id": "purchase.model-02",
+      "geometry": {
+        "asset_id": "purchase.model-02",
+        "consumer": 5,
+        "states": [
+          "available",
+          "locked"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1052,
+        "sprite_count": 2
+      }
+    },
+    {
+      "asset_id": "vehicle.model-03",
+      "geometry": {
+        "asset_id": "vehicle.model-03",
+        "consumer": 5,
+        "states": [
+          "empty",
+          "partial",
+          "full",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1054,
+        "sprite_count": 80
+      }
+    },
+    {
+      "asset_id": "purchase.model-03",
+      "geometry": {
+        "asset_id": "purchase.model-03",
+        "consumer": 5,
+        "states": [
+          "available",
+          "locked"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1134,
+        "sprite_count": 2
+      }
+    },
+    {
+      "asset_id": "vehicle.model-04",
+      "geometry": {
+        "asset_id": "vehicle.model-04",
+        "consumer": 5,
+        "states": [
+          "idle",
+          "moving",
+          "working",
+          "blocked",
+          "service"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1136,
+        "sprite_count": 80
+      }
+    },
+    {
+      "asset_id": "purchase.model-04",
+      "geometry": {
+        "asset_id": "purchase.model-04",
+        "consumer": 5,
+        "states": [
+          "available",
+          "locked"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1216,
+        "sprite_count": 2
+      }
+    },
+    {
+      "asset_id": "vehicle.model-14",
+      "geometry": {
+        "asset_id": "vehicle.model-14",
+        "consumer": 9,
+        "states": [
+          "ready",
+          "preparing",
+          "ascent",
+          "orbit",
+          "recovery",
+          "blocked",
+          "service"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "explicit_mask",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_launch",
+        "native_offset": 7679,
+        "sprite_count": 112
+      }
+    },
+    {
+      "asset_id": "vehicle.model-15",
+      "geometry": {
+        "asset_id": "vehicle.model-15",
+        "consumer": 10,
+        "states": [
+          "free",
+          "rendezvous",
+          "attached",
+          "mining",
+          "full",
+          "return",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 3599,
+        "sprite_count": 128
+      }
+    },
+    {
+      "asset_id": "vehicle.model-16",
+      "geometry": {
+        "asset_id": "vehicle.model-16",
+        "consumer": 11,
+        "states": [
+          "idle",
+          "moving",
+          "working",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5295,
+        "sprite_count": 80
+      }
+    },
+    {
+      "asset_id": "vehicle.model-17",
+      "geometry": {
+        "asset_id": "vehicle.model-17",
+        "consumer": 11,
+        "states": [
+          "empty",
+          "partial",
+          "full",
+          "moving-empty",
+          "moving-partial",
+          "moving-full",
+          "service",
+          "blocked",
+          "blocked-partial",
+          "blocked-full"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5375,
+        "sprite_count": 160
+      }
+    },
+    {
+      "asset_id": "vehicle.model-18",
+      "geometry": {
+        "asset_id": "vehicle.model-18",
+        "consumer": 9,
+        "states": [
+          "packed",
+          "descending",
+          "recovered",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 3951,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "facility.portal.sealed",
+      "geometry": {
+        "asset_id": "facility.portal.sealed",
+        "consumer": 3,
+        "states": [
+          "sealed",
+          "commissioning",
+          "connected"
+        ],
+        "frames": 1,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 2,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          1
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1218,
+        "sprite_count": 48
+      }
+    },
+    {
+      "asset_id": "facility.portal.deep-rail",
+      "geometry": {
+        "asset_id": "facility.portal.deep-rail",
+        "consumer": 3,
+        "states": [
+          "sealed",
+          "commissioning",
+          "connected"
+        ],
+        "frames": 1,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 2,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          1
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1266,
+        "sprite_count": 48
+      }
+    },
+    {
+      "asset_id": "facility.exchange",
+      "geometry": {
+        "asset_id": "facility.exchange",
+        "consumer": 5,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1314,
+        "sprite_count": 128
+      }
+    },
+    {
+      "asset_id": "facility.rail-service",
+      "geometry": {
+        "asset_id": "facility.rail-service",
+        "consumer": 7,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1442,
+        "sprite_count": 128
+      }
+    },
+    {
+      "asset_id": "facility.road-service",
+      "geometry": {
+        "asset_id": "facility.road-service",
+        "consumer": 7,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1570,
+        "sprite_count": 128
+      }
+    },
+    {
+      "asset_id": "facility.earth-receiver",
+      "geometry": {
+        "asset_id": "facility.earth-receiver",
+        "consumer": 6,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 6,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          3
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1698,
+        "sprite_count": 192
+      }
+    },
+    {
+      "asset_id": "facility.rock-receiver",
+      "geometry": {
+        "asset_id": "facility.rock-receiver",
+        "consumer": 6,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 16,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          4,
+          4
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 1890,
+        "sprite_count": 512
+      }
+    },
+    {
+      "asset_id": "facility.vent-collector",
+      "geometry": {
+        "asset_id": "facility.vent-collector",
+        "consumer": 18,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 9,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          3,
+          3
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 2436,
+        "sprite_count": 1152
+      }
+    },
+    {
+      "asset_id": "facility.launch-center",
+      "geometry": {
+        "asset_id": "facility.launch-center",
+        "consumer": 9,
+        "states": [
+          "construction",
+          "ready",
+          "working",
+          "blocked"
+        ],
+        "frames": 4,
+        "directions": [
+          "NE",
+          "SE",
+          "SW",
+          "NW"
+        ],
+        "tile_variants": 12,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          4,
+          3
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_launch",
+        "native_offset": 6143,
+        "sprite_count": 1536
+      }
+    },
+    {
+      "asset_id": "module.nucleus",
+      "geometry": {
+        "asset_id": "module.nucleus",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 9,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          3,
+          3
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5535,
+        "sprite_count": 144
+      }
+    },
+    {
+      "asset_id": "module.dock",
+      "geometry": {
+        "asset_id": "module.dock",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 4,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5679,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "module.storage",
+      "geometry": {
+        "asset_id": "module.storage",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 4,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5743,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "module.workshop",
+      "geometry": {
+        "asset_id": "module.workshop",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 4,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5935,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "module.processor",
+      "geometry": {
+        "asset_id": "module.processor",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 9,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          3,
+          3
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5999,
+        "sprite_count": 144
+      }
+    },
+    {
+      "asset_id": "module.power",
+      "geometry": {
+        "asset_id": "module.power",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 4,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5807,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "module.fuel-store",
+      "geometry": {
+        "asset_id": "module.fuel-store",
+        "consumer": 11,
+        "states": [
+          "blueprint",
+          "partial",
+          "complete",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 4,
+        "parts": [
+          "back",
+          "front"
+        ],
+        "native_size": [
+          64,
+          64
+        ],
+        "anchor": [
+          -31,
+          -33
+        ],
+        "footprint": [
+          2,
+          2
+        ],
+        "geometry": "per_tile",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5871,
+        "sprite_count": 64
+      }
+    },
+    {
+      "asset_id": "asteroid.nickel",
+      "geometry": {
+        "asset_id": "asteroid.nickel",
+        "consumer": 10,
+        "states": [
+          "free",
+          "attached",
+          "mining",
+          "depleted"
+        ],
+        "frames": 4,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 3,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          96,
+          80
+        ],
+        "anchor": [
+          -48,
+          -48
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 4015,
+        "sprite_count": 384
+      }
+    },
+    {
+      "asset_id": "asteroid.ice",
+      "geometry": {
+        "asset_id": "asteroid.ice",
+        "consumer": 10,
+        "states": [
+          "free",
+          "attached",
+          "mining",
+          "depleted"
+        ],
+        "frames": 4,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 3,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          96,
+          80
+        ],
+        "anchor": [
+          -48,
+          -48
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 4399,
+        "sprite_count": 384
+      }
+    },
+    {
+      "asset_id": "asteroid.rare-earth",
+      "geometry": {
+        "asset_id": "asteroid.rare-earth",
+        "consumer": 10,
+        "states": [
+          "free",
+          "attached",
+          "mining",
+          "depleted"
+        ],
+        "frames": 4,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 3,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          96,
+          80
+        ],
+        "anchor": [
+          -48,
+          -48
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 4783,
+        "sprite_count": 384
+      }
+    },
+    {
+      "asset_id": "control.survey",
+      "geometry": {
+        "asset_id": "control.survey",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 128,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.excavation",
+      "geometry": {
+        "asset_id": "control.excavation",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 131,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.tbm-area",
+      "geometry": {
+        "asset_id": "control.tbm-area",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 134,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.tbm-turn45",
+      "geometry": {
+        "asset_id": "control.tbm-turn45",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 137,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.exchange",
+      "geometry": {
+        "asset_id": "control.exchange",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 140,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.deep-lock",
+      "geometry": {
+        "asset_id": "control.deep-lock",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 158,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "control.future-lock",
+      "geometry": {
+        "asset_id": "control.future-lock",
+        "consumer": 7,
+        "states": [
+          "enabled",
+          "disabled",
+          "pressed"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 161,
+        "sprite_count": 3
+      }
+    },
+    {
+      "asset_id": "cargo.ERTH",
+      "geometry": {
+        "asset_id": "cargo.ERTH",
+        "consumer": 1,
+        "states": [
+          "normal"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 2402,
+        "sprite_count": 1
+      }
+    },
+    {
+      "asset_id": "cargo.ROCK",
+      "geometry": {
+        "asset_id": "cargo.ROCK",
+        "consumer": 1,
+        "states": [
+          "normal"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          20,
+          20
+        ],
+        "anchor": [
+          0,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 2403,
+        "sprite_count": 1
+      }
+    },
+    {
+      "asset_id": "terrain.edges.underground",
+      "geometry": {
+        "asset_id": "terrain.edges.underground",
+        "consumer": 2,
+        "states": [
+          "mask_00",
+          "mask_01",
+          "mask_02",
+          "mask_03",
+          "mask_04",
+          "mask_05",
+          "mask_06",
+          "mask_07",
+          "mask_08",
+          "mask_09",
+          "mask_0a",
+          "mask_0b",
+          "mask_0c",
+          "mask_0d",
+          "mask_0e",
+          "mask_0f"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 168,
+        "sprite_count": 16
+      }
+    },
+    {
+      "asset_id": "terrain.edges.deep",
+      "geometry": {
+        "asset_id": "terrain.edges.deep",
+        "consumer": 2,
+        "states": [
+          "mask_00",
+          "mask_01",
+          "mask_02",
+          "mask_03",
+          "mask_04",
+          "mask_05",
+          "mask_06",
+          "mask_07",
+          "mask_08",
+          "mask_09",
+          "mask_0a",
+          "mask_0b",
+          "mask_0c",
+          "mask_0d",
+          "mask_0e",
+          "mask_0f"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 184,
+        "sprite_count": 16
+      }
+    },
+    {
+      "asset_id": "terrain.hardness",
+      "geometry": {
+        "asset_id": "terrain.hardness",
+        "consumer": 2,
+        "states": [
+          "soft_solid",
+          "soft_cut_face",
+          "soft_excavating",
+          "soft_excavated",
+          "mixed_solid",
+          "mixed_cut_face",
+          "mixed_excavating",
+          "mixed_excavated",
+          "hard_solid",
+          "hard_cut_face",
+          "hard_excavating",
+          "hard_excavated",
+          "basalt_solid",
+          "basalt_cut_face",
+          "basalt_excavating",
+          "basalt_excavated"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 2404,
+        "sprite_count": 16
+      }
+    },
+    {
+      "asset_id": "terrain.hardness-edges",
+      "geometry": {
+        "asset_id": "terrain.hardness-edges",
+        "consumer": 2,
+        "states": [
+          "soft_upper_left",
+          "soft_upper_right",
+          "soft_lower_right",
+          "soft_lower_left",
+          "mixed_upper_left",
+          "mixed_upper_right",
+          "mixed_lower_right",
+          "mixed_lower_left",
+          "hard_upper_left",
+          "hard_upper_right",
+          "hard_lower_right",
+          "hard_lower_left",
+          "basalt_upper_left",
+          "basalt_upper_right",
+          "basalt_lower_right",
+          "basalt_lower_left"
+        ],
+        "frames": 1,
+        "directions": [
+          "none"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          31
+        ],
+        "anchor": [
+          -31,
+          0
+        ],
+        "footprint": [
+          1,
+          1
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_action5_1c",
+        "native_offset": 2420,
+        "sprite_count": 16
+      }
+    },
+    {
+      "asset_id": "vehicle.model-19",
+      "geometry": {
+        "asset_id": "vehicle.model-19",
+        "consumer": 10,
+        "states": [
+          "free",
+          "approach",
+          "scanning",
+          "return",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 3727,
+        "sprite_count": 96
+      }
+    },
+    {
+      "asset_id": "vehicle.model-20",
+      "geometry": {
+        "asset_id": "vehicle.model-20",
+        "consumer": 10,
+        "states": [
+          "empty",
+          "approach",
+          "steel",
+          "goods",
+          "constructing",
+          "return",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_space",
+        "native_offset": 3823,
+        "sprite_count": 128
+      }
+    },
+    {
+      "asset_id": "vehicle.model-21",
+      "geometry": {
+        "asset_id": "vehicle.model-21",
+        "consumer": 11,
+        "states": [
+          "free",
+          "rendezvous",
+          "attached",
+          "mining",
+          "full",
+          "return",
+          "service",
+          "blocked"
+        ],
+        "frames": 2,
+        "directions": [
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SW",
+          "W",
+          "NW"
+        ],
+        "tile_variants": 1,
+        "parts": [
+          "body"
+        ],
+        "native_size": [
+          64,
+          48
+        ],
+        "anchor": [
+          -32,
+          -32
+        ],
+        "footprint": [
+          0,
+          0
+        ],
+        "geometry": "per_view",
+        "company_colors": "none",
+        "animation_colors": "forbidden"
+      },
+      "packed": {
+        "route": "native_baseset_orbital",
+        "native_offset": 5167,
+        "sprite_count": 128
+      }
+    }
+  ],
+  "protected_prefix_files": [
+    {
+      "path": "media/baseset/openttd/launch_final.nfo",
+      "sha256": "9a3ba046729bec50887601a6680382fcee43b1b8bf75b3d839a75bf167463fc0"
+    },
+    {
+      "path": "media/baseset/openttd/launch_final.png",
+      "sha256": "11a37a8dd4d144cad8029257c15d81d73502bf426ea9c9b751689e3fbb55a1da"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers.nfo",
+      "sha256": "d63a614b9c95412d218be6da253efe7dfbd35940f1e197d8ed069eb3bd38f5db"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers.png",
+      "sha256": "d3a93082ea33dda5759319a3833f86deca1fcf9119fcf2e6543d424f1420a4f1"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.nfo",
+      "sha256": "47022818191e223e042c7893ca90cf17894dbb84b04ed2261c5d01194e554057"
+    },
+    {
+      "path": "media/baseset/openttd/map_layers_m1.png",
+      "sha256": "5bb1311f5c4940eb4718aebcc496122bf3251aba38d46b1f4796a2a60a00c974"
+    },
+    {
+      "path": "media/baseset/openttd/orbital_final.nfo",
+      "sha256": "dd2a47b8e220ec09efffe60b24445d099cb7138ef25b1079e6fda5f89bf50876"
+    },
+    {
+      "path": "media/baseset/openttd/orbital_final.png",
+      "sha256": "d30c29e1b783c1753e35d4f2ac74a6928ace0f7b1b269f001219f79203cd6415"
+    },
+    {
+      "path": "media/baseset/openttd/space_final.nfo",
+      "sha256": "2b54ca81a26eaccfb2ad4f4460f1624d58a45dd78a5d72499e5d59b006885284"
+    },
+    {
+      "path": "media/baseset/openttd/space_final.png",
+      "sha256": "9cc86a28374e0cdfcb1d32cb758956bd53e05dc44cec4d7b407bc6b208f7ef96"
+    },
+    {
+      "path": "src/table/launch_fleet_sprite_assets.h",
+      "sha256": "caaa450db708a34c84f1e31c0293d5900b5ab5895efd5825a8feacdda52b3b56"
+    },
+    {
+      "path": "src/table/multilayer_sprite_assets.h",
+      "sha256": "fa96e23b1facf8221817bf1ee7f2ae58fa51ec2664ef13fba225132a68613a71"
+    },
+    {
+      "path": "src/table/orbital_sprite_assets.h",
+      "sha256": "c57afb9a939deafbc54230c176f9b5a91e65e78028bcacca1fc8d2d30e964cad"
+    },
+    {
+      "path": "src/table/space_sprite_assets.h",
+      "sha256": "aaf332cf387c23bb74ac9f19a6373b2fde7d6ae95391ac4468d93e4e005a08a9"
+    }
+  ],
+  "source_pose_contracts": {
+    "mine.COAL": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/coal-mine-source-manifest.json",
+        "sha256": "1080fb8601352ba2b3c0e341a11719d3e86c9a082b1cca25435adfc97d48e91b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/coal-mine-source-authored.png",
+        "sha256": "eefb74a5a04d21da94634d8db946a677fb1f35a7a5ce922cecc6feae47346624"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "341037d5ac4b73c835b04ec5eda4c5aa4b89f2ebd6af9d898a88a939144d0e57"
+    },
+    "mine.IORE": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/iron-mine-source-manifest.json",
+        "sha256": "3a7fa5fe153064c4acb0769fde2e4da606fc9548ca2f9637ac3f611201d10c9b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/iron-mine-source-authored.png",
+        "sha256": "97aa3ce61539dd73f2125e6214b96b7318731a7e1f6928de7e33343a49c19e02"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "0ad33de0a8045e6d6ab82610874355ecc8f93b56fb9cf65ae8faa243f61434a5"
+    },
+    "mine.CORE": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/copper-mine-source-manifest.json",
+        "sha256": "81a8a60aa0bb36a68d5ed82e4b91d8f357803593069016a959a4e7eae51cbeda"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/copper-mine-source-authored.png",
+        "sha256": "6323e39899c7f5c3efc343e04648cdfd5f47f1dd1705a7a2a0c30ec6da636803"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "18c829a423e2538a7f8cb2d7c7f5b8be95d3f0a717babea489f4d209866f67f1"
+    },
+    "mine.SALT": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/salt-mine-source-manifest.json",
+        "sha256": "683688a500c4cde09b2fad2b87c2ad53da933b3e7afd966c2d7d14e2581e5515"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/salt-mine-source-authored.png",
+        "sha256": "b590fa3d816d73211c9093b1a9082594c88935adb6f9fc92e1de8123fc46ba4c"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "93c0a637e2fa4c330fa5fd85942d3f56863b3d23812f0607e4fcfb0801287ec9"
+    },
+    "mine.LITH": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/lithium-mine-source-manifest.json",
+        "sha256": "ed82bde19d0447a9c991fbeba2e65ffc3a17d94b141d920339526a6e2276e578"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/lithium-mine-source-authored.png",
+        "sha256": "75cf9be0e1e83f907f01edd8d0dfbe8609c19d6413a45960a5170ae6a605f682"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "780a8d1052526e9824963752de093ce1614b16e6a51be4c2fb1229aec94f03d3"
+    },
+    "mine.COBT": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/cobalt-mine-source-manifest.json",
+        "sha256": "fdb680665364a9da956b9886e871f57e9fc9d1533cc1cb962ed5b20acfad2f7b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/cobalt-mine-source-authored.png",
+        "sha256": "345d42ed75d595ecf1da7b779c353a62298c8c8c0a0df7206449b16417d72ad2"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "0e203dfdee0e06e23649ce4766490c65aa1e2c672854aa41cd42686615812a57"
+    },
+    "mine.RARE": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/rare-earth-mine-source-manifest.json",
+        "sha256": "d4465291591c24c204c9a6c32683d08b00217bf06e4d6cd6af85009da86ac968"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/rare-earth-mine-source-authored.png",
+        "sha256": "c47eb65630413cb15baaf7b65546989b8ca084a0cb55f419d28125bac3a21c0d"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "5bfc31b48581886419f6a7bf5a8faeecf621c9a83d5fb9de6cebc23c633b5e32"
+    },
+    "facility.metal-refinery": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/metal-refinery-source-manifest.json",
+        "sha256": "6243b7d5723ba638b22862664e2b291c6a8e57ab8d30bcde2d14d5415ac7351f"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/metal-refinery-source-authored.png",
+        "sha256": "14ceb33f39144943c7153f4559eb4ab0b5edefd54bb1f2805eee4f0dfa6aa36c"
+      },
+      "pose_count": 512,
+      "pose_contract_sha256": "acbd124018e478a47a08def7edfb6c6608147ab512995440ded3e30267147435"
+    },
+    "facility.chemical-works": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/chemical-works-source-manifest.json",
+        "sha256": "be791f5c16352ea68c53553d12cf22d416eedbffb8e2fc7a15ef09a7d2e886be"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/chemical-works-source-authored.png",
+        "sha256": "932005b05bf184611e8f3a845397a5f5e80d7539e9aa9be1c16a1ef9637cc193"
+      },
+      "pose_count": 512,
+      "pose_contract_sha256": "32cbba6d110f55fc1eebf20b55d04ea2c93c881a407d902873ef8a2eba68f334"
+    },
+    "facility.battery-works": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/battery-works-source-manifest.json",
+        "sha256": "ee5d252d8c9ac485b4c3548c95c9c04e6ef8eb45b997b29c3c39bd37fa23cd7d"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/battery-works-source-authored.png",
+        "sha256": "abc45b977dfb94ff7f0981a6985eb02c974a4b5f40b5c871f1cc013f141c6b64"
+      },
+      "pose_count": 512,
+      "pose_contract_sha256": "3773190d3ccb024d18844b4b147355edce50cc6cc02d3b8e53eda3e3e79c23d1"
+    },
+    "facility.electronics-works": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/electronics-works-source-manifest.json",
+        "sha256": "1bd22c3b60034bb9584f9e2f830f94bee9ae9f2979391e14250da4f3f567c1b8"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/electronics-works-source-authored.png",
+        "sha256": "5daac79feae055e67b487dc8ed731174217deea8368ba142954b47c459bb0b27"
+      },
+      "pose_count": 512,
+      "pose_contract_sha256": "ba267113ba4d4052676c5c0d6183e393433a6ab87730e59abd297913a42051bd"
+    },
+    "vehicle.model-05": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-05-source-manifest.json",
+        "sha256": "f2e432cea279af303951f90cdd91a16a96444a7ece468241f1702886f8716920"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-05-authored.png",
+        "sha256": "5b5a69c91b53df18c6995723a6c1bfa79a1b5a10d8c3d67fa75214cf40ff9671"
+      },
+      "pose_count": 1360,
+      "pose_contract_sha256": "3d12edf1729053995a899d49da34a5e5a00e2aa551c8a079d20026e597409c1e"
+    },
+    "purchase.model-05": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-05-source-manifest.json",
+        "sha256": "f2e432cea279af303951f90cdd91a16a96444a7ece468241f1702886f8716920"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/purchase-model-05-authored.png",
+        "sha256": "2940cfc7b62641539e964435b043102840462883cbef9ed1416c56c9037a67da"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "f484452956b28f12b25d86e7da0fc7f6f78850e75ebd813841d5997ac2de8304"
+    },
+    "vehicle.model-06": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-06-source-manifest.json",
+        "sha256": "b13d69a6b93d8e6abbd8fcd9943d94ec09d6c8db475bb4c3cc844b779459836d"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-06-authored.png",
+        "sha256": "c668458428f86ed0821686dd457815d79ebde5879cc1a3b92bf5840f1f6941ee"
+      },
+      "pose_count": 80,
+      "pose_contract_sha256": "4bf0b375bfc3456f894b66a0c282e8cb500aedc46eeb067d22c18469beaf1b89"
+    },
+    "purchase.model-06": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-06-source-manifest.json",
+        "sha256": "b13d69a6b93d8e6abbd8fcd9943d94ec09d6c8db475bb4c3cc844b779459836d"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/purchase-model-06-authored.png",
+        "sha256": "ff0dc580ee2cb9b0d5ee0e45f744ed0995f7ccf3e9741bc9cdb53d584850ad25"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "c731f3150cccec3c5d1b869fc71b8dde064f9360f81d619ce930943dc60984a6"
+    },
+    "vehicle.model-07": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-07-source-manifest.json",
+        "sha256": "c5b20a67a792df11c562de0d8ab124680ff2a2bf04f0379fda8fdcfb5d38eb1e"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-07-authored.png",
+        "sha256": "c6272d6a4fd7534097d91dcf65956230f51150887843e3a8bb6a2926415c2fa7"
+      },
+      "pose_count": 800,
+      "pose_contract_sha256": "53b4b6ab230d95be81670d43eea1b91eeee6ef0b637d815e1b02febdd6a29ea6"
+    },
+    "purchase.model-07": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-07-source-manifest.json",
+        "sha256": "c5b20a67a792df11c562de0d8ab124680ff2a2bf04f0379fda8fdcfb5d38eb1e"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/purchase-model-07-authored.png",
+        "sha256": "a4cc1afb8238a6dc0947b9fc9e9bd019d80b16728cf6ab1f3a266d04219ac366"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "7f2f5886ebc1dad40a30ad9249086647cedc366b4073ef7487687d9c08c010ab"
+    },
+    "vehicle.model-08": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-08-source-manifest.json",
+        "sha256": "5ed38690fd2eec0ac1fc8ece10241dfa62e933d738e6f09947cd3f65b20ddecb"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-08-authored.png",
+        "sha256": "767787d2bd1f650a9abc78e66abe914cf0363258b3ea8cef005a1fcedb1eb16e"
+      },
+      "pose_count": 80,
+      "pose_contract_sha256": "6a99b8ac2bc920f0221c2729064a11279e01bbdae279026e85df7f128a2950a5"
+    },
+    "purchase.model-08": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vehicle-model-08-source-manifest.json",
+        "sha256": "5ed38690fd2eec0ac1fc8ece10241dfa62e933d738e6f09947cd3f65b20ddecb"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/purchase-model-08-authored.png",
+        "sha256": "e93a7472f18fb45d71467ccbd990494560e432b105bcb45770cd934e504abeb1"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "4430b8b1de8c84bd129cd6f16f0b91e29873c55ee515a2c068cbd6995ca4a63a"
+    },
+    "vehicle.model-09": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+        "sha256": "7d7b059945660a153e76ba88b2f25bdc8f05c6346963addf0fa5752b897d9400"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/mole-authored.png",
+        "sha256": "634a9503dd676632b52d0d3df9d806c651455b7d87840692fc1afe2c2770509f"
+      },
+      "pose_count": 144,
+      "pose_contract_sha256": "70dd9dd88f738852a95d879f7e4fce85ae07089a03046769a73fc63b24e8f1cb"
+    },
+    "purchase.model-09": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+        "sha256": "7d7b059945660a153e76ba88b2f25bdc8f05c6346963addf0fa5752b897d9400"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/mole-purchase-authored.png",
+        "sha256": "f83802ea356328cea8b460ef5d5437c4235fd73e5a5f287143c1f75f92f3df88"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "40b197459d2187d6f31b06742e9170062c4685af87c63888895908a389599cee"
+    },
+    "vehicle.model-10": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+        "sha256": "24c2fe024ace696d97d9dec434851e1e1183bb8da38418ab79769daee76f4d0f"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/crate-authored.png",
+        "sha256": "415c1a97d4405076d77bd6db7c6ba9654eef9ae0196a61c70fe62fb4890a8550"
+      },
+      "pose_count": 144,
+      "pose_contract_sha256": "da0050644554ce4395b4d76a8cf67cf63758c895eb32092b5e644fe05998efd3"
+    },
+    "purchase.model-10": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+        "sha256": "24c2fe024ace696d97d9dec434851e1e1183bb8da38418ab79769daee76f4d0f"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/crate-purchase-authored.png",
+        "sha256": "9d2eab5fda39dc40fcd3b9347a92ba970668a1e7366bc76bf77e77226d69f508"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "2040502b60215a62ee036e1041d519ae3c30f0b83faf58bb0c9b007345723601"
+    },
+    "vehicle.model-11": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/cistern-source-manifest.json",
+        "sha256": "ef21e40ca2f663cc1a36c2e3cbcf371b5b8d69d65e02b603e3c493cbfd7ee19b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/cistern-authored.png",
+        "sha256": "21e8bda7b67252d1746d02fea4e7a403edce2af95264930a5efabcdb8b1e9af1"
+      },
+      "pose_count": 144,
+      "pose_contract_sha256": "2e27db665407b81369f3848c09206e56b586ff3a4368c8e6f850246b26371949"
+    },
+    "purchase.model-11": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/cistern-source-manifest.json",
+        "sha256": "ef21e40ca2f663cc1a36c2e3cbcf371b5b8d69d65e02b603e3c493cbfd7ee19b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/cistern-purchase-authored.png",
+        "sha256": "02b237750884bc07c918898abebc59823c418c6b1bac7af288667c3899de2725"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "5315b4c7e8e8c2c63611b82391189ed787f92b0d1b93037a47f111d0fabccd46"
+    },
+    "vehicle.model-12": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/shield-source-manifest.json",
+        "sha256": "5cb7d3a64f93e53bd5be39cbd7c44d1e8cfc823a38a76545c868f9d4ed4c387f"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/shield-authored.png",
+        "sha256": "fdb99ba79edc2fd9241c6af06887571036b93cacc5059b3b662b887db9262d9c"
+      },
+      "pose_count": 144,
+      "pose_contract_sha256": "493e744d484db052d53c73ea321cf47fb9379a94e003d1dd27f4282925aae6b2"
+    },
+    "purchase.model-12": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/shield-source-manifest.json",
+        "sha256": "5cb7d3a64f93e53bd5be39cbd7c44d1e8cfc823a38a76545c868f9d4ed4c387f"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/shield-purchase-authored.png",
+        "sha256": "93d9fe30536ecbc48e178b6aed40ad939ba765636332a4e4223d31da90c2b581"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "c933c23b76dbc85ae7526ec2bbfe290ef8543b4f4eefa6b98ea267104917ad13"
+    },
+    "vehicle.model-13": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/forge-source-manifest.json",
+        "sha256": "c10252b70b701bbc038c9c5f3a9ced7fafc7705ec8d1b924b42fd3fec06396f2"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/forge-authored.png",
+        "sha256": "926d6ef10013f99eaede950028db55223788034ede03b616e8e61241737fa088"
+      },
+      "pose_count": 144,
+      "pose_contract_sha256": "3c171cbb09bb3cf12e3a76bda35b76e21e008a99daf182392202e9b9cb8cd61c"
+    },
+    "purchase.model-13": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/forge-source-manifest.json",
+        "sha256": "c10252b70b701bbc038c9c5f3a9ced7fafc7705ec8d1b924b42fd3fec06396f2"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/forge-purchase-authored.png",
+        "sha256": "473c33f21cd2c186fa9e9d68e2c33a119d1c47f502623aee7bfb83ab0075693b"
+      },
+      "pose_count": 2,
+      "pose_contract_sha256": "d3045975e1769041e1193b5dc179b412f4f8c1eaaabf046d8d2c3ab1463b7672"
+    },
+    "facility.rail-station": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/station-source-manifest.json",
+        "sha256": "616084bde1baa13560e96f48e7b14020e77604e8a5e6825ce306f6be160d33b1"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/station-source-authored.png",
+        "sha256": "f8ae1e4881306d796964faf45be9450126ecf8418e2b74699aa2a0efd01337f6"
+      },
+      "pose_count": 512,
+      "pose_contract_sha256": "fef4896be41fbe6a658a417d75a608725bbbdc2efce1dcec47a98b24e85d23e0"
+    },
+    "facility.road-terminal": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/terminal-source-manifest.json",
+        "sha256": "06808f9f4c99c7f137e498b5e5b567dde6a463c4a492431187074faf971842f8"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/terminal-source-authored.png",
+        "sha256": "22ba5c2fa6a31cdabd1403b8cf4f03590ca93b1fd67f3676ae2ee18cf5350fb0"
+      },
+      "pose_count": 288,
+      "pose_contract_sha256": "2410d1592217c01ba3b8c89af7f55cacac08408ac4c9ba51f2a6a86044c7d834"
+    },
+    "facility.tube-terminal": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-terminal-atlas-manifest.json",
+        "sha256": "5dde7c8f84319130fceda9522de7f54a9f51d447b33e52c51eec0c438881dd30"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-terminal-authored.png",
+        "sha256": "e721dc881ecd240face91bbfb2de137815b7cd8804aff5baab9b16f1629a4d15"
+      },
+      "pose_count": 256,
+      "pose_contract_sha256": "18f97eac2a5dfa78fe64672f2fcc936e895d3b1ed1aa7654e88405fd8bc610f6"
+    },
+    "facility.tube-service": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-service-atlas-manifest.json",
+        "sha256": "189d7c3d79d125d5e65d52bd2f0d00a79d63680e8652a83f21b5706e5028a04c"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-service-authored.png",
+        "sha256": "105466e8f5d9a349b60412262bfc00c4e39d6b2cf0622f8bea140652e50fa1a0"
+      },
+      "pose_count": 128,
+      "pose_contract_sha256": "1f46b16b8608e4a48b25d2af7a7f364dc2cbc8524ecfc508f58fa70136956041"
+    },
+    "facility.tube-interchange": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-interchange-atlas-manifest.json",
+        "sha256": "c3c3d2f12cd67be783949d93023a23ab6e1c93a674dd5ca35e792e0180a2a2b9"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-interchange-authored.png",
+        "sha256": "e721dc881ecd240face91bbfb2de137815b7cd8804aff5baab9b16f1629a4d15"
+      },
+      "pose_count": 256,
+      "pose_contract_sha256": "18f97eac2a5dfa78fe64672f2fcc936e895d3b1ed1aa7654e88405fd8bc610f6"
+    },
+    "facility.vent-powerhouse": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/venttap-source-manifest.json",
+        "sha256": "3c6c3d35ad98cae13d46edcd519f0dcafd190c08ff47a5113f836e4a6952a74c"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/venttap-authored.png",
+        "sha256": "adc560b8c17b55b97cfb91595b3c2ac8c71cc2c64a765b6a4aa3b10e2cc546ec"
+      },
+      "pose_count": 2560,
+      "pose_contract_sha256": "1c2c7babd16120959d6d7193d0c1b8500836b6b1e6660ce87ddc32aef275491c"
+    },
+    "facility.magma-powerhouse": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/magmaloop-source-manifest.json",
+        "sha256": "9a1b804a57007e2330bdc521cb4aec5aedb370eb6ba869d3fca116eef4dc4928"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/magmaloop-authored.png",
+        "sha256": "0a2c2b3db02a158a902bcef4e90a3eb54852a55a1c71150465d27aeb32d86283"
+      },
+      "pose_count": 2560,
+      "pose_contract_sha256": "62a0055e8e1eae74aae41b799acb0e6370e7fc70e1ff4b5105ec769beb610c35"
+    },
+    "facility.utility-riser": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-riser-source-manifest.json",
+        "sha256": "0e7577428fa19231dff28416b55cf1cff2437393e1575f3e881c604907a4d22b"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-riser-authored.png",
+        "sha256": "25b8146abb0649587d190f49d7cdce6ca04851161f0d95db28e50a616a322778"
+      },
+      "pose_count": 128,
+      "pose_contract_sha256": "9d6c614460a0b2c29c18340731823f3cd5c6bb537c5de82a4de37342684f9d22"
+    },
+    "geothermal.vent": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/vent-source-manifest.json",
+        "sha256": "3df020772907490eb2893a268158ecb3ed5f578c46798f4946b72974920b94e1"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/vent-authored.png",
+        "sha256": "2a7d8300b17570c382de208c296e1e5f3ec2bfa49fb8e16fad973a30faa091e1"
+      },
+      "pose_count": 12,
+      "pose_contract_sha256": "39fbc1470941ea55b72d417a707374e44c915570cc9888f6116f52e193092086"
+    },
+    "geothermal.conduit": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-conduit-source-manifest.json",
+        "sha256": "bb76d63d3f2554bab9f9c1da2745ff6fa5abcef603cb533b23e57011dfa1c38c"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-conduit-authored.png",
+        "sha256": "595946cd1a98d27037a1918b6383558bb7c7cad25b06be2134ebe859ad50c978"
+      },
+      "pose_count": 24,
+      "pose_contract_sha256": "1d7376cb1c84b37fa1749c7b255886fb598145d8d53593dd27e1409faf9ee352"
+    },
+    "tube.straight": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+        "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+        "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+      },
+      "pose_count": 12,
+      "pose_contract_sha256": "72d3522e521e142fe63399de1cdb7caaaf4455963f5900c78873d6f21eec2d50"
+    },
+    "tube.bend45": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-curves-atlas-manifest.json",
+        "sha256": "9094ec701534f3d534b36d02a26158db0bd7215a30bb78455f0cc3f20f495fcc"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-curves-authored.png",
+        "sha256": "6d26a47d8020e9a86ef091c02c1c9325528c273088322813153a211df10182d8"
+      },
+      "pose_count": 24,
+      "pose_contract_sha256": "76c47b1baee69906709c522f54b057369a1c49b5a5fcc0108fdfba4549564e0f"
+    },
+    "tube.junction": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-junction-atlas-manifest.json",
+        "sha256": "086a78486ca0d39eb2788255cc9cda692b75e75fc99105a6628688cc391c642d"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-junction-authored.png",
+        "sha256": "1d1549ba54880b3b1c564b2b0b921e1469dae7962bc8431d211af82f5ef7ac62"
+      },
+      "pose_count": 324,
+      "pose_contract_sha256": "5081fe311e2511492828ac1278525147ac36d2f1453aa813b158be9631d0a39c"
+    },
+    "tube.end": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-end-atlas-manifest.json",
+        "sha256": "26b2e49976e83a0b87dd6925a39dca7bc6f99d86e9d38fa987f9c58c4f4373bd"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-end-authored.png",
+        "sha256": "a41671f46355e053a1b6c01ed723a42e7862af51f983ec37285501991c2d7392"
+      },
+      "pose_count": 24,
+      "pose_contract_sha256": "c63e4e6a975fc76aa6b35e64982f59bf54ae0a5dce3cac1ff6b467a813c5f486"
+    },
+    "tube.crossing": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-crossing-atlas-manifest.json",
+        "sha256": "c23c3d041b4ea5cb4131df793ee5a9f8e190baeecd8c6461dfad52942a6b53db"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-crossing-authored.png",
+        "sha256": "909fabe41d8793c7cd93aabf814c988f7966b8856b5f8c4b1454923992b963e8"
+      },
+      "pose_count": 6,
+      "pose_contract_sha256": "58b1c3ca736dbc47296cc8744e74827f69a7b617abef25e5733c55fa13cce2b7"
+    },
+    "tube.conduit": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-conduit-atlas-manifest.json",
+        "sha256": "f95f381c7f25408c20d4cb7e3edda521aff5575eb597b966c0c1fb17c7a281d5"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/tube-conduit-authored.png",
+        "sha256": "77e6e9f8a67149fb6c2c554dabc7c682bf5872ebdbd5ed9bb5f716b4a24ea527"
+      },
+      "pose_count": 12,
+      "pose_contract_sha256": "8fa8f75ed0f1e3e43798e70d27dd0bed45d28489d6648aaffbfc55e639c292a7"
+    },
+    "control.tube": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/control-tube-source-manifest.json",
+        "sha256": "d171d1b5dbba3a4868220de939fe7ac519bcd2f4fd46fd920d1b65cb7cd30733"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/control-tube-authored.png",
+        "sha256": "6c673433974d8ec41202755cad336157750dbfb8ce6d2e549b390b3f47d842b9"
+      },
+      "pose_count": 3,
+      "pose_contract_sha256": "078e4dfbef4f11ff3055eca839c243bb6edfa1acb868a34b47ed950bbbbe70f6"
+    },
+    "control.geothermal": {
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/control-geothermal-source-manifest.json",
+        "sha256": "249c4c81e739f8cc7c6f1b752cd54c40577678797183b7d88c52ec913001d836"
+      },
+      "original_atlas": {
+        "path": "logs/proofs/mlm/native-art/ground/control-geothermal-authored.png",
+        "sha256": "3e172610c442fb8a851878d1274bdecfa20e69a74e2412708bb70f033523ef3e"
+      },
+      "pose_count": 3,
+      "pose_contract_sha256": "567ad504046cfbecd109247b34cfc7bae66dced975d3d222bd3b4178793ba185"
+    }
+  },
+  "derived_source_inputs": {
+    "facility.utility-riser": {
+      "historical_derived_source": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-riser-authored.png",
+        "sha256": "25b8146abb0649587d190f49d7cdce6ca04851161f0d95db28e50a616a322778"
+      },
+      "original_record": {
+        "path": "media/multilayer/source/ground/utility-generation-record.json",
+        "sha256": "da103111fe659b7b5b9c3e773c2a02b6fb456f9c082273004acdc791caa7132d"
+      },
+      "original_inputs": [
+        {
+          "path": "media/multilayer/guides/ground/utility-riser-native-geometry-v1.png",
+          "sha256": "551bde98ab90fad90cdabdab592567715b7abe96e56160ef3c697d39e8316d08"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-construction-0-v1.png",
+          "sha256": "7d38658f4f0b0889b857c1c80b0504152280828877763a1bc5740e467115203d"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-construction-1-v1.png",
+          "sha256": "3e4d4d6840a089faf5b17028b657a7766ae170eed30adb19892637b058df7981"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-construction-2-v1.png",
+          "sha256": "311c6566623c40ec81a50aea00a80c5c3f7fd4dca02aa1a4c61666acb2a2884e"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v1.png",
+          "sha256": "75d175fdce3a75e86c3fea580d80ca783324eb6507b97714b53c814c4d9c0740"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-riser-ready-v2.png",
+          "sha256": "2f1df67842cbbcd5aa5a3f5e36afcea653256932622c6bb7e62548f9e21142a2"
+        }
+      ]
+    },
+    "geothermal.conduit": {
+      "historical_derived_source": {
+        "path": "logs/proofs/mlm/native-art/ground/utility-conduit-authored.png",
+        "sha256": "595946cd1a98d27037a1918b6383558bb7c7cad25b06be2134ebe859ad50c978"
+      },
+      "original_record": {
+        "path": "media/multilayer/source/ground/utility-generation-record.json",
+        "sha256": "da103111fe659b7b5b9c3e773c2a02b6fb456f9c082273004acdc791caa7132d"
+      },
+      "original_inputs": [
+        {
+          "path": "media/multilayer/guides/ground/utility-electricity-y-geometry-v1.png",
+          "sha256": "8a0dfbc652c562da386894cd5be5f30823b1d100e91f2176c774f1a7600d3ea6"
+        },
+        {
+          "path": "media/multilayer/guides/ground/utility-heat-y-geometry-v1.png",
+          "sha256": "f3c0ba0d2c9bd5b727b9c779e0ded2765570925e326e553a0f6f2b3235928cff"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-x-v1.png",
+          "sha256": "0a3b1da8b88bde1d4b8cdb1e7b088bd4824c67e24797064eadf76d3a5ce0c3d9"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-connected-y-v1.png",
+          "sha256": "d22d39345e0c25f0e62f79c8156dffc99d574079f45b833e79310f764046c569"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-construction-x-v1.png",
+          "sha256": "d49510ac6cd06f1e4905a414aec3b38976593a67956d144a21ea4b8c46a8d442"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-construction-y-v1.png",
+          "sha256": "871ec0251c3d2d9f8d274879bc97980eb82bb5edebf6d9dbad8560846b314ee2"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-unconnected-x-v1.png",
+          "sha256": "5a9247becf848295cc470a35f5493d59f271f71ba663e658bb003c2d1a7bb911"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-electricity-unconnected-y-v1.png",
+          "sha256": "b986642b67e0ad366056726a93ba9b64217c169e0ea1f1c18c7f24cc8cb31822"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-x-v1.png",
+          "sha256": "c44f0eb4c2d29fac694eef0ab37fddb32dae2836760bd15b06de63813c0616d2"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-connected-y-v1.png",
+          "sha256": "6cf63b8c285e266916e49f5b96ab3fd370f2df30c73664e546213a7ad41d7d92"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-construction-x-v1.png",
+          "sha256": "9792370d9bd461aa92ab795279cf53f87a1ce394a429a3bf2bd0b48e4bf38ac8"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-construction-y-v1.png",
+          "sha256": "2b395dc63f38b2f59db830011cc12b04cfc6ca674c4a051e34347c4d06cf383e"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-unconnected-x-v1.png",
+          "sha256": "2cbe07d3a04935f1da4cb4a04ec7f8fd11dbfdf79f42ed751745b536d8f685c1"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/utility-heat-unconnected-y-v1.png",
+          "sha256": "53bd2a26c9712754ad50ce230a1bd62f49852d722aec589f15cdd096ded73901"
+        }
+      ]
+    },
+    "control.tube": {
+      "historical_derived_source": {
+        "path": "logs/proofs/mlm/native-art/ground/control-tube-authored.png",
+        "sha256": "6c673433974d8ec41202755cad336157750dbfb8ce6d2e549b390b3f47d842b9"
+      },
+      "original_record": {
+        "path": "media/multilayer/source/ground/feature-control-generation-record.json",
+        "sha256": "5f18914485f766d217c2c23b251f9aca868bc28ca72ff3e05573a3363931cfc2"
+      },
+      "original_inputs": [
+        {
+          "path": "media/multilayer/source/ground/raw/control-tube-disabled-v1.png",
+          "sha256": "98838039afe3e7618e5613cf987ee75038b42687adfc04deed57eb60301175b7"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/control-tube-enabled-v1.png",
+          "sha256": "a7dbf8d1e1d5ca4a06c10f85da625e6880b921580818ee7ad1620550a9e7c0bf"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/control-tube-pressed-v1.png",
+          "sha256": "8a1e860ffef6cbee53e099e0f33db4880b695a1c8616e085ba8a4d590f2e806f"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/tube-straight-base-v1.png",
+          "sha256": "5cb68174834cddee2ac77c4ba3340ec204590db08db14d3bd6583b76827e3464"
+        },
+        {
+          "path": "media/multilayer/source/m1/raw/ground-controls-v1.png",
+          "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f"
+        }
+      ]
+    },
+    "control.geothermal": {
+      "historical_derived_source": {
+        "path": "logs/proofs/mlm/native-art/ground/control-geothermal-authored.png",
+        "sha256": "3e172610c442fb8a851878d1274bdecfa20e69a74e2412708bb70f033523ef3e"
+      },
+      "original_record": {
+        "path": "media/multilayer/source/ground/feature-control-generation-record.json",
+        "sha256": "5f18914485f766d217c2c23b251f9aca868bc28ca72ff3e05573a3363931cfc2"
+      },
+      "original_inputs": [
+        {
+          "path": "media/multilayer/source/ground/raw/collector-base-ne-v1.png",
+          "sha256": "d4c125675fec2d3159ac9dc7cf0e2642b94e1584f0e2fc029b261a2dfbce276e"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/control-geothermal-disabled-v1.png",
+          "sha256": "3eada50dedcb3e98d9fc8457854f30279c4fd5335c0cbda9209c9e76b530f710"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/control-geothermal-enabled-v1.png",
+          "sha256": "75ccd4c2f074859e6f0ec4a029a6255c0c24fe2bf143ef0ea6a8d10e72a7808f"
+        },
+        {
+          "path": "media/multilayer/source/ground/raw/control-geothermal-pressed-v1.png",
+          "sha256": "f466664eeafc7e107c9278482d6e11b1992fbb96b01a143ed02ee901afa291da"
+        },
+        {
+          "path": "media/multilayer/source/m1/raw/ground-controls-v1.png",
+          "sha256": "2a575270f9286c3047f81941736a426690caa68ccfdd28db090f3ad277a6421f"
+        }
+      ]
+    }
+  },
+  "original_native_descriptors": [
+    {
+      "path": "media/multilayer/contracts/native-mine-geometry.json",
+      "sha256": "b4520b895c4bea82f67b4ed609274555a562409aa51ef3afc0beb7184258d7cd"
+    },
+    {
+      "path": "media/multilayer/contracts/native-processor-geometry.json",
+      "sha256": "23563f329d13cb8c03f2d1d50a382f54a1146f496e83f2d1daebe3666f740097"
+    }
+  ],
+  "historical_native_mismatches": [
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "source": "src/multilayer_industry.h",
+      "historical_sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+      "observed_at_migration_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "source": "src/industry_cmd.cpp",
+      "historical_sha256": "990ab77ccdcba3c4c8df430a21cf5ca336674211397d16cf15c5da2fda0c71ec",
+      "observed_at_migration_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-mine-geometry.json",
+      "source": "src/multilayer_sprite.cpp",
+      "historical_sha256": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+      "observed_at_migration_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/multilayer_recipe.cpp",
+      "historical_sha256": "4d1d23036474b6627374e2a98abfb01f861babac460b411dfd5ee4382c95b158",
+      "observed_at_migration_sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/multilayer_recipe.h",
+      "historical_sha256": "48e7b50e08d270ab5f5199cd3ac46df43255a037cf05acb8543012808691bd3a",
+      "observed_at_migration_sha256": "2e7b74de6dabbd948f74072c2eb7ab64f96cb6c052e0f7ee8a35d11810f2fb4d",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/multilayer_industry.h",
+      "historical_sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+      "observed_at_migration_sha256": "6a3642085d8136262382afb6b4ea388dc43892b653d1c378a6f0ce4fe406afdd",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/industry_cmd.cpp",
+      "historical_sha256": "990ab77ccdcba3c4c8df430a21cf5ca336674211397d16cf15c5da2fda0c71ec",
+      "observed_at_migration_sha256": "b90d2e69c44a92ba462673f56cb7856e1a587d6962f37e3409dbdda14f4f83ea",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/multilayer_sprite.cpp",
+      "historical_sha256": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+      "observed_at_migration_sha256": "1c45bd6eafb49389f79efb76ca659cfbc388c91d93e1a7234c432c0b6381b865",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/CMakeLists.txt",
+      "historical_sha256": "e89195bdff7dc5a91b826c308e6e9d0b082341d7a76c4a7bf7d822d5d2eba2d0",
+      "observed_at_migration_sha256": "3a75a6b59f5f05bc82b886e8394b65d73c9861616b43e202b4a3d689c96df61f",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    },
+    {
+      "descriptor": "media/multilayer/contracts/native-processor-geometry.json",
+      "source": "src/tests/CMakeLists.txt",
+      "historical_sha256": "44820ac4fcbc91065f67d63096a8db8be7e414f51a290a997f4fa54977f6f03a",
+      "observed_at_migration_sha256": "33429d01ad8f101684a4014ea385baacb44fafb5949fdb7ed41680550c5940fd",
+      "role": "historical_native_epoch_requires_separate_current_owner_proof"
+    }
+  ]
+}

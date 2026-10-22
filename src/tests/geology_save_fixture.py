@@ -3,6 +3,7 @@
 
 @file geology_save_fixture.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 4
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 
 import argparse
@@ -21,6 +22,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path
+from savegame_tables import chunks
 from runner import current_run_context, run_native
 from multilayer_state_fixture import output_save_path, prior_artifact
 CONTEXT = current_run_context("geology", "geology-save-fixture")
@@ -32,36 +34,6 @@ run_case = partial(run_case, context=CONTEXT)
 log_path = partial(log_path, context=CONTEXT)
 
 
-def chunks(stream):
-    """Collect immutable raw chunks and their payloads/rows for narrowly owned fixture mutations.
-
-    @param stream Actual decompressed 372 save bytes.
-    @return Ordered dictionaries; unknown ordinary chunks retain their original exact transport.
-    """
-    reader = Reader(stream)
-    result = []
-    # Preserve unrelated descriptors byte-for-byte; only targeted geological authority is changed by the caller.
-    while True:
-        start = reader.pos
-        name = reader.take(4)
-        if name == bytes(4):
-            return result
-        mode = reader.byte()
-        kind = mode & 15
-        payload = None
-        rows = []
-        if kind == CHUNK_RIFF:
-            length = ((mode >> 4) << 24) | (reader.byte() << 16) | (reader.byte() << 8) | reader.byte()
-            payload = reader.take(length)
-        elif kind in CHUNK_RECORDS:
-            while True:
-                length = reader.gamma()
-                if not length:
-                    break
-                rows.append(reader.take(length - 1))
-        else:
-            raise ValueError("unsupported fixture chunk transport")
-        result.append({"name": name, "kind": kind, "raw": stream[start:reader.pos], "payload": payload, "rows": rows})
 
 
 def gamma(value):

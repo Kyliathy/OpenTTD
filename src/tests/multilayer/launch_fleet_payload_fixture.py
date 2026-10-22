@@ -1,6 +1,7 @@
 """Retain full original pixel expectations for actual launch/fleet and prior native loading.
 
 @file launch_fleet_payload_fixture.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group18; explicit current source expectations.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62I.2.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 The fixture contains exact source index bytes and anchors, never a GRF decoder.
@@ -18,7 +19,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT/"src/tests"))
 sys.path.insert(0, str(ROOT/"media/multilayer"))
-from multilayer_packed_art_fixture import pixel_hash
+from multilayer_packed_art_fixture import pixel_hash, write_selected_payload
 import pack_launch_fleet_art as packing
 from tools import cargo_rocket_art as art
 from tools import launch_fleet_handoff as handoff
@@ -51,7 +52,7 @@ def source_cells(stem):
     return result
 
 
-def protected_records(name, magic, header_size, count, stems):
+def protected_records(name, magic, header_size, count, stems, path=None):
     """Match unchanged historical expected geometry/hashes to full protected source bytes.
 
     @param name Existing retained binary fixture basename, never regenerated here.
@@ -59,10 +60,11 @@ def protected_records(name, magic, header_size, count, stems):
     @param header_size Preceding producer's actual fixed header byte count.
     @param count Exact previously qualified published sprite count.
     @param stems Protected source sheets in that historical fixture's native order.
+    @param path Explicit selected source-derived prefix; None retains historical authoring lookup.
     @return Full prior native offset/geometry/anchor/hash/pixel-byte records.
     @throws ValueError On lost historical expectations or any altered prior source pixel.
     """
-    path = OUTPUT.parent/(name+"-packed-sprites.bin")
+    path = OUTPUT.parent/(name+"-packed-sprites.bin") if path is None else path
     payload = path.read_bytes()
     cells = [cell for stem in stems for cell in source_cells(stem)]
     record = struct.Struct("<HHHhhI")
@@ -83,22 +85,37 @@ def protected_records(name, magic, header_size, count, stems):
     return result
 
 
-def produce():
+def produce(report=None, image_path=None, destination=None, prefixes=None):
     """Write reproducible full-byte expectations for6116old and1648new native identities.
 
-    @return Full expected binary identity and independently retained source/proof bindings.
+    @param report Explicit current packing report; None selects historical authoring only.
+    @param image_path Selected indexed sheet; required together with report/destination/prefixes.
+    @param destination Current binary data output; never a canonical GRF destination.
+    @param prefixes Actual selected m1/space/orbital source expectation binary paths.
+    @return Full expected binary facts and independently retained source/proof bindings.
     @throws ValueError On any source, native identity, packed-crop or historical fixture drift.
     """
-    scope, accepted = packing.read_scope()
-    report, files = packing.derive()
+    selected = any(value is not None for value in (report, image_path, destination, prefixes))
+    # Half-selected inputs must never reopen old authoring paths. All four
+    # explicit roles form one current source-only operation, independent of decoding.
+    if selected and any(value is None for value in (report, image_path, destination, prefixes)):
+        raise ValueError("launch expectations require complete explicit current inputs/output")
+    if selected:
+        if set(prefixes) != {"m1", "space", "orbital"}:
+            raise ValueError("launch expectations require exact source prefix families")
+        scope, accepted = packing.read_scope(current_sources=True)
+        files = {}
+    else:
+        scope, accepted = packing.read_scope()
+        report, files = packing.derive()
     # The native process must observe the exact staged PNG/NFO/header, rather
     # than an unpublished in-memory derivation or a neighboring source atlas.
     for path, data in files.items():
         if path.read_bytes() != data:
             raise ValueError("stage exact qualified launch/fleet inputs before full-pixel expectations")
-    old = protected_records("m1", b"MLVART1\0", 12, 3561, ("map_layers", "map_layers_m1"))
-    old += protected_records("space", b"SPCART1\0", 14, 1579, ("space_preview", "space_final"))
-    old += protected_records("orbital", b"ORBART1\0", 14, 976, ("orbital_final",))
+    old = protected_records("m1", b"MLVART1\0", 12, 3561, ("map_layers", "map_layers_m1"), None if not selected else prefixes["m1"])
+    old += protected_records("space", b"SPCART1\0", 14, 1579, ("space_preview", "space_final"), None if not selected else prefixes["space"])
+    old += protected_records("orbital", b"ORBART1\0", 14, 976, ("orbital_final",), None if not selected else prefixes["orbital"])
     required_old = set(range(66)) | set(range(3588, 3599))
     # Frozen public ranges own all preceding native IDs; reserved/unselected
     # slots remain absent instead of becoming fabricated transparent coverage.
@@ -109,7 +126,7 @@ def produce():
     if len(observed_old) != 6116 or len(set(observed_old)) != 6116 or set(observed_old) != required_old:
         raise ValueError("protected native IDs differ from qualified frozen public ranges")
     records = list(old)
-    with Image.open(ROOT/scope["png"]) as image:
+    with Image.open(image_path if selected else ROOT/scope["png"]) as image:
         # Every new logical slot retains its own identity, even when an alias
         # shares physical pixels or the original back/front part is wholly empty.
         for row in report["sprites"]:
@@ -130,8 +147,12 @@ def produce():
     # native cache must now match every old/new transparent and material byte.
     for offset, width, height, ax, ay, digest, pixels in records:
         chunks.extend((struct.pack("<HHHhhI", offset, width, height, ax, ay, digest), pixels))
+    payload = b"".join(chunks)
+    if selected:
+        write_selected_payload(destination, payload)
+        return dict(total_sprites=7764, protected_sprites=6116, new_sprites=1648, native_loading_verified=False)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_bytes(b"".join(chunks))
+    OUTPUT.write_bytes(payload)
     summary = dict(_documentation=__doc__, fixture=art.source.identity(OUTPUT), producer=art.source.identity(Path(__file__)),
                    source_handoff=scope["source_handoff"], source_qualification=scope["source_qualification"],
                    native_bound=7791, protected_sprites=6116, new_sprites=1648, total_sprites=7764,
@@ -140,6 +161,18 @@ def produce():
     SUMMARY.parent.mkdir(parents=True, exist_ok=True)
     SUMMARY.write_text(json.dumps(summary, indent=2)+"\n", encoding="utf-8")
     return summary
+
+
+def produce_selected(report, image_path, destination, prefixes=None):
+    """Execute the original complete-byte producer using explicit current source roles.
+
+    @param report Checked selected launch/fleet packing report.
+    @param image_path Exact current original source-derived launch packing sheet.
+    @param destination Explicit current binary data output.
+    @param prefixes Exact selected m1/space/orbital original expectation binary paths.
+    @return Complete7764source expectation count; no native loading or publication occurs.
+    """
+    return produce(report, image_path, destination, prefixes)["total_sprites"]
 
 
 def main():

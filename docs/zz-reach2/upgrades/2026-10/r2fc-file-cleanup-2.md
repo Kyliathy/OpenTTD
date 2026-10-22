@@ -2,6 +2,12 @@
 
 Recorded: 2026-10-15. Predecessor: [R2FC file cleanup](r2fc-file-cleanup.md). Shared layout owner: [R2MLVS development artifact layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout).
 
+Successor execution: [R2FC-3](r2fc-file-cleanup3.md) supersedes this plan's
+unimplemented permanent-output retention/migration approach. Groups1-9 there
+have captured/classified inputs and registered disabled recipe declarations;
+sealing, relocation, fresh verification and cleanup remain pending. The unchecked
+tasks below remain unchecked; this link claims no implementation of them.
+
 **Separate authorized archive cleanup,2026-10-17.** The user requested and authorized a separate Git commit moving the October execution ledgers, handovers, audits and generation records to `docs/zz-rhr/upgrades/2026-10/`, preserving their relative subfolders.168 auxiliary Markdown files moved;45 main plans, review plans and player guides remain at the original location. Inbound links, archived outbound links and repository-qualified source/tool references follow the new paths. Repository VS Code settings hide the archive from Explorer, search and file watching; Git continues to include it. This relocation supersedes the earlier same-directory companion placement rule. It does not execute the pending artifact/log migrations below or resume deferred native compilation.
 
 **Status:** the disk audit, cleanup script, baseline retention and post-cleanup checks below are completed work. The migration tasks in Groups 2-9 are **planned, not implemented**. In particular, `logs/` is still required by some checks and must not yet be emptied wholesale. This documentation request does not apply another cleanup, move test inputs or authorize Git writes.

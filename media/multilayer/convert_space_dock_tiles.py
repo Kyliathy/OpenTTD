@@ -1,6 +1,7 @@
 """Cut the accepted original Dock into its four genuine fixed back/front world cells.
 
 @file convert_space_dock_tiles.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13F
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group71.2
 Only each original near clamp jaw belongs above a visiting craft. Receivers,
@@ -39,9 +40,11 @@ def proposed_policy(document):
     """
     family = document["families"][dock.ASSET]
     reference = family["base_source_review"]
-    if art.identity(art.ROOT / reference["path"]) != reference:
-        raise ValueError("accepted Dock base review changed")
-    base = json.loads((art.ROOT / reference["path"]).read_text(encoding="utf-8"))["base"]
+    # The old review identity remains a historical approval fact in the frozen
+    # policy. Reconstruct measured base/foreground facts from actual originals;
+    # checked_policy still compares every field against its independent signed
+    # policy, so regeneration cannot approve changed pixels or registrations.
+    _, base = dock.native_base(document)
     # A source policy cannot launder a changed deck or another clamp under the
     # existing physical-depth review, even with a fresh authoring signature.
     if (base["body"]["signature"] != family["approved_body_registration"]["complete"]
@@ -66,7 +69,7 @@ def proposed_policy(document):
 
 
 def checked_policy(document, public=None):
-    """Refuse tile, rotation and physical-foreground drift before original image decoding.
+    """Refuse tile, rotation and physical-foreground drift against original image geometry.
 
     @param document Current or detached Dock source catalogue.
     @param public Optional public manifest for focused native geometry refusal checks.

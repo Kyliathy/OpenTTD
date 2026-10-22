@@ -1,0 +1,10 @@
+{
+  "_documentation": "Plan11Group15CSGZV exact recovered Rel recorder before correcting its explanatory native-body-count comment; actual native invocation/saves and process are unchanged.",
+  "products": [
+    {
+      "source": "src/tests/multilayer/acceptance/surface_entry_rail_productivity_checks-1.py",
+      "path": "test-cache/surface-entry/rail-productivity-before-edit/recorder-before-native-part-comment-fix.py",
+      "sha256": "c7507f9be2e1db8b1596d98c226c03156096cd9aaa7210524e4d5149d41b23e6"
+    }
+  ]
+}

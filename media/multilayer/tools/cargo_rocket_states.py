@@ -1,6 +1,7 @@
 """Map already native-owned rocket phase progress to read-only original-source poses.
 
 @file cargo_rocket_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62E.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md saved native flight contract.
 This is source policy, not a second native record validator or runtime selector.
@@ -14,11 +15,11 @@ FIXTURE = art.ROOT / "src/tests/multilayer/cargo-rocket-state-fixture.json"
 
 
 def checked_policy(policy):
-    """Bind immutable source choices to actual native producers and ready originals.
+    """Validate immutable original source choices and retained genuine-ready inputs.
 
     @param policy Explicit immutable model14 source-state/part contract.
     @return None.
-    @throws ValueError On stale producer inputs or changed body/part/state geometry.
+    @throws ValueError On changed retained source policy, ready inputs or body/part/state geometry.
     """
     expected = art.read_json(FIXTURE)
     # The pre-effect checkpoint is immutable. Later authors bind selected
@@ -27,23 +28,13 @@ def checked_policy(policy):
             or art.semantic_digest(policy) != expected["policy_semantic_sha256"]
             or policy["ready_qualification"] != expected["ready_qualification"]):
         raise ValueError("immutable rocket phase source policy changed")
-    for reference in [policy["ready_qualification"], *policy["native_inputs"]]:
-        if art.source.identity(art.ROOT / reference["path"]) != reference:
-            raise ValueError("rocket source policy owner/ready input changed")
-    # Both real narrow native runs must retain their exact source/binary/log
-    # identities. Source mapping cannot bless an uncompiled native phase edit.
-    for configuration, reference in policy["native_proofs"].items():
-        if art.source.identity(art.ROOT / reference["path"]) != reference:
-            raise ValueError("rocket phase native receipt changed")
-        proof = art.read_json(art.ROOT / reference["path"])
-        if (proof["configuration"] != configuration or not proof["complete"]
-                or proof["assertions"] != 183 or proof["cases"] != 7
-                or proof["paid_world_loaded"] or proof["simulation_ticks"] != 0
-                or proof["sources"] != policy["native_inputs"]):
-            raise ValueError("rocket phase native producer scope changed")
-        for actual in [proof["application"], proof["terminal"], *proof["sources"]]:
-            if art.source.identity(art.ROOT / actual["path"]) != actual:
-                raise ValueError("rocket phase actual producer input/output changed")
+    if art.source.identity(art.ROOT / policy["ready_qualification"]["path"]) != policy["ready_qualification"]:
+        raise ValueError("rocket source ready input changed")
+    # Native source hashes/receipts freeze the original phase-policy epoch.
+    # They remain immutable facts inside this signed policy, not demands for
+    # archived EXEs or a claim that current C++ has passed native qualification.
+    # Source conversion checks genuine pixels/aliases against retained fixtures;
+    # current native decoding/selection is independently qualified by recipes.
     art.checked_model(art.read_json(art.MODEL))
 
 

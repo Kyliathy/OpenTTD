@@ -46,6 +46,10 @@ Saving serializes the shared world through versioned chunks and object reference
 
 ## Source and runtime boundaries
 
+[Historical debugging and artifacts](archi-historical-debug.md) describes durable
+source/asset/save owners, generated review/runtime/build paths and the commands
+that reconstruct development evidence after cleanup.
+
 The game is primarily C++20, built out of source with CMake. The project version in the current [CMake file](../../../CMakeLists.txt) is 16.0. `openttd_lib` contains the shared game code, `openttd` is the application, and `openttd_test` runs Catch2 tests. Language, settings and script API tables have build-time generators. The game is licensed under GPL-2.0; bundled third-party components have their own licenses, listed in the [repository README](../../../README.md).
 
 | Location | Responsibility |

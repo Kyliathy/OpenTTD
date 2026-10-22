@@ -1,0 +1,896 @@
+# Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Final Space presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
+# Native orbital presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+# Native cargo-rocket presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J.
+# Native launch-center cells/occupants: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB.
+# Passive generator geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
+# Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
+# Pure native processor presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
+# Selected finite-mine source presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FC.
+# Selected Surface processor source presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FD.
+# Selected conventional rail freight presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FE.
+# Selected conventional road carrier presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FF.
+# Selected conventional station/terminal images over native bounds: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FG.
+# Shared native approach admission: docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
+# Native bounded orbital recipe runtime/history: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
+option(OPTION_MULTILAYER_LOADER_PROBE "Enable the isolated multilayer content loader experiment in Debug builds" OFF)
+if(OPTION_MULTILAYER_LOADER_PROBE)
+    # Scope the experimental mutation hook to the loader translation unit and explicit Debug fixture builds.
+    set_source_files_properties(newgrf.cpp PROPERTIES COMPILE_DEFINITIONS "$<$<CONFIG:Debug>:WITH_MULTILAYER_LOADER_PROBE>")
+endif()
+
+add_subdirectory(script)
+add_subdirectory(settingsgen)
+add_subdirectory(strgen)
+
+if(OPTION_TOOLS_ONLY)
+    return()
+endif()
+
+add_subdirectory(3rdparty)
+add_subdirectory(ai)
+add_subdirectory(blitter)
+add_subdirectory(core)
+add_subdirectory(fontcache)
+add_subdirectory(game)
+add_subdirectory(lang)
+add_subdirectory(linkgraph)
+add_subdirectory(misc)
+add_subdirectory(music)
+add_subdirectory(network)
+add_subdirectory(newgrf)
+add_subdirectory(os)
+add_subdirectory(pathfinder)
+add_subdirectory(saveload)
+add_subdirectory(sound)
+add_subdirectory(spriteloader)
+add_subdirectory(table)
+add_subdirectory(tests)
+add_subdirectory(timer)
+add_subdirectory(video)
+add_subdirectory(widgets)
+
+add_files(
+    viewport_sprite_sorter_sse4.cpp
+    CONDITION SSE_FOUND
+)
+
+add_files(
+    gfx_layout_icu.cpp
+    gfx_layout_icu.h
+    CONDITION ICU_I18N_FOUND AND HARFBUZZ_FOUND
+)
+
+add_files(
+    screenshot_png.cpp
+    CONDITION PNG_FOUND
+)
+
+add_files(
+    soundloader_opus.cpp
+    CONDITION OpusFile_FOUND
+)
+
+add_files(
+    soundresampler_soxr.cpp
+    CONDITION Soxr_FOUND
+)
+
+add_files(
+    aircraft.h
+    aircraft_cmd.cpp
+    aircraft_cmd.h
+    aircraft_gui.cpp
+    airport.cpp
+    airport.h
+    airport_cmd.h
+    airport_gui.cpp
+    animated_tile.cpp
+    animated_tile_func.h
+    animated_tile_map.h
+    articulated_vehicles.cpp
+    articulated_vehicles.h
+    autocompletion.cpp
+    autocompletion.h
+    autoreplace.cpp
+    autoreplace_base.h
+    autoreplace_cmd.cpp
+    autoreplace_cmd.h
+    autoreplace_func.h
+    autoreplace_gui.cpp
+    autoreplace_gui.h
+    autoreplace_type.h
+    autoslope.h
+    base_consist.cpp
+    base_consist.h
+    base_media_base.h
+    base_media_func.h
+    base_media_graphics.h
+    base_media_music.h
+    base_media_sounds.h
+    base_station_base.h
+    bmp.cpp
+    bmp.h
+    bootstrap_gui.cpp
+    bridge.h
+    bridge_gui.cpp
+    bridge_map.cpp
+    bridge_map.h
+    bridge_type.h
+    build_vehicle_gui.cpp
+    cachecheck.cpp
+    cargo_type.h
+    cargoaction.cpp
+    cargoaction.h
+    cargomonitor.cpp
+    cargomonitor.h
+    cargopacket.cpp
+    cargopacket.h
+    cargotype.cpp
+    cargotype.h
+    cheat.cpp
+    cheat_func.h
+    cheat_gui.cpp
+    cheat_type.h
+    clear_cmd.cpp
+    clear_func.h
+    clear_map.h
+    command.cpp
+    command_func.h
+    command_type.h
+    construction_preview.h
+    company_base.h
+    company_cmd.cpp
+    company_cmd.h
+    company_func.h
+    company_gui.cpp
+    company_gui.h
+    company_manager_face.h
+    company_type.h
+    console.cpp
+    console_cmds.cpp
+    console_func.h
+    console_gui.cpp
+    console_gui.h
+    console_internal.h
+    console_type.h
+    cpu.cpp
+    cpu.h
+    crashlog.cpp
+    crashlog.h
+    currency.cpp
+    currency_func.h
+    currency_type.h
+    date_gui.cpp
+    date_gui.h
+    debug.cpp
+    debug.h
+    debug_type.h
+    dedicated.cpp
+    depot.cpp
+    depot_base.h
+    depot_cmd.cpp
+    depot_cmd.h
+    depot_func.h
+    depot_gui.cpp
+    depot_map.h
+    depot_type.h
+    direction_func.h
+    direction_type.h
+    disaster_vehicle.cpp
+    disaster_vehicle.h
+    dock_cmd.h
+    dock_gui.cpp
+    driver.cpp
+    driver.h
+    dropdown.cpp
+    dropdown_common_type.h
+    dropdown_func.h
+    dropdown_type.h
+    economy.cpp
+    economy_base.h
+    economy_cmd.h
+    economy_func.h
+    economy_type.h
+    effectvehicle.cpp
+    effectvehicle_base.h
+    effectvehicle_func.h
+    elrail.cpp
+    elrail_func.h
+    engine.cpp
+    engine_base.h
+    engine_cmd.h
+    engine_func.h
+    engine_gui.cpp
+    engine_gui.h
+    engine_type.h
+    error.h
+    error.cpp
+    error_func.h
+    error_gui.cpp
+    fileio.cpp
+    fileio_func.h
+    fileio_type.h
+    fios.cpp
+    fios.h
+    fios_gui.cpp
+    fontcache.cpp
+    fontcache.h
+    framerate_gui.cpp
+    framerate_type.h
+    gamelog.cpp
+    gamelog.h
+    gamelog_internal.h
+    genworld.cpp
+    genworld.h
+    genworld_gui.cpp
+    gfx.cpp
+    gfx_func.h
+    gfx_layout.cpp
+    gfx_layout.h
+    gfx_layout_fallback.cpp
+    gfx_layout_fallback.h
+    gfx_type.h
+    gfxinit.cpp
+    gfxinit.h
+    goal.cpp
+    goal_base.h
+    goal_cmd.h
+    goal_gui.cpp
+    goal_gui.h
+    goal_type.h
+    graph_gui.cpp
+    graph_gui.h
+    ground_vehicle.cpp
+    ground_vehicle.hpp
+    group.h
+    group_cmd.cpp
+    group_cmd.h
+    group_gui.cpp
+    group_gui.h
+    group_type.h
+    gui.h
+    heightmap.cpp
+    heightmap.h
+    help_gui.cpp
+    help_gui.h
+    highscore.cpp
+    highscore.h
+    highscore_gui.cpp
+    hotkeys.cpp
+    hotkeys.h
+    house.h
+    house_type.h
+    industry.h
+    industry_cmd.cpp
+    industry_cmd.h
+    industry_gui.cpp
+    industry_map.h
+    industry_type.h
+    industrytype.h
+    ini.cpp
+    ini_load.cpp
+    ini_type.h
+    intro_gui.cpp
+    landscape.cpp
+    landscape.h
+    landscape_cmd.h
+    landscape_type.h
+    layer_portal_cmd.cpp
+    layer_portal_work.cpp
+    layer_portal_work_wire.h
+    layer_portal_bootstrap.cpp
+    layer_portal_gui.cpp
+    underground_gui.cpp
+    underground_gui.h
+    layer_portal_cmd.h
+    layer_portal_map.h
+    language.h
+    league_base.h
+    league_cmd.h
+    league_cmd.cpp
+    league_gui.h
+    league_gui.cpp
+    league_type.h
+    library_loader.h
+    livery.h
+    main_gui.cpp
+    map.cpp
+    map_func.h
+    map_layer.cpp
+    space.cpp
+    space_vehicle.cpp
+    space_sprite.cpp
+    launch_sprite.cpp
+    launch_sprite.h
+    launch_facility_sprite.cpp
+    launch_facility_sprite.h
+    # Original orbital hull/work/load owners: r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
+    orbital_sprite.cpp
+    orbital_sprite.h
+    # Atomic original finite extraction: r2mlvs10-asteroids-and-mining-probes.md Group10.
+    space_mining_inventory.cpp
+    space_mining_inventory.h
+    # Shared physical mining departure: r2mlvs10-asteroids-and-mining-probes.md Group11.
+    space_departure.h
+    space.h
+    # Disposable native work counters: r2mlvs10-asteroids-and-mining-probes.md Group21.
+    space_work_cost.h
+    asteroid.cpp
+    # Body/attachment publication before native work: r2mlvs10-asteroids-and-mining-probes.md Group3.
+    asteroid_motion.cpp
+    # Saved initial starter access: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    asteroid_generation.cpp
+    asteroid_generation.h
+    multilayer_asteroid_catalogue.h
+    launch_center.cpp
+    # Shared native launch geometry: r2mlvs9 Group3 / r2mlvs10 Group2.
+    launch_site.cpp
+    launch_site.h
+    launch_operations.cpp
+    launch_assembly_gui.cpp
+    launch_assembly_gui.h
+    space_manifest.cpp
+    space_manifest.h
+    space_pod.cpp
+    space_pod.h
+    space_pod_type.h
+    space_structure.cpp
+    space_structure_gui.cpp
+    space_structure.h
+    space_structure_type.h
+    space_structure_cmd.h
+    orbital_station.cpp
+    orbital_station.h
+    orbital_service.cpp
+    orbital_service.h
+    # Queued paid Assembly requests: r2mlvs11-orbital-stations-and-manufacturing.md Group7.
+    orbital_manufacturing.cpp
+    orbital_recipe.h
+    orbital_recipe.cpp
+    orbital_recipe_runtime.cpp
+    orbital_recipe_record.cpp
+    orbital_manufacturing.h
+    # Ordinary paid facility purchase consumers: r2mlvs11-orbital-stations-and-manufacturing.md Group8B.
+    space_purchase.cpp
+    space_purchase.h
+    # Copied paid clone intent: r2mlvs11-orbital-stations-and-manufacturing.md Group8BB.
+    space_clone.cpp
+    space_clone.h
+    # Prepared paid native replacement: r2mlvs11-orbital-stations-and-manufacturing.md Group8BC.
+    space_replacement.cpp
+    space_replacement.h
+    orbital_freight.cpp
+    orbital_freight.h
+    space_transition.cpp
+    space_transition.h
+    space_descent.cpp
+    launch_operations.h
+    hub_cargo.cpp
+    hub_cargo.h
+    surface_handling.cpp
+    launch_hub.cpp
+    launch_center.h
+    asteroid.h
+    asteroid_gui.cpp
+    space_survey_gui.h
+    # Company-gated native inspector/motion disclosure: r2mlvs10-asteroids-and-mining-probes.md Group14.
+    asteroid_inspection.cpp
+    asteroid_inspection.h
+    multilayer_asteroid_catalogue.cpp
+    map_layer.h
+    map_layer_gui.cpp
+    map_layer_gui.h
+    map_layer_type.h
+    excavation.cpp
+    excavation_guard.cpp
+    excavation_jobs.cpp
+    excavation_cut.cpp
+    excavation_outline.cpp
+    excavation_route.cpp
+    excavation_pass.cpp
+    excavation_starter.cpp
+    excavation.h
+    tbm.h
+    tbm_model.cpp
+    tbm_engine.cpp
+    underground_vehicle.h
+    underground_vehicle.cpp
+    conventional_station_art.h
+    conventional_station_art.cpp
+    # Native truck-stop geometry producer: r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
+    conventional_terminal_art.h
+    conventional_terminal_art.cpp
+    # Native tube capability producer: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
+    transport_tube.h
+    transport_tube.cpp
+    transport_tube_engine.cpp
+    # Physical capsule source contract: r2mlvs17-underground-transport-tubes.md Group10B.
+    transport_tube_model.h
+    transport_tube_construction.cpp
+    transport_tube_power.cpp
+    transport_tube_runtime.cpp
+    transport_tube_topology.cpp
+    transport_tube_readiness.cpp
+    # One native station packet owner and bounded transfers: r2mlvs17 Group9.
+    transport_tube_cargo.h
+    transport_tube_cargo.cpp
+    # Five original native capsule coefficients: r2mlvs17 Group10.
+    transport_tube_fleet.h
+    transport_tube_fleet.cpp
+    # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
+    geothermal.h
+    geothermal_type.h
+    geothermal_site.cpp
+    geothermal_claim.cpp
+    geothermal_site_wire.h
+    geothermal_definitions.cpp
+    geothermal_generator_geometry.h
+    geothermal_generator_geometry.cpp
+    geothermal_collector_wire.h
+    geothermal_collector.h
+    geothermal_collector.cpp
+    geothermal_heat.h
+    geothermal_heat.cpp
+    geothermal_utility.h
+    geothermal_utility_cmd.h
+    geothermal_utility.cpp
+    geothermal_electrical.h
+    geothermal_electrical.cpp
+    utility_power_lineage.h
+    utility_power_transfer.h
+    utility_power_lineage.cpp
+    # Actual commissioned-riser admission: r2mlvs18-geothermal-energy-and-industry.md Group5B.
+    geothermal_riser.h
+    geothermal_riser.cpp
+    geothermal_riser_construction.cpp
+    geothermal_riser_wire.h
+    geothermal_riser_wire.cpp
+    # Native project presentation: r2tbmf-tbm-fixes.md Group2.
+    tbm_gui.h
+    tbm_projects_gui.cpp
+    tbm_acquisition.cpp
+    tbm_area.cpp
+    tbm_commission.cpp
+    tbm_cmd.h
+    tbm_replanning.h
+    tbm_area_preview.h
+    tbm_controls.h
+    tbm_controls.cpp
+    tbm_hangar.h
+    tbm_hangar.cpp
+    tbm_exchange.h
+    tbm_exchange.cpp
+    spoil_receiver.h
+    spoil_receiver.cpp
+    tbm_project.cpp
+    tbm_support.cpp
+    tbm_work.cpp
+    geology.cpp
+    geology_digest.cpp
+    geology_generation.cpp
+    geology_hardness.cpp
+    geology_state.cpp
+    geothermal_geology.cpp
+    excavation_state.h
+    multilayer_content.cpp
+    multilayer_sprite.cpp
+    ground_mine_sprite.cpp
+    ground_mine_sprite.h
+    ground_processor_sprite.cpp
+    ground_processor_sprite.h
+    ground_train_sprite.cpp
+    ground_train_sprite.h
+    ground_road_sprite.cpp
+    ground_road_sprite.h
+    ground_station_sprite.cpp
+    ground_station_sprite.h
+    ground_sprite.h
+    multilayer_sound.cpp
+    multilayer_sound.h
+    multilayer_sprite.h
+    multilayer_content.h
+    multilayer_state.cpp
+    multilayer_state.h
+    multilayer_vehicle_catalogue.cpp
+    multilayer_space_content.cpp
+    multilayer_space_content.h
+    space_orders.cpp
+    space_order_actions.cpp
+    space_order_actions.h
+    # Immutable distinct miner roles: r2mlvs11-orbital-stations-and-manufacturing.md Group9.
+    space_mining_tuning.cpp
+    space_mining_tuning.h
+    space_approach.cpp
+    space_approach.h
+    space_production.cpp
+    space_production.h
+    space_orders.h
+    multilayer_utility.cpp
+    multilayer_utility.h
+    utility_power.cpp
+    utility_power.h
+    solar_power.h
+    multilayer_content_identity.cpp
+    multilayer_content_identity.h
+    multilayer_recipe.cpp
+    multilayer_industry.h
+    layer_industry_policy.cpp
+    layer_industry_mine.cpp
+    layer_industry_recipe.cpp
+    layer_recipe_work.h
+    layer_recipe_work.cpp
+    layer_industry_definitions.cpp
+    layer_industry_processor.h
+    layer_industry_processor.cpp
+    layer_processor_presentation.h
+    layer_processor_presentation.cpp
+    layer_industry_baseline.h
+    layer_industry_baseline.cpp
+    station_supply.h
+    # Pure actual-owner paid seed admission: r2mlvs6-mines-and-resource-chains.md Group13C.1.
+    surface_supply.cpp
+    surface_supply.h
+    # Detached original-owner order metadata: r2mlvs6-mines-and-resource-chains.md Group13CCB.
+    surface_supply_order.cpp
+    surface_supply_order.h
+    # Sole private native commitment owner: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_runtime.cpp
+    surface_supply_order_runtime.h
+    # Dormant synchronized ABI reserved with persistence: r2mlvs6-mines-and-resource-chains.md Groups13CCC/13CCD.
+    surface_supply_cmd.h
+    # Bounded native/full/copied original transport: r2mlvs6-mines-and-resource-chains.md Group13CCC.
+    surface_supply_order_wire.cpp
+    surface_supply_order_wire.h
+    multilayer_recipe.h
+    multilayer_bootstrap.cpp
+    multilayer_bootstrap.h
+    map_type.h
+    misc.cpp
+    misc_cmd.cpp
+    misc_cmd.h
+    misc_gui.cpp
+    mixer.cpp
+    mixer.h
+    music.cpp
+    music_gui.cpp
+    newgrf.cpp
+    newgrf.h
+    newgrf_act5.h
+    newgrf_airport.cpp
+    newgrf_airport.h
+    newgrf_airporttiles.cpp
+    newgrf_airporttiles.h
+    newgrf_animation_base.h
+    newgrf_animation_type.h
+    newgrf_badge.cpp
+    newgrf_badge.h
+    newgrf_badge_config.cpp
+    newgrf_badge_config.h
+    newgrf_badge_gui.cpp
+    newgrf_badge_gui.h
+    newgrf_badge_type.h
+    newgrf_callbacks.h
+    newgrf_canal.cpp
+    newgrf_canal.h
+    newgrf_cargo.cpp
+    newgrf_cargo.h
+    newgrf_class.h
+    newgrf_class_func.h
+    newgrf_commons.cpp
+    newgrf_commons.h
+    newgrf_config.cpp
+    newgrf_config.h
+    newgrf_debug.h
+    newgrf_debug_gui.cpp
+    newgrf_engine.cpp
+    newgrf_engine.h
+    newgrf_generic.cpp
+    newgrf_generic.h
+    newgrf_gui.cpp
+    newgrf_house.cpp
+    newgrf_house.h
+    newgrf_industries.cpp
+    newgrf_industries.h
+    newgrf_industrytiles.cpp
+    newgrf_industrytiles.h
+    newgrf_object.cpp
+    newgrf_object.h
+    newgrf_profiling.cpp
+    newgrf_profiling.h
+    newgrf_properties.h
+    newgrf_railtype.cpp
+    newgrf_railtype.h
+    newgrf_roadstop.cpp
+    newgrf_roadstop.h
+    newgrf_roadtype.cpp
+    newgrf_roadtype.h
+    newgrf_sound.cpp
+    newgrf_sound.h
+    newgrf_spritegroup.cpp
+    newgrf_spritegroup.h
+    newgrf_station.cpp
+    newgrf_station.h
+    newgrf_storage.cpp
+    newgrf_storage.h
+    newgrf_text.cpp
+    newgrf_text.h
+    newgrf_text_type.h
+    newgrf_town.cpp
+    newgrf_town.h
+    newgrf_townname.cpp
+    newgrf_townname.h
+    newgrf_type.h
+    news_cmd.h
+    news_func.h
+    news_gui.cpp
+    news_gui.h
+    news_type.h
+    object.h
+    object_base.h
+    object_cmd.cpp
+    object_cmd.h
+    object_gui.cpp
+    object_map.h
+    object_type.h
+    openttd.cpp
+    openttd.h
+    order_backup.cpp
+    order_backup.h
+    order_base.h
+    order_cmd.cpp
+    order_cmd.h
+    order_func.h
+    order_gui.cpp
+    order_type.h
+    osk_gui.cpp
+    palette.cpp
+    palette_func.h
+    pbs.cpp
+    pbs.h
+    picker_func.h
+    picker_gui.cpp
+    picker_gui.h
+    progress.cpp
+    progress.h
+    provider_manager.h
+    querystring_gui.h
+    rail.cpp
+    rail.h
+    rail_cmd.cpp
+    rail_cmd.h
+    rail_gui.cpp
+    rail_gui.h
+    rail_map.h
+    rail_type.h
+    random_access_file.cpp
+    random_access_file_type.h
+    rev.h
+    road.cpp
+    road.h
+    road_cmd.cpp
+    road_cmd.h
+    road_func.h
+    road_gui.cpp
+    road_gui.h
+    road_internal.h
+    road_map.cpp
+    road_map.h
+    road_type.h
+    roadstop.cpp
+    roadstop_base.h
+    roadveh.h
+    roadveh_cmd.cpp
+    roadveh_cmd.h
+    roadveh_gui.cpp
+    safeguards.h
+    screensaver.cpp
+    screensaver.h
+    screenshot_bmp.cpp
+    screenshot_gui.cpp
+    screenshot_gui.h
+    screenshot.cpp
+    screenshot.h
+    screenshot_type.h
+    screenshot_pcx.cpp
+    settingentry_gui.cpp
+    settingentry_gui.h
+    settings.cpp
+    settings_cmd.h
+    settings_func.h
+    settings_gui.cpp
+    settings_gui.h
+    settings_internal.h
+    settings_table.h
+    settings_table.cpp
+    settings_type.h
+    ship.h
+    ship_cmd.cpp
+    ship_cmd.h
+    ship_gui.cpp
+    signal.cpp
+    signal_func.h
+    signal_type.h
+    signature.cpp
+    signature.h
+    signs.cpp
+    signs_base.h
+    signs_cmd.cpp
+    signs_cmd.h
+    signs_func.h
+    signs_gui.cpp
+    signs_type.h
+    slider.cpp
+    slider_func.h
+    slope_func.h
+    slope_type.h
+    smallmap_gui.cpp
+    smallmap_gui.h
+    social_integration.cpp
+    social_integration.h
+    sortlist_type.h
+    sound.cpp
+    sound_func.h
+    sound_type.h
+    soundloader.cpp
+    soundloader_func.h
+    soundloader_type.h
+    soundloader_raw.cpp
+    soundloader_wav.cpp
+    soundresampler_type.h
+    source_type.h
+    sprite.cpp
+    sprite.h
+    spritecache.cpp
+    spritecache.h
+    spritecache_internal.h
+    spritecache_type.h
+    station.cpp
+    station_base.h
+    station_cmd.cpp
+    station_cmd.h
+    station_func.h
+    station_gui.cpp
+    station_gui.h
+    station_kdtree.h
+    station_layout_type.h
+    station_map.h
+    station_type.h
+    statusbar_gui.cpp
+    statusbar_gui.h
+    stdafx.h
+    story.cpp
+    story_base.h
+    story_cmd.h
+    story_gui.cpp
+    story_type.h
+    string.cpp
+    string_base.h
+    string_func.h
+    string_type.h
+    stringfilter.cpp
+    stringfilter_type.h
+    strings.cpp
+    strings_func.h
+    strings_internal.h
+    strings_type.h
+    subsidy.cpp
+    subsidy_base.h
+    subsidy_cmd.h
+    subsidy_func.h
+    subsidy_gui.cpp
+    subsidy_type.h
+    survey.cpp
+    survey.h
+    tar_type.h
+    terraform_cmd.cpp
+    terraform_cmd.h
+    terraform_gui.cpp
+    terraform_gui.h
+    textbuf.cpp
+    textbuf_gui.h
+    textbuf_type.h
+    texteff.cpp
+    texteff.hpp
+    textfile_gui.cpp
+    textfile_gui.h
+    textfile_type.h
+    tgp.cpp
+    tgp.h
+    thread.h
+    tile_cmd.h
+    tile_map.cpp
+    tile_map.h
+    tile_type.h
+    tilearea.cpp
+    tilearea_airport.h
+    tilearea_airportlayout.h
+    tilearea_bitmap.cpp
+    tilearea_bitmap.h
+    tilearea_diagonal.cpp
+    tilearea_diagonal.h
+    tilearea_orthogonal.cpp
+    tilearea_orthogonal.h
+    tilearea_spiral.cpp
+    tilearea_spiral.h
+    tilearea_type.h
+    tilearea_wrapper.h
+    tilehighlight_func.h
+    tilehighlight_type.h
+    timetable.h
+    timetable_cmd.cpp
+    timetable_cmd.h
+    timetable_gui.cpp
+    toolbar_gui.cpp
+    toolbar_gui.h
+    town.h
+    town_cmd.cpp
+    town_cmd.h
+    town_gui.cpp
+    town_kdtree.h
+    town_map.h
+    town_type.h
+    townname.cpp
+    townname_func.h
+    townname_type.h
+    track_func.h
+    track_type.h
+    train.h
+    train_cmd.cpp
+    train_cmd.h
+    train_gui.cpp
+    transparency.h
+    transparency_gui.cpp
+    transparency_gui.h
+    transport_type.h
+    tree_cmd.cpp
+    tree_cmd.h
+    tree_gui.cpp
+    tree_map.h
+    tunnel_map.cpp
+    tunnel_map.h
+    tunnelbridge.h
+    tunnelbridge_cmd.cpp
+    tunnelbridge_cmd.h
+    tunnelbridge_map.h
+    vehicle.cpp
+    vehicle_base.h
+    vehicle_cmd.cpp
+    vehicle_cmd.h
+    vehicle_func.h
+    vehicle_gui.cpp
+    vehicle_gui.h
+    vehicle_gui_base.h
+    vehicle_type.h
+    vehiclelist.cpp
+    vehiclelist.h
+    vehiclelist_cmd.h
+    vehiclelist_func.h
+    viewport.cpp
+    viewport_cmd.h
+    viewport_func.h
+    viewport_gui.cpp
+    viewport_kdtree.h
+    viewport_sprite_sorter.h
+    viewport_type.h
+    void_cmd.cpp
+    void_map.h
+    water.h
+    water_cmd.cpp
+    water_cmd.h
+    water_map.h
+    waypoint.cpp
+    waypoint_base.h
+    waypoint_cmd.cpp
+    waypoint_cmd.h
+    waypoint_func.h
+    waypoint_gui.cpp
+    widget.cpp
+    widget_type.h
+    window.cpp
+    window_func.h
+    window_gui.h
+    window_type.h
+    zoom_func.h
+    zoom_type.h
+)

@@ -1,0 +1,48 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md Group6.5; documentation consumers to update with actual tested locations and recipes at Group23/34.",
+  "schema_version": 1,
+  "consumers": [
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlsp-z-z-z-z-z-q-launch-center-source.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    },
+    {
+      "path": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md",
+      "required_group": 23,
+      "scope": "live continuation/recovery commands and input locations; historical facts remain dated"
+    }
+  ],
+  "command_audit": "test-cache/cleanup/plan-command-literals.log",
+  "status": "pending_tested_recipe_migration"
+}

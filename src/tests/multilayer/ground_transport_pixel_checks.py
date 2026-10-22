@@ -1,6 +1,7 @@
 """Check accepted transport source pixels against actual native UI captures.
 
 @file ground_transport_pixel_checks.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current source view.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHC.
 @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md.
 Only source-owned pixels and native display geometry are compared; no art is generated.
@@ -16,10 +17,11 @@ from tools.ground_payload_binding import checked_reference, reference
 import pack_m1_art
 
 
-def verify_purchases(execution):
+def verify_purchases(execution, source_view):
     """Require every available/locked native purchase canvas to equal its accepted source.
 
     @param execution Repository-relative successful purchase execution report.
+    @param source_view Explicit checked GroundSourceViews with current original source poses/locations.
     @return Hash-bound exact pixel evidence, without body or station coverage claims.
     """
     proof = handoff.read_json(execution)
@@ -36,8 +38,7 @@ def verify_purchases(execution):
     expected_matrix = {(model, available) for model in range(4, 9) for available in (False, True)}
     if len(scene["frames"]) != 10 or {(row["model"], row["available"]) for row in scene["frames"]} != expected_matrix:
         raise ValueError("purchase capture matrix changed")
-    scope, before, public = handoff.read_scope()
-    families = {row["asset_id"]: row for row in public["assets"]}
+    families = source_view.families
     documents, images, results = {}, {}, []
     # Read model4 from its protected M1 producer, and appended models from the
     # ground producer. Both expose immutable indexed source poses, not screenshots.
@@ -45,10 +46,7 @@ def verify_purchases(execution):
         family = families[frame["asset_id"]]
         if frame["asset_id"] != "purchase.model-{:02}".format(frame["model"]):
             raise ValueError("purchase model does not identify its source family")
-        if frame["model"] == 4:
-            poses, atlas = pack_m1_art.source_poses(family, documents, images)
-        else:
-            poses, atlas = handoff.source_poses(family, scope, before, documents, images)
+        poses, atlas = source_view.poses(frame["asset_id"])
         pose = poses[("available" if frame["available"] else "locked", 0, "none", 0, "body")]
         left, top, width, height = pose["box"]
         indices = atlas.crop((left, top, left + width, top + height)).tobytes()
@@ -86,21 +84,8 @@ def verify_purchases(execution):
 
 
 def main():
-    """Verify one actual purchase epoch and retain its repository-local evidence.
-
-    @return None; a mismatch fails before publishing a successful report.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--execution", required=True)
-    parser.add_argument("--report", required=True)
-    args = parser.parse_args()
-    output = handoff.bound(args.report)
-    if not output.is_relative_to(ROOT / "logs"):
-        raise ValueError("native pixel diagnostics belong beneath repository logs")
-    result = verify_purchases(args.execution)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in ("passed", "native_purchase_views", "matched_source_pixels")}))
+    """Require the explicit current native producer, which seals these exact pixel obligations."""
+    raise SystemExit("Use ground_viewport_review.py with explicit --mode, --selector-result, --build-result, --source-result and --run-id; this pixel verifier requires the selected current source view.")
 
 
 if __name__ == "__main__":

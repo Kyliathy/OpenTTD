@@ -1,0 +1,81 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group17; actual paid original rocket/carried probe phase pair, once-only deployment and native running/pad expenses. Ordinary final-delivery payment is separate.",
+  "configuration": "Debug",
+  "phase": "preparing",
+  "predecessor": null,
+  "source": {
+    "path": "src/tests/fixtures/demos/space/space-launch-414.sav",
+    "sha256": "02eb9fef7bb6f81f8fcf8d63d2991d1e12043855fa74d45b0149f3204a6bf6c5"
+  },
+  "before": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-before-423.sav",
+    "sha256": "ce2a813ee83b867133e63e25917221fa6ceec054c2b1020796b9b01a630fa460"
+  },
+  "after": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-after-423.sav",
+    "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+  },
+  "replay_before": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-before-423.sav",
+    "sha256": "ce2a813ee83b867133e63e25917221fa6ceec054c2b1020796b9b01a630fa460"
+  },
+  "replay_after": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-preparing/20261014-122556-fe7a300f24/saves/probe-flight-preparing-after-423.sav",
+    "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+  },
+  "ordinary_resaves": {
+    "before": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-preparing-before/20261014-122556-fe7a300f24/saves/ordinary-resave.sav",
+      "sha256": "ce2a813ee83b867133e63e25917221fa6ceec054c2b1020796b9b01a630fa460"
+    },
+    "after": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-preparing-after/20261014-122556-fe7a300f24/saves/ordinary-resave.sav",
+      "sha256": "6cbadd47b6327a525c163ae180b38d5cc19d63c4def0bc8a4b964b2c873ef64f"
+    }
+  },
+  "exact_owner_families": 26,
+  "normalized_ledger": [
+    {
+      "edge": "before",
+      "phase": 1,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3415045,
+      "rocket_profit": -128000,
+      "probe_profit": 0,
+      "fuel": 15,
+      "burned": 0,
+      "started": 2,
+      "completed": 0,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    },
+    {
+      "edge": "after",
+      "phase": 2,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3414275,
+      "rocket_profit": -320000,
+      "probe_profit": 0,
+      "fuel": 5,
+      "burned": 10,
+      "started": 2,
+      "completed": 0,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    }
+  ],
+  "no_new_mission_fee": true,
+  "no_cargo_income": true
+}

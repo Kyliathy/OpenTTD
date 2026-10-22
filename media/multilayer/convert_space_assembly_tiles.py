@@ -1,6 +1,7 @@
 """Cut the accepted original Assembly into its four genuine fixed back/front world cells.
 
 @file convert_space_assembly_tiles.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13I
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group74.2
 Only the original near coupling jaw belongs above a visiting construction craft.
@@ -39,9 +40,11 @@ def proposed_policy(document):
     """
     family = document["families"][assembly.ASSET]
     reference = family["base_source_review"]
-    if art.identity(art.ROOT / reference["path"]) != reference:
-        raise ValueError("accepted Assembly base review changed")
-    base = json.loads((art.ROOT / reference["path"]).read_text(encoding="utf-8"))["base"]
+    # The old review identity remains a historical approval fact in the frozen
+    # policy. Reconstruct measured base/foreground facts from actual originals;
+    # checked_policy still compares every field against its independent signed
+    # policy, so regeneration cannot approve changed pixels or registrations.
+    _, base = assembly.native_base(document)
     # A source policy cannot launder a changed deck or another coupling under the
     # existing physical-depth review, even with a fresh authoring signature.
     if (base["body"]["signature"] != family["approved_body_registration"]["complete"]
@@ -64,7 +67,7 @@ def proposed_policy(document):
 
 
 def checked_policy(document, public=None):
-    """Refuse tile, rotation and physical-foreground drift before original image decoding.
+    """Refuse tile, rotation and physical-foreground drift against original image geometry.
 
     @param document Current or detached Assembly source catalogue.
     @param public Optional public manifest for focused native geometry refusal checks.

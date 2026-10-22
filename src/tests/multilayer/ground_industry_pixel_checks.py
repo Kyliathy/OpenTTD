@@ -1,6 +1,7 @@
 """Compare actual selected industry viewports with their independently accepted indexed source pixels.
 
 @file ground_industry_pixel_checks.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current source view.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHB.2.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 This verifier reads source pixels and native captures. It does not render a
@@ -55,10 +56,11 @@ def project(poses, atlas, frame, reverse_parts=False, reverse_depth=False):
     return pixels
 
 
-def verify(execution):
+def verify(execution, source_view):
     """Require exact source-derived native pixels for every explicitly captured industry scene.
 
     @param execution Successful native execution JSON; artifact identities are checked before use.
+    @param source_view Explicit checked GroundSourceViews with current original source poses/locations.
     @return Exact compared source/capture identities and overlap-order discrimination, without human acceptance.
     """
     proof = handoff.read_json(execution)
@@ -71,8 +73,7 @@ def verify(execution):
         raise ValueError("industry pixels require exact native scene metadata")
     scene = handoff.read_json(scene_paths[0].relative_to(ROOT).as_posix())
     image_directory = scene_paths[0].parent.parent / "images"
-    scope = handoff.read_json("media/multilayer/ground-pack-scope.json")
-    sources = {row["asset_id"]: row for row in scope["source_rows"]}
+    sources = {row["asset_id"]: row for row in source_view.scope["source_rows"]}
     documents, atlases, reports = {}, {}, []
     # Each actual captured state resolves its own accepted source, never the
     # live selector's formula or a convenient earlier/other model's contact sheet.
@@ -122,14 +123,4 @@ def verify(execution):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--execution", required=True, help="Exact successful native fixture/state execution JSON")
-    parser.add_argument("--report", required=True, help="Explicit repository logs output")
-    args = parser.parse_args()
-    target = handoff.bound(args.report)
-    if not target.is_relative_to(ROOT / "logs"):
-        raise ValueError("native pixel verification reports belong in repository logs")
-    result = verify(args.execution)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in ("passed", "native_scenes", "matched_source_pixels")}))
+    raise SystemExit("Use ground_viewport_review.py with explicit current native/source/build inputs; standalone implicit-cache qualification is retired.")

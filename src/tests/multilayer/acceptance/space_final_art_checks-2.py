@@ -1,33 +1,9 @@
-"""Qualify ordinary-game final Space screenshots against exact packed source pixels.
+"""Match actual ordinary native pixels against explicitly selected original packed art.
 
-@file space_final_art_checks-2.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BH
-Matching observes original indexed screenshot pixels. Transparency leaves the
-actual native background visible; it never authorizes another rendered pose.
+@file space_final_art_checks-2.py Exact original indexed matching algorithms.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group19C.
 """
-import argparse
 import hashlib
-import json
-from pathlib import Path
-import runpy
-
-from PIL import Image
-from space_preview_checks import ROOT, identity
-
-LEAF = runpy.run_path(str(Path(__file__).with_name("space_final_art_checks-1.py")))
-EXPECTED = {
-    "selection": ("vehicle.model-15", "full"),
-    "scan": ("vehicle.model-19", "scanning"),
-    "known": ("asteroid.nickel", "free"),
-    "construction": ("vehicle.model-20", "empty"),
-    "mining": ("vehicle.model-15", "mining"),
-    "pod": ("vehicle.model-18", "descending"),
-    "attachment": ("vehicle.model-15", "attached"),
-    "nickel": ("asteroid.nickel", None),
-    "ice": ("asteroid.ice", None),
-    "rich": ("asteroid.rare-earth", None),
-}
-
 
 def positions(native, sprite):
     """Locate an actual native sprite by every opaque source palette index.
@@ -92,120 +68,9 @@ def native_matches(native, manifest, sheet, asset, state):
     return matches
 
 
-def qualify(selector, configuration, manifest, sheet):
-    """Qualify exact ordinary captures, paid ancestry and expected visible final sprites.
-
-    @param selector Explicit complete capture-membership file.
-    @param configuration Matching independently built ordinary game.
-    @param manifest Accepted final native ranges and original packed sheet cells.
-    @param sheet Exact current indexed final source sheet.
-    @return Original current reports with independently verified native matches.
-    """
-    selected = LEAF["read"](selector)
-    assert selected["configuration"] == configuration
-    records = []
-    seen = set()
-    # Every declared state/view has one exclusive current native process and an immutable accepted gameplay source; no missing state can inherit another capture.
-    for relative in selected["selectors"]:
-        membership = LEAF["read"](ROOT / relative)
-        path = ROOT / membership["report"]["path"]
-        assert identity(path) == membership["report"]
-        proof = LEAF["read"](path)
-        assert proof["complete"] and proof["configuration"] == configuration
-        key = proof["phase"], proof["view"]
-        assert key not in seen
-        seen.add(key)
-        assert (proof["dated_producer"], proof["source"]) == LEAF["predecessor"](configuration, proof["phase"])
-        assert not any(proof[field] for field in ("added_stock", "granted_work", "granted_pose"))
-        references = {}
-        LEAF["AUDIT"]["inspect"](proof, references)
-        LEAF["AUDIT"]["compare"](proof["source"], proof["after"])
-        process = LEAF["read"](ROOT / proof["native_process"]["path"])
-        assert process["original_application"] == identity(ROOT / "build" / configuration / "openttd.exe")
-        assert proof["capture"] in process["artifacts"] and proof["after"] in process["artifacts"]
-        matches = []
-        with Image.open(ROOT / proof["capture"]["path"]) as native:
-            assert list(native.size) == proof["dimensions"]
-            assert hashlib.sha256(native.convert("RGB").tobytes()).hexdigest() == proof["rgb_pixel_sha256"]
-            if proof["view"] == "field":
-                asset, state = EXPECTED[proof["phase"]]
-                matches = native_matches(native, manifest, sheet, asset, state)
-                assert matches, (configuration, proof["phase"], "required final native sprite not visible", proof["capture"])
-        records.append(dict(report=identity(path), **proof, exact_native_matches=matches))
-    expected = {(phase, "field") for phase in EXPECTED} | {(phase, "inspector") for phase in list(EXPECTED)[:6]}
-    assert seen == expected
-    return records
-
-
-def qualify_live(selector, configuration, manifest, sheet):
-    """Verify actual ordinary construction progress independently of paused-load review.
-
-    @param selector Explicit one-process live construction capture membership.
-    @param configuration Actual independently built ordinary game.
-    @param manifest Accepted final pose/source/range identities.
-    @param sheet Exact current indexed final source sheet.
-    @return Complete live record, real earned output and exact constructing pixels.
-    """
-    member = LEAF["read"](selector)
-    path = ROOT / member["report"]["path"]
-    assert identity(path) == member["report"]
-    proof = LEAF["read"](path)
-    assert proof["complete"] and proof["configuration"] == configuration
-    assert proof["phase"] == "construction" and proof["view"] == "field" and proof["captured_live"]
-    assert (proof["dated_producer"], proof["source"]) == LEAF["predecessor"](configuration, "construction")
-    LEAF["AUDIT"]["inspect"](proof, {})
-    LEAF["AUDIT"]["compare"](proof["source"], proof["after"])
-    process = LEAF["read"](ROOT / proof["native_process"]["path"])
-    assert process["original_application"] == identity(ROOT / "build" / configuration / "openttd.exe")
-    assert proof["capture"] in process["artifacts"] and proof["earned_after"] in process["artifacts"]
-    before = LEAF["AUDIT"]["chunks"](ROOT / proof["after"]["path"])[1]
-    after = LEAF["AUDIT"]["chunks"](ROOT / proof["earned_after"]["path"])[1]
-    assert before[b"SPST"] != after[b"SPST"], "ordinary loop earned no native construction progress"
-    assert not any(proof[field] for field in ("added_stock", "granted_work", "granted_pose"))
-    commands = proof["live_console_commands"]
-    assert len(commands) == 3 and commands[0] == "pause"
-    assert commands[1].startswith('save "') and commands[2] == 'screenshot giant "space-final-construction"'
-    with Image.open(ROOT / proof["capture"]["path"]) as native:
-        assert hashlib.sha256(native.convert("RGB").tobytes()).hexdigest() == proof["rgb_pixel_sha256"]
-        matches = native_matches(native, manifest, sheet, "vehicle.model-20", "constructing")
-    assert matches, (configuration, "genuine native constructing pixels absent")
-    return dict(report=identity(path), **proof, exact_native_matches=matches)
-
-
 def main():
-    """Freeze both ordinary-game configurations only after original owners and exact final pixels agree."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--release", type=Path, required=True)
-    parser.add_argument("--debug", type=Path, required=True)
-    parser.add_argument("--live-release", type=Path, required=True)
-    parser.add_argument("--live-debug", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    args = parser.parse_args()
-    assert not args.output.exists()
-    manifest_path = ROOT / "logs/proofs/mlm/native-art/space/packed-space-manifest.json"
-    manifest = LEAF["read"](manifest_path)
-    sheet_path = ROOT / "media/baseset/openttd/space_final.png"
-    sheet = Image.open(sheet_path)
-    release = qualify(args.release, "RelWithDebInfo", manifest, sheet)
-    debug = qualify(args.debug, "Debug", manifest, sheet)
-    live = [qualify_live(args.live_release, "RelWithDebInfo", manifest, sheet), qualify_live(args.live_debug, "Debug", manifest, sheet)]
-    debug_rows = {(row["phase"], row["view"]): row for row in debug}
-    # Identical physical state must produce identical final game pixels across configurations, including the actual ordinary status/selection windows.
-    for row in release:
-        peer = debug_rows[row["phase"], row["view"]]
-        assert row["packed_acceptance"] == peer["packed_acceptance"] == release[0]["packed_acceptance"]
-        LEAF["AUDIT"]["compare"](row["after"], peer["after"])
-        assert row["rgb_pixel_sha256"] == peer["rgb_pixel_sha256"], (row["phase"], row["view"], "configuration pixels differ")
-        assert row["exact_native_matches"] == peer["exact_native_matches"]
-    result = dict(_documentation=__doc__, complete=True, configurations=[dict(configuration="RelWithDebInfo", captures=release), dict(configuration="Debug", captures=debug)],
-                  manifest=identity(manifest_path), sheet=identity(sheet_path), packed_acceptance=release[0]["packed_acceptance"],
-                  sources=[identity(Path(__file__)), identity(Path(__file__).with_name("space_final_art_checks-1.py"))],
-                  live_construction=live, ordinary_native_captures=34, paused_load_captures=32,
-                  required_field_states=10, exact_cross_configuration_pixel_comparisons=16,
-                  physical_owner_families=30, metadata_families=2, added_stock=False, granted_work=False, granted_pose=False,
-                  visual_review_complete=False, personal_review_complete=False)
-    args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(identity(args.output.resolve()), flush=True)
+    """Require the current explicit capture recipe instead of a historical proof cache."""
+    raise SystemExit("Use space_final_art_checks-1.py with --selector-result, --build-result, --source-result and --run-id; pixels qualify within that actual current capture.")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 """Append completed Space source families through the existing native pack owners.
 
 @file pack_space_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups79-80
 Original source pixels and prior native ranges remain immutable. Staging packing
@@ -124,23 +125,33 @@ def format_header(ranges, bound):
     return "\n".join(lines).encode("utf-8")
 
 
-def derive(public=None):
+def derive(public=None, source_manifests=None, context=None):
     """Prepare exact Space packing inputs without mutating prior source owners.
 
     @param public Optional detached public manifest for focused corruption checks.
+    @param source_manifests Exact current source report identities keyed by public asset.
+    @param context Explicit invocation owning selected source and packing outputs.
     @return Complete packing report and repository output byte mapping.
     @throws ValueError On stale source handoff, missing coverage or changed native bindings.
     """
     scope = read_scope()
     public = json.loads(PUBLIC.read_text(encoding="utf-8")) if public is None else public
+    # Current packing needs the complete selected closure. An output context
+    # cannot silently fall back to historical approval report files.
+    if (source_manifests is None) != (context is None):
+        raise ValueError("selected Space packing requires context and source manifests together")
+    reviews, documents = scope["source_reviews"], {}
+    if context is not None:
+        from regenerate_space_sources import bind_sources
+        public, reviews, documents = bind_sources(public, scope, context, source_manifests)
     families = {row["asset_id"]: row for row in public["assets"]}
-    documents, images, sprites, entries, ranges = {}, {}, [], [], []
+    images, sprites, entries, ranges = {}, [], [], []
     cursor = scope["native_start"]
     # Complete the seven already reviewed source families in master-plan order; each appends its own contiguous range after the frozen prior prefix.
     for asset in scope["asset_ids"]:
         family = families[asset]
         packing.validate_family(family)
-        identity = scope["source_reviews"][asset]
+        identity = reviews[asset]
         authoring = family["authoring"]
         # Source-only publication is the entry gate. Another atlas, changed report or false completion flag cannot become a packed sprite through an existing native ID.
         if (not authoring["coverage_complete"] or authoring["atlas_manifest"] != identity["path"]
@@ -185,12 +196,18 @@ def derive(public=None):
         pixels, width, height, x, y = sprite
         entry.update(box=[*position, width, height], anchor=[x, y], pixel_sha256=hashlib.sha256(bytes(pixels)).hexdigest())
     files = {ROOT / scope["png"]: png, ROOT / scope["nfo"]: nfo, ROOT / scope["header"]: header}
+    if context is not None:
+        files = {context.output("data", Path(scope[role]).name): encoded
+                 for role, encoded in (("png", png), ("nfo", nfo), ("header", header))}
     report = dict(_documentation="Owner: r2mlvs10 Group14BG; final Space packing inputs, native decoding/runtime remain separate.",
                   schema_version=1, route=scope["native_route"], source_reviews=scope["source_reviews"],
                   protected_outputs=scope["protected_outputs"], toolchain=scope["toolchain"],
                   native_start=scope["native_start"], native_sprite_bound=cursor, pose_count=len(entries), families=ranges,
                   sprites=entries, outputs=[dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(data).hexdigest())
                                              for path, data in files.items()], packed_grf=None, runtime_activated=False)
+    if context is not None:
+        report.update(schema_version=2, kind="selected_space_packing", run_id=context.run_id,
+                      historical_source_reviews=scope["source_reviews"], source_reviews=reviews)
     return report, files
 
 

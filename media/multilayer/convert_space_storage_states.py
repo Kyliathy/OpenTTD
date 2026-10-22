@@ -1,6 +1,7 @@
 """Assemble original Storage construction and availability states with explicit still aliases.
 
 @file convert_space_storage_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13G
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group72.3
 Original packets, activation and Core dependency retain their native owners.
@@ -98,6 +99,8 @@ def status_component(document):
         raise ValueError("Storage status glass leaves its existing native cabinet")
     image, evidence = site.registered_original(candidate, STATUS_CONTACT, storage.geometry())
     x0, y0, x1, y1 = evidence["native_subject_bounds"]
+    # Only the existing physical console may carry status; reject source overflow
+    # before compositing can hide pixels outside the genuine approved glass.
     if not (STATUS_BOUNDS[0] <= x0 < x1 <= STATUS_BOUNDS[2]
             and STATUS_BOUNDS[1] <= y0 < y1 <= STATUS_BOUNDS[3]):
         raise ValueError("Storage status original leaves approved cabinet before assembly")
@@ -166,6 +169,8 @@ def matrix(document=None, public=None):
         foreground = tile_policy["foreground_pixels"] if state in ("complete", "blocked") else []
         canonical = cuts.cut_cells(images[state], tile_policy["geometry"], foreground, state)
         result.extend((dict(row, alias_of=None), image) for row, image in canonical)
+        # Every declared cell/frame retains its exact original pixels and aliases;
+        # expanding logical coverage cannot invent hardware or physical phases.
         for row, image in canonical:
             alias = dict(state=state, frame=0, direction="none", tile_variant=row["tile_variant"], part=row["part"])
             result.append((dict(row, frame=1, alias_of=alias), image.copy()))
@@ -174,18 +179,16 @@ def matrix(document=None, public=None):
     return result, images, evidence
 
 
-def review(output):
+def review(output, context=None):
     """Publish full Storage source coverage without packing, native selection or game activation.
 
-    @param output Fresh repository native-art proof directory.
+    @param output Fresh source images directory in the selected generated owner.
+    @param context Explicit current recipe invocation separating images and reports.
     @return Exact original source-manifest identity.
     @throws ValueError On unsafe review ownership or invalid state source assembly.
     """
-    output = output.resolve()
-    # Fresh proof directories preserve every accepted original and old proof;
-    # source publication cannot overwrite distributed graphics or runtime data.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("Storage state review requires a fresh native-art proof directory")
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
     parts, images, evidence = matrix()
     atlas = cuts.indexed_canvas((256, 1024))
     contact = Image.new("RGB", (2304, 504), (38, 43, 49))
@@ -198,16 +201,20 @@ def review(output):
         box = [row["tile_variant"] * 64, band * 64, 64, 64]
         atlas.paste(image, tuple(box[:2]))
         sprites.append(dict(row, box=box))
+    # Show each genuine physical stage once; review enlargement never changes
+    # native world-cell ownership or turns a declared still into animation.
     for index, state in enumerate(STATES):
         rgba = images[state].convert("RGBA").resize((576, 480), Image.Resampling.NEAREST)
         contact.paste(rgba, (index * 576, 24), rgba)
         pen.text((index * 576 + 8, 6), state + " (frames0/1 identical)", fill="white")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=context is not None)
     atlas.save(output / "module-storage-authored.png", transparency=0)
     contact.save(output / "state-contact.png")
+    # Retain whole original poses for inspection alongside their real cell atlas;
+    # these disposable images carry no new source approval or native authority.
     for state, image in images.items():
         image.save(output / (state + ".png"), transparency=0)
-    path = output / "source-manifest.json"
+    path = reports / "source-manifest.json"
     report = dict(_documentation=__doc__, asset_id=storage.ASSET, **evidence, sprites=sprites,
                   coverage_complete=True, packed=False, runtime_activated=False,
                   artifacts=[art.identity(output / name) for name in

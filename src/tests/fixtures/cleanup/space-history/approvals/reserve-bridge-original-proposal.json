@@ -1,0 +1,42 @@
+{
+  "_documentation": "Audit the delivered orbital handoff without replaying historical native worlds.\n\n@file orbital_handoff_checks.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group16.\nThis documentation/identity audit reuses accepted runtime boundaries. It cannot\nclose the unfinished genuine Surface-funded chain or authorize another interval.\n",
+  "read_only": true,
+  "authorized": false,
+  "sources": [
+    {
+      "path": "logs/surface-entry-joint-cycle-reserve-005-RelWithDebInfo.json",
+      "sha256": "d1ba8ebf0f30260df755c9e0005aa9e70cc775793f4ee740ca2353b5e2223cd2"
+    },
+    {
+      "path": "logs/surface-entry-joint-cycle-reserve-005-Debug.json",
+      "sha256": "ca32074de5d538c866be9421d0518d8d1096c0baf7aa0cf1ec7760096fe9d106"
+    }
+  ],
+  "original_quote": {
+    "ceiling": 2000,
+    "ticks": 2000,
+    "unpaid": 0,
+    "operating": 12712,
+    "reserve": 40000,
+    "target": 52712,
+    "cash": 47839,
+    "funded": false,
+    "future_income_counted": 0
+  },
+  "candidate_floor": 30000,
+  "candidate_full_bill_plus_floor": 42712,
+  "current_cash": 47839,
+  "candidate_admission_margin": 5127,
+  "proposed_tick_cap": 2000,
+  "proposed_windows": 1,
+  "stop_at_first_posted_rail_payment": true,
+  "future_income_counted": 0,
+  "native_ticks_earned": 0,
+  "current_default_reserve": 40000,
+  "existing_scopes_reopened": false,
+  "repeat_authorized": false,
+  "verifier": {
+    "path": "src/tests/multilayer/orbital_handoff_checks.py",
+    "sha256": "dd2b84e34eb06ce73d6c1bc3b0828d842f7850b7caa8e3c19d1765ab9d18a8b3"
+  }
+}

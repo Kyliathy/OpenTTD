@@ -4,6 +4,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BD.3.
 One invocation runs one bounded ordinary process. Original native histories,
 packet references, product origins and cash ledgers establish actual output.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 import argparse
 import json
@@ -14,39 +15,13 @@ import sys
 from space_preview_checks import ROOT, chunks, identity
 
 sys.path.insert(0, str(ROOT / "src/tests"))
-import tbm_logistics_save_fixture as TABLE
+import savegame_tables as TABLE
+from savegame_tables import saved_owner_table as saved_table
 ORDINARY = runpy.run_path(str(Path(__file__).with_name("surface_supply_delivery_checks-2.py")))
 REVISION = runpy.run_path(str(Path(__file__).with_name("surface_entry_checks-3.py")))
 PREFIX = "roadveh[0].common[0]."
 
 
-def saved_table(path, name):
-    """Decode actual named physical owners, retaining gaps left by retired dense-pool items.
-
-    @param path Original complete native save.
-    @param name Four-byte actual table chunk owner.
-    @return Exact live object rows with their original native pool identities.
-    """
-    version, stream = TABLE.read_stream(path)
-    assert version >= 375
-    chunk, = [row for row in TABLE.chunks(stream) if row["name"] == name]
-    assert chunk["kind"] in (3, 4)
-    header = TABLE.Reader(chunk["rows"][0])
-    fields = TABLE.table_header(header)
-    assert header.pos == len(header.data)
-    result = {}
-    # SlIterateArray increments dense identity even for a zero-payload hole,
-    # then skips it. Delivered packets are routinely retired; these are absent
-    # owners, not malformed or zero-valued cargo packets to fabricate locally.
-    for index, row in enumerate(chunk["rows"][1:]):
-        if not row:
-            assert chunk["kind"] == 3
-            continue
-        reader = TABLE.Reader(row)
-        owner = reader.gamma() if chunk["kind"] == 4 else index
-        result[owner] = TABLE.table_record(reader, fields)
-        assert reader.pos == len(row)
-    return result
 
 
 def observe(path):

@@ -1,0 +1,44 @@
+{
+  "_documentation": "Restore the exact final actual construction-cash original through the ordinary game.\n\n@file surface_entry_construction_cash_checks-2.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZVEEH.\nPaused native load/resave repeats no fare, cargo transfer or earned tick.\n",
+  "complete": true,
+  "configuration": "Debug",
+  "phase": "restore",
+  "receipt": {
+    "path": "logs/surface-entry-construction-cash-work-032-Debug.json",
+    "sha256": "772b2cc8eadca5b9f6827b5aa81a87830fbc009a6c76cc26ecac93c5de9b411b"
+  },
+  "operation": {
+    "source": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215547-fa0b1bae22/saves/surface-resupply-construction-cash-work-440.sav",
+      "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+    },
+    "output": {
+      "path": "mlm/reviews/space/surface-supply-delivery-construction-cash-static-debug/20261020-215600-c5c6c9258b/saves/ordinary-440.sav",
+      "sha256": "56b6e8928e90a597a4ad4f978192f15b0649e6ad5860b41bf6f8d0f8987891a9"
+    },
+    "application": {
+      "path": "build/Debug/openttd.exe",
+      "sha256": "cc8b57ecba5cba2e84ad2b21bb7d250e37e3758553c059c514087335ab88476f"
+    },
+    "terminal": {
+      "path": "logs/space/surface-supply-delivery-construction-cash-static-debug/20261020-215600-c5c6c9258b/ordinary.log",
+      "sha256": "51b987db99b9063f3500c3b776d24cec9a111df00c0312a99960e1370e6da9ca"
+    },
+    "advance": false,
+    "native_processes": [
+      {
+        "path": "mlm/reviews/space/surface-supply-delivery-construction-cash-static-debug/20261020-215600-c5c6c9258b/reports/native-e7d45c281f3a4a909a33c316679a2f7b.json",
+        "sha256": "dec04d696ed41573137b4e1383a5a9ec3847807e233ef10e1692cb9cea343180"
+      }
+    ]
+  },
+  "original_pause": {
+    "before": 1,
+    "after": 1,
+    "original_owner": "AfterLoad_LinkGraphPauseControl"
+  },
+  "source": {
+    "path": "src/tests/multilayer/acceptance/surface_original_evidence.py",
+    "sha256": "cb2205607408bbd246306590ddaa311ecd8f34ce45bb809e054583503eb413c4"
+  }
+}

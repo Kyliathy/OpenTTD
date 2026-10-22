@@ -1,6 +1,7 @@
 """Convert measured original Space rectangles to fixed native canvases and review contacts.
 
 @file convert_space_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups17C/17D.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups14BB-14BFC
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups63-64/67-69
 Only retained original crops, uniform resampling, fixed registration and the existing DOS quantizer are used; creative edits remain imagegen.
@@ -9,11 +10,15 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import sys
 
 from PIL import Image, ImageDraw
 import convert_m1_art as base
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
+from artifact_paths import contained
+
 RECORD = ROOT / "media/multilayer/source/space/space-generation-record.json"
 ASTEROID_ASSETS = ("asteroid.nickel", "asteroid.ice", "asteroid.rare-earth")
 
@@ -61,6 +66,31 @@ def source_separator(pixel, policy=None):
             and min(red, blue) - green >= policy["chroma_min"])
 
 
+def source_reference(reference, document, feature="space"):
+    """Resolve immutable original ancestry through its existing media provenance.
+
+    @param reference Original executed input path and exact approved byte SHA256.
+    @param document Existing media generation record with explicit retained input aliases.
+    @param feature Existing space or ground media owner for retained original generation inputs.
+    @return Verified media file; original historical path/hash metadata stays unchanged.
+    @throws ValueError On missing/changed source bytes, changed alias hash or escaped owner.
+    """
+    if feature not in ("space", "ground"):
+        raise ValueError("unknown original media generation-input owner")
+    retained = document.get("retained_reference_inputs", {}).get(reference["path"])
+    if retained is None:
+        path = contained(ROOT / reference["path"], ROOT / "media")
+    else:
+        # Relocation preserves an executed generation input, never substitutes
+        # newly generated pixels or promotes an unrelated old gallery to source.
+        if retained["sha256"] != reference["sha256"]:
+            raise ValueError("retained Space generation input identity changed")
+        path = contained(ROOT / retained["path"], ROOT / "media/multilayer/guides" / feature / "retained-generation-inputs")
+    if identity(path)["sha256"] != reference["sha256"]:
+        raise ValueError("immutable Space source ancestry changed")
+    return path
+
+
 def source_candidate(key, document):
     """Resolve one exact original source and verify its immutable ancestry.
 
@@ -76,9 +106,9 @@ def source_candidate(key, document):
     if candidate["status"].startswith("rejected"):
         raise ValueError("rejected Space source cannot supply a native view")
     # An original prompt receipt and every actual image input remain unchanged; a plausible replacement cannot silently supply a selected model.
-    for record in [{k: candidate[k] for k in ("path", "sha256")}, candidate["generation_receipt"], *candidate["references"]]:
-        if identity(ROOT / record["path"]) != record:
-            raise ValueError("immutable Space source ancestry changed")
+    references = candidate.get("references", candidate.get("reference_inputs", []))
+    for record in [{k: candidate[k] for k in ("path", "sha256")}, candidate["generation_receipt"], *references]:
+        source_reference(record, document)
     return candidate
 
 

@@ -1,0 +1,2653 @@
+{
+  "_documentation": "Validate existing Space history through exact retained storage aliases only.\n\n@file space_history_audit.py No native execution, runtime restoration or EXE copies.\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group7.\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md GZVEEH.\nThe unchanged original verifier remains authoritative. A private call namespace\nselects byte-identical retained console images for its existing PE comparison.\nThis is historical validation, never fresh application qualification.\n",
+  "schema_version": 1,
+  "kind": "validated_historical_space_facts",
+  "complete": true,
+  "fresh_application_ran": false,
+  "gameplay_ticks_executed": 0,
+  "child_process_attempts": 0,
+  "original_root": {
+    "path": "logs/surface-entry-construction-cash-verification.json",
+    "sha256": "5658d458171176b7625f73dfa063ab9a140cdf29bca29877231795bd256c7349"
+  },
+  "immediate_foundation": {
+    "path": "logs/surface-entry-construction-capital-verification.json",
+    "sha256": "941543a39e4516dfcc744ed866cc744da00f7ef656eebf6ee51682b9a3ca57ee"
+  },
+  "source_epochs": [
+    {
+      "path": "logs/surface-entry-farm-backhaul-before-edit.json",
+      "sha256": "221bf6fb5932a94e327bb733d1a32b56de7048a9dd46a960d7ca0961094878f5"
+    },
+    {
+      "path": "logs/surface-entry-farm-backhaul-slot-reuse-before-edit.json",
+      "sha256": "b13968b1d83c3c3a30e255ba129d2ad446b48dab72d25cdca3e68e4eec5f8f3e"
+    },
+    {
+      "path": "logs/surface-entry-farm-two-return-before-edit.json",
+      "sha256": "98b4a028c4b9e00b95f8040aa519da0b41a3677ac247ac4494761611e7938d17"
+    },
+    {
+      "path": "logs/surface-entry-rail-productivity-recorder-versions.json",
+      "sha256": "64038a10a0bc3ad01afef0c1f83af7251a38404f5d53fbe755fd1e8baa281481"
+    },
+    {
+      "path": "logs/surface-entry-surplus-home-before-edit.json",
+      "sha256": "e1d85fcb9ede83a252f9ab5adc6119ac40471bb4c002bf7f99bfc3d36550400a"
+    },
+    {
+      "path": "logs/surface-entry-surplus-recovery-before-edit.json",
+      "sha256": "f94aa891acaf0d4fe8b68587299d0cd7d49357530eb621ad18c8cebeb4cd9a01"
+    },
+    {
+      "path": "logs/surface-entry-constructor-home-before-edit.json",
+      "sha256": "594d3293a94a26eb79dd39525682310b99a54cdd16ac9966eb2439322f29aef1"
+    },
+    {
+      "path": "logs/surface-entry-home-binding-before-edit.json",
+      "sha256": "a6a9f3359609889484064f06c258bb9351581a0c1a539d70113278e2ee3fec36"
+    },
+    {
+      "path": "logs/surface-entry-constructor-retirement-before-edit.json",
+      "sha256": "8e335b63892c8c91315cb866b48792c332f07d48c511ef98c9807009554e966e"
+    },
+    {
+      "path": "logs/surface-entry-funded-farm-goods-before-edit.json",
+      "sha256": "65533302b9fc7ea2fd98c379885af85ad7a83e662c26510aa0350f0188cb1ff6"
+    },
+    {
+      "path": "logs/surface-entry-working-cash-before-edit.json",
+      "sha256": "dfd78b0ebb38d516fa0ae3723232aca627c3824fbe2786446b581095256d4fa7"
+    },
+    {
+      "path": "logs/surface-entry-construction-capital-before-edit.json",
+      "sha256": "0bbeccd39fc9262b64b8bb913bb4ffdfe1e781b6f8381262ba5472675df1532b"
+    },
+    {
+      "path": "logs/surface-entry-construction-cash-before-edit.json",
+      "sha256": "640b282f4d41e651ef1573b08b54c8643ad696b1988b74f40515df583ca14b36"
+    }
+  ],
+  "retained_product_authority": {
+    "path": "test-cache/surface-entry/construction-capital-products/retained.json",
+    "sha256": "4f8e55371e8b5affb16409920a669c5f7969dcb3be4a6c0f6315c02a3ddcef67"
+  },
+  "final_retained_product_authority": {
+    "path": "test-cache/surface-entry/construction-cash-products/retained.json",
+    "sha256": "bb73166b6d0bb003e7075503daa1cdd8a9f88970fe4cf60ea1afc5345ffe4a1e"
+  },
+  "storage_aliases": {
+    "path": "test-cache/cleanup/space-storage-aliases.json",
+    "sha256": "de392f56956d9ad041da1bed280319ea6e8e57cf6d19d0c19684202656c2b934"
+  },
+  "storage_bound_result": {
+    "path": "logs/cleanup-space-storage-bind-20261021.json",
+    "sha256": "d5b6a654d8afd0593c1837ddfb4ae84525607530aaebffac7e1ef1b0b8afdf30"
+  },
+  "original_cli_failure": {
+    "path": "test-cache/cleanup/binder-original.log",
+    "sha256": "da73fc5bdcdee0ac8794485bfa8a676795453772800b521ad167c12eef6c302f"
+  },
+  "original_cli_status": "failed_on_advanced_live_source_src_cargopacket_cpp",
+  "adapted_verifier_status": "passed_unchanged_original_code_with_explicit_exact_storage_aliases",
+  "original_verifier": {
+    "path": "src/tests/multilayer/acceptance/surface_original_evidence.py",
+    "sha256": "cb2205607408bbd246306590ddaa311ecd8f34ce45bb809e054583503eb413c4"
+  },
+  "binder": {
+    "path": "src/tests/multilayer/acceptance/surface_entry_construction_cash_checks-3.py",
+    "sha256": "153761a00ffab81703e86748fe3f9c9b45c495f8fd18db1f751c743505cafdbb"
+  },
+  "auditor": {
+    "path": "src/tests/multilayer/acceptance/space_history_audit.py",
+    "sha256": "a54de0d12fe2aacaab78b3c535d0c8fa2fac7d4853f561d15580fba02a7c7369"
+  },
+  "configurations": [
+    {
+      "configuration": "RelWithDebInfo",
+      "receipt": {
+        "path": "logs/surface-entry-construction-cash-work-032-RelWithDebInfo.json",
+        "sha256": "02f8c6149e3638c4efaa0d0fbd3d9e0e05cdc5dca22494f76f61b01091bab42c"
+      },
+      "output": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+      },
+      "observation": {
+        "company": {
+          "cash": 182302,
+          "debt": 5000000
+        },
+        "facility": {
+          "center": 21,
+          "generation": 1,
+          "anchor": 2890,
+          "rotation": 1,
+          "member": 0,
+          "member_generation": 1,
+          "next_center": 2,
+          "next_member": 2,
+          "cells": [
+            2890,
+            2891,
+            2892,
+            2954,
+            2955,
+            2956,
+            3018,
+            3019,
+            3020,
+            3082,
+            3083,
+            3084
+          ],
+          "empty_slots": false,
+          "workshop": [
+            1048575,
+            0
+          ],
+          "pad": [
+            1048575,
+            0
+          ],
+          "queue": [
+            [
+              54,
+              1
+            ]
+          ]
+        },
+        "totals": {
+          "STEL": 32,
+          "GOOD": 50,
+          "PROP": 38
+        },
+        "cohort": [
+          {
+            "packet": 4,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 6,
+            "periods_in_transit": 110,
+            "feeder_share": 48,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 5,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 3,
+            "periods_in_transit": 14323,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 7,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 3,
+            "periods_in_transit": 80,
+            "feeder_share": 3,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 8,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 8316,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 10,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 56,
+            "feeder_share": 7,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 16,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 13,
+            "periods_in_transit": 108,
+            "feeder_share": 6,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 29,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 8315,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 34,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 2,
+            "periods_in_transit": 6417,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 40,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 12,
+            "periods_in_transit": 84,
+            "feeder_share": 9,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 41,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 4,
+            "periods_in_transit": 22,
+            "feeder_share": 6,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 44,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 25,
+            "periods_in_transit": 8,
+            "feeder_share": 587,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 52,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 89,
+            "feeder_share": 61,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 54,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 14338,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 65,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 107,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 74,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 109,
+            "feeder_share": 39,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 80,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 10,
+            "periods_in_transit": 111,
+            "feeder_share": 76,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 81,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 8,
+            "periods_in_transit": 57,
+            "feeder_share": 10,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 85,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 9,
+            "feeder_share": 24,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          }
+        ],
+        "shipments": {
+          "Surface Steel reserve 1": {
+            "vehicle": 4,
+            "label": "STEL",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 18
+          },
+          "Surface Steel reserve 2": {
+            "vehicle": 5,
+            "label": "STEL",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 18
+          },
+          "Surface Goods reserve": {
+            "vehicle": 6,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 14
+          },
+          "Surface Launch Goods reserve 1": {
+            "vehicle": 3,
+            "label": "GOOD",
+            "held": 13,
+            "packets": [
+              {
+                "packet": 17,
+                "source": 13,
+                "source_xy": 2572,
+                "loaded_at_xy": 65535,
+                "count": 13,
+                "periods_in_transit": 3,
+                "feeder_share": 22,
+                "source_type": 0,
+                "source_id": 5,
+                "travelled.x": 12,
+                "travelled.y": 40
+              }
+            ],
+            "tile": 2575,
+            "home": false,
+            "capacity": 18
+          },
+          "Surface Launch Goods reserve 2": {
+            "vehicle": 25,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2637,
+            "home": false,
+            "capacity": 18
+          },
+          "Surface Propellant reserve": {
+            "vehicle": 2,
+            "label": "PROP",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 27
+          }
+        },
+        "handling": {
+          "next_id": 7,
+          "jobs": [],
+          "remainder": 0
+        },
+        "service_lives": [
+          {
+            "vehicle": 10,
+            "name": "Surface Launch passenger 1",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 24,
+            "name": "Surface Launch passenger 3",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 42,
+            "name": "Surface Income coal",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 48,
+            "name": "Surface ore delivery",
+            "engine": 263,
+            "age": 7761,
+            "remaining": 3219
+          },
+          {
+            "vehicle": 49,
+            "name": "Surface Income goods",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 51,
+            "name": "Surface Steel delivery",
+            "engine": 152,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 52,
+            "name": "Surface Income farm",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 53,
+            "name": "Surface Launch passenger 2",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 11,
+            "name": "Surface Regional passenger 2",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 43,
+            "name": "Surface Regional passenger 3",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 56,
+            "name": "Surface Regional passenger 1",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          }
+        ],
+        "plant": {
+          "consumed": 68,
+          "produced": 68,
+          "dispatched": 68,
+          "batches": 34,
+          "delivered": 27,
+          "additional_consumed": 26,
+          "additional_produced": 26,
+          "additional_dispatched": 26,
+          "chemical_input": 1,
+          "propellant_output": 0
+        },
+        "chemical_history": {
+          "0": {
+            "CHEM": 90,
+            "PCHM": 0
+          },
+          "1": {
+            "CHEM": 0,
+            "OIL_": 180,
+            "SALT": 180
+          },
+          "2": {
+            "CHEM": 180,
+            "PROP": 0
+          }
+        },
+        "finite_salt": {
+          "extracted": 10960,
+          "remaining": 13040
+        },
+        "surviving_packets": 100,
+        "sole_packet_owners": 100,
+        "goods_income": {
+          "Surface Launch Goods reserve 1": {
+            "vehicle": 3,
+            "label": "GOOD",
+            "held": 13,
+            "packets": [
+              {
+                "packet": 17,
+                "source": 13,
+                "source_xy": 2572,
+                "loaded_at_xy": 65535,
+                "count": 13,
+                "periods_in_transit": 3,
+                "feeder_share": 22,
+                "source_type": 0,
+                "source_id": 5,
+                "travelled.x": 12,
+                "travelled.y": 40
+              }
+            ],
+            "tile": 2575,
+            "home": false,
+            "capacity": 18,
+            "engine": 140,
+            "remaining": 1974,
+            "stopped": false,
+            "profit256": -25458,
+            "previous_profit256": -197361,
+            "orders": 8
+          },
+          "Surface Launch Goods reserve 2": {
+            "vehicle": 25,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2637,
+            "home": false,
+            "capacity": 18,
+            "engine": 140,
+            "remaining": 1977,
+            "stopped": false,
+            "profit256": -17778,
+            "previous_profit256": -180721,
+            "orders": 15
+          }
+        },
+        "capital_service": {
+          "vehicle": 9,
+          "label": "PASS",
+          "held": 5,
+          "packets": [
+            {
+              "packet": 3,
+              "source": 20,
+              "source_xy": 1055,
+              "loaded_at_xy": 65535,
+              "count": 5,
+              "periods_in_transit": 15,
+              "feeder_share": 0,
+              "source_type": 1,
+              "source_id": 1,
+              "travelled.x": 31,
+              "travelled.y": 16
+            }
+          ],
+          "tile": 2546,
+          "home": false,
+          "capacity": 40,
+          "engine": 119,
+          "remaining": 3029,
+          "profit256": 70542,
+          "age": 2461,
+          "orders": 17,
+          "stopped": false
+        },
+        "farm_road": {
+          "vehicle": 62,
+          "label": "LVST",
+          "held": 10,
+          "packets": [
+            {
+              "packet": 26,
+              "source": 22,
+              "source_xy": 1316,
+              "loaded_at_xy": 65535,
+              "count": 10,
+              "periods_in_transit": 0,
+              "feeder_share": 0,
+              "source_type": 0,
+              "source_id": 7,
+              "travelled.x": 36,
+              "travelled.y": 20
+            }
+          ],
+          "tile": 1316,
+          "home": false,
+          "capacity": 18,
+          "engine": 137,
+          "remaining": 3863,
+          "profit256": -27250,
+          "previous_profit256": -230897,
+          "orders": 13,
+          "stopped": false
+        },
+        "paid_craft": [
+          {
+            "vehicle": 54,
+            "generation": 1,
+            "model": 14,
+            "placement": 2,
+            "remaining": 0,
+            "content": 3,
+            "capital": 400000,
+            "tile": 2891,
+            "deployed": false
+          }
+        ],
+        "embodied_inputs": {
+          "STEL": 12,
+          "GOOD": 16,
+          "PROP": 0
+        },
+        "constructor_retired": true,
+        "retired_embodied_inputs": {
+          "STEL": 4,
+          "GOOD": 8,
+          "PROP": 0
+        },
+        "retired_constructor": {
+          "vehicle": 38,
+          "generation": 2,
+          "model": 20,
+          "original_capital": 100000,
+          "embodied": {
+            "STEL": 4,
+            "GOOD": 8
+          },
+          "extinguished_unused_returns": 2,
+          "components_recovered": 0
+        },
+        "manifests": {
+          "54": {
+            "generation": 1,
+            "passenger": [
+              1048575,
+              0
+            ],
+            "carrier": [
+              1048575,
+              0
+            ],
+            "age": 174,
+            "returns": 0,
+            "fuel_burned": 30,
+            "supplies": [
+              [],
+              [],
+              []
+            ]
+          }
+        },
+        "core": {
+          "site": 0,
+          "row": {
+            "generation": 1,
+            "owner": 0,
+            "kind": 6,
+            "phase": 1,
+            "x": 10,
+            "y": 48,
+            "content": 3,
+            "capital": 700000,
+            "work": 740,
+            "age": 8,
+            "consumed": [
+              16,
+              24
+            ],
+            "inputs": [
+              {
+                "quantity": 0,
+                "references": []
+              },
+              {
+                "quantity": 0,
+                "references": []
+              }
+            ],
+            "module": {
+              "activation": 0,
+              "age": 47,
+              "stock": {},
+              "producer": 0,
+              "consumer": 4294967295,
+              "enabled": 1,
+              "completed": 0,
+              "service": {
+                "craft": 1048575,
+                "generation": 0,
+                "ticks": 0,
+                "paused": 0,
+                "interval": 0,
+                "serial": 0,
+                "inputs": [
+                  {
+                    "quantity": 0,
+                    "references": []
+                  },
+                  {
+                    "quantity": 0,
+                    "references": []
+                  }
+                ],
+                "model": 65535
+              },
+              "assembly_consumer": 4294967295,
+              "source": 65535,
+              "source_generation": 0,
+              "dock_service": {
+                "craft": 1048575,
+                "generation": 0,
+                "ticks": 0,
+                "paused": 0,
+                "interval": 0,
+                "serial": 0,
+                "inputs": [
+                  {
+                    "quantity": 0,
+                    "references": []
+                  },
+                  {
+                    "quantity": 0,
+                    "references": []
+                  }
+                ],
+                "model": 65535
+              },
+              "manufacture_serial": 0,
+              "manufacture": null
+            },
+            "fraction": 0,
+            "remainder": 0,
+            "tick": 2683950,
+            "interval": 0
+          }
+        },
+        "orbital_consumed": {
+          "STEL": 16,
+          "GOOD": 24,
+          "PROP": 0
+        },
+        "additional_collected": {
+          "STEL": 36,
+          "GOOD": 50,
+          "PROP": 26
+        },
+        "cargo_abandoned": {
+          "STEL": 8,
+          "GOOD": 2,
+          "PROP": 0
+        },
+        "salt_delivery": {
+          "delivered": 60,
+          "consumed": 60,
+          "salt_input": 0,
+          "chemical_output": 0,
+          "oil_input": 723,
+          "processor": {
+            "industry": 15,
+            "controller": 0,
+            "recipe": 1296386115,
+            "work_ticks": 296,
+            "scale_fraction": 0,
+            "revision": 7440,
+            "dispatched": 180
+          }
+        },
+        "chemical_carrier": {
+          "vehicle": 55,
+          "label": "CHEM",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27,
+          "engine": 134,
+          "age": 2593,
+          "life": 5490,
+          "stored": 0,
+          "reserved": 0
+        },
+        "propellant_carrier": {
+          "vehicle": 2,
+          "label": "PROP",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27,
+          "engine": 134,
+          "age": 3527,
+          "life": 5490,
+          "stored": 0,
+          "reserved": 0
+        },
+        "space_orders": {
+          "next": 3,
+          "generations": {
+            "54": 1
+          },
+          "queues": {
+            "54": {
+              "generation": 1,
+              "cursor": 0,
+              "started": 0,
+              "blocked": 0,
+              "timer": 0,
+              "work": 0,
+              "entries": [],
+              "approach": null
+            }
+          }
+        },
+        "fuel_burned": 30,
+        "flight": {
+          "vehicle": 54,
+          "generation": 1,
+          "phase": 0,
+          "blocked": 0,
+          "layer": 0,
+          "source": [
+            65535,
+            0
+          ],
+          "recovery": [
+            65535,
+            0
+          ],
+          "destination": [
+            0,
+            4294967295,
+            0
+          ],
+          "departure": [
+            0,
+            0
+          ],
+          "remaining": 0,
+          "pad_remainder": 0,
+          "flags": 0,
+          "started": 2,
+          "completed": 2,
+          "canceled": 0
+        },
+        "goods_holds": {
+          "54": 0
+        },
+        "panel": {
+          "type": 0,
+          "id": 0,
+          "reference": 0,
+          "owner": 0,
+          "layer": 2,
+          "kind": 5,
+          "active": 1,
+          "epoch": 239437,
+          "a": 30000,
+          "b": 810,
+          "c": 0,
+          "d": 0,
+          "ticks": 1,
+          "remainder": 0,
+          "lifetime_generated": 193884030,
+          "lifetime_consumed": 0,
+          "transferred": 0,
+          "imported_link": 0,
+          "destination": 0,
+          "source_endpoint": 0,
+          "destination_endpoint": 0,
+          "town": 0,
+          "town_bonus": 0,
+          "town_applied": 0,
+          "town_suspended": 0,
+          "domain": 0,
+          "riser": 0,
+          "share": 0,
+          "parent": 0
+        },
+        "operational": true,
+        "delivery_stocks": {
+          "0": {
+            "STEL": 0,
+            "GOOD": 0,
+            "PROP": 0
+          },
+          "21": {
+            "STEL": 32,
+            "GOOD": 50,
+            "PROP": 38
+          }
+        },
+        "component_carriers_returned": false,
+        "components_at_member": false,
+        "components_at_center": true,
+        "farm_balance": {
+          "state": "backhaul",
+          "active": [
+            52,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            21,
+            22,
+            23,
+            50,
+            57,
+            39,
+            60
+          ],
+          "parked": [
+            18,
+            19,
+            20
+          ],
+          "parked_livestock": [],
+          "original_owned": [
+            7,
+            8,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            40,
+            41,
+            42,
+            44,
+            45,
+            46,
+            47,
+            49,
+            52
+          ],
+          "original_wagons_owned": 32,
+          "original_wagons_active": 29,
+          "new_wagons": [
+            {
+              "vehicle": 57,
+              "held": 15,
+              "capacity": 25,
+              "packets": [
+                {
+                  "packet": 14,
+                  "source": 22,
+                  "source_xy": 1316,
+                  "loaded_at_xy": 65535,
+                  "count": 4,
+                  "periods_in_transit": 4,
+                  "feeder_share": 2,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 30
+                },
+                {
+                  "packet": 55,
+                  "source": 15,
+                  "source_xy": 2022,
+                  "loaded_at_xy": 65535,
+                  "count": 1,
+                  "periods_in_transit": 2,
+                  "feeder_share": 0,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 31
+                },
+                {
+                  "packet": 67,
+                  "source": 15,
+                  "source_xy": 2022,
+                  "loaded_at_xy": 65535,
+                  "count": 10,
+                  "periods_in_transit": 1,
+                  "feeder_share": 0,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 31
+                }
+              ]
+            }
+          ],
+          "goods_wagons": [
+            {
+              "vehicle": 39,
+              "held": 0,
+              "capacity": 25,
+              "packets": []
+            },
+            {
+              "vehicle": 60,
+              "held": 0,
+              "capacity": 25,
+              "packets": []
+            }
+          ],
+          "livestock_capacity": 200,
+          "grain_capacity": 90,
+          "goods_capacity": 50,
+          "parked_grain_capacity": 90,
+          "parked_livestock_capacity": 0,
+          "active_length": 112,
+          "train_bodies": 39,
+          "retired_livestock": [
+            58,
+            59
+          ],
+          "retired_livestock_capacity": 50
+        },
+        "new_fuel_at_member": false,
+        "new_fuel_at_center": true
+      },
+      "ordinary": {
+        "path": "logs/surface-entry-construction-cash-static-RelWithDebInfo.json",
+        "sha256": "e061a20901819f32ea08f476a44e2f6e3f5449bc8057d73b261af2b087fb8df8"
+      },
+      "save_version": 440,
+      "chunk_sha256": {
+        "GLOG": "e2e729b01d518e9c58293cd5150e64b06abb727da7ab16d4366fe535b5944d77",
+        "MAPS": "a46a6bbaa4e88f2f138c03c74a06eaa8a3b9d386db75eda61a5566cd5822b5f4",
+        "MAPT": "8eedb54896496534a7f5cb777252f3ab1deab117a55a897fb7eb0c14b9096982",
+        "MAPH": "c416d9145e273fcb0af52075efc657b8bb216c8ea2ab13ff9a2e920dbeba0cfd",
+        "MAPO": "2200ae89248a3f69b16a89819ad5aac1a99f2976e89f9ca341bbf2bf3eec2aa3",
+        "MAP2": "b07fa425bfbf7ca39fcba656e91d752324e2349a99fc8a18c3a65b690c405180",
+        "M3LO": "f523512ca565c18fcde39d1e0b3d3be818e7debae7544e5f911ca0d400c36407",
+        "M3HI": "2bcab7b57d48233aa5cf5afea42ea04724d89a7919a73d170f6f887b8e171c68",
+        "MAP5": "d9cc81a9c4f3e5e5ebe5b398461d1d49c0e06ae1fc90e63df576b812fa1132b9",
+        "MAPE": "dc8ce819e1a76b2b9ffe8e783a5017a0a80f1169b238b1e29c49f911eaa308f8",
+        "MAP7": "e3621d142580d75e2b91a4a6658b762e12c14d0cc0cb2cec4dbbffcb19dc094f",
+        "MAP8": "9e1cfce1d5e59cfaa22b06c2df21efba022c827d1aede1d81024cc3e50197af8",
+        "DATE": "09aad2bb792a3757bb8b7388d0bb386ac692c203f35922cb6089acefeddb4e2a",
+        "VIEW": "3f605b37ef39f29ff97528e7ab354ae74b56e629ac902afb4350e53afb7b9d8d",
+        "MLMD": "09d6b84b08bff1ae3b5c5d498a2e16b3a4ae379eb74dd13f6bca306d64a88227",
+        "SDEF": "169fa9c5f43c20709127356f8f83530cb706392dfbb410a82146872df7874f94",
+        "CDIM": "8b45588c0a2a99c5236fc9b2f89aee3eb7a75a59bf1e25b1dc998de20708f329",
+        "ASTR": "368206e264c95c15b39155a31e434bcad8b296857fce3a512e9d611e308e6b05",
+        "SPKN": "46c89f7a4e9c45b8d9368fcec59bfd91f5f3c7650f2b08f77cea5b673bfaf731",
+        "SPOR": "c0c3e674e8719af7ba45c95867bece461e92e928adf3e9543b878e905a43f29b",
+        "SVST": "012122449a939309e976181bc8c1f3b7c08de5264d85a506910e964b005b25bf",
+        "LCOP": "e063e3cc09fe071d5fd99941ffee5a776cbf001763d6ebdd100eddffddc32e20",
+        "SPSU": "5abb022c72c93c99ffc85d254bc546edc82e6aa8307559a50e75dd0fa4cde5b7",
+        "SPOD": "87c8c627952b3ee27a48b4dab7acab3855d3b5824b273ca181c18fb99dcb1d6b",
+        "SPST": "5371a86dca2fc238e653790c5dee32121e8bd544f7d98342b3f8b916fdc0d747",
+        "SPRC": "85b349a17b075f7b6ca1c3e57d20b9c3761c899210392aac88172ccca72df452",
+        "SSOR": "ff1bef9f60bd3c7d608e65b00ceecc537d55e6168f8b3ee59596f66d0bafdacd",
+        "SPFL": "b7e7234c1c096040d22da535951b0558d2bd0575db9bec2ea4c341edc7c44123",
+        "SPDJ": "87c8c627952b3ee27a48b4dab7acab3855d3b5824b273ca181c18fb99dcb1d6b",
+        "LCTR": "bf2ad54bd7db4dba25c9c43f85771700249a01846621172f14179875576ee52c",
+        "LCHB": "d2c64493da3a90b3526bf4e4cbacb43172ce87da073fdb09f2b3d4c975006f01",
+        "LHND": "a34c2eb020bf2e5b848dd46c393e5bfcfbd4b0ca032086f0edb9276b89bc2510",
+        "GEOS": "24ec8e7ce20e984c6106e05ef81fc8e7b36d39f2bf2e09beaecce945c9c5f09b",
+        "GDEP": "625f1417dcfa441a5ebce2483902147dabb9246fc72671af29258e217b0c9ba0",
+        "GSPN": "300c0ca85771c8818a013222b46b9628d5febfd22a255535e2ddb31c0f811e35",
+        "GVNT": "0b4f42b41ba45d53ed7a6dcf14c7986da535a14b0ff9978529c4fe06c3a6b0c1",
+        "EXJS": "1f31c76f5fca8f2dad0357fe1281570ae5f5585336447340e79941837523519f",
+        "XJOB": "fd50c2476abb80a4d1c6bfb377303192c1b657d6f2039473c600add982151d2b",
+        "XJRT": "a05606c9bcd330f0d7801c6851638550d4a84435446aa8f7354471a1841fd536",
+        "XJTL": "045aeec6b56939cb703ae95954db9826311ba8933c36f6da14de33f60e33603d",
+        "XPAS": "ca5b79f8a3e2a7671fe46b6ca22e0f9cd70e901be57d789b9b74014a9e89026f",
+        "LPWH": "f8e7347d707271fee985fe80dee2a578ab400a98e5e4ae56877f4be60391699d",
+        "LPWK": "32c76fe092b06df25d0495428c8f0fc7d5be27df4756f7dc996feac86eebea0c",
+        "TBMH": "2a687efee3056f3a6a1c6f1333eb84807212d91e51a75ae367b65d948dc589b8",
+        "TBMP": "585bcd5a1545f5c03c1b152af8acac9e1a9249490020de39559f595985e78d8e",
+        "TBMS": "094ce6ab176b393db20f5999ef9740ba9f5042d2db46c4463315b11622dfad40",
+        "SPRH": "d01773d641c8e0a44d036fd55b11913c29508011210a942040e5b24b04074f82",
+        "SPRR": "4a6683b2bd384ca3b6748be84c69e57a4dd2735d7abd543e052b082fc1d470b3",
+        "LMNH": "f8e7347d707271fee985fe80dee2a578ab400a98e5e4ae56877f4be60391699d",
+        "LMNR": "9a6da011f1c9fe5e3ef7dbe82a5e9916fac66294ebe2f5dc2075005e26f16235",
+        "LPCH": "a16e3adc2be2e2e6f246371cbbff5a087d798c2f42be20b222ceb9d7bb99a400",
+        "LPCR": "8d0196bdbe832494effcfd695226b47069a55c1e696ea97dda0e9d262caad18a",
+        "LPCC": "613336178623a5688ca9fbc709e089476de791ca0909468bcd375b76158b98ad",
+        "TBXH": "58db2f9be44301be0f768fec0cb2ffd66639813c684d55dc67833d43e7e5ee23",
+        "TBXA": "34ad65d198f7a7d82cf3ac9f3e9ad2de44819c14013e74150237a5d21bddd6fe",
+        "TBXS": "d6b53550e811c4078f70687cea6cb781ec47e38092ba51d3e3189a3a444685d4",
+        "TBXW": "48d6424aeca689f8e37fa8125bb5985c7e928d43ebb6a44e1bce9521a0f1f78a",
+        "UPLH": "331d6251cc80d964bc1c5e3d3e57652f6696cc539f58df372e4dc510597bed22",
+        "UPLD": "d037b41055937dc6e2af394aea92fdf6369511278318db8d7ba77fe8d106f813",
+        "UPPH": "a54d56e9f9f47bc40b421b9ea5fdeef749eb67ad74b3947ab675f05361f23719",
+        "UPPD": "0d8d892105f128adbb93cdd1177a60056bd73d56fccd252f5c3cc49cc41c265d",
+        "TUPH": "35158b4d9047f3431a75eec9d0434fc6a5918ab7cc2d5da3d6cdd79d98934af5",
+        "TUPD": "26b5467d05363e6e7af850dd12d9901aceac209bcb03f9a8509529a8c4e528dd",
+        "TUVH": "d33955529cc5ea10ea1772c36bd0f68b70e1e1ec7500903283d2936dace99383",
+        "TUVD": "1ac413d6e85030b8125fd4f14f441480a910046db5240f209de7a0dc5864d9ff",
+        "GCSH": "48a9ec7ee1747e96bec46038e501e7ead01c694ae0b5a81b0e6c734df32b8c60",
+        "GCSD": "3d1ebad97248b08d33d2901b38c3c7cec1a38baec371de3fa3e9291148454862",
+        "GCBH": "160c0366e600e4c167079c94eff0a8961cee8461f42601ca51328b650e9ce01a",
+        "GCBD": "31c6765b418c638a30b55b5dc25e9dab0fb10067b5f0fc6de2c4d4d47eca346e",
+        "GRSH": "48a9ec7ee1747e96bec46038e501e7ead01c694ae0b5a81b0e6c734df32b8c60",
+        "GRSD": "03d6d4ff9ff26c5e211d1ffae47382b2604b27402c6520ab968ed4b031a7069b",
+        "GHTH": "769172d6da8724f5963e79d93a9d4447fc8a5bfd78af986a0e593ad7a6b45e07",
+        "GHTD": "54b78ebd9a5be564f607aa3569f6a0904cc2f6d1cb6ac3e78f9ad1d8228b07b9",
+        "CHTS": "bc449defb972c5944c94d6941963cb68e58e1f1e3497661bf916b6c4815a77f0",
+        "PATS": "4851006b261a6e014f822312694767dba1bbf2b40b7251e8d81a5cc4674416e4",
+        "VEHS": "3618f2512c0fdd435b85aa5cdf18f2254cfb32b11b05d4d58f98be171ba96316",
+        "DEPT": "e681317dfc5173bf108533a581eb6fdb6ab2597f393ca70ffdbf24c14b989357",
+        "BKOR": "171808715b8c19426bc5ab4cabc905229a69f57b05c28e1da12bdec97e79a84b",
+        "ORDL": "d0d51c5b9319ee39a8babfa98fe466bd5c2445ad7d6598e9ccbbf62837021c4a",
+        "INDY": "f621d81d06a63e62bb50ef52e56cf0ceb24ca45fe2db7e1d85d5f477704cd221",
+        "IIDS": "1cb6e862efc5eea8c99f8e7c0a5fc6bdbfefdc0511ce891faa311e331d56b8f2",
+        "TIDS": "20a29966ab213ba74fdc3ce140d5756193c0cdf839fcc4d49d558de0141d8f8e",
+        "IBLD": "5d7269480cf49251fa51f8c518e8c3a529d223399a6f02477e1174bd132b4c06",
+        "ITBL": "ccf977f3834b52b549b9c24c92a4f2de190e7aedcf91c434a72488dddd8d6673",
+        "CAPY": "64732cab28a70004d74b1b64bdb9087c6edfbf7ee32c73e8729be2c6f51ea6f1",
+        "ECMY": "a0ad545eccc5847c9143ef0de3287bd04ceb9fff585b966c1bfb1bc4a048c312",
+        "SUBS": "8fe16bd0103a7e4234502dc2841cadbe4178ca5aa948c23b4d0dfbd4a1f2a32f",
+        "CMDL": "14f13e0e97a57049406cb315fe7e747880f1309e15a6bd9e05e55888a5eeeaa1",
+        "CMPU": "14f13e0e97a57049406cb315fe7e747880f1309e15a6bd9e05e55888a5eeeaa1",
+        "GOAL": "d9499a18fd15200cc353a4f1f6c3ff09e1c89a96da968258c1ae0e5d2c6d0ec7",
+        "STPE": "1c5124d0b4de37abe9800305f5a35a308a2c856d12f0d8930d6fcceab7017e7d",
+        "STPA": "9d729b476362c5208093e74c03038f0fee0287dbf78dc3acff2cbc2c7ecf3dbb",
+        "LEAE": "2845d05ffca3429d6c45f2200d7f5ed470c412e845c57656b0cf6da30c3619ae",
+        "LEAT": "006a89395b43343c79dd3d0f9289466a26e65c3ea424885a966a313b228a9d73",
+        "EIDS": "02ff7cc4274d1ccccccead34e6cecaebcabcc22c1e542dda4285df513a798fc7",
+        "ENGN": "9e4d40147a37289c4a12e530d7c97c0c505f73f95b63715b7d74a1fe08577a64",
+        "HIDS": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "CITY": "15067dd37d33c09431e98b164f59c55350fd17811d84b452e3403f664f6260f3",
+        "SIGN": "c654651859d7442bf1c57d6b147ffb607010c60c4efc0c2a23228bec307c203f",
+        "STNN": "a6a7f87c784088496c2430d8d3d411fd912a8f24e533e6024c6826d232e67aba",
+        "ROAD": "e5ece05b5723a0c64aa1a68bcce031411a4e782ebdac37bc76f465b9315fbf0a",
+        "PLYR": "04756115e162fbfc539bf407c9d4adf2a5b33a94fd7429b9eecee6784314bce4",
+        "AIPL": "dd9cfb209cc14f2751769a09b863cba6c51f51df91b2f2ddad5ac9b85c5761fe",
+        "GSTR": "11d96df9131f92f070a2fb095a9809fe16021b53e64d1b67523cce403bcd7927",
+        "GSDT": "3805fb6b909cc4a39a7b3435f627687785c660ba36a91089b748b39f1152330a",
+        "ANIT": "b8f6e470fccc1f7e6e098004a42539c02e218bc7a7a0efb7b85c0d68e1b6a24e",
+        "NGRF": "7a8f7899cf5560d1bb635083678ce216e4881662052daffaae4e0284216f3579",
+        "GRPS": "1b5e643d24b651195c402260ae27b31ad516c44b702452da1c15bcfb6196217b",
+        "CAPA": "30aa6f12480c645ee2c0537a0eb5bb8047df5e8187a0e7d463536a6ba7b77b18",
+        "ERNW": "c45fa78c4b1ec12e00028c62b5d1f461bb6ab6d43f60ed6a620b453ca38ed1a5",
+        "RAIL": "27e7522833329e436a0037f6022ece55e60569426482558b3dd7ad3a2c189cb1",
+        "ROTT": "41fb58a0de78c978367d2c0944e022900588552f169b9a8f9a115b8a9143ccff",
+        "LGRP": "23c8e646d62a3689f9618c4cbfc330b7a0faf38551666e0a5294844dd98ac4f5",
+        "LGRJ": "0aea0f52ce6f08cbde2ddd9359a20f30bfe906dc0e69bcddaf2a4deb856e1e07",
+        "LGRS": "74ec0f21dc017e79219db7064efa274c023de576d284e1581de183fdf440f311",
+        "ATID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "APID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "OBID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "OBJS": "4f303f134b086b016976d1d6653a178de20bc869575316fb049f870fb6b484c8",
+        "PSAC": "d6c797169ce66d2c12e7d44d28006000d090a4368ae9b243c22fd36d8c616278",
+        "SRND": "70cfd4f02d04a97c50d4d9d36033f4904e9b189c4758325fbe180d891bd611f1"
+      }
+    },
+    {
+      "configuration": "Debug",
+      "receipt": {
+        "path": "logs/surface-entry-construction-cash-work-032-Debug.json",
+        "sha256": "772b2cc8eadca5b9f6827b5aa81a87830fbc009a6c76cc26ecac93c5de9b411b"
+      },
+      "output": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215547-fa0b1bae22/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+      },
+      "observation": {
+        "company": {
+          "cash": 182302,
+          "debt": 5000000
+        },
+        "facility": {
+          "center": 21,
+          "generation": 1,
+          "anchor": 2890,
+          "rotation": 1,
+          "member": 0,
+          "member_generation": 1,
+          "next_center": 2,
+          "next_member": 2,
+          "cells": [
+            2890,
+            2891,
+            2892,
+            2954,
+            2955,
+            2956,
+            3018,
+            3019,
+            3020,
+            3082,
+            3083,
+            3084
+          ],
+          "empty_slots": false,
+          "workshop": [
+            1048575,
+            0
+          ],
+          "pad": [
+            1048575,
+            0
+          ],
+          "queue": [
+            [
+              54,
+              1
+            ]
+          ]
+        },
+        "totals": {
+          "STEL": 32,
+          "GOOD": 50,
+          "PROP": 38
+        },
+        "cohort": [
+          {
+            "packet": 4,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 6,
+            "periods_in_transit": 110,
+            "feeder_share": 48,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 5,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 3,
+            "periods_in_transit": 14323,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 7,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 3,
+            "periods_in_transit": 80,
+            "feeder_share": 3,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 8,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 8316,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 10,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 56,
+            "feeder_share": 7,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 16,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 13,
+            "periods_in_transit": 108,
+            "feeder_share": 6,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 29,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 8315,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 34,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 2,
+            "periods_in_transit": 6417,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 40,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 12,
+            "periods_in_transit": 84,
+            "feeder_share": 9,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 41,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 4,
+            "periods_in_transit": 22,
+            "feeder_share": 6,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 44,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 25,
+            "periods_in_transit": 8,
+            "feeder_share": 587,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          },
+          {
+            "packet": 52,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 7,
+            "periods_in_transit": 89,
+            "feeder_share": 61,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 54,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 14338,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 65,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 107,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 74,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 109,
+            "feeder_share": 39,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 80,
+            "label": "STEL",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 1,
+            "source_xy": 2204,
+            "loaded_at_xy": 65535,
+            "count": 10,
+            "periods_in_transit": 111,
+            "feeder_share": 76,
+            "source_type": 0,
+            "source_id": 10,
+            "travelled.x": 20,
+            "travelled.y": -5
+          },
+          {
+            "packet": 81,
+            "label": "GOOD",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 19,
+            "source_xy": 2377,
+            "loaded_at_xy": 65535,
+            "count": 8,
+            "periods_in_transit": 57,
+            "feeder_share": 10,
+            "source_type": 0,
+            "source_id": 11,
+            "travelled.x": 1,
+            "travelled.y": -2
+          },
+          {
+            "packet": 85,
+            "label": "PROP",
+            "owner": [
+              "station",
+              21
+            ],
+            "source": 10,
+            "source_xy": 1896,
+            "loaded_at_xy": 65535,
+            "count": 1,
+            "periods_in_transit": 9,
+            "feeder_share": 24,
+            "source_type": 0,
+            "source_id": 6,
+            "travelled.x": 32,
+            "travelled.y": -10
+          }
+        ],
+        "shipments": {
+          "Surface Steel reserve 1": {
+            "vehicle": 4,
+            "label": "STEL",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 18
+          },
+          "Surface Steel reserve 2": {
+            "vehicle": 5,
+            "label": "STEL",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 18
+          },
+          "Surface Goods reserve": {
+            "vehicle": 6,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 14
+          },
+          "Surface Launch Goods reserve 1": {
+            "vehicle": 3,
+            "label": "GOOD",
+            "held": 13,
+            "packets": [
+              {
+                "packet": 17,
+                "source": 13,
+                "source_xy": 2572,
+                "loaded_at_xy": 65535,
+                "count": 13,
+                "periods_in_transit": 3,
+                "feeder_share": 22,
+                "source_type": 0,
+                "source_id": 5,
+                "travelled.x": 12,
+                "travelled.y": 40
+              }
+            ],
+            "tile": 2575,
+            "home": false,
+            "capacity": 18
+          },
+          "Surface Launch Goods reserve 2": {
+            "vehicle": 25,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2637,
+            "home": false,
+            "capacity": 18
+          },
+          "Surface Propellant reserve": {
+            "vehicle": 2,
+            "label": "PROP",
+            "held": 0,
+            "packets": [],
+            "tile": 2443,
+            "home": true,
+            "capacity": 27
+          }
+        },
+        "handling": {
+          "next_id": 7,
+          "jobs": [],
+          "remainder": 0
+        },
+        "service_lives": [
+          {
+            "vehicle": 10,
+            "name": "Surface Launch passenger 1",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 24,
+            "name": "Surface Launch passenger 3",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 42,
+            "name": "Surface Income coal",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 48,
+            "name": "Surface ore delivery",
+            "engine": 263,
+            "age": 7761,
+            "remaining": 3219
+          },
+          {
+            "vehicle": 49,
+            "name": "Surface Income goods",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 51,
+            "name": "Surface Steel delivery",
+            "engine": 152,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 52,
+            "name": "Surface Income farm",
+            "engine": 24,
+            "age": 4729,
+            "remaining": 3689
+          },
+          {
+            "vehicle": 53,
+            "name": "Surface Launch passenger 2",
+            "engine": 119,
+            "age": 3940,
+            "remaining": 1550
+          },
+          {
+            "vehicle": 11,
+            "name": "Surface Regional passenger 2",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 43,
+            "name": "Surface Regional passenger 3",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          },
+          {
+            "vehicle": 56,
+            "name": "Surface Regional passenger 1",
+            "engine": 119,
+            "age": 2390,
+            "remaining": 3100
+          }
+        ],
+        "plant": {
+          "consumed": 68,
+          "produced": 68,
+          "dispatched": 68,
+          "batches": 34,
+          "delivered": 27,
+          "additional_consumed": 26,
+          "additional_produced": 26,
+          "additional_dispatched": 26,
+          "chemical_input": 1,
+          "propellant_output": 0
+        },
+        "chemical_history": {
+          "0": {
+            "CHEM": 90,
+            "PCHM": 0
+          },
+          "1": {
+            "CHEM": 0,
+            "OIL_": 180,
+            "SALT": 180
+          },
+          "2": {
+            "CHEM": 180,
+            "PROP": 0
+          }
+        },
+        "finite_salt": {
+          "extracted": 10960,
+          "remaining": 13040
+        },
+        "surviving_packets": 100,
+        "sole_packet_owners": 100,
+        "goods_income": {
+          "Surface Launch Goods reserve 1": {
+            "vehicle": 3,
+            "label": "GOOD",
+            "held": 13,
+            "packets": [
+              {
+                "packet": 17,
+                "source": 13,
+                "source_xy": 2572,
+                "loaded_at_xy": 65535,
+                "count": 13,
+                "periods_in_transit": 3,
+                "feeder_share": 22,
+                "source_type": 0,
+                "source_id": 5,
+                "travelled.x": 12,
+                "travelled.y": 40
+              }
+            ],
+            "tile": 2575,
+            "home": false,
+            "capacity": 18,
+            "engine": 140,
+            "remaining": 1974,
+            "stopped": false,
+            "profit256": -25458,
+            "previous_profit256": -197361,
+            "orders": 8
+          },
+          "Surface Launch Goods reserve 2": {
+            "vehicle": 25,
+            "label": "GOOD",
+            "held": 0,
+            "packets": [],
+            "tile": 2637,
+            "home": false,
+            "capacity": 18,
+            "engine": 140,
+            "remaining": 1977,
+            "stopped": false,
+            "profit256": -17778,
+            "previous_profit256": -180721,
+            "orders": 15
+          }
+        },
+        "capital_service": {
+          "vehicle": 9,
+          "label": "PASS",
+          "held": 5,
+          "packets": [
+            {
+              "packet": 3,
+              "source": 20,
+              "source_xy": 1055,
+              "loaded_at_xy": 65535,
+              "count": 5,
+              "periods_in_transit": 15,
+              "feeder_share": 0,
+              "source_type": 1,
+              "source_id": 1,
+              "travelled.x": 31,
+              "travelled.y": 16
+            }
+          ],
+          "tile": 2546,
+          "home": false,
+          "capacity": 40,
+          "engine": 119,
+          "remaining": 3029,
+          "profit256": 70542,
+          "age": 2461,
+          "orders": 17,
+          "stopped": false
+        },
+        "farm_road": {
+          "vehicle": 62,
+          "label": "LVST",
+          "held": 10,
+          "packets": [
+            {
+              "packet": 26,
+              "source": 22,
+              "source_xy": 1316,
+              "loaded_at_xy": 65535,
+              "count": 10,
+              "periods_in_transit": 0,
+              "feeder_share": 0,
+              "source_type": 0,
+              "source_id": 7,
+              "travelled.x": 36,
+              "travelled.y": 20
+            }
+          ],
+          "tile": 1316,
+          "home": false,
+          "capacity": 18,
+          "engine": 137,
+          "remaining": 3863,
+          "profit256": -27250,
+          "previous_profit256": -230897,
+          "orders": 13,
+          "stopped": false
+        },
+        "paid_craft": [
+          {
+            "vehicle": 54,
+            "generation": 1,
+            "model": 14,
+            "placement": 2,
+            "remaining": 0,
+            "content": 3,
+            "capital": 400000,
+            "tile": 2891,
+            "deployed": false
+          }
+        ],
+        "embodied_inputs": {
+          "STEL": 12,
+          "GOOD": 16,
+          "PROP": 0
+        },
+        "constructor_retired": true,
+        "retired_embodied_inputs": {
+          "STEL": 4,
+          "GOOD": 8,
+          "PROP": 0
+        },
+        "retired_constructor": {
+          "vehicle": 38,
+          "generation": 2,
+          "model": 20,
+          "original_capital": 100000,
+          "embodied": {
+            "STEL": 4,
+            "GOOD": 8
+          },
+          "extinguished_unused_returns": 2,
+          "components_recovered": 0
+        },
+        "manifests": {
+          "54": {
+            "generation": 1,
+            "passenger": [
+              1048575,
+              0
+            ],
+            "carrier": [
+              1048575,
+              0
+            ],
+            "age": 174,
+            "returns": 0,
+            "fuel_burned": 30,
+            "supplies": [
+              [],
+              [],
+              []
+            ]
+          }
+        },
+        "core": {
+          "site": 0,
+          "row": {
+            "generation": 1,
+            "owner": 0,
+            "kind": 6,
+            "phase": 1,
+            "x": 10,
+            "y": 48,
+            "content": 3,
+            "capital": 700000,
+            "work": 740,
+            "age": 8,
+            "consumed": [
+              16,
+              24
+            ],
+            "inputs": [
+              {
+                "quantity": 0,
+                "references": []
+              },
+              {
+                "quantity": 0,
+                "references": []
+              }
+            ],
+            "module": {
+              "activation": 0,
+              "age": 47,
+              "stock": {},
+              "producer": 0,
+              "consumer": 4294967295,
+              "enabled": 1,
+              "completed": 0,
+              "service": {
+                "craft": 1048575,
+                "generation": 0,
+                "ticks": 0,
+                "paused": 0,
+                "interval": 0,
+                "serial": 0,
+                "inputs": [
+                  {
+                    "quantity": 0,
+                    "references": []
+                  },
+                  {
+                    "quantity": 0,
+                    "references": []
+                  }
+                ],
+                "model": 65535
+              },
+              "assembly_consumer": 4294967295,
+              "source": 65535,
+              "source_generation": 0,
+              "dock_service": {
+                "craft": 1048575,
+                "generation": 0,
+                "ticks": 0,
+                "paused": 0,
+                "interval": 0,
+                "serial": 0,
+                "inputs": [
+                  {
+                    "quantity": 0,
+                    "references": []
+                  },
+                  {
+                    "quantity": 0,
+                    "references": []
+                  }
+                ],
+                "model": 65535
+              },
+              "manufacture_serial": 0,
+              "manufacture": null
+            },
+            "fraction": 0,
+            "remainder": 0,
+            "tick": 2683950,
+            "interval": 0
+          }
+        },
+        "orbital_consumed": {
+          "STEL": 16,
+          "GOOD": 24,
+          "PROP": 0
+        },
+        "additional_collected": {
+          "STEL": 36,
+          "GOOD": 50,
+          "PROP": 26
+        },
+        "cargo_abandoned": {
+          "STEL": 8,
+          "GOOD": 2,
+          "PROP": 0
+        },
+        "salt_delivery": {
+          "delivered": 60,
+          "consumed": 60,
+          "salt_input": 0,
+          "chemical_output": 0,
+          "oil_input": 723,
+          "processor": {
+            "industry": 15,
+            "controller": 0,
+            "recipe": 1296386115,
+            "work_ticks": 296,
+            "scale_fraction": 0,
+            "revision": 7440,
+            "dispatched": 180
+          }
+        },
+        "chemical_carrier": {
+          "vehicle": 55,
+          "label": "CHEM",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27,
+          "engine": 134,
+          "age": 2593,
+          "life": 5490,
+          "stored": 0,
+          "reserved": 0
+        },
+        "propellant_carrier": {
+          "vehicle": 2,
+          "label": "PROP",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27,
+          "engine": 134,
+          "age": 3527,
+          "life": 5490,
+          "stored": 0,
+          "reserved": 0
+        },
+        "space_orders": {
+          "next": 3,
+          "generations": {
+            "54": 1
+          },
+          "queues": {
+            "54": {
+              "generation": 1,
+              "cursor": 0,
+              "started": 0,
+              "blocked": 0,
+              "timer": 0,
+              "work": 0,
+              "entries": [],
+              "approach": null
+            }
+          }
+        },
+        "fuel_burned": 30,
+        "flight": {
+          "vehicle": 54,
+          "generation": 1,
+          "phase": 0,
+          "blocked": 0,
+          "layer": 0,
+          "source": [
+            65535,
+            0
+          ],
+          "recovery": [
+            65535,
+            0
+          ],
+          "destination": [
+            0,
+            4294967295,
+            0
+          ],
+          "departure": [
+            0,
+            0
+          ],
+          "remaining": 0,
+          "pad_remainder": 0,
+          "flags": 0,
+          "started": 2,
+          "completed": 2,
+          "canceled": 0
+        },
+        "goods_holds": {
+          "54": 0
+        },
+        "panel": {
+          "type": 0,
+          "id": 0,
+          "reference": 0,
+          "owner": 0,
+          "layer": 2,
+          "kind": 5,
+          "active": 1,
+          "epoch": 239437,
+          "a": 30000,
+          "b": 810,
+          "c": 0,
+          "d": 0,
+          "ticks": 1,
+          "remainder": 0,
+          "lifetime_generated": 193884030,
+          "lifetime_consumed": 0,
+          "transferred": 0,
+          "imported_link": 0,
+          "destination": 0,
+          "source_endpoint": 0,
+          "destination_endpoint": 0,
+          "town": 0,
+          "town_bonus": 0,
+          "town_applied": 0,
+          "town_suspended": 0,
+          "domain": 0,
+          "riser": 0,
+          "share": 0,
+          "parent": 0
+        },
+        "operational": true,
+        "delivery_stocks": {
+          "0": {
+            "STEL": 0,
+            "GOOD": 0,
+            "PROP": 0
+          },
+          "21": {
+            "STEL": 32,
+            "GOOD": 50,
+            "PROP": 38
+          }
+        },
+        "component_carriers_returned": false,
+        "components_at_member": false,
+        "components_at_center": true,
+        "farm_balance": {
+          "state": "backhaul",
+          "active": [
+            52,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            21,
+            22,
+            23,
+            50,
+            57,
+            39,
+            60
+          ],
+          "parked": [
+            18,
+            19,
+            20
+          ],
+          "parked_livestock": [],
+          "original_owned": [
+            7,
+            8,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            40,
+            41,
+            42,
+            44,
+            45,
+            46,
+            47,
+            49,
+            52
+          ],
+          "original_wagons_owned": 32,
+          "original_wagons_active": 29,
+          "new_wagons": [
+            {
+              "vehicle": 57,
+              "held": 15,
+              "capacity": 25,
+              "packets": [
+                {
+                  "packet": 14,
+                  "source": 22,
+                  "source_xy": 1316,
+                  "loaded_at_xy": 65535,
+                  "count": 4,
+                  "periods_in_transit": 4,
+                  "feeder_share": 2,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 30
+                },
+                {
+                  "packet": 55,
+                  "source": 15,
+                  "source_xy": 2022,
+                  "loaded_at_xy": 65535,
+                  "count": 1,
+                  "periods_in_transit": 2,
+                  "feeder_share": 0,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 31
+                },
+                {
+                  "packet": 67,
+                  "source": 15,
+                  "source_xy": 2022,
+                  "loaded_at_xy": 65535,
+                  "count": 10,
+                  "periods_in_transit": 1,
+                  "feeder_share": 0,
+                  "source_type": 0,
+                  "source_id": 7,
+                  "travelled.x": 38,
+                  "travelled.y": 31
+                }
+              ]
+            }
+          ],
+          "goods_wagons": [
+            {
+              "vehicle": 39,
+              "held": 0,
+              "capacity": 25,
+              "packets": []
+            },
+            {
+              "vehicle": 60,
+              "held": 0,
+              "capacity": 25,
+              "packets": []
+            }
+          ],
+          "livestock_capacity": 200,
+          "grain_capacity": 90,
+          "goods_capacity": 50,
+          "parked_grain_capacity": 90,
+          "parked_livestock_capacity": 0,
+          "active_length": 112,
+          "train_bodies": 39,
+          "retired_livestock": [
+            58,
+            59
+          ],
+          "retired_livestock_capacity": 50
+        },
+        "new_fuel_at_member": false,
+        "new_fuel_at_center": true
+      },
+      "ordinary": {
+        "path": "logs/surface-entry-construction-cash-static-Debug.json",
+        "sha256": "7d3409a08fd5f76116fedef826d4bd181538efa5dae03664be95f30cc9bfb4ad"
+      },
+      "save_version": 440,
+      "chunk_sha256": {
+        "GLOG": "baec199e6a3618eb5ca3732fd07d157d11df2d1f181a80b4c01e866bdada98f2",
+        "MAPS": "a46a6bbaa4e88f2f138c03c74a06eaa8a3b9d386db75eda61a5566cd5822b5f4",
+        "MAPT": "8eedb54896496534a7f5cb777252f3ab1deab117a55a897fb7eb0c14b9096982",
+        "MAPH": "c416d9145e273fcb0af52075efc657b8bb216c8ea2ab13ff9a2e920dbeba0cfd",
+        "MAPO": "2200ae89248a3f69b16a89819ad5aac1a99f2976e89f9ca341bbf2bf3eec2aa3",
+        "MAP2": "b07fa425bfbf7ca39fcba656e91d752324e2349a99fc8a18c3a65b690c405180",
+        "M3LO": "f523512ca565c18fcde39d1e0b3d3be818e7debae7544e5f911ca0d400c36407",
+        "M3HI": "2bcab7b57d48233aa5cf5afea42ea04724d89a7919a73d170f6f887b8e171c68",
+        "MAP5": "d9cc81a9c4f3e5e5ebe5b398461d1d49c0e06ae1fc90e63df576b812fa1132b9",
+        "MAPE": "dc8ce819e1a76b2b9ffe8e783a5017a0a80f1169b238b1e29c49f911eaa308f8",
+        "MAP7": "e3621d142580d75e2b91a4a6658b762e12c14d0cc0cb2cec4dbbffcb19dc094f",
+        "MAP8": "9e1cfce1d5e59cfaa22b06c2df21efba022c827d1aede1d81024cc3e50197af8",
+        "DATE": "09aad2bb792a3757bb8b7388d0bb386ac692c203f35922cb6089acefeddb4e2a",
+        "VIEW": "3f605b37ef39f29ff97528e7ab354ae74b56e629ac902afb4350e53afb7b9d8d",
+        "MLMD": "09d6b84b08bff1ae3b5c5d498a2e16b3a4ae379eb74dd13f6bca306d64a88227",
+        "SDEF": "169fa9c5f43c20709127356f8f83530cb706392dfbb410a82146872df7874f94",
+        "CDIM": "8b45588c0a2a99c5236fc9b2f89aee3eb7a75a59bf1e25b1dc998de20708f329",
+        "ASTR": "368206e264c95c15b39155a31e434bcad8b296857fce3a512e9d611e308e6b05",
+        "SPKN": "46c89f7a4e9c45b8d9368fcec59bfd91f5f3c7650f2b08f77cea5b673bfaf731",
+        "SPOR": "c0c3e674e8719af7ba45c95867bece461e92e928adf3e9543b878e905a43f29b",
+        "SVST": "012122449a939309e976181bc8c1f3b7c08de5264d85a506910e964b005b25bf",
+        "LCOP": "e063e3cc09fe071d5fd99941ffee5a776cbf001763d6ebdd100eddffddc32e20",
+        "SPSU": "5abb022c72c93c99ffc85d254bc546edc82e6aa8307559a50e75dd0fa4cde5b7",
+        "SPOD": "87c8c627952b3ee27a48b4dab7acab3855d3b5824b273ca181c18fb99dcb1d6b",
+        "SPST": "5371a86dca2fc238e653790c5dee32121e8bd544f7d98342b3f8b916fdc0d747",
+        "SPRC": "85b349a17b075f7b6ca1c3e57d20b9c3761c899210392aac88172ccca72df452",
+        "SSOR": "ff1bef9f60bd3c7d608e65b00ceecc537d55e6168f8b3ee59596f66d0bafdacd",
+        "SPFL": "b7e7234c1c096040d22da535951b0558d2bd0575db9bec2ea4c341edc7c44123",
+        "SPDJ": "87c8c627952b3ee27a48b4dab7acab3855d3b5824b273ca181c18fb99dcb1d6b",
+        "LCTR": "bf2ad54bd7db4dba25c9c43f85771700249a01846621172f14179875576ee52c",
+        "LCHB": "d2c64493da3a90b3526bf4e4cbacb43172ce87da073fdb09f2b3d4c975006f01",
+        "LHND": "a34c2eb020bf2e5b848dd46c393e5bfcfbd4b0ca032086f0edb9276b89bc2510",
+        "GEOS": "24ec8e7ce20e984c6106e05ef81fc8e7b36d39f2bf2e09beaecce945c9c5f09b",
+        "GDEP": "625f1417dcfa441a5ebce2483902147dabb9246fc72671af29258e217b0c9ba0",
+        "GSPN": "300c0ca85771c8818a013222b46b9628d5febfd22a255535e2ddb31c0f811e35",
+        "GVNT": "0b4f42b41ba45d53ed7a6dcf14c7986da535a14b0ff9978529c4fe06c3a6b0c1",
+        "EXJS": "1f31c76f5fca8f2dad0357fe1281570ae5f5585336447340e79941837523519f",
+        "XJOB": "fd50c2476abb80a4d1c6bfb377303192c1b657d6f2039473c600add982151d2b",
+        "XJRT": "a05606c9bcd330f0d7801c6851638550d4a84435446aa8f7354471a1841fd536",
+        "XJTL": "045aeec6b56939cb703ae95954db9826311ba8933c36f6da14de33f60e33603d",
+        "XPAS": "ca5b79f8a3e2a7671fe46b6ca22e0f9cd70e901be57d789b9b74014a9e89026f",
+        "LPWH": "f8e7347d707271fee985fe80dee2a578ab400a98e5e4ae56877f4be60391699d",
+        "LPWK": "32c76fe092b06df25d0495428c8f0fc7d5be27df4756f7dc996feac86eebea0c",
+        "TBMH": "2a687efee3056f3a6a1c6f1333eb84807212d91e51a75ae367b65d948dc589b8",
+        "TBMP": "585bcd5a1545f5c03c1b152af8acac9e1a9249490020de39559f595985e78d8e",
+        "TBMS": "094ce6ab176b393db20f5999ef9740ba9f5042d2db46c4463315b11622dfad40",
+        "SPRH": "d01773d641c8e0a44d036fd55b11913c29508011210a942040e5b24b04074f82",
+        "SPRR": "4a6683b2bd384ca3b6748be84c69e57a4dd2735d7abd543e052b082fc1d470b3",
+        "LMNH": "f8e7347d707271fee985fe80dee2a578ab400a98e5e4ae56877f4be60391699d",
+        "LMNR": "9a6da011f1c9fe5e3ef7dbe82a5e9916fac66294ebe2f5dc2075005e26f16235",
+        "LPCH": "a16e3adc2be2e2e6f246371cbbff5a087d798c2f42be20b222ceb9d7bb99a400",
+        "LPCR": "8d0196bdbe832494effcfd695226b47069a55c1e696ea97dda0e9d262caad18a",
+        "LPCC": "613336178623a5688ca9fbc709e089476de791ca0909468bcd375b76158b98ad",
+        "TBXH": "58db2f9be44301be0f768fec0cb2ffd66639813c684d55dc67833d43e7e5ee23",
+        "TBXA": "34ad65d198f7a7d82cf3ac9f3e9ad2de44819c14013e74150237a5d21bddd6fe",
+        "TBXS": "d6b53550e811c4078f70687cea6cb781ec47e38092ba51d3e3189a3a444685d4",
+        "TBXW": "48d6424aeca689f8e37fa8125bb5985c7e928d43ebb6a44e1bce9521a0f1f78a",
+        "UPLH": "331d6251cc80d964bc1c5e3d3e57652f6696cc539f58df372e4dc510597bed22",
+        "UPLD": "d037b41055937dc6e2af394aea92fdf6369511278318db8d7ba77fe8d106f813",
+        "UPPH": "a54d56e9f9f47bc40b421b9ea5fdeef749eb67ad74b3947ab675f05361f23719",
+        "UPPD": "0d8d892105f128adbb93cdd1177a60056bd73d56fccd252f5c3cc49cc41c265d",
+        "TUPH": "35158b4d9047f3431a75eec9d0434fc6a5918ab7cc2d5da3d6cdd79d98934af5",
+        "TUPD": "26b5467d05363e6e7af850dd12d9901aceac209bcb03f9a8509529a8c4e528dd",
+        "TUVH": "d33955529cc5ea10ea1772c36bd0f68b70e1e1ec7500903283d2936dace99383",
+        "TUVD": "1ac413d6e85030b8125fd4f14f441480a910046db5240f209de7a0dc5864d9ff",
+        "GCSH": "48a9ec7ee1747e96bec46038e501e7ead01c694ae0b5a81b0e6c734df32b8c60",
+        "GCSD": "3d1ebad97248b08d33d2901b38c3c7cec1a38baec371de3fa3e9291148454862",
+        "GCBH": "160c0366e600e4c167079c94eff0a8961cee8461f42601ca51328b650e9ce01a",
+        "GCBD": "31c6765b418c638a30b55b5dc25e9dab0fb10067b5f0fc6de2c4d4d47eca346e",
+        "GRSH": "48a9ec7ee1747e96bec46038e501e7ead01c694ae0b5a81b0e6c734df32b8c60",
+        "GRSD": "03d6d4ff9ff26c5e211d1ffae47382b2604b27402c6520ab968ed4b031a7069b",
+        "GHTH": "769172d6da8724f5963e79d93a9d4447fc8a5bfd78af986a0e593ad7a6b45e07",
+        "GHTD": "54b78ebd9a5be564f607aa3569f6a0904cc2f6d1cb6ac3e78f9ad1d8228b07b9",
+        "CHTS": "bc449defb972c5944c94d6941963cb68e58e1f1e3497661bf916b6c4815a77f0",
+        "PATS": "4851006b261a6e014f822312694767dba1bbf2b40b7251e8d81a5cc4674416e4",
+        "VEHS": "3618f2512c0fdd435b85aa5cdf18f2254cfb32b11b05d4d58f98be171ba96316",
+        "DEPT": "e681317dfc5173bf108533a581eb6fdb6ab2597f393ca70ffdbf24c14b989357",
+        "BKOR": "171808715b8c19426bc5ab4cabc905229a69f57b05c28e1da12bdec97e79a84b",
+        "ORDL": "d0d51c5b9319ee39a8babfa98fe466bd5c2445ad7d6598e9ccbbf62837021c4a",
+        "INDY": "f621d81d06a63e62bb50ef52e56cf0ceb24ca45fe2db7e1d85d5f477704cd221",
+        "IIDS": "1cb6e862efc5eea8c99f8e7c0a5fc6bdbfefdc0511ce891faa311e331d56b8f2",
+        "TIDS": "20a29966ab213ba74fdc3ce140d5756193c0cdf839fcc4d49d558de0141d8f8e",
+        "IBLD": "5d7269480cf49251fa51f8c518e8c3a529d223399a6f02477e1174bd132b4c06",
+        "ITBL": "ccf977f3834b52b549b9c24c92a4f2de190e7aedcf91c434a72488dddd8d6673",
+        "CAPY": "64732cab28a70004d74b1b64bdb9087c6edfbf7ee32c73e8729be2c6f51ea6f1",
+        "ECMY": "a0ad545eccc5847c9143ef0de3287bd04ceb9fff585b966c1bfb1bc4a048c312",
+        "SUBS": "8fe16bd0103a7e4234502dc2841cadbe4178ca5aa948c23b4d0dfbd4a1f2a32f",
+        "CMDL": "14f13e0e97a57049406cb315fe7e747880f1309e15a6bd9e05e55888a5eeeaa1",
+        "CMPU": "14f13e0e97a57049406cb315fe7e747880f1309e15a6bd9e05e55888a5eeeaa1",
+        "GOAL": "d9499a18fd15200cc353a4f1f6c3ff09e1c89a96da968258c1ae0e5d2c6d0ec7",
+        "STPE": "1c5124d0b4de37abe9800305f5a35a308a2c856d12f0d8930d6fcceab7017e7d",
+        "STPA": "9d729b476362c5208093e74c03038f0fee0287dbf78dc3acff2cbc2c7ecf3dbb",
+        "LEAE": "2845d05ffca3429d6c45f2200d7f5ed470c412e845c57656b0cf6da30c3619ae",
+        "LEAT": "006a89395b43343c79dd3d0f9289466a26e65c3ea424885a966a313b228a9d73",
+        "EIDS": "02ff7cc4274d1ccccccead34e6cecaebcabcc22c1e542dda4285df513a798fc7",
+        "ENGN": "9e4d40147a37289c4a12e530d7c97c0c505f73f95b63715b7d74a1fe08577a64",
+        "HIDS": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "CITY": "15067dd37d33c09431e98b164f59c55350fd17811d84b452e3403f664f6260f3",
+        "SIGN": "c654651859d7442bf1c57d6b147ffb607010c60c4efc0c2a23228bec307c203f",
+        "STNN": "a6a7f87c784088496c2430d8d3d411fd912a8f24e533e6024c6826d232e67aba",
+        "ROAD": "e5ece05b5723a0c64aa1a68bcce031411a4e782ebdac37bc76f465b9315fbf0a",
+        "PLYR": "04756115e162fbfc539bf407c9d4adf2a5b33a94fd7429b9eecee6784314bce4",
+        "AIPL": "dd9cfb209cc14f2751769a09b863cba6c51f51df91b2f2ddad5ac9b85c5761fe",
+        "GSTR": "11d96df9131f92f070a2fb095a9809fe16021b53e64d1b67523cce403bcd7927",
+        "GSDT": "3805fb6b909cc4a39a7b3435f627687785c660ba36a91089b748b39f1152330a",
+        "ANIT": "b8f6e470fccc1f7e6e098004a42539c02e218bc7a7a0efb7b85c0d68e1b6a24e",
+        "NGRF": "7a8f7899cf5560d1bb635083678ce216e4881662052daffaae4e0284216f3579",
+        "GRPS": "1b5e643d24b651195c402260ae27b31ad516c44b702452da1c15bcfb6196217b",
+        "CAPA": "30aa6f12480c645ee2c0537a0eb5bb8047df5e8187a0e7d463536a6ba7b77b18",
+        "ERNW": "c45fa78c4b1ec12e00028c62b5d1f461bb6ab6d43f60ed6a620b453ca38ed1a5",
+        "RAIL": "27e7522833329e436a0037f6022ece55e60569426482558b3dd7ad3a2c189cb1",
+        "ROTT": "41fb58a0de78c978367d2c0944e022900588552f169b9a8f9a115b8a9143ccff",
+        "LGRP": "23c8e646d62a3689f9618c4cbfc330b7a0faf38551666e0a5294844dd98ac4f5",
+        "LGRJ": "0aea0f52ce6f08cbde2ddd9359a20f30bfe906dc0e69bcddaf2a4deb856e1e07",
+        "LGRS": "74ec0f21dc017e79219db7064efa274c023de576d284e1581de183fdf440f311",
+        "ATID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "APID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "OBID": "f9e21fe4de0e7d709af934e85eaefb21bfd78efaac12bd5ff693a0c96b9bcb7f",
+        "OBJS": "4f303f134b086b016976d1d6653a178de20bc869575316fb049f870fb6b484c8",
+        "PSAC": "d6c797169ce66d2c12e7d44d28006000d090a4368ae9b243c22fd36d8c616278",
+        "SRND": "70cfd4f02d04a97c50d4d9d36033f4904e9b189c4758325fbe180d891bd611f1"
+      }
+    }
+  ],
+  "ordinary_projection_selections": [
+    {
+      "original": {
+        "path": "mlm/runtime/native/20261020-215556-e654b11b66/main/openttd_console.exe",
+        "sha256": "1910219bbe85dd0a937f2135a0456a415b698cfc631ae1ca6b2cde0738c95510"
+      },
+      "selected": {
+        "path": "test-cache/surface-entry/construction-cash-products/158-main-openttd_console.exe",
+        "sha256": "1910219bbe85dd0a937f2135a0456a415b698cfc631ae1ca6b2cde0738c95510"
+      },
+      "application": {
+        "path": "build/RelWithDebInfo/openttd.exe",
+        "sha256": "e4903e67ad32de7c971963cf08c50e2024cc772deb0646ed18de929d01e301b3"
+      }
+    },
+    {
+      "original": {
+        "path": "mlm/runtime/native/20261020-215600-c5c6c9258b/main/openttd_console.exe",
+        "sha256": "dc4586b23ee861020c22ff455a966c7358062bd8d1e79941e7c35e58614fe31f"
+      },
+      "selected": {
+        "path": "test-cache/surface-entry/construction-cash-products/162-main-openttd_console.exe",
+        "sha256": "dc4586b23ee861020c22ff455a966c7358062bd8d1e79941e7c35e58614fe31f"
+      },
+      "application": {
+        "path": "build/Debug/openttd.exe",
+        "sha256": "cc8b57ecba5cba2e84ad2b21bb7d250e37e3758553c059c514087335ab88476f"
+      }
+    }
+  ],
+  "native_processes": 68,
+  "cross_build_gameplay_comparisons": 4080,
+  "original_ordinary_processes": 2,
+  "closed_policy": {
+    "actual_cash": 182302,
+    "startup_reserve": 40000,
+    "working_floor_policy": 100000,
+    "capital_scope": {
+      "window": 32,
+      "total_earned_ticks": 64000,
+      "maximum_windows": 32,
+      "tick_cap": 64000,
+      "ended": true,
+      "end_reason": "tick_cap"
+    },
+    "measured_cash_flow": {
+      "ticks": 64000,
+      "actual_fares": 374517,
+      "interest": 241666,
+      "other_operating_cost": 51642,
+      "cash_delta": 81209
+    }
+  },
+  "storage_validation_seconds": 78.844
+}

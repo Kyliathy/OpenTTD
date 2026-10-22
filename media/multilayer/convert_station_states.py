@@ -1,6 +1,7 @@
 """Assemble complete conventional station source coverage from retained native views.
 
 @file convert_station_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DD, immutable source-era reconstruction.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md task24.3.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Default station construction is atomic. Preview aliases and original status
@@ -35,11 +36,12 @@ def signature(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
-def checked_components(record, public):
+def checked_components(record, public, source_only=False):
     """Verify native state ownership and fixed original-glass fitting registrations.
 
     @param record Station source selections or isolated refusal fixture.
     @param public Shared native station row with its authoritative source matrix.
+    @param source_only Require the exact frozen original record; grants no current native qualification.
     @return Approved fitting geometry and original donor description.
     @throws ValueError On moved fittings, foreign donors or invented preview stages.
     """
@@ -60,9 +62,15 @@ def checked_components(record, public):
     # Native picker/load/departure/tick owners were inspected for this source
     # decision. A changed producer requires review before its old snapshot can
     # authorize subsequent packing or new presentation claims.
-    for name, digest in geometry["native_presentation_owner_sha256"].items():
-        if source_digest(loader.base.ROOT / name) != digest:
-            raise ValueError("station native preview/loading presentation owner changed")
+    if source_only:
+        from station_source_facts import verify_original
+        verify_original(record, "record", asset="facility.rail-station")
+    else:
+        # Current native source authoring still requires its actual presentation
+        # owners. Frozen original art cannot certify changed loading/tick code.
+        for name, digest in geometry["native_presentation_owner_sha256"].items():
+            if source_digest(loader.base.ROOT / name) != digest:
+                raise ValueError("station native preview/loading presentation owner changed")
     if component["source_record"] != facilities.RECORD.relative_to(loader.base.ROOT).as_posix() or component["source_key"] != "facility-status":
         raise ValueError("station status glass lacks its original approved donor")
     return geometry, component
@@ -183,14 +191,15 @@ def review_board(poses):
     return board
 
 
-def build(record, public):
+def build(record, public, source_only=False):
     """Build the complete512-slot source matrix, preserving all384 nonempty originals.
 
     @param record Selected station original, native-view and glass-component ancestry.
     @param public Authoritative shared facility.rail-station row.
+    @param source_only Reconstruct independently frozen physical artwork without current native proof.
     @return Complete source report and deterministic native atlas/review artifacts.
     """
-    geometry, component = checked_components(record, public)
+    geometry, component = checked_components(record, public, source_only=source_only)
     lenses = original_lenses(component)
     native, sources, prior_artifacts = base_sources(record)
     atlas = sources[0]["back"].copy().resize((2048, 1024), Image.Resampling.NEAREST)

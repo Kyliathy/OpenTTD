@@ -1,6 +1,7 @@
 """Register genuine cargo-rocket originals and review their fixed native contact.
 
 @file cargo_rocket_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 Source review never creates a hull, starts a flight, publishes coverage or packs art.
@@ -44,11 +45,12 @@ def semantic_digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def checked_predecessor(document, public):
+def checked_predecessor(document, public, source_only=False):
     """Protect every completed source and unrelated public family during authoring.
 
     @param document Live Space source record, allowing rocket-only appends.
     @param public Live shared manifest, with no geometry or packed-range exception.
+    @param source_only Reconstruct originals while later native/publication epochs remain history.
     @return None.
     @throws ValueError On predecessor, retained original or payload drift.
     """
@@ -59,6 +61,14 @@ def checked_predecessor(document, public):
             or semantic_digest(document["excluded_sources"][:fixture["exclusion_count"]]) != fixture["exclusion_prefix_sha256"]
             or semantic_digest({key: value for key, value in public.items() if key != "assets"}) != fixture["public_envelope_sha256"]):
         raise ValueError("cargo rocket predecessor prefix/envelope changed")
+    if source_only:
+        # Current source recovery preserves original signed prefixes and actual
+        # retained originals. Later completed-family/native publication metadata
+        # remains historical; the selected converter separately validates its own
+        # physical public contract and all independent pixel/registration fixtures.
+        for name, expected in fixture["retained_originals"].items():
+            source.source_reference(dict(path=name, sha256=expected), document)
+        return
     # Completed family metadata and all other public rows remain independently
     # frozen, including the newly qualified launch-center occupied source.
     for key, expected in fixture["completed_source_families"].items():
@@ -100,9 +110,10 @@ def checked_model(model):
     for name, value in expected.items():
         if row[name] != value or model["public_geometry"][name] != value:
             raise ValueError("cargo rocket public geometry changed: " + name)
-    # The exact feature sources own payment, payload, burns and phases; the
-    # brief and source fit model must be refreshed explicitly after owner edits.
-    for reference in [*model["native_inputs"], model["source_predecessor_fixture"], model["launch_fit_reference"]]:
+    # Native source hashes retain the original source-model epoch as history.
+    # Current physical fit uses the unchanged independent retained fixtures;
+    # only separate native recipes qualify payment, payload, burns and phases.
+    for reference in [model["source_predecessor_fixture"], model["launch_fit_reference"]]:
         if source.identity(ROOT / reference["path"]) != reference:
             raise ValueError("cargo rocket bound owner/input changed")
 
@@ -129,8 +140,9 @@ def candidate_view(key, direction, document=None, model=None):
             or candidate["tool"] != "built-in image_gen" or not candidate["transparent_background"]):
         raise ValueError("cargo rocket original/receipt identity changed")
     for reference in candidate["reference_inputs"]:
-        if not reference["role"] or source.identity(ROOT / reference["path"])["sha256"] != reference["sha256"]:
+        if not reference["role"]:
             raise ValueError("cargo rocket image input changed")
+        source.source_reference(reference, document)
     pixels, evidence = source.native_view(key, direction, document)
     selected = model.get("selected_base")
     # Later phase/direction work cannot move or repaint the accepted NE body,

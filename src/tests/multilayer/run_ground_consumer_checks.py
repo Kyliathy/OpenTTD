@@ -1,25 +1,20 @@
-"""Build and run one bounded current-ground consumer group with explicit preservation evidence.
+"""Execute current Ground source consumers with explicit current decoder/build inputs.
 
-@file run_ground_consumer_checks.py
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups79FB-H.
+@file run_ground_consumer_checks.py Original isolated native owner; no historical EXE cache.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
-Current consumer cases use their own executable. Original games and completed
-packing applications remain exact; each focused native process is capped60seconds.
 """
-
-import argparse
 import json
 from pathlib import Path
-import re
-import subprocess
-import time
+import struct
 
 from ground_pack_check_support import ROOT, handoff
-from ground_payload_build_checks import execute
 from tools.ground_payload_binding import reference
-from support.artifact_paths import create_run_context
 
+# Historical callers are migrated/guarded separately; the current entry point
+# never chooses a before snapshot or reads this old diagnostic location.
 BASELINE = "logs/graphics/selected-ground-consumers/20261021-types-01/before.json"
+POSE_SHA256 = "1a07fe173fa21124c603586c3695df2405151c6d66263c90e4cab7e5c594ff89"
 
 
 def preserved(relative):
@@ -42,57 +37,55 @@ def preserved(relative):
     return changed, len(before["files"])
 
 
-def main():
-    """Compile or execute only the requested current native consumer burst.
+def verify_consumer_inputs(request, root):
+    """Close the independently retained tuple domain and unchanged current/later dispatch boundary.
 
-    @return None; retain real command/terminal/input/application identities in repository logs.
+    @param request Registered Ground selector request with exact retained fixture/dispatch roles.
+    @param root Explicit checkout owning immutable source expectations and current native processes.
+    @return Exact original source and selected consumer scope, without a viewport/gameplay claim.
     """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("build", "run"), required=True)
-    parser.add_argument("--configuration", choices=("Debug", "RelWithDebInfo"), required=True)
-    parser.add_argument("--run", required=True, help="Repository logs directory for this exact invocation")
-    parser.add_argument("--baseline", default=BASELINE, help="Explicit active-group before snapshot")
-    parser.add_argument("--filter", default="[ground-sprite-contract]", help="Only the active group's exact Catch tags")
-    args = parser.parse_args()
-    output = handoff.bound(args.run)
-    if not output.is_relative_to(ROOT / "logs"):
-        raise ValueError("ground consumer diagnostics belong in repository logs")
-    output.mkdir(parents=True, exist_ok=True)
-    transitions, count = preserved(args.baseline)
-    cache = dict(re.findall(r"^([^#/:=]+):[^=]+=(.*)$", (ROOT / "build/CMakeCache.txt").read_text(encoding="utf-8"), re.MULTILINE))
-    application = ROOT / "build" / args.configuration / "openttd_ground_consumer_test.exe"
-    commands, observed = [], None
-    if args.mode == "build":
-        commands.append(execute([cache["CMAKE_COMMAND"], "-S", str(ROOT), "-B", str(ROOT / "build")], ROOT, output / "configure.log"))
-        commands.append(execute([cache["CMAKE_COMMAND"], "--build", str(ROOT / "build"), "--config", args.configuration,
-                                 "--target", "openttd_ground_consumer_test", "--parallel", "2", "--", "/nodeReuse:false", "/p:CL_MPCount=2"],
-                                ROOT, output / "build.log"))
-    else:
-        context = create_run_context("multilayer-art", "ground-consumer", run_id="ground-consumer-" + str(time.time_ns()),
-                                     root=ROOT, profile="ground-consumers", process=args.configuration.lower())
-        terminal = output / "native.log"
-        started = time.monotonic()
-        with terminal.open("w", encoding="utf-8") as stream:
-            result = subprocess.run([str(application), args.filter], cwd=ROOT / "build", env=context.environment(),
-                                    stdout=stream, stderr=subprocess.STDOUT, timeout=60, check=False)
-        text = terminal.read_text(encoding="utf-8", errors="replace")
-        match = re.search(r"All tests passed \(([\d,]+) assertions? in (\d+) test cases?\)", text)
-        if result.returncode != 0 or match is None:
-            # A zero exit alone cannot prove the requested producer boundary;
-            # require the actual filtered Catch completion and exact case count.
-            raise ValueError("ground current native consumer burst failed; inspect " + str(terminal))
-        observed = {"exit_code": result.returncode, "terminal": reference(terminal), "invocation": context.run_id,
-                    "filter": args.filter, "assertions": int(match.group(1).replace(",", "")), "cases": int(match.group(2)),
-                    "seconds": round(time.monotonic() - started, 3)}
-    transitions, count = preserved(args.baseline)
-    inputs = [Path(__file__), ROOT / "src/ground_sprite.h", ROOT / "src/tests/ground_sprite_selection.cpp",
-              handoff.bound(args.baseline), ROOT / "src/table/ground_sprite_assets.h"]
-    proof = {"_documentation": __doc__, "passed": True, "configuration": args.configuration, "mode": args.mode,
-             "application": reference(application), "inputs": [reference(path) for path in inputs],
-             "commands": commands, "observation": observed, "preserved_file_count": count, "transitions": transitions,
-             "runtime_activated": False}
-    (output / (args.mode + ".json")).write_text(json.dumps(proof, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"passed": True, "configuration": args.configuration, "mode": args.mode, "observation": observed}))
+    from artifact_rebuild import identity
+    from artifact_paths import contained
+    inputs = request["inputs"]
+    contract = json.loads((root / inputs["consumer-expectations"]["path"]).read_text(encoding="utf-8"))
+    expected = {key: contract["fixture"][key] for key in ("path", "sha256")}
+    fixture = contained(root / inputs["pose-fixture"]["path"], root / "src/tests/fixtures/graphics")
+    # Current native resolver output cannot supply its own expectations. These
+    # exact original source-owned bytes predate the cleanup reader modification.
+    if (identity(fixture, root) != expected or inputs["pose-fixture"] != expected
+            or expected["sha256"] != POSE_SHA256 or fixture.stat().st_size != 128301):
+        raise ValueError("Ground consumer requires its independently retained original tuple bytes")
+    data = fixture.read_bytes()
+    if data[:8] != b"GRDPOS1\0" or struct.unpack_from("<HHHB", data, 8) != (14254, 7791, 22045, 47):
+        raise ValueError("Ground consumer independent source domain changed")
+    rows = list(struct.iter_unpack("<BBBBHBH", data[15:]))
+    # Retain every logical source axis and native ID, including aliases. A
+    # duplicate tuple or offset cannot hide an omitted source pose/family.
+    if (len(rows) != 14254 or len({row[:-1] for row in rows}) != 14254
+            or {row[-1] for row in rows} != set(range(7791, 22045))):
+        raise ValueError("Ground consumer independent tuple coverage is incomplete")
+    dispatch_path = root / inputs["dispatch"]["path"]
+    if identity(dispatch_path, root) != inputs["dispatch"]:
+        raise ValueError("Ground consumer dispatch contract changed")
+    dispatch = json.loads(dispatch_path.read_text(encoding="utf-8"))
+    counts = {name: sum(row["dispatch"] == name for row in dispatch["families"]) for name in contract["dispatch_counts"]}
+    # Source completeness cannot promote twenty-six explicitly deferred owners
+    # into current drawing, operations, useful-route or human acceptance.
+    if counts != contract["dispatch_counts"] or len(dispatch["families"]) != 50:
+        raise ValueError("Ground consumer current/later ownership partition changed")
+    for row in dispatch["families"]:
+        if row["dispatch"] == "later_owner":
+            if not all(row.get(key) for key in ("group", "master", "reason")):
+                raise ValueError("Ground deferred owner lost its explicit unfinished dispatch")
+    return dict(source_families=47, source_poses=14254, native_start=7791, native_end_exclusive=22045,
+                dispatch_families=50, dispatch_counts=counts, viewport_claimed=False,
+                later_operating_claimed=False, whole_underground_complete=False)
+
+
+def main():
+    """Dispatch only the original current Ground selector cases with explicit actual prerequisites."""
+    from space_source_review import main as selected_main
+    selected_main("ground")
 
 
 if __name__ == "__main__":

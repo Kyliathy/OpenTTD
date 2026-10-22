@@ -1,6 +1,7 @@
 """Publish original FuelStore construction states without unsupported operation.
 
 @file convert_space_fuel_store_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13HB
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group73B.3
 Native activation excludes FuelStore. Required blocked art explicitly aliases
@@ -111,6 +112,8 @@ def matrix(document=None, public=None):
         canonical = cuts.cut_cells(images[state], policy["geometry"], foreground, state)
         target = STATE_ALIASES.get(state, state)
         for frame in range(2):
+            # Every declared cell/frame retains its exact original pixels and aliases;
+            # expanding logical coverage cannot invent hardware or physical phases.
             for row, image in canonical:
                 # Alias to the actual physical original, including all blocked
                 # parts. The second frame never acquires a new work or fuel phase.
@@ -126,18 +129,16 @@ def matrix(document=None, public=None):
     return result, images, evidence
 
 
-def review(output):
+def review(output, context=None):
     """Publish complete source coverage without activating unsupported native facilities.
 
-    @param output Fresh repository native-art proof directory.
+    @param output Fresh source images directory in the selected generated owner.
+    @param context Explicit current recipe invocation separating images and reports.
     @return Exact full source-manifest identity.
     @throws ValueError On unsafe output ownership or invalid source assembly.
     """
-    output = output.resolve()
-    # Fresh proofs preserve approved originals and previous evidence. Source
-    # publication cannot overwrite shipped graphics or native runtime data.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("FuelStore state review requires a fresh native-art proof directory")
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
     parts, images, evidence = matrix()
     atlas = cuts.indexed_canvas((256, 1024))
     contact = Image.new("RGB", (2304, 504), (38, 43, 49))
@@ -150,17 +151,21 @@ def review(output):
         box = [row["tile_variant"] * 64, band * 64, 64, 64]
         atlas.paste(image, tuple(box[:2]))
         sprites.append(dict(row, box=box))
+    # Show each genuine physical stage once; review enlargement never changes
+    # native world-cell ownership or turns a declared still into animation.
     for index, state in enumerate(STATES):
         rgba = images[state].convert("RGBA").resize((576, 480), Image.Resampling.NEAREST)
         contact.paste(rgba, (index * 576, 24), rgba)
         label = state + (" = complete (unsupported activation)" if state == "blocked" else " (frames0/1 identical)")
         pen.text((index * 576 + 8, 6), label, fill="white")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=context is not None)
     atlas.save(output / "module-fuel-store-authored.png", transparency=0)
     contact.save(output / "state-contact.png")
+    # Retain whole original poses for inspection alongside their real cell atlas;
+    # these disposable images carry no new source approval or native authority.
     for state, image in images.items():
         image.save(output / (state + ".png"), transparency=0)
-    path = output / "source-manifest.json"
+    path = reports / "source-manifest.json"
     report = dict(_documentation=__doc__, asset_id=fuel.ASSET, **evidence, sprites=sprites,
                   coverage_complete=True, packed=False, runtime_activated=False,
                   artifacts=[art.identity(output / name) for name in

@@ -1,6 +1,7 @@
 """Append qualified launch-center and rocket originals through existing native packing owners.
 
 @file pack_launch_fleet_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups17CB/17CC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62I.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 Source staging preserves all previous sheets/ranges and saved MLVI identities.
@@ -11,6 +12,7 @@ import argparse
 import copy
 import hashlib
 import json
+from pathlib import Path
 import re
 import sys
 
@@ -27,10 +29,11 @@ PUBLIC = art.PUBLIC
 BUILD_PROOF = ROOT/"logs/proofs/mlm/native-art/space/launch-fleet-packing-v1/build-proof.json"
 
 
-def read_scope():
+def read_scope(current_sources=False):
     """Require exact qualified source owners, append extent and deterministic tools.
 
-    @return Explicit two-family packing scope and checked immutable source handoff.
+    @param current_sources Select retained original facts for fresh source conversion only.
+    @return Explicit two-family scope and original handoff; current native proof stays separate.
     @throws ValueError On source/proof, prior sheet/range or pinned toolchain drift.
     """
     scope = art.read_json(SCOPE)
@@ -42,6 +45,19 @@ def read_scope():
             or scope["sheet_width"] != 2048 or scope["sprite_gap"] != 2):
         raise ValueError("launch/fleet packing scope or pinned toolchain changed")
     accepted = art.read_json(handoff.bound(scope["source_handoff"]))
+    if current_sources:
+        # Fresh source reconstruction uses independent frozen source/geometry
+        # facts. Historical qualification reports and predecessor GRF copies
+        # remain history; they cannot certify or supply this selected run.
+        if (accepted["asset_order"] != scope["asset_ids"] or accepted["native_start"] != scope["native_start"]
+                or accepted["native_end_exclusive"] != scope["native_end_exclusive"]
+                or accepted["native_route"] != scope["native_route"]):
+            raise ValueError("launch original source scope differs from its frozen handoff")
+        # Preserve actual predecessor source sheets/declarations, independently
+        # of a later shared container or any old executable qualification.
+        for reference in accepted["protected_outputs"]:
+            handoff.bound(reference)
+        return scope, accepted
     handoff.checked_handoff(accepted)
     proof = art.read_json(handoff.bound(scope["source_qualification"]))
     # A current completed adapter qualification must precede any new packed
@@ -84,21 +100,33 @@ def format_header(ranges, bound):
                           b"static constexpr uint16_t LAUNCH_FLEET_SPRITE_END")
 
 
-def derive(public=None):
+def derive(public=None, source_manifests=None, context=None):
     """Prepare exact deterministic append bytes from qualified stored native source artwork.
 
     @param public Optional detached public contract for focused range/source refusal checks.
+    @param source_manifests Complete selected current source reports keyed by existing asset ID.
+    @param context Explicit current invocation owning source prerequisites and candidate data.
     @return Complete packing report and exact three owned PNG/NFO/header byte outputs.
     @throws ValueError On source qualification, original geometry or native range drift.
     """
-    scope, accepted = read_scope()
+    # An output run requires both fresh source leaves. No missing current
+    # prerequisite may silently reopen a historical approval report or gallery.
+    if (source_manifests is None) != (context is None):
+        raise ValueError("selected launch packing requires context and source manifests together")
+    scope, accepted = read_scope(current_sources=context is not None)
     public = art.read_json(PUBLIC) if public is None else public
+    documents = {}
+    if context is not None:
+        from artifact_paths import RunContext
+        from regenerate_space_sources import bind_sources, selected_path
+        selected_scope = dict(scope, source_reviews={asset: accepted["sources"][asset]["report"] for asset in scope["asset_ids"]})
+        public, _, documents = bind_sources(public, selected_scope, context, source_manifests)
     selected = [row["asset_id"] for row in public["assets"] if row["asset_id"] in handoff.ASSETS]
     # A missing/duplicated selected public identity must fail before source
     # lookup rather than becoming a dictionary overwrite or a missing-key crash.
     if len(selected) != 2 or set(selected) != set(handoff.ASSETS):
         raise ValueError("launch/fleet selected public family is missing or duplicated")
-    ranges, bound = handoff.layout(public, accepted)
+    ranges, bound = handoff.layout(public, accepted, current_sources=context is not None)
     families = {row["asset_id"]: row for row in public["assets"]}
     sprites, entries = [], []
     # Every declared state/frame/view/cell/part retains its own native identity,
@@ -106,7 +134,15 @@ def derive(public=None):
     for native in ranges:
         asset = native["asset_id"]
         family = families[asset]
-        poses, image = handoff.source_poses(family, handoff=accepted)
+        if context is None:
+            poses, image = handoff.source_poses(family, handoff=accepted)
+        else:
+            reference = source_manifests[asset]
+            source_path = selected_path(reference, context, "reports")
+            parts = source_path.relative_to(ROOT / "mlm/reviews").parts
+            source_context = RunContext(ROOT, parts[0], parts[1], context.run_id)
+            poses, image = handoff.source_poses(family, report=documents[reference["path"]],
+                                               handoff=accepted, context=source_context)
         for index, key in enumerate(packing.required_keys(family)):
             pose = poses[key]
             sprites.append(packing.cropped_pose(image, pose))
@@ -132,6 +168,14 @@ def derive(public=None):
                   native_start=scope["native_start"], native_sprite_bound=bound, pose_count=len(entries), families=ranges,
                   sprites=entries, outputs=[dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(data).hexdigest())
                                            for path, data in files.items()], packed_grf=None, runtime_activated=False)
+    if context is not None:
+        files = {context.output("data", path.name): encoded for path, encoded in files.items()}
+        report.update(schema_version=2, kind="selected_launch_packing", run_id=context.run_id,
+                      historical_source_handoff=report.pop("source_handoff"),
+                      historical_source_qualification=report.pop("source_qualification"),
+                      source_reviews=source_manifests,
+                      outputs=[dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(encoded).hexdigest())
+                               for path, encoded in files.items()])
     return report, files
 
 

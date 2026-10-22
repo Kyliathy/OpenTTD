@@ -1,0 +1,81 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md Group19C. Exact already-earned historical fixture worlds, immutable through the retained-input alias map. Historical origin identities are facts only; current GUI/build/pixel/owner proof is regenerated. No active GZVEEH world, paid progress, new baseline or authored/public status.",
+  "schema_version": 1,
+  "kind": "paused_graphics_review_worlds",
+  "physical_families": [
+    "SPST",
+    "SPKN",
+    "SPDJ",
+    "SPFL",
+    "SPOD",
+    "SPSU",
+    "SVST",
+    "LCOP",
+    "SDEF",
+    "SPOR",
+    "ASTR",
+    "VEHS",
+    "CAPA",
+    "PLYR",
+    "STNN",
+    "LCTR",
+    "LCHB",
+    "LHND",
+    "UPLH",
+    "UPLD",
+    "UPPH",
+    "UPPD",
+    "TUPH",
+    "TUPD",
+    "TUVH",
+    "TUVD",
+    "ENGN",
+    "EIDS",
+    "ERNW",
+    "GRPS"
+  ],
+  "metadata_families": [
+    "CDIM",
+    "SPRC"
+  ],
+  "worlds": {
+    "space": {
+      "source": {
+        "path": "mlm/reviews/space/asteroid-inspection-native-a/20261017-020108-ff4940e729/saves/inspection-after-438.sav",
+        "sha256": "a20f81d174b351dba803b510ce8e812d682c35ab497b8129cd660c018e550d38"
+      },
+      "source_version": 438,
+      "historical_origin": {
+        "path": "logs/asteroid-inspection-verification.json",
+        "sha256": "dd738d03ac7c633c3749fa6307b25ec3e06ac6dcb19a428f7eaf10e20f7c2294",
+        "checkpoint": "native/pending/after",
+        "role": "historical_fact_only_do_not_dereference"
+      },
+      "view": "field",
+      "expected": {
+        "asset_id": "vehicle.model-18",
+        "state": "descending"
+      }
+    },
+    "orbital": {
+      "source": {
+        "path": "mlm/reviews/space/orbital-processor-native/20261016-222517-8d058a68ff/saves/processor-ice-batch-438.sav",
+        "sha256": "87eeca0fa5c5bcb450a2b1a3109b9fa3f6268eff7a51fc2163d3715632956fc0"
+      },
+      "source_version": 438,
+      "historical_origin": {
+        "path": "logs/orbital-processor-verification.json",
+        "sha256": "45ddf32a5b13afccea72e1af6753cfe87cfcea5119d351ba063f9ee875406747",
+        "checkpoint": "native/ice-batch",
+        "role": "historical_fact_only_do_not_dereference"
+      },
+      "view": "field",
+      "expected": {
+        "asset_ids": [
+          "module.nucleus",
+          "module.processor"
+        ]
+      }
+    }
+  }
+}

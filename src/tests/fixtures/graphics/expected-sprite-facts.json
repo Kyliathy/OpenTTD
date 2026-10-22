@@ -1,0 +1,116 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md18; identities of original pre-adaptation expectation witnesses. Ground explicitly selects the existing79FHCCB corrected witness and preserves the superseded79E epoch. Historical paths/producer/reader/publication hashes are provenance only; ordinary checks never dereference them or qualify current binaries. No expectation is derived from a changed producer.",
+  "schema_version": 1,
+  "kind": "original_sprite_expectation_facts",
+  "native_loading_verified": false,
+  "families": {
+    "m1": {
+      "original_path": "logs/proofs/mlm/native-art/expected/m1-packed-sprites.bin",
+      "sha256": "66f5208e0cdd60df4b865a1014c986f9c71daf1e054372d759ee59bd814c0ba2",
+      "bytes": 49866,
+      "magic_hex": "4d4c564152543100",
+      "record_count": 3561,
+      "native_bound": 3588,
+      "original_producer": {
+        "path": "src/tests/multilayer_packed_art_fixture.py",
+        "sha256": "f033f337cf2dd92576a54a17a3a2a062565efa77e76321cc120c30d11c542b4e"
+      },
+      "original_native_reader": {
+        "path": "src/tests/multilayer_packed_load.cpp",
+        "sha256": "cec1dd433629cda316754134f4e7e24a9778b88025f1311bfa55f30781617a84"
+      }
+    },
+    "space": {
+      "original_path": "logs/proofs/mlm/native-art/expected/space-packed-sprites.bin",
+      "sha256": "316440bf0505042e62649b27c5288b8722305db16ebd06b91970b96c99e78220",
+      "bytes": 22120,
+      "magic_hex": "5350434152543100",
+      "record_count": 1579,
+      "native_bound": 5167,
+      "original_producer": {
+        "path": "src/tests/space_art_fixture.py",
+        "sha256": "7fa3974fb08e7e63a6d481ae6221484dbcc11a98d9a6929e2b00b4970f0d751e"
+      },
+      "original_native_reader": {
+        "path": "src/tests/multilayer_packed_load.cpp",
+        "sha256": "cec1dd433629cda316754134f4e7e24a9778b88025f1311bfa55f30781617a84"
+      }
+    },
+    "orbital": {
+      "original_path": "logs/proofs/mlm/native-art/expected/orbital-packed-sprites.bin",
+      "sha256": "6a9c9812aacf54708a8208179bdd6d6057141aa1f047129bd70a77e7a1152a49",
+      "bytes": 13678,
+      "magic_hex": "4f52424152543100",
+      "record_count": 976,
+      "native_bound": 6143,
+      "original_producer": {
+        "path": "src/tests/orbital_art_fixture.py",
+        "sha256": "45c62f2578c82474386b123a4a55e522208567ab430863417388e3ba2fb1f74e"
+      },
+      "original_native_reader": {
+        "path": "src/tests/multilayer_packed_load.cpp",
+        "sha256": "cec1dd433629cda316754134f4e7e24a9778b88025f1311bfa55f30781617a84"
+      }
+    },
+    "launch-fleet": {
+      "original_path": "logs/proofs/mlm/native-art/expected/launch-fleet-packed-sprites.bin",
+      "sha256": "98eb441e43ab81043a3500dbb881d7b93b044722edd813088ae1bd985aaca031",
+      "bytes": 15042290,
+      "magic_hex": "4c4e464152543200",
+      "record_count": 7764,
+      "native_bound": 7791,
+      "original_producer": {
+        "path": "src/tests/multilayer/launch_fleet_payload_fixture.py",
+        "sha256": "8785a5a466a9658383efaaf8740161f2f3349556f69f88aa23e648d51036be10"
+      },
+      "original_native_reader": {
+        "path": "src/tests/multilayer_packed_load.cpp",
+        "sha256": "cec1dd433629cda316754134f4e7e24a9778b88025f1311bfa55f30781617a84"
+      }
+    },
+    "ground": {
+      "original_path": "logs/proofs/mlm/native-art/expected/ground-station-offset-sprites.bin",
+      "sha256": "b235089bbe0f38d7f2eb40dfee09525b0f6133ee43be8a1da194617c48870597",
+      "bytes": 42029930,
+      "magic_hex": "4752444152543100",
+      "record_count": 22018,
+      "native_bound": 22045,
+      "original_producer": {
+        "path": "src/tests/multilayer/ground_station_offset_payload_checks.py",
+        "sha256": "21ce68496bfb5c40188860a1257dc95ab3b2554caa924a20ea051add6c5686a6"
+      },
+      "original_native_reader": {
+        "path": "src/tests/ground_station_offset_load.cpp",
+        "sha256": "9f87c95084f49c2c1038896212508386ef9720e243fbd13799222b84702e08bd"
+      },
+      "original_publication": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/publication.json",
+        "sha256": "bcbf43f411360eb91e5868f26fc522484eb2ff3f0c63bc303a0d54b015a21fa6"
+      },
+      "original_build": {
+        "path": "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/build-proof.json",
+        "sha256": "019b0f0fa23da3acf589d674069df08283ced5fa20d10b598e284a7767d2d14b"
+      },
+      "changed_station_records": 432,
+      "unchanged_native_records": 21586,
+      "historical_versions": [
+        {
+          "original_path": "logs/proofs/mlm/native-art/expected/ground-packed-sprites.bin",
+          "sha256": "86f47f201f015965f2948819953bdfda081080f4a5c34701ec0de27ba5c2efa1",
+          "bytes": 41909098,
+          "magic_hex": "4752444152543100",
+          "record_count": 22018,
+          "native_bound": 22045,
+          "original_producer": {
+            "path": "src/tests/multilayer/ground_payload_fixture.py",
+            "sha256": "50bc442aad7553c6b806c54964a365d07e584f9ffc84d791b4c92e7456218003"
+          },
+          "original_native_reader": {
+            "path": "src/tests/ground_packed_load.cpp",
+            "sha256": "a970dbbbe6cb0f1324196627a24be84464252c11dfbedf174da10ffe63a303c6"
+          }
+        }
+      ]
+    }
+  }
+}

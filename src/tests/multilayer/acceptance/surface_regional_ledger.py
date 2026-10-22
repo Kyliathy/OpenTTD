@@ -4,13 +4,13 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BIEQA.
 Only named additional buses admit actual Town0/1 passengers. Original local
 service and the complete36Steel/50Goods/42Propellant inventories remain strict.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 from pathlib import Path
-import runpy
 
 from surface_fuel_refill_ledger import TABLE, observe as observe_fuel, reserve_identity
 
-ORIGINAL_LIVES = runpy.run_path(str(Path(__file__).with_name("surface_entry_capital_checks-1.py")))["lives"]
+from space_saved_state import lives as ORIGINAL_LIVES
 
 
 def observe(path):

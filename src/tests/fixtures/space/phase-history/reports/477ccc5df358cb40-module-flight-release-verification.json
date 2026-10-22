@@ -1,0 +1,298 @@
+{
+  "_documentation": "Owner: r2mlvs9-launch-centers-and-rockets.md Group11/task11.3; actual423 direct module freight. Group11C failures and Debug consumer validation remain open; no full-plan completion claim.",
+  "date": "2026-10-14",
+  "save_version": 423,
+  "configuration": "RelWithDebInfo",
+  "focused_contracts": {
+    "assertions": 295,
+    "cases": 14
+  },
+  "native_phases": 7,
+  "interrupted_replays": 5,
+  "paused_partial_resaves": 5,
+  "completed_resaves": 1,
+  "exact_owner_families": 26,
+  "original_rocket": {
+    "vehicle": 15,
+    "generation": 1,
+    "missions_started": 7,
+    "missions_completed": 7,
+    "missions_canceled": 0,
+    "fuel_burned_total": 105,
+    "flight_fuel_consumed": 15
+  },
+  "delivered_labels": {
+    "STEL": 2,
+    "RFMT": 1,
+    "ELEC": 1
+  },
+  "actual_workshop_launch": true,
+  "valid_full_load_and_independent_preview": true,
+  "source": [
+    {
+      "path": "src/orbital_freight.cpp",
+      "sha256": "9506c87fe672cffb522587513284be51aac320a9536d83c6ea8ecf49ea4584c0"
+    },
+    {
+      "path": "src/orbital_freight.h",
+      "sha256": "8cbeded070cbf3bb93ccc9942207d98ecbf7e051cc93652ffceb969b9bd6c3c2"
+    },
+    {
+      "path": "src/space_transition.cpp",
+      "sha256": "cbb06343453d6f173d8d8f844b894f5137b37a63fedc8be4347e1398ed4f6271"
+    },
+    {
+      "path": "src/space_transition.h",
+      "sha256": "7551c3eedd4abbcd30832a371667bac72e32be921da5f6f1e2cebb99736f0856"
+    },
+    {
+      "path": "src/space_approach.cpp",
+      "sha256": "1de75eb421cbec61685dba03563fc3146e79a2e81556dd52bb4835cb34b06056"
+    },
+    {
+      "path": "src/space_approach.h",
+      "sha256": "b30817720f4cf9b92cc2cc0f3f6cb1ba3f71c0e4ab17393be2b6960425e90189"
+    },
+    {
+      "path": "src/space_production.cpp",
+      "sha256": "23d741927016c6a9184740bf27bdedbc72a105acf26478c23920b4df37afda05"
+    },
+    {
+      "path": "src/space_structure.cpp",
+      "sha256": "fb4b47f6d768d662ee4250b1f109efdb79c6e38e5628806f2a908d6247892cda"
+    },
+    {
+      "path": "src/launch_assembly_gui.cpp",
+      "sha256": "6db2e5ff8fa4172ca7fce8cb12e88ca037ec6d60e6b8096d1b890e7efa1d15bb"
+    },
+    {
+      "path": "src/fios.h",
+      "sha256": "701342c2ca9d25dd4660665431c0a7f45f86b4203abd1c740f5b5d331c753303"
+    },
+    {
+      "path": "src/saveload/saveload.h",
+      "sha256": "2ef44d2af5b42598ef70aec80117aec1570a3647072dd55cca0fbd00e189ea38"
+    },
+    {
+      "path": "src/saveload/vehicle_sl.cpp",
+      "sha256": "c561b886fe4c39eed802d67d7a6076ea2b1373b96a8ce31bc8831ae11f9e5f29"
+    },
+    {
+      "path": "src/saveload/space_transition_sl.cpp",
+      "sha256": "b4862aa638bd0dd3f46f9d627dce19ae29f69f895efd6e933712e80bae3af827"
+    },
+    {
+      "path": "src/saveload/space_order_sl.cpp",
+      "sha256": "3de17d90e0cdeeef04031fb976ed481eb254dab22f00ed65edabd7967f1850da"
+    },
+    {
+      "path": "src/lang/english.txt",
+      "sha256": "ce75a06da2e4d03760e0cf68c0f83f9a9b2f1fd6149a5c8f7227caf94d553012"
+    },
+    {
+      "path": "src/CMakeLists.txt",
+      "sha256": "b804255d6a3c64af6836ae6452186422e71f3cc7fc8622fcac68597aac1ab857"
+    },
+    {
+      "path": "src/tests/CMakeLists.txt",
+      "sha256": "e2236864316846ff77a1e7ed2705dcb2ba4aa03eedf3958a55e68312c15e22bc"
+    },
+    {
+      "path": "src/tests/orbital_freight.cpp",
+      "sha256": "25dcfc4bbe90b7ea59b0a91940b3e421763249aeb70b893d3bb591330e873d03"
+    },
+    {
+      "path": "src/tests/orbital_freight_native.cpp",
+      "sha256": "81b81b4cbe1563cff645cb787b0bd167af610786da69dfd218d0a85079e0dca3"
+    },
+    {
+      "path": "mlm/review-producers.json",
+      "sha256": "a81e68e26da209e09a6cf72e6f5413dfcf2e519a8d9fdff27fa2a7387f224558"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/orbital_freight_checks-1.py",
+      "sha256": "a2577a956797066c20cefda3b3bf525b574c7318c38d82838ce0c302a54b967e"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/orbital_freight_checks-2.py",
+      "sha256": "5d0eea91bc9c97c175d85b38bc44b1fcf6ae089eced0490b15dcb22da225d6f7"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/orbital_freight_checks-3.py",
+      "sha256": "ea1ef641ab3ee0d30feb60df932efba6bcfa7fd062b743c2abd6e1e4f4cbd0f0"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "sha256": "9d34b4c8ef769e3d27d2b2f8cc222625ee6c7089f9af10b45b96c76f6d683f1e"
+    },
+    {
+      "path": "build/RelWithDebInfo/openttd_test.exe",
+      "sha256": "99ef3f05320cb983bd4aa58becba71e09851b225c8d1f58c96f70ed2877f160c"
+    }
+  ],
+  "logs": [
+    {
+      "path": "logs/module-flight-release-build.log",
+      "sha256": "0deaaa2b0b6d5c026baa88e7507675c0b66d7c2c9813c5362d66c9ddb84c2f3e"
+    },
+    {
+      "path": "logs/module-flight-release-build-2.log",
+      "sha256": "2c91aa85bb7d825a74bc20511c7fabd46c0ec3dfb88429c1b074902a3121bc4b"
+    },
+    {
+      "path": "logs/module-flight-release-contracts.log",
+      "sha256": "a8f96137129d3ef7149ce7672306444af7e49f0dfecbae81d8948604d3a8f96d"
+    }
+  ],
+  "reports": [
+    {
+      "path": "mlm/reviews/space/module-flight-prepare-verify/20261014-062932-94f944ed66/reports/orbital-module-flight-prepare.json",
+      "sha256": "7c3650ce42a49460faac12d30ca39d84235de37d28ba1329fad980223d164603"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete-verify/20261014-063018-e1298ab590/reports/orbital-module-flight-complete.json",
+      "sha256": "44cbd7133b12db5e9d1a684a338772064359db15f9c70c03f6c6cf6e8b33074b"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-preburn/20261014-063108-a49000ad1f/reports/orbital-module-flight-replay.json",
+      "sha256": "99752267382bd82416b9ab09dbb5e00e0b60d4540573f451abfe0aa090cb043d"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-ascent/20261014-063118-a60cf69b04/reports/orbital-module-flight-replay.json",
+      "sha256": "ccd0ec332893894d7a6e036790e546a56e51f1dd0a27be187e7b06662ad4fc0b"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-approach/20261014-063128-e67bdac05d/reports/orbital-module-flight-replay.json",
+      "sha256": "4e7b099080ba0eb96b8c1faf6658e5da1d24897ae8dac125edc198263733433d"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-unloaded/20261014-063137-9487ea2787/reports/orbital-module-flight-replay.json",
+      "sha256": "bf0f36b2a12e65779cd0c111c4ae5d48fd2771afe0a50d881b3abb3de741119c"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-turnaround/20261014-063142-79f88e7719/reports/orbital-module-flight-replay.json",
+      "sha256": "dbbe54ef58f09f39ba93d8e80ab0e5f361dc916a344794058a910584d5e6cc8a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "src/tests/fixtures/demos/space/space-module-frame-418.sav",
+      "sha256": "0f10c5e085846c1ee2fca8c3d8945296e3b5366243ddaadff6d09e9250e00dca"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-delivery-423.sav",
+      "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-preburn-423.sav",
+      "sha256": "2f14789c7028a38c01a38629f708ec4e309004b0f9489ada443b0f8ec5e99989"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/saves/module-flight-ascent-423.sav",
+      "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/images/module-workshop-unselected.png",
+      "sha256": "f44aa2268ec608644b7975a722aa3bd80f3200131e3fe21d282b9503d1a5cc07"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-062932-94f944ed66/images/module-workshop-ready.png",
+      "sha256": "1eaab76b4cc9ee6e6e25034f81cb99e75f9e32619813a267b24f274258d0940e"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare-verify/20261014-062932-94f944ed66/reports/orbital-module-flight-prepare.json",
+      "sha256": "7c3650ce42a49460faac12d30ca39d84235de37d28ba1329fad980223d164603"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-ordinary/20261014-063018-e1298ab590/saves/ordinary-resave.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-approach-423.sav",
+      "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-unloaded-423.sav",
+      "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete/20261014-063018-e1298ab590/saves/module-flight-turnaround-423.sav",
+      "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-complete-verify/20261014-063018-e1298ab590/reports/orbital-module-flight-complete.json",
+      "sha256": "44cbd7133b12db5e9d1a684a338772064359db15f9c70c03f6c6cf6e8b33074b"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-resume-preburn/20261014-063108-a49000ad1f/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-paused-preburn/20261014-063108-a49000ad1f/saves/ordinary-resave.sav",
+      "sha256": "2f14789c7028a38c01a38629f708ec4e309004b0f9489ada443b0f8ec5e99989"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-preburn/20261014-063108-a49000ad1f/reports/orbital-module-flight-replay.json",
+      "sha256": "99752267382bd82416b9ab09dbb5e00e0b60d4540573f451abfe0aa090cb043d"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-resume-ascent/20261014-063118-a60cf69b04/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-paused-ascent/20261014-063118-a60cf69b04/saves/ordinary-resave.sav",
+      "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-ascent/20261014-063118-a60cf69b04/reports/orbital-module-flight-replay.json",
+      "sha256": "ccd0ec332893894d7a6e036790e546a56e51f1dd0a27be187e7b06662ad4fc0b"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-resume-approach/20261014-063128-e67bdac05d/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-paused-approach/20261014-063128-e67bdac05d/saves/ordinary-resave.sav",
+      "sha256": "e92b7cc941ea953d7dd36b424a917622f9612927e71570c2f6fff54da13f5b3b"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-approach/20261014-063128-e67bdac05d/reports/orbital-module-flight-replay.json",
+      "sha256": "4e7b099080ba0eb96b8c1faf6658e5da1d24897ae8dac125edc198263733433d"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-resume-unloaded/20261014-063137-9487ea2787/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-paused-unloaded/20261014-063137-9487ea2787/saves/ordinary-resave.sav",
+      "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-unloaded/20261014-063137-9487ea2787/reports/orbital-module-flight-replay.json",
+      "sha256": "bf0f36b2a12e65779cd0c111c4ae5d48fd2771afe0a50d881b3abb3de741119c"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-resume-turnaround/20261014-063142-79f88e7719/saves/module-flight-complete-423.sav",
+      "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-paused-turnaround/20261014-063142-79f88e7719/saves/ordinary-resave.sav",
+      "sha256": "aa630a388520901c858e40e5bfdd794f29d4f801c59f6d7d96b791c60cbe9838"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-replay-turnaround/20261014-063142-79f88e7719/reports/orbital-module-flight-replay.json",
+      "sha256": "dbbe54ef58f09f39ba93d8e80ab0e5f361dc916a344794058a910584d5e6cc8a"
+    }
+  ],
+  "remaining": [
+    "Group11C contention/fullness/lost-target and malformed full-load/preview acceptance",
+    "Debug direct-flight consumer validation in the next substantial batch",
+    "Later Plan9 tasks and final art/network acceptance"
+  ]
+}

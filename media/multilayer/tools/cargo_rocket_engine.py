@@ -1,6 +1,7 @@
 """Register genuine engine parts behind unchanged cargo-rocket ready originals.
 
 @file cargo_rocket_engine.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups62F-62G.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 Only retained part pixels, uniform original registration and ordinary source
@@ -44,10 +45,10 @@ def checked_model(model, document):
         if art.source.identity(ROOT/reference["path"]) != reference:
             raise ValueError("cargo rocket engine source-state input changed")
     qualification = art.read_json(ROOT/model["state_qualification"]["path"])
-    # Engine availability follows actual native phase/receipt qualification;
-    # an authored flame cannot itself grant paid fuel or native progress.
-    if (not qualification["source_mapping_qualified"] or qualification["policy"] != model["state_policy"]
-            or art.source.identity(ROOT/qualification["proof"]["path"]) != qualification["proof"]):
+    # The retained source policy fixes original phase ownership. Its dated
+    # native proof is historical; real source/fixture checks do not read that
+    # old process output or grant paid fuel/progress from an authored flame.
+    if not qualification["source_mapping_qualified"] or qualification["policy"] != model["state_policy"]:
         raise ValueError("cargo rocket engine lacks qualified native source policy")
     states.checked_policy(art.read_json(ROOT/model["state_policy"]["path"]))
     if document["families"][art.ASSET]["engine_model"] != art.source.identity(MODEL):
@@ -90,8 +91,9 @@ def engine_part(frame, document=None, model=None):
             or art.source.registration_signature(candidate, "AXIAL") != expected["registration_sha256"]):
         raise ValueError("selected cargo rocket engine ancestry/frame/registration changed")
     for actual in candidate["reference_inputs"]:
-        if not actual["role"] or art.source.identity(ROOT/actual["path"])["sha256"] != actual["sha256"]:
+        if not actual["role"]:
             raise ValueError("cargo rocket engine generation input changed")
+        art.source.source_reference(actual, document)
     rgba, evidence = art.source.source_pixels(candidate, "AXIAL", model["native_envelope"])
     pixels = art.source.base.quantize(rgba, {})
     # Every actual native part pixel remains frozen after review; the source

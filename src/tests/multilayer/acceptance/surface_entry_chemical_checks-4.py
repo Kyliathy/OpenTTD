@@ -4,6 +4,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BH.2.
 Native commands alone own sale proceeds, debt and incomplete industry/road/bay
 creation. No construction progress, material stock or transport is supplied.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 import argparse
 import json
@@ -14,6 +15,7 @@ import runpy
 import subprocess
 
 from space_preview_checks import ROOT, chunks, identity
+from space_saved_state import observe_factory
 from artifact_paths import create_run_context
 from runner import run_native
 
@@ -21,43 +23,6 @@ SALT = runpy.run_path(str(Path(__file__).with_name("surface_entry_salt_mine_chec
 OWNERS = SALT["OWNERS"]
 
 
-def observe_factory(path):
-    """Read native chemical stock, complete-batch histories and every machinery cell.
-
-    @param path Actual complete native save containing the funded first chemical works.
-    @return Original processor, sole Industry inventory and native construction bits.
-    """
-    table = OWNERS["saved_table"]
-    raw = chunks(path)[1]
-    dimensions = raw[b"CDIM"][3:]
-    assert len(dimensions) == 1 + dimensions[0] * 6
-    labels = {dimensions[offset]: dimensions[offset + 1:offset + 5].decode("ascii") for offset in range(1, len(dimensions), 6)}
-    processors = table(path, b"LPCR")
-    processor, = [row for row in processors.values() if row["industry"] == 15]
-    assert processor["controller"] == 0 and processor["recipe"].to_bytes(4, "little") == b"CHEM"
-    counters = {kind: {} for kind in range(3)}
-    # Histories describe complete commits; they never add another copy of the
-    # physical accepted/produced stock held by Industry15.
-    for row in table(path, b"LPCC").values():
-        if row["industry"] == 15:
-            counters[row["kind"]][row["label"].to_bytes(4, "little").decode("ascii")] = row["count"]
-    industry = table(path, b"INDY")[15]
-    inputs = {labels[industry[f"accepted[{i}].cargo"]]: industry[f"accepted[{i}].waiting"] for i in range(industry["accepted.count"])}
-    outputs = {labels[industry[f"produced[{i}].cargo"]]: industry[f"produced[{i}].waiting"] for i in range(industry["produced.count"])}
-    assert set(inputs) == {"SALT", "OIL_", "CHEM"} and set(outputs) == {"CHEM", "PROP"}
-    assert counters[0]["CHEM"] * 2 == counters[1]["SALT"] == counters[1]["OIL_"] == counters[2]["CHEM"]
-    assert counters[0]["PCHM"] == counters[1]["CHEM"] == counters[2]["PROP"] == outputs["PROP"] == 0
-    types, flags, owners = [raw[key][3:] for key in (b"MAPT", b"MAPO", b"MAP2")]
-    cells = []
-    # All sixteen actual Industry15cells must independently earn completion;
-    # a neighbouring or copied readiness flag cannot establish this producer.
-    for y in range(24, 28):
-        for x in range(30, 34):
-            tile = y * 64 + x
-            assert types[tile] >> 4 == 8 and int.from_bytes(owners[2 * tile:2 * tile + 2], "big") == 15
-            cells.append(dict(tile=tile, complete=bool(flags[tile] & 128), stage=flags[tile] & 3, counter=(flags[tile] >> 2) & 3))
-    return dict(processor=processor, counters=counters, inputs=inputs, outputs=outputs, cells=cells,
-                complete=all(row["complete"] for row in cells), cargo_labels=labels)
 
 
 def execute(configuration, receipt, phase):

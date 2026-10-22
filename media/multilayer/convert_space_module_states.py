@@ -1,6 +1,7 @@
 """Assemble original Core construction/status sources into its fixed native matrix.
 
 @file convert_space_module_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13E
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group70.3
 Saved paid construction, activation and panel availability own presentation.
@@ -115,6 +116,8 @@ def status_component(document):
             or core.registration_signature(candidate) != family["approved_blocked_registration"]):
         raise ValueError("Core blocked original or registration changed")
     transform = candidate["native_transform"]
+    # Status may change existing glass only; retaining its physical mounting
+    # prevents a source transform from adding a detached warning or larger console.
     if transform["native_contact"] != list(STATUS_CONTACT) or transform["native_bounds"] != list(STATUS_BOUNDS):
         raise ValueError("Core status glass leaves its native window")
     with Image.open(art.ROOT / candidate["path"]) as original:
@@ -124,6 +127,8 @@ def status_component(document):
     if list(original.size) != candidate["image_size"] or transform["crop_box"] != [0, 0, *original.size]:
         raise ValueError("Core status original dimensions or whole-source crop changed")
     bounds = original.getchannel("A").point([0] * 16 + [255] * 240).getbbox()
+    # Original alpha measurements freeze the admitted source extent; missing or
+    # changed glass cannot pass as the same approved status component.
     if bounds is None or list(bounds) != transform["measured_subject_bbox_in_crop"]:
         raise ValueError("Core status original measurement changed")
     if min(bounds[0], bounds[1], original.width - bounds[2], original.height - bounds[3]) < 16:
@@ -222,8 +227,12 @@ def matrix(document=None, public=None):
                 ox, oy = core.ORIGINS[tile]
                 parts[tile, "front" if (x, y) in front else "back"].putpixel((x - ox, y - oy), value)
         canonical = []
+        # Every real footprint cell needs opaque back hardware; honest empty
+        # fronts remain explicit so absence never conceals a missing station tile.
         for (tile, part), image in parts.items():
             count = sum(value != 0 for value in image.get_flattened_data())
+            # A paid footprint cannot lose its physical base while retaining
+            # apparently complete logical source coverage.
             if part == "back" and count == 0:
                 raise ValueError("Core construction source loses an actual footprint cell")
             row = dict(asset_id=core.ASSET, state=state, frame=0, direction="none", native_layout=0,
@@ -239,6 +248,8 @@ def matrix(document=None, public=None):
                       base_native_sha256=hashlib.sha256(whole.tobytes()).hexdigest())
         tiles.reassemble(canonical, policy)
         result.extend(canonical)
+        # Every declared cell/frame retains its exact original pixels and aliases;
+        # expanding logical coverage cannot invent hardware or physical phases.
         for row, image in canonical:
             alias = dict(state=state, frame=0, direction="none", tile_variant=row["tile_variant"], part=row["part"])
             result.append((dict(row, frame=1, alias_of=alias), image.copy()))
@@ -247,18 +258,16 @@ def matrix(document=None, public=None):
     return result, images, evidence
 
 
-def review(output):
+def review(output, context=None):
     """Publish full original Core source coverage without native packing or activation.
 
-    @param output Fresh repository native-art proof directory.
+    @param output Fresh source images directory in the selected generated owner.
+    @param context Explicit current recipe invocation separating images and reports.
     @return Exact full source-manifest identity and source-only coverage summary.
     @throws ValueError On unsafe proof ownership, old output paths or invalid originals.
     """
-    output = output.resolve()
-    # New proof publication must preserve immutable earlier art and remain in
-    # the repository review home; it cannot replace shipped graphics or an old proof.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("Core state review requires a fresh native-art proof directory")
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
     parts, images, evidence = matrix()
     atlas = tiles.indexed_canvas((576, 1024))
     contact = Image.new("RGB", (2048, 408), (38, 43, 49))
@@ -272,20 +281,24 @@ def review(output):
         box = [row["tile_variant"] * 64, band * 64, 64, 64]
         atlas.paste(image, tuple(box[:2]))
         rows.append(dict(row, box=box))
+    # Show each genuine physical stage once; review enlargement never changes
+    # native world-cell ownership or turns a declared still into animation.
     for index, state in enumerate(STATES):
         rgba = images[state].convert("RGBA").resize((512, 384), Image.Resampling.NEAREST)
         contact.paste(rgba, (index * 512, 24), rgba)
         pen.text((index * 512 + 8, 6), state + " (frames0/1 identical)", fill="white")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=context is not None)
     atlas.save(output / "module-nucleus-authored.png", transparency=0)
     contact.save(output / "state-contact.png")
+    # Retain whole original poses for inspection alongside their real cell atlas;
+    # these disposable images carry no new source approval or native authority.
     for state, image in images.items():
         image.save(output / (state + ".png"), transparency=0)
     report = dict(_documentation=__doc__, asset_id=core.ASSET, **evidence, sprites=rows,
                   coverage_complete=True, packed=False, runtime_activated=False,
                   artifacts=[art.identity(output / name) for name in
                              ("module-nucleus-authored.png", "state-contact.png", *(state + ".png" for state in STATES))])
-    path = output / "source-manifest.json"
+    path = reports / "source-manifest.json"
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return art.identity(path)
 

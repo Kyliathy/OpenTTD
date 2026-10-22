@@ -4,6 +4,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15BIEK.
 Existing native annual work and matching repayment commands retain all owners;
 current42unit fuel custody never weakens the closed original20unit contract.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 import argparse
 import json
@@ -15,6 +16,7 @@ import subprocess
 from artifact_paths import RunContext, create_run_context, identifier
 from runner import run_native
 from space_preview_checks import ROOT, chunks, identity
+from space_saved_state import lives
 from surface_fuel_refill_ledger import TABLE, observe, reserve_identity
 
 DIRECTORY = Path(__file__).resolve().parent
@@ -26,21 +28,6 @@ NEW_FUEL = runpy.run_path(str(DIRECTORY / "surface_entry_fuel_refill_checks-3.py
 GOODS = runpy.run_path(str(DIRECTORY / "surface_entry_goods_checks-1.py"))["goods_identity"]
 
 
-def lives(path):
-    """@param path Complete original save. @return Current useful eight-service identities and actual remaining days."""
-    result = []
-    for key, row in TABLE(path, b"VEHS").items():
-        if row["type"] not in (0, 1):
-            continue
-        prefix = "train[0].common[0]." if row["type"] == 0 else "roadveh[0].common[0]."
-        name = bytes.fromhex(row[prefix + "name"]).decode("utf-8")
-        active = name.startswith("Surface Income ") or name.startswith("Surface Launch passenger ") or name in ("Surface ore delivery", "Surface Steel delivery")
-        if not active:
-            continue
-        result.append(dict(vehicle=key, name=name, engine=row[prefix + "engine_type"], age=row[prefix + "age"],
-                           remaining=row[prefix + "max_age"] - row[prefix + "age"]))
-    assert len(result) == 8
-    return result
 
 
 def plan():

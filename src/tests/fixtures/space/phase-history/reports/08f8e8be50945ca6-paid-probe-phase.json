@@ -1,0 +1,84 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group17; actual paid original rocket/carried probe phase pair, once-only deployment and native running/pad expenses. Ordinary final-delivery payment is separate.",
+  "configuration": "Debug",
+  "phase": "turnaround",
+  "predecessor": {
+    "path": "mlm/reviews/space/paid-probe-phase-verify-return/20261014-122732-6c2478b828/reports/paid-probe-phase.json",
+    "sha256": "097f5596188addf9024c6812df48510a58225fe49dd4f21a16ef0ee303ab7185"
+  },
+  "source": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122732-6c2478b828/saves/probe-flight-return-after-423.sav",
+    "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+  },
+  "before": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-before-423.sav",
+    "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+  },
+  "after": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-after-423.sav",
+    "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+  },
+  "replay_before": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-before-423.sav",
+    "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+  },
+  "replay_after": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-turnaround/20261014-122756-caafeb5007/saves/probe-flight-turnaround-after-423.sav",
+    "sha256": "0cfa825cb8dce7ce109f3e8811b732b395a5fcedbcad875b869dc4e3e1ef239c"
+  },
+  "ordinary_resaves": {
+    "before": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-turnaround-before/20261014-122756-caafeb5007/saves/ordinary-resave.sav",
+      "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+    },
+    "after": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-turnaround-after/20261014-122756-caafeb5007/saves/ordinary-resave.sav",
+      "sha256": "152aa653704b89280d492bddabad02526dafb207ab37b3ef717e6e8a8066ccf2"
+    }
+  },
+  "exact_owner_families": 26,
+  "normalized_ledger": [
+    {
+      "edge": "before",
+      "phase": 5,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3413895,
+      "rocket_profit": -320000,
+      "probe_profit": -76800,
+      "fuel": 0,
+      "burned": 15,
+      "started": 2,
+      "completed": 0,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    },
+    {
+      "edge": "after",
+      "phase": 0,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3413282,
+      "rocket_profit": -448000,
+      "probe_profit": -102400,
+      "fuel": 0,
+      "burned": 15,
+      "started": 2,
+      "completed": 1,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    }
+  ],
+  "no_new_mission_fee": true,
+  "no_cargo_income": true
+}

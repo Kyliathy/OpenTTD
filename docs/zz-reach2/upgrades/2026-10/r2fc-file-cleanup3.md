@@ -1,4 +1,4 @@
-# R2FC-3 - Transfer-ready cleanup and reproducible verification
+# R2FC-3 - Completed preservation and artifact reconstruction
 
 ## Global Mandatory Reading
 
@@ -46,7 +46,15 @@ Owner: this plan, following [R2FC](r2fc-file-cleanup.md) and [R2FC-2](r2fc-file-
 
 ## Status and transfer objective
 
-**Planning only, 2026-10-21.** No cleanup implementation, deletion, build, feature resumption or Git mutation is performed by writing this plan. Execute the groups sequentially, top to bottom, without subagents. Mark an individual task `[X]` only after its stated result is verified. Finish and record each group before starting the next.
+**Paused at the user's request,2026-10-22.** Groups1-20BB and12B are complete; every task retained below is checked. Group20BB finished its complete optimized matrix and Debug smoke per distinct native callback. No later implementation group has started. See the [execution checkpoint](r2fc-file-cleanup3-a-execution.md#checkpoint-paused-after-group20bb) for exact current witnesses and remaining hazards. No project cleanup, feature resumption or Git mutation has been performed.
+
+This file contains the146 completed tasks through Group20BB and stays at its
+original path. All78 remaining tasks are in one continuation:
+[**R2FC2 - Remaining migrations, cleanup, transfer and Space resumption**](r2fc2-file-cleanup3.md).
+That plan starts at20BC and explicitly requires fewer debug and verification
+cycles. Execution remains paused; do not reread completed groups to resume.
+
+The stable [historical debugging architecture](../../architecture/archi-historical-debug.md) describes file ownership, retained saves, current/historical evidence, artifact reconstruction and cleanup gates with Mermaid diagrams. It replaces the obsolete proposed recovery CLI at the end of this plan.
 
 The deliverable is a small transferable development repository containing source, original graphical assets, saves, compact regression inputs and the tools/instructions to rebuild everything else. Default `clean.ps1` remains a preview; its explicit `-Apply` must eventually remove all disposable logs, test-cache, runtime profiles, generated reviews and declared build products. It must not preserve tens of gigabytes because validators read yesterday's outputs.
 
@@ -161,19 +169,19 @@ _Applies to Groups 1-2._
 ### Group 1 - Freeze the live planning boundary
 
 {{SIMPLE}}
-- [ ] 1.1 Record repository/worktree identity, modified/untracked/ignored valuable files and active writers using read-only operations. Capture a stable snapshot before relinking consumed applications.
-- [ ] 1.2 Confirm the current Space task and exact final save/receipt pair from its live handover; record closed financial scopes and protected source/application hashes. Refresh this plan's dated values if another thread advanced.
-- [ ] 1.3 Record underground Group10's partial source and the distinct pre-edit/partial-definition baselines. Keep its feature work paused and its uncompiled status explicit.
-- [ ] 1.4 Record sizes, exact build roots, nested repositories, reparse points and external tool/dependency locations. No wildcard build-root deletion or copy of another worktree.
+- [X] 1.1 Record repository/worktree identity, modified/untracked/ignored valuable files and active writers using read-only operations. Capture a stable snapshot before relinking consumed applications.
+- [X] 1.2 Confirm the current Space task and exact final save/receipt pair from its live handover; record closed financial scopes and protected source/application hashes. Refresh this plan's dated values if another thread advanced.
+- [X] 1.3 Record underground Group10's partial source and the distinct pre-edit/partial-definition baselines. Keep its feature work paused and its uncompiled status explicit.
+- [X] 1.4 Record sizes, exact build roots, nested repositories, reparse points and external tool/dependency locations. No wildcard build-root deletion or copy of another worktree.
 
 ### Group 2 - Establish the file and save inventory contract
 
 {{MEDIUM}}
-- [ ] 2.1 Add a small `artifact_inventory.py` beside support tests, exporting `collect_candidates` and `classify_reference`. Inventory paths/roles without importing legacy acceptance modules, which can initialize run contexts or load predecessor chains.
-- [ ] 2.2 Record every save/scenario/autosave/backup, including unusual extensions using existing save-stream detection where applicable. Unknown save-like content stays protected; no decoder success is required to retain an old-format save.
-- [ ] 2.3 Publish a compact durable migration manifest under `src/tests/fixtures/cleanup/` with original path, destination, SHA256, role, consumers, disposition and verification status. Put large enumeration/debug output under test-cache.
-- [ ] 2.4 Capture effective compiler/CMake/runtime/Python/Pillow/GRF/vcpkg requirements and config templates separately from machine-local cache paths. Preserve user configuration that cannot be reconstructed.
-- [ ] 2.5 Verify inventory-only execution writes no exports and detects missing, conflicting, redirected and changed inputs. Keep source/tool discovery read-only.
+- [X] 2.1 Add a small `artifact_inventory.py` beside support tests, exporting `collect_candidates` and `classify_reference`. Inventory paths/roles without importing legacy acceptance modules, which can initialize run contexts or load predecessor chains.
+- [X] 2.2 Record every save/scenario/autosave/backup, including unusual extensions using existing save-stream detection where applicable. Unknown save-like content stays protected; no decoder success is required to retain an old-format save.
+- [X] 2.3 Publish a compact durable migration manifest under `src/tests/fixtures/cleanup/` with original path, destination, SHA256, role, consumers, disposition and verification status. Put large enumeration/debug output under test-cache.
+- [X] 2.4 Capture effective compiler/CMake/runtime/Python/Pillow/GRF/vcpkg requirements and config templates separately from machine-local cache paths. Preserve user configuration that cannot be reconstructed.
+- [X] 2.5 Verify inventory-only execution writes no exports and detects missing, conflicting, redirected and changed inputs. Keep source/tool discovery read-only.
 
 Proposed dependency row; field names are to be validated in Group2, not inferred from every arbitrary JSON string:
 
@@ -209,37 +217,37 @@ Entry gate: Group2's typed inventory and `collect_candidates/classify_reference`
 ### Group 3 - Trace the current Space dependency graph
 
 {{HARD}}
-- [ ] 3.1 Export `trace_references` from the inventory helper with explicit adapters for the current bound receipt, retained-product manifest and thirteen before-edit manifests. Follow `foundation`, `products`, `source/retained`, `historical_versions` and configuration receipt references with a visited set and path/hash mismatch detection.
-- [ ] 3.2 Trace native operation `source/before/output/application/terminal/retained_harness/sources/native_processes` and ordinary restore records. Associate each reference with the reader that requires it; do not treat a historical EXE hash as a future executable dependency.
-- [ ] 3.3 Classify the final saves and independent observation expectations as continuation inputs; classify completed-stage logs/process facts as historical provenance. Identify any historical fact whose only witness would otherwise be deleted.
-- [ ] 3.4 Record required observer/source epochs and a metadata-only validation command. Explicitly prohibit `surface_gateway_replay.replay` here: its implementation advances two branches by3,000 ticks.
-- [ ] 3.5 Verify traversal on one final configuration plus cross-configuration linking; test cycles, wrong hashes, duplicate aliases and a missing nested receipt. Do not replay a completed financial window.
+- [X] 3.1 Export `trace_references` from the inventory helper with explicit adapters for the current bound receipt, retained-product manifest and thirteen before-edit manifests. Follow `foundation`, `products`, `source/retained`, `historical_versions` and configuration receipt references with a visited set and path/hash mismatch detection. Record the complete declared lineage separately from the actual current binder read-set; superseded ancestor identities remain historical observations.
+- [X] 3.2 Trace native operation `source/before/output/application/terminal/retained_harness/sources/native_processes` and ordinary restore records. Associate each reference with the reader that requires it; do not treat a historical EXE hash as a future executable dependency.
+- [X] 3.3 Classify the final saves and independent observation expectations as continuation inputs; classify completed-stage logs/process facts as historical provenance. Identify any historical fact whose only witness would otherwise be deleted.
+- [X] 3.4 Record required observer/source epochs and a metadata-only validation command. Explicitly prohibit `surface_gateway_replay.replay` here: its implementation advances two branches by3,000 ticks.
+- [X] 3.5 Verify traversal on one final configuration plus cross-configuration linking; test cycles, wrong hashes, duplicate aliases and a missing nested receipt. Do not replay a completed financial window.
 
 ### Group 4 - Trace graphics sources, generated products and proof cycles
 
 {{HARD}}
-- [ ] 4.1 Trace public source/packing/runtime references through `EvidenceSet` and selected converter/packer scopes. Distinguish original media, canonical shipping assets, derived atlases, expected payloads and actual native frames.
-- [ ] 4.2 Inspect `pack_m1_art.derive/publish` and corresponding Space/orbital/launch/ground owners. Record that `derive` returns candidate bytes but `publish` writes canonical files and the public manifest; regression recipes must not call publication implicitly.
-- [ ] 4.3 Identify source-to-proof-to-source cycles and frozen predecessor requirements. Choose retained source/independent expectations as roots; record a bounded generator for each derived edge instead of retaining every old gallery.
-- [ ] 4.4 Map every native expected-payload literal, including M1/Space/orbital/launch `*-packed-sprites.bin`, to its generator and actual loader test. Include required terminal transcripts and source-policy observations.
-- [ ] 4.5 Classify missing generators, immutable baselines and retired authoring snapshots explicitly. Old rejected/selected-original status assertions cannot become fresh runtime tests unchanged.
+- [X] 4.1 Trace public source/packing/runtime references through `EvidenceSet` and selected converter/packer scopes. Distinguish original media, canonical shipping assets, derived atlases, expected payloads and actual native frames.
+- [X] 4.2 Inspect `pack_m1_art.derive/publish` and corresponding Space/orbital/launch/ground owners. Record that `derive` returns candidate bytes but `publish` writes canonical files and the public manifest; regression recipes must not call publication implicitly.
+- [X] 4.3 Identify source-to-proof-to-source cycles and frozen predecessor requirements. Choose retained source/independent expectations as roots; record a bounded generator for each derived edge instead of retaining every old gallery.
+- [X] 4.4 Map every native expected-payload literal, including M1/Space/orbital/launch `*-packed-sprites.bin`, to its generator and actual loader test. Include required terminal transcripts and source-policy observations.
+- [X] 4.5 Classify missing generators, immutable baselines and retired authoring snapshots explicitly. Old rejected/selected-original status assertions cannot become fresh runtime tests unchanged.
 
 ### Group 5 - Trace other continuation readers and close inventory gaps
 
 {{MEDIUM}}
-- [ ] 5.1 Inventory state/profile/geology, TBM feedback/motion/pacing and Space phase-pair consumers by exact reader, input role and prior-run selector. Use shared graph adapters where records share a schema.
-- [ ] 5.2 Scan Python/C++/PowerShell/CMake and active plan commands for direct and assembled cache/log paths. Classify reads versus writes; filename matches alone are insufficient.
-- [ ] 5.3 Record a disposition for every candidate subtree and supported producer family: retain/export, regenerate or retire as superseded. Resolve all required unknowns before deletion; do not treat a partial catalogue as a full audit.
-- [ ] 5.4 Record independent pre-existing stale mine/processor proofs and provisional underground build limitations. Keep their diagnosis separate from relocation failures.
+- [X] 5.1 Inventory state/profile/geology, TBM feedback/motion/pacing and Space phase-pair consumers by exact reader, input role and prior-run selector. Use shared graph adapters where records share a schema.
+- [X] 5.2 Scan Python/C++/PowerShell/CMake and active plan commands for direct and assembled cache/log paths. Classify reads versus writes; filename matches alone are insufficient.
+- [X] 5.3 Record a disposition for every candidate subtree and supported producer family: retain/export, regenerate or retire as superseded. Resolve all required unknowns before deletion; do not treat a partial catalogue as a full audit.
+- [X] 5.4 Record independent pre-existing stale mine/processor proofs and provisional underground build limitations. Keep their diagnosis separate from relocation failures.
 
 ### Group 6 - Register bounded recipes and their input roles
 
 {{MEDIUM}}
-- [ ] 6.1 Confirm the current dependency graph permits editing `mlm/review-producers.json` before sealing, then extend it with recipe ID, original producer, target/test tags, retained inputs, ordered prerequisites, output roles, configuration/tool requirements and expected comparison mode. If a newer graph binds that file, move original validation/sealing before its mutation; never amend historical hashes to permit the edit.
-- [ ] 6.2 Define inspect/build/prepare/verify stages and read-only versus native-fixture execution modes. Explicitly exclude closed financial work and source/publication mutation from routine regeneration.
-- [ ] 6.3 Register initial recipes for `space-checkpoint`, scoped Space/ground art families and tube checkpoint material. Split umbrella recipes into bounded leaves; selecting one leaf must not build the entire acceptance directory.
-- [ ] 6.4 Validate unknown dependencies, cycles, duplicate roles, cross-configuration reuse and output paths outside cleanable owners. Required missing inputs must report the exact supplying recipe or retained fixture.
-- [ ] 6.5 Record Space master/Plans8/9/10/11/13/14 documentation consumers for later updates. Exit with zero unclassified required inputs; keep raw inventory output disposable.
+- [X] 6.1 Confirm the current dependency graph permits editing `mlm/review-producers.json` before sealing, then extend it with recipe ID, original producer, target/test tags, retained inputs, ordered prerequisites, output roles, configuration/tool requirements and expected comparison mode. If a newer graph binds that file, move original validation/sealing before its mutation; never amend historical hashes to permit the edit.
+- [X] 6.2 Define inspect/build/prepare/verify stages and read-only versus native-fixture execution modes. Explicitly exclude closed financial work and source/publication mutation from routine regeneration.
+- [X] 6.3 Register initial recipes for `space-checkpoint`, scoped Space/ground art families and tube checkpoint material. Split umbrella recipes into bounded leaves; selecting one leaf must not build the entire acceptance directory. Initial declarations are explicitly disabled until their named supplying groups implement/seal their real interfaces and inputs; no fictional test tag or working command is claimed.
+- [X] 6.4 Validate unknown dependencies, cycles, duplicate roles, cross-configuration reuse and output paths outside cleanable owners. Required missing inputs must report the exact supplying recipe or retained fixture.
+- [X] 6.5 Record Space master/Plans8/9/10/11/13/14 documentation consumers for later updates. Exit with zero unclassified required inputs; keep raw inventory output disposable.
 
 Planning observation: the current612-product manifest binds `src/tests/multilayer/support/runner.py` but does not bind `mlm/review-producers.json`. This permits recipe-schema work before Group7 while deferring runner changes until after the seal. Recheck this edge if the active Space thread advanced.
 
@@ -277,19 +285,22 @@ Entry gate: Groups3/6 provide a verified current Space graph and recipe/disposit
 ### Group 7 - Validate the existing Space evidence once
 
 {{HARD}}
-- [ ] 7.1 Revalidate original source/application identities before editing consumed adapters. Run the metadata-only binder into a new report without `--retain` and without any native work stage; record failure honestly if original history is already incomplete.
-- [ ] 7.2 Recompute both current save observations and compare with the verified final receipts. Verify the original save hashes, all121 chunk families and existing per-configuration/cross-build rules.
-- [ ] 7.3 Extract compact necessary historical facts: predecessor identity, actual cash flow, closed caps/approvals, owner/material observations and process outcomes. Preserve the original receipt bytes or minimal necessary semantic transcripts where they are independent witnesses.
-- [ ] 7.4 Publish an audit result naming the exact imported roots and validated source epochs. Its historical EXE hashes are recorded facts; the audit result does not claim a newly compiled application ran.
+- [X] 7.1 Revalidate original source/application identities before editing consumed adapters. Run the metadata-only binder into a new report without `--retain` and without any native work stage; record failure honestly if original history is already incomplete. The CLI failed on advanced live `cargopacket.cpp`; exact old bytes and console projections remain in the two original retained-product authorities. The explicit storage adapter passes those aliases through the original versions contract and PE verifier in a private call namespace; original verifier code/globals stay unchanged, with no EXE copy/runtime restoration/native execution.
+- [X] 7.2 Recompute both current save observations and compare with the verified final receipts. Verify the original save hashes, all121 chunk families and existing per-configuration/cross-build rules.
+- [X] 7.3 Extract compact necessary historical facts: predecessor identity, actual cash flow, closed caps/approvals, owner/material observations and process outcomes. Preserve the original receipt bytes or minimal necessary semantic transcripts where they are independent witnesses.
+- [X] 7.4 Publish an audit result naming the exact imported roots and validated source epochs. Its historical EXE hashes are recorded facts; the audit result does not claim a newly compiled application ran.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 8 - Seal a durable Space checkpoint contract
 
 {{HARD}}
-- [ ] 8.1 Add `space_checkpoint.py` beside acceptance tests with `load_checkpoint` and `verify_checkpoint`. Define a versioned checkpoint type distinct from a legacy operation receipt; validate exact required fields before use.
-- [ ] 8.2 Store each final save under its configuration-specific checkpoint owner, with independent observation/chunk expectations and the Group7 audit reference. Preserve both different save hashes; never normalize the originals in place.
-- [ ] 8.3 Retain the smallest complete historical semantic/source-epoch set needed to explain the checkpoint. Separate non-dereferenced historical EXE identity records from live retained input references; do not disguise missing required bytes as optional provenance.
-- [ ] 8.4 Implement read-only seal verification: retained hashes, graph roots, configuration, actual observer result, expected chunk set and closed policies. Fail on missing/tampered input or reopened scope; produce no new gameplay authorization.
-- [ ] 8.5 Publish the seal and migration map atomically after verification; interrupted writes cannot become a valid checkpoint. Update the handover to point to the seal while keeping fresh-build qualification explicitly pending.
+- [X] 8.0 Isolate the existing pure table/chunk and observation primitives from import-time runtime setup, retaining original orchestration APIs through re-exports. Verify unchanged decoding and both independently recorded observations with writes/processes forbidden before seal verification uses those helpers.
+- [X] 8.1 Add `space_checkpoint.py` beside acceptance tests with `load_checkpoint` and `verify_checkpoint`. Define a versioned checkpoint type distinct from a legacy operation receipt; validate exact required fields before use.
+- [X] 8.2 Store each final save under its configuration-specific checkpoint owner, with independent observation/chunk expectations and the Group7 audit reference. Preserve both different save hashes; never normalize the originals in place.
+- [X] 8.3 Retain the smallest complete historical semantic/source-epoch set needed to explain the checkpoint. Separate non-dereferenced historical EXE identity records from live retained input references; do not disguise missing required bytes as optional provenance.
+- [X] 8.4 Implement read-only seal verification: retained hashes, graph roots, configuration, actual observer result, expected chunk set and closed policies. Fail on missing/tampered input or reopened scope; produce no new gameplay authorization.
+- [X] 8.5 Publish the seal and migration map atomically after verification; interrupted writes cannot become a valid checkpoint. Update the handover to point to the seal while keeping fresh-build qualification explicitly pending.
 
 Conceptual checkpoint contract; placeholders must be filled from Group7 evidence, not from the plan's prose:
 
@@ -329,20 +340,20 @@ Entry gate: Group8's seal verifies against the original saves and Group2 invento
 ### Group 9 - Export all saves and small immutable baselines
 
 {{MEDIUM}}
-- [ ] 9.1 Export every inventoried save/scenario/backup into its fixture/checkpoint owner or `savegames/retained/`. Preserve original names/aliases; hash both sides before releasing any source copy.
-- [ ] 9.2 Promote necessary comparison baselines and compact semantic evidence under purpose-named fixtures, including underground pre-edit and partial-definition epochs. Do not bulk-copy reviews or EXEs.
-- [ ] 9.3 Update `multilayer-inputs.json` and its readers with explicit alias precedence and hash validation. Test while both old and new files exist so a stale original cannot silently satisfy a migrated key; explicit prior-run paths retain their declared semantics.
-- [ ] 9.4 Preserve current source snapshots/patches only where needed for historical expectation/rebuild; record their original bytes and provenance. Separate authored/generated source contracts from scratch copies.
-- [ ] 9.5 Verify every save alias, configuration and destination, including conflicting same-name/different-content files and corrupt/legacy saves. Publish a complete verified migration map outside deletion roots.
+- [X] 9.1 Export every inventoried save/scenario/backup into its fixture/checkpoint owner or `savegames/retained/`. Preserve original names/aliases; hash both sides before releasing any source copy.
+- [X] 9.2 Promote necessary comparison baselines and compact semantic evidence under purpose-named fixtures, including underground pre-edit and partial-definition epochs. Do not bulk-copy reviews or EXEs.
+- [X] 9.3 Update `multilayer-inputs.json` and its readers with explicit alias precedence and hash validation. Test while both old and new files exist so a stale original cannot silently satisfy a migrated key; explicit prior-run paths retain their declared semantics.
+- [X] 9.4 Preserve current source snapshots/patches only where needed for historical expectation/rebuild; record their original bytes and provenance. Separate authored/generated source contracts from scratch copies.
+- [X] 9.5 Verify every save alias, configuration and destination, including conflicting same-name/different-content files and corrupt/legacy saves. Publish a complete verified migration map outside deletion roots.
 
 ### Group 10 - Add generated data and evidence roles in both languages
 
 {{MEDIUM}}
-- [ ] 10.1 Add `data`/`evidence` to Python properties, `output` allowlist, directory materialization and report routing validation. Preserve basename, owner and run isolation.
-- [ ] 10.2 Add matching C++ fields, aggregate initialization, directory creation and `Output` cases. Update fixtures to prove Python/native output locations agree.
-- [ ] 10.3 Keep frames under `images`; adding general evidence roles must not relax frame producer/run checks. Put required current-run transcripts under evidence with optional diagnostic copies in logs.
-- [ ] 10.4 Update durable input resolution in Python/C++ together; generated prerequisites remain explicitly selected inputs, never automatic latest-run fallbacks or fixture overwrite destinations.
-- [ ] 10.5 Run focused artifact-path tests for traversal, alias precedence/hash changes, mixed-feature runs and host/client separation. Publish the parent layout/README routing changes.
+- [X] 10.1 Add `data`/`evidence` to Python properties, `output` allowlist, directory materialization and report routing validation. Preserve basename, owner and run isolation.
+- [X] 10.2 Add matching C++ fields, aggregate initialization, directory creation and `Output` cases. Update fixtures to prove Python/native output locations agree.
+- [X] 10.3 Keep frames under `images`; adding general evidence roles must not relax frame producer/run checks. Put required current-run transcripts under evidence with optional diagnostic copies in logs.
+- [X] 10.4 Update durable input resolution in Python/C++ together; generated prerequisites remain explicitly selected inputs, never automatic latest-run fallbacks or fixture overwrite destinations.
+- [X] 10.5 Run focused artifact-path tests for traversal, alias precedence/hash changes, mixed-feature runs and host/client separation. Publish the parent layout/README routing changes.
 
 ### Area Mandatory Reading - Add a pure native checkpoint boundary
 
@@ -363,11 +374,11 @@ Entry gate: Group8 exposes `load_checkpoint/verify_checkpoint` and Group10 expos
 ### Group 11 - Implement a dedicated zero-tick native load check
 
 {{HARD}}
-- [ ] 11.1 Add a hidden `[.space-checkpoint-load]` test in the existing isolated capital harness, with an explicit source input and no work/query-mode switch. Reuse native console/load/save setup and callback error propagation.
-- [ ] 11.2 Save before/after snapshots inside the paused inspection callback, observe the loaded native owners, then exit. Never invoke `StateGameLoop` work helpers, purchase commands or old cash/admission callbacks.
-- [ ] 11.3 Add a Python qualification adapter that verifies source identity before/after, native process inputs/executable/exit status and the expected observation. Record all generated files in the current run.
-- [ ] 11.4 Validate all121 families; compare tick counters and date fields explicitly before applying only the established pause/revision allowances. No blanket "ignore DATE/GLOG" rule may hide time or unrelated metadata changes.
-- [ ] 11.5 Add focused failure cases for a wrong save/configuration, changed tick/state, unexpected tag/phase and incomplete native process. Stage actual builds for Group15.
+- [X] 11.1 Add a hidden `[.space-checkpoint-load]` test in the existing isolated capital harness, with an explicit source input and no work/query-mode switch. Reuse native console/load/save setup and callback error propagation.
+- [X] 11.2 Save before/after snapshots inside the paused inspection callback, observe the loaded native owners, then exit. Never invoke `StateGameLoop` work helpers, purchase commands or old cash/admission callbacks.
+- [X] 11.3 Add a Python qualification adapter that verifies source identity before/after, native process inputs/executable/exit status and the expected observation. Record all generated files in the current run.
+- [X] 11.4 Validate all121 families; compare tick counters and date fields explicitly before applying only the established pause/revision allowances. No blanket "ignore DATE/GLOG" rule may hide time or unrelated metadata changes.
+- [X] 11.5 Add focused failure cases for a wrong save/configuration, changed tick/state, unexpected tag/phase and incomplete native process. Stage actual builds for Group15.
 
 Conceptual body inside the existing paused observer, not a replacement game loop:
 
@@ -386,11 +397,31 @@ Use the harness's existing exception/observed handling around this body. The Pyt
 ### Group 12 - Introduce the new continuation foundation explicitly
 
 {{HARD}}
-- [ ] 12.1 Add `qualify_checkpoint` and `publish_successor` to the checkpoint adapter. A qualified foundation links the immutable seal to a fresh native/static result and actual current executable/source identities.
-- [ ] 12.2 Define an explicit discriminator for `sealed_checkpoint` versus an ordinary `operation_receipt`. New active callers consume the qualified foundation; historical callers retain their original `verify/bind` behavior.
-- [ ] 12.3 Give the future Space caller an explicit foundation argument and selected source/configuration. Do not import its thirteen-stage historical chain to discover the current save or manufacture a compatibility receipt accepted by the old binder.
-- [ ] 12.4 Validate successor provenance: selected predecessor save, real before/output/process evidence and current observer must agree. Closed financial scopes cannot become new operation permissions.
-- [ ] 12.5 Verify the adapter on synthetic corrupt references and retained checkpoint data; classify old receivers as historical where appropriate. The real GZVEEI producer remains owned by Plan11 and is dispatched in Groups35-37.
+- [X] 12.1 Add `qualify_checkpoint` to the checkpoint adapter. Validate explicit current native/static/build results, then publish a foundation linking the immutable seal to the actually executed image/source identities. Separate current validation from already completed qualification facts so a later build never requires retaining an old EXE.
+- [X] 12.2 Define the explicit `sealed_checkpoint` versus `operation_receipt` discriminator and typed foundation loading/verification. Historical callers retain their original `verify/bind` behavior; no compatibility receipt is manufactured.
+- [X] 12.3 Verify qualification and historical/current role boundaries on synthetic corrupt references and independent retained checkpoint data. Native/static application execution remains staged for Group15.
+
+### Area Mandatory Reading - Publish explicit Space continuations
+
+_Applies to Group12B._
+
+Group12 was split before implementation to keep qualification and operation publication bounded. Its typed foundation must exist and pass focused checks before successor wiring. A completed qualification records old image/source identities as historical facts; every new operation supplies its own actual current process/build evidence. It grants no new paid scope.
+
+| File name | Relevant sections | Description |
+| --- | --- | --- |
+| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live `SpaceCheckpoint`, `SpaceFoundation`, `qualify_checkpoint`, `load_foundation/verify_foundation` | Reuse the typed original/qualified input seam. A legacy operation dict cannot become a qualified foundation merely by setting complete. |
+| [Qualification owner](../../../../src/tests/multilayer/acceptance/space_checkpoint_foundation.py) | Live Group12 exports/schema and witness-role validation | Verify selected source, independent observations and compact physical witnesses. Do not dereference historical EXE/source path strings as current inputs. |
+| [Current observer](../../../../src/tests/multilayer/acceptance/surface_constructor_retirement_ledger.py) | `observe` | Preserve default original body/material semantics. A future paid-body mode belongs to the explicit Plan11 task, not cleanup. |
+| [Current Space handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) | Current boundary and closed cash/approval policy | GZVEEH/no033 and both spent30,000exceptions remain closed. Plan11GZVEEI is the next source task, implemented only in Groups35-37. |
+
+Context has compacted 1 times while executing this group.
+
+### Group 12B - Publish explicitly selected successor operations
+
+{{HARD}}
+- [X] 12B.1 Add `publish_successor` with actual predecessor/source/before/output/process/build and owner-observation validation. Require the Plan11-owned operation validator for business permissions; completed financial scopes cannot become new permissions.
+- [X] 12B.2 Give the future Space caller an explicit foundation argument and selected source/configuration. Do not import its thirteen-stage historical chain to discover the current save or manufacture a compatibility receipt accepted by the old binder.
+- [X] 12B.3 Verify successor corruption/configuration/scope refusals with retained checkpoint data and synthetic transport fixtures. Classify old receivers as historical. The real GZVEEI producer remains owned by Plan11 and is dispatched in Groups35-37.
 
 ### Area Mandatory Reading - Build and recipe execution
 
@@ -398,32 +429,32 @@ _Applies to Groups 13-15._
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
-Entry gate: Group6 recipe schema, Group10 routing and Groups11-12 checkpoint exports must exist. Verify those public contracts before launching builds. If absent, stop dependent native execution; inspect tool versions/configuration independently. An old build directory or cached EXE is not a substitute.
+Entry gate: Group6 recipe schema, Group10 routing and Groups11/12/12B checkpoint exports must exist. Verify those public contracts before launching builds. If absent, stop dependent native execution; inspect tool versions/configuration independently. An old build directory or cached EXE is not a substitute.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [Build target definitions](../../../../CMakeLists.txt) | 331-337;403-416;417-445 | Existing capital/tube/Space-art targets limit compilation to selected producers. Reuse ordinary `openttd` for static recovery; no new gameplay implementation. |
 | [Run identity](../../../../src/tests/multilayer/support/artifact_paths.py) | 187-198;219-242;294-319 | `environment/prepare_runtime/create_run_context` propagate a run and reserve IDs. Explicit duplicate IDs currently refuse; inspect must not reserve one, and resume needs validated recorded identity. |
 | [Native runner](../../../../src/tests/multilayer/support/runner.py) | 199-249 | `run_native` records actual child input/executable/output identities. Recipes must preserve this evidence and subprocess exit status. |
-| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live Groups8/12 exports; no fixed range | `load_checkpoint/verify_checkpoint/qualify_checkpoint/publish_successor` are the earlier groups' public foundation. Inspect their schemas and refusal checks, not an internal legacy fallback. |
+| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live Groups8/12/12B exports; no fixed range | `load_checkpoint/verify_checkpoint/qualify_checkpoint/publish_successor` are the earlier groups' public foundation. Inspect their schemas and refusal checks, not an internal legacy fallback. |
 
 ### Group 13 - Reconstruct a portable native build
 
 {{MEDIUM}}
-- [ ] 13.1 Write the portable build profile from Group2's actual generator/compiler/options and pinned dependency/tool versions. Keep user configuration/templates outside build; don't transfer CMakeCache as authority.
-- [ ] 13.2 Implement tool discovery/explicit path overrides and configure-from-missing-build behavior. Route downloads, temporary state and binary caches into allowed locations; report unavailable external prerequisites before compiling.
-- [ ] 13.3 Build selected existing targets per configuration, sequentially with two workers and owned MSBuild node reuse disabled. Preserve project settings and read-only Git version discovery.
-- [ ] 13.4 Make the profile report actual tool versions, options, dependencies, source epoch and output identities. Old EXE hashes are not expected rebuild hashes.
-- [ ] 13.5 Verify a missing build directory and mismatched/missing tool profile using a bounded fixture; stage real current target compilation with Group15.
+- [X] 13.1 Write the portable build profile from Group2's actual generator/compiler/options and pinned dependency/tool versions. Keep user configuration/templates outside build; don't transfer CMakeCache as authority.
+- [X] 13.2 Implement tool discovery/explicit path overrides and configure-from-missing-build behavior. Route downloads, temporary state and binary caches into allowed locations; report unavailable external prerequisites before compiling.
+- [X] 13.3 Build selected existing targets per configuration, sequentially with two workers and owned MSBuild node reuse disabled. Preserve project settings and read-only Git version discovery.
+- [X] 13.4 Make the profile report actual tool versions, options, dependencies, source epoch and output identities. Old EXE hashes are not expected rebuild hashes.
+- [X] 13.5 Verify a missing build directory and mismatched/missing tool profile using a bounded fixture; stage real current target compilation with Group15.
 
 ### Group 14 - Implement the recipe executor and restart semantics
 
 {{MEDIUM}}
-- [ ] 14.1 Add `artifact_rebuild.py` with `load_recipe`, `verify_retained_inputs` and `prepare_recipe`. Resolve only registered recipes and structured argument arrays; inspect validates the graph without importing producer entry points or writing output.
-- [ ] 14.2 Order prerequisites topologically and execute one explicit configuration/run. Build and generated-input stages retain separate statuses; publish a successful verification only after real selected checks pass.
-- [ ] 14.3 Implement fresh run reservation plus explicit interrupted-run resume. Validate recipe, configuration, inputs and producer hashes against the stored manifest before joining `RunContext`; never silently reuse an existing directory because its name matches.
-- [ ] 14.4 Keep each stage's output under shared roles and pass explicit selected manifests to children. Failure leaves a failed/incomplete generated report and cannot advance dependent stages.
-- [ ] 14.5 Verify cycles, changed inputs, incomplete prior stages, duplicate invocation and source-publication/paid-work exclusion. Keep individual runners under two minutes and builds separately timed.
+- [X] 14.1 Add `artifact_rebuild.py` with `load_recipe`, `verify_retained_inputs` and `prepare_recipe`. Resolve only registered recipes and structured argument arrays; inspect validates the graph without importing producer entry points or writing output.
+- [X] 14.2 Order prerequisites topologically and execute one explicit configuration/run. Build and generated-input stages retain separate statuses; publish a successful verification only after real selected checks pass.
+- [X] 14.3 Implement fresh run reservation plus explicit interrupted-run resume. Validate recipe, configuration, inputs and producer hashes against the stored manifest before joining `RunContext`; never silently reuse an existing directory because its name matches.
+- [X] 14.4 Keep each stage's output under shared roles and pass explicit selected manifests to children. Failure leaves a failed/incomplete generated report and cannot advance dependent stages.
+- [X] 14.5 Verify cycles, changed inputs, incomplete prior stages, duplicate invocation and source-publication/paid-work exclusion. Keep individual runners under two minutes and builds separately timed.
 
 ```mermaid
 stateDiagram-v2
@@ -444,14 +475,14 @@ Inspection creates no run directory. A changed source/recipe/input requires a ne
 ### Group 15 - Qualify the retained Space foundation on fresh applications
 
 {{MEDIUM}}
-- [ ] 15.1 Build the current capital and ordinary applications through the new profile in both configurations. Do not replace/erase original history before the Group7/8 seal has passed.
-- [ ] 15.2 Execute only the new load-only tag and ordinary static loader on each retained final save. Publish source/save/process identities and independent state comparisons through the new checkpoint adapter.
-- [ ] 15.3 Validate GLOG revision and pause differences using the established bounded helpers, with unchanged gameplay counters and original save hashes. Prove no money, order, packet, owner, date or work progression was introduced.
-- [ ] 15.4 Record fresh qualification separately from historical earnings. Verify a current source/application mismatch invalidates fresh qualification without invalidating or rewriting the immutable historical seal.
+- [X] 15.1 Build the current capital and ordinary applications through the new profile in both configurations. Do not replace/erase original history before the Group7/8 seal has passed.
+- [X] 15.2 Execute only the new load-only tag and ordinary static loader on each retained final save. Publish source/save/process identities and independent state comparisons through the new checkpoint adapter.
+- [X] 15.3 Validate GLOG revision and pause differences using the established bounded helpers, with unchanged gameplay counters and original save hashes. Prove no money, order, packet, owner, date or work progression was introduced.
+- [X] 15.4 Record fresh qualification separately from historical earnings. Verify a current source/application mismatch invalidates fresh qualification without invalidating or rewriting the immutable historical seal.
 
 ### Area Mandatory Reading - Graphics selection, conversion and native payloads
 
-_Applies to Groups 16-18._
+_Applies to Groups16-17. Later family/native areas below narrow their own mandatory reading._
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
@@ -468,36 +499,327 @@ Entry gate: Group10 roles and Group14 recipe executor pass their focused contrac
 ### Group 16 - Make evidence selection independent of diagnostic logs
 
 {{HARD}}
-- [ ] 16.1 Parameterize `EvidenceSet` selection/output roots through the explicit recipe run. Move required transcript roles to generated evidence; diagnostic logs remain optional.
-- [ ] 16.2 Preserve exact frame hashing, images-role location, feature/scenario/run ID, native writer and source identity checks. Updating valid roots must not turn historical-relocation records into current native passes.
-- [ ] 16.3 Migrate selected-manifest fields and direct consumers together, including report-to-terminal references. Reject ambiguous mixed old/new schemas; expose a bounded migration/version error.
-- [ ] 16.4 Test wrong run, stale source, edited frame, missing required evidence and absent optional logs independently. Record existing old capture imports as historical or regenerate them explicitly.
+- [X] 16.1 Parameterize `EvidenceSet` selection/output roots through the explicit recipe run. Move required transcript roles to generated evidence; diagnostic logs remain optional.
+- [X] 16.2 Preserve exact frame hashing, images-role location, feature/scenario/run ID, native writer and source identity checks. Updating valid roots must not turn historical-relocation records into current native passes.
+- [X] 16.3 Migrate selected-manifest fields and direct consumers together, including report-to-terminal references. Reject ambiguous mixed old/new schemas; expose a bounded migration/version error.
+- [X] 16.4 Test wrong run, stale source, edited frame, missing required evidence and absent optional logs independently. Record existing old capture imports as historical or regenerate them explicitly.
 
-### Group 17 - Generate derived images and packing candidates without publishing
+### Group 17 - Generate M1 derived images and packing candidates without publishing
 
 {{MEDIUM}}
-- [ ] 17.1 Add explicit output selection to shared source conversion/guide generation, starting with `regenerate_art_sources` and the pure packer seam. Reuse existing `--cache-only`/`publish_source=False` behavior where present; verify it rather than introducing another publication switch. Candidate bytes go to data/images in the selected run.
-- [ ] 17.2 Apply the same adapter to current Space, orbital, launch and ground family converters from the inventory. Reuse original poses/palettes/crops/anchors and pinned encoders; split any family that needs more than a mechanical destination adapter into a new numbered group before proceeding.
-- [ ] 17.3 Generate contact sheets, guides, indexed rasters and packing inputs through their actual producer files. Preserve original media and compare canonical shipping bytes without invoking `publish` or rewriting runtime/publication flags.
-- [ ] 17.4 Reconstruct available predecessor bytes from declared source/read-only Git objects; retain only an indispensable independent baseline where exact reconstruction is unavailable. No self-updating expected image.
-- [ ] 17.5 Verify deterministic repeated output and source/public-manifest preservation on selected family cases, including an encoder-version mismatch and altered source.
+- [X] 17.0 Resolve the missing registered `source-approval-contract` input before generation. Select existing authoritative authored contracts or preserve only indispensable original facts; do not invent approval, rebase source hashes or copy an old gallery. Verify the selected recipe root without importing producers.
+- [X] 17.1 Add explicit output selection to shared source conversion/guide generation, starting with `regenerate_art_sources` and the pure packer seam. Reuse existing `--cache-only`/`publish_source=False` behavior where present; verify it rather than introducing another publication switch. Candidate bytes go to data/images in the selected run.
+- [X] 17.2 Cover all current M1 packing sources, including the collector source producer omitted from the original eight-leaf recipe graph. Select actual generated reports/atlases explicitly; no fixed-cache source fallback. Remaining family adaptations from the original17.2 are assigned to17B-17D below.
+- [X] 17.3 Generate contact sheets, guides, indexed rasters and packing inputs through their actual producer files. Preserve original media and compare canonical shipping bytes without invoking `publish` or rewriting runtime/publication flags.
+- [X] 17.4 Reconstruct available predecessor bytes from declared source/read-only Git objects; retain only an indispensable independent baseline where exact reconstruction is unavailable. No self-updating expected image.
+- [X] 17.5 Verify deterministic repeated output and source/public-manifest preservation on selected family cases, including an encoder-version mismatch and altered source.
 
-### Group 18 - Pass generated expectations into the actual native loader
+### Area Mandatory Reading - Space and orbital source candidates
+
+_Applies to Group17B (seven Space families); orbital craft/modules are narrowed into17BB/17BC below._
+
+Read the existing public manifest's selected Space authoring entries and
+`graphics-dependencies.json` named family/generator/cycle-break entries only.
+Read `pack_space_art.py:derive/read_scope` and the
+actual selected converter exports those functions call. `EvidenceSet` and
+Group17's output-only adapter own routing; no new output orchestrator. Original
+approval remains historical. Resolve a required independent source fact explicitly
+before generation; do not copy a historical gallery or rebase its hash.
+
+Context has compacted 1 times while executing this group.
+
+### Group17B - Generate Space source candidates
 
 {{HARD}}
-- [ ] 18.1 Parameterize expected sprite producers with selected packing/source inputs and an explicit generated payload destination. Cover all four literal payload families found in `multilayer_packed_load.cpp`.
-- [ ] 18.2 Introduce an explicit test-only expected-payload input, for example `OTTD_TEST_EXPECTED_SPRITES`, resolved inside an allowed fixture/generated owner. Validate its recipe/configuration/hash before launching the selected native test.
-- [ ] 18.3 Extend process provenance to record this non-save input. Current `run_native` auto-discovers only `.sav/.scn` source hooks, so setting an environment variable alone leaves the binary payload unbound.
-- [ ] 18.4 Run the real GRF loader against independent source-derived geometry/pixel expectations. Preserve native sprite ranges/legacy prefix and canonical shipping identities.
-- [ ] 18.5 Verify missing/changed payload, wrong family/configuration and genuine decoder mismatch all fail. Split each native family into a separately invocable bounded recipe leaf.
+- [X] 17B.1 Identify selected converter dependencies and separate original approval/source facts from regenerable reports. Preserve only indispensable independent facts, following the existing public media authority.
+- [X] 17B.2 Apply Group17's explicit output adapter to actual Space converters and guides, preserving poses, palettes, crops, anchors and pinned encoders. Split further if the mechanism exceeds a bounded family.
+- [X] 17B.3 Derive selected packing PNG/NFO/header candidates from those outputs without calling publication or reopening historical native proof chains.
+- [X] 17B.4 Verify repeated bytes, canonical source/public-manifest preservation and rejection of changed source or encoder; register exact supported family commands.
+
+### Area Mandatory Reading - Orbital craft source candidates
+
+_Applies to Group17BB; split from17B to keep three craft families bounded._
+
+Read selected vehicle.model-21/16/17 public authoring/source policy entries,
+`convert_space_family_art.py:derive/state_pose` and the actual heavy/retained/
+hauler pose exports they call. Read `pack_orbital_art.py` craft source selection
+only. Reuse17B's selected source destinations and typed source report adapter.
+Original approval hashes remain history; current candidates must preserve the
+independent original pixel/policy identities. Do not reopen old native proof.
+
+### Group17BB - Generate orbital craft source candidates
+
+{{MEDIUM}}
+- [X] 17BB.1 Identify the three original craft input/policy closures and preserve any indispensable independent fact through its existing media owner.
+- [X] 17BB.2 Reuse17B's output adapter for actual heavy miner, retained robot and hauler source/guide producers without changing physical views, aliases or authored status.
+- [X] 17BB.3 Verify repeated output, approved original hashes, source/tool mismatch and old-proof-free execution; register bounded source leaves for later orbital packing.
+
+### Area Mandatory Reading - Orbital module source and packing candidates
+
+_Applies to Group17BC; split from17B for seven fixed-world-cell module matrices._
+
+Read selected module authoring/source policy entries and the actual matrix/review
+exports in Core/Dock/Storage/Power/FuelStore/Assembly/Processor state converters.
+Read `pack_orbital_art.py:derive/module_poses/read_scope`. Reuse17B/17BB selected
+source destinations and source reports, original cell/absence/state aliases,
+and the shared executor. Source input ancestry stays immutable; old source
+review hashes are historical approval facts, never current filesystem inputs.
+
+### Group17BC - Generate orbital module and packing candidates
+
+{{HARD}}
+- [X] 17BC.1 Classify the seven module original input/policy closures and any required independent facts without copying historical galleries.
+- [X] 17BC.2 Route actual module state/cell/contact producers into selected images/reports, preserving native footprints, honest absent fronts and state/frame aliases.
+- [X] 17BC.3 Derive orbital PNG/NFO/header candidates from all ten selected craft/module reports, preserving canonical shipping bytes without publication.
+- [X] 17BC.4 Verify repeat output, original/public preservation, changed source/encoder and foreign/missing inputs; register exact bounded module and packing commands.
+
+### Area Mandatory Reading - Launch and rocket source candidates
+
+_Applies to Group17C; split from original17.2. Conversion and packing are narrowed into17CB/17CC below._
+
+Read only selected launch/rocket entries in the public manifest, the corresponding
+`graphics-dependencies.json` source/proof-cycle entries,
+`pack_launch_fleet_art.py:derive` and its selected source-policy/pose exports.
+Reuse Group17's output-only adapter and `artifact_rebuild.load_recipe/prepare_recipe`.
+Retain existing physical absence, aliases, independent source policy and original
+approval semantics; no regenerated actual becomes its own expected baseline.
+
+### Group17C - Preserve launch and rocket original source facts
+
+{{HARD}}
+- [X] 17C.1 Classify selected launch/rocket dependencies, distinguishing historical qualification receipts from indispensable independent original/pixel/geometry facts.
+- [X] 17C.2 Preserve the exact ten historical rocket generation-input template images through their existing media provenance owner, keeping original path/hash facts and frozen candidate/signature prefixes unchanged.
+- [X] 17C.3 Identify independently retained geometry/pixel/alias expectations and original approval facts needed by fresh source validation; retain only indispensable missing facts and verify old-proof-free original ancestry resolution.
+
+### Area Mandatory Reading - Launch and rocket source conversion
+
+_Applies to Group17CB; split from17C after finding source-era qualification cycles._
+
+Read `convert_launch_center_source.py:derive/decode/checked_occupied_policy` and
+`convert_cargo_rocket_source.py:derive/decode/checked_art/audited_original`;
+only their selected policy/fixture and actual composition/pose exports are required.
+Reuse17C's retained original inputs, the independent existing fixtures and the
+shared selected output adapter. Historical qualification identities remain facts;
+fresh source validation must execute actual converters/decoders, not read old
+success counters or preserve executable/source snapshots for a false current pass.
+
+### Group17CB - Generate launch and rocket source candidates
+
+{{HARD}}
+- [X] 17CB.1 Separate historical source-stage qualification metadata from actual independently retained geometry/pixel expectations in the two source validators.
+- [X] 17CB.2 Route actual source/guide/contact/mask/ownership producers through selected images/data/reports without changing authored originals, physical poses, source policy or publication flags.
+- [X] 17CB.3 Verify deterministic repeated candidates, independent approved pixels/aliases, original preservation and source/tool/foreign-run refusals; register the two bounded source leaves.
+
+### Area Mandatory Reading - Launch and rocket packing candidates
+
+_Applies to Group17CC; split from17C to bound the historical source-handoff adapter._
+
+Read `pack_launch_fleet_art.py:read_scope/derive` and
+`tools/launch_fleet_handoff.py:checked_handoff/source_poses/layout`, plus only
+the frozen handoff's canonical source/geometry/prefix fields. Use17CB's two
+explicit current source reports; historical report/proof hashes remain approval
+facts and do not require their physical old paths. Keep all1648logical IDs,
+direct aliases, foreground absence, source expectations and canonical bytes.
+
+### Group17CC - Generate launch and rocket packing candidates
+
+{{HARD}}
+- [X] 17CC.1 Bind the existing independent handoff expectations to the two actual current source reports without rewriting original approval or reopening native proof chains.
+- [X] 17CC.2 Derive selected PNG/NFO/header candidates through the original packer and verify exact canonical shipping/prefix bytes without publication.
+- [X] 17CC.3 Verify repeated output and source/tool/missing/foreign/geometry refusals; register and execute the exact selected source-to-packing closure.
+
+### Area Mandatory Reading - Ground source candidates
+
+_Applies to Group17D; original facts/diagnosis. Its47-family conversion and packing are narrowed into17DB/17DC/17DD/17DE below._
+
+Read `pack_ground_art.py:derive` and the preserved-file guard it invokes,
+`graphics-dependencies.json` ground generator/expected-input entries, and only
+the selected ground converter exports required by the current public manifest.
+Reuse Group17's output-only adapter. The ten source-hash mismatches observed
+before cleanup remain existing limitations: diagnose their actual owning contract,
+never rewrite hashes to turn changed pixels into approved source.
+
+### Group17D - Preserve ground source facts and diagnose historical epochs
+
+{{HARD}}
+- [X] 17D.1 Separate original source/independent prefix facts from the historical publication snapshot, retaining only indispensable facts through existing media/fixture owners.
+- [X] 17D.2 Diagnose the ten native mine/processor descriptor mismatches against actual owners, distinguish historical native qualification from immutable physical source expectations, and preserve old facts without hash rebasing or a false current native pass.
+- [X] 17D.3 Seal only indispensable independent geometry/prefix/source/alias facts from verified historical inputs; verify durable input resolution without retaining2145physical old files or a general review archive.
+
+### Area Mandatory Reading - Ground material source candidates
+
+_Applies to Group17DB; split from17D for seven mines and four processing facilities._
+
+Read selected mine/processor public entries and their original converter exports,
+`tools/ground_mine_contract.py` and `tools/ground_processor_contract.py` source-only
+contract readers. Use17D's independent physical expectations and distinguish old
+native epochs from current source execution. Reuse shared selected images/data/
+reports routing; no descriptor hash refresh without actual native owner proof.
+
+Context has compacted 1 times while executing this group.
+
+### Group17DB - Generate ground material source candidates
+
+{{HARD}}
+- [X] 17DB.1 Route original mine and processing-facility source/guide/contact producers into explicit selected outputs while preserving source geometry and physical part ownership.
+- [X] 17DB.2 Reconstruct original source pixels/poses against independent approved identities; preserve old native descriptor facts and keep current native qualification separate.
+- [X] 17DB.3 Verify repeated outputs, immutable originals/public state and source/tool/foreign-input refusals; register bounded material source leaves, splitting further if needed.
+
+### Area Mandatory Reading - Ground fleet source candidates
+
+_Applies to Group17DC; split from17D for conventional models05-08 and tube models09-13._
+
+Read only selected vehicle/purchase source policies, their actual conventional/
+tube converter exports and `tools/ground_fleet_contract.py`. Reuse17D's retained
+physical facts and selected output adapter. Completed original art is separate
+from underground Group10's provisional native edits; preserve those edits and
+their two source epochs without implementing or qualifying the paused feature.
+
+### Group17DC - Generate ground fleet source candidates
+
+{{HARD}}
+- [X] 17DC.1 Route actual selected body/purchase/state/contact producers through explicit images/data/reports without changing original model, load, company-mask or heading semantics.
+- [X] 17DC.2 Verify deterministic approved source pixels, original state/frame aliases and canonical preservation, keeping provisional underground native work unqualified.
+- [X] 17DC.3 Verify source/tool/foreign/missing-input refusals and register bounded family leaves; split conventional/tube mechanisms further if necessary.
+
+### Area Mandatory Reading - Ground infrastructure source candidates
+
+_Applies to Group17DD; narrowed to the two conventional station/terminal source mechanisms. Tube and energy/utility sources follow17DDB/17DDC._
+
+Read only selected rail-station/road-terminal public entries and their original
+station/terminal state converter exports. Preserve the
+station/terminal signed native parent/roof/glass anchor contracts in
+`pack_ground_art.py:native_pose`; retain honest absent parts and actual world
+cells. Reuse shared output routing and17D's independent facts, with no publisher.
+
+### Group17DD - Generate conventional station source candidates
+
+{{HARD}}
+- [X] 17DD.1 Route actual rail-station/road-terminal state/guide/contact outputs into selected owners without publication or current native qualification claims.
+- [X] 17DD.2 Preserve fixed cells, signed native parent/relative-child roof/glass anchors, physical absence and aliases; reproduce independent original pixel/pose identities.
+- [X] 17DD.3 Verify repeated bytes, original/public preservation and source/tool/foreign/missing-input refusals; register the two bounded source leaves.
+
+### Area Mandatory Reading - Tube infrastructure source candidates
+
+_Applies to Group17DDB; split from17DD for the nine tube infrastructure families._
+
+Read only selected tube-terminal/service/interchange and tube geometry public
+entries, their original pure build/contact exports in the tube converter files,
+and17D's corresponding physical expectations. Preserve all original junction
+variants, honest absent fronts, fixed cells and source state aliases. Reuse
+shared output routing and explicit reconstructed prerequisites; paused Tube10
+native implementation remains protected and unqualified.
+
+### Group17DDB - Generate tube infrastructure source candidates
+
+{{HARD}}
+- [X] 17DDB.1 Route the actual selected tube facility/geometry/contact producers into current images/reports/data using the shared output adapter.
+- [X] 17DDB.2 Preserve original complete geometry, physical absence, junction variants and aliases against independent pixel/pose expectations.
+- [X] 17DDB.3 Verify repeated bytes, original/public preservation and source/tool/foreign/missing-input refusals; register bounded tube infrastructure leaves.
+
+### Area Mandatory Reading - Ground energy, utility and control source candidates
+
+_Applies to Group17DDC; split from17DD for seven energy/utility/control families._
+
+Read only selected vent/powerhouse/utility/control public entries and the actual
+pure exports in convert_vent_art.py, convert_generator_art.py,
+convert_riser_art.py, convert_utility_art.py and convert_feature_controls.py;
+read convert_geothermal_art.py only where those exports call its original
+composition helpers. Four original public source paths name generated
+atlases: use17D's explicit derived_source_inputs facts to regenerate from actual
+retained media, preserving old paths/hashes as historical facts. Do not copy
+those old derivatives as originals or qualify current native code with old proof.
+
+### Group17DDC - Generate energy, utility and control source candidates
+
+{{HARD}}
+- [X] 17DDC.1 Route actual geothermal/utility/control source/guide/contact producers into selected outputs from their retained original media records.
+- [X] 17DDC.2 Bind the four explicitly classified generated-source roles to current outputs while preserving original pixel/pose/absence/anchor expectations and canonical public state.
+- [X] 17DDC.3 Verify repeated bytes, original/public preservation and source/tool/foreign/missing-input refusals; register bounded energy/utility/control leaves.
+
+### Area Mandatory Reading - Ground packing candidates
+
+_Applies to Group17DE; split from17D for the47-family packing closure._
+
+Read `pack_ground_art.py:derive/native_pose` and
+`tools/ground_art_handoff.py:read_scope/source_poses/allowed_empty/validate_native_palette`.
+Consume17DB-17DDC's explicit current reports and17D's independent facts rather
+than the old2145-file publication snapshot. Preserve all14254sprites/native
+range[7791,22045), company indices, source absence and signed facility anchors.
+
+Context has compacted 1 times while executing this group.
+
+### Group17DE - Generate ground packing candidates
+
+{{HARD}}
+- [X] 17DE.1 Bind all selected current ground source reports to independent original source/geometry/prefix facts without reopening old native or publication chains.
+- [X] 17DE.2 Derive exact canonical PNG/NFO/header candidates through the original packer without publication or stale native qualification claims.
+- [X] 17DE.3 Verify repeat output and missing/foreign/tool/source/geometry/absence refusals; register and execute the complete bounded source-to-packing closure.
+
+### Area Mandatory Reading - Actual native expected payloads
+
+_Applies to Group18._
+
+Read `multilayer_packed_art_fixture.py:pixel_hash/main` and the corresponding
+Space/orbital/launch expected-payload producers selected by the current recipe.
+Read `multilayer_packed_load.cpp` selected loader cases and literal payload inputs,
+`runner.py:run_native` input/process provenance, Group17/17B-17D's selected
+packing outputs, and `artifact_rebuild.load_recipe/prepare_recipe`. Keep source
+expectations independent of the actual GRF decoder. Missing prerequisite outputs
+stop the selected loader recipe; no old cache or canonical publication fallback.
+
+### Group 18 - Generate explicit independent sprite expectations
+
+{{HARD}}
+- [X] 18.1 Parameterize expected sprite producers with selected packing/source inputs and an explicit generated payload destination. Cover all four literal payload families found in `multilayer_packed_load.cpp`.
+- [X] 18.2 Include Ground's fifth actual producer using current source/prefix inputs, removing its selected path's old decoded-build proof dependency and canonical GRF/hash writes. Verify reproducible source payloads and register bounded pure expectation leaves.
+
+Execution refinement: the five original payload producers, shared native input
+binding and actual decoder checks are separate ownership changes. Keep them in
+18/18B/18C order so source expectations are verified before native acceptance.
+
+### Area Mandatory Reading - Native payload selection and provenance
+
+_Applies to Group18B._
+
+Read `test_artifact_paths.h/.cpp` current input/containment helpers,
+`multilayer_packed_load.cpp` and `ground_packed_load.cpp` fixture selection,
+`runner.py:run_native`, and18's actual selected payload reports/recipe roles.
+Preserve family/configuration/identity/owner gates and record the exact non-save
+input actually supplied to the native process. No old expected-directory fallback.
+
+### Group18B - Bind selected payloads to native inputs
+
+{{HARD}}
+- [X] 18B.1 Introduce an explicit test-only expected-payload input, for example `OTTD_TEST_EXPECTED_SPRITES`, resolved inside an allowed fixture/generated owner. Validate its recipe/configuration/hash before launching the selected native test.
+- [X] 18B.2 Extend process provenance to record this non-save input. Current `run_native` auto-discovers only `.sav/.scn` source hooks, so setting an environment variable alone leaves the binary payload unbound. Verify missing/changed/wrong-family/configuration/owner refusals before native acceptance.
+
+### Area Mandatory Reading - Actual native sprite loading
+
+_Applies to Group18C._
+
+Read18's selected payload manifests and18B's explicit native input/provenance
+boundary, the actual loader cases in `multilayer_packed_load.cpp` and
+`ground_packed_load.cpp`, `artifact_rebuild.load_recipe/prepare_recipe`, and
+`native_build.build_selected` for the two current graphics test targets.
+Keep all five family leaves bounded and retain exact current process evidence.
+Source-only checks or historical loader success cannot qualify current binaries.
+
+Context has compacted 1 times while executing this group.
+
+### Group18C - Execute actual native sprite loader leaves
+
+{{HARD}}
+- [X] 18C.1 Run the real GRF loader against independent source-derived geometry/pixel expectations. Preserve native sprite ranges/legacy prefix and canonical shipping identities.
+- [X] 18C.2 Verify genuine decoder mismatch fails and each of the five actual native families passes its separately invocable bounded recipe leaf with exact input/executable/configuration/process/transcript provenance.
 
 ### Area Mandatory Reading - Rebuild actual native review captures
 
-_Applies to Groups 19-20._
+_Applies to Group19. Later capture groups have their own focused Area blocks._
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
-Entry gate: Groups16-18 provide explicit evidence selection, pure derived inputs and native loader recipes. Inspect those recipe manifests and focused results. Stop dependent capture verification if absent; inventory current drawing producers independently. No synthetic screenshot, old EXE or source-publication action may bypass the missing prerequisite.
+Entry gate: Groups16-18C provide explicit evidence selection, pure derived inputs and actual native loader recipes. Inspect those recipe manifests and focused results. Group18's source-only completion cannot bypass18B/18C's current native input/loader gates. Stop dependent capture verification if absent; inventory current drawing producers independently. No synthetic screenshot, old EXE or source-publication action may bypass the missing prerequisite.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
@@ -507,342 +829,164 @@ Entry gate: Groups16-18 provide explicit evidence selection, pure derived inputs
 | [Native runner](../../../../src/tests/multilayer/support/runner.py) | 199-249 | `run_native` binds child configuration, actual executable, source saves and produced captures. Explicit selected frame sets remain mandatory. |
 | [Recipe executor](../../../../src/tests/multilayer/support/artifact_rebuild.py) | Live Group14 `prepare_recipe` and Groups16-18 registered leaves; no fixed range | Use the already verified dependency/selection interface to prepare native capture inputs. A native wrapper must not reconstruct private fixed proof directories. |
 
-### Group 19 - Rebuild current Space review families
+Execution refinement after18C: current source selectors, launch's occupied native
+matrix and paused ordinary-game captures have distinct input/authority guards.
+Keep them sequential in19/19B/19C. The original orbital paid construction observer
+must never be used merely to regenerate screenshots.
+
+### Group19 - Rebuild current Space source-selector reviews
 
 {{HARD}}
-- [ ] 19.1 Register bounded source-selector/decoder/viewport leaves for launch/rocket/pod, orbital and asteroid/probe families using actual existing targets/tags. Split configuration and expensive capture phases; no monolithic historical replay.
-- [ ] 19.2 Rewire each current capture wrapper's output/terminal/manifest paths to the selected context. Keep canonical native drawing and exact source/native-pixel comparisons.
-- [ ] 19.3 Use retained fixture worlds for isolated review obligations. Do not invoke the actual current GZVEEH world or old paid-work caller merely to regenerate screenshots.
-- [ ] 19.4 Keep current producer success separate from ordinary-game/human acceptance and public runtime activation. Regression verification cannot automatically update authored/publication status.
-- [ ] 19.5 Verify a representative complete invocation for each changed producer mechanism, then register precise per-family rebuild commands for remaining coverage.
+- [X] 19.1 Register bounded launch/rocket/pod, orbital and asteroid/probe source-selector leaves using actual existing targets/tags and the existing18C decoder leaves. Keep configuration and expensive viewport phases separate.
+- [X] 19.2 Adapt the current selector wrapper's output/terminal/manifest paths and explicit source policy inputs to the selected context. Preserve original source-policy comparisons and detached refusals.
+- [X] 19.3 Verify representative complete bounded selector invocations and document per-family commands. Keep source-selector success separate from viewport, ordinary-game/human acceptance and public runtime activation.
 
-### Group 20 - Rebuild selected ground and tube review material
+### Area Mandatory Reading - Selected occupied launch viewports
 
-{{HARD}}
-- [ ] 20.1 Bind selected ground source/packed/native consumer recipes to the existing current qualification owners. Keep independent expected pose/domain boundaries and later-owner exclusions.
-- [ ] 20.2 Route actual viewport/capture products into cleanable runs; remove current checks' fixed before-audit/log paths by using retained comparison inputs.
-- [ ] 20.3 Preserve completed tube terminal scope separately from provisional five-model work. Rebuild only its documented producer material and record any existing source-epoch limitation.
-- [ ] 20.4 Verify bounded ground/tube witnesses and all source/GRF preservation checks. No cleanup task completes unfinished model, useful-route or user-acceptance requirements.
+_Applies to Group19B._
 
-### Area Mandatory Reading - Migrate prior-stage and Space publication consumers
+Read launch_facility_render_checks.py:run/verify_rasters/expected_scene and
+launch_facility_render.cpp's [.launch-facility-render] case. Use19's current
+source selectors,18C's actual decoder results and17DA/17DB's selected source
+reports. The retained historical host supplies physical owners; current source
+reports supply independent pixel/ownership expectations. Keep zero simulation
+ticks and disclosed component pose inputs; no current GZVEEH world or paid work.
 
-_Applies to Groups 21-22._
-
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Groups9-10 supply verified immutable inputs/shared roles and Group14 supplies explicit selected recipes; Groups8/12 supply the Space checkpoint adapter. Verify those contracts. Stop dependent consumer migration if absent; trace an unclassified reader independently. Do not infer an accepted prior stage from a matching filename or choose the latest run.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [State fixture](../../../../src/tests/multilayer_state_fixture.py) | 28-104 | `prior_artifact/log_path/output_save_path/save_path` are the existing shared selection seam. Keep exact prior run and newly reserved output semantics. |
-| [Phase-pair reader](../../../../src/tests/multilayer/acceptance/phase_pair_index_checks-1.py) | 18-26;29-45 | Actual path/hash and owner-family comparisons must survive index relocation; replacing the index alone is insufficient. |
-| [Original native driver](../../../../src/tests/multilayer/acceptance/surface_construction_cash_native.py) | 20-82 | Current receipt-based execution records terminal/harness/native reports. Migrate only active publication/adapters; retain historical caller contracts explicitly. |
-| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live Groups8/12 exports; no fixed range | `qualify_checkpoint/publish_successor` supply the new continuation foundation and complete selected successor evidence. |
-| [Recipe executor](../../../../src/tests/multilayer/support/artifact_rebuild.py) | Live Group14 `load_recipe/prepare_recipe`; no fixed range | Explicit preparation of a missing prior stage must use the existing recipe dependency/status contract and a retained input, not silently run arbitrary historical stages. |
-
-### Group 21 - Reconstruct prior-stage test evidence explicitly
+### Group19B - Rebuild selected occupied launch viewports
 
 {{HARD}}
-- [ ] 21.1 Replace required log reads in shared state/profile/geology helpers with retained semantic fixtures or explicitly prepared prior-stage evidence. Parse diagnostics from the current process and publish only required semantics/transcripts.
-- [ ] 21.2 Migrate TBM feedback/motion/pacing consumers through their actual prior-stage selectors. Preserve accepted/refused cases and configuration/source/save identities.
-- [ ] 21.3 Add a bounded prerequisite recipe when a missing earlier stage can be regenerated from a retained fixture. Preserve required older-format inputs instead of generating them with the new save format.
-- [ ] 21.4 Test missing prior evidence, wrong run/configuration, unchanged refusal semantics and regenerated valid inputs. Diagnostic-log deletion must not change pass/fail.
-- [ ] 21.5 Close the inventory dispositions for these families; split any distinct protocol requiring new design into its own bounded group rather than expanding this one.
+- [X] 19B.1 Parameterize the existing occupied native capture/raster wrapper with explicit retained host, selected source reports and actual current build, routing all captures/transcripts/manifests into its selected context.
+- [X] 19B.2 Register and verify a representative complete bounded viewport leaf with exact native drawing/source-pixel comparisons and malformed-evidence refusals. Keep ordinary-game/human acceptance and public activation separate.
 
-### Group 22 - Move active Space indexes and successor receipts
+### Area Mandatory Reading - Paused orbital and asteroid viewports
 
-{{MEDIUM}}
-- [ ] 22.1 Update current progress/phase-pair index producers and readers together to selected report paths. Keep exact path/hash references and complete nested input sets.
-- [ ] 22.2 Remove live unique source snapshots, checkpoint indexes and required authorizations from logs/test-cache. Retain spent approval facts only as historical evidence, never reusable execution permission.
-- [ ] 22.3 Replace active `--retain` behavior that recursively copies executables with checkpoint/successor publication. Fresh process identities remain in generated proof; durable continuation state uses the compact foundation.
-- [ ] 22.4 Prove a successor can be exported, its disposable diagnostics removed, and its next qualification reconstructed without the original report folders. Preserve real incomplete/refused operation status.
+_Applies to Group19C._
 
-### Area Mandatory Reading - Update Space development instructions
+Read orbital_final_art_checks-1.py:capture/predecessor and
+space_final_art_checks-1.py:capture/predecessor, runner.py:start_native/
+console_executable/collect_native_screenshots, and19's selected selector/decoder
+results. Use explicit retained historical worlds and current ordinary application
+builds. Do not run orbital_final_art_checks-3 or [.orbital-art-native]: those
+producers purchase/construct rather than merely capture. Keep live=false and
+independently compare saved physical owners before/after paused view commands.
 
-_Applies to Group 23._
+Context has compacted 1 times while executing this group.
 
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+### Group19C - Rebuild paused orbital and asteroid reviews
 
-Entry gate: Groups15-22 have actual passing recipe commands or an explicit unresolved result per affected family. Validate commands against the live catalogue. Stop publishing "ready to rebuild/resume" for an unresolved family; classify historical documentation independently. Do not document hypothetical CLI behavior as delivered.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Space master](r2mlsp-space-master-plan.md) and [current handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) | Master7-9/287-291; handover5-17 | Replace current paths/practices and dispatch the actual next task. Keep historical results and closed policies truthful. |
-| [Plan11 next task](r2mlvs11-orbital-stations-and-manufacturing.md#group-15csgzveei---price-genuine-additional-goods-service-before-further-capital-earnings) | 2954-2963 | Its Local block still directs future work to old logs/thirteen epochs/archived applications. Replace that bootstrap with the verified checkpoint foundation while preserving the actual Goods-query obligation. |
-| [Shared layout](r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout) | 36-49, then live Group10 changes | This shared owner must agree with child plans on generated versus durable inputs; no private Space exception keeping logs permanent. |
-
-### Group 23 - Publish concrete cleanup-aware Space instructions
-
-{{MEDIUM}}
-- [ ] 23.1 Update master and affected Plans8/9/10/11/13/14 current instructions, mandatory-reading pointers and guide/handovers with actual retained paths and cleanable generated destinations. Label older output paths historical.
-- [ ] 23.2 For each required next-step asset, name recipe, owning Python/C++ file/tag, retained inputs, configuration/target, exact command and expected scoped result. Verify each recipe exists; generic "rerun the tests" wording is insufficient.
-- [ ] 23.3 Rewrite the current Space resumption instructions to consume the sealed foundation/new qualification and export future checkpoints. Explicitly remove instructions to archive another full EXE graph or replay the closed cash scope.
-- [ ] 23.4 Record the post-clean development order and source-plan dispatch used by Groups35-37. Preserve current unfinished checkboxes; cold-load qualification does not complete GZVEEI.
-- [ ] 23.5 Check all live documentation links/commands against the actual catalogue, including shared graphics/world instructions. Keep old receipt quotations as dated history without live dependencies.
-
-### Area Mandatory Reading - Save export and runtime lifecycle
-
-_Applies to Groups 24-25._
-
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Group9 provides verified save aliases and Group22 publishes compact successors. Check those contracts before adding automatic export/retirement. Stop runtime removal if export is unavailable; measure copying independently. No unsupported save format or failed export may be treated as disposable.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Save stream reader](../../../../mlm/tools/savegames/savegame_plane_digest.py) | 87-105 | `read_stream` recognizes some compression tags but explicitly lacks LZO. Use header knowledge conservatively; decoder failure cannot justify discarding an old save. |
-| [Python runtime materialization](../../../../src/tests/multilayer/support/artifact_paths.py) | 219-242 | `prepare_runtime` copies baseset/newgrf/lang/scripts. Keep mutable scripts/configs isolated while reducing repeated content work. |
-| [Console image preparation](../../../../src/tests/multilayer/support/runner.py) | 86-121 | `console_executable` patches a disposable PE copy with atomic replacement and matching DLLs. Preserve source/peer image bytes and recorded identities. |
-| [Native runtime materialization](../../../../src/tests/test_artifact_paths.cpp) | 205-226 | `GetTestRuntimeConfig` currently mirrors distribution copying. Python-only changes would leave native callers accumulating old homes. |
-
-### Group 24 - Implement verified save export as a reusable operation
-
-{{MEDIUM}}
-- [ ] 24.1 Add `save_retention.py` beside support tests with `plan_save_exports` and `apply_save_exports`. Plan source/destination/hash aliases without writing; use Group9's stable owner and collision policy.
-- [ ] 24.2 Copy each new save to a temporary destination, verify original and copied hashes, then atomically publish the retained payload and migration record. Keep source saves untouched during export.
-- [ ] 24.3 Preserve all recognized extensions, backup forms and save-like headers even when the test decoder cannot parse them. A same-name/different-hash destination gets an explicit distinct alias or refusal, never overwrite.
-- [ ] 24.4 Recheck changed/new save candidates before deletion authorization. A failed/partial export blocks the owning deletion target; rerun export safely after interruption.
-- [ ] 24.5 Test dry planning, complete export, unsupported old format, conflicting destination, truncated copy and source modification during export. No real review/runtime cleanup in these tests.
-
-### Group 25 - Bound repeated runtime and executable growth
-
-{{MEDIUM}}
-- [ ] 25.1 Measure repeated invocations by content, language, DLL, console EXE and mutable process files. Choose the simplest supported reduction; do not introduce a new shared cache architecture merely to avoid a small copy.
-- [ ] 25.2 Stop recursive historical EXE retention in current producers. Keep only current build/run images and their generated provenance; use Group24 exports before retiring any completed home containing saves.
-- [ ] 25.3 Reuse immutable prepared distribution content only where existing engine search paths or verified atomic copies support it. Preserve per-process configs/scripts/autosaves; no junction shortcut that contradicts cleaner safeguards.
-- [ ] 25.4 Verify native/Python parity, repeated-run size, host/client isolation and no mutation of source or peer images. Failures may retain temporary diagnostics until the next explicit clean.
-
-### Area Mandatory Reading - Cleanup implementation and destruction tests
-
-_Applies to Groups 26-28._
-
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Group24 exports saves safely and Groups16-23 close required-input migrations. Verify export tests and zero unresolved required inputs in the durable inventory. Stop real deletion if absent; isolated target/refusal fixtures may continue. Do not weaken tracked/reparse/nested-repository guards to force a clean result.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Cleanup target selection](../../../../clean.ps1) | 162-240 | `Assert-CleanupTarget/New-CleanupEntry/Get-DevelopmentCleanupPlan` must share the same exact broad disposable-root policy; deleting more than the validated plan is forbidden. |
-| [Cleanup entry point](../../../../clean.ps1) | 306-356 | Current preview exits before process checks/deletion; actual removal rechecks targets and tracked files. Add save export without causing preview writes or shell-crossed deletion. |
-| [Existing cleanup tests](../../../../src/tests/multilayer/support/cleanup_check.ps1) | 39-79;94-142 | Current fixtures deliberately discard some generated saves and preserve logs/builds. Reverse those expectations under the new policy, while retaining isolation, hard-link and refusal checks. |
-| [Save exporter](../../../../src/tests/multilayer/support/save_retention.py) | Live Group24 exports; no fixed range | `plan_save_exports/apply_save_exports` are the established preservation boundary; PowerShell consumes structured results rather than implementing a divergent save policy. |
-
-### Group 26 - Extend cleanup through one export-and-delete pipeline
-
-{{MEDIUM}}
-- [ ] 26.1 Update target generation and the safety allowlist for all logs/test-cache/runtime profiles, generated reviews except their README, audited build roots/products and classified Python/scratch output. Unknown siblings remain outside the deletion set.
-- [ ] 26.2 Integrate Group24 export planning into preview and verified export into apply. Check all required retained inputs before deletion; unresolved valuable content produces an explicit refusal.
-- [ ] 26.3 Keep preview-by-default and DryRun/WhatIf precedence. Preview must create neither save archives nor directories; apply uses structured arguments and repository-contained native PowerShell deletion only.
-- [ ] 26.4 Recheck writer state, absolute target/type, nested Git/reparse points, tracked files and save identities immediately before each removal. If new files appeared, refresh/export/refuse; do not delete a stale preview snapshot blindly.
-- [ ] 26.5 Report actual completed targets and logical/distinct storage honestly after partial failures. Preserve source/media/fixtures/savegames/Git/genuine source baselines and make a second apply idempotent.
-
-Conceptual ordering inside the existing cleaner; proposed export helpers delegate to Group24 and are implemented in this group:
-
-```powershell
-$cleanupPlan = Get-DevelopmentCleanupPlan $repository $false
-$saveExports = Get-CleanupSaveExportPlan $cleanupPlan
-if ($preview) {
-    Show-CleanupPaths $cleanupPlan
-    Show-CleanupSaveExports $saveExports
-    return
-}
-Assert-CleanupStopped $repository
-Invoke-CleanupSaveExports $saveExports
-Assert-CleanupRetainedInputs $cleanupPlan
-# Each target is re-enumerated and revalidated before its existing Remove-Item call.
-```
-
-The preview branch is read-only. Export completion permits validation, not automatic deletion; all existing containment/identity/ShouldProcess checks still apply.
-
-### Group 27 - Exercise cleanup on a disposable fixture
-
-{{MEDIUM}}
-- [ ] 27.1 Move cleanup-test scratch under test-cache and keep every nested fake project inside its explicit fixture root. Update existing preserve/discard sets so generated saves are exported, logs/cache/builds are removed and canonical media survives.
-- [ ] 27.2 Cover all runtime profiles, unmatched raw PPM, generated reviews, full builds and repeated apply. Verify the retained save bytes and alias map, not just whether a destination filename exists.
-- [ ] 27.3 Verify dry-run/WhatIf write nothing and a failed export blocks deletion. Include changed/new save, interrupted copy and destination conflict.
-- [ ] 27.4 Preserve tracked-file, sibling/outside-root, nested repository, junction/type-swap and active-writer refusal cases. Test hard links with an outside retained owner and accurate storage estimates.
-- [ ] 27.5 Check partial-deletion reporting and successful rerun after a resolved refusal. No real workspace cleanup is performed by this suite.
-
-### Group 28 - Prevent new undeclared historical dependencies
-
-{{MEDIUM}}
-- [ ] 28.1 Add a role-aware check over recipe/manifest references and known reader adapters. Diagnostic writes are allowed; unique retained inputs under deletion roots or unowned generated outputs are rejected.
-- [ ] 28.2 Detect a nested receipt pointing into old logs, a stale current EXE requirement and an output that overwrites a fixture. Do not simply ban every string containing `logs`.
-- [ ] 28.3 Verify generated prerequisite references are bound to the selected recipe/run and have a preparation path. Missing/corrupt expectations fail instead of being regenerated from current actual output.
-- [ ] 28.4 Reconcile the inventory/canonical catalogue and Space commands against this guard; all affected live families must be classified before cold transfer rehearsal.
-
-### Area Mandatory Reading - Packaging and cold reconstruction
-
-_Applies to Groups 29-32._
-
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Groups13-28 supply build/recipe/export/cleanup contracts and passing focused checks. Inspect registered recipes, retained identities and actual cleanup target selection. Stop cold acceptance if unresolved required inputs remain; independent package enumeration may continue. No original workstation build/proof folder, external worktree or network-hosted review archive may fill a missing dependency.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Recipe executor](../../../../src/tests/multilayer/support/artifact_rebuild.py) | Live Group14 `load_recipe/verify_retained_inputs/prepare_recipe`; no fixed range | Cold execution starts through the same public interface users will invoke. No private test-only fallback to old outputs. |
-| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live Groups8/12/15 seal and qualification exports; no fixed range | Verify original save/state, fresh executable and next-task foundation independently of deleted history. |
-| [Save exporter](../../../../src/tests/multilayer/support/save_retention.py) | Live Group24 plan/apply contracts; no fixed range | Every staged/real cleanup must preserve newly produced saves as well as the original inventory. |
-| [Cleaner](../../../../clean.ps1) | Live Group26 target/export/application pipeline; no fixed range | The cold fixture uses the same deletion behavior as the final repository, including complete log/cache removal and runtime profile coverage. |
-
-### Group 29 - Implement a complete source transfer package
-
-{{MEDIUM}}
-- [ ] 29.1 Add `src/tests/multilayer/support/package_transfer.py` with `enumerate_preserved_files`, `stage_transfer`, `create_transfer_archive` and `verify_transfer_archive`. Enumerate preserved working files explicitly, including untracked/ignored source/assets/saves and required Git metadata; exclude only audited generated roots.
-- [ ] 29.2 Detect external Git object stores/alternates, linked-worktree metadata, nested repositories and missing dependencies. Preserve real source repositories; do not silently produce an archive depending on an absent other checkout.
-- [ ] 29.3 Stage a source-only tree in an allowed temporary location with all retained identities and no builds/logs/cache/runtime/generated reviews. Keep verification output under that staged project's logs/test-cache.
-- [ ] 29.4 Verify archive member paths/hashes, avoid self-inclusion and produce a checksum sidecar outside the payload. Include a small extraction roundtrip with an untracked source, authored PNG and retained save.
-- [ ] 29.5 Record exact packaging/exclusion commands and the staged root; protect the live workspace throughout rehearsal.
-
-### Group 30 - Rebuild and qualify the Space checkpoint in the staged tree
+Implementation boundary: these original ordinary GUI screenshot mechanisms use the actual
+`openttd` target and `-g/-c/-v` startup arguments through `native_application` recipes;
+they have no Catch tag. The representative retained worlds are already paused and
+bind independently preserved historical bytes. Current native decoder/source selectors,
+ordinary process exit, indexed source matches and unchanged saved owners/clocks are separate gates.
+Historical live/paid capture entry points do not acquire cleanup execution authority.
 
 {{HARD}}
-- [ ] 30.1 Inspect and configure the selected recipe from a missing build tree, using declared tools/dependencies. Fail any source-workstation absolute-path or old-cache fallback.
-- [ ] 30.2 Build only the capital/ordinary targets needed for checkpoint recovery in both configurations. Record actual versions and source/executable identities.
-- [ ] 30.3 Run load-only/static qualification of both original saves and verify all121 families, bounded metadata allowances and actual observer state. No old cash/replay tag may run.
-- [ ] 30.4 Verify the new continuation foundation points only to retained source/saves and current generated qualification. Preserve original hashes and prove altered time/state is rejected.
+- [X] 19C.1 Register bounded viewport leaves for orbital and asteroid/probe families using the existing ordinary native capture mechanisms and explicitly retained fixture worlds.
+- [X] 19C.2 Replace fixed dated producer/build/output/terminal paths in the selected wrappers with explicit current inputs and context-owned outputs. Preserve canonical native drawing and exact source/native-pixel obligations.
+- [X] 19C.3 Verify a representative complete invocation for each changed capture mechanism and document precise remaining per-family commands. Grant no paid progress, authored/publication status or human acceptance.
 
-### Group 31 - Rebuild graphics witnesses in the staged tree
+### Area Mandatory Reading - One compile prerequisite for the selected graph
+
+_Applies to Group19D._
+
+Read artifact_rebuild.py:prepare_recipe/shared_current_build/verify_current_build and
+artifact_shared_build_check.py. The selected ordinary capture adds an application
+target after its isolated decoder/selector prerequisites. Build the exact selected
+graph's declared target union before its first native case, then share that actual
+compile result inside this invocation. Do not add unrelated targets, accept external
+historical build results, rebase hashes or relink a previously observed executable.
+
+### Group19D - Preserve native identities across cold graph builds
+
+Added from19C's cold-path audit: late target expansion could relink an executable
+already observed by a prerequisite. The explicit prepared19C invocations use one
+combined current build and pass; their cold registered graph needs the same ordering.
+
+{{MEDIUM}}
+- [X] 19D.1 Compute the exact selected graph's declared native target union and build it once before the first native case. Preserve per-leaf current-build and independent native execution checks.
+- [X] 19D.2 Verify target scoping, deduplication and compile sharing/refusal in focused tests; record cold full-graph execution for the existing Groups30-32 rehearsal gates.
+
+### Area Mandatory Reading - Current Ground source consumers
+
+_Applies to Group20._
+
+Read run_ground_consumer_checks.py:verify_consumer_inputs/main,
+space_source_review.py:checked_request/checked_result and the Ground target branch,
+ground_sprite_selection.cpp's original tuple case, and the immutable
+graphics/ground-consumer-expectations.json contract. Read18C's selected Ground
+decoder result and17DE's source/packing contract in the execution record. Consult
+qualify_ground_selected_closure.py:native_domain/qualify only for independent
+domain/current-later scope. Viewport and paused Tube protocols have their own
+20B/20Cblocks below; no old EXE or fixed before-audit/log path qualifies current proof.
+
+### Group 20 - Rebuild current Ground source consumers
+
+Split from the original20before implementation: independent pose/consumer,
+actual viewport and paused terminal epochs have different supplying interfaces.
+The original four obligations are preserved below in sequential20/20B/20C.
 
 {{HARD}}
-- [ ] 31.1 Recreate selected source conversions/packing candidates from original assets with publication disabled; verify canonical source/media remains byte-identical.
-- [ ] 31.2 Generate expected payloads and run the actual native loader per selected family/configuration. Fresh outputs cannot borrow an old report or an unrecorded binary fixture.
-- [ ] 31.3 Recreate bounded actual Space and ground capture witnesses, recording producer, selected fixture, native process and frame identities. Use representative changed mechanisms, not the whole historical acceptance directory.
-- [ ] 31.4 Remove only staged generated graphics and repeat selected leaves. Require reproducible bytes or the specified semantic comparison; preserve negative corruption checks.
+- [X] 20.1 Bind selected Ground source/packed/native consumer recipes to the existing current qualification owners. Keep independent expected pose/domain boundaries and later-owner exclusions.
+- [X] 20.2 Replace the current source-consumer runner's fixed before/log dependencies with retained immutable expectations and context-owned current process reports. Verify both current configurations and source/GRF preservation.
 
-### Group 32 - Rehearse continuation recovery and full staged cleanup
+### Area Mandatory Reading - Explicit Ground viewport source inputs
 
-{{MEDIUM}}
-- [ ] 32.1 Exercise a representative prior-stage state/TBM recipe with absent logs and freshly prepared prerequisites. Keep existing refusal meanings and explicit prior-run identity.
-- [ ] 32.2 Verify underground source/baseline/art material is present and distinguish its provisional feature from completed terminal obligations. Do not implement the five-model task to make cleanup look complete.
-- [ ] 32.3 Apply the upgraded cleaner to the staged project, checking all generated roots and every original/new save export. Rebuild a selected checkpoint/artifact recipe after that clean.
-- [ ] 32.4 Record actual commands/results, current limitations and footprint; qualify all real-deletion gates. Do not claim the user's other machine was tested by this local rehearsal.
+_Applies to Group20B._
 
-### Area Mandatory Reading - Real cleanup and transfer handover
+Read regenerate_ground_sources.py:current_source_view/bind_sources/verify_poses,
+ground_art_handoff.py:read_scope(current_sources=True), pack_m1_art.py:selected_sources/source_poses,
+and20's ground-consumer-expectations.json. Read the execution record's17DE/20
+results for the independent source/pose/native domain and current/later partition.
+The original capture sources are the retained selected-industries fixture and
+funded collector. Old approval/index identities are history only; no old EXE or
+large generated image collection becomes a durable dependency.
 
-_Applies to Groups 33-34._
+### Group20B - Bind original Ground viewport sources and worlds
 
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Groups30-32 passed and the real live checkpoint has not advanced beyond the seal. Recheck the handover, inventory and current writer state. Stop real deletion if they changed; export/qualify the newer boundary first. A staged success cannot authorize deleting newly created source or saves.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Space current boundary](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) | Live Group23 recovery section; no fixed range | Identifies the currently selected durable checkpoint and next Space task. Reconcile concurrent progress before deletion. |
-| [Cleaner](../../../../clean.ps1) | Live Group26 entry point and Group24 export adapter; no fixed range | Execute only the verified preview/apply behavior; no separate ad hoc recursive delete. |
-| [Transfer helper](../../../../src/tests/multilayer/support/package_transfer.py) | Live Group29 `enumerate_preserved_files/stage_transfer/create_transfer_archive/verify_transfer_archive`; no fixed range | These public exports package all durable working material with explicit exclusions and an external checksum sidecar; verify actual exports rather than assuming an archive tool exists. |
-
-### Group 33 - Apply verified cleanup to the real repository
-
-{{SIMPLE}}
-- [ ] 33.1 Revalidate the actual current checkpoint and source/save inventory against the live handover. Check relevant writers are stopped; never terminate unrelated processes.
-- [ ] 33.2 Run the upgraded explicit preview and verify save export/retained inputs, then apply its audited targets with all gates satisfied.
-- [ ] 33.3 Check source/media/Git/fixture/save preservation and the absence of generated logs/cache/runtime/build/review payloads. No disguised output archive may have been moved elsewhere.
-- [ ] 33.4 Reapply to prove idempotence and record actual deleted totals/remaining footprint/partial failures. Keep any real failure open rather than marking cleanup complete.
-
-### Group 34 - Package the clean project and finish its recovery handover
-
-{{SIMPLE}}
-- [ ] 34.1 Finalize this plan's runbook and Space/underground handovers with tested commands, actual retained hashes, tool versions, generated destinations, last results and next task.
-- [ ] 34.2 Leave the removable Space resume note: it can be deleted after the checkpoint is recovered. Update predecessor cleanup follow-ups and all active Space location/practice links.
-- [ ] 34.3 Create the archive in the allowed temporary area, outside its payload. Verify members/hashes and extraction; include all valuable untracked/ignored working files and required Git metadata.
-- [ ] 34.4 Record actual tree/archive sizes and checksum sidecar. Refresh the archive if closure edits change its contents; do not delete indispensable inputs to meet the planning size target.
-- [ ] 34.5 Mark the transfer-ready milestone only when its checks pass. Keep the final source tree clean for transfer; Groups35-37 are executed in the chosen development checkout when work resumes.
-
-### Area Mandatory Reading - Resume actual Space development
-
-_Applies to Groups 35-37._
-
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
-
-Entry gate: Group34's retained payload is available in the chosen development checkout and the Group30 checkpoint qualification can be reproduced there. Check exact source/save identities and tool prerequisites. If the destination has not yet received the project, Groups35-37 stay pending; transfer readiness remains a separate completed milestone. Independent documentation can continue. Do not pull source from an unselected worktree, replay GZVEEH or use old EXE archives as recovery.
-
-| File name | Line Ranges | Description |
-| --- | --- | --- |
-| [Space master](r2mlsp-space-master-plan.md) and [active handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) | Live Group23/34 dispatch and recovery sections; no fixed range | Select the actual first unfinished Space task after cleanup; the planning snapshot expects GZVEEI, but a newer recorded dispatch wins. |
-| [Plan11 next-task contract](r2mlvs11-orbital-stations-and-manufacturing.md#group-15csgzveei---price-genuine-additional-goods-service-before-further-capital-earnings) | GZVEEI Local/Group, originally2954-2963, plus its explicitly required Global/Presentation/AD-12 sections | This source plan owns the new Goods-demand/native-capacity/full-cost query and its accounting. On dispatch read its relevant mandatory sections; do not treat cleanup qualification as implementation of that query. |
-| [Checkpoint adapter](../../../../src/tests/multilayer/acceptance/space_checkpoint.py) | Live `load_checkpoint/qualify_checkpoint/publish_successor`; no fixed range | Actual development uses the retained foundation and fresh proof, then exports a new durable checkpoint before a later clean. No recursive retained-EXE foundation is reintroduced. |
-
-### Group 35 - Recover the chosen development checkout
-
-{{MEDIUM}}
-- [ ] 35.1 Verify transferred source/assets/saves and discover tools in the actual development checkout. Run the selected checkpoint recipe in both configurations; record this machine's results independently of the staged rehearsal.
-- [ ] 35.2 Recover the exact pair/current state/closed policies and read the live Space dispatch plus its relevant Global/Local sections. A newer explicit checkpoint wins over this plan's dated GZVEEI snapshot.
-- [ ] 35.3 Prepare only the assets/build targets required by that actual next task, through registered recipes. Validate that no old logs, review folders or EXE archives are required.
-- [ ] 35.4 Record recovery complete and the source-plan task to execute next. The removable checkpoint-recovery note may now be deleted; feature implementation has its own following completion checks.
-
-### Group 36 - Execute the next bounded Space task through the new foundation
+The original capture obligation is split before implementation into explicit
+source inputs, actual bounded capture mechanisms and their selected closure.
+All native drawing/pixel/preservation obligations remain in20BB/20BCbelow.
 
 {{HARD}}
-- [ ] 36.1 Dispatch the live source-plan task under its own numbering, rather than duplicating gameplay authority here. If it is still Plan11GZVEEI, create its separately selected pure Goods proposal using the qualified checkpoint argument and existing native command/route/cost owners.
-- [ ] 36.2 For GZVEEI, read actual station13 waiting Goods/station15 acceptance and packet origins, original49/mixed52 capacity, depot1638 connectivity and platform fit. Quote a currently available callback-free head plus2/4/8/12Goods-wagon lots; include their first full operating interval, every existing owner cost and100,000capital floor. Preserve actual availability/refusals.
-- [ ] 36.3 Rebuild the isolated target after these edits, requalify the new source/application epoch, then run both pure queries and bounded ordinary reloads. Require zero gameplay ticks/all121families and current body/material/finance observations unchanged. Do not invoke cash-work033, asset purchases or old45,080/101,093cash-specific test cases.
-- [ ] 36.4 Bind the actual proposal/refusal through the new successor contract and complete only the corresponding source-plan tasks whose evidence passed. Preserve closed financial scopes; the next paid producer remains subject to its own full native admission and source-plan requirements.
+- [X] 20B.1 Bind exact current Ground and retained M1 source views through their existing independent normalizers. Preserve pose/domain/absence, approved pixels and current/later-owner boundaries.
+- [X] 20B.2 Retain explicit original viewport worlds and minimal independent comparison facts; verify input selection without historical executable, screenshot-archive or before-audit dependencies.
 
-At this snapshot the query can reuse the existing estimate adapter:
+### Area Mandatory Reading - Actual bounded Ground capture mechanisms
 
-```cpp
-const auto quote = QuoteSurfaceResupply<Commands::BuildVehicle>(
-    depot, depot, candidate, false, goods, ClientID::Server);
-```
+_Applies to Group20BB._
 
-This fragment obtains one native body quote. The actual task separately proves model/callback eligibility, route/platform fit and the complete proposed-consist/company invoice. `CloneVehicle` carries `CommandFlag::NoTest` in `vehicle_cmd.h`; it cannot replace a reliable whole-purchase estimate.
+Read ground_viewport_review.py:checked_request/execute_stage/checked_result and
+ground_viewport_capture.py:run_capture/verify_original_rasters/verify_pixels.
+For the current mode only, read its original wrapper's capture and corresponding
+native callback: ground_industry_runtime.cpp (collector/industry-states),
+ground_transport_runtime.cpp (purchases/rail/road), or ground_station_runtime.cpp
+(stations). Read the current mode's original pixel owner only:
+ground_selected_closure_checks.py:collector_pixels and ground_industry_pixel_checks.py:project;
+industry verify/project; transport verify_purchases or body verify/source_key;
+station verify/source_pixels/compose/depth_order. Use20B's
+explicit source views/worlds and20's current selector/decoder contracts. Preserve
+native fixture staging disclosures, complete matrices, wrong-view/depth controls,
+indexed/RGB/container provenance and source/GRF preservation. Do not infer paid
+progress, operating readiness or human acceptance from these art fixtures.
 
-### Group 37 - Publish the next checkpoint and continue the Space queue
+Context has compacted 1 times while executing this group.
 
-{{MEDIUM}}
-- [ ] 37.1 Export the selected task's actual successor save/contract and source epoch through the established checkpoint/save-retention helpers. Preserve original and successor identities; generated process/review output remains cleanable.
-- [ ] 37.2 Update the Space master/child handover with real results and the next unfinished task. Mark development resumed only after actual source-plan work, not from archive extraction or a successful static load.
-- [ ] 37.3 Verify the next continuation resolves durable inputs without recursive EXE retention. Continue under the Space plan's ordering and existing authorization, keeping underground feature work paused unless separately resumed.
+### Group20BB - Rebuild actual selected Ground captures
 
-Transfer-ready completion is Group34. Development-resumed completion requires Groups35-37 in the chosen checkout. If transfer has not yet occurred, report those latter tasks pending rather than claiming remote execution.
+{{HARD}}
+- [X] 20BB.1 Route the original industry/collector, transport and station native producers through explicit current build/source/retained-world inputs into cleanable isolated runs, removing fixed before-audit/log and EXE-retention dependencies.
+- [X] 20BB.2 Verify the complete six-mode original pixel/composition/refusal matrix once in the current optimized build, plus a Debug smoke capture for each distinct native callback (industry, transport and stations). Preserve original source/GRF bytes and all unfinished gameplay/human gates. Debug rail/road sweeps are omitted for this routing change; the full drawing matrix is qualified once in the optimized build.
 
-Conceptual caller flow using the previously delivered adapter; signatures are finalized in Group12:
+## Continuation and reconstruction
 
-```python
-checkpoint = load_checkpoint(checkpoint_path, configuration)
-qualified = qualify_checkpoint(checkpoint, current_native_report)
-# The selected source-plan producer observes the actual retained original.
-operation = execute_selected_query(qualified, run_context)
-successor = publish_successor(qualified, operation, run_context)
-# Export the successor's save/contract before deleting this generated run.
-```
+All remaining groups and their Area Mandatory Reading blocks are in
+[R2FC2](r2fc2-file-cleanup3.md), beginning at20BC. Their task IDs and unchecked
+states are preserved; descriptions were reviewed to eliminate duplicate debug,
+verification and cold-rehearsal cycles. The former B/C/D continuation files have
+been consolidated and removed. This plan retains completed tasks only.
+Use the architecture's [reconstruction commands](../../architecture/archi-historical-debug.md#reconstituting-debug-artifacts).
 
-`execute_selected_query` means the actual source-plan producer, not a cleanup stub. Its native accounting, ownership, negative cases and completion remain source-plan obligations.
-
-## Recovery runbook to finalize during execution
-
-**Proposed interfaces become runnable only after Groups8-15.** Group34 records exact tested versions/paths; Groups35-37 execute actual recovery and resume the next source-plan task. No cleanup or feature execution is performed by this planning revision.
-
-Proposed checkpoint recovery commands:
-
-```powershell
-python src/tests/multilayer/support/artifact_rebuild.py --recipe space-checkpoint --configuration RelWithDebInfo --run-id transfer-space-opt-001 --stage inspect
-python src/tests/multilayer/support/artifact_rebuild.py --recipe space-checkpoint --configuration RelWithDebInfo --run-id transfer-space-opt-001 --stage verify
-python src/tests/multilayer/support/artifact_rebuild.py --recipe space-checkpoint --configuration Debug --run-id transfer-space-debug-001 --stage verify
-```
-
-Inspect is read-only and reserves no ID. Verify builds/prepares declared prerequisites and runs only the load/static qualification. An independent rerun gets a new explicit ID; interrupted execution uses verified resume semantics. It must not import/execute old cash-work or3,000-tick replay entry points.
-
-Only prepare the graphics leaves the actual next task needs:
-
-```powershell
-python src/tests/multilayer/support/artifact_rebuild.py --recipe launch-current-producers --configuration RelWithDebInfo --run-id resume-launch-opt-001 --stage verify
-```
-
-The final handover lists each concrete selected recipe's producer/tag, prerequisite inputs, target/configuration, output files and scoped result. Generated images/data/reports/evidence go to its cleanable review run, mutable homes to runtime, diagnostics to logs and intermediates to test-cache/build.
-
-After checkpoint recovery, reopen the actual next task's Global/Local reading and continue under that source plan. GZVEEI currently requires real Goods demand at stations13/15, original49/mixed52 capacity, depot1638 connectivity/platform fit and fresh head/wagon whole-cost queries with the restored100,000 capital floor. It permits no purchase, stock/order/clock change or reopening of the spent30,000 exceptions. Do not use the older productive-admission case with its45,080cash assertion.
-
-Cleanup after stopped runs:
-
-```powershell
-powershell -NoProfile -File clean.ps1 -DryRun -ShowPaths
-powershell -NoProfile -File clean.ps1 -Apply
-```
-
-Required final handover fields: both current save destinations/hashes; seal and current qualification identities; exact next task; closed-scope limits; underground partial-source/two-baseline status; tested tool/configure/build/prepare/verify commands; complete save aliases; actual archive path/size/checksum; and any missing destination-machine prerequisite. Original media and expected baselines stay durable; every new review output stays cleanable.
 ## Consult on Demand
 
 | Trigger | File name | Start at | Expand only when | Consultation purpose |

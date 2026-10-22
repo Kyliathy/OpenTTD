@@ -1,0 +1,863 @@
+/* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
+/** @file surface_entry_resupply.cpp Original finite-Salt and chemical-refill admission, transport and settlement.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups15BIEG/15CH/15CIB/15CIC.
+ * Native commands, original geography, packets, buffers and company books
+ * retain ownership. Pure planning creates no carrier, product or progress.
+ */
+#include "../stdafx.h"
+#include "../3rdparty/catch2/catch.hpp"
+#include "../console_internal.h"
+#include "../command_func.h"
+#include "../company_base.h"
+#include "../company_func.h"
+#include "../engine_base.h"
+#include "../engine_func.h"
+#include "../underground_vehicle.h"
+#include "../vehicle_cmd.h"
+#include "../roadveh.h"
+#include "../train.h"
+#include "../train_cmd.h"
+#include "../pathfinder/follow_track.hpp"
+#include "../order_cmd.h"
+#include "../depot_base.h"
+#include "../industry.h"
+#include "../multilayer_industry.h"
+#include "../layer_industry_processor.h"
+#include "../layer_portal_cmd.h"
+#include "../launch_center.h"
+#include "../space_vehicle.h"
+#include "../multilayer_space_content.h"
+#include "../station_base.h"
+#include "../station_map.h"
+#include "../rail_map.h"
+#include "../rail_cmd.h"
+#include "../road_map.h"
+#include "../misc_cmd.h"
+#include "../openttd.h"
+#include "../core/backup_type.hpp"
+#include "../saveload/saveload_func.h"
+#include "layer_save_fixture.h"
+#include "test_artifact_paths.h"
+#include "surface_entry_work.h"
+#include <queue>
+#include "../safeguards.h"
+
+static std::function<void()> *surface_resupply_observer = nullptr; ///< Invocation callback, never a simulation owner.
+static constexpr TileIndex surface_resupply_depot{1373}, surface_resupply_road_depot{2443};
+
+/** @param args Original parameter-free console arguments. @return True after observing this invocation. */
+static bool ObserveSurfaceResupply(std::span<std::string_view> args)
+{
+	REQUIRE(args.size() == 1); REQUIRE(surface_resupply_observer != nullptr); (*surface_resupply_observer)(); return true;
+}
+
+/** @param path Fresh invocation-owned output. Preserve actual owners without earning work. */
+static void SaveSurfaceResupply(const std::filesystem::path &path)
+{
+	AutoRestoreBackup pause(_pause_mode, PauseModes{PauseMode::Normal});
+	AutoRestoreBackup compression(_savegame_format, std::string{"lzma"});
+	REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);
+}
+
+/** Query one complete original command without mutating gameplay.
+ * @tparam Tcmd Original command. @tparam Targs Native argument types.
+ * @param tile Actual command position. @param args Complete original arguments. @return Native quote or refusal.
+ */
+template <Commands Tcmd, typename... Targs>
+static auto QuoteSurfaceResupply(TileIndex tile, Targs... args)
+{
+	return Command<Tcmd>::template Unsafe<CommandCallback>(INVALID_STRING_ID, nullptr, false, true, tile, std::make_tuple(args...));
+}
+
+/** Inspect existing native rail edges without moving a train or granting a route.
+ * @param depot Actual owned depot from which a head would depart normally.
+ * @param target Actual owned depot or station to reach.
+ * @param railtypes Real powered/compatible rail types of the proposed head.
+ * @return Whether the native track follower reaches the destination under current geometry and ownership.
+ */
+static bool SurfaceResupplyRailConnected(TileIndex depot, TileIndex target, RailTypes railtypes)
+{
+	REQUIRE(IsRailDepotTile(depot)); REQUIRE(GetTileOwner(depot) == _current_company);
+	REQUIRE(_settings_game.pf.forbid_90_deg);
+	using Position = std::pair<TileIndex, Trackdir>;
+	std::set<Position> visited; std::queue<Position> pending;
+	const Position first{depot, DiagDirToDiagTrackdir(GetRailDepotDirection(depot))};
+	visited.insert(first); pending.push(first);
+	// Explore only directional edges accepted by the game's own follower,
+	// including real portal pairs, bridges, station exits and depot entrances.
+	// A nearby parallel line or an adjacent storage plane supplies no edge.
+	while (!pending.empty()) {
+		const auto [tile, direction] = pending.front(); pending.pop();
+		if (tile == target) return true;
+		CFollowTrackRailNo90 follower(_current_company, railtypes);
+		if (!follower.Follow(tile, direction)) continue;
+		// The native follower can skip a platform. Reaching any tile of the
+		// requested original station admits that same physical destination.
+		if (IsRailStationTile(target) && IsRailStationTile(follower.new_tile)) {
+			if (GetStationIndex(target) == GetStationIndex(follower.new_tile)) return true;
+		}
+		// Remember each directional state once so loops in paid railway cannot
+		// create unbounded planning work or masquerade as a new connection.
+		for (const auto next : follower.new_td_bits) {
+			const Position position{follower.new_tile, next};
+			if (visited.insert(position).second) pending.push(position);
+		}
+	}
+	return false;
+}
+
+/** Verify one existing Surface road trip without granting a vehicle or future cargo.
+ * @param target Actual owned source, receiver or launch-member road stop.
+ * @return Count of existing level crossings that must be cleared by the later real traffic-protection stage.
+ */
+static uint QuerySurfaceResupplyRoad(TileIndex target)
+{
+	std::map<TileIndex, TileIndex> parent; std::queue<TileIndex> pending;
+	parent.emplace(surface_resupply_road_depot, surface_resupply_road_depot); pending.push(surface_resupply_road_depot);
+	// Every supply leg needs a reciprocal real road from the paid depot;
+	// station catchment and nearby coordinates cannot supply missing track.
+	while (!pending.empty()) {
+		const auto tile = pending.front(); pending.pop();
+		if (tile == target) break;
+		const auto bits = GetAnyRoadBits(tile, RoadTramType::Road);
+		// Explore each legal neighboring road once, keeping all existing
+		// stations, industries, rails and roads in their original ownership.
+		for (const auto direction : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
+			if ((bits & DiagDirToRoadBits(direction)) == RoadBits{}) continue;
+			const auto next = AddTileIndexDiffCWrap(tile, TileIndexDiffCByDiagDir(direction));
+			// A new edge must remain on Surface and not repeat a visited road;
+			// this bounds the query and forbids camera-plane shortcuts.
+			if (!MultiLayerMap::IsTileInLayer(next, MapLayer::Surface) || parent.contains(next)) continue;
+			if ((GetAnyRoadBits(next, RoadTramType::Road) & DiagDirToRoadBits(ReverseDiagDir(direction))) == RoadBits{}) continue;
+			parent.emplace(next, tile); pending.push(next);
+		}
+	}
+	REQUIRE(parent.contains(target)); uint edges = 0, crossings = 0;
+	// Only the chosen existing physical path contributes crossings. Real
+	// traffic must later be halted; this quote does not clear those crossings.
+	for (auto tile = target; tile != surface_resupply_road_depot; tile = parent.at(tile)) {
+		++edges;
+		if (IsLevelCrossingTile(tile)) ++crossings;
+	}
+	fmt::print("SURFACE_RESUPPLY_ROUTE target={} edges={} crossings={} infrastructure=0\n", target.base(), edges, crossings);
+	return crossings;
+}
+
+/** Quote the complete bounded next fuel window using an admitted alternative head.
+ * @param head Actual currently buildable head identity at the original Salt depot.
+ * @param head_cost Its whole native purchase quote, with no hypothetical resale credit.
+ * @param infrastructure Whole native quotes for a required earlier route-conversion producer; zero for the current route.
+ * @param quote_depot Existing compatible depot used for the head quote; a converted Salt depot must be requoted after actual conversion.
+ * @return Nothing; explicit remaining permissions and the native bank refusal stay visible.
+ */
+static void QuerySurfaceResupplyWindow(EngineID head, Money head_cost, Money infrastructure = Money{0}, TileIndex quote_depot = surface_resupply_depot)
+{
+	const auto salt = GetCargoTypeByLabel(CargoLabel{"SALT"}), chem = GetCargoTypeByLabel(CargoLabel{"CHEM"}), prop = GetCargoTypeByLabel(CargoLabel{"PROP"});
+	const auto wagon = GetUndergroundEngine(5);
+	const auto hopper = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, wagon, false, salt, ClientID::Server);
+	REQUIRE(std::get<0>(hopper).Succeeded()); REQUIRE(std::get<2>(hopper) == 60);
+	EngineID replacement = EngineID::Invalid(); Money replacement_cost{0}; uint capacity = 0;
+	// Genuine tanker renewal must precede chemical collection. Compare every
+	// available whole CHEM purchase, excluding capacities below the actual18need.
+	for (const auto *engine : Engine::IterateType(VehicleType::Road)) {
+		if (!IsEngineBuildable(engine->index, VehicleType::Road, _current_company)) continue;
+		const auto quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_road_depot, surface_resupply_road_depot, engine->index, false, chem, ClientID::Server);
+		if (std::get<0>(quote).Failed()) continue;
+		if (std::get<2>(quote) < 18) continue;
+		// Retain an earlier candidate unless this whole quote is cheaper;
+		// a larger advertised capacity alone cannot justify extra spending.
+		if (replacement != EngineID::Invalid() && std::get<0>(quote).GetCost() >= replacement_cost) continue;
+		replacement = engine->index; replacement_cost = std::get<0>(quote).GetCost(); capacity = std::get<2>(quote);
+	}
+	REQUIRE(replacement != EngineID::Invalid()); const uint fuel = 2 * (capacity / 2); REQUIRE(fuel >= 18);
+	const auto *chemical = Industry::Get(IndustryID{15}), *processor = Industry::Get(IndustryID{6});
+	REQUIRE(IsLayerIndustryComplete(*chemical)); REQUIRE(IsLayerIndustryComplete(*processor));
+	REQUIRE(GetLayerProcessorState(chemical->index)->recipe == MultiLayerRecipeID{"CHEM"});
+	REQUIRE(GetLayerProcessorState(processor->index)->recipe == MultiLayerRecipeID{"PCHM"});
+	const auto oil = std::ranges::find(chemical->accepted, GetCargoTypeByLabel(CargoLabel{"OIL_"}), &Industry::AcceptedCargo::cargo);
+	REQUIRE(oil != chemical->accepted.end()); REQUIRE(oil->waiting >= fuel);
+	const auto buffered_salt = std::ranges::find(Industry::Get(IndustryID{14})->produced, salt, &Industry::ProducedCargo::cargo);
+	REQUIRE(buffered_salt != Industry::Get(IndustryID{14})->produced.end()); REQUIRE(buffered_salt->waiting >= 60);
+	uint crossings = 0;
+	// Price all real road legs: Source15 collection, PCHM input, PCHM output
+	// and the original hub member. Zero new infrastructure is an actual existing
+	// route result, never a proposed shortcut or a stock-backed handling claim.
+	for (const auto bay : {TileIndex{1825}, TileIndex{1895}, TileIndex{1896}, TileIndex{2504}}) {
+		crossings += QuerySurfaceResupplyRoad(bay);
+		const auto *station = Station::GetByTile(bay); REQUIRE(station != nullptr); REQUIRE(station->owner == _current_company);
+		Order order; order.MakeGoToStation(station->index); order.SetStopLocation(OrderStopLocation::FarEnd);
+		order.SetLoadType(OrderLoadType::NoLoad);
+		const auto quote = QuoteSurfaceResupply<Commands::InsertOrder>(TileIndex{0}, VehicleID{9}, VehicleOrderID{0}, order);
+		REQUIRE(quote.Succeeded()); REQUIRE(quote.GetCost() == 0);
+	}
+	const auto membership = GetLaunchHubMembership(StationID{0}); REQUIRE(membership.has_value());
+	const auto *center = ResolveLaunchCenter(membership->center), *member = ResolveLaunchHubMember(membership->center, membership->member);
+	REQUIRE(center != nullptr); REQUIRE(member != nullptr); REQUIRE(center->index == StationID{21});
+	REQUIRE(GetLaunchStockHeadroom(*center, prop) >= fuel); REQUIRE(GetLaunchStockHeadroom(*member, prop) >= fuel);
+	const auto *company = Company::Get(_current_company); const Money reserve{100000}, work{18000};
+	const Money handling{static_cast<int64_t>((uint64_t{fuel} * CargoSpec::Get(prop)->weight + 15) / 16)};
+	const auto target = head_cost + std::get<0>(hopper).GetCost() + replacement_cost + reserve + work + handling + infrastructure;
+	const Money credit{((std::max(Money{0}, target - company->money).base() + 9999) / 10000) * 10000};
+	const bool bank = credit == 0 || QuoteSurfaceResupply<Commands::IncreaseLoan>(TileIndex{0}, LoanCommand::Amount, credit).Succeeded();
+	// Every paid purchase, the complete bounded work allowance and unchanged
+	// working reserve must fit actual cash plus natively admitted credit. Future
+	// income, old-asset resale and the later module reserve supply no money here.
+	const bool funded = bank && company->money + credit >= target;
+	fmt::print("SURFACE_RESUPPLY_WINDOW head={} head_cost={} wagon={} wagon_cost={} replacement={} replacement_cost={} chemical_capacity={} salt=60 oil_needed={} chemical_feed={} fuel={} handling={} work={} reserve={} target={} cash={} credit={} bank_admitted={} funded={} road_crossings={} infrastructure={} head_quote_depot={} conversion_pending={} unsold_value_counted=false coupling_pending=true handling_stock_missing=true bounded_bill_complete=true fuel_procured=false\n",
+		head.base(), head_cost.base(), wagon.base(), std::get<0>(hopper).GetCost().base(), replacement.base(), replacement_cost.base(), capacity,
+		fuel, fuel, fuel, handling.base(), work.base(), reserve.base(), target.base(), company->money.base(), credit.base(), bank, funded, crossings, infrastructure.base(), quote_depot.base(), infrastructure > 0);
+}
+
+/** Quote the next physically bounded Salt stage without spending a future resale.
+ * @param head Actual electric head quoted at the compatible existing depot.
+ * @param head_cost Whole native head quote, with no future refund deducted.
+ * @param infrastructure Whole already quoted original Salt-route conversion.
+ * @param buy_train Include the not-yet-owned train purchase/upkeep; false only after the real consist is paid and observed.
+ * @return Whether actual liquidity and the native calendar admit this exact first window; no future sale is counted.
+ */
+static bool QuerySurfaceResupplyPeak(EngineID head, Money head_cost, Money infrastructure, bool buy_train = true)
+{
+	constexpr uint limit = 500;
+	const auto *company = Company::Get(_current_company);
+	const auto hopper = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, GetUndergroundEngine(5), false, GetCargoTypeByLabel(CargoLabel{"SALT"}), ClientID::Server);
+	REQUIRE(std::get<0>(hopper).Succeeded());
+	Money work{0}; uint observed = 0;
+	constexpr uint64_t denominator = uint64_t{CalendarTime::DAYS_IN_YEAR} * Ticks::DAY_TICKS * 256;
+	// Bound current native per-vehicle accrual, including already pending
+	// ground running_ticks. Reserve carriers remain stopped; no future fare,
+	// asset sale, loan or reduced working reserve can pay this first stage.
+	for (const auto *vehicle : Vehicle::Iterate()) {
+		if (vehicle->owner != _current_company) continue;
+		if (!vehicle->IsPrimaryVehicle()) continue;
+		const bool ground = vehicle->type == VehicleType::Train || vehicle->type == VehicleType::Road;
+		// Only active ground bodies and the actual orbital idle constructor
+		// can accrue costs during this unchanged-order interval. Surface-stored
+		// Space hulls have their native zero upkeep and no running_ticks debt.
+		if (ground && vehicle->vehstatus.Test(VehState::Stopped)) continue;
+		if (!ground && vehicle->type != VehicleType::Space) continue;
+		const uint ticks = limit + (ground ? vehicle->running_ticks : 0);
+		const auto annual = vehicle->GetRunningCost().base(); REQUIRE(annual >= 0);
+		work += Money{static_cast<int64_t>((static_cast<uint64_t>(annual) * ticks + denominator - 1) / denominator) + 1};
+		++observed;
+	}
+	// The proposed new head is not in the world yet. Its full native annual
+	// running price is added separately; the unpowered hopper has no upkeep.
+	const auto annual = Engine::Get(head)->GetRunningCost().base(); REQUIRE(annual >= 0);
+	if (buy_train) work += Money{static_cast<int64_t>((static_cast<uint64_t>(annual) * limit + uint64_t{CalendarTime::DAYS_IN_YEAR} * Ticks::DAY_TICKS - 1) /
+		(uint64_t{CalendarTime::DAYS_IN_YEAR} * Ticks::DAY_TICKS)) + 2};
+	const uint days = (limit + TimerGameEconomy::date_fract + Ticks::DAY_TICKS - 1) / Ticks::DAY_TICKS;
+	bool monthly_boundary = false;
+	// Interest and infrastructure maintenance are original monthly charges.
+	// Refuse this small work window if even one admitted day can cross that
+	// boundary rather than hiding those costs inside an inadequate allowance.
+	for (uint offset = 1; offset <= days; ++offset) {
+		const auto future = TimerGameEconomy::ConvertDateToYMD(TimerGameEconomy::Date{TimerGameEconomy::date.base() + static_cast<int>(offset)});
+		if (future.month != TimerGameEconomy::month) monthly_boundary = true;
+	}
+	const Money reserve{100000}, wagon_cost = buy_train ? std::get<0>(hopper).GetCost() : Money{0};
+	const auto target = reserve + infrastructure + head_cost + wagon_cost + work;
+	// Both actual liquidity and a native-calendar-safe work window must fit
+	// before any purchase. An actual empty returned train may later be sold,
+	// but its unearned refund contributes zero to today's spending permission.
+	const bool funded = !monthly_boundary && company->money >= target;
+	fmt::print("SURFACE_RESUPPLY_PEAK head={} head_cost={} wagon_cost={} infrastructure={} ticks={} days={} observed_bodies={} work_bound={} reserve={} target={} cash={} shortfall={} monthly_boundary={} funded={} refund_counted=0 chemical_purchase_deferred=true conversion_pending=true salt_trip_unproved=true\n",
+		head.base(), head_cost.base(), wagon_cost.base(), infrastructure.base(), limit, days, observed, work.base(), reserve.base(), target.base(),
+		company->money.base(), std::max(Money{0}, target - company->money).base(), monthly_boundary, funded);
+	return funded;
+}
+
+/** Quote an actual powered-rail upgrade before rejecting cheaper electric heads.
+ * @param staged Also price the conditional next short Salt window; never count its future empty-train sale as current cash.
+ * @return Nothing; every physical track, reciprocal portal end and whole native conversion remains explicit and unmodified.
+ */
+static void QuerySurfaceResupplyElectrification(bool staged = false)
+{
+	const TileIndex compatible_depot{1638}, portal{1949};
+	const auto pickup = Station::Get(StationID{5})->train_station.tile;
+	REQUIRE(GetRailType(compatible_depot) == RAILTYPE_ELECTRIC);
+	EngineID selected = EngineID::Invalid(); Money price{0};
+	// A quote at the actual already electrified depot establishes the real
+	// engine price. It grants no build permission at the still-ordinary Salt
+	// depot, which must be converted and freshly quoted before any purchase.
+	for (const auto *engine : Engine::IterateType(VehicleType::Train)) {
+		if (!IsEngineBuildable(engine->index, VehicleType::Train, _current_company)) continue;
+		if (engine->VehInfo<RailVehicleInfo>().railveh_type == RailVehicleType::Wagon) continue;
+		if (CheckUndergroundVehicleCapability(engine->index, MapLayer::Underground, INVALID_CARGO).Failed()) continue;
+		if (!HasPowerOnRail(engine->VehInfo<RailVehicleInfo>().railtypes, RAILTYPE_ELECTRIC)) continue;
+		const auto quote = QuoteSurfaceResupply<Commands::BuildVehicle>(compatible_depot, compatible_depot, engine->index, false, INVALID_CARGO, ClientID::Server);
+		if (std::get<0>(quote).Failed()) continue;
+		// Select the cheapest admitted whole electric-depot purchase. Unsold
+		// existing heads and their detached wagons contribute no new capital.
+		if (selected != EngineID::Invalid() && std::get<0>(quote).GetCost() >= price) continue;
+		selected = engine->index; price = std::get<0>(quote).GetCost();
+	}
+	REQUIRE(selected != EngineID::Invalid()); Money infrastructure{0};
+	std::set<TileIndex> quoted; auto tile = surface_resupply_depot;
+	// Follow the retained straight Salt route through its canonical portal
+	// pair. Quote each real ordinary tile once and the reciprocal housing pair
+	// once, so the second end cannot double-charge the conversion budget.
+	while (true) {
+		REQUIRE(TileX(tile) == TileX(surface_resupply_depot)); REQUIRE(GetTileOwner(tile) == _current_company);
+		REQUIRE(GetRailType(tile) == RAILTYPE_RAIL);
+		if (!quoted.contains(tile)) {
+			const auto quote = QuoteSurfaceResupply<Commands::ConvertRail>(tile, tile, tile, RAILTYPE_ELECTRIC, false);
+			fmt::print("SURFACE_RESUPPLY_CONVERSION tile={} cost={} admitted={} error={}\n", tile.base(), quote.GetCost().base(), quote.Succeeded(), quote.GetErrorMessage().base());
+			if (quote.Failed()) {
+				fmt::print("SURFACE_RESUPPLY_ELECTRIFICATION head={} head_cost={} admitted=false converted=false full_bill=false\n", selected.base(), price.base());
+				return;
+			}
+			infrastructure += quote.GetCost(); quoted.insert(tile);
+			if (IsLayerPortalTile(tile)) quoted.insert(GetLayerPortalPairTile(tile));
+		}
+		if (tile == pickup) break;
+		if (tile == portal) tile = GetLayerPortalPairTile(tile);
+		else tile = AddTileIndexDiffCWrap(tile, TileIndexDiffCByDiagDir(DiagDirection::SE));
+		REQUIRE(quoted.size() <= 20);
+	}
+	// Normal and electric rail share physical geometry. This existing-route
+	// check admits no electrical power until the actual quoted conversion and
+	// its fresh native depot, portal and train checks have all completed.
+	REQUIRE(SurfaceResupplyRailConnected(surface_resupply_depot, pickup, RailTypes{RAILTYPE_RAIL, RAILTYPE_ELECTRIC}));
+	fmt::print("SURFACE_RESUPPLY_ELECTRIFICATION head={} head_cost={} infrastructure={} physical_tiles={} admitted=true converted=false new_depot_quote_pending=true full_bill=true\n",
+		selected.base(), price.base(), infrastructure.base(), quoted.size());
+	QuerySurfaceResupplyWindow(selected, price, infrastructure, compatible_depot);
+	if (staged) QuerySurfaceResupplyPeak(selected, price, infrastructure);
+}
+
+/** Quote cheaper finite-Salt heads and prove or refuse reuse of existing income heads.
+ * The query owns no rolling stock, future revenue, coupling permission or paid progress.
+ * @return Nothing; typed native diagnostics disclose actual route and purchase boundaries.
+ */
+static void QuerySurfaceResupplyAlternatives()
+{
+	const auto salt = GetCargoTypeByLabel(CargoLabel{"SALT"});
+	const auto *pickup = Station::Get(StationID{5});
+	const std::map<std::string, TileIndex> depots{{"Surface Income farm", TileIndex{1638}}, {"Surface Income goods", TileIndex{3224}}, {"Surface Income coal", TileIndex{3161}}};
+	uint owned = 0;
+	// Reuse can avoid a capital purchase only if the existing income head can
+	// physically leave its paid depot for Salt and return to its original line.
+	// Capability metadata alone grants neither connectivity nor depot coupling.
+	for (const auto *train : Train::Iterate()) {
+		if (!train->IsFrontEngine()) continue;
+		if (!train->name.starts_with("Surface Income ")) continue;
+		const auto depot = depots.at(train->name);
+		const bool outward = SurfaceResupplyRailConnected(depot, surface_resupply_depot, train->compatible_railtypes);
+		const bool homeward = SurfaceResupplyRailConnected(surface_resupply_depot, depot, train->compatible_railtypes);
+		const bool capability = CheckUndergroundVehicleCapability(train->engine_type, MapLayer::Underground, salt).Succeeded();
+		REQUIRE(train->owner == _current_company); REQUIRE(train->GetNumOrders() == 2);
+		fmt::print("SURFACE_RESUPPLY_REUSE vehicle={} engine={} depot={} capability={} outward={} homeward={} coupled=false admitted=false original_orders=2\n",
+			train->index.base(), train->engine_type.base(), depot.base(), capability, outward, homeward);
+		++owned;
+	}
+	REQUIRE(owned == 3);
+	EngineID selected = EngineID::Invalid(); Money price{0};
+	// Compare whole currently buildable ordinary native heads at the actual
+	// Salt depot. A catalogue's expensive dedicated head is not the only option
+	// when an original conventional head is legally buildable and powered here.
+	for (const auto *engine : Engine::IterateType(VehicleType::Train)) {
+		if (!IsEngineBuildable(engine->index, VehicleType::Train, _current_company)) continue;
+		if (engine->VehInfo<RailVehicleInfo>().railveh_type == RailVehicleType::Wagon) continue;
+		if (CheckUndergroundVehicleCapability(engine->index, MapLayer::Underground, salt).Failed()) continue;
+		const auto quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, engine->index, false, INVALID_CARGO, ClientID::Server);
+		if (std::get<0>(quote).Failed()) continue;
+		const auto rails = GetAllPoweredRailTypes(engine->VehInfo<RailVehicleInfo>().railtypes);
+		const bool mine = SurfaceResupplyRailConnected(surface_resupply_depot, pickup->train_station.tile, rails);
+		fmt::print("SURFACE_RESUPPLY_HEAD engine={} cost={} depot=1373 mine_route={} capacity={}\n", engine->index.base(), std::get<0>(quote).GetCost().base(), mine, std::get<2>(quote));
+		if (!mine) continue;
+		// Only an admitted cheaper whole purchase replaces the best candidate;
+		// no refund from an unsold head or future commercial income is counted.
+		if (selected != EngineID::Invalid() && std::get<0>(quote).GetCost() >= price) continue;
+		selected = engine->index; price = std::get<0>(quote).GetCost();
+	}
+	REQUIRE(selected != EngineID::Invalid());
+	fmt::print("SURFACE_RESUPPLY_ALTERNATIVE selected={} head_cost={} reused=false purchased=false coupling_pending=true full_logistics_bill_complete=false\n", selected.base(), price.base());
+	QuerySurfaceResupplyWindow(selected, price);
+	QuerySurfaceResupplyElectrification();
+}
+
+/** @return Existing original empty chemical tanker, following its name rather than an assumed reusable pool slot. */
+static const RoadVehicle *FindSurfaceResupplyChemical()
+{
+	const RoadVehicle *result = nullptr;
+	for (const auto *truck : RoadVehicle::Iterate()) {
+		if (truck->name != "Surface Chemical reserve") continue;
+		REQUIRE(result == nullptr); result = truck;
+	}
+	REQUIRE(result != nullptr); REQUIRE(result->owner == _current_company);
+	REQUIRE(result->cargo_type == GetCargoTypeByLabel(CargoLabel{"CHEM"})); REQUIRE(result->cargo_cap == 21);
+	return result;
+}
+
+/** Complete read-only admission for the real carrier, useful existing inputs and crossing-safe staged delivery.
+ * @param admission_only Explicit later funded-Core consumer: report current renewal/work/funding gaps without weakening the original funded query.
+ */
+static void QuerySurfaceResupply(bool admission_only = false)
+{
+	const auto *company = Company::Get(_current_company); const auto *chemical = FindSurfaceResupplyChemical();
+	REQUIRE(chemical->IsStoppedInDepot()); REQUIRE(chemical->tile == surface_resupply_road_depot); REQUIRE(chemical->cargo.TotalCount() == 0);
+	const auto *factory = Industry::Get(IndustryID{15}); REQUIRE(IsLayerIndustryComplete(*factory));
+	const auto *processor = GetLayerProcessorState(factory->index); REQUIRE(processor != nullptr); REQUIRE(processor->recipe == MultiLayerRecipeID{"CHEM"});
+	const auto oil = GetCargoTypeByLabel(CargoLabel{"OIL_"}), salt = GetCargoTypeByLabel(CargoLabel{"SALT"});
+	const auto input = std::ranges::find(factory->accepted, oil, &Industry::AcceptedCargo::cargo); REQUIRE(input != factory->accepted.end()); REQUIRE(input->waiting >= 60);
+	const auto salt_input = std::ranges::find(factory->accepted, salt, &Industry::AcceptedCargo::cargo); REQUIRE(salt_input != factory->accepted.end()); REQUIRE(salt_input->waiting == 0);
+	REQUIRE(GetLayerPortalWorkState(TileIndex{1949}) == LayerPortalWorkState::Connected);
+	const auto locomotive = GetUndergroundEngine(4), wagon = GetUndergroundEngine(5);
+	auto head = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, locomotive, false, INVALID_CARGO, ClientID::Server);
+	auto hopper = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, wagon, false, salt, ClientID::Server);
+	REQUIRE(std::get<0>(head).Succeeded()); REQUIRE(std::get<0>(hopper).Succeeded()); REQUIRE(std::get<2>(hopper) == 60);
+	REQUIRE(CheckUndergroundVehicleCapability(locomotive, MapLayer::Underground, salt).Succeeded());
+	REQUIRE(CheckUndergroundVehicleCapability(wagon, MapLayer::Surface, salt).Succeeded());
+	const auto *receiver = Station::Get(StationID{4}); const auto *pickup = Station::Get(StationID{5}); const auto *output = Station::GetByTile(TileIndex{1825});
+	REQUIRE(receiver->owner == _current_company); REQUIRE(pickup->owner == _current_company); REQUIRE(output != nullptr); REQUIRE(output->owner == _current_company);
+	REQUIRE(receiver->TileIsInCatchment(factory->location.tile)); bool covers = false;
+	for (const auto tile : factory->location) if (output->TileIsInCatchment(tile)) covers = true;
+	REQUIRE(covers); REQUIRE(GetRailDepotDirection(surface_resupply_depot) == DiagDirection::SE);
+	REQUIRE(TileX(receiver->train_station.tile) == TileX(surface_resupply_depot)); REQUIRE(TileY(receiver->train_station.tile) == 24);
+	// Stage the full Salt train back into its original depot before sending
+	// the empty chemical tanker across the shared mainline. Later Salt delivery
+	// uses only this short existing northern rail segment, above road crossings.
+	for (uint y = TileY(surface_resupply_depot); y <= TileY(receiver->train_station.tile); ++y) {
+		const auto tile = TileXY(TileX(surface_resupply_depot), y); REQUIRE(GetTileOwner(tile) == _current_company);
+		REQUIRE((IsTileType(tile, TileType::Railway) || IsRailStationTile(tile))); REQUIRE_FALSE(IsLevelCrossingTile(tile));
+		if (IsPlainRailTile(tile)) REQUIRE(GetTrackBits(tile).Test(Track::Y));
+	}
+	fmt::print("SURFACE_RESUPPLY_RAIL depot=1373 pickup=5 receiver=4 receiver_tile={} short_tiles=4 short_crossings=0 full_return_first=true chemical_waits_at_source=true\n", receiver->train_station.tile.base());
+	std::map<TileIndex, TileIndex> parent; std::queue<TileIndex> pending;
+	parent.emplace(surface_resupply_road_depot, surface_resupply_road_depot); pending.push(surface_resupply_road_depot);
+	// Only the present reciprocal Surface road component admits the existing
+	// chemical output stop. No virtual station edge or proposed road is used.
+	while (!pending.empty()) {
+		const auto tile = pending.front(); pending.pop(); if (tile == output->xy) break;
+		const auto bits = GetAnyRoadBits(tile, RoadTramType::Road);
+		for (const auto direction : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
+			if ((bits & DiagDirToRoadBits(direction)) == RoadBits{}) continue;
+			const auto next = AddTileIndexDiffCWrap(tile, TileIndexDiffCByDiagDir(direction));
+			// Canonical Surface ownership and prior discovery constrain the
+			// read-only traversal to real same-plane mutually connected roads.
+			if (!MultiLayerMap::IsTileInLayer(next, MapLayer::Surface) || parent.contains(next)) continue;
+			if ((GetAnyRoadBits(next, RoadTramType::Road) & DiagDirToRoadBits(ReverseDiagDir(direction))) == RoadBits{}) continue;
+			parent.emplace(next, tile); pending.push(next);
+		}
+	}
+	REQUIRE(parent.contains(output->xy)); uint edges = 0, crossings = 0;
+	// Identify each actual crossing, including its relation to the short
+	// later Salt delivery. Native trains must genuinely clear the chemical trip.
+	for (auto tile = output->xy; tile != surface_resupply_road_depot; tile = parent.at(tile)) {
+		++edges;
+		if (!IsLevelCrossingTile(tile)) continue;
+		++crossings; REQUIRE(TileY(tile) > 24);
+		fmt::print("SURFACE_RESUPPLY_CROSSING tile={} x={} y={} north_delivery_clear=true\n", tile.base(), TileX(tile), TileY(tile));
+	}
+	Order collect; collect.MakeGoToStation(output->index); collect.SetLoadType(OrderLoadType::FullLoad); collect.SetUnloadType(OrderUnloadType::NoUnload); collect.SetStopLocation(OrderStopLocation::FarEnd);
+	auto loading = QuoteSurfaceResupply<Commands::InsertOrder>(TileIndex{0}, chemical->index, VehicleOrderID{0}, collect); REQUIRE(loading.Succeeded()); REQUIRE(loading.GetCost() == 0);
+	auto service = QuoteSurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, chemical->index, true); REQUIRE(service.Succeeded()); REQUIRE(service.GetCost() == 0);
+	uint traffic = 0;
+	// Preserve every original income order and cargo: native appended depot
+	// halts plus delivery at the existing receiver can protect all three routes.
+	for (const auto *train : Train::Iterate()) {
+		if (!train->IsFrontEngine()) continue;
+		if (!train->name.starts_with("Surface Income ")) continue;
+		const std::map<std::string, TileIndex> depots{{"Surface Income farm", TileIndex{1638}}, {"Surface Income goods", TileIndex{3224}}, {"Surface Income coal", TileIndex{3161}}};
+		const auto *depot = Depot::GetByTile(depots.at(train->name)); REQUIRE(depot != nullptr); REQUIRE(train->GetNumOrders() == 2);
+		Order home; home.MakeGoToDepot(depot->index, OrderDepotTypeFlag::PartOfOrders, OrderNonStopFlag::NonStop, OrderDepotActionFlag::Halt);
+		auto halt = QuoteSurfaceResupply<Commands::InsertOrder>(TileIndex{0}, train->index, VehicleOrderID{2}, home); REQUIRE(halt.Succeeded()); REQUIRE(halt.GetCost() == 0);
+		++traffic;
+	}
+	REQUIRE(traffic == 3); const auto gross = std::get<0>(head).GetCost() + std::get<0>(hopper).GetCost(); const Money reserve{100000};
+	if (admission_only) {
+		EngineID replacement = EngineID::Invalid(); Money replacement_cost{0}; uint replacement_capacity = 0;
+		// The original parked tanker is far beyond useful life. Quote only
+		// currently buildable real CHEMcarriers with enough whole input for
+		// the missing18fuel; the lowest whole purchase is a prospective price,
+		// never a delivered replacement, refunded old asset or fabricated stock.
+		for (const auto *engine : Engine::IterateType(VehicleType::Road)) {
+			if (!IsEngineBuildable(engine->index, VehicleType::Road, _current_company)) continue;
+			const auto quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_road_depot, surface_resupply_road_depot, engine->index, false, GetCargoTypeByLabel(CargoLabel{"CHEM"}), ClientID::Server);
+			if (std::get<0>(quote).Failed()) continue;
+			if (std::get<2>(quote) < 18) continue;
+			// Both an already selected candidate and a no-cheaper complete
+			// quote are required to discard this option; capacity alone cannot
+			// justify a costlier replacement or a claim of affordable supply.
+			if (replacement != EngineID::Invalid() && std::get<0>(quote).GetCost() >= replacement_cost) continue;
+			replacement = engine->index; replacement_cost = std::get<0>(quote).GetCost(); replacement_capacity = std::get<2>(quote);
+		}
+		const auto remaining = int64_t{chemical->max_age.base()} - chemical->age.base(); const Money work{18000};
+		const uint candidate_fuel = 2 * (replacement_capacity / 2);
+		const Money handling{static_cast<int64_t>((uint64_t{candidate_fuel} * CargoSpec::Get(GetCargoTypeByLabel(CargoLabel{"PROP"}))->weight + 15) / 16)};
+		const auto target = gross + replacement_cost + reserve + work + handling;
+		const Money credit{((std::max(Money{0}, target - company->money).base() + 9999) / 10000) * 10000};
+		bool bank_admitted = credit == 0;
+		if (credit > 0) bank_admitted = QuoteSurfaceResupply<Commands::IncreaseLoan>(TileIndex{0}, LoanCommand::Amount, credit).Succeeded();
+		// Every prospective purchase, the actual matching bank permission
+		// and this bounded work/reserve window must fit before any later paid
+		// producer is admitted. Completion duration and fuel return logistics
+		// remain explicit missing prices, not projected income or ready stock.
+		const bool funded = replacement != EngineID::Invalid() && bank_admitted && company->money + credit >= target;
+		fmt::print("SURFACE_RESUPPLY_ADMISSION locomotive={} wagon={} head_cost={} wagon_cost={} rail_gross={} salt_capacity=60 oil={} chemical_vehicle={} chemical_age={} chemical_life={} chemical_remaining={} chemical_capacity={} replacement={} replacement_cost={} replacement_capacity={} candidate_fuel={} minimum_fuel=18 handling_allowance={} work_allowance={} reserve={} target={} cash={} debt={} ceiling={} credit={} bank_admitted={} bounded_window_funded={} replacement_owned=false full_logistics_bill_complete=false\n",
+			locomotive.base(), wagon.base(), std::get<0>(head).GetCost().base(), std::get<0>(hopper).GetCost().base(), gross.base(), input->waiting,
+			chemical->index.base(), chemical->age.base(), chemical->max_age.base(), remaining, chemical->cargo_cap, replacement.base(), replacement_cost.base(), replacement_capacity,
+			candidate_fuel, handling.base(), work.base(), reserve.base(), target.base(), company->money.base(), company->current_loan.base(), company->GetMaxLoan().base(), credit.base(), bank_admitted, funded);
+		// Preserve both actual renewed fuel bodies/capacities independently of
+		// old20/22role descriptions. No full27unit pickup is implied by18need.
+		for (const auto *truck : RoadVehicle::Iterate()) {
+			if (truck->name != "Surface Propellant reserve" && truck->name != "Surface Propellant refill") continue;
+			fmt::print("SURFACE_RESUPPLY_FUEL_CARRIER vehicle={} capacity={} held={} age={} life={} remaining={} depot={} halted={}\n", truck->index.base(), truck->cargo_cap, truck->cargo.TotalCount(), truck->age.base(), truck->max_age.base(), int64_t{truck->max_age.base()} - truck->age.base(), truck->tile.base(), truck->IsStoppedInDepot());
+		}
+		return;
+	}
+	const auto shortfall = std::max(Money{0}, gross + reserve - company->money); const Money credit{((shortfall.base() + 9999) / 10000) * 10000};
+	if (credit > 0) { auto bank = QuoteSurfaceResupply<Commands::IncreaseLoan>(TileIndex{0}, LoanCommand::Amount, credit); REQUIRE(bank.Succeeded()); }
+	REQUIRE(company->current_loan + credit <= company->GetMaxLoan()); REQUIRE(company->money + credit - gross >= reserve);
+	fmt::print("SURFACE_RESUPPLY_PLAN locomotive={} wagon={} head_cost={} wagon_cost={} gross={} salt_capacity=60 oil={} chemicals=21 chemical_vehicle={} chemical_capacity={} chemical_pickup={} road_edges={} road_crossings={} protected_trains={} reserve=100000 credit={} cash={} debt={} ceiling={} infrastructure=0 unsold_value_counted=false\n",
+		locomotive.base(), wagon.base(), std::get<0>(head).GetCost().base(), std::get<0>(hopper).GetCost().base(), gross.base(), input->waiting,
+		chemical->index.base(), chemical->cargo_cap, output->index.base(), edges, crossings, traffic, credit.base(), company->money.base(), company->current_loan.base(), company->GetMaxLoan().base());
+}
+
+/** Freshly admit and settle one complete original paid action.
+ * @tparam Tcmd Original command. @tparam Targs Native argument types.
+ * @param tile Actual action position. @param args Complete native arguments. @return Settled original result.
+ */
+template <Commands Tcmd, typename... Targs>
+static auto PaySurfaceResupply(TileIndex tile, Targs... args)
+{
+	auto quote = QuoteSurfaceResupply<Tcmd>(tile, args...); REQUIRE(ExtractCommandCost(quote).Succeeded());
+	auto paid = Command<Tcmd>::template Unsafe<CommandCallback>(INVALID_STRING_ID, nullptr, false, false, tile, std::make_tuple(args...));
+	REQUIRE(ExtractCommandCost(paid).Succeeded()); REQUIRE(ExtractCommandCost(paid).GetCost() == ExtractCommandCost(quote).GetCost());
+	fmt::print("SURFACE_RESUPPLY_INVOICE command={} tile={} cost={}\n", GetCommandName(Tcmd), tile.base(), ExtractCommandCost(paid).GetCost().base());
+	return paid;
+}
+
+/** @return All three original named income trains and their actual existing paid depots. */
+static std::vector<std::pair<const Train *, TileIndex>> SurfaceResupplyTraffic()
+{
+	const std::map<std::string, TileIndex> depots{{"Surface Income farm", TileIndex{1638}}, {"Surface Income goods", TileIndex{3224}}, {"Surface Income coal", TileIndex{3161}}};
+	std::vector<std::pair<const Train *, TileIndex>> result;
+	// Cosmetic discovery names follow the actual native renewed fronts;
+	// reused old pool slots cannot become phantom crossing protection.
+	for (const auto *train : Train::Iterate()) {
+		if (!train->IsFrontEngine()) continue;
+		if (!train->name.starts_with("Surface Income ")) continue;
+		REQUIRE(train->owner == _current_company); result.emplace_back(train, depots.at(train->name));
+	}
+	REQUIRE(result.size() == 3); return result;
+}
+
+/** @return True only after every real income train has arrived empty and halted in its original depot. */
+static bool SurfaceResupplyTrafficProtected()
+{
+	for (const auto &[train, depot] : SurfaceResupplyTraffic()) {
+		// Cargo delivery and true depot arrival both precede protection;
+		// a temporary order or nearby stopped train cannot clear the crossing.
+		if (!train->IsStoppedInDepot() || train->tile != depot) return false;
+		for (const auto *part = train; part != nullptr; part = part->Next()) if (part->cargo.TotalCount() != 0) return false;
+	}
+	return true;
+}
+
+/** @return Actual newly purchased two-part Salt train, or nullptr before purchase/after genuine empty sale. */
+static const Train *FindSurfaceResupplySalt()
+{
+	const Train *result = nullptr;
+	// Only the named actual front and its linked paid hopper admit this
+	// producer. Cargo label and original source are checked on every observation.
+	for (const auto *train : Train::Iterate()) {
+		if (train->name != "Surface Salt refill") continue;
+		REQUIRE(result == nullptr); result = train;
+	}
+	if (result == nullptr) return nullptr;
+	REQUIRE(result->IsFrontEngine()); REQUIRE(result->owner == _current_company); REQUIRE(result->engine_type == GetUndergroundEngine(4));
+	const auto *wagon = result->Next(); REQUIRE(wagon != nullptr); REQUIRE(wagon->Next() == nullptr); REQUIRE(wagon->engine_type == GetUndergroundEngine(5));
+	REQUIRE(wagon->cargo_type == GetCargoTypeByLabel(CargoLabel{"SALT"})); REQUIRE(wagon->cargo_cap == 60); REQUIRE(result->gcache.cached_total_length <= TILE_SIZE);
+	REQUIRE(result->cargo.TotalCount() == 0);
+	for (const auto *packet : *wagon->cargo.Packets()) { REQUIRE(packet->GetSource().type == SourceType::Industry); REQUIRE(packet->GetSource().id == 14); }
+	return result;
+}
+
+/** @return Original explicit halt into the actual paid Surface Salt depot. */
+static Order SurfaceResupplySaltHome()
+{
+	const auto *depot = Depot::GetByTile(surface_resupply_depot); REQUIRE(depot != nullptr);
+	Order home; home.MakeGoToDepot(depot->index, OrderDepotTypeFlag::PartOfOrders, OrderNonStopFlag::NonStop, OrderDepotActionFlag::Halt); return home;
+}
+
+/** Preserve both commercial orders and genuinely recall each original income train through its normal receiver. */
+static void RecallSurfaceResupplyTraffic()
+{
+	for (const auto &[train, tile] : SurfaceResupplyTraffic()) {
+		REQUIRE(train->GetNumOrders() == 2); const auto *depot = Depot::GetByTile(tile); REQUIRE(depot != nullptr);
+		Order home; home.MakeGoToDepot(depot->index, OrderDepotTypeFlag::PartOfOrders, OrderNonStopFlag::NonStop, OrderDepotActionFlag::Halt);
+		PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, train->index, VehicleOrderID{2}, home);
+		if (train->cur_real_order_index != 1) PaySurfaceResupply<Commands::SkipToOrder>(TileIndex{0}, train->index, VehicleOrderID{1});
+		fmt::print("SURFACE_RESUPPLY_RECALL head={} depot={} orders=3 supplied_pose=false\n", train->index.base(), tile.base());
+	}
+}
+
+/** Buy only the admitted real empty Salt pair with freshly necessary matching credit, then issue original pickup/return orders. */
+static void BuySurfaceResupplySalt()
+{
+	REQUIRE(SurfaceResupplyTrafficProtected()); REQUIRE(FindSurfaceResupplySalt() == nullptr);
+	const auto *company = Company::Get(_current_company); const auto cash = company->money, debt = company->current_loan;
+	const auto salt = GetCargoTypeByLabel(CargoLabel{"SALT"}); const auto locomotive = GetUndergroundEngine(4), wagon = GetUndergroundEngine(5);
+	auto head_quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, locomotive, false, INVALID_CARGO, ClientID::Server);
+	auto wagon_quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, wagon, false, salt, ClientID::Server);
+	REQUIRE(std::get<0>(head_quote).Succeeded()); REQUIRE(std::get<0>(wagon_quote).Succeeded());
+	const auto gross = std::get<0>(head_quote).GetCost() + std::get<0>(wagon_quote).GetCost();
+	const auto shortfall = std::max(Money{0}, gross + Money{100000} - cash); const Money credit{((shortfall.base() + 9999) / 10000) * 10000};
+	REQUIRE(debt + credit <= company->GetMaxLoan()); if (credit > 0) PaySurfaceResupply<Commands::IncreaseLoan>(TileIndex{0}, LoanCommand::Amount, credit);
+	auto bought_head = PaySurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, locomotive, false, INVALID_CARGO, ClientID::Server);
+	auto bought_wagon = PaySurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, wagon, false, salt, ClientID::Server);
+	const auto head_id = std::get<1>(bought_head), wagon_id = std::get<1>(bought_wagon); const auto *train = Train::Get(head_id);
+	if (Train::Get(wagon_id)->First() != train) PaySurfaceResupply<Commands::MoveRailVehicle>(TileIndex{0}, wagon_id, train->Last()->index, false);
+	PaySurfaceResupply<Commands::RenameVehicle>(TileIndex{0}, head_id, std::string{"Surface Salt refill"}); REQUIRE(FindSurfaceResupplySalt() == train);
+	REQUIRE(train->Next()->cargo.TotalCount() == 0); REQUIRE(train->IsStoppedInDepot());
+	Order pickup; pickup.MakeGoToStation(StationID{5}); pickup.SetLoadType(OrderLoadType::FullLoad); pickup.SetUnloadType(OrderUnloadType::NoUnload); pickup.SetStopLocation(OrderStopLocation::FarEnd);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, head_id, VehicleOrderID{0}, pickup);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, head_id, VehicleOrderID{1}, SurfaceResupplySaltHome());
+	PaySurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, head_id, true);
+	REQUIRE(company->money == cash + credit - gross); REQUIRE(company->current_loan == debt + credit); REQUIRE(company->money >= 100000);
+	fmt::print("SURFACE_RESUPPLY_PURCHASE head={} wagon={} gross={} credit={} cash={} debt={} reserve=100000 empty=true\n", head_id.base(), wagon_id.base(), gross.base(), credit.base(), company->money.base(), company->current_loan.base());
+}
+
+/** @return True only after the actual finite60Salt load has returned into the original depot. */
+static bool SurfaceResupplySaltCollected()
+{
+	const auto *train = FindSurfaceResupplySalt(); REQUIRE(train != nullptr);
+	return train->IsStoppedInDepot() && train->tile == surface_resupply_depot && train->Next()->cargo.TotalCount() == 60;
+}
+
+/** Send the original empty chemical tanker through the protected existing road to its actual producer stop. */
+static void OrderSurfaceResupplyChemical()
+{
+	REQUIRE(SurfaceResupplyTrafficProtected()); REQUIRE(SurfaceResupplySaltCollected()); const auto *truck = FindSurfaceResupplyChemical();
+	REQUIRE(truck->IsStoppedInDepot()); REQUIRE(truck->tile == surface_resupply_road_depot); REQUIRE(truck->cargo.TotalCount() == 0);
+	// Replace only the retired PCHM delivery trip with real Source15pickup
+	// and the same actual depot halt; no physical position or cargo is changed.
+	while (truck->GetNumOrders() != 0) PaySurfaceResupply<Commands::DeleteOrder>(TileIndex{0}, truck->index, VehicleOrderID{0});
+	Order collect; collect.MakeGoToStation(GetStationIndex(TileIndex{1825})); collect.SetLoadType(OrderLoadType::FullLoad); collect.SetUnloadType(OrderUnloadType::NoUnload); collect.SetStopLocation(OrderStopLocation::FarEnd);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, truck->index, VehicleOrderID{0}, collect);
+	Order home; home.MakeGoToDepot(Depot::GetByTile(surface_resupply_road_depot)->index, OrderDepotTypeFlag::PartOfOrders, OrderNonStopFlag::NonStop, OrderDepotActionFlag::Halt);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, truck->index, VehicleOrderID{1}, home);
+	PaySurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, truck->index, true);
+}
+
+/** @return True only when the actual empty tanker has crossed safely and is normally loading at Source15. */
+static bool SurfaceResupplyChemicalAtSource()
+{
+	const auto *truck = FindSurfaceResupplyChemical();
+	return truck->tile == TileIndex{1825} && truck->current_order.IsType(OT_LOADING) && truck->cargo.TotalCount() == 0;
+}
+
+/** Deliver the physically held Salt over the admitted short northern rail, retaining original empty-return ownership. */
+static void OrderSurfaceResupplySaltDelivery()
+{
+	REQUIRE(SurfaceResupplyTrafficProtected()); REQUIRE(SurfaceResupplySaltCollected()); REQUIRE(SurfaceResupplyChemicalAtSource());
+	const auto *train = FindSurfaceResupplySalt();
+	// The real full load stays in the same native hopper while normal order
+	// commands replace mine pickup with the original Surface chemical receiver.
+	while (train->GetNumOrders() != 0) PaySurfaceResupply<Commands::DeleteOrder>(TileIndex{0}, train->index, VehicleOrderID{0});
+	Order deliver; deliver.MakeGoToStation(StationID{4}); deliver.SetLoadType(OrderLoadType::NoLoad); deliver.SetStopLocation(OrderStopLocation::FarEnd);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, train->index, VehicleOrderID{0}, deliver);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, train->index, VehicleOrderID{1}, SurfaceResupplySaltHome());
+	PaySurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, train->index, true);
+}
+
+/** @return True only after actual empty Salt return and21new real Source15chemicals in depot custody. */
+static bool SurfaceResupplyCollected()
+{
+	const auto *train = FindSurfaceResupplySalt(); REQUIRE(train != nullptr); const auto *truck = FindSurfaceResupplyChemical();
+	return train->IsStoppedInDepot() && train->tile == surface_resupply_depot && train->Next()->cargo.TotalCount() == 0 &&
+		truck->IsStoppedInDepot() && truck->tile == surface_resupply_road_depot && truck->cargo.TotalCount() == 21;
+}
+
+/** Sell only the genuinely returned empty temporary train and restore each original useful income service. */
+static void SettleSurfaceResupply()
+{
+	REQUIRE(SurfaceResupplyTrafficProtected()); REQUIRE(SurfaceResupplyCollected()); const auto *train = FindSurfaceResupplySalt();
+	const auto *company = Company::Get(_current_company); const auto cash = company->money, debt = company->current_loan;
+	const auto refund = PaySurfaceResupply<Commands::SellVehicle>(TileIndex{0}, train->index, true, false, ClientID::Server).GetCost(); REQUIRE(refund < 0);
+	REQUIRE(FindSurfaceResupplySalt() == nullptr);
+	// The original two commercial orders and all useful wagons survive;
+	// deleting only the temporary halt resumes normal native routing and income.
+	for (const auto &[income, depot] : SurfaceResupplyTraffic()) {
+		REQUIRE(income->GetNumOrders() == 3); PaySurfaceResupply<Commands::DeleteOrder>(TileIndex{0}, income->index, VehicleOrderID{2});
+		REQUIRE(income->GetNumOrders() == 2); PaySurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, income->index, true);
+	}
+	REQUIRE(company->money == cash - refund); REQUIRE(company->current_loan == debt);
+	fmt::print("SURFACE_RESUPPLY_SETTLED refund={} cash={} debt={} resumed=3 chemicals=21 empty_sale=true\n", (-refund).base(), company->money.base(), company->current_loan.base());
+}
+
+/** Convert only the fully funded original Salt route through native commands.
+ * @return Nothing; exact invoices, original cash and real powered-route/depot quotes prove the paid boundary.
+ */
+static void ConvertSurfaceResupplyRoute()
+{
+	const TileIndex portal{1949}; const auto pickup = Station::Get(StationID{5})->train_station.tile;
+	const auto *company = Company::Get(_current_company); const auto cash = company->money, debt = company->current_loan;
+	std::vector<TileIndex> tiles; std::set<TileIndex> quoted; Money total{0}; auto tile = surface_resupply_depot;
+	// Preflight every existing physical tile before the first expense. The
+	// reciprocal housing is one native command and must not be charged twice;
+	// neither portal conversion nor plain track conversion grants missing floor.
+	while (true) {
+		REQUIRE(TileX(tile) == TileX(surface_resupply_depot)); REQUIRE(GetTileOwner(tile) == _current_company);
+		REQUIRE(GetRailType(tile) == RAILTYPE_RAIL);
+		if (!quoted.contains(tile)) {
+			const auto quote = QuoteSurfaceResupply<Commands::ConvertRail>(tile, tile, tile, RAILTYPE_ELECTRIC, false);
+			REQUIRE(quote.Succeeded()); total += quote.GetCost(); tiles.push_back(tile); quoted.insert(tile);
+			if (IsLayerPortalTile(tile)) quoted.insert(GetLayerPortalPairTile(tile));
+		}
+		if (tile == pickup) break;
+		if (tile == portal) tile = GetLayerPortalPairTile(tile);
+		else tile = AddTileIndexDiffCWrap(tile, TileIndexDiffCByDiagDir(DiagDirection::SE));
+		REQUIRE(quoted.size() <= 20);
+	}
+	REQUIRE(total == 663); REQUIRE(quoted.size() == 13); REQUIRE(tiles.size() == 12);
+	const auto head = QuoteSurfaceResupply<Commands::BuildVehicle>(TileIndex{1638}, TileIndex{1638}, EngineID{24}, false, INVALID_CARGO, ClientID::Server);
+	REQUIRE(std::get<0>(head).Succeeded()); REQUIRE(QuerySurfaceResupplyPeak(EngineID{24}, std::get<0>(head).GetCost(), total));
+	// Every whole command is freshly admitted immediately before payment.
+	// No game tick is earned between invoices, so this route expense cannot
+	// consume any of the separately capped500ticks of actual Salt movement.
+	for (const auto current : tiles) PaySurfaceResupply<Commands::ConvertRail>(current, current, current, RAILTYPE_ELECTRIC, false);
+	for (const auto current : quoted) REQUIRE(GetRailType(current) == RAILTYPE_ELECTRIC);
+	REQUIRE(GetLayerPortalWorkState(portal) == LayerPortalWorkState::Connected);
+	REQUIRE(SurfaceResupplyRailConnected(surface_resupply_depot, pickup, GetAllPoweredRailTypes(Engine::Get(EngineID{24})->VehInfo<RailVehicleInfo>().railtypes)));
+	const auto actual_head = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, EngineID{24}, false, INVALID_CARGO, ClientID::Server);
+	const auto actual_wagon = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, GetUndergroundEngine(5), false, GetCargoTypeByLabel(CargoLabel{"SALT"}), ClientID::Server);
+	REQUIRE(std::get<0>(actual_head).Succeeded()); REQUIRE(std::get<0>(actual_head).GetCost() == std::get<0>(head).GetCost());
+	REQUIRE(std::get<0>(actual_wagon).Succeeded()); REQUIRE(std::get<2>(actual_wagon) == 60);
+	REQUIRE(company->money == cash - total); REQUIRE(company->current_loan == debt);
+	fmt::print("SURFACE_RESUPPLY_CONVERTED tiles={} commands={} cost={} cash={} debt={} head_cost={} wagon_cost={} wagon_capacity=60 powered_route=true connected_portal=true earned=0\n",
+		quoted.size(), tiles.size(), total.base(), company->money.base(), company->current_loan.base(), std::get<0>(actual_head).GetCost().base(), std::get<0>(actual_wagon).GetCost().base());
+}
+
+/** @return The exact paid two-part electric Salt consist, or nullptr before its genuine purchase. */
+static const Train *FindSurfaceElectricSalt()
+{
+	const Train *result = nullptr;
+	// The discovery name identifies this explicit paid producer only. An old
+	// dedicated head, a recycled slot or another useful income consist cannot
+	// substitute for its real linked electric head and sealed Salt hopper.
+	for (const auto *train : Train::Iterate()) {
+		if (train->name != "Surface Salt electric refill") continue;
+		REQUIRE(result == nullptr); REQUIRE(train->IsFrontEngine()); REQUIRE(train->owner == _current_company);
+		REQUIRE(train->engine_type == EngineID{24}); REQUIRE(train->cargo.TotalCount() == 0);
+		const auto *wagon = train->Next(); REQUIRE(wagon != nullptr); REQUIRE(wagon->Next() == nullptr);
+		REQUIRE(wagon->engine_type == GetUndergroundEngine(5)); REQUIRE(wagon->cargo_type == GetCargoTypeByLabel(CargoLabel{"SALT"}));
+		REQUIRE(wagon->cargo_cap == 60); REQUIRE(train->gcache.cached_total_length <= TILE_SIZE);
+		// Native mine packets retain their literal finite Industry14source;
+		// bought CompanySupply or another industry's Salt cannot close a trip.
+		for (const auto *packet : *wagon->cargo.Packets()) {
+			REQUIRE(packet->GetSource().type == SourceType::Industry); REQUIRE(packet->GetSource().id == 14);
+		}
+		result = train;
+	}
+	return result;
+}
+
+/** @return True only when the real60Salt load has returned normally into the original powered depot. */
+static bool SurfaceElectricSaltCollected()
+{
+	const auto *train = FindSurfaceElectricSalt(); REQUIRE(train != nullptr);
+	// Full actual depot return, stopped state and retained hopper quantity are
+	// all required. An order, full mine buffer or train near home supplies none.
+	return train->IsStoppedInDepot() && train->tile == surface_resupply_depot && train->Next()->cargo.TotalCount() == 60;
+}
+
+/** Buy and couple the admitted empty electric Salt consist without earning a tick or changing useful services. */
+static void BuySurfaceElectricSalt()
+{
+	REQUIRE(FindSurfaceElectricSalt() == nullptr); REQUIRE(GetRailType(surface_resupply_depot) == RAILTYPE_ELECTRIC);
+	const auto *company = Company::Get(_current_company); const auto cash = company->money, debt = company->current_loan;
+	const auto head_quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, EngineID{24}, false, INVALID_CARGO, ClientID::Server);
+	REQUIRE(std::get<0>(head_quote).Succeeded()); REQUIRE(QuerySurfaceResupplyPeak(EngineID{24}, std::get<0>(head_quote).GetCost(), Money{0}));
+	const auto hopper = GetUndergroundEngine(5); const auto salt = GetCargoTypeByLabel(CargoLabel{"SALT"});
+	const auto wagon_quote = QuoteSurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, hopper, false, salt, ClientID::Server);
+	REQUIRE(std::get<0>(wagon_quote).Succeeded()); REQUIRE(std::get<2>(wagon_quote) == 60);
+	// Establish real paid empty bodies before quoting their actual depot
+	// coupling. The complete first-window cash and work reserve already fit;
+	// no prospective resale or commercial service head finances the purchase.
+	const auto head = std::get<1>(PaySurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, EngineID{24}, false, INVALID_CARGO, ClientID::Server));
+	const auto wagon = std::get<1>(PaySurfaceResupply<Commands::BuildVehicle>(surface_resupply_depot, surface_resupply_depot, hopper, false, salt, ClientID::Server));
+	if (Train::Get(wagon)->First()->index != head) PaySurfaceResupply<Commands::MoveRailVehicle>(TileIndex{0}, wagon, Train::Get(head)->Last()->index, false);
+	PaySurfaceResupply<Commands::RenameVehicle>(TileIndex{0}, head, std::string{"Surface Salt electric refill"});
+	const auto *train = FindSurfaceElectricSalt(); REQUIRE(train != nullptr); REQUIRE(train->IsStoppedInDepot()); REQUIRE(train->Next()->cargo.TotalCount() == 0);
+	REQUIRE(CheckUndergroundVehicleCapability(train->engine_type, MapLayer::Underground, INVALID_CARGO).Succeeded());
+	REQUIRE(SurfaceResupplyRailConnected(surface_resupply_depot, Station::Get(StationID{5})->train_station.tile, train->compatible_railtypes));
+	Order pickup; pickup.MakeGoToStation(StationID{5}); pickup.SetLoadType(OrderLoadType::FullLoad); pickup.SetUnloadType(OrderUnloadType::NoUnload); pickup.SetStopLocation(OrderStopLocation::FarEnd);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, head, VehicleOrderID{0}, pickup);
+	PaySurfaceResupply<Commands::InsertOrder>(TileIndex{0}, head, VehicleOrderID{1}, SurfaceResupplySaltHome());
+	// Preserve the exact two commercial orders of all three original trains;
+	// this independent Salt trip cannot silently commandeer their useful work.
+	for (const auto &[income, depot] : SurfaceResupplyTraffic()) REQUIRE(income->GetNumOrders() == 2);
+	PaySurfaceResupply<Commands::StartStopVehicle>(TileIndex{0}, head, true);
+	const auto gross = std::get<0>(head_quote).GetCost() + std::get<0>(wagon_quote).GetCost();
+	REQUIRE(company->money == cash - gross); REQUIRE(company->current_loan == debt); REQUIRE(company->money >= 100000);
+	fmt::print("SURFACE_RESUPPLY_ELECTRIC_PURCHASE head={} wagon={} engine=24 wagon_engine={} gross={} cash={} debt={} capacity=60 orders=2 pickup=5 depot=1373 held=0 earned=0\n",
+		head.base(), wagon.base(), hopper.base(), gross.base(), company->money.base(), company->current_loan.base());
+}
+
+/** Earn at most the admitted500normal ticks, retaining actual partial or complete finite-Salt return. */
+static void WorkSurfaceElectricSalt()
+{
+	const auto *train = FindSurfaceElectricSalt(); REQUIRE(train != nullptr); REQUIRE(train->GetNumOrders() == 2);
+	REQUIRE(QuerySurfaceResupplyPeak(EngineID{24}, Money{0}, Money{0}, false));
+	const auto work = EarnSurfaceEntryWork("SURFACE_RESUPPLY", 500, SurfaceElectricSaltCollected);
+	REQUIRE(Company::Get(_current_company)->money >= 100000);
+	fmt::print("SURFACE_RESUPPLY_ELECTRIC_PROGRESS head={} wagon={} held={} tile={} halted={} earned={} collected={} source=14 new_floor=false supplied_stock=false\n",
+		train->index.base(), train->Next()->index.base(), train->Next()->cargo.TotalCount(), train->tile.base(), train->IsStoppedInDepot(), work.ticks, SurfaceElectricSaltCollected());
+}
+
+/** Original current-world quotes, paid transport and bounded real work; no supplied material or position. */
+TEST_CASE("Authentic chemical refill has a complete original finite transport and funding quote", "[.surface-entry-resupply]")
+{
+	const char *source = std::getenv("OTTD_SURFACE_ENTRY_SOURCE"); REQUIRE(source != nullptr);
+	const char *selected = std::getenv("OTTD_SURFACE_RESUPPLY_PHASE"); const std::string phase = selected == nullptr ? "query" : selected;
+	const std::array<std::string_view, 17> allowed{"query", "admission", "current-admission", "staged-admission", "staged-convert", "staged-buy", "staged-work", "recall", "traffic-work", "buy-salt", "salt-work", "chemical-order", "chemical-source-work", "salt-delivery-order", "refill-work", "settle", "earn"};
+	REQUIRE(std::ranges::find(allowed, phase) != allowed.end());
+	const auto paths = GetTestCaseArtifactPaths("space", "surface-entry-resupply"); const auto config = GetTestRuntimeConfig(); bool observed = false; std::exception_ptr failure;
+	/** Preserve native query failures through normal shutdown without compensating gameplay changes. */
+	std::function<void()> inspect = [&] {
+		try {
+			AutoRestoreBackup actor(_current_company, _local_company); REQUIRE(Company::IsValidID(_current_company));
+			SaveSurfaceResupply(paths.saves / ("surface-resupply-before-" + phase + "-440.sav"));
+			if (phase == "query") QuerySurfaceResupply();
+			else if (phase == "admission") QuerySurfaceResupply(true);
+			else if (phase == "current-admission") { QuerySurfaceResupply(true); QuerySurfaceResupplyAlternatives(); }
+			else if (phase == "staged-admission") QuerySurfaceResupplyElectrification(true);
+			else if (phase == "staged-convert") ConvertSurfaceResupplyRoute();
+			else if (phase == "staged-buy") BuySurfaceElectricSalt();
+			else if (phase == "staged-work") WorkSurfaceElectricSalt();
+			else if (phase == "recall") RecallSurfaceResupplyTraffic();
+			else if (phase == "traffic-work") EarnSurfaceEntryWork("SURFACE_RESUPPLY", 3000, SurfaceResupplyTrafficProtected);
+			else if (phase == "buy-salt") BuySurfaceResupplySalt();
+			else if (phase == "salt-work") { REQUIRE(SurfaceResupplyTrafficProtected()); EarnSurfaceEntryWork("SURFACE_RESUPPLY", 3000, SurfaceResupplySaltCollected); }
+			else if (phase == "chemical-order") OrderSurfaceResupplyChemical();
+			else if (phase == "chemical-source-work") { REQUIRE(SurfaceResupplyTrafficProtected()); REQUIRE(SurfaceResupplySaltCollected()); EarnSurfaceEntryWork("SURFACE_RESUPPLY", 3000, SurfaceResupplyChemicalAtSource); }
+			else if (phase == "salt-delivery-order") OrderSurfaceResupplySaltDelivery();
+			else if (phase == "refill-work") { REQUIRE(SurfaceResupplyTrafficProtected()); EarnSurfaceEntryWork("SURFACE_RESUPPLY", 3000, SurfaceResupplyCollected); }
+			else if (phase == "settle") SettleSurfaceResupply();
+			else {
+				REQUIRE(FindSurfaceResupplySalt() == nullptr); REQUIRE(FindSurfaceResupplyChemical()->cargo.TotalCount() == 21);
+				/** @return False; the declared actual3000tick interval owns replay completion. */
+				EarnSurfaceEntryWork("SURFACE_RESUPPLY", 3000, [] { return false; });
+			}
+			const auto *chemical = FindSurfaceResupplyChemical(); const auto *salt_train = FindSurfaceResupplySalt();
+			fmt::print("SURFACE_RESUPPLY_CUSTODY chemical_vehicle={} chemicals={} chemical_tile={} chemical_halted={} salt_train={} salt_held={} traffic_protected={}\n", chemical->index.base(), chemical->cargo.TotalCount(), chemical->tile.base(), chemical->IsStoppedInDepot(), salt_train != nullptr, salt_train == nullptr ? 0 : salt_train->Next()->cargo.TotalCount(), SurfaceResupplyTrafficProtected());
+			SaveSurfaceResupply(paths.saves / ("surface-resupply-" + phase + "-440.sav"));
+			fmt::print("SURFACE_RESUPPLY_COMPLETE phase={} supplied_stock=false supplied_work=false\n", phase); observed = true;
+		} catch (...) {
+			failure = std::current_exception();
+			// A failed new paid boundary must retain its actual world before
+			// shutdown. Recovery can inspect partial invoices/progress rather
+			// than repeat successful commands against the old input snapshot.
+			if (phase.starts_with("staged-")) {
+				try { SaveSurfaceResupply(paths.saves / ("surface-resupply-failed-" + phase + "-440.sav")); }
+				catch (...) { fmt::print("SURFACE_RESUPPLY_FAILURE_SNAPSHOT unavailable=true phase={}\n", phase); }
+			}
+		}
+		_pause_mode.Set(PauseMode::Normal); _exit_game = true;
+	};
+	AutoRestoreBackup observer(surface_resupply_observer, &inspect); IConsole::CmdRegister("surface_entry_resupply", ObserveSurfaceResupply);
+	const std::string config_arg = config.string();
+	std::array<std::string_view, 17> args = {"openttd_surface_supply_test.exe", "-v", "null:ticks=2", "-b", "null", "-s", "null", "-m", "null", "-x", "-X", "-I", "original_dos", "-c", config_arg, "-g", source};
+	CHECK(openttd_main(args) == 0); if (failure) std::rethrow_exception(failure); CHECK(observed);
+}

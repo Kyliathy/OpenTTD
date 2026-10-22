@@ -1,6 +1,7 @@
 """Compose launch-center source status from genuine material and fixed hardware.
 
 @file launch_facility_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group61E.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-z-z-z-z-z-q-launch-center-source.md.
 Only existing workshop glazing changes. Whole original material is uniformly
@@ -39,11 +40,10 @@ def checked_policy(policy):
         raise ValueError("launch state source geometry, alias or foreground policy changed")
     mapping = base.bound_json(policy["state_mapping"])
     selection = base.bound_json(mapping["selected_bases"])
-    # Complete native owner identities are a current source requirement. A
-    # changed visibility or placement producer needs new state/foreground review.
-    for reference in mapping["native_inputs"]:
-        if base.identity(ROOT / reference["path"]) != reference:
-            raise ValueError("launch source native state/visibility owner changed")
+    # Native owner hashes record the original reviewed mapping epoch. Actual
+    # source composition/decoding uses independent retained geometry/pixel facts;
+    # those old hashes cannot certify current C++ or require archived binaries.
+    # Current native selector/capture qualification remains a separate recipe.
     return mapping, selection
 
 

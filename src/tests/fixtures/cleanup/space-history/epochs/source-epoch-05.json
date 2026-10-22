@@ -1,0 +1,20 @@
+{
+  "_documentation": "Plan11Group15CSGZVE exact consumed isolated sources/apps before new pure native surplus/home proposal.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/surplus-home-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "51df35f310e6a8257ca6e7c2da7c369424b57a5c546efcf78febe316217199bc"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/surplus-home-before-edit/1-openttd_surface_capital_test.exe",
+      "sha256": "6a7179debe3f6b39f9afb4524c26a5e5a4c9edc676f808b41fbafc491ca513f5"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/surplus-home-before-edit/2-openttd_surface_capital_test.exe",
+      "sha256": "9db43bd40117f5569c050b7600d78ee22f15a46760e006d8815c88ff194cf1e1"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+"""Conserve actual first-Core deliveries, paid portable work and native panel activation.
+
+@file surface_gateway_construction_ledger.py
+@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups15CD/15CIE/15CK.
+Reserved SPSTpackets and once-only consumed receipts are distinct quantities.
+The actual UPLDsource is the sole energy owner; this observer grants none.
+"""
+from surface_gateway_resupply_ledger import observe as resupply
+from surface_regional_ledger import TABLE
+
+
+def observe(path, allow_components=False, allow_component_delivery=False, allow_component_abandonment=False, allow_salt_delivery=False, allow_chemical_pickup=False):
+    """@param path Actual original first-Core construction/activation world. @param allow_components Explicit later real factory collection, with original Core and strict historical receipts retained.
+    @param allow_component_delivery Explicit transport of the actually completed fixed36/50acquisition.
+    @param allow_component_abandonment Explicit after-boundary actual ordinary-offer attrition, retaining all original Core receipts. @return Exact physical/reserved/consumed stock, original paid owners and real shared panel.
+    @param allow_salt_delivery Explicit subsequent physical finite-Salt receiver/production; earlier construction defaults remain strict.
+    @param allow_chemical_pickup Explicit subsequent renewed chemical pickup; original Core activation and receipts remain strict.
+    """
+    result = resupply(path, allow_construction=True, allow_components=allow_components, allow_component_delivery=allow_component_delivery, allow_component_abandonment=allow_component_abandonment, allow_salt_delivery=allow_salt_delivery, allow_chemical_pickup=allow_chemical_pickup); row = result["core"]["row"]; module = row["module"]
+    assert result["fuel_burned"] == 30 and result["flight"]["completed"] == result["flight"]["started"] == 2
+    sources = [value for value in TABLE(path, b"UPLD").values() if value["type"] == 0 and value["layer"] == 2]
+    panel = None
+    if module is None:
+        assert not sources
+    else:
+        assert row["phase"] == 1 and row["work"] == 740 and module["stock"] == {} and 0 <= module["activation"] <= 74
+        assert module["consumer"] == module["assembly_consumer"] == 0xFFFFFFFF and module["enabled"] == 1
+        assert module["source"] == 65535 and module["source_generation"] == module["completed"] == module["manufacture_serial"] == 0
+        assert module["manufacture"] is None
+        for name in ("service", "dock_service"):
+            job = module[name]
+            assert job["craft"] == 0xFFFFF and job["generation"] == job["ticks"] == job["paused"] == job["interval"] == job["serial"] == 0
+            assert job["inputs"] == [dict(quantity=0, references=[]), dict(quantity=0, references=[])]
+        panel, = sources
+        assert panel["id"] == module["producer"] and panel["owner"] == 0 and panel["layer"] == 2 and panel["kind"] == 5 and panel["active"] == 1 and panel["domain"] == 0
+        assert panel["a"] in (0, 30000) and panel["c"] == panel["lifetime_consumed"] == 0
+    result["panel"] = panel; result["operational"] = module is not None and module["activation"] == 0
+    return result

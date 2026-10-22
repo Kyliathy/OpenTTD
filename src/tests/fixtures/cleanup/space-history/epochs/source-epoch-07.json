@@ -1,0 +1,60 @@
+{
+  "_documentation": "Plan11Group15CSGZVEC exact consumed direct observer/native source/app epochs before explicit original builder-home Visit support.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "8e59b370fec8ae5a8b763109c551ff93996bddf936370e5ac65d1ebd7547f26f"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_core_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/1-surface_gateway_core_ledger.py",
+      "sha256": "f0f2edc785f8aae88d1eb8c7807ccc91b80054817e7b3d69edd10a6def2bdb2d"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_assembly_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/2-surface_gateway_assembly_ledger.py",
+      "sha256": "b3facff3399f5d13468f113533d187fbb294b43c018dff7548bebfe01f197e45"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_material_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/3-surface_gateway_material_ledger.py",
+      "sha256": "e0ad3759cc4b8f88e936027216db64fc2a8d448d67765e5e7ca155e49a609361"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_resupply_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/4-surface_gateway_resupply_ledger.py",
+      "sha256": "a154126d960cef50ea5758d38cf14a31167ff83534dd9c37c234e6f88a9f64cd"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_construction_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/5-surface_gateway_construction_ledger.py",
+      "sha256": "3a170e7fb81fe1cd9ed9a496a781f1a1175898efca2ab6139171bea96e2c096a"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/6-surface_gateway_component_delivery_ledger.py",
+      "sha256": "88dcd1538dd33fbdac92c05f6354504e7351e9417b82e411aa4011567b033913"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_farm_backhaul_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/7-surface_farm_backhaul_ledger.py",
+      "sha256": "afae167d40b1eeda52897a1f5e9622c5ef7f6e3405a88ab19a4babe91d513ceb"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_surplus_recovery_ledger.py",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/8-surface_surplus_recovery_ledger.py",
+      "sha256": "2afbbf18276cc87ae90867edc3b20c429f7d574c7d18fd6178935b1562fc71fe"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/9-openttd_surface_capital_test.exe",
+      "sha256": "5c20067616c587b4f93423bb3a792f19ae2274eb622999097290823141d16f8a"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/constructor-home-before-edit/10-openttd_surface_capital_test.exe",
+      "sha256": "f7eb078e1fb8b47e08bf988eaad531b95846c02711091d7fd61854f24772a5f3"
+    }
+  ]
+}

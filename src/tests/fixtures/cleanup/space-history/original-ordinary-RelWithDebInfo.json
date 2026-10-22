@@ -1,0 +1,44 @@
+{
+  "_documentation": "Restore the exact final actual construction-cash original through the ordinary game.\n\n@file surface_entry_construction_cash_checks-2.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZVEEH.\nPaused native load/resave repeats no fare, cargo transfer or earned tick.\n",
+  "complete": true,
+  "configuration": "RelWithDebInfo",
+  "phase": "restore",
+  "receipt": {
+    "path": "logs/surface-entry-construction-cash-work-032-RelWithDebInfo.json",
+    "sha256": "02f8c6149e3638c4efaa0d0fbd3d9e0e05cdc5dca22494f76f61b01091bab42c"
+  },
+  "operation": {
+    "source": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-construction-cash-work-440.sav",
+      "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+    },
+    "output": {
+      "path": "mlm/reviews/space/surface-supply-delivery-construction-cash-static-relwithdebinfo/20261020-215556-e654b11b66/saves/ordinary-440.sav",
+      "sha256": "d3a01aa55108dbdc914f79bdbf0475e8fcb1860c88950e987e519c1a74061d0e"
+    },
+    "application": {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "sha256": "e4903e67ad32de7c971963cf08c50e2024cc772deb0646ed18de929d01e301b3"
+    },
+    "terminal": {
+      "path": "logs/space/surface-supply-delivery-construction-cash-static-relwithdebinfo/20261020-215556-e654b11b66/ordinary.log",
+      "sha256": "0eef1830d6b13b82a334b4c793489f8a919746c6ffc59ce9b7d061c7c1150a80"
+    },
+    "advance": false,
+    "native_processes": [
+      {
+        "path": "mlm/reviews/space/surface-supply-delivery-construction-cash-static-relwithdebinfo/20261020-215556-e654b11b66/reports/native-e275bb68407043b9908b95c4fc512b07.json",
+        "sha256": "5dd1b9710c69ec088dfb97e771cdc4b9c2e3840a7e66325354909e7b0cc2415c"
+      }
+    ]
+  },
+  "original_pause": {
+    "before": 1,
+    "after": 1,
+    "original_owner": "AfterLoad_LinkGraphPauseControl"
+  },
+  "source": {
+    "path": "src/tests/multilayer/acceptance/surface_original_evidence.py",
+    "sha256": "cb2205607408bbd246306590ddaa311ecd8f34ce45bb809e054583503eb413c4"
+  }
+}

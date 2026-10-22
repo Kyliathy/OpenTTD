@@ -5,15 +5,14 @@
 Native mine counters are history. Industry, CAPA, STNN and VEHS retain sole
 material ownership. Ordinary unserved station offers may decay; held wagon
 stock and delivered/consumed chemical inputs must never be counted as losses.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 from pathlib import Path
 import re
-import runpy
 
 from space_preview_checks import chunks
 
-FACTORY = runpy.run_path(str(Path(__file__).with_name("surface_entry_chemical_checks-4.py")))
-TABLE = FACTORY["OWNERS"]["saved_table"]
+from space_saved_state import FACTORY, TABLE
 TRAIN = "train[0].common[0]."
 
 

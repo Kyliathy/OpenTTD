@@ -1,5 +1,10 @@
 # R2FC - Repository files, test fixtures and review output cleanup
 
+Successor execution: [R2FC-3](r2fc-file-cleanup3.md) replaces long-term generated
+proof retention with transfer-ready regeneration. Its Groups1-9 are complete;
+original validation/sealing and all-save export pass; cleanup remains pending. This completed layout
+plan remains historical authority for its delivered work; no new Git writes are authorized.
+
 ## Global Mandatory Reading
 
 This cleanup changes artifact locations and test output routing, not gameplay, save formats, native sprite identities or the meaning of retained acceptance evidence. Preserve the existing working-tree changes and immutable inputs. Git operations remain read-only. Keep review evidence in `mlm/reviews/`, disposable native test/demo data homes in `mlm/runtime/`, and captured logs in `logs/`; keep Markdown outside source directories. `/mlm/` is a repository-local multi-layer development workspace, not a replacement for OpenTTD's general data-directory policy.

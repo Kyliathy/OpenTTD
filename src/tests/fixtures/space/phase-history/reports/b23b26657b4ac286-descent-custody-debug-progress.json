@@ -1,0 +1,95 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group13; sequential bounded wrappers with exact paid predecessors and ordinary resaves. Every step names its output report explicitly.",
+  "configuration": "Debug",
+  "steps": [
+    {
+      "phase": "release",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-release/20261014-090439-2abe13fa0f/reports/descent-custody.json",
+        "sha256": "02b4a59df7dea776b3d0a27c439c762066c44b0e50d85d61e0c7dd919d24ed64"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-release/20261014-090439-2abe13fa0f/saves/descent-release-423.sav",
+        "sha256": "4b8b5ed7b567f0b30704e9598f6fa079b8bdd733b7a31cfd79a6eb52f4fd342c"
+      }
+    },
+    {
+      "phase": "before-first",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-first/20261014-090456-5918b8bcf1/reports/descent-custody.json",
+        "sha256": "6bfa4c741ca397e8457c5fccbf963b70387d063f2a099dd810349a6b34da89db"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-before-first/20261014-090456-5918b8bcf1/saves/descent-before-first-423.sav",
+        "sha256": "ff70edca464dbd5a9869329a39812087b22f696a912363c0184cfed4278b3828"
+      }
+    },
+    {
+      "phase": "first",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-first/20261014-090508-5e30be0c81/reports/descent-custody.json",
+        "sha256": "ff94ec19e955289a92e2e75ba5c0fca94bec03a28d1a9bddee5710e93a9d19a2"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-first/20261014-090508-5e30be0c81/saves/descent-first-423.sav",
+        "sha256": "c019d1324cb8db49f3158426ce8984cd76d3549aa158ee39aedba96c6e053bab"
+      }
+    },
+    {
+      "phase": "before-second",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-second/20261014-090525-eaa3d50e3e/reports/descent-custody.json",
+        "sha256": "f83eb39728dc1bf19a5dee0c829bd34d25aef1c36228560ea213d168698bfbfd"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-before-second/20261014-090525-eaa3d50e3e/saves/descent-before-second-423.sav",
+        "sha256": "da98ca6080beb385ea8c2351219bac6a11877ef5ba9953d3d88128cf2deeee9a"
+      }
+    },
+    {
+      "phase": "second",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-second/20261014-090542-2b21b75b14/reports/descent-custody.json",
+        "sha256": "ae23a61486ab5563df690a97e0722d0f853749759fe3aff04df97c63b92dc4fc"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-second/20261014-090542-2b21b75b14/saves/descent-second-423.sav",
+        "sha256": "2da0177bce92e3e1b6f79b9e2e9fce878f0f586878c11e492c5e82a743db8900"
+      }
+    },
+    {
+      "phase": "service",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-service/20261014-090558-78cd08cd7c/reports/descent-custody.json",
+        "sha256": "9eda9f22fd70f4ed56611942b11876a636f9ab1b96272cfdf06e39fbd04cf046"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-service/20261014-090558-78cd08cd7c/saves/descent-service-423.sav",
+        "sha256": "f9f9192143aa40f3adc1f406212bb21095e462c4b95b125f0e7b8d87b7e66c55"
+      }
+    },
+    {
+      "phase": "before-service",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-before-service/20261014-090615-4984fc895f/reports/descent-custody.json",
+        "sha256": "b35323def91f08ae74acddcbbba5060b7e21c5d3abcff10c9fe1ac72f9bc7985"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-before-service/20261014-090615-4984fc895f/saves/descent-before-service-423.sav",
+        "sha256": "4c84873bb44abfd133dbf450aa2b3c0c9234d17042f8c0749c2f9200595c3cd8"
+      }
+    },
+    {
+      "phase": "complete-service",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-complete-service/20261014-090631-8e548ce296/reports/descent-custody.json",
+        "sha256": "2af706d6b7e4ad0bb09c97b3dd4ad07f3d8db14c59a0073761c94dbaea64bfb6"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090631-8e548ce296/saves/descent-complete-service-423.sav",
+        "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+      }
+    }
+  ],
+  "status": "passed"
+}

@@ -19,6 +19,7 @@ The older notes in `docs/` (savegame format, landscape HTML, multiplayer, link g
 | `towns/` | [archi-towns.md](towns/archi-towns.md) | [town-growth.md](towns/town-growth.md), [town-import.md](towns/town-import.md) | `docs/importing_town_data.md` |
 | `basesets/` | [archi-basesets.md](basesets/archi-basesets.md) | [obg.md](basesets/obg.md), [obs.md](basesets/obs.md), [obm.md](basesets/obm.md) | `docs/obg_format.txt`, `obs_format.txt`, `obm_format.txt` |
 | `files/` | [archi-files.md](files/archi-files.md) | | `docs/directory_structure.md` |
+| `.` | [archi-historical-debug.md](archi-historical-debug.md) | Historical inputs, retained saves, debug artifact reconstruction and cleanup gates | |
 | `commands/` | [archi-commands.md](commands/archi-commands.md) | | |
 | `game-loop/` | [archi-game-loop.md](game-loop/archi-game-loop.md) | | |
 | `economy/` | [archi-economy.md](economy/archi-economy.md) | [archi-cargo-payment.md](economy/archi-cargo-payment.md), [archi-subsidies.md](economy/archi-subsidies.md) | |

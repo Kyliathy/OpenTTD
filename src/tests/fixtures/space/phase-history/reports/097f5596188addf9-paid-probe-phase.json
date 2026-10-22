@@ -1,0 +1,84 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group17; actual paid original rocket/carried probe phase pair, once-only deployment and native running/pad expenses. Ordinary final-delivery payment is separate.",
+  "configuration": "Debug",
+  "phase": "return",
+  "predecessor": {
+    "path": "mlm/reviews/space/paid-probe-phase-verify-delivery/20261014-122659-d2c54a283d/reports/paid-probe-phase.json",
+    "sha256": "9c2be5fd51824e0baf3e66835b0c477288d64b303f036963222e2456b50ceb11"
+  },
+  "source": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-delivery/20261014-122659-d2c54a283d/saves/probe-flight-delivery-after-423.sav",
+    "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+  },
+  "before": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122732-6c2478b828/saves/probe-flight-return-before-423.sav",
+    "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+  },
+  "after": {
+    "path": "mlm/reviews/space/paid-probe-phase-native-return/20261014-122732-6c2478b828/saves/probe-flight-return-after-423.sav",
+    "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+  },
+  "replay_before": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-return/20261014-122732-6c2478b828/saves/probe-flight-return-before-423.sav",
+    "sha256": "e9a2952a43538850bcc046470a06374b930fd078a4ba2c7a045d19c7d2a1edfd"
+  },
+  "replay_after": {
+    "path": "mlm/reviews/space/paid-probe-phase-replay-return/20261014-122732-6c2478b828/saves/probe-flight-return-after-423.sav",
+    "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+  },
+  "ordinary_resaves": {
+    "before": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-return-before/20261014-122732-6c2478b828/saves/ordinary-resave.sav",
+      "sha256": "ff1288632763857de7a0fd60d077ea0ec0f7a40276dfce491f66d38f08d779a8"
+    },
+    "after": {
+      "path": "mlm/reviews/space/paid-probe-phase-paused-return-after/20261014-122732-6c2478b828/saves/ordinary-resave.sav",
+      "sha256": "265c0de39f2857037e3a4b11d5744b335bd293a92039b3bde5464c0ade37e49c"
+    }
+  },
+  "exact_owner_families": 26,
+  "normalized_ledger": [
+    {
+      "edge": "before",
+      "phase": 4,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3414235,
+      "rocket_profit": -320000,
+      "probe_profit": 0,
+      "fuel": 0,
+      "burned": 15,
+      "started": 2,
+      "completed": 0,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    },
+    {
+      "edge": "after",
+      "phase": 5,
+      "rocket": 15,
+      "rocket_generation": 1,
+      "probe": 16,
+      "probe_generation": 2,
+      "money": 3413895,
+      "rocket_profit": -320000,
+      "probe_profit": -76800,
+      "fuel": 0,
+      "burned": 15,
+      "started": 2,
+      "completed": 0,
+      "canceled": 1,
+      "cargo": 0,
+      "pods": 2,
+      "pad_remainder": 0,
+      "probe_remainder": 0
+    }
+  ],
+  "no_new_mission_fee": true,
+  "no_cargo_income": true
+}

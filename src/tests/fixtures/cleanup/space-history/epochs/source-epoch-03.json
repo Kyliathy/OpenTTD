@@ -1,0 +1,25 @@
+{
+  "_documentation": "Exact closed GZVBreturn-header/isolated-app epoch before default-preserving two-wagon budget admission; Plan11Group15CSGZVBC.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_mixed_farm_return.h",
+      "path": "test-cache/surface-entry/farm-two-return-before-edit/00-tests-surface_entry_mixed_farm_return.h",
+      "sha256": "eafd4eca8f79b9292cb0b9d3c098203bae31b5fac32c01e2928b503f425fcc77"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/farm-two-return-before-edit/01-RelWithDebInfo-openttd_surface_capital_test.exe",
+      "sha256": "6682d103ae3687b3fbc7c7f321b796d5faf14a02489d0e3abdd32d29101b5f4b"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/farm-two-return-before-edit/02-Debug-openttd_surface_capital_test.exe",
+      "sha256": "ed0813c09cf799bb8e9cd48c13e0e93b5a514ca1d8fd4855dfdca39b724b3c62"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_farm_return_native.py",
+      "path": "test-cache/surface-entry/farm-two-return-before-edit/03-acceptance-surface_farm_return_native.py",
+      "sha256": "8c799a40d05dea97cae385eb94ef62f1ed979bdfa0bb18c1bcb65f9ee7820add"
+    }
+  ]
+}

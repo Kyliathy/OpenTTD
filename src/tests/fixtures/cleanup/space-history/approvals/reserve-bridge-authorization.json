@@ -1,0 +1,20 @@
+{
+  "_documentation": "Owner: r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZQ. Explicit user reply to the one-window proposal; this grants no simulation work or capital.",
+  "complete": true,
+  "user_reply": "Authorize the single capped attempt",
+  "date": "2026-10-20",
+  "configurations": [
+    "RelWithDebInfo",
+    "Debug"
+  ],
+  "maximum_windows_per_configuration": 1,
+  "maximum_ticks": 2000,
+  "stop_at_first_posted_goods_payment": true,
+  "temporary_reserve": 30000,
+  "default_reserve_unchanged": 40000,
+  "second_window_authorized": false,
+  "proposal": {
+    "path": "logs/surface-entry-reserve-bridge-proposal.json",
+    "sha256": "ef6ee7ad83522a3e3949051b0a143f0577bec135c652d11756dc8a45692f52b5"
+  }
+}

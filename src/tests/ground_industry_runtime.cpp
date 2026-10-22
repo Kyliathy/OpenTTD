@@ -1,5 +1,6 @@
 /**
  * @file ground_industry_runtime.cpp Actual current application/viewport observer for selected industry art.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit retained source and isolated capture modes.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHB.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  * The immutable collector fixture establishes the real application loader and
@@ -293,7 +294,6 @@ TEST_CASE("Current selected industry observer loads a real native world and view
 {
 	const auto root = FindTestRepositoryRoot();
 	const auto source = ResolveTestInputPath(root / "src/tests/fixtures/geothermal/fixture389-collector-funded-read.sav");
-	const auto paths = GetTestArtifactPaths("selected-ground", "industries");
 	const auto config = GetTestRuntimeConfig();
 	bool observed = false;
 	std::exception_ptr failure;
@@ -301,6 +301,12 @@ TEST_CASE("Current selected industry observer loads a real native world and view
 	 * @param command Exact startup command choosing bootstrap versus current fixture construction.
 	 */
 	std::function<void(std::string_view)> capture = [&](std::string_view command) {
+		// One selected graph can observe the retained collector and staged
+		// industry states independently. Their actual command determines separate
+		// capture ownership so neither can replace another leaf's native evidence.
+		const auto scenario = command == "ground_industry_art" ? "retained-collector" :
+			command == "ground_industry_states" ? "industry-states" : "industries";
+		const auto paths = GetTestArtifactPaths("selected-ground", scenario);
 		try {
 			REQUIRE(GetCurrentMultiLayerProfileSelection().id == MultiLayerGameplayProfileID::MultilayerIndustry);
 			const auto collectors = CaptureGeothermalCollectors();
@@ -353,7 +359,9 @@ TEST_CASE("Current selected industry observer loads a real native world and view
 	IConsole::CmdRegister("ground_industry_reload", ObserveGroundIndustryArt);
 	IConsole::CmdRegister("ground_industry_states", ObserveGroundIndustryArt);
 	const std::string config_path = config.string();
-	const char *checkpoint = std::getenv("OTTD_GROUND_INDUSTRY_CHECKPOINT");
+	// Consume the same real source hook observed by the shared process runner;
+	// an evidence-only alias must never claim a different loaded review world.
+	const char *checkpoint = std::getenv("OTTD_GROUND_INDUSTRY_SOURCE");
 	const std::string source_path = checkpoint == nullptr ? source.string() :
 		ResolveTestInputPath(std::filesystem::path{checkpoint}).string();
 	std::array<std::string_view, 17> arguments{"openttd_ground_viewport_test.exe", "-v", "null:ticks=2", "-b", "8bpp-simple",

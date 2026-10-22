@@ -1,0 +1,79 @@
+Filters: [.surface-construction-cash]
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=3 engine=140 annual256=288000 pending=65 remaining=2001 profit_last=-197361 profit_this=-11835 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=3 type=1 destination=13 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=3 type=1 destination=12 load=4 unload=2
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=9 engine=119 annual256=288000 pending=59 remaining=3056 profit_last=960015 profit_this=91845 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=9 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=9 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=10 engine=119 annual256=288000 pending=58 remaining=1577 profit_last=1421071 profit_this=53701 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=10 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=10 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=11 engine=119 annual256=288000 pending=57 remaining=3127 profit_last=1232143 profit_this=68037 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=11 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=11 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=24 engine=119 annual256=288000 pending=44 remaining=1577 profit_last=1189135 profit_this=51909 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=24 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=24 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=25 engine=140 annual256=288000 pending=43 remaining=2004 profit_last=-180721 profit_this=-11835 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=25 type=1 destination=13 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=25 type=1 destination=12 load=4 unload=2
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=42 engine=24 annual256=738000 pending=26 remaining=3716 profit_last=5021055 profit_this=-30315 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=42 type=1 destination=14 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=42 type=1 destination=16 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=43 engine=119 annual256=288000 pending=25 remaining=3127 profit_last=1748495 profit_this=-11835 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=43 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=43 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=48 engine=263 annual256=120000 pending=20 remaining=3246 profit_last=108632 profit_this=-4920 orders=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=1 destination=0 load=2 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=1 destination=3 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=49 engine=24 annual256=738000 pending=19 remaining=3716 profit_last=8225151 profit_this=-30315 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=49 type=1 destination=12 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=49 type=1 destination=11 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=51 engine=152 annual256=288000 pending=17 remaining=3127 profit_last=-67569 profit_this=-11835 orders=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=1 destination=1 load=2 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=1 destination=2 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=52 engine=24 annual256=738000 pending=16 remaining=3716 profit_last=12678527 profit_this=410005 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=52 type=1 destination=15 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=52 type=1 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=53 engine=119 annual256=288000 pending=15 remaining=1577 profit_last=1096719 profit_this=32197 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=53 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=53 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=54 engine=266 annual256=0 pending=0 remaining=7535 profit_last=0 profit_this=0 orders=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=56 engine=119 annual256=288000 pending=12 remaining=3127 profit_last=1404175 profit_this=48069 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=56 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=56 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=62 engine=137 annual256=288000 pending=6 remaining=3890 profit_last=-230897 profit_this=-10299 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=62 type=1 destination=22 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=62 type=1 destination=15 load=4 unload=2
+SURFACE_RESUPPLY_INCOME_FIXED_PRICES ticks=2000 inflation=false callback_free=true priced_bodies=16 year_boundary=false days=28 months=1 upkeep=1640 interest=8334 station_charge=25
+SURFACE_RESUPPLY_GOODS_RAIL_FEEDER_WORK_ADMISSION ceiling=2000 ticks=2000 unpaid=0 operating=9999 reserve=40000 target=49999 cash=179573 funded=true future_income_counted=0
+SURFACE_RESUPPLY_FUNDED_FARM_GOODS_SELECTION ceiling=2000 ticks=2000 found=true settlement=false initial=0
+SURFACE_RESUPPLY_EXPENSE type=0 amount=0
+SURFACE_RESUPPLY_EXPENSE type=1 amount=0
+SURFACE_RESUPPLY_EXPENSE type=2 amount=640
+SURFACE_RESUPPLY_EXPENSE type=3 amount=950
+SURFACE_RESUPPLY_EXPENSE type=4 amount=0
+SURFACE_RESUPPLY_EXPENSE type=5 amount=0
+SURFACE_RESUPPLY_EXPENSE type=6 amount=0
+SURFACE_RESUPPLY_EXPENSE type=7 amount=-9752
+SURFACE_RESUPPLY_EXPENSE type=8 amount=-2925
+SURFACE_RESUPPLY_EXPENSE type=9 amount=0
+SURFACE_RESUPPLY_EXPENSE type=10 amount=0
+SURFACE_RESUPPLY_EXPENSE type=11 amount=8333
+SURFACE_RESUPPLY_EXPENSE type=12 amount=25
+SURFACE_RESUPPLY_EARNED earned=2000 reached=false cash_before=179573 cash=182302 debt=5000000 income=12677 net_expense=-2729
+SURFACE_RESUPPLY_DELIVERED label=PASS amount=352
+SURFACE_RESUPPLY_DELIVERED label=COAL amount=75
+SURFACE_RESUPPLY_DELIVERED label=LVST amount=200
+SURFACE_RESUPPLY_DELIVERED label=GOOD amount=50
+SURFACE_RESUPPLY_DELIVERED label=GRAI amount=53
+SURFACE_RESUPPLY_FUNDED_FARM_GOODS_SERVICE ticks=2000 initial=0 boarded=50 accepted=50 held=0 observed_whole_unload_fare=1510 payment_pending=false payment_posted=true settlement=false cash=182302 restored=false reserve=40000 cohort_only_fare_claimed=false feeder_credit_is_cash=false
+SURFACE_RESUPPLY_WORKING_CASH_MODE stop_on_payment=false target=650000 cash=182302 restored=false reserve=40000
+SURFACE_RESUPPLY_COMPLETE phase=construction-cash-work supplied_stock=false supplied_work=false
+===============================================================================
+All tests passed (13325 assertions in 1 test case)
+

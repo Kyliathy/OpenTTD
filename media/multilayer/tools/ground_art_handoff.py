@@ -1,6 +1,7 @@
 """Normalize only the qualified selected ground sources for an independent native append.
 
 @file ground_art_handoff.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DE, selected current source inputs.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79D.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
@@ -66,15 +67,30 @@ def read_json(relative):
     return json.loads(bound(relative).read_text(encoding="utf-8"))
 
 
-def read_scope(public=None):
+def read_scope(public=None, current_sources=False):
     """Validate the current selected source/range contract and retained native prefix.
 
     @param public Optional detached public document for focused refusal checks.
+    @param current_sources Use independently retained physical/prefix facts without old publication products.
     @return Scope, before snapshot and current public document; no files are changed.
     @throws ValueError On source selection, pinned tools, published range or append drift.
     """
     scope = read_json(SCOPE.relative_to(ROOT).as_posix())
-    before = read_json(scope["baseline"])
+    if current_sources:
+        from ground_source_facts import load_facts, verify_facts
+        facts = load_facts()
+        verify_facts()
+        frozen = {row["asset_id"]: dict(row["geometry"], packed=row["packed"]) for row in facts["native_prefix"]}
+        # The old append snapshot bound three already-shipped selected families.
+        # Reconstruct only that exact before-view, not current Ground ranges or
+        # the obsolete2145-file source/application publication snapshot.
+        for asset, physical in facts["selected_public_facts"].items():
+            packed = frozen.get(asset, {}).get("packed", {"native_offset": None})
+            frozen[asset] = dict(physical, packed=packed)
+        before = dict(native_end_exclusive=scope["native_start"], native_prefix=facts["native_prefix"],
+                      public={"assets": list(frozen.values())})
+    else:
+        before = read_json(scope["baseline"])
     public = read_json(PUBLIC.relative_to(ROOT).as_posix()) if public is None else public
     # This append begins after every current M1/Space/orbital/launch sprite;
     # an old M1-only bound cannot reclaim later published slots.
@@ -85,8 +101,9 @@ def read_scope(public=None):
             or scope["toolchain"]["python"] != sys.version.split()[0] or scope["toolchain"]["pillow"] != PIL.__version__):
         raise ValueError("ground source selection, native append or pinned toolchain changed")
     audit = scope["source_audit"]
-    if digest(bound(audit["path"])) != audit["sha256"]:
-        raise ValueError("ground selected source audit changed")
+    if not current_sources:
+        if digest(bound(audit["path"])) != audit["sha256"]:
+            raise ValueError("ground selected source audit changed")
     current = {row["asset_id"]: row for row in public["assets"]}
     if len(current) != len(public["assets"]):
         raise ValueError("ground public family identities are ambiguous")

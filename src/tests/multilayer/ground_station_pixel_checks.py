@@ -1,6 +1,7 @@
 """Compare actual native facility, glass and vehicle foreground compositions with accepted sources.
 
 @file ground_station_pixel_checks.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current source view.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHCC.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Native invisible captures supply unchanged world background. Independent source
@@ -115,10 +116,11 @@ def compose(base, nodes, order, appearance, transparent_remap):
     return pixels, owners, glass_vehicle, foreground
 
 
-def verify(execution):
+def verify(execution, source_view):
     """Require exact source/native composition for every current default facility view.
 
     @param execution Successful actual native station execution report beneath repository logs.
+    @param source_view Explicit checked GroundSourceViews with current original source poses/locations.
     @return Hash-bound source, body, depth, glass and appearance evidence for the exact native process.
     """
     proof = handoff.read_json(execution)
@@ -136,11 +138,9 @@ def verify(execution):
     required = expected_matrix()
     if len(frames) != len(scene["frames"]) or set(frames) != required:
         raise ValueError("native station source matrix is incomplete or duplicated")
-    scope, before, public = handoff.read_scope()
-    families = {row["asset_id"]: row for row in public["assets"]}
+    families = source_view.families
     sources, documents, images = {}, {}, {}
-    report_path = "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/packed-ground-manifest.json"
-    packed = handoff.read_json(report_path)
+    packed = source_view.packed
     offsets = {(row["asset_id"], row["state"], row["frame"], row["direction"], row["tile_variant"], row["part"]): row["native_offset"]
                for row in packed["sprites"]}
     results, buffers = [], {}
@@ -149,7 +149,7 @@ def verify(execution):
     for identity, frame in frames.items():
         asset, graphics, state, phase, appearance = identity
         if asset not in sources:
-            sources[asset] = handoff.source_poses(families[asset], scope, before, documents, images)
+            sources[asset] = source_view.poses(asset)
         poses, atlas = sources[asset]
         family = families[asset]
         rail = asset == "facility.rail-station"
@@ -201,7 +201,7 @@ def verify(execution):
             body = frame["body"]
             body_asset = body["asset_id"]
             if body_asset not in sources:
-                sources[body_asset] = handoff.source_poses(families[body_asset], scope, before, documents, images)
+                sources[body_asset] = source_view.poses(body_asset)
             body_poses, body_atlas = sources[body_asset]
             if body["cargo_label"] != "COAL" or body["load"] != 1:
                 raise ValueError("station foreground lacks its actual packet-backed cargo boundary")
@@ -237,21 +237,8 @@ def verify(execution):
 
 
 def main():
-    """Verify one exact current station run and retain its source/native foreground result.
-
-    @return None; any source, depth, glass or appearance mismatch fails before successful publication.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--execution", required=True)
-    parser.add_argument("--report", required=True)
-    args = parser.parse_args()
-    output = handoff.bound(args.report)
-    if not output.is_relative_to(ROOT / "logs"):
-        raise ValueError("station pixel evidence belongs beneath repository logs")
-    result = verify(args.execution)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in ("passed", "native_scenes", "matched_source_composition_pixels", "glass_vehicle_pixels", "foreground_vehicle_pixels", "reversed_depth_different_pixels")}))
+    """Require the explicit current native producer, which seals these exact pixel obligations."""
+    raise SystemExit("Use ground_viewport_review.py with explicit --mode, --selector-result, --build-result, --source-result and --run-id; this pixel verifier requires the selected current source view.")
 
 
 if __name__ == "__main__":

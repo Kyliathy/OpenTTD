@@ -1,0 +1,27 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md Group20. Exact independent original Ground source-pose fixture; copied unchanged before modifying its native reader. Historical origins are facts only. Current decoder/consumer proof is regenerated; no baseline produced by changed implementation.",
+  "schema_version": 1,
+  "kind": "independent_ground_consumer_expectations",
+  "fixture": {
+    "path": "src/tests/fixtures/graphics/ground-pose-tuples.bin",
+    "sha256": "1a07fe173fa21124c603586c3695df2405151c6d66263c90e4cab7e5c594ff89",
+    "bytes": 128301
+  },
+  "historical_origin": {
+    "path": "logs/proofs/mlm/native-art/expected/ground-pose-tuples.bin",
+    "sha256": "1a07fe173fa21124c603586c3695df2405151c6d66263c90e4cab7e5c594ff89",
+    "role": "historical_fact_only_do_not_dereference"
+  },
+  "families": 47,
+  "source_tuples": 14254,
+  "native_start": 7791,
+  "native_end_exclusive": 22045,
+  "dispatch_contract": "media/multilayer/contracts/ground-consumer-dispatch.json",
+  "dispatch_counts": {
+    "current_bound": 21,
+    "current_existing": 3,
+    "later_owner": 26
+  },
+  "current_viewport_claimed": false,
+  "whole_underground_plan_complete": false
+}

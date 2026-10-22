@@ -1,0 +1,20 @@
+{
+  "_documentation": "Plan11 Group15CSGZVEEG: exact consumed original source and applications before adding a pure capital query.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/construction-capital-before-edit/src/tests/surface_entry_productive_admission.cpp",
+      "sha256": "76106508225486f02cba3ff68125013a6ebd00d8d99339503ea9a37f7f973f26"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/construction-capital-before-edit/build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "sha256": "6b5bd93cfa3f07c7d613c089cc45668f188b6b21d23fbfdbddbf7f0faff53ae7"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/construction-capital-before-edit/build/Debug/openttd_surface_capital_test.exe",
+      "sha256": "f4f6fbb97b4fadd87ef913d24a406a0ba46bbe5a062d7e2d766e133b6154d3c9"
+    }
+  ]
+}

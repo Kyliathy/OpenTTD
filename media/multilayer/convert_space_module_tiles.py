@@ -1,6 +1,7 @@
 """Cut the selected original Core into its fixed native world-tile source parts.
 
 @file convert_space_module_tiles.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13E
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group70.2
 Every original pixel has one tile/part owner. The near coupling cheek alone is
@@ -37,9 +38,11 @@ def proposed_policy(document):
     """
     family = document["families"][core.ASSET]
     reference = family["base_source_review"]
-    if art.identity(art.ROOT / reference["path"]) != reference:
-        raise ValueError("accepted Core base review changed")
-    base = json.loads((art.ROOT / reference["path"]).read_text(encoding="utf-8"))["base"]
+    # The old review identity remains a historical approval fact in the frozen
+    # policy. Reconstruct measured base/foreground facts from actual originals;
+    # checked_policy still compares every field against its independent signed
+    # policy, so regeneration cannot approve changed pixels or registrations.
+    _, base = core.native_base(family["base_selection"], document)
     # Cut approval cannot launder a different hull or coupling: the original
     # whole-model evidence and both receiving registrations must still agree.
     if (base["signature"] != family["approved_base_registration"]
@@ -62,11 +65,11 @@ def proposed_policy(document):
 
 
 def checked_policy(document, public=None):
-    """Refuse policy or world-cell drift before opening any original image.
+    """Refuse policy or world-cell drift against original source geometry and pixels.
 
     @param document Current or detached source catalogue for focused refusal checks.
     @param public Optional public manifest; fixed native geometry remains authoritative.
-    @return Approved exact Core cut policy, without decoding source rasters.
+    @return Approved exact Core cut policy, after rechecking original base pixels and registrations.
     @throws ValueError On unsigned changes or newly signed geometry/foreground drift.
     """
     core.public_contract(public)
@@ -130,6 +133,8 @@ def reassemble(pieces, policy):
     for row, image in pieces:
         tile = row["tile_variant"]
         origin = core.ORIGINS[tile]
+        # Stored cells must preserve the actual paid footprint and DOS palette;
+        # plausible pixel hashes cannot excuse moved hardware or changed sorting.
         if (row["world_cell"] != list(core.CELLS[tile]) or row["native_origin"] != list(origin)
                 or row["anchor"] != [-31, -33] or image.mode != "P" or image.size != (64, 64)
                 or bytes(image.getpalette()) != bytes(art.base.PALETTE_BYTES)):

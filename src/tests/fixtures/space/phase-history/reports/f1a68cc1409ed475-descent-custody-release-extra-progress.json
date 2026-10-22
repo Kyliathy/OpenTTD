@@ -1,0 +1,29 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group13; actual paid alternate recovery center and paid replacement shell, with exact predecessor identities.",
+  "configuration": "RelWithDebInfo",
+  "steps": [
+    {
+      "phase": "retarget",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-retarget/20261014-091139-9fcec98a6a/reports/descent-custody.json",
+        "sha256": "9567b23928092c70acb1d0869212174d4734fa1fde2bbca5eb3dac9985356772"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-retarget/20261014-091139-9fcec98a6a/saves/descent-retarget-423.sav",
+        "sha256": "a9f0493f8e1adc4f064a570ce524c61eabd88d573462402d48328a0195543af3"
+      }
+    },
+    {
+      "phase": "replacement",
+      "report": {
+        "path": "mlm/reviews/space/descent-custody-verify-replacement/20261014-091143-d8e13f15f6/reports/descent-custody.json",
+        "sha256": "a7739d1321dd3314f2f2781df5a2c6eb08af02a4b3f8c0496c0af20fc3eec95f"
+      },
+      "complete": {
+        "path": "mlm/reviews/space/descent-custody-native-replacement/20261014-091143-d8e13f15f6/saves/descent-replacement-423.sav",
+        "sha256": "049edf2efe695e5c3299a663e0f0b8d53ed5fd86ab8a9a0f417cb6776ec7d018"
+      }
+    }
+  ],
+  "status": "passed"
+}

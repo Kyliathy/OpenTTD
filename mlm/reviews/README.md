@@ -1,28 +1,745 @@
 # Multi-layer review artifacts
 
-Owner: [cleanup plan](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md). Shared decision: [Development artifact layout](../../docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout).
+Owner: [R2FC-3 cleanup](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md). Shared decision: [Development artifact layout](../../docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md#development-artifact-layout).
 
-Follow-up: [R2FC-2](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup-2.md) records disk cleanup and plans moving required log-resident inputs/evidence into curated fixtures and explicit review runs. That migration is pending; current consumers still require some files under `logs/`.
+Migration is active: current Space saves, paused underground source epochs, all inventoried saves and compact independent comparison inputs are retained outside disposable trees. Producer adaptation and broad cleanup follow the checked groups in R2FC-3. The Space recovery recipe has passed both configurations. Verified M1, Space, orbital and launch source/packing recipes and completed Ground source leaves are enabled; pending recipes remain disabled until their supplying groups pass.
 
 ## Routing contract
 
-The layout migration and focused native/cold verification are complete. Reusable tests live under `src/tests/`; this directory contains generated evidence. The [producer catalogue](../review-producers.json) records native writers and wrapper entry points. Each caller selects feature/scenario explicitly; mixed tests share an invocation ID while using separate feature directories.
+Shared routing and its focused native probes are implemented; full cold-transfer gates follow R2FC-3's task order. Reusable tests live under `src/tests/`; this directory contains generated evidence. The [producer catalogue](../review-producers.json) records native writers and wrapper entry points. Each caller selects feature/scenario explicitly; mixed tests share an invocation ID while using separate feature directories.
 
-Use `<feature>/<scenario>/<run-id>/images/`, `saves/`, `reports/` and `scratch/`. Reports record producer, native writer, feature, scenario, run ID, build configuration, input identities and artifact paths/hashes. Logs use repository `logs/<feature>/<scenario>/<run-id>/`. Runtime homes use `mlm/runtime/<profile>/<run-id>/<process>/`, separately for host/client.
+Use `<feature>/<scenario>/<run-id>/images/`, `saves/`, `data/`, `reports/`, `evidence/` and `scratch/`. `data` contains selected generated payloads; `evidence` contains required current-run transcripts and observations. Frames stay in `images` with their exact native writer/run identities. Reports bind producer, native writer, feature, scenario, run ID, configuration and input/output hashes. `runner.run_native` retains its configured stdout/stderr in evidence; diagnostic copies under `logs/<feature>/<scenario>/<run-id>/` are optional. Runtime homes use `mlm/runtime/<profile>/<run-id>/<process>/`, separately for host/client.
 
-Inputs are immutable fixtures or explicitly selected prior checkpoints. Do not overwrite them, infer the latest historical run, or create a docs data home. Reproducible proof images/reports/logs belong under ignored `logs/proofs/mlm/native-art/`, with explicit source identities and regeneration commands. A validator dependency alone does not justify committing generated output. Immutable compatibility/demo inputs stay in purpose-named fixture directories. Historical `import-20261009` artifacts preserve original bytes/provenance and do not count as new passes. Fixture pruning remains gated by master task 12.6.
+Inputs are immutable purpose-named fixtures, retained saves or explicitly selected prior runs. Stable keys in `src/tests/fixtures/multilayer-inputs.json` prefer hash-verified retained copies even while old paths exist. Unindexed prior runs remain direct selections; no latest-run fallback or fixture overwrite is permitted. Space/underground continuation contracts live under `src/tests/fixtures/checkpoints/`. Other exported saves use `savegames/retained/` with complete original aliases. Historical receipt/image hashes describe past executions and cannot qualify a newly compiled image. Original media and the existing public media authority remain unchanged. Fixture pruning remains gated by master task12.6.
 
-The repository's clean.ps1 removes reproducible acceptance/data-home and
-acceptance/demo-guide-load-N outputs, plus raw PPM captures with retained PNG
-counterparts. The original playable demos stay in src/tests/fixtures/demos/.
-It also discards old native runtime homes and their binaries: historical proof
-records describe completed executions, rather than requiring executable copies
-to remain installed forever. Reverify by regenerating the relevant output.
-Other review runs remain because some contain the only explicit saved inputs
-for unfinished Space work or native art validators; do not erase this entire
-tree without first retaining those inputs in their proper fixture/asset owner.
+All generated reviews/runtime homes/logs/test-cache become cleanable after the
+plan's export and verification gates. The broad cleaner implementation/application
+is still pending in Groups26-33; the current cleaner retains its preview default.
+Older `logs/proofs/mlm/native-art/` paths are migration inputs. New proofs belong
+in explicit review runs, regenerated by their selected recipes.
+
+## Focused shared-owner verification
+
+The small support project links the real native routing owner without game/world
+sources or Git discovery. Set `$cmakePath` to the selected executable from the
+tool contract; this is the verified Windows installation (select the equivalent
+installed path on another host):
+
+```powershell
+$cmakePath = "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe"
+& $cmakePath -S src/tests/multilayer/support -B test-cache/cleanup/support-probes -G "Visual Studio 17 2022" -A x64
+& $cmakePath --build test-cache/cleanup/support-probes --config RelWithDebInfo --parallel 2 -- /nodeReuse:false
+python -B src/tests/multilayer/support/artifact_paths_check.py
+python -B src/tests/multilayer/support/artifact_paths_native_check.py --application test-cache/cleanup/support-probes/RelWithDebInfo/artifact_paths_probe.exe
+python -B src/tests/multilayer/support/input_sha256_check.py --application test-cache/cleanup/support-probes/RelWithDebInfo/input_sha256_check.exe
+```
+
+Configure/build output and optional transcripts go under `test-cache/cleanup/`.
+These probes qualify routing/hash behavior, not a Space application or feature.
+
+## Portable selected native builds
+
+The versioned profile is
+`src/tests/fixtures/config/multilayer/native-build-profile.json`. It pins the
+observed Windows/MSVC tools, options, SDK and actual installed dependency
+versions. The source manifest's older vcpkg baseline remains recorded separately.
+The445,643-byte `native-dependency-sources.zip` beside the profile retains exact
+third-party recipe/script sources and their original provenance, without compiled
+libraries or executables. Rebuilds need no old external vcpkg Git history.
+
+Supply installed prerequisites explicitly when PATH/discovery cannot find them:
+
+```powershell
+python -B src/tests/multilayer/support/native_build.py --inspect --vcpkg D:/Codez/Tools/vcpkg --grfcodec D:/Codez/Tools/grfcodec/grfcodec-6.2.0-windows-win64/bin
+python -B src/tests/multilayer/support/native_build.py --configuration RelWithDebInfo --target openttd_surface_capital_test --target openttd --vcpkg D:/Codez/Tools/vcpkg --grfcodec D:/Codez/Tools/grfcodec/grfcodec-6.2.0-windows-win64/bin
+```
+
+Replace those example external paths for the selected host. Inspection reads
+versions and validates retained recipe sources without reserving a run. Missing
+or mismatched prerequisites fail before compilation. A selected build creates a
+local vcpkg provider under `build/.native-tools/`; downloads, binary caches,
+packages, dependency builds and temporary files stay under `build/.native-work/`.
+Original source patches use the selected GNU patch tool, and Git-fetch helpers
+are disabled in this generated provider. External installations remain read-only.
+
+Configure replaces missing/mismatched CMake configuration with `--fresh`, using
+the explicit profile/tool discovery as authority. Matching configuration is
+reused, preserving generated precompiled headers for incremental builds. Exported
+configuration templates and saves stay outside these build products. Targets
+build sequentially with two workers, `CL_MPCount=2` and node reuse disabled.
+Repeat with `--configuration Debug` for its independent images. Actual current
+source/tool/image identities and each stage's exit status/transcript are recorded
+under `mlm/reviews/build/selected-native/<run-id>/{data,reports,evidence}/`.
+These build results alone do not qualify a Space checkpoint or authorize work.
+
+Focused bootstrap checks are reproducible with:
+
+```powershell
+python -B src/tests/multilayer/support/native_build_check.py
+python -B src/tests/multilayer/support/native_build_bootstrap_check.py --vcpkg D:/Codez/Tools/vcpkg --grfcodec D:/Codez/Tools/grfcodec/grfcodec-6.2.0-windows-win64/bin
+```
+
+The second runner configures from a missing build and compiles only an existing
+small support utility. Its real tool transcripts use
+`mlm/reviews/cleanup/build-bootstrap/<run-id>/evidence/`; suite output belongs in
+`test-cache/cleanup/native-build-{contract,bootstrap}-tests.log`.
+
+## Selected recipes and explicit restart
+
+Inspect a registered recipe without importing producers, reserving a run or
+creating output:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py space-checkpoint --configuration Debug --inspect
+```
+
+Execution uses the same command without `--inspect`, optionally with an explicit
+new `--run-id`. Disabled recipes report their supplying groups before reserving
+anything; Group15 and later supplying groups enable only implemented leaves.
+Current native recipes also accept the build tool path overrides documented above.
+
+A failed invocation prints its generated report/evidence location. Resume it by
+selecting the same recipe/configuration with `--resume <exact-run-id>`. This
+checks exact declarations, retained inputs, producer sources, completed stage
+witnesses and prerequisite outputs. An active owner/child, completed invocation,
+changed selection or duplicate fresh ID refuses. Successful prior stages keep
+their identities; only incomplete stages retry, with separate attempt transcripts.
+
+Progress lives at `mlm/reviews/rebuild/<recipe>/<run-id>/reports/rebuild.json`.
+Each declared feature/scenario receives the same invocation ID, with explicit
+request/result/process records in `reports/` and child transcripts in `evidence/`.
+Native build outcomes remain separate from preparation and verification. Actual
+measured checks and every declared output are required before success; a zero
+process status alone is insufficient. Cleanup recipes grant no paid-work or
+source-publication permission.
+
+Rebuild these orchestration checks with
+`python -B src/tests/multilayer/support/artifact_rebuild_check.py`; retain suite
+output under `test-cache/cleanup/artifact-rebuild-tests.log`.
+
+## Selected graphics evidence
+
+Owner: [R2FC-3 Group16](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Current graphics selections use schema2 in an exact
+`mlm/reviews/<feature>/<scenario>/<run-id>/reports/` owner. `selection_document`
+and `EvidenceSet` accept the recipe's explicit `RunContext`; required transcript
+roles use `evidence/`, independently of optional diagnostics in `logs/`.
+Frames retain their `images/` owner, source identities, canonical producer/native
+writer assignments, actual process identities and unchanged native-container
+conversion witnesses. Output packing data uses `data/`; runtime/sound/gallery
+JSON uses `reports/`, and gallery images use `images/`.
+
+`regenerate_art_proofs.py initialize --run-id <fresh-explicit-id>` creates only
+an empty selection. Later phases require `--manifest <exact-selection>` and
+verified recipe prerequisites. Missing retained source approval or pending native
+adapters stop generation before any producer executes. The initialization flag
+does not claim a completed native capture. Recipe children may inherit their
+already selected invocation instead of reserving another ID.
+
+Old `logs/proofs/mlm/native-art/evidence.json` and its relocated captures are
+historical. `EvidenceSet(path, allow_historical=True)` permits explicit read-only
+inspection; default access and current output publication reject schema1. Mixed
+old/new terminal fields fail with regeneration guidance. No old cache is a
+current default. Activation, gallery and sound consumers require the same
+explicit schema2 selection, including report-to-terminal identities.
+
+Run the focused routing/refusal checks with
+`python -B src/tests/multilayer/support/evidence_selection_check.py`; output
+belongs in `test-cache/cleanup/evidence-selection-tests.log`. These use synthetic
+metadata only and do not certify native rendering, audio or ordinary gameplay.
+
+## M1 source and packing candidates
+
+Owner: [R2FC-3 Group17](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The selected M1 closure contains nine actual source producers, including the
+collector. Rebuild it with:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py m1-derived-inputs --run-id <fresh-explicit-id>
+```
+
+Each source leaf publishes `reports/derived.json`, an explicit
+`data/source-data.json` inventory and actual source/review rasters in `images/`.
+Vehicle, purchase and control select the base producer's current manifest and
+images from the same invocation. Original dated aliases remain provenance;
+no source reader falls back to old logs/proofs. All other original source
+transforms, palettes, crops, source registrations and native IDs remain with
+the existing converters and public manifest.
+
+Packing requires every selected source report and preserves its original approved
+pixel hash. Candidates go to the selected data owner and must match existing
+shipping PNG/NFO/header bytes before success. No publisher, authored flag update,
+AI generation or native application participates. Native decoder verification is
+separately supplied by Group18. M0 source pixels and independently pinned source
+predecessor hashes remain their original expectations; candidates never rewrite
+the expected baseline.
+
+Focused source checks run one family at a time:
+
+```powershell
+python -B src/tests/multilayer/support/m1_source_conversion_check.py --stage base --run-id <explicit-source-check-id>
+python -B src/tests/multilayer/support/m1_source_conversion_check.py --stage vehicle --run-id <same-source-check-id>
+```
+
+Select the other source stages individually, then run
+`m1_packing_candidate_check.py --run-id <same-source-check-id>` after all nine.
+Source and packing check summaries/logs use `test-cache/cleanup/m1-source-*` and
+`test-cache/cleanup/m1-packing-candidate-*`. The `current-inputs` case blocks actual
+old-proof file I/O, and `foreign-input` checks invocation separation without
+running a conversion. Every source command remains independently invocable;
+no full historical regression is required.
+
+## Space source and packing candidates
+
+Owner: [R2FC-3 Group17B](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Rebuild the seven original Space source families and their packing candidates:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py space-derived-inputs --run-id <fresh-explicit-id>
+```
+
+The selected craft are vehicle.model-15/19/20/18, followed by nickel, ice and
+rare-earth asteroids. Each original converter writes images and contact sheets
+to its selected `images/` owner, raw/typed reports to `reports/`, and a compact
+file inventory to `data/source-data.json`. Packing consumes all seven explicit
+current manifests. Original public source-review hashes remain historical
+approval facts; fresh source pixels must reproduce the independently approved
+native atlas hash. No old source report or gallery is opened.
+
+Candidate PNG/NFO/header files must match canonical shipping bytes and remain
+under the packing run's `data/`. This recipe performs no publication, native
+decoder check, gameplay operation or runtime activation.
+
+Focused checks run one family per invocation, sharing an explicit check ID:
+
+```powershell
+python -B src/tests/multilayer/support/space_source_conversion_check.py --asset vehicle.model-15 --run-id <source-check-id>
+```
+
+Select each remaining family individually, then run
+`space_packing_candidate_check.py --run-id <same-source-check-id>`. Checks block
+actual old-proof file I/O, compare repeated images/canonical bytes and refuse
+source/tool changes or foreign source runs. Logs and rebuildable summaries live
+under `test-cache/cleanup/space-source-*` and `space-packing-candidate-*`.
+
+## Orbital craft source candidates
+
+Owner: [R2FC-3 Group17BB](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The same selected converter supports the original heavy miner21, retained
+robot16 and hauler17. Each source leaf can be rebuilt independently:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py orbital-source-vehicle-model-21 --run-id <fresh-explicit-id>
+```
+
+Select model16 or17 explicitly for the other leaves. These preserve original
+physical headings, state aliases, component ancestry and approved native atlas
+hashes. Module sources and complete orbital packing are supplied by Group17BC.
+Focused checks use `space_source_conversion_check.py --collection orbital
+--asset vehicle.model-21 --run-id <shared-source-check-id>`, selecting each
+craft separately. Logs and rebuildable summaries use
+`test-cache/cleanup/orbital-source-*`.
+
+## Orbital module and packing candidates
+
+Owner: [R2FC-3 Group17BC](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Rebuild all ten original craft/module source leaves and their packing candidate:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py orbital-derived-inputs --run-id <fresh-explicit-id>
+```
+
+The seven module leaves select nucleus, dock, storage, power, fuel-store,
+workshop and processor. Their existing state/cell producers preserve real
+world-cell footprints, absent foregrounds, physical work phases and declared
+state/frame aliases. Original signed tile policies remain independent expected
+values. Base/foreground measurements are recomputed from original source images;
+historical base-review references remain facts inside those unchanged policies.
+
+Packing consumes the ten current manifests, keeps original approval separate,
+and compares candidate PNG/NFO/header bytes to canonical shipping files. Later
+runtime metadata is a separate native-proof role. A later published shared GRF
+checksum is accepted only when it matches the actual canonical shipping
+container; definition namespace/offset and native range remain exact. No native
+decoding or runtime activation is claimed by this source-only recipe.
+
+For bounded module checks, use `space_source_conversion_check.py --collection
+orbital --asset module.nucleus --run-id <shared-source-check-id>` and select each
+other module individually. After all ten source checks, run
+`space_packing_candidate_check.py --collection orbital --run-id
+<same-source-check-id>`. Logs and rebuildable summaries use
+`test-cache/cleanup/orbital-source-*` and `orbital-packing-candidate-*`.
+
+## Launch and rocket source candidates
+
+Owner: [R2FC-3 Groups17C/17CB](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Rebuild the two original source families independently:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py launch-source-facility-launch-center --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py launch-source-vehicle-model-14 --run-id <another-fresh-explicit-id>
+```
+
+The actual converters and saved-source decoders preserve the independently
+approved native atlas hashes, all1536facility parts and112rocket poses. Images,
+contacts and the explicit empty company mask use `images/`; facility ownership
+buffers use `data/`, and reports use `reports/`. No publication occurs.
+
+Twenty-eight exact executed AI generation-input templates are retained under
+`media/multilayer/guides/space/retained-generation-inputs/`. The existing generation
+record owns their old-path aliases; original candidate/receipt/approval fields
+remain unchanged. Historical native hashes, receipts and EXEs do not certify a
+fresh source run or become reconstruction inputs. Current native decoding and
+rendering remain later recipes; original policy/geometry/pixel fixtures stay
+independent expected values.
+
+Focused source checks use `space_source_conversion_check.py --collection launch
+--asset facility.launch-center --run-id <source-check-id>`, followed by the rocket
+with the same ID. `--case decoder` checks only changed pixels/coverage/aliases
+against an already selected source result. `space_source_ancestry_check.py`
+rebuilds original-input and retained-fixture checks. Logs/summaries use
+`test-cache/cleanup/launch-source-*` and `space-source-ancestry-tests.log`.
+Complete launch packing is supplied by Group17CC below.
+
+## Launch and rocket packing candidates
+
+Owner: [R2FC-3 Group17CC](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Rebuild both source prerequisites and the1648pose append candidate:
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py launch-derived-inputs --run-id <fresh-explicit-id>
+```
+
+The original packer consumes exact current source reports/images and executes
+their actual source decoders. Original handoff report/proof hashes remain
+historical approval facts. Frozen canonical row/pixel tables and the independent
+`src/tests/fixtures/graphics/launch-source-aliases.json` protect geometry,
+physical absence and exact logical state/frame/view/cell/part aliases. The alias
+fixture was extracted from byte/semantic-hash-verified original reports during
+migration; ordinary verification never regenerates its expected values.
+
+Candidates must match canonical shipping PNG/NFO/header bytes and keep native
+range[6143,7791). No original or shipping file is published. Native GRF decoding,
+runtime binding and ordinary presentation remain separate recipe gates.
+
+After both source checks use `space_packing_candidate_check.py --collection
+launch --run-id <same-source-check-id>`. Its `--case alias` demonstrates refusal
+of a coherent wrong-state physical alias, and `--case refusals` checks missing,
+stale/foreign sources, wrong encoder and changed geometry. All output and
+rebuildable summaries/logs remain under the selected review run or
+`test-cache/cleanup/launch-packing-*`.
+
+## Independent ground source facts
+
+Owner: [R2FC-3 Group17D](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+`src/tests/fixtures/graphics/ground-source-facts.json` retains physical/source
+expectations for the50selected families,47new packing families/14254poses,
+62native prefix ranges and14prefix source/declaration files. Original scoped
+report/atlas hashes qualified the captured matrix fingerprints. Whole old
+publication snapshots, EXEs and galleries remain disposable historical products.
+
+```powershell
+python -B src/tests/multilayer/support/ground_source_facts.py
+python -B src/tests/multilayer/support/ground_source_facts_check.py
+```
+
+Both commands verify durable inputs without old-proof access. Redirect output
+to `test-cache/cleanup/ground-source-facts-verification.log` and
+`ground-source-facts-tests.log`. The `--export` option is an explicit one-time
+preservation tool requiring original scoped reports; it refuses replacing an
+existing expectation and is never part of ordinary verification.
+
+Four legacy public source paths name generated utility/control atlases. Their
+facts identify actual retained media records/original inputs instead of reading
+those old PNGs. An exact16747byte M1 image used as an original fleet AI input is
+retained in the ground guides owner, with its approved M1 SHA verified and its
+historical path unchanged in the generation record.
+
+Ten original mine/processor C++ descriptor hashes describe an older native
+epoch. They are preserved explicitly as historical facts; no hash is rebased
+and this source-fact check grants no current native qualification. Source
+conversion and packing follow Groups17DB-17DE.
+
+## Selected ground material sources
+
+Owner: [R2FC-3 Group17DB](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The seven selected mines and four processing facilities use their actual
+original source/guide/contact producers. Recipes named `ground-source-mine-coal`
+(also iore/core/salt/lith/cobt/rare) and `ground-source-facility-metal-refinery`
+(also chemical-works/battery-works/electronics-works) prepare the real
+`m1-source-facility` prerequisite in the same explicit invocation.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-mine-coal --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-facility-electronics-works --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_source_conversion_check.py --asset mine.COAL --run-id <fresh-source-check-id>
+```
+
+Source checks select one family per burst. For another family, pass its existing
+public asset ID, such as `facility.battery-works`; `--case refusals` repeats only
+input/tool/geometry refusal checks. Two actual conversions compare every
+generated image/GIF and independently frozen original native pixels and physical
+poses, with old-proof file I/O blocked. Logs and rebuildable summaries belong
+under `test-cache/cleanup/ground-source-*`. Images, raw/typed source reports and
+file inventories use the selected run's `images/`, `reports/` and `data/`.
+
+The source-only descriptor mode requires the exact independently retained
+original geometry bytes. It does not refresh historical C++ hashes or qualify
+the current native owners; default native validation remains strict. Source
+recipes never call publication or alter original/public/shipping bytes. Ground
+packing remains disabled pending17DE; infrastructure source leaves follow17DD.
+
+## Selected ground fleet sources
+
+Owner: [R2FC-3 Group17DC](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Recipes `ground-source-vehicle-model-05` through `ground-source-vehicle-model-13`
+each produce the actual model's body and purchase preview together. The four
+conventional state producers and shared five-model tube producer retain original
+cargo/load/mode/heading, company-mask, purchase-lock and phase semantics.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-vehicle-model-05 --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-vehicle-model-13 --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_source_conversion_check.py --asset vehicle.model-09 --run-id <fresh-source-check-id>
+```
+
+Each recipe prepares the real M1 base source in that invocation for cargo
+reference checks used by the genuine purchase-lock producer. Original fleet AI
+input aliases resolve only through the exact retained media provenance owner.
+The source check compares both body and purchase atlas pixels/physical poses,
+plus all generated images/GIFs, with old-proof I/O blocked. Use `--case contract`
+to repeat only coherent alias/atlas identity/missing-input refusal checks against
+that explicit source-check run; `--case refusals` checks original/tool refusal.
+Logs and summaries rebuild under `test-cache/cleanup/ground-source-vehicle-*`.
+
+Completed original tube art remains separate from provisional underground
+Group10 native edits. These commands do not build, qualify or advance the paused
+feature, alter gameplay/save formats, or grant current native rendering proof.
+
+## Selected conventional station sources
+
+Owner: [R2FC-3 Group17DD](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+`ground-source-facility-rail-station` and
+`ground-source-facility-road-terminal` run the actual original state/view/contact
+producers. They preserve all512rail-station and288road-terminal logical poses,
+including128/32structurally absent parts and original signed native parent/roof/
+relative-glass offsets. Candidates never publish canonical source or packing.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-facility-rail-station --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-facility-road-terminal --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_source_conversion_check.py --asset facility.rail-station --run-id <fresh-source-check-id>
+python -B src/tests/multilayer/support/station_source_facts_check.py
+```
+
+`src/tests/fixtures/graphics/station-source-geometry.json` retains only exact
+original descriptor/record/renderer identities. Original generation records and
+descriptors were compared with the pre-cleanup Git epoch, and independently
+hash-checked original source reports verified equipment/state expectations.
+Ordinary source validation requires only retained media and these compact facts;
+it invokes neither Git nor old reports. The explicit preservation-only
+`station_source_facts.py --export` requires those old witnesses and refuses
+replacing an existing expectation. It never supplies an ordinary test baseline.
+
+Source-only geometry selection restores all original imported readers on exit.
+Default native validation still refuses changed native owners. Old renderer,
+geometry and presentation hashes remain historical facts; no fresh native
+qualification is inferred from reconstructed artwork. Source checks compare
+repeated images/GIFs and independent original pixel/physical matrices, and reject
+coherent signed-anchor changes. Rebuildable output logs and summaries use
+`test-cache/cleanup/ground-source-facility-{rail-station,road-terminal}-*` and
+`station-source-facts-*.log`.
+
+## Selected tube infrastructure sources
+
+Owner: [R2FC-3 Group17DDB](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Nine source leaves reconstruct the original straight, bend45, junction, end,
+crossing and conduit geometry, plus terminal/service/interchange facilities.
+They preserve all1042logical poses, including54junction topology variants and
+honest absent parts, through the actual original composition and contact owners.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-tube-junction --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-facility-tube-service --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_source_conversion_check.py --asset tube.straight --run-id <fresh-source-check-id>
+```
+
+The other geometry recipe suffixes are `straight`, `bend45`, `end`, `crossing`
+and `conduit`; facility suffixes are `tube-terminal`, `tube-service` and
+`tube-interchange`. Each leaf derives directly from retained originals with no
+old atlas prerequisite. Service reuse is the existing explicit M1 model/status
+component reuse. Its source refusal test alters a detached copy of that actual
+M1 input, rather than an unused tube candidate. All selected original media and
+records participate in resume signatures.
+
+Source checks run one family per burst, generate twice with old-proof I/O
+blocked, and compare independent approved atlas pixels and complete physical
+matrices. Coherent topology/alias edits refuse independently of unchanged PNGs.
+Logs and rebuildable summaries use `test-cache/cleanup/ground-source-tube-*`
+and `ground-source-facility-tube-*`. Current images/reports/data are disposable.
+These source commands grant no current native rendering or paused Tube10
+qualification and do not publish public/packing state.
+
+## Selected energy, utility and control sources
+
+Owner: [R2FC-3 Group17DDC](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Six leaves reconstruct seven original families: the natural vent, VentTap and
+MagmaLoop powerhouses, electrical riser, two-domain conduit and paired feature
+controls. The actual original producers retain5290logical physical poses and
+their original pixel, world-cell, contact, phase, absence and alias semantics.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-geothermal-vent --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-facility-utility-riser --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-source-control-tube --run-id <another-fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_source_conversion_check.py --asset facility.magma-powerhouse --run-id <fresh-source-check-id>
+```
+
+Other leaves are `ground-source-facility-vent-powerhouse`,
+`ground-source-facility-magma-powerhouse` and
+`ground-source-geothermal-conduit`. The control leaf retains both actual
+three-state control source reports and atlases. The vent contact sheet prepares
+the real `m1-source-hardness` input in the same invocation. The riser geometry
+guide prepares the real conduit source leaf and receives both its explicitly
+selected report and atlas; supplying only one refuses before composing a guide.
+
+Four original public source paths refer to generated atlases. Their existing
+independent `derived_source_inputs` facts identify actual retained original
+records/media and preserve historical path/hash identities. Only a detached
+current consumer view changes those generated locations, after checking exact
+original native pixels. Canonical public/source metadata is never rewritten.
+Selected native atlases, raw per-family reports and typed envelopes use the
+current images/reports/data roles; contact/geometry/original-comparison pages
+come from their actual original producers. No current native qualification,
+installation, work, payment or source publication is implied.
+
+Focused output logs and rebuildable summaries use
+`test-cache/cleanup/ground-source-geothermal-*`,
+`ground-source-facility-{vent-powerhouse,magma-powerhouse,utility-riser}-*`
+and `ground-source-control-tube-*`. Catalogue boundary bursts use
+`artifact_recipes_check-1.py` and `artifact_recipes_check-2.py` beside the tests.
+
+## Selected Ground packing candidates
+
+Owner: [R2FC-3 Group17DE](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The `ground-derived-inputs` recipe prepares37actual Ground source leaves and
+their three shared M1 prerequisites before running the original Ground packer.
+Those leaves supply47physical families and14254sprites in the unchanged native
+range[7791,22045). Typed current reports bind every source atlas, original raw
+report and actual producer to that invocation. Missing or foreign sources refuse.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-derived-inputs --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/ground_packing_contract_check.py
+python -B src/tests/multilayer/support/ground_packing_candidate_check.py --run-id <completed-explicit-id> --case repeat
+python -B src/tests/multilayer/support/ground_packing_candidate_check.py --run-id <completed-explicit-id> --case refusals
+```
+
+Current packing reads compact independent source/prefix facts and the explicitly
+selected current reports. It does not reopen the old2145-file publication
+snapshot, native audit or historical applications. Original normalization,
+company masks, intentional absence and signed station parent/roof/glass anchors
+remain authoritative. The candidate PNG/NFO/header must exactly match the
+independent shipping bytes before being written under current `data/`; the
+packing report uses `reports/derived.json`. No publisher is called, and these
+source comparisons grant no current native decoder/render qualification.
+
+The supervisor validates the full recipe catalogue. Child stages validate their
+selected declaration closure through the same shared validator, while checking
+the complete selected source authority. Within each supervisor snapshot pass,
+shared retained payloads are hashed once; every role still checks its declared
+SHA and closing observations reject changed inputs or alias authority. Each new
+pass hashes again. An explicit resume remains bound to the exact source/input
+signature and completed output witnesses.
+
+Focused logs, benchmarks and disposable registration aids use
+`test-cache/cleanup/ground-packing-*`; all generated source/candidate reviews
+remain rebuildable and disposable. Candidate fault checks write copies under
+current report roles and leave actual producer reports and shipping bytes exact.
+The explicit candidate-check `--sources-only` switch can debug verified suppliers
+after a packing failure. It does not accept or alter that incomplete executor
+result; normal acceptance still requires a completed source-to-packing run.
+
+## Selected source sprite expectations
+
+Owner: [R2FC-3 Group18](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+Five pure leaves call the original M1, Space, orbital, launch/fleet and Ground
+expectation producers with explicit current packing and data destinations. The
+complete `ground-expected-payload` recipe prepares all75source/packing/expectation
+nodes once, including declared original prefix suppliers. Individual
+`<family>-expected-payload` recipes remain separately invocable; use `launch`
+for its recipe prefix and `launch-fleet` for its binary protocol label.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py ground-expected-payload --run-id <fresh-explicit-id>
+python -B src/tests/multilayer/support/sprite_expected_payload_check.py --family ground --recipe ground-expected-payload --run-id <completed-explicit-id>
+python -B src/tests/multilayer/support/sprite_expected_payload_binding_check.py --recipe ground-expected-payload --run-id <completed-explicit-id>
+```
+
+Run the family check separately for `m1`, `space`, `orbital`, `launch-fleet` and
+`ground`. The supplied complete recipe/run identifies actual packing and typed
+prefix outputs, without a cache/latest lookup. Optional explicit `--prefix
+family=path` arguments support pure-algorithm checks against earlier generated
+source binaries; the actual shared recipe requires same-run typed prefix reports.
+Current payloads use `data/<family>-packed-sprites.bin`, with typed source reports
+under `reports/derived.json`. Actual loader input binding/checks follow18B/18C.
+
+`src/tests/fixtures/graphics/expected-sprite-facts.json` preserves original witness
+identities without old binaries. Ground explicitly selects the distinct existing
+79FHCCB corrected source witness and preserves the superseded79E epoch as history.
+The two differ in exactly432station records; the existing correction retains
+21,586unaffected native records. Ordinary checks read only compact facts and
+durable/current source inputs, never historical witness paths or EXEs.
+
+Ground's selected path consumes its source-derived complete launch prefix and
+the current original source packing sheet. It neither consults old decoded-build
+proofs nor writes the canonical GRF/hash. Prefix/output identity, family,
+producer, writer, invocation and independent original payload bytes are checked
+before typed source completion; generated prerequisites are rechecked afterward.
+Reports claim source_bytes_only/native_loading_verified=false/publishes_source=false.
+Legacy direct authoring entry guards remain a Group28 migration task.
+
+Focused diagnostics and disposable preservation/registration scripts use
+`test-cache/cleanup/sprite-expectations-*` and
+`test-cache/cleanup/preserve-*-sprite-expectations.py`. Preservation requires
+exact original witnesses and refuses replacing an existing fixture; these are
+one-time migration aids, never ordinary test-baseline generators.
+
+## Explicit native sprite inputs
+
+Owner: [R2FC-3 Group18B](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+`sprite_native_inputs.bind_expected_payload` selects a current typed source
+expectation report and binds its binary, family, configuration and both exact
+hashes to the child environment. The shared runner validates this binding before
+launch, records the binary in `inputs` and its semantic role in `bound_inputs`,
+then closes the input identities after the actual child. Changed inputs retain
+the child/transcript evidence with `input_integrity_passed=false` and fail.
+
+The C++ `GetTestExpectedSprites` owner repeats current run/role/writer, hash,
+family, recipe/source-status and compiled configuration checks before loader
+startup. It uses no old expected directory. All four original literal loaders
+and Ground use this owner; their content checks now read the actual process
+runtime directory. Actual game/decoder acceptance follows18C separately.
+
+Build the small existing `src/tests/multilayer/support/CMakeLists.txt` probe in
+Debug and RelWithDebInfo with two workers and `/nodeReuse:false`, using the
+existing support-probe build commands above. Then check each actual configuration:
+
+```powershell
+python -B src/tests/multilayer/support/sprite_native_inputs_check.py --application test-cache/cleanup/support-probes/RelWithDebInfo/artifact_paths_probe.exe --configuration RelWithDebInfo --run-id <completed-expectation-id>
+python -B src/tests/multilayer/support/sprite_native_inputs_check.py --application test-cache/cleanup/support-probes/Debug/artifact_paths_probe.exe --configuration Debug --run-id <completed-expectation-id>
+```
+
+The default supplying recipe is `ground-expected-payload`; choose another
+explicit complete root through `--recipe` when appropriate. These probes link
+no game/world/decoder code. The intentional corruption child can change only
+its test scenario's own newly generated data, and verifies closing-integrity
+failure without altering real suppliers. Build/test logs use
+`test-cache/cleanup/sprite-native-input-*`; actual probe provenance and refusal
+transcripts use the selected current review reports/evidence roles.
+
+## Actual native sprite loader leaves
+
+Owner: [R2FC-3 Group18C](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The five `<family>-native-loader` recipes execute the original real application
+GRF/cache cases with current build results and independent source expectations.
+`sprite-native-loaders` joins their actual five-family outcomes through the same
+existing recipe executor. Its complete dependency graph has81nodes; selected
+sources are prepared once per invocation. Select Debug or RelWithDebInfo explicitly
+and pass the portable profile's external tool roots where discovery needs them.
+The first native leaf builds both graphics targets. Later leaves in that exact
+invocation share the checked compile prerequisite and execute their own native
+cases. Changed source, configuration, result or executable bytes stop the run;
+the executor never rebuilds silently over an earlier measured image.
+
+```powershell
+python -B src/tests/multilayer/support/artifact_rebuild.py sprite-native-loaders --configuration RelWithDebInfo --run-id <fresh-native-id> --vcpkg <explicit-vcpkg-root> --grfcodec <explicit-grf-tool-directory>
+python -B src/tests/multilayer/support/sprite_native_loader.py --family ground --configuration Debug --source-run <completed-source-id> --source-recipe ground-expected-payload --build-result <actual-Debug-native-build.json>
+python -B src/tests/multilayer/support/sprite_native_loader.py --family m1 --configuration RelWithDebInfo --source-run <completed-source-id> --build-result <actual-RelWithDebInfo-native-build.json> --decoder-refusal
+```
+
+Prepared mode reads one explicitly selected completed source root, verifies its
+passed pure-source stage/output witnesses and independent payload identities,
+and dispatches fresh native prepare/verify requests under current source policy.
+It reuses only source_bytes_only products, with actual current producer identities;
+native outcomes and executables are rebuilt and verified for each configuration.
+No completed source receipt is rewritten or treated as a fresh native proof.
+The ordinary full recipes remain sufficient after all generated outputs are cleaned.
+
+Each native family/configuration owns a separate packed-art runtime process home.
+Its neutral startup script loads no saved paid world. Completion requires the
+actual original one-case Catch result and complete decoder marker, exact current
+executable/build/source/configuration/input/process/transcript identities, and
+unchanged runtime/canonical payload bytes. Results use
+`reports/current-<configuration>.json`, with actual `evidence/decoder-<configuration>.txt`
+and the exact runner process report. Source-only checks grant no loader acceptance.
+
+The explicit decoder-refusal switch copies current source expectations and changes
+one expected FNV bit. Its coherent fault bypasses Python's normal original-byte
+preflight deliberately, then requires the real compiled pixel comparison to fail.
+It records native_loading_verified=false in its separate refusal report. Neither
+original suppliers nor canonical assets change. This is a native reader refusal
+test, never an accepted new expected baseline. Actual build/leaf/closure logs use
+`test-cache/cleanup/sprite-native-*`; required current transcripts remain in review
+evidence roles and every result stays rebuildable.
+
+## Current Space source-selector reviews
+
+Owner: [R2FC-3 Group19](../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md).
+The `launch-current-producers`, `orbital-current-producers` and
+`space-current-producers` leaves run the original20,16and9 component cases.
+Their prerequisites are the corresponding actual18C native decoder results
+from the same exact current build/configuration. Component fixtures cannot
+supply a replacement decoder proof. Launch keeps its original independent
+phase/cadence model and detached incomplete/duplicate/wrong-frame refusals;
+its old executable/GRF proof chains are historical.
+
+After an explicit new current build, source bytes from a completed expectation
+root may supply fresh native qualification with a named `--attempt`. It writes
+`reports/prepared-<attempt>/current-<configuration>.json` and matching nested
+evidence, using a distinct process home. Existing reports and runtime homes
+remain immutable. This reuses only independently checked source bytes, never
+another native pass. Repeating a completed attempt refuses before runtime writes.
+
+```powershell
+python -B src/tests/multilayer/support/sprite_native_loader.py --family launch-fleet --configuration RelWithDebInfo --source-run <completed-source-id> --source-recipe <explicit-completed-root> --build-result <actual-current-native-build.json> --attempt <fresh-native-attempt>
+python -B src/tests/multilayer/launch_fleet_runtime_checks.py --configuration RelWithDebInfo --native-result <exact-new-launch-native-result.json> --build-result <same-actual-current-native-build.json>
+python -B src/tests/multilayer/space_source_review.py --family orbital --configuration RelWithDebInfo --native-result <exact-new-orbital-native-result.json> --build-result <same-actual-current-native-build.json>
+python -B src/tests/multilayer/space_source_review.py --family space --configuration RelWithDebInfo --native-result <exact-new-space-native-result.json> --build-result <same-actual-current-native-build.json>
+```
+
+The ordinary `artifact_rebuild.py <family>-current-producers` commands rebuild
+their selected prerequisites after cleaning. Prepared commands require explicit
+actual decoder/build identities and issue fresh prepare/verify dispatcher
+requests; no latest lookup or old result is overwritten. Each actual child is
+bounded by60seconds. Results and required transcripts stay in the selected
+source-selector scenario's reports/evidence roles; diagnostic logs use
+`test-cache/cleanup/space-source-*`. Source-selector success grants no viewport,
+ordinary-game/human acceptance, public activation or paid-world progress.
 
 ## Producer catalogue
+
+Occupied launch viewports use the original `[.launch-facility-render]` producer
+through the `launch-occupied-viewports` recipe. Supply the exact retained host
+through its registered input alias and current selected facility/rocket sources.
+Prepared captures use a fresh output run for each configuration because C++
+owns fixed scene names. Current selector/native repeats can use `--attempt`
+to keep earlier observations and process homes immutable.
+
+```powershell
+python -B src/tests/multilayer/launch_fleet_runtime_checks.py --configuration RelWithDebInfo --native-result <fresh-launch-native-result.json> --build-result <same-current-build.json> --attempt <fresh-selector-attempt>
+python -B src/tests/multilayer/launch_facility_render_checks.py --configuration RelWithDebInfo --selector-result <fresh-launch-selector-result.json> --build-result <same-current-build.json> --source-result <explicit-completed-source-root.json> --run-id <fresh-configuration-specific-capture-id>
+python -B src/tests/multilayer/launch_facility_render_checks.py --compare <exact-Debug-current.json> <exact-RelWithDebInfo-current.json>
+```
+
+The original36-scene indexed source comparisons,3wrong-layer comparisons and
+4malformed-evidence refusals remain required. Real native containers and PNG
+conversions are linked to the exact child, wrapper and dispatch entry point.
+Machine observations and indexed buffers remain actual child artifacts too.
+Derived contact sheets are separate review products. Schema2 selected capture
+and evidence manifests are validated before current technical qualification is
+published. No executable copies, paid progress, human acceptance or public
+activation are produced. Diagnostic logs use `test-cache/cleanup/launch-viewport-*`.
 
 The machine-readable [producer catalogue](../review-producers.json) lists current entry points, explicit feature/scenario assignments and actual native test tags. Mixed control capture spans construction, geology, portals and vehicles; terrain capture spans geology and portals. Native spoil-loop capture uses separate Deep/Underground scenarios. Manual art capture explicitly routes portal/traffic, terrain and construction UI frames to their respective features.
 

@@ -121158,5 +121158,120 @@
       "status": "rejected_emitter_projection",
       "reason": "Edit retains the original roughly4:1 flat luminous emitter instead of the actual2:1 geometry guide. Shorter tail helps but does not qualify camera/physical circular-emitter identity. Preserve whole alpha/output; next use only the exact geometry sketch as input rather than carrying forward this incorrect shape."
     }
-  ]
+  ],
+  "_retained_reference_inputs_documentation": "Owner: r2fc-file-cleanup3.md Group17C. Exact original AI generation-input templates relocated from disposable proof trees into their existing media provenance owner. Keys retain historical executed input paths; values select identical durable bytes. Candidate/receipt/family/policy signatures are unchanged. These are source inputs, never current native proof or generated regression baselines.",
+  "retained_reference_inputs": {
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/e-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-e-isolated-template.png",
+      "sha256": "bc48f24bf49d3bede97badb527d493c82dc584e0923342bb4faf41f141411420"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-e-se-s-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-n-e-se-s-template.png",
+      "sha256": "f1f04adbe97c701a918fe2ac0ced2a02ec214c46722d427085483392b79ce349"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/n-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-n-isolated-template.png",
+      "sha256": "7181041246e01563c47ffa474aac367b81d9aa4737ebb0529b034f2cb38a2eea"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/nw-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-nw-isolated-template.png",
+      "sha256": "d90799fdd1a3d2358d5ba837f0f2e1854c716d31d66a6c2155ec7d4e9edb93fc"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/s-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-s-isolated-template.png",
+      "sha256": "7e0e2b2db8e713bdaab92dea00a1585ad376d7855e4ca81a44e7bcdb6d70e68f"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/se-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-se-isolated-template.png",
+      "sha256": "0315ba0186cb697b29ccc9a143c1074f792c201d9b35da142509e1545cb5e889"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/sw-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-sw-isolated-template.png",
+      "sha256": "a3ad4d2fd831d01f8224062c37441f24a65c5c8a5e6f73e058e28cb337c1b4bc"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-directions-v1/w-isolated-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-directions-v1-w-isolated-template.png",
+      "sha256": "19896321bd88c87befc511dd902100a85b8c9693d5c929e9dd7b69dc154d044f"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame0-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-engine-v1-guides-engine-frame0-template.png",
+      "sha256": "31054322817a6d4df6b56fd370e82970ae380dd7b2df2d35859600bee0766a67"
+    },
+    "logs/proofs/mlm/native-art/space/cargo-rocket-engine-v1/guides/engine-frame1-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/cargo-rocket-engine-v1-guides-engine-frame1-template.png",
+      "sha256": "b5081396e3327b27db05da32b4eb129032d1e89280c6d077360fa0a0995038eb"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-NE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-pad-NE-template.png",
+      "sha256": "448816c69f46548cc7e0e90114fbb714a1aa09a9b163e99e14294ebe7f99a81a"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-NW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-pad-NW-template.png",
+      "sha256": "84bdf3a17daaf7763e75b845c36e18ca6ab1b769b133c9f172726a6a7b461b33"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-SE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-pad-SE-template.png",
+      "sha256": "78c36da31f2befedad8c513a3ace67b0be31d075271c6ab2abd7deda5669738c"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/pad-SW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-pad-SW-template.png",
+      "sha256": "688b1d3353714c2146b07ec07b0cb09e5346626347a31c41abd7909f133d2404"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-NE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-recovery-NE-template.png",
+      "sha256": "63609ee796a2719a5d6b6f3e22781f531e2395bf95b63b5feb412cd44f61016c"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-NW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-recovery-NW-template.png",
+      "sha256": "1ad3d1dccbb5b4e4e814f2e699279a5514fea2088fe2ef6a6350388a79fc9d08"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-SE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-recovery-SE-template.png",
+      "sha256": "715e5b8cdefc393cd9046b0e9158139f25c897fdbb3564bd94a60b059305dec3"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/recovery-SW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-recovery-SW-template.png",
+      "sha256": "5eaf717f9c025c32b6b2dcbe0ccbdc0b7014fb0fac7c4b32a888a4a961c70c08"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-storage-NE-template.png",
+      "sha256": "9e1d84a83faf9fc940cc011cc1e84c614a05af20871ec64cadad10d178081d0e"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-NW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-storage-NW-template.png",
+      "sha256": "ab0373a912cb57b9551edcd4b2c36436628992628c4f4aa1bf0dbed8d4196c25"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-SE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-storage-SE-template.png",
+      "sha256": "529d10ed3d80fa098d16677427e202a2e9d0bc8755572a9a32bc2b21e134d0e9"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/storage-SW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-storage-SW-template.png",
+      "sha256": "80978490b39db3c7320b03078d803456c0affcc850e058d1e5a7a8a0a9c5bb22"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-NE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-workshop-NE-template.png",
+      "sha256": "3133134619fbd5ef49837cbb46b27ad745cdc441f564cf252d1e0cbdea7c24da"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-NW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-workshop-NW-template.png",
+      "sha256": "a57e18a7021f8bf7fc3f32168d3d17ac0d3443278dbe48b10eebf779186a0b04"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-SE-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-workshop-SE-template.png",
+      "sha256": "e1ff30d407617af43c42e59740b30fe591bf25418e38901bbbdeb14d38861556"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-components-v1/workshop-SW-template.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-components-v1-workshop-SW-template.png",
+      "sha256": "0f2d818a7d5758988a44d23b71b6be788f4bb5aaffa46ccf7d5ca5fd4ef59955"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-contract-v1/launch-center-NE-layout.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-contract-v1-launch-center-NE-layout.png",
+      "sha256": "755d3f9b4e5dbca985e841a23b768f4c9224993c18b4329f9e7bf688b5438ebb"
+    },
+    "logs/proofs/mlm/native-art/space/launch-center-contract-v2/launch-center-NE-layout.png": {
+      "path": "media/multilayer/guides/space/retained-generation-inputs/launch-center-contract-v2-launch-center-NE-layout.png",
+      "sha256": "18db93ad2b218563d197836409b2f718bda411051a1cf6c8a54fe790361e3fe9"
+    }
+  }
 }

@@ -1,6 +1,7 @@
 """Export and decode the complete genuine cargo-rocket source/alias handoff.
 
 @file convert_cargo_rocket_source.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups17C/17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62G.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 Original bodies and engine parts supply24canonical images/112logical positions.
@@ -107,27 +108,21 @@ def checked_art(policy=None, document=None):
             or motor["engine_model"] != policy["engine_model"]
             or family["engine_model"] != policy["engine_model"] or family["direction_model"] != policy["direction_model"]):
         raise ValueError("rocket source stages do not share the qualified original inputs")
-    proofs = ((phase["proof"], 6), (ready["heading_proof"], 7), (ready["fit_proof"], 4), (motor["proof"], 7))
-    # Current focused producer identities remain observable. A dated path or
-    # forged success counter cannot bless edited source/conversion behavior.
-    for reference, count in proofs:
-        proof = bound_json(reference)
-        if proof["status"] != "passed" or proof["cases"] != count:
-            raise ValueError("rocket source preceding focused qualification did not pass")
-        for name in ("helper", "tests"):
-            if art.source.identity(ROOT/proof[name]["path"]) != proof[name]:
-                raise ValueError("rocket source preceding qualification producer changed")
+    # Source-era proof identities remain historical facts in these unchanged
+    # retained contracts. Fresh conversion/decoding checks actual original and
+    # independent registration/pixel fixtures, never old success counters.
     states.checked_policy(inputs["state_policy"])
     directions.checked_model(inputs["direction_model"], document)
     art.checked_model(art.read_json(art.MODEL))
     public = art.read_json(art.PUBLIC)
     row = next(row for row in public["assets"] if row["asset_id"] == art.ASSET)
     before = art.read_json(art.FIXTURE)["rocket_before"]
-    # Source publication may update only its own source/authoring fields; the
-    # original public canvas, company policy, palette and packed range stay fixed.
-    if ({name: value for name, value in row.items() if name not in ("source", "authoring")}
-            != {name: value for name, value in before.items() if name not in ("source", "authoring")}):
-        raise ValueError("rocket source public geometry or packed identity changed")
+    # Independent native publication later updates packed/runtime evidence.
+    # Source conversion owns the unchanged physical canvas, state and company
+    # policy; native ranges/decoding are separately verified by packing recipes.
+    if ({name: value for name, value in row.items() if name not in ("source", "authoring", "packed", "runtime")}
+            != {name: value for name, value in before.items() if name not in ("source", "authoring", "packed", "runtime")}):
+        raise ValueError("rocket source public geometry or source policy changed")
     ready_fixtures = {}
     # Each genuine heading keeps its independent original/registration/pixel
     # fixture. Pixel symmetry never supplies another heading or missing receipt.
@@ -178,8 +173,9 @@ def audited_original(selection, heading, document):
     # All actual generation inputs are immutable provenance, including geometry
     # guides stored as rebuildable proof artifacts rather than shipped artwork.
     for reference in candidate["reference_inputs"]:
-        if not reference["role"] or art.source.identity(ROOT/reference["path"])["sha256"] != reference["sha256"]:
+        if not reference["role"]:
             raise ValueError("rocket source actual generation input changed")
+        art.source.source_reference(reference, document)
     return fixture, candidate
 
 
@@ -238,10 +234,11 @@ def expected_hashes(ready_fixtures, burn_fixture):
     return expected
 
 
-def review_contacts(images):
+def review_contacts(images, output=OUTPUT):
     """Save both logical frames for every heading/state at native and readable x4 scale.
 
     @param images The24canonical whole native images, addressed by canonical pose key.
+    @param output Explicit source images owner; selected runs never write old proof paths.
     @return Seven explicit source-only contact identities; no game rendering claim.
     """
     result = []
@@ -260,22 +257,23 @@ def review_contacts(images):
                 draw.text((x+frame*256+8, y+28), "frame"+str(frame)+(" alias" if alias else " original"), fill="white")
                 contact.paste(art.opaque_rgb(pixels), (x+frame*256+8, y+48))
                 contact.paste(art.opaque_rgb(pixels).resize((256, 192), Image.Resampling.NEAREST), (x+frame*256, y+112))
-        path = OUTPUT/(state+"-contact.png")
+        path = output/(state+"-contact.png")
         contact.save(path)
         result.append(art.source.identity(path))
     return result
 
 
-def decode_contacts(report, crops, policy):
+def decode_contacts(report, crops, policy, output=OUTPUT):
     """Verify every stored state/frame contact displays the actual decoded canonical pixels.
 
     @param report Complete handoff carrying seven exact review image identities.
     @param crops Independently validated canonical atlas images.
     @param policy Qualified source alias policy with no runtime mutation authority.
+    @param output Exact current source images owner, or explicit historical proof owner.
     @return None after all112native and enlarged contact panels match their real source.
     @throws ValueError On missing, changed, stale, clipped or relabelled review images.
     """
-    expected = [art.source.identity(OUTPUT/(state+"-contact.png")) for state in art.STATES]
+    expected = [art.source.identity(output/(state+"-contact.png")) for state in art.STATES]
     if report["contacts"] != expected:
         raise ValueError("rocket source complete contact identities changed")
     # Every visible panel must show its own actual frame, including direct
@@ -300,17 +298,23 @@ def decode_contacts(report, crops, policy):
                         raise ValueError("rocket source review contact pixels differ from decoded source")
 
 
-def derive(output=OUTPUT):
+def derive(output=OUTPUT, context=None):
     """Rebuild complete original source coverage without using ignored PNGs as artwork.
 
     @param output Exact owned source-proof directory; arbitrary destinations are refused.
+    @param context Explicit selected source invocation separating images and reports.
     @return Full112-position source report with24canonical images and88direct aliases.
     @throws ValueError On missing qualified originals, unsafe output or frozen-pixel drift.
     """
-    if output.resolve() != OUTPUT.resolve():
-        raise ValueError("rocket source conversion requires its explicit owned proof directory")
+    if context is None:
+        if output.resolve() != OUTPUT.resolve():
+            raise ValueError("rocket source conversion requires its explicit owned proof directory")
+        reports = output
+    else:
+        from regenerate_art_sources import source_directories
+        output, reports = source_directories(output, context)
     policy, document, ready_fixtures, burn_fixture = checked_art()
-    art.checked_predecessor(document, art.read_json(art.PUBLIC))
+    art.checked_predecessor(document, art.read_json(art.PUBLIC), source_only=context is not None)
     engine_model = bound_json(policy["engine_model"])
     engine.checked_model(engine_model, document)
     parts = {frame: engine.engine_part(frame, document, engine_model)[0] for frame in (0, 1)}
@@ -330,8 +334,9 @@ def derive(output=OUTPUT):
     # matches its independently frozen original/body/part pixel expectation.
     if set(images) != set(expected) or any(hashlib.sha256(image.tobytes()).hexdigest() != expected[name] for name, image in images.items()):
         raise ValueError("rocket source regenerated original pixels changed")
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    (OUTPUT/"canonical").mkdir(exist_ok=True)
+    output.mkdir(parents=True, exist_ok=True)
+    canonical_directory = output if context is not None else output / "canonical"
+    canonical_directory.mkdir(exist_ok=True)
     atlas = Image.new("P", (512, 144), 0)
     atlas.putpalette(art.source.base.PALETTE_BYTES)
     canonical = []
@@ -341,7 +346,7 @@ def derive(output=OUTPUT):
         for column, heading in enumerate(art.DIRECTIONS):
             row = pose(heading, state, frame)
             pixels = images[key(row)]
-            path = OUTPUT/"canonical"/(state+"-"+heading.lower()+"-"+str(frame)+".png")
+            path = canonical_directory/(state+"-"+heading.lower()+"-"+str(frame)+".png")
             pixels.save(path, transparency=0)
             box = [column*64, line*48, 64, 48]
             atlas.paste(pixels, tuple(box[:2]))
@@ -350,7 +355,7 @@ def derive(output=OUTPUT):
                                   native_sha256=expected[key(row)], opaque_pixels=sum(value != 0 for value in pixels.get_flattened_data()),
                                   opaque_bbox=list(pixels.getbbox()), structurally_absent=False, company_mask=[],
                                   image=art.source.identity(path)))
-    atlas_path, mask_path = OUTPUT/"cargo-rocket-authored.png", OUTPUT/"company-mask.png"
+    atlas_path, mask_path = output/"cargo-rocket-authored.png", output/"company-mask.png"
     atlas.save(atlas_path, transparency=0)
     # The selected original has no company-livery region. An explicit empty
     # mask preserves the public policy without inventing or recoloring hardware.
@@ -374,17 +379,18 @@ def derive(output=OUTPUT):
                   explicit_static_alias_count=72, equivalent_state_alias_count=16,
                   missing_pose_count=0, coverage_complete=True, packed=False, runtime_activated=False,
                   atlas=art.source.identity(atlas_path), company_mask=dict(kind="explicit_empty", pixels=0, image=art.source.identity(mask_path)),
-                  contacts=review_contacts(images))
-    write_json(MANIFEST, report)
+                  contacts=review_contacts(images, output))
+    write_json(reports / "source-manifest.json", report)
     return report
 
 
-def decode(report, atlas=None, mask=None):
+def decode(report, atlas=None, mask=None, context=None):
     """Decode every saved logical PNG position against independent genuine-pixel fixtures.
 
     @param report Complete source report or detached metadata refusal input.
     @param atlas Optional actual opened indexed PNG, also used for pixel corruption cases.
     @param mask Optional actual explicit company mask or detached corruption input.
+    @param context Optional current source invocation binding all generated input owners.
     @return All112logical metadata/image pairs resolved through direct canonical targets.
     @throws ValueError On missing/duplicate/forged source, aliases, pixels, palette or geometry.
     """
@@ -407,7 +413,9 @@ def decode(report, atlas=None, mask=None):
             or report["evidence"] != ready_evidence(document, ready_fixtures, policy)
             or report["converter"] != art.source.identity(ROOT/"media/multilayer/convert_cargo_rocket_source.py")):
         raise ValueError("rocket source complete coverage/provenance/native scope changed")
-    atlas_path, mask_path = OUTPUT/"cargo-rocket-authored.png", OUTPUT/"company-mask.png"
+    output = OUTPUT if context is None else context.images
+    canonical_directory = output / "canonical" if context is None else output
+    atlas_path, mask_path = output/"cargo-rocket-authored.png", output/"company-mask.png"
     # Exact owned artifact paths and current bytes bind the real stored inputs;
     # callers cannot substitute another family's image or an external PNG.
     if (report["atlas"] != art.source.identity(atlas_path)
@@ -433,7 +441,7 @@ def decode(report, atlas=None, mask=None):
         heading, state, frame, tile, part = name
         line = 0 if state == "ready" else 1+frame
         box = [art.DIRECTIONS.index(heading)*64, line*48, 64, 48]
-        path = OUTPUT/"canonical"/(state+"-"+heading.lower()+"-"+str(frame)+".png")
+        path = canonical_directory/(state+"-"+heading.lower()+"-"+str(frame)+".png")
         # Every source crop keeps its actual fixed contact/canvas and direct
         # physical identity; geometry edits cannot be disguised as alias metadata.
         if (row["box"] != box or any(type(value) is not int for value in row["box"])
@@ -484,7 +492,7 @@ def decode(report, atlas=None, mask=None):
         result.append((row, crops[key(target_pose)].copy()))
     if counts != {"static": 72, "equivalent_active_state": 16, None: 24}:
         raise ValueError("rocket source actual alias coverage differs from declared policy")
-    decode_contacts(report, crops, policy)
+    decode_contacts(report, crops, policy, output)
     return result
 
 

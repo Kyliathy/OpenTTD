@@ -1,6 +1,7 @@
 """Review retained conventional freight bodies before load/state authoring.
 
 @file convert_ground_fleet_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DC, retained original generation inputs.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group20B
@@ -21,6 +22,7 @@ from PIL import Image, ImageChops, ImageDraw
 import convert_m1_art as base
 from convert_terrain_art import png_bytes
 from tools.ground_fleet_contract import cargo_geometry, mine_truck_cargo_geometry, native_cargo_forms, variant_contract
+from convert_space_art import source_reference
 
 
 RECORD = base.ROOT / "media/multilayer/source/ground/fleet-generation-record.json"
@@ -105,8 +107,7 @@ def native_view(key, direction, document=None, public=None):
     # Every actual reference remains immutable, including the selected E body
     # used to preserve model identity across separately generated headings.
     for identity in [source] + source["references"]:
-        if base.digest(base.ROOT / identity["path"]) != identity["sha256"]:
-            raise ValueError("immutable wagon original/reference changed")
+        source_reference(identity, document, feature="ground")
     signature = registration_signature(source, direction)
     approved = document["families"][source["asset_id"]]["approved_base_registration"].get(direction)
     if signature != approved:
@@ -357,8 +358,7 @@ def bulk_material(label, document, model_id=5):
     # Source/reference bytes remain immutable even when workflow notes change;
     # material selection cannot silently replace the approved grain ancestry.
     for identity in [source] + source["references"]:
-        if base.digest(base.ROOT / identity["path"]) != identity["sha256"]:
-            raise ValueError("immutable wagon grain original/reference changed")
+        source_reference(identity, document, feature="ground")
     signature = material_signature(source, label)
     if signature != approved["signature"]:
         raise ValueError("wagon grain crop changed after approval")

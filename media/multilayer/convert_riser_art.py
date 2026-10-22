@@ -1,6 +1,7 @@
 """Review original electrical riser hardware on its one real native2x2 layout.
 
 @file convert_riser_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DDC, explicit current conduit review input.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group60C.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups5B/5.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
@@ -193,13 +194,19 @@ def assemble(pieces):
     return result
 
 
-def geometry_contact(whole, pieces):
+def geometry_contact(whole, pieces, conduit_report=None, conduit_atlas=None):
     """Review stored native cells and external port geometry without inventing a portal.
 
     @param whole Checked original whole ready model at its fixed native registration.
     @param pieces Four independently stored native machinery sections.
+    @param conduit_report Optional explicitly selected original conduit source metadata.
+    @param conduit_atlas Matching explicit indexed conduit atlas; both inputs must be supplied together.
     @return PNG source review with actual cable contacts and labelled geometry overlays.
     """
+    # Reject mixed input epochs before composing any review. A current guide
+    # cannot combine selected metadata with an earlier workstation atlas.
+    if (conduit_report is None) != (conduit_atlas is None):
+        raise ValueError("riser geometry requires both selected conduit report and atlas")
     page = Image.new("RGB", (1536, 1720), (46, 50, 57))
     draw = ImageDraw.Draw(page)
     draw.text((18, 15), "RISER SOURCE / one fixed native2x2 layout / port and access do not rotate machinery / packing-runtime pending", fill="white")
@@ -213,11 +220,15 @@ def geometry_contact(whole, pieces):
         sprite = piece.convert("RGBA").resize((256, 256), Image.Resampling.NEAREST)
         page.paste(sprite, (index * 384, 600), sprite)
         draw.text((index * 384 + 18, 860), f"cell{index} world{CELLS[index]} anchor(-31,-33); front empty", fill="white")
-    conduit_report = json.loads(utilities.MANIFEST.read_text(encoding="utf-8"))
+    # Historical authoring retains its existing paired defaults; selected
+    # execution supplies both current inputs and never enters this cache read.
+    if conduit_report is None:
+        conduit_report = json.loads(utilities.MANIFEST.read_text(encoding="utf-8"))
+        conduit_atlas = utilities.ATLAS
     sprites = {}
     # Only the delivered electrical branch source explains physical riser
     # contacts; thermal colours/status never imply an inter-layer Heat route.
-    with Image.open(utilities.ATLAS) as atlas:
+    with Image.open(conduit_atlas) as atlas:
         for row in conduit_report["sprites"]:
             if row["domain"] == "Electricity" and row["state"] == "connected":
                 x, y, width, height = row["box"]

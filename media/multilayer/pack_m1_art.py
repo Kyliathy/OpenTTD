@@ -1,6 +1,7 @@
 """Pack the selected M1 source set into independent native Action 5 segments.
 
 @file pack_m1_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups 79B/80B/79C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints 8.6/10.4B
 Existing M0 PNG/NFO and MLVI definition bytes are never rewritten. Source
@@ -12,6 +13,7 @@ import copy
 import hashlib
 import itertools
 import json
+from pathlib import Path
 import re
 import sys
 
@@ -280,6 +282,8 @@ def shelf_sheet(sprites, width, gap):
         raise ValueError("packed M1 sheet exceeds native coordinate range")
     sheet = Image.new("P", (width, height), 0)
     sheet.putpalette(base.PALETTE_BYTES)
+    # Place each verified native sprite at its recorded shelf position, retaining
+    # exact palette indices and transparent holes rather than resampling cells.
     for (indices, sw, sh, _rx, _ry), origin in zip(sprites, positions):
         cell = Image.new("P", (sw, sh), 0)
         cell.putdata(indices)
@@ -321,6 +325,7 @@ def format_nfo(entries, sprites, positions):
         lines.extend(["//@@WARNING DISABLE 44",
                       f"   -1 * 0 05 9C {extended_byte(count)} {extended_byte(offset)} // {count} sprites at native offset {offset}",
                       "//@@WARNING ENABLE 44"])
+        # Consecutive replacement IDs retain their own geometry and sheet crops.
         for position in range(index, end):
             sx, sy = positions[position]
             _pixels, sw, sh, rx, ry = sprites[position]
@@ -352,6 +357,8 @@ def format_header(ranges, bound):
              "#ifndef MULTILAYER_SPRITE_ASSETS_H", "#define MULTILAYER_SPRITE_ASSETS_H", "", "#include <array>", "#include <cstdint>", "",
              "/** Selected M1 graphics identities; saved engine/cargo/industry IDs stay with their existing owners. */",
              "enum class MultiLayerSpriteAsset : uint8_t {"]
+    # Generated enum identities follow existing public range order so native
+    # consumers keep their selected family identities across regeneration.
     for row in ranges:
         lines.append(f"\t{cpp_name(row['asset_id'])}, ///< {row['asset_id']}.")
     lines.extend(["\tEnd, ///< Number of selected family declarations.", "};", "",
@@ -363,6 +370,8 @@ def format_header(ranges, bound):
                   "\tuint8_t parts; ///< Physical back/front or vehicle part count.", "};", "",
                   f"static constexpr uint16_t MULTILAYER_M1_SPRITE_COUNT = {bound}; ///< Exclusive selected native block bound.",
                   f"static constexpr std::array<MultiLayerSpriteRange, {len(ranges)}> _multilayer_m1_sprite_ranges = {{{{"])
+    # Range geometry is emitted from the same existing public contract as the
+    # enum; source conversion cannot allocate another native identity namespace.
     for row in ranges:
         values = [row["native_offset"], row["sprite_count"], len(row["states"]), row["frames"], len(row["directions"]), row["tile_variants"], len(row["parts"])]
         lines.append("\t{" + ", ".join(map(str, values)) + "}, // " + row["asset_id"])
@@ -370,14 +379,75 @@ def format_header(ranges, bound):
     return "\n".join(lines).encode("utf-8")
 
 
-def derive():
+def selected_sources(public, scope, context, manifests):
+    """Relocate selected source reads while preserving the original approved identities.
+
+    @param public In-memory canonical public manifest; disk bytes remain unchanged.
+    @param scope Existing selected native family/range contract.
+    @param context Exact recipe invocation supplying every generated source.
+    @param manifests Original manifest aliases mapped to current path/SHA256 records.
+    @return Parsed current source reports keyed by their selected repository paths.
+    """
+    from evidence import identity
+    from artifact_paths import contained, identifier
+    if context.root.resolve() != base.ROOT:
+        raise ValueError("selected packing belongs to another source checkout")
+    identifier(context.run_id)
+    families = {row["asset_id"]: row for row in public["assets"]}
+    required = {families[name]["authoring"]["atlas_manifest"] for name in scope["asset_ids"]}
+    if set(manifests) != required:
+        raise ValueError("selected M1 source manifests are incomplete or ambiguous")
+    documents, aliases = {}, {}
+    # Resolve every declared source once by its exact run/role/hash. Old alias
+    # strings identify canonical bindings; they are never read from old caches.
+    for alias, reference in manifests.items():
+        path = contained(base.ROOT / reference["path"], base.ROOT / "mlm/reviews")
+        parts = path.relative_to(base.ROOT / "mlm/reviews").parts
+        # A correct hash at an earlier run is insufficient: the selected source
+        # producer must supply a report in this exact recipe invocation.
+        if len(parts) != 5 or parts[2] != context.run_id or parts[3] != "reports":
+            raise ValueError("source manifest has a foreign invocation or storage role")
+        if identity(path) != reference:
+            raise ValueError("selected source manifest changed")
+        documents[reference["path"]] = json.loads(path.read_text(encoding="utf-8"))
+        aliases[alias] = reference["path"]
+    # Only source report/atlas locations may change. Canonical coverage, native
+    # sizes, anchors, approved pixel hashes and published ranges stay authoritative.
+    for name in scope["asset_ids"]:
+        authoring = families[name]["authoring"]
+        selected = aliases[authoring["atlas_manifest"]]
+        document = documents[selected]
+        candidates = document.get("atlases", [document])
+        matches = [row for row in candidates if Path(row["path"]).name == Path(authoring["native_atlas"]).name]
+        if len(matches) != 1:
+            raise ValueError("selected source atlas is missing/ambiguous: " + name)
+        atlas = matches[0]
+        image = contained(base.ROOT / atlas["path"], base.ROOT / "mlm/reviews")
+        parts = image.relative_to(base.ROOT / "mlm/reviews").parts
+        # Source candidates remain images from the same run, independently of
+        # packing data and any similarly named historical authoring output.
+        if len(parts) != 5 or parts[2] != context.run_id or parts[3] != "images":
+            raise ValueError("selected atlas has a foreign invocation or storage role")
+        if atlas["sha256"] != authoring["native_sha256"]:
+            raise ValueError("selected source differs from approved original pixels: " + name)
+        authoring.update(atlas_manifest=selected, native_atlas=atlas["path"])
+    return documents
+
+
+def derive(source_manifests=None, context=None):
     """Validate selected source handoffs and prepare exact native payload inputs.
 
+    @param source_manifests Exact original aliases to current source report identities.
+    @param context Explicit run for selected sources and disposable packing outputs.
     @return Packed source metadata and output-path/byte mapping; no files written.
     @throws ValueError If source coverage, tool versions or native references fail.
     """
     scope = json.loads(SCOPE.read_text(encoding="utf-8"))
     public = json.loads(PUBLIC.read_text(encoding="utf-8"))
+    # Selected regeneration needs the whole explicit source closure. Neither a
+    # context alone nor a partial source map may fall back to an old proof cache.
+    if (source_manifests is None) != (context is None):
+        raise ValueError("selected packing requires both a context and all source manifests")
     if PIL.__version__ != scope["toolchain"]["pillow"] or sys.version.split()[0] != scope["toolchain"]["python"]:
         # Encoders/serializers are pinned so clean conversions can be compared
         # byte-for-byte without a silent toolchain-dependent source revision.
@@ -387,12 +457,14 @@ def derive():
         raise ValueError("protected M0 source sheet changed")
     ranges, bound = selected_ranges(public, scope)
     families = {row["asset_id"]: row for row in public["assets"]}
-    documents, images, combined = {}, {}, []
+    documents = selected_sources(public, scope, context, source_manifests) if context is not None else {}
+    images, combined = {}, []
     # Every selected family contributes its exact authoritative source poses.
     # Pure conversion neither advances a work owner nor activates native assets.
     for row in ranges:
         family = families[row["asset_id"]]
         poses, image = source_poses(family, documents, images)
+        # Every declared state/frame/view/part retains its existing native offset.
         for index, key in enumerate(required_keys(family)):
             pose = poses[key]
             entry = {"asset_id": row["asset_id"], "native_offset": row["native_offset"] + index,
@@ -403,6 +475,7 @@ def derive():
     entries, sprites = map(list, zip(*combined))
     sheet, positions = shelf_sheet(sprites, scope["sheet_width"], scope["sprite_gap"])
     png, nfo, header = png_bytes(sheet), format_nfo(entries, sprites, positions), format_header(ranges, bound)
+    # Report the actual packed crop/anchor for every emitted native identity.
     for entry, sprite, origin in zip(entries, sprites, positions):
         _indices, width, height, rx, ry = sprite
         entry.update(box=[*origin, width, height], anchor=[rx, ry])
@@ -415,6 +488,14 @@ def derive():
               "packed_grf": None, "runtime_activated": False}
     files = {base.repository_path(scope["png"]): png, base.repository_path(scope["nfo"]): nfo,
              base.repository_path(scope["header"]): header}
+    if context is not None:
+        files = {}
+        # Candidate payloads retain their shipping basenames and exact bytes,
+        # while writing them can affect only the selected generated data owner.
+        for role, encoded in (("png", png), ("nfo", nfo), ("header", header)):
+            path = context.output("data", Path(scope[role]).name)
+            report[role]["path"] = path.relative_to(base.ROOT).as_posix()
+            files[path] = encoded
     return report, files
 
 
@@ -425,6 +506,8 @@ def publish(report, files):
     @param files Encoded separate PNG/NFO/generated-header repository outputs.
     @return None; write only selected packing artifacts, not the cargo package.
     """
+    # This existing explicit publisher writes the validated canonical inputs;
+    # selected regression recipes call derive and never enter this function.
     for path, encoded in files.items():
         path.write_bytes(encoded)
     scope = json.loads(SCOPE.read_text(encoding="utf-8"))
@@ -470,6 +553,8 @@ def finalise_base_terrain():
         for resource in resources:
             source_poses(families["survey." + resource], documents, images)
         targets.append(family)
+    # Only independently checked terrain/survey originals gain source completion;
+    # this authoring action still grants no native runtime or human acceptance.
     for family in targets:
         family["source"]["status"] = "authored"
         family["authoring"].update(coverage_complete=True, status="source_coverage_verified_runtime_pending")

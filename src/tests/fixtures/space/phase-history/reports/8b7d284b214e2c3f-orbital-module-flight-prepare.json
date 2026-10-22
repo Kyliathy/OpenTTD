@@ -1,0 +1,34 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group11; paid direct departure, not final flight acceptance.",
+  "configuration": "Debug",
+  "save_version": 423,
+  "source": {
+    "path": "src/tests/fixtures/demos/space/space-module-frame-418.sav",
+    "sha256": "0f10c5e085846c1ee2fca8c3d8945296e3b5366243ddaadff6d09e9250e00dca"
+  },
+  "delivery": {
+    "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-delivery-423.sav",
+    "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+  },
+  "preburn": {
+    "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-preburn-423.sav",
+    "sha256": "2f14789c7028a38c01a38629f708ec4e309004b0f9489ada443b0f8ec5e99989"
+  },
+  "ascent": {
+    "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-ascent-423.sav",
+    "sha256": "5e0126ccad8db966d0f0397a090bed41df29715b84074564c71e02d8c3017347"
+  },
+  "captures": [
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/images/module-workshop-unselected.png",
+      "sha256": "f44aa2268ec608644b7975a722aa3bd80f3200131e3fe21d282b9503d1a5cc07"
+    },
+    {
+      "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/images/module-workshop-ready.png",
+      "sha256": "1eaab76b4cc9ee6e6e25034f81cb99e75f9e32619813a267b24f274258d0940e"
+    }
+  ],
+  "actual_workshop_launch": true,
+  "one_departure_fee": true,
+  "actual_space_entry": true
+}

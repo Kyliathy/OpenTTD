@@ -1,6 +1,7 @@
 """Convert genuine natural-body originals and approved local surface parts.
 
 @file convert_space_asteroids.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups14BF/14BFB/14BFC
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups67-69
 Only retained original pixels, uniform BOX reduction, declared physical-part assembly
@@ -225,20 +226,19 @@ class AsteroidSources:
         return pixels, dict(evidence, state=state, logical_frame=frame, actual_phase=phase)
 
 
-def derive(asset, output, document=None):
+def derive(asset, output, document=None, context=None):
     """Write a complete source atlas and native/4x contacts without activating runtime art.
 
     @param asset Exact selected natural-body asset.
     @param output Fresh repository-local native-art proof directory.
     @param document Optional exact detached generation record for focused checks.
+    @param context Explicit recipe invocation separating source images and reports.
     @return Identity of the reproducible source manifest, with packing/runtime explicitly false.
     """
     sources = AsteroidSources(asset, document)
-    output = output.resolve()
-    # Immutable review evidence stays in the established proof home and never replaces an earlier accepted conversion or shipped payload.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("asteroid review requires a fresh native-art proof directory")
-    output.mkdir(parents=True)
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
+    output.mkdir(parents=True, exist_ok=context is not None)
     atlas = Image.new("P", (96 * 8, 80 * 4 * 4 * 3), 0)
     atlas.putpalette(art.base.PALETTE_BYTES)
     entries, artifacts = [], []
@@ -246,6 +246,7 @@ def derive(asset, output, document=None):
     for size_index, size in enumerate(SIZES):
         for direction_index, direction in enumerate(DIRECTIONS):
             for state_index, state in enumerate(STATES):
+                # Logical frames preserve explicit original/static aliases.
                 for frame in range(4):
                     pixels, evidence = sources.pose(direction, size, state, frame)
                     x, y = direction_index * 96, (size_index * 16 + state_index * 4 + frame) * 80
@@ -257,6 +258,7 @@ def derive(asset, output, document=None):
         for state, phase in (("free", 0), ("attached", 0), ("mining", 0), ("mining", 1), ("depleted", 0)):
             contact = Image.new("RGB", (384 * 8, 432), (38, 43, 49))
             drawing = ImageDraw.Draw(contact)
+            # Each heading shows actual native and integer-scaled original pixels.
             for index, direction in enumerate(DIRECTIONS):
                 pixels, _evidence = sources.pose(direction, size, state, phase)
                 rgba = pixels.convert("RGBA")
@@ -274,7 +276,7 @@ def derive(asset, output, document=None):
     keys.update(key for states in sources._family["surface_sources"].values()
                 for views in states.values() for key in views.values())
     originals = [copy.deepcopy(art.source_candidate(key, sources._document)) for key in sorted(keys)]
-    report = output / "space-source-manifest.json"
+    report = reports / "space-source-manifest.json"
     report.write_text(json.dumps(dict(_documentation=__doc__, schema_version=1, asset_id=asset,
                                      logical_pose_count=len(entries), complete_source_coverage=True,
                                      actual_component_pose_count=96, explicit_source_alias_count=288,
@@ -371,6 +373,8 @@ def publish(asset, report_path):
         key = (row["size"], row["direction"], row["state"], row["frame"])
         left, top, right, bottom = row["box"]
         pixels = atlas.crop(row["box"])
+        # A plausible cell cannot replace the declared size/view/state/frame,
+        # exact original pixel hash or the existing natural-body world anchor.
         if (key in actual or key not in expected or (right - left, bottom - top) != (96, 80)
                 or row["anchor"] != [-48, -48]
                 or hashlib.sha256(pixels.tobytes()).hexdigest() != row["pixel_sha256"]):

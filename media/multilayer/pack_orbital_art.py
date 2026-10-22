@@ -1,6 +1,7 @@
 """Append reviewed orbital sources without changing the prior native sprite prefix.
 
 @file pack_orbital_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups79-80
 Packing grants no gameplay capability. Native decoding, selectors and ordinary
@@ -157,22 +158,32 @@ def format_header(ranges, bound):
     return "\n".join(lines).encode("utf-8")
 
 
-def derive(public=None):
+def derive(public=None, source_manifests=None, context=None):
     """Derive deterministic orbital packing bytes from exact accepted originals.
 
     @param public Optional detached manifest for focused corruption/refusal checks.
+    @param source_manifests Complete current source report identities keyed by public asset.
+    @param context Exact current invocation owning disposable selected sources/candidates.
     @return Packing report and exact own PNG/NFO/generated-header byte mapping.
     @throws ValueError On changed source, contract, native range, palette or coverage.
     """
     scope = read_scope()
     public = json.loads(PUBLIC.read_text(encoding="utf-8")) if public is None else public
+    # Current output selection requires its complete fresh source closure;
+    # historical source-review approval paths cannot supply missing current work.
+    if (source_manifests is None) != (context is None):
+        raise ValueError("selected orbital packing requires context and source manifests together")
+    reviews, documents = scope["source_reviews"], {}
+    if context is not None:
+        from regenerate_space_sources import bind_sources
+        public, reviews, documents = bind_sources(public, scope, context, source_manifests)
     matches = [row for row in public["assets"] if row["asset_id"] in ASSETS]
     families = {row["asset_id"]: row for row in matches}
     # Dictionary construction must not silently replace a duplicated paid role;
     # missing or ambiguous families stop the whole append before source staging.
     if len(matches) != len(ASSETS) or set(families) != set(ASSETS):
         raise ValueError("missing or duplicate orbital public family")
-    documents, images, sprites, entries, ranges = {}, {}, [], [], []
+    images, sprites, entries, ranges = {}, [], [], []
     cursor = scope["native_start"]
     # Append complete accepted source families once in fixed plan order. No
     # native slot can borrow another model's role or repeat a whole site per tile.
@@ -180,11 +191,16 @@ def derive(public=None):
         family = families[asset]
         packing.validate_family(family)
         validate_orbital_contract(family)
-        contract = {key: value for key, value in family.items() if key not in ("packed", "authoring")}
-        if contract != scope["public_contracts"][asset]:
+        # Source packing owns geometry and pixel coverage. Later runtime-binding
+        # metadata is historical/native evidence, independently requalified by
+        # native recipes; it cannot alter or authorize these source candidates.
+        contract = {key: value for key, value in family.items() if key not in ("packed", "authoring", "runtime")}
+        expected_contract = {key: value for key, value in scope["public_contracts"][asset].items() if key != "runtime"}
+        if contract != expected_contract:
             raise ValueError(asset + ": accepted orbital public source contract changed")
-        reference = scope["source_reviews"][asset]
-        native = scope["source_atlases"][asset]
+        reference = reviews[asset]
+        native = (documents[reference["path"]]["native_source"] if context is not None
+                  else scope["source_atlases"][asset])
         authoring = family.get("authoring", {})
         # Exact source approval, manifest and palette atlas form one gate.
         # Native staging cannot replace missing producer work with a new file.
@@ -207,7 +223,16 @@ def derive(public=None):
         # Existing definition-local MLVI offsets remain owned by content. A
         # repeated stage must reproduce its native append instead of moving it.
         binding = {key: packed.get(key) for key in ("namespace", "offset", "sha256")}
-        if (binding != scope["definition_bindings"][asset] or packed.get("native_offset", cursor) != cursor
+        expected_binding = scope["definition_bindings"][asset]
+        # Later launch/ground publication legitimately updates the shared GRF
+        # checksum for an already native-bound family. Accept only that actual
+        # shipping container, retaining the frozen original identity as history;
+        # this pure conversion neither publishes nor qualifies native decoding.
+        if binding["sha256"] != expected_binding["sha256"]:
+            if packed.get("route") != scope["native_route"] or binding["sha256"] != source.identity(ROOT / "media/baseset/openttd.grf")["sha256"]:
+                raise ValueError(asset + ": orbital shared shipping container binding changed")
+        if ({key: binding[key] for key in ("namespace", "offset")} != {key: expected_binding[key] for key in ("namespace", "offset")}
+                or packed.get("native_offset", cursor) != cursor
                 or packed.get("sprite_count", count) != count
                 or packed.get("route", scope["native_route"]) != scope["native_route"]
                 or packed.get("source_payload", scope["report"]) != scope["report"]):
@@ -235,6 +260,8 @@ def derive(public=None):
     nfo = nfo.replace(b"r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C", b"r2mlvs11-orbital-stations-and-manufacturing.md Group13K")
     files = {ROOT / scope["png"]: png, ROOT / scope["nfo"]: nfo,
              ROOT / scope["header"]: format_header(ranges, cursor)}
+    if context is not None:
+        files = {context.output("data", Path(path).name): encoded for path, encoded in files.items()}
     # Retain original and cropped geometry/hashes so independent native decoding
     # can later prove exact pixels and anchors for every old and new logical ID.
     for entry, sprite, position in zip(entries, sprites, positions, strict=True):
@@ -246,6 +273,9 @@ def derive(public=None):
                   pose_count=len(entries), families=ranges, sprites=entries,
                   outputs=[dict(path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(data).hexdigest())
                            for path, data in files.items()], packed_grf=None, runtime_activated=False)
+    if context is not None:
+        report.update(schema_version=2, kind="selected_orbital_packing", run_id=context.run_id,
+                      historical_source_reviews=scope["source_reviews"], source_reviews=reviews)
     return report, files
 
 

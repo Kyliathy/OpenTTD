@@ -1,0 +1,38 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group11; real whole module unload and original hull recovery.",
+  "configuration": "Debug",
+  "save_version": 423,
+  "preparation": {
+    "path": "mlm/reviews/space/module-flight-prepare-verify/20261014-080114-8c7717c1aa/reports/orbital-module-flight-prepare.json",
+    "sha256": "8b7d284b214e2c3f0c52c6f8ec4689dcb934334f74439267d6825ad6aed510ef"
+  },
+  "source": {
+    "path": "mlm/reviews/space/module-flight-prepare/20261014-080114-8c7717c1aa/saves/module-flight-delivery-423.sav",
+    "sha256": "85989b1024d48d10ebc433c98706946d89b346cab61d59dbdb56d2c17f2282da"
+  },
+  "complete": {
+    "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-complete-423.sav",
+    "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+  },
+  "ordinary_resave": {
+    "path": "mlm/reviews/space/module-flight-ordinary/20261014-080119-8aaa17194a/saves/ordinary-resave.sav",
+    "sha256": "76f89d219d4f2739f5109fac9a9209406ebf604d00015b7698354dc7362d1b84"
+  },
+  "exact_owner_families": 26,
+  "approach": {
+    "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-approach-423.sav",
+    "sha256": "d439fbe1450aa7273c3f12c2a124ae0e9d9d663c486f996e945257aa7cb10ce0"
+  },
+  "unloaded": {
+    "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-unloaded-423.sav",
+    "sha256": "ce0405ab34d6da8f56e12e0c1cadc378f1c9e407b676ff25646ef0bb1a6016d9"
+  },
+  "turnaround": {
+    "path": "mlm/reviews/space/module-flight-complete/20261014-080119-8aaa17194a/saves/module-flight-turnaround-423.sav",
+    "sha256": "74422b71d24bc3b7148929bb232d03c4dceaffa109e270ac1d4e448dd17e7160"
+  },
+  "whole_delivery": true,
+  "same_original_rocket": true,
+  "fuel_burned_once": 15,
+  "no_second_recipe": true
+}

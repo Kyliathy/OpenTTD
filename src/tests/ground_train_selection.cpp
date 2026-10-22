@@ -1,5 +1,6 @@
 /**
  * @file ground_train_selection.cpp Real native rail identities, packets, source views and purchase guards.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20; preserve rail refusal and completed road dispatch.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FE.
  * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md.
  * Depots and freight are command-created. Packet loads and speed/hold boundary
@@ -243,6 +244,10 @@ TEST_CASE("Selected rail purchase previews preserve actual engine and company gu
 	CHECK_FALSE(IsEngineBuildable(sealed, VehicleType::Train, _current_company));
 	CHECK(GetMultiLayerEnginePurchaseSprite(sealed, false) == GetGroundSprite(GroundSpriteFamily::PurchaseModel06, {1}));
 	CHECK_FALSE(GetMultiLayerEnginePurchaseSprite(EngineID::Invalid(), true));
-	CHECK_FALSE(GetMultiLayerPurchaseSprite(7, true));
+	// The later completed road family now owns model7 in the public dispatcher.
+	// Rail selection must still refuse it; the shared lookup must preserve the
+	// independent road source identity rather than treating valid art as absent.
+	CHECK_FALSE(GetGroundRailPurchaseSprite(7, true));
+	CHECK(GetMultiLayerPurchaseSprite(7, true) == GetGroundSprite(GroundSpriteFamily::PurchaseModel07, {0}));
 	CHECK(GetMultiLayerEnginePurchaseSprite(GetUndergroundEngine(4), true) == GetMultiLayerSprite(MultiLayerSpriteAsset::PurchaseModel04, {0}));
 }

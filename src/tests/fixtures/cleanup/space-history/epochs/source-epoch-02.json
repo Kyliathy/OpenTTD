@@ -1,0 +1,30 @@
+{
+  "_documentation": "Plan11Group15CSGZVD exact consumed pure-query observers before explicit native returned Goods39slot-reuse handling. Actual native paid run20261020-195244-2c851a6a7csucceeded and must only be recovered.",
+  "products": [
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+      "path": "test-cache/surface-entry/farm-backhaul-slot-reuse-before-edit/0-surface_gateway_component_delivery_ledger.py",
+      "sha256": "758d7bed315782e3505a49ef1190a50008d0fa3f629c8759a02dc712c88d004a"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_construction_ledger.py",
+      "path": "test-cache/surface-entry/farm-backhaul-slot-reuse-before-edit/1-surface_gateway_construction_ledger.py",
+      "sha256": "b2f91ff1ab64ad441d0b3a373b5eb49f6bc7f7678cebf57b92c1df9b50cca162"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_resupply_ledger.py",
+      "path": "test-cache/surface-entry/farm-backhaul-slot-reuse-before-edit/2-surface_gateway_resupply_ledger.py",
+      "sha256": "b98a2b67df39786a91c526087cec8ef49bf82b686a5690d3f50dc26f07443478"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_material_ledger.py",
+      "path": "test-cache/surface-entry/farm-backhaul-slot-reuse-before-edit/3-surface_gateway_material_ledger.py",
+      "sha256": "f793ca536fd0361581e7c446756c7fd3220e7173ec20d2da05d792f8094262d3"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_entry_farm_backhaul_checks-1.py",
+      "path": "test-cache/surface-entry/farm-backhaul-slot-reuse-before-edit/4-surface_entry_farm_backhaul_checks-1.py",
+      "sha256": "80db0bd2a48e6754e8b3ef6e10b6f8e825f45cde08b9d798a09b3ce172311f7a"
+    }
+  ]
+}

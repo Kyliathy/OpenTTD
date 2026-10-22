@@ -1,6 +1,7 @@
 """Consume compiled conventional station geometry without creating gameplay state.
 
 @file ground_station_contract.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DD, historical physical source reconstruction.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24C.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
@@ -46,10 +47,11 @@ def source_digest(path):
     return hashlib.sha256(Path(path).read_text(encoding="utf-8").encode("utf-8")).hexdigest()
 
 
-def validate_geometry(document):
+def validate_geometry(document, source_only=False):
     """Check complete compiled geometry and its current native source owners.
 
     @param document Checked-in native descriptor, or a candidate for publication.
+    @param source_only Explicit original-art role; never qualifies current native source owners.
     @return The same descriptor after complete validation.
     @throws ValueError If geometry, native source ownership or proof is incomplete.
     """
@@ -66,9 +68,15 @@ def validate_geometry(document):
         raise ValueError("incomplete native station geometry source ownership")
     # Changes to a renderer, layout, axis or approach owner require a new
     # compiled proof; a Python-only copied table cannot silently bless them.
-    for name in OWNERS:
-        if owners[name] != source_digest(ROOT / name):
-            raise ValueError("native station geometry owner changed: " + name)
+    if source_only:
+        from station_source_facts import verify_original
+        verify_original(document, "descriptor", path=DESCRIPTOR)
+    else:
+        # Current native consumers must still bind every actual owner; frozen
+        # source-era geometry alone cannot qualify a changed executable.
+        for name in OWNERS:
+            if owners[name] != source_digest(ROOT / name):
+                raise ValueError("native station geometry owner changed: " + name)
     proof = document.get("native_proof", {})
     # Retain provenance without requiring ignored build/log files in a cold
     # checkout. Current native source hashes remain the reproducibility gate.
@@ -119,12 +127,13 @@ def validate_geometry(document):
     return document
 
 
-def load_geometry():
+def load_geometry(source_only=False):
     """Read the checked descriptor before any dependent station source selection.
 
-    @return Fully validated native geometry and proof provenance.
+    @param source_only Explicit historical artwork role; default native freshness stays strict.
+    @return Validated geometry with its original proof provenance.
     """
-    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")))
+    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")), source_only=source_only)
 
 
 def native_packed_anchor(layout, part):
@@ -155,12 +164,18 @@ def native_packed_anchor(layout, part):
     return [SOURCE_ANCHOR[0] - 2 * (y - x), SOURCE_ANCHOR[1] - (x + y - z)]
 
 
-def station_contract():
+def station_contract(source_only=False):
     """Define source poses for native modular cells and actual existing state owners.
 
+    @param source_only Use exact retained source-era renderer identities, never a current native claim.
     @return Shared manifest fields, leaving source delivery/packing untouched.
     """
-    geometry = load_geometry()
+    geometry = load_geometry(source_only=source_only)
+    if source_only:
+        from station_source_facts import load_originals
+        renderers = load_originals()["families"]["facility.rail-station"]["native_anchor_renderer_sha256"]
+    else:
+        renderers = {name: source_digest(ROOT / name) for name in ANCHOR_RENDERERS}
     return {
         "directions": ["NE", "SE"], "footprint": [1, 1], "tile_variants": 4,
         "parts": ["back", "front", "roof", "glass"], "frames": 4,
@@ -183,7 +198,7 @@ def station_contract():
         "native_packed_anchors": {str(layout["graphics"]): {part: native_packed_anchor(layout, part)
                                                          for part in ("back", "front", "roof", "glass")}
                                   for layout in geometry["layouts"]},
-        "native_anchor_renderer_sha256": {name: source_digest(ROOT / name) for name in ANCHOR_RENDERERS},
+        "native_anchor_renderer_sha256": renderers,
         "native_anchor_policy": "Source frames share(-31,-33). Packed parent offsets compensate actual RemapCoords(origin+offset); relative native glass uses packed(0,0) from roof image left/top. Preserve original three sorting boxes and native child displacement; decoded/ordinary-game proof remains master10.4D.",
         "ground_owner": "Actual RailType ground/overlay, reservation and catenary; station originals contain no track, train or replacement floor",
         "native_state_policy": {

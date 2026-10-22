@@ -1,6 +1,7 @@
 """Compare actual vehicle map/list pixels with unchanged accepted indexed body sources.
 
 @file ground_transport_body_pixel_checks.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current source view.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHC.
 @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md.
 Native depot scenery may occlude map bodies; the ordinary list renderer keeps
@@ -70,10 +71,11 @@ def source_key(frame, family):
     return family["states"][state], phase, family["directions"][frame["direction"]], variant, "body"
 
 
-def verify(execution):
+def verify(execution, source_view):
     """Require exact accepted body pixels in each provenance-bound native map/list observation.
 
     @param execution Repository-relative successful rail or road execution report.
+    @param source_view Explicit checked GroundSourceViews with current original source poses/locations.
     @return Pixel and explicit native-depot occlusion observations for the exact process.
     """
     proof = handoff.read_json(execution)
@@ -92,8 +94,7 @@ def verify(execution):
     # matrix into a complete body proof merely by preserving a row count.
     if len(scene["frames"]) != len(required) or actual_matrix != required:
         raise ValueError("actual native body matrix lacks exact required cargo/state/view coverage")
-    scope, before, public = handoff.read_scope()
-    families = {row["asset_id"]: row for row in public["assets"]}
+    families = source_view.families
     documents, images, sources, results = {}, {}, {}, []
     # Each native frame resolves an unchanged accepted source and actual company
     # recolour table. Public catalogue numbers never stand in for runtime IDs.
@@ -103,8 +104,7 @@ def verify(execution):
         if asset != "vehicle.model-{:02}".format(frame["model"]):
             raise ValueError("native vehicle model does not identify its accepted body family")
         if asset not in sources:
-            sources[asset] = (pack_m1_art.source_poses(family, documents, images) if frame["model"] == 4
-                              else handoff.source_poses(family, scope, before, documents, images))
+            sources[asset] = source_view.poses(asset)
         poses, atlas = sources[asset]
         key = source_key(frame, family)
         pose = poses[key]
@@ -175,21 +175,8 @@ def verify(execution):
 
 
 def main():
-    """Verify one exact actual body process and write its bounded pixel result.
-
-    @return None; mismatches fail before successful evidence is published.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--execution", required=True)
-    parser.add_argument("--report", required=True)
-    args = parser.parse_args()
-    output = handoff.bound(args.report)
-    if not output.is_relative_to(ROOT / "logs"):
-        raise ValueError("body pixel results belong beneath repository logs")
-    result = verify(args.execution)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: result[key] for key in ("passed", "native_body_frames", "matched_source_pixels")}))
+    """Require the explicit current native producer, which seals these exact pixel obligations."""
+    raise SystemExit("Use ground_viewport_review.py with explicit --mode, --selector-result, --build-result, --source-result and --run-id; this pixel verifier requires the selected current source view.")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 """Verify native TBM sound-event reuse against actual controller-selected PCM playback.
 
 @file verify_m1_sound.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group16.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md task83.4
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md task16.2
 Publication contains mappings and fingerprints only; no selected baseset sample is copied.
@@ -13,11 +14,10 @@ from pathlib import Path
 import re
 
 from activate_m1_art import read_evidence
-from evidence import CACHE, contained
+from evidence import EvidenceSet
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "media/multilayer/m1-sound-events.json"
-OUTPUT = ROOT / "logs/proofs/mlm/native-art/sound-runtime.json"
 
 
 def validate(manifest, evidence, capture):
@@ -55,6 +55,31 @@ def validate(manifest, evidence, capture):
              "sample_rate": int(row[3]), "decoded_bytes": int(row[4]), "nonzero_pcm": int(row[5]), "pcm_fingerprint": row[6]} for row in records]
 
 
+def selected_sound_inputs(selection, capture_path, evidence, selection_log, output=None):
+    """Resolve sound's direct consumer edges through the graphics selection.
+
+    @param selection Explicit schema2 EvidenceSet for the recipe invocation.
+    @param capture_path Exact selected semantic capture path, absolute or relative.
+    @param evidence Required native sound transcript's repository-relative path.
+    @param selection_log Required owner/refusal transcript's repository-relative path.
+    @param output Optional explicit destination, which must equal the selected owner.
+    @return Validated capture and generated sound report destination.
+    """
+    destination = selection.output("sound")
+    # Caller overrides can repeat the explicit owner, but cannot redirect
+    # required evidence into sources, diagnostics or an unrelated invocation.
+    if output is not None and (selection.root / output).resolve() != destination:
+        raise ValueError("sound output differs from the explicit recipe selection")
+    capture_path = (selection.root / capture_path).resolve()
+    matches = [role for role in selection.document["reports"] if selection.selected("reports", role) == capture_path]
+    if len(matches) != 1:
+        raise ValueError("sound capture is not an unambiguous selected current report")
+    capture = selection.report(matches[0])
+    assert selection.capture_terminal(capture) == evidence, "sound and actual loop evidence disagree"
+    assert selection.terminal("sound-selection") == selection_log, "sound selection transcript differs from required evidence"
+    return capture, destination
+
+
 def main():
     """Validate actual reuse/playback and optionally publish its exact retained evidence.
 
@@ -64,17 +89,18 @@ def main():
     parser.add_argument("--evidence", required=True)
     parser.add_argument("--capture", required=True)
     parser.add_argument("--selection-log", required=True)
+    parser.add_argument("--evidence-manifest", type=Path, required=True,
+                        help="exact schema2 graphics selection; diagnostics cannot supply required evidence")
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--cache-only", action="store_true", help="write generated evidence without changing source status")
-    parser.add_argument("--output", type=Path, default=OUTPUT)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    output = contained(args.output if args.output.is_absolute() else ROOT / args.output, CACHE)
+    selection = EvidenceSet(args.evidence_manifest)
+    capture, output = selected_sound_inputs(selection, args.capture, args.evidence, args.selection_log, args.output)
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     evidence_path = ROOT / args.evidence
-    capture = json.loads((ROOT / args.capture).read_text(encoding="utf-8"))
     evidence = read_evidence(evidence_path)
     assert "All tests passed" in read_evidence(ROOT / args.selection_log), "sound owner/refusal tests failed"
-    assert capture["log"] == args.evidence, "sound and actual loop evidence disagree"
     records = validate(manifest, evidence, capture)
     # Missing actual output must refuse even when a caller reports a selected
     # sample. This bounded corruption retains every other actual log record.
@@ -85,6 +111,8 @@ def main():
         pass
     else:
         raise AssertionError("silent dispatched sound was accepted as playback")
+    # Both explicit publication modes write the selected generated proof; only
+    # the separately requested source publication may advance authored status.
     if args.publish or args.cache_only:
         report = {"_documentation": "Owner: r2mlvs13-graphics-and-asset-pipeline.md83.4; real native phase/selected baseset decode/mixer proof, no sample bytes redistributed",
                   "schema_version": 1, "provider": "original_dos (isolated fixture)", "provider_descriptor": "media/baseset/orig_dos.obs",

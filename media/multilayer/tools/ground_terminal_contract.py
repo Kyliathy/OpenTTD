@@ -1,6 +1,7 @@
 """Consume successful compiled truck-stop geometry before dependent original art.
 
 @file ground_terminal_contract.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DD, historical physical source reconstruction.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups25B/25.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Native sequence order, real one-tile cells and command admission stay authoritative.
@@ -28,10 +29,11 @@ OWNERS = ("src/conventional_terminal_art.h", "src/conventional_terminal_art.cpp"
 RENDERERS = ("src/landscape.h", "src/viewport.cpp", "src/viewport_func.h", "src/sprite.cpp")
 
 
-def validate_geometry(document):
+def validate_geometry(document, source_only=False):
     """Require all six genuine layouts, native parent semantics and complete successful proof.
 
     @param document Checked descriptor or candidate complete native publication.
+    @param source_only Explicit original-art role; never qualifies current native source owners.
     @return Same document after current-owner/shape/proof validation.
     @throws ValueError On stale owners, incomplete parents or invented fallback directions.
     """
@@ -41,9 +43,15 @@ def validate_geometry(document):
             or document.get("part_order") != list(PARTS) or document.get("native_source_hash_policy") != "utf8_lf"
             or set(document.get("native_source_sha256", {})) != set(OWNERS)):
         raise ValueError("unsupported or incomplete native terminal geometry owner")
-    for name in OWNERS:
-        if document["native_source_sha256"][name] != source_digest(ROOT / name):
-            raise ValueError("native terminal geometry owner changed: " + name)
+    if source_only:
+        from station_source_facts import verify_original
+        verify_original(document, "descriptor", path=DESCRIPTOR)
+    else:
+        # Current native users still require actual current owner identities;
+        # source-only reconstruction grants no executable qualification.
+        for name in OWNERS:
+            if document["native_source_sha256"][name] != source_digest(ROOT / name):
+                raise ValueError("native terminal geometry owner changed: " + name)
     proof = document.get("native_proof", {})
     # Cold checkouts need not retain ignored binaries/logs, but every published
     # descriptor must name the exact successful compiled command/loading run.
@@ -80,12 +88,13 @@ def validate_geometry(document):
     return document
 
 
-def load_geometry():
+def load_geometry(source_only=False):
     """Read the checked complete native producer before any dependent source operation.
 
-    @return Validated actual truck-stop layout/source/proof descriptor.
+    @param source_only Explicit historical artwork role; default native freshness stays strict.
+    @return Validated actual truck-stop layout with original proof provenance.
     """
-    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")))
+    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")), source_only=source_only)
 
 
 def packed_anchor(layout, parent_index):
@@ -102,12 +111,18 @@ def packed_anchor(layout, parent_index):
     return [-31 - 2 * (y - x), -33 - (x + y - z)]
 
 
-def terminal_contract():
+def terminal_contract(source_only=False):
     """Publish exact modular road-terminal source topology without changing native ranges.
 
+    @param source_only Use retained source-era renderer identities without a current native claim.
     @return Public geometry/anchor/state fields for four bays and two true through axes.
     """
-    native = load_geometry()
+    native = load_geometry(source_only=source_only)
+    if source_only:
+        from station_source_facts import load_originals
+        renderers = load_originals()["families"]["facility.road-terminal"]["native_anchor_renderer_sha256"]
+    else:
+        renderers = {name: source_digest(ROOT / name) for name in RENDERERS}
     return {
         "directions": list(DIRECTIONS), "footprint": [1, 1], "tile_variants": 1,
         "parts": list(PARTS), "frames": 4, "states": ["construction", "ready", "working", "blocked"],
@@ -122,7 +137,7 @@ def terminal_contract():
         "ground_owner": "Native truck-stop ground, road type overlays/catenary and vehicle turning/lane controller remain independent; no pavement, road marking, truck or ground baked into building source parents",
         "parent_order": "parent-0/parent-1/parent-2 follow the exact native sequence. Their physical front/back role varies by genuine bay direction; through parent-2 is absent",
         "native_packed_anchors": {row["direction"]: {part: packed_anchor(row, index) for index, part in enumerate(PARTS)} for row in native["layouts"]},
-        "native_anchor_renderer_sha256": {name: source_digest(ROOT / name) for name in RENDERERS},
+        "native_anchor_renderer_sha256": renderers,
         "native_anchor_policy": "Common64x64 source(-31,-33); packed image offsets compensate RemapCoords(native origin+offset). Preserve every original sorting parent and native ground owner; decoded/game proof remains10.4D",
         "native_state_policy": {
             "construction": "Atomic native build preview only; no installed construction stages or work owner",

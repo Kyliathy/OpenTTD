@@ -1,0 +1,35 @@
+{
+  "_documentation": "Plan11Group15CSGZVEB exact consumed verifier/observers/isolated sources/apps before real surplus-only retirement.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "e93ab3829da56c5b4efb4fc0404d860874d027252fc448e4e3653baf5fde26af"
+    },
+    {
+      "source": "src/tests/surface_entry_mixed_farm_backhaul.h",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/1-surface_entry_mixed_farm_backhaul.h",
+      "sha256": "9bbc84e6c48f5d59ec53f032b109693b4d1099786da32ffcbb45efa30934b4d7"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/2-surface_gateway_component_delivery_ledger.py",
+      "sha256": "da61dfacea073be24d9c32b685eebf520c90c48e8d20bceacedd26cf14ebd5aa"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_farm_backhaul_ledger.py",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/3-surface_farm_backhaul_ledger.py",
+      "sha256": "e5807357c5474e38d97308ea6427fbea7fb5f2750bf806ffcba59cf508adc77c"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/4-openttd_surface_capital_test.exe",
+      "sha256": "6cca958b1b67fd1b274355b30582745141556cda580d724d05d6abd638cc598c"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/surplus-recovery-before-edit/5-openttd_surface_capital_test.exe",
+      "sha256": "05ba05209a9f3216566f76de4aea09180cf3cb3eb91272449768baef9f8a286c"
+    }
+  ]
+}

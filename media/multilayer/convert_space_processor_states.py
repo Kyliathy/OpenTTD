@@ -1,6 +1,7 @@
 """Compose genuine Processor construction and native processing display sources.
 
 @file convert_space_processor_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17BC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13J
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group75.3
 The shared machine never creates a recipe, inventory, work or energy owner.
@@ -115,6 +116,8 @@ def display_component(document, phase):
         raise ValueError("Processor display leaves its existing native console")
     image, evidence = site.registered_original(candidate, STATUS_CONTACT, processor.geometry())
     x0, y0, x1, y1 = evidence["native_subject_bounds"]
+    # Only the existing physical console may carry status; reject source overflow
+    # before compositing can hide pixels outside the genuine approved glass.
     if not (STATUS_BOUNDS[0] <= x0 < x1 <= STATUS_BOUNDS[2]
             and STATUS_BOUNDS[1] <= y0 < y1 <= STATUS_BOUNDS[3]):
         raise ValueError("Processor display original leaves approved window before composition")
@@ -198,8 +201,12 @@ def matrix(document=None, public=None):
         for frame in range(2):
             pose = "working" if state == "complete" and frame == 1 else state
             canonical = cuts.cut_cells(images[pose], tile_policy["geometry"], foreground, state, frame)
+            # Every declared cell/frame retains its exact original pixels and aliases;
+            # expanding logical coverage cannot invent hardware or physical phases.
             for row, image in canonical:
                 alias = None
+                # Only complete hardware has genuine work motion; unfinished and
+                # blocked frame1 entries remain exact stills of their own stage.
                 if frame == 1 and state != "complete":
                     alias = dict(state=state, frame=0, direction="none", tile_variant=row["tile_variant"], part=row["part"])
                 result.append((dict(row, alias_of=alias), image))
@@ -210,18 +217,16 @@ def matrix(document=None, public=None):
     return result, images, evidence
 
 
-def review(output):
+def review(output, context=None):
     """Publish original Processor source coverage without packing or native activation.
 
-    @param output Fresh repository native-art proof directory.
+    @param output Fresh source images directory in the selected generated owner.
+    @param context Explicit current recipe invocation separating images and reports.
     @return Exact full source-manifest identity.
     @throws ValueError On unsafe proof ownership or invalid original state processor.
     """
-    output = output.resolve()
-    # Fresh source proofs protect earlier accepted evidence and every shipped
-    # graphic. A conversion never overwrites originals or runtime payloads.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("Processor state review requires a fresh native-art proof directory")
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
     parts, images, evidence = matrix()
     atlas = cuts.indexed_canvas((576, 1024))
     contact = Image.new("RGB", (2304, 1200), (38, 43, 49))
@@ -234,23 +239,25 @@ def review(output):
         box = [row["tile_variant"] * 64, band * 64, 64, 64]
         atlas.paste(image, tuple(box[:2]))
         sprites.append(dict(row, box=box))
+    # Keep genuine work/display poses distinct in review without adding phases.
     for index, pose in enumerate(POSES):
         rgba = images[pose].convert("RGBA").resize((768, 576), Image.Resampling.NEAREST)
         contact.paste(rgba, ((index % 3) * 768, (index // 3) * 600 + 24), rgba)
         pen.text(((index % 3) * 768 + 8, (index // 3) * 600 + 6), pose + (" (complete frame1: actual native work only)" if pose == "working" else ""), fill="white")
     detail = Image.new("RGB", (1536, 344), (38, 43, 49))
     detail_pen = ImageDraw.Draw(detail)
+    # Keep genuine work/display poses distinct in review without adding phases.
     for index, pose in enumerate(("complete", "working", "blocked")):
         rgba = images[pose].crop((118, 105, 134, 115)).convert("RGBA").resize((512, 320), Image.Resampling.NEAREST)
         detail.paste(rgba, (index * 512, 24), rgba)
         detail_pen.text((index * 512 + 8, 6), pose + " original console pixels", fill="white")
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=context is not None)
     atlas.save(output / "module-processor-authored.png", transparency=0)
     contact.save(output / "state-contact.png")
     detail.save(output / "console-contact.png")
     for pose, image in images.items():
         image.save(output / (pose + ".png"), transparency=0)
-    path = output / "source-manifest.json"
+    path = reports / "source-manifest.json"
     report = dict(_documentation=__doc__, asset_id=processor.ASSET, **evidence, sprites=sprites,
                   coverage_complete=True, packed=False, runtime_activated=False,
                   artifacts=[art.identity(output / name) for name in

@@ -1,0 +1,15 @@
+{
+  "_documentation": "Plan11Group15CSGZVEC exact shared verifier/combined checker before splitting a120second timed-out metadata bind. All actual native commands/work and both ordinary reloads already succeeded and are never repeated.",
+  "products": [
+    {
+      "source": "src/tests/multilayer/acceptance/surface_original_evidence.py",
+      "path": "test-cache/surface-entry/home-binding-before-edit/0-surface_original_evidence.py",
+      "sha256": "5c722062d287700e73412b14185092842dbd006d808308e85497b7aef960a7ea"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_entry_constructor_home_checks-2.py",
+      "path": "test-cache/surface-entry/home-binding-before-edit/1-surface_entry_constructor_home_checks-2.py",
+      "sha256": "1050ff7209439fcb9e0c1fb6991749e7c0458acf839a2c1c7f7a6fe410d66555"
+    }
+  ]
+}

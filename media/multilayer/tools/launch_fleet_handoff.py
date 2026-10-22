@@ -1,6 +1,7 @@
 """Freeze qualified launch/fleet source art for append-only native packing.
 
 @file launch_fleet_handoff.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CC.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups62H-62J.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-space-master-plan.md Plan9task16.2.
 Source-era native receipts remain historical authoring evidence after native
@@ -9,8 +10,11 @@ it neither grants native compatibility nor publishes a packed payload.
 """
 
 import argparse
+import copy
 import hashlib
+import importlib
 import json
+from pathlib import Path
 
 from PIL import Image
 
@@ -23,6 +27,8 @@ ASSETS = ("facility.launch-center", "vehicle.model-14")
 HANDOFF = ROOT/"media/multilayer/source/space/launch-fleet-source-handoff-v1.json"
 OUTPUT = ROOT/"logs/proofs/mlm/native-art/space/launch-fleet-handoff-v1"
 FIELDS = ("state", "frame", "direction", "tile_variant", "part")
+ALIAS_FACTS = ROOT / "src/tests/fixtures/graphics/launch-source-aliases.json"
+ALIAS_FACTS_SHA256 = "1d238cc180cb9d7987867fa40ca260b4da2959aed7b7ec952d9f1ff6726f0747"
 
 
 def key(row):
@@ -139,14 +145,21 @@ def freeze():
     return handoff
 
 
-def checked_handoff(handoff=None):
+def checked_handoff(handoff=None, current_sources=False):
     """Require retained accepted source/proof bytes and immutable original ancestry.
 
     @param handoff Optional detached frozen handoff for focused refusal checks.
+    @param current_sources Validate original facts for fresh conversion without old physical proofs.
     @return Current accepted source handoff; no historical native owner is reactivated.
     @throws ValueError On wrong scope, changed proofs or original provenance drift.
     """
     handoff = art.read_json(HANDOFF) if handoff is None else handoff
+    if current_sources:
+        declared = art.read_json(ROOT / "media/multilayer/launch-pack-scope.json")["source_handoff"]
+        # Fresh candidates cannot supply their own expected source table or
+        # revise the independently approved frozen handoff while relocating it.
+        if source.identity(HANDOFF) != declared or handoff != art.read_json(HANDOFF):
+            raise ValueError("current launch source handoff differs from its immutable original")
     # The snapshot grants exactly two source families and an append extent;
     # a completion flag cannot add another native or gameplay authority.
     if (handoff["asset_order"] != list(ASSETS) or handoff["native_start"] != 6143
@@ -173,7 +186,9 @@ def checked_handoff(handoff=None):
         for reference in ({name: candidate[name] for name in ("path", "sha256")}, candidate["generation_receipt"], *references):
             originals[reference["path"], reference["sha256"]] = reference
     for reference in originals.values():
-        bound(reference)
+        source.source_reference(reference, record)
+    if current_sources:
+        return handoff
     for asset in ASSETS:
         accepted = handoff["sources"][asset]
         report, proof = art.read_json(bound(accepted["report"])), art.read_json(bound(accepted["qualification"]))
@@ -196,16 +211,102 @@ def checked_handoff(handoff=None):
     return handoff
 
 
-def source_poses(family, report=None, image=None, handoff=None):
+def current_source_poses(family, report, image, handoff, context):
+    """Check fresh physical source parts against independent frozen pixels and aliases.
+
+    @param family Detached public descriptor bound to this invocation's source report/atlas.
+    @param report Explicit current source report, or None to read the selected exact identity.
+    @param image Optional opened current indexed atlas for focused pixel corruption checks.
+    @param handoff Original immutable source expectations, never regenerated from current output.
+    @param context Exact source leaf invocation, including its own images/data/report owners.
+    @return Identity-keyed actual decoded source poses and their current indexed atlas.
+    @throws ValueError On foreign source, changed original geometry/pixels/aliases or expected facts.
+    """
+    from regenerate_space_sources import selected_path
+
+    handoff = checked_handoff(handoff, current_sources=True)
+    asset = family["asset_id"]
+    if asset not in ASSETS:
+        raise ValueError("current launch source belongs to an unrelated family")
+    accepted = handoff["sources"][asset]
+    authoring = family["authoring"]
+    reference = dict(path=authoring["atlas_manifest"], sha256=authoring["atlas_manifest_sha256"])
+    path = selected_path(reference, context, "reports")
+    report = art.read_json(path) if report is None else report
+    contract = {name: value for name, value in source_contract(family).items() if name != "runtime"}
+    expected = {name: value for name, value in accepted["source_contract"].items() if name != "runtime"}
+    # Later runtime bindings are separate native evidence. Current source must
+    # retain this original physical contract and explicitly identify its actual
+    # invocation and historical approval, never relocate an old success report.
+    if (contract != expected or not authoring["coverage_complete"]
+            or report.get("kind") != "selected_space_source" or report.get("asset_id") != asset
+            or report.get("collection") != "launch" or report.get("run_id") != context.run_id
+            or report.get("historical_approval") != accepted["report"]):
+        raise ValueError("current launch source contract/run/original approval changed")
+    native = report["native_source"]
+    native_path = selected_path(native, context, "images")
+    # Original approved source pixels remain independent expectations, while
+    # current locations and actual producer hashes belong only to this run.
+    if (native["sha256"] != accepted["atlas"]["sha256"] or authoring["native_sha256"] != native["sha256"]
+            or authoring["native_atlas"] != native["path"]):
+        raise ValueError("current launch source differs from original approved native pixels")
+    producer = importlib.import_module("convert_launch_center_source" if asset == ASSETS[0] else "convert_cargo_rocket_source")
+    if report["source_producer"] != source.identity(Path(producer.__file__)):
+        raise ValueError("current launch source producer changed; rebuild its selected leaf")
+    if image is None:
+        with Image.open(native_path) as opened:
+            image = opened.copy()
+    packing.validate_source_image(image, asset)
+    # Native source positions require integer ordinals. Python Boolean equality
+    # cannot make a forged logical frame/cell satisfy an original numbered slot.
+    for row in report["sprites"]:
+        if any(type(row[name]) is not int for name in ("frame", "tile_variant")):
+            raise ValueError("current launch source frame/cell is not an integer ordinal")
+    decoded = producer.decode(report, atlas=image, context=context)
+    canonical = {}
+    # Only the generated image location moved: compare every original canonical
+    # field after restoring its historical path spelling as a non-read fact.
+    for row in report["canonical_parts"]:
+        normalized = copy.deepcopy(row)
+        if "image" in normalized:
+            normalized["image"]["path"] = (Path(accepted["atlas"]["path"]).parent / "canonical" / Path(row["image"]["path"]).name).as_posix()
+        canonical[address(row)] = dict(row_sha256=art.semantic_digest(normalized), native_sha256=row["native_sha256"])
+    if canonical != accepted["canonical"]:
+        raise ValueError("current launch canonical parts differ from independent original source facts")
+    facts = art.read_json(bound(dict(path=ALIAS_FACTS.relative_to(ROOT).as_posix(), sha256=ALIAS_FACTS_SHA256)))
+    declared = art.read_json(ROOT / "media/multilayer/launch-pack-scope.json")["source_handoff"]
+    # This compact expectation was captured from exact approved old reports,
+    # never from current conversion; losing it cannot trigger baseline updates.
+    if facts["source_handoff"] != declared or facts["sort_fields"] != list(FIELDS):
+        raise ValueError("independent launch source alias fixture changed original owner")
+    expected = facts["families"][asset]
+    addresses = {value: index for index, value in enumerate(expected["canonical_addresses"])}
+    actual = []
+    # Preserve exact logical-to-physical state/frame/view/cell/part aliases.
+    # Plausible native pixels cannot authorize a different construction/work pose.
+    for row in sorted(report["sprites"], key=key):
+        target = address(row["alias_of"] if row["alias_of"] is not None else row)
+        if target not in addresses:
+            raise ValueError("current launch source alias has no independent canonical target")
+        actual.append(addresses[target])
+    if actual != expected["target_indices"]:
+        raise ValueError("current launch logical aliases differ from independent original source facts")
+    return {key(row): dict(row) for row, _ in decoded}, image
+
+
+def source_poses(family, report=None, image=None, handoff=None, context=None):
     """Adapt exact qualified launch/rocket physical parts to the existing native packer.
 
     @param family Public descriptor with immutable source/geometry and staged packed fields.
     @param report Optional detached complete source report for metadata refusal checks.
     @param image Optional actual indexed atlas or detached PNG corruption buffer.
     @param handoff Optional detached frozen handoff, rechecked against its accepted proofs.
+    @param context Optional exact current source leaf, requiring fresh source/independent fact checks.
     @return Identity-keyed physical source poses and their verified indexed atlas.
     @throws ValueError On missing, duplicate, cross-view, false-absence or rehashed source.
     """
+    if context is not None:
+        return current_source_poses(family, report, image, handoff, context)
     handoff = checked_handoff(handoff)
     asset = family["asset_id"]
     if asset not in ASSETS:
@@ -301,15 +402,16 @@ def validate_prepacking_prefix(handoff=None):
     bound(handoff["predecessor_payload_original"])
 
 
-def layout(public=None, handoff=None):
+def layout(public=None, handoff=None, current_sources=False):
     """Describe the exact append through existing family domains without staging native files.
 
     @param public Optional detached public contract for range/geometry refusal checks.
     @param handoff Optional qualified frozen source handoff, checked before allocation.
+    @param current_sources Compare fresh source geometry independently of historical runtime metadata.
     @return Ordered two-family ranges and exclusive7791bound; no sprite is published.
     @throws ValueError On prior range drift, changed source domains or relocated new bindings.
     """
-    handoff = checked_handoff(handoff)
+    handoff = checked_handoff(handoff, current_sources=current_sources)
     public = art.read_json(art.PUBLIC) if public is None else public
     rows = {row["asset_id"]: row for row in public["assets"]}
     if len(rows) != len(public["assets"]):
@@ -331,7 +433,12 @@ def layout(public=None, handoff=None):
         packed = family["packed"]
         # Existing source geometry and any already staged append are immutable;
         # a reordered selection or new source field cannot relocate native IDs.
-        if (art.semantic_digest(source_contract(family)) != art.semantic_digest(accepted["source_contract"])
+        contract = source_contract(family)
+        expected_contract = accepted["source_contract"]
+        if current_sources:
+            contract = {name: value for name, value in contract.items() if name != "runtime"}
+            expected_contract = {name: value for name, value in expected_contract.items() if name != "runtime"}
+        if (art.semantic_digest(contract) != art.semantic_digest(expected_contract)
                 or count != accepted["logical_poses"] or packed.get("native_offset", cursor) != cursor
                 or packed.get("sprite_count", count) != count or packed.get("route", handoff["native_route"]) != handoff["native_route"]
                 or packed["namespace"] != accepted["definition_binding"]["namespace"]

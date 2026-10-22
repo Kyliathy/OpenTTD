@@ -3,6 +3,7 @@
 /**
  * @file artifact_paths.cpp Focused native checks for development artifact ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group10.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  */
 
@@ -22,6 +23,12 @@ TEST_CASE("Artifact paths separate features without changing native process iden
 	CHECK(tbm.run_id == geology.run_id);
 	CHECK(tbm.runtime_dir == geology.runtime_dir);
 	CHECK(tbm.images != geology.images);
+	CHECK(tbm.data != geology.data);
+	CHECK(tbm.evidence != geology.evidence);
+	CHECK(std::filesystem::is_directory(tbm.data));
+	CHECK(std::filesystem::is_directory(tbm.evidence));
+	CHECK(tbm.Output("data", "payload.bin") == tbm.data / "payload.bin");
+	CHECK(tbm.Output("evidence", "native.txt") == tbm.evidence / "native.txt");
 	const auto first = tbm.Output("scratch", "identity.bin");
 	const auto second = geology.Output("scratch", "identity.bin");
 	std::ofstream(first) << "tbm";

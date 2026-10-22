@@ -8157,5 +8157,12 @@
         "native_reviewed": true
       }
     }
-  ]
+  ],
+  "_retained_reference_inputs_documentation": "Owner: r2fc-file-cleanup3.md Group17D. Exact executed fleet AI input image retained through existing media ownership. Original M1 approved native atlas SHA256 independently verifies these bytes. Historical reference spelling and original candidate/family/policy fields stay unchanged; this is original prompt input, not current native proof.",
+  "retained_reference_inputs": {
+    "logs/proofs/mlm/native-art/derived/vehicle-model-04-authored.png": {
+      "path": "media/multilayer/guides/ground/retained-generation-inputs/m1-vehicle-model-04-generation-input.png",
+      "sha256": "753dd76bfbe2ec11d11b4d38496ffbde061e7fa0142250e51971ba317de28df5"
+    }
+  }
 }

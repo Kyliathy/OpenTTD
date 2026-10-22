@@ -1,5 +1,6 @@
 /**
  * @file ground_transport_runtime.cpp Actual conventional transport UI and viewport source observations.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; mode-specific current capture ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHC.
  * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md.
  * Native company-availability boundary fixtures qualify presentation only;
@@ -110,7 +111,12 @@ TEST_CASE("Current conventional transport observer draws actual native purchase 
 	const char *source_value = std::getenv("OTTD_GROUND_TRANSPORT_SOURCE");
 	REQUIRE(source_value != nullptr);
 	const auto source = ResolveTestInputPath(std::filesystem::path{source_value});
-	const auto paths = GetTestArtifactPaths("selected-ground", "transport");
+	const char *mode = std::getenv("OTTD_GROUND_TRANSPORT_MODE");
+	const std::string scope = mode == nullptr ? "purchases" : mode;
+	// Each real bounded mode keeps separate output/stage ownership inside one
+	// selected graph. Unknown modes cannot create an arbitrary artifact namespace.
+	REQUIRE((scope == "purchases" || scope == "rail" || scope == "road"));
+	const auto paths = GetTestArtifactPaths("selected-ground", "transport-" + scope);
 	const auto config = GetTestRuntimeConfig();
 	bool observed = false;
 	std::exception_ptr failure;
@@ -123,8 +129,6 @@ TEST_CASE("Current conventional transport observer draws actual native purchase 
 			REQUIRE(BlitterFactory::SelectBlitter("8bpp-simple") != nullptr);
 			GfxClearSpriteCache();
 			FontCache::ClearFontCaches(FONTSIZES_REQUIRED);
-			const char *mode = std::getenv("OTTD_GROUND_TRANSPORT_MODE");
-			const std::string scope = mode == nullptr ? "purchases" : mode;
 			const bool bodies = scope != "purchases";
 			const auto frames = bodies ? CaptureGroundTransportBodies(paths, scope == "road") : CaptureGroundTransportPurchases(paths);
 			REQUIRE(frames.size() == (bodies ? (scope == "road" ? 210 : 289) : 10));

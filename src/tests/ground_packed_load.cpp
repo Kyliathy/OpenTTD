@@ -1,5 +1,6 @@
 /**
  * @file ground_packed_load.cpp Actual complete-byte loading of selected underground and protected native art.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group18B; explicit current source inputs.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79E.2.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  * This observer starts the real application without loading or changing a paid world.
@@ -80,15 +81,14 @@ static uint32_t HashGroundPixels(const Sprite &sprite)
 /** Hidden isolated native startup observes every existing and newly appended palette byte and anchor. */
 TEST_CASE("Actual native loader preserves complete prefix and loads selected underground artwork", "[.ground-packed-art-load]")
 {
-	const auto root = FindTestRepositoryRoot();
-	const auto fixture = root / "logs/proofs/mlm/native-art/expected/ground-packed-sprites.bin";
+	const auto fixture = GetTestExpectedSprites("ground");
 	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Normal original base graphics and the current shared extra GRF must
 	// exist before native startup; no fallback mock can satisfy loader coverage.
 	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
-		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+		REQUIRE(std::filesystem::exists(config.parent_path() / "baseset" / name));
 	}
 	bool observed = false;
 	std::exception_ptr failure;

@@ -1,0 +1,53 @@
+{
+  "_documentation": "Retain original conventional-facility geometry without qualifying current native code.\n\n@file station_source_facts.py Exact source-era records, never a regenerated image baseline.\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DD.\n",
+  "schema_version": 1,
+  "kind": "original_station_source_geometry",
+  "original_git_epoch": "395103b5672c992aad21ccc928cac24e886c294e",
+  "scope": {
+    "path": "media/multilayer/ground-pack-scope.json",
+    "sha256": "06e8e705b0efe233f79537d95d905c06dba5337d84f05435ae339c17285af4ac"
+  },
+  "families": {
+    "facility.rail-station": {
+      "descriptor": {
+        "path": "media/multilayer/contracts/conventional-station-geometry.json",
+        "sha256": "8f530f3fa602224712d30ec6cb4b60c5bed28b886fadbaf753f72963677c6920"
+      },
+      "record": {
+        "path": "media/multilayer/source/ground/station-generation-record.json",
+        "sha256": "a6d57cca266f93ebfc7e704f0a076747f5715c11b301a0b83d98c4b33245c576"
+      },
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/station-source-manifest.json",
+        "sha256": "616084bde1baa13560e96f48e7b14020e77604e8a5e6825ce306f6be160d33b1"
+      },
+      "native_anchor_renderer_sha256": {
+        "src/landscape.h": "55af88f0e33d10f9ed0ba3d33581314aea3010292cf8c29c7b9ffc5d987e8ece",
+        "src/viewport.cpp": "eb1ed57078b19d58f2f145ee4a606dacdb24e960903e98739cdda2e2033cfe60",
+        "src/viewport_func.h": "3398ec2214906c58bb934e4b4956aa0aad3f75c51ad6d649c88bc9536f25bd98",
+        "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b"
+      }
+    },
+    "facility.road-terminal": {
+      "descriptor": {
+        "path": "media/multilayer/contracts/conventional-terminal-geometry.json",
+        "sha256": "68ac32090d26f5edfd9e8c67ad906f59ef1e7af36935054a06159299dfee773f"
+      },
+      "record": {
+        "path": "media/multilayer/source/ground/terminal-generation-record.json",
+        "sha256": "288ddb865c05b968980b96ad11f2c12bf0636247a72efbb6b6030d313b639484"
+      },
+      "original_report": {
+        "path": "logs/proofs/mlm/native-art/ground/terminal-source-manifest.json",
+        "sha256": "06808f9f4c99c7f137e498b5e5b567dde6a463c4a492431187074faf971842f8"
+      },
+      "native_anchor_renderer_sha256": {
+        "src/landscape.h": "55af88f0e33d10f9ed0ba3d33581314aea3010292cf8c29c7b9ffc5d987e8ece",
+        "src/viewport.cpp": "eb1ed57078b19d58f2f145ee4a606dacdb24e960903e98739cdda2e2033cfe60",
+        "src/viewport_func.h": "3398ec2214906c58bb934e4b4956aa0aad3f75c51ad6d649c88bc9536f25bd98",
+        "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b"
+      }
+    }
+  },
+  "native_proof": false
+}

@@ -1,6 +1,7 @@
 """Semantic refusal checks for actual native vehicle body/source comparison.
 
 @file ground_transport_body_pixel_checks-1.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current capture/source selection.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHC.
 @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md.
 One real native pose is copied beneath repository test-cache. A scoped unit
@@ -18,8 +19,10 @@ import ground_transport_body_pixel_checks as checks
 from ground_pack_check_support import ROOT, handoff
 from tools.ground_payload_binding import reference
 
-EXECUTION = "logs/graphics/selected-ground-runtime/20261021-transport-01/rail-debug-04/rail.json"
-OUTPUT = ROOT / "logs/graphics/selected-ground-runtime/20261021-transport-01/body-pixel-verifier-cases"
+
+from ground_pixel_refusal_support import run_checks, scratch_root
+
+EXECUTION = None
 
 
 class NativeTransportPixelRefusals(unittest.TestCase):
@@ -30,7 +33,7 @@ class NativeTransportPixelRefusals(unittest.TestCase):
 
         @param self Current isolated semantic case.
         """
-        cache = ROOT / "test-cache/selected-ground-body-pixel-verifier"
+        cache = scratch_root("selected-ground-body-pixel-verifier")
         cache.mkdir(parents=True, exist_ok=True)
         self.temporary = tempfile.TemporaryDirectory(prefix="native-body-", dir=cache)
         self.directory = Path(self.temporary.name).resolve()
@@ -78,7 +81,7 @@ class NativeTransportPixelRefusals(unittest.TestCase):
         """
         identity = (self.frame["model"], self.frame["cargo_label"], self.frame["state_index"], self.frame["frame"], self.frame["direction"], "map")
         with patch.object(checks, "expected_matrix", return_value={identity}):
-            return checks.verify(self.execution.relative_to(ROOT).as_posix())
+            return checks.verify(self.execution.relative_to(ROOT).as_posix(), self.source_view)
 
     def test_actual_native_pose_matches(self):
         """@param self Current case. Real packet-backed native pixels match accepted source and company remaps."""
@@ -86,9 +89,8 @@ class NativeTransportPixelRefusals(unittest.TestCase):
 
     def test_rehashed_wrong_native_pixel_refuses(self):
         """@param self Current case. A fresh raster hash cannot authorize a changed opaque source pixel."""
-        scope, before, public = handoff.read_scope()
-        family = next(row for row in public["assets"] if row["asset_id"] == self.frame["asset_id"])
-        poses, atlas = handoff.source_poses(family, scope, before, {}, {})
+        family = self.source_view.families[self.frame["asset_id"]]
+        poses, atlas = self.source_view.poses(family["asset_id"])
         pose = poses[checks.source_key(self.frame, family)]
         left, top, width, height = pose["box"]
         data = atlas.crop((left, top, left + width, top + height)).tobytes()
@@ -133,7 +135,7 @@ class NativeTransportPixelRefusals(unittest.TestCase):
     def test_partial_matrix_refuses_without_unit_scope(self):
         """@param self Current case. Production validation requires the entire independent native coverage matrix."""
         with self.assertRaisesRegex(ValueError, "exact required cargo/state/view coverage"):
-            checks.verify(self.execution.relative_to(ROOT).as_posix())
+            checks.verify(self.execution.relative_to(ROOT).as_posix(), self.source_view)
 
     def test_failed_native_process_refuses(self):
         """@param self Current case. Plausible pixels cannot qualify an unsuccessful native process."""
@@ -144,14 +146,4 @@ class NativeTransportPixelRefusals(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    started = time.monotonic()
-    with (OUTPUT / "cases.log").open("w", encoding="utf-8") as stream:
-        result = unittest.TextTestRunner(stream=stream, verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(NativeTransportPixelRefusals))
-    report = {"_documentation": __doc__, "passed": result.wasSuccessful(), "cases": result.testsRun,
-              "seconds": round(time.monotonic() - started, 3), "terminal": reference(OUTPUT / "cases.log"),
-              "native_execution": reference(handoff.bound(EXECUTION)),
-              "inputs": [reference(Path(__file__)), reference(Path(checks.__file__))]}
-    (OUTPUT / "verification.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: report[key] for key in ("passed", "cases", "seconds")}))
-    raise SystemExit(0 if result.wasSuccessful() else 1)
+    run_checks(NativeTransportPixelRefusals, 'rail')

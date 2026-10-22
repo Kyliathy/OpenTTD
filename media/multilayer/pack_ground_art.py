@@ -1,6 +1,7 @@
 """Prepare deterministic selected ground sprites after the complete published native prefix.
 
 @file pack_ground_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DE, current source-only packing candidates.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79D.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHCCB native station offsets.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D.
@@ -13,6 +14,7 @@ import argparse
 import hashlib
 import io
 import json
+from pathlib import Path
 
 from PIL import PngImagePlugin
 
@@ -111,15 +113,35 @@ def native_pose(family, key, poses, image):
     return packing.cropped_pose(image, {**pose, "anchor": anchor})
 
 
-def derive(public=None):
+def derive(public=None, source_manifests=None, context=None):
     """Convert only exact qualified native sources into new append inputs.
 
     @param public Optional detached public document for focused source/range refusal checks.
+    @param source_manifests Exact47asset-to-current source report map; required with context.
+    @param context Explicit selected data owner; None retains historical staging inspection.
     @return Complete source-derived packing report and exact new PNG/NFO/header bytes.
     @throws ValueError On changed prefix, source geometry, palette, coverage or unauthorized absence.
     """
-    scope, before, public = handoff.read_scope(public)
-    handoff.validate_preserved_files(scope, before)
+    # Current sources and destinations form one explicit invocation. Supplying
+    # only half cannot silently reopen historical workstation publication data.
+    if (context is None) != (source_manifests is None):
+        raise ValueError("Ground current packing requires both source reports and output context")
+    scope, before, public = handoff.read_scope(public, current_sources=context is not None)
+    source = None
+    if context is None:
+        handoff.validate_preserved_files(scope, before)
+    else:
+        import regenerate_ground_sources as source
+        from artifact_paths import contained, identifier
+        if context.root.resolve() != ROOT:
+            raise ValueError("Ground packing context belongs to another checkout")
+        # Shared routing owns every generated destination and invocation name;
+        # selected packing cannot write canonical media or another run's data.
+        for value in (context.feature, context.scenario, context.run_id):
+            identifier(value)
+        contained(context.data, context.directory)
+        public, scope, before = source.bind_sources(public, scope, before, context, source_manifests)
+        facts = source.load_facts()
     families = {row["asset_id"]: row for row in public["assets"]}
     documents, images, ranges, entries, sprites = {}, {}, [], [], []
     # Every canonical source identity gets its own native slot, including
@@ -129,6 +151,8 @@ def derive(public=None):
         asset_id = reference["asset_id"]
         family = families[asset_id]
         poses, image = handoff.source_poses(family, scope, before, documents, images)
+        if source is not None:
+            source.verify_poses(asset_id, poses, facts)
         ranges.append({"asset_id": asset_id, "native_offset": reference["native_offset"], "sprite_count": reference["sprite_count"],
                        **{key: family[key] for key in ("states", "frames", "directions", "tile_variants", "parts", "native_size", "anchor")}})
         for index, key in enumerate(packing.required_keys(family)):
@@ -144,7 +168,10 @@ def derive(public=None):
     sheet, positions = packing.shelf_sheet(sprites, scope["sheet_width"], scope["sprite_gap"])
     png = encoded_png(sheet)
     nfo = packing.format_nfo(entries, sprites, positions).replace(b"map_layers_m1.png", b"ground_final.png")
-    nfo = (b"// @see r2mlvs14-remaining-assets-and-runtime-integration.md Group79D; archi-map-layers.md.\n" + nfo)
+    # The published station-anchor correction is already part of the shipping
+    # source contract. Preserve its exact attribution as well as every sprite
+    # byte; selected regeneration must reproduce the existing canonical NFO.
+    nfo = (b"// @see r2mlvs14-remaining-assets-and-runtime-integration.md Groups79D/79FHCCB; archi-map-layers.md.\n" + nfo)
     header = format_header(ranges, scope["native_start"], scope["native_end_exclusive"])
     # The retained report binds cropped bytes and anchors to the full original
     # native source. A real loader can compare every index, including holes,
@@ -152,7 +179,9 @@ def derive(public=None):
     for entry, sprite, position in zip(entries, sprites, positions):
         indices, width, height, x, y = sprite
         entry.update(box=[*position, width, height], anchor=[x, y], pixel_sha256=hashlib.sha256(bytes(indices)).hexdigest())
-    files = {handoff.bound(scope["png"]): png, handoff.bound(scope["nfo"]): nfo, handoff.bound(scope["header"]): header}
+    destinations = [handoff.bound(scope[key]) if context is None else context.data / Path(scope[key]).name
+                    for key in ("png", "nfo", "header")]
+    files = dict(zip(destinations, (png, nfo, header)))
     report = {"_documentation": __doc__, "schema_version": 1, "route": scope["native_route"],
               "native_start": scope["native_start"], "native_sprite_bound": scope["native_end_exclusive"],
               "pose_count": len(entries), "families": ranges, "sprites": entries, "toolchain": scope["toolchain"],
@@ -163,6 +192,14 @@ def derive(public=None):
               "outputs": [{"path": path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(data).hexdigest()}
                           for path, data in files.items()], "sheet_size": list(sheet.size),
               "packed_grf": None, "runtime_activated": False}
+    if context is not None:
+        report.update(schema_version=2, kind="selected_ground_packing", run_id=context.run_id,
+                      source_reviews=source_manifests, historical_source_audit=report.pop("source_audit"),
+                      native_proof=False, publishes_source=False)
+    # Cropped sprites retain independent byte lists; source atlases need not
+    # remain open after source normalization and native anchor compensation.
+    for image in images.values():
+        image.close()
     return report, files
 
 

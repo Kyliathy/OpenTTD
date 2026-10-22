@@ -1,0 +1,36 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group17; seeded thirteen-unit packet/near-aging-boundary characterization with actual native handling commands. This supplies no material-paid cargo producer claim. Existing observer checks fee2, retained feeder share130 and one canonical packet age increment.",
+  "configuration": "RelWithDebInfo",
+  "source": {
+    "path": "src/tests/fixtures/demos/space/space-survey-approach-1990-404.sav",
+    "sha256": "5a56a61b521d675937abfd4c073f4a55cf072435db62126c0a7368bdbff8cbda"
+  },
+  "fixture_kind": "seeded_packet_handling_boundary",
+  "before": {
+    "path": "mlm/reviews/space/handling-phase-prepare/20261014-122212-d156c7018b/saves/launch-center-413.sav",
+    "sha256": "0d0afae003e791b63357a399cdb0909cc494054fc389a926a7a7dabe4754a1ca"
+  },
+  "after": {
+    "path": "mlm/reviews/space/handling-phase-continue/20261014-122212-d156c7018b/saves/launch-center-413.sav",
+    "sha256": "2a953bb9fb27e90934da1af93d8b57604f99a6f31d81ed94d065d8f2b894ac10"
+  },
+  "replay": {
+    "path": "mlm/reviews/space/handling-phase-replay/20261014-122212-d156c7018b/saves/launch-center-413.sav",
+    "sha256": "2a953bb9fb27e90934da1af93d8b57604f99a6f31d81ed94d065d8f2b894ac10"
+  },
+  "ordinary_resaves": {
+    "before": {
+      "path": "mlm/reviews/space/handling-phase-paused-before/20261014-122212-d156c7018b/saves/ordinary-resave.sav",
+      "sha256": "0d0afae003e791b63357a399cdb0909cc494054fc389a926a7a7dabe4754a1ca"
+    },
+    "after": {
+      "path": "mlm/reviews/space/handling-phase-paused-after/20261014-122212-d156c7018b/saves/ordinary-resave.sav",
+      "sha256": "2a953bb9fb27e90934da1af93d8b57604f99a6f31d81ed94d065d8f2b894ac10"
+    }
+  },
+  "exact_owner_families": 26,
+  "transferred_before": 8,
+  "transferred_after": 13,
+  "completion_expense": 2,
+  "no_cargo_income": true
+}

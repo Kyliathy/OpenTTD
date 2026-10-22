@@ -1,0 +1,2 @@
+@see r2mlvs6-mines-and-resource-chains.md, Group 16B. Actual stock/choice/history checkpoint.
+MLVS_PROCESSORS_LOADED count=1 digest=87BB9BED2D1CFD7C

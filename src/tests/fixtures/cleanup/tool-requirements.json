@@ -1,0 +1,51 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md Groups2/13. Portable observed requirements, not a CMakeCache transfer or a claim of destination-machine qualification. Machine paths are discovery output in test-cache/cleanup/boundary.json.",
+  "schema_version": 1,
+  "native": {
+    "language_standard": "C++20",
+    "observed_compiler": "MSVC 19.44.35216.0",
+    "observed_visual_studio": "2022 BuildTools, toolset 14.44.35207, x64",
+    "observed_cmake": "3.31.6-msvc6",
+    "generator": "Visual Studio 17 2022",
+    "platform": "x64",
+    "configurations": ["RelWithDebInfo", "Debug"],
+    "maximum_build_workers": 2,
+    "msbuild_node_reuse": false,
+    "source_requirements": ["CMakeLists.txt", "cmake", "src/CMakeLists.txt", "src/tests/CMakeLists.txt", "vcpkg.json"],
+    "vcpkg_baseline": "f3e10653cc27d62a37a3763cd84b38bca07c6075",
+    "vcpkg_triplet": "x64-windows-static",
+    "dependencies": ["breakpad", "liblzma", "libpng", "lzo", "opusfile", "soxr", "zlib"],
+    "dependency_authority": "vcpkg.json",
+    "cache_is_machine_local": true
+  },
+  "graphics": {
+    "python": "3.10.0",
+    "pillow": "12.3.0",
+    "grfcodec": "6.2.0",
+    "nforenum": "6.2.0",
+    "toolchain_authorities": [
+      "media/multilayer/m1-pack-scope.json",
+      "media/multilayer/space-pack-scope.json",
+      "media/multilayer/orbital-pack-scope.json",
+      "media/multilayer/launch-pack-scope.json",
+      "media/multilayer/ground-pack-scope.json"
+    ],
+    "approved_original_pixels_are_not_regenerable": true
+  },
+  "runtime": {
+    "immutable_config_templates": "src/tests/fixtures/config/multilayer",
+    "required_distribution": ["baseset", "newgrf", "lang", "scripts"],
+    "process_home": "mlm/runtime/<profile>/<run-id>/<process>",
+    "current_build_configs": "build/*.cfg",
+    "preserve_config_bytes_before_build_deletion": true,
+    "config_migration_authority": "src/tests/fixtures/cleanup/migration.json",
+    "save_decoder_success_required_for_retention": false
+  },
+  "discovery": {
+    "python": "Discover the selected Python executable and compare its version with the selected pack scope.",
+    "cmake": "Discover PATH CMake or the selected Visual Studio CMake installation; supply it explicitly.",
+    "compiler": "Discover Visual Studio BuildTools/MSVC and Windows SDK; never transfer a machine-local compiler cache.",
+    "vcpkg": "Discover or supply an external vcpkg root at the source-declared baseline; install dependencies into the declared local build owner.",
+    "grf": "Discover or supply GRFCodec, grfid and nforenum executables matching the selected source scope."
+  }
+}

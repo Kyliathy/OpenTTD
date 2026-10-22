@@ -4,6 +4,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B/39-42.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group41B current native qualification.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DB, historical source geometry only.
 Industry owns physical stock; existing native recipe/control/work own production.
 This contract allocates neither a sprite range nor runtime rendering authority.
 """
@@ -29,10 +30,11 @@ OWNERS = ("src/layer_industry_definitions.cpp", "src/layer_industry_policy.cpp",
           "src/tests/layer_processor_definition.cpp", "src/tests/layer_processor_presentation.cpp", "src/tests/layer_processor.cpp")
 
 
-def validate_geometry(document):
+def validate_geometry(document, source_only=False):
     """Require exact compiled selected native families and current physical/state owners.
 
     @param document Candidate or published processor geometry and successful native proof.
+    @param source_only Reconstruct frozen physical art; grants no current native qualification.
     @return Same checked document; stale owners, false proof and partial geometry refuse.
     @throws ValueError When native provenance or any ordered machinery identity differs.
     """
@@ -42,7 +44,10 @@ def validate_geometry(document):
             or document.get("native_source_hash_policy") != "utf8_lf"
             or set(document.get("native_source_sha256", {})) != set(OWNERS)):
         raise ValueError("native processor ownership/schema mismatch")
-    changed = [name for name in OWNERS if document["native_source_sha256"][name] != source_digest(ROOT / name)]
+    if source_only:
+        from ground_source_facts import verify_original_descriptor
+        verify_original_descriptor(document, DESCRIPTOR)
+    changed = [] if source_only else [name for name in OWNERS if document["native_source_sha256"][name] != source_digest(ROOT / name)]
     if changed:
         # Later shared-code changes need a separate current compiled proof of
         # this exact original geometry. Keep all historical source hashes and
@@ -72,12 +77,13 @@ def validate_geometry(document):
     return document
 
 
-def load_geometry():
+def load_geometry(source_only=False):
     """Read checked compiled processor geometry before dependent source operations.
 
-    @return Validated four-family native layout/state descriptor.
+    @param source_only Explicit frozen-art role; default native freshness remains strict.
+    @return Validated four-family layout with its explicitly historical native descriptor.
     """
-    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")))
+    return validate_geometry(json.loads(DESCRIPTOR.read_text(encoding="utf-8")), source_only=source_only)
 
 
 def processor_contract(asset_id):

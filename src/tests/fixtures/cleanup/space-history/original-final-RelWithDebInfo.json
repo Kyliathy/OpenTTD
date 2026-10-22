@@ -1,0 +1,3079 @@
+{
+  "_documentation": "Recover actual construction capital through freshly funded existing paid services.\n\n@file surface_entry_construction_cash_checks-1.py\n@see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZVEEH.\nOnly native fares and actual costs move money; retired components remain history.\n",
+  "complete": true,
+  "configuration": "RelWithDebInfo",
+  "phase": "construction-cash-work",
+  "operation": {
+    "receipt": {
+      "path": "logs/surface-entry-construction-cash-work-031-RelWithDebInfo.json",
+      "sha256": "7956a30814b194d7c02fe2e996aa29aa0f9330dd4917869663bb6e26b65720f0"
+    },
+    "source": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215528-424788cd36/saves/surface-resupply-construction-cash-work-440.sav",
+      "sha256": "c04de380cc9cfeed133056a0b84e22fad7e79268ce796262b14ae7cd197a8f2c"
+    },
+    "before": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-before-construction-cash-work-440.sav",
+      "sha256": "c04de380cc9cfeed133056a0b84e22fad7e79268ce796262b14ae7cd197a8f2c"
+    },
+    "output": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-construction-cash-work-440.sav",
+      "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+    },
+    "application": {
+      "path": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "sha256": "147c3aa2d40b16fc07f73b96f64ae47370bb6539289fd810ceb1aa6ce305fbc2"
+    },
+    "terminal": {
+      "path": "logs/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/native.log",
+      "sha256": "3067072ff56c77ed80174aa381028860743909de00953bf031789c9a08dcb6f4"
+    },
+    "rows": {
+      "plan": [],
+      "admission": [
+        {
+          "ceiling": 2000,
+          "ticks": 2000,
+          "unpaid": 0,
+          "operating": 9999,
+          "reserve": 40000,
+          "target": 49999,
+          "cash": 179573,
+          "funded": true,
+          "future_income_counted": 0
+        }
+      ],
+      "selection": [
+        {
+          "ceiling": 2000,
+          "ticks": 2000,
+          "found": true,
+          "settlement": false,
+          "initial": 0
+        }
+      ],
+      "service": [
+        {
+          "ticks": 2000,
+          "initial": 0,
+          "boarded": 50,
+          "accepted": 50,
+          "held": 0,
+          "observed_whole_unload_fare": 1510,
+          "payment_pending": false,
+          "payment_posted": true,
+          "settlement": false,
+          "cash": 182302,
+          "restored": false,
+          "reserve": 40000,
+          "cohort_only_fare_claimed": false,
+          "feeder_credit_is_cash": false
+        }
+      ],
+      "mode": [
+        {
+          "stop_on_payment": false,
+          "target": 650000,
+          "cash": 182302,
+          "restored": false,
+          "reserve": 40000
+        }
+      ],
+      "earned": [
+        {
+          "earned": 2000,
+          "reached": false,
+          "cash_before": 179573,
+          "cash": 182302,
+          "debt": 5000000,
+          "income": 12677,
+          "net_expense": -2729
+        }
+      ],
+      "expenses": [
+        {
+          "type": 0,
+          "amount": 0
+        },
+        {
+          "type": 1,
+          "amount": 0
+        },
+        {
+          "type": 2,
+          "amount": 640
+        },
+        {
+          "type": 3,
+          "amount": 950
+        },
+        {
+          "type": 4,
+          "amount": 0
+        },
+        {
+          "type": 5,
+          "amount": 0
+        },
+        {
+          "type": 6,
+          "amount": 0
+        },
+        {
+          "type": 7,
+          "amount": -9752
+        },
+        {
+          "type": 8,
+          "amount": -2925
+        },
+        {
+          "type": 9,
+          "amount": 0
+        },
+        {
+          "type": 10,
+          "amount": 0
+        },
+        {
+          "type": 11,
+          "amount": 8333
+        },
+        {
+          "type": 12,
+          "amount": 25
+        }
+      ]
+    },
+    "initial": {
+      "company": {
+        "cash": 179573,
+        "debt": 5000000
+      },
+      "facility": {
+        "center": 21,
+        "generation": 1,
+        "anchor": 2890,
+        "rotation": 1,
+        "member": 0,
+        "member_generation": 1,
+        "next_center": 2,
+        "next_member": 2,
+        "cells": [
+          2890,
+          2891,
+          2892,
+          2954,
+          2955,
+          2956,
+          3018,
+          3019,
+          3020,
+          3082,
+          3083,
+          3084
+        ],
+        "empty_slots": false,
+        "workshop": [
+          1048575,
+          0
+        ],
+        "pad": [
+          1048575,
+          0
+        ],
+        "queue": [
+          [
+            54,
+            1
+          ]
+        ]
+      },
+      "totals": {
+        "STEL": 32,
+        "GOOD": 50,
+        "PROP": 38
+      },
+      "cohort": [
+        {
+          "packet": 4,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 6,
+          "periods_in_transit": 110,
+          "feeder_share": 48,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 5,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 3,
+          "periods_in_transit": 14323,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 7,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 3,
+          "periods_in_transit": 80,
+          "feeder_share": 3,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 8,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 5,
+          "periods_in_transit": 8316,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 10,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 56,
+          "feeder_share": 7,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 16,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 13,
+          "periods_in_transit": 108,
+          "feeder_share": 6,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 29,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 8315,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 34,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 2,
+          "periods_in_transit": 6417,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 40,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 12,
+          "periods_in_transit": 84,
+          "feeder_share": 9,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 41,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 4,
+          "periods_in_transit": 22,
+          "feeder_share": 6,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 44,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 25,
+          "periods_in_transit": 8,
+          "feeder_share": 587,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 52,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 89,
+          "feeder_share": 61,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 54,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 14338,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 65,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 107,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 74,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 5,
+          "periods_in_transit": 109,
+          "feeder_share": 39,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 80,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 10,
+          "periods_in_transit": 111,
+          "feeder_share": 76,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 81,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 8,
+          "periods_in_transit": 57,
+          "feeder_share": 10,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 85,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 9,
+          "feeder_share": 24,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        }
+      ],
+      "shipments": {
+        "Surface Steel reserve 1": {
+          "vehicle": 4,
+          "label": "STEL",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 18
+        },
+        "Surface Steel reserve 2": {
+          "vehicle": 5,
+          "label": "STEL",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 18
+        },
+        "Surface Goods reserve": {
+          "vehicle": 6,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 14
+        },
+        "Surface Launch Goods reserve 1": {
+          "vehicle": 3,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2575,
+          "home": false,
+          "capacity": 18
+        },
+        "Surface Launch Goods reserve 2": {
+          "vehicle": 25,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2508,
+          "home": false,
+          "capacity": 18
+        },
+        "Surface Propellant reserve": {
+          "vehicle": 2,
+          "label": "PROP",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27
+        }
+      },
+      "handling": {
+        "next_id": 7,
+        "jobs": [],
+        "remainder": 0
+      },
+      "service_lives": [
+        {
+          "vehicle": 10,
+          "name": "Surface Launch passenger 1",
+          "engine": 119,
+          "age": 3913,
+          "remaining": 1577
+        },
+        {
+          "vehicle": 24,
+          "name": "Surface Launch passenger 3",
+          "engine": 119,
+          "age": 3913,
+          "remaining": 1577
+        },
+        {
+          "vehicle": 42,
+          "name": "Surface Income coal",
+          "engine": 24,
+          "age": 4702,
+          "remaining": 3716
+        },
+        {
+          "vehicle": 48,
+          "name": "Surface ore delivery",
+          "engine": 263,
+          "age": 7734,
+          "remaining": 3246
+        },
+        {
+          "vehicle": 49,
+          "name": "Surface Income goods",
+          "engine": 24,
+          "age": 4702,
+          "remaining": 3716
+        },
+        {
+          "vehicle": 51,
+          "name": "Surface Steel delivery",
+          "engine": 152,
+          "age": 2363,
+          "remaining": 3127
+        },
+        {
+          "vehicle": 52,
+          "name": "Surface Income farm",
+          "engine": 24,
+          "age": 4702,
+          "remaining": 3716
+        },
+        {
+          "vehicle": 53,
+          "name": "Surface Launch passenger 2",
+          "engine": 119,
+          "age": 3913,
+          "remaining": 1577
+        },
+        {
+          "vehicle": 11,
+          "name": "Surface Regional passenger 2",
+          "engine": 119,
+          "age": 2363,
+          "remaining": 3127
+        },
+        {
+          "vehicle": 43,
+          "name": "Surface Regional passenger 3",
+          "engine": 119,
+          "age": 2363,
+          "remaining": 3127
+        },
+        {
+          "vehicle": 56,
+          "name": "Surface Regional passenger 1",
+          "engine": 119,
+          "age": 2363,
+          "remaining": 3127
+        }
+      ],
+      "plant": {
+        "consumed": 68,
+        "produced": 68,
+        "dispatched": 68,
+        "batches": 34,
+        "delivered": 27,
+        "additional_consumed": 26,
+        "additional_produced": 26,
+        "additional_dispatched": 26,
+        "chemical_input": 1,
+        "propellant_output": 0
+      },
+      "chemical_history": {
+        "0": {
+          "CHEM": 90,
+          "PCHM": 0
+        },
+        "1": {
+          "CHEM": 0,
+          "OIL_": 180,
+          "SALT": 180
+        },
+        "2": {
+          "CHEM": 180,
+          "PROP": 0
+        }
+      },
+      "finite_salt": {
+        "extracted": 10960,
+        "remaining": 13040
+      },
+      "surviving_packets": 99,
+      "sole_packet_owners": 99,
+      "goods_income": {
+        "Surface Launch Goods reserve 1": {
+          "vehicle": 3,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2575,
+          "home": false,
+          "capacity": 18,
+          "engine": 140,
+          "remaining": 2001,
+          "stopped": false,
+          "profit256": -11835,
+          "previous_profit256": -197361,
+          "orders": 8
+        },
+        "Surface Launch Goods reserve 2": {
+          "vehicle": 25,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2508,
+          "home": false,
+          "capacity": 18,
+          "engine": 140,
+          "remaining": 2004,
+          "stopped": false,
+          "profit256": -11835,
+          "previous_profit256": -180721,
+          "orders": 15
+        }
+      },
+      "capital_service": {
+        "vehicle": 9,
+        "label": "PASS",
+        "held": 40,
+        "packets": [
+          {
+            "packet": 86,
+            "source": 20,
+            "source_xy": 1055,
+            "loaded_at_xy": 65535,
+            "count": 20,
+            "periods_in_transit": 5,
+            "feeder_share": 0,
+            "source_type": 1,
+            "source_id": 1,
+            "travelled.x": 31,
+            "travelled.y": 16
+          },
+          {
+            "packet": 3,
+            "source": 20,
+            "source_xy": 1055,
+            "loaded_at_xy": 65535,
+            "count": 20,
+            "periods_in_transit": 4,
+            "feeder_share": 0,
+            "source_type": 1,
+            "source_id": 1,
+            "travelled.x": 31,
+            "travelled.y": 16
+          }
+        ],
+        "tile": 1515,
+        "home": false,
+        "capacity": 40,
+        "engine": 119,
+        "remaining": 3056,
+        "profit256": 91845,
+        "age": 2434,
+        "orders": 17,
+        "stopped": false
+      },
+      "farm_road": {
+        "vehicle": 62,
+        "label": "LVST",
+        "held": 5,
+        "packets": [
+          {
+            "packet": 98,
+            "source": 22,
+            "source_xy": 1316,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 0,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 7,
+            "travelled.x": 36,
+            "travelled.y": 20
+          }
+        ],
+        "tile": 1316,
+        "home": false,
+        "capacity": 18,
+        "engine": 137,
+        "remaining": 3890,
+        "profit256": -10299,
+        "previous_profit256": -230897,
+        "orders": 13,
+        "stopped": false
+      },
+      "paid_craft": [
+        {
+          "vehicle": 54,
+          "generation": 1,
+          "model": 14,
+          "placement": 2,
+          "remaining": 0,
+          "content": 3,
+          "capital": 400000,
+          "tile": 2891,
+          "deployed": false
+        }
+      ],
+      "embodied_inputs": {
+        "STEL": 12,
+        "GOOD": 16,
+        "PROP": 0
+      },
+      "constructor_retired": true,
+      "retired_embodied_inputs": {
+        "STEL": 4,
+        "GOOD": 8,
+        "PROP": 0
+      },
+      "retired_constructor": {
+        "vehicle": 38,
+        "generation": 2,
+        "model": 20,
+        "original_capital": 100000,
+        "embodied": {
+          "STEL": 4,
+          "GOOD": 8
+        },
+        "extinguished_unused_returns": 2,
+        "components_recovered": 0
+      },
+      "manifests": {
+        "54": {
+          "generation": 1,
+          "passenger": [
+            1048575,
+            0
+          ],
+          "carrier": [
+            1048575,
+            0
+          ],
+          "age": 24,
+          "returns": 0,
+          "fuel_burned": 30,
+          "supplies": [
+            [],
+            [],
+            []
+          ]
+        }
+      },
+      "core": {
+        "site": 0,
+        "row": {
+          "generation": 1,
+          "owner": 0,
+          "kind": 6,
+          "phase": 1,
+          "x": 10,
+          "y": 48,
+          "content": 3,
+          "capital": 700000,
+          "work": 740,
+          "age": 8,
+          "consumed": [
+            16,
+            24
+          ],
+          "inputs": [
+            {
+              "quantity": 0,
+              "references": []
+            },
+            {
+              "quantity": 0,
+              "references": []
+            }
+          ],
+          "module": {
+            "activation": 0,
+            "age": 82,
+            "stock": {},
+            "producer": 0,
+            "consumer": 4294967295,
+            "enabled": 1,
+            "completed": 0,
+            "service": {
+              "craft": 1048575,
+              "generation": 0,
+              "ticks": 0,
+              "paused": 0,
+              "interval": 0,
+              "serial": 0,
+              "inputs": [
+                {
+                  "quantity": 0,
+                  "references": []
+                },
+                {
+                  "quantity": 0,
+                  "references": []
+                }
+              ],
+              "model": 65535
+            },
+            "assembly_consumer": 4294967295,
+            "source": 65535,
+            "source_generation": 0,
+            "dock_service": {
+              "craft": 1048575,
+              "generation": 0,
+              "ticks": 0,
+              "paused": 0,
+              "interval": 0,
+              "serial": 0,
+              "inputs": [
+                {
+                  "quantity": 0,
+                  "references": []
+                },
+                {
+                  "quantity": 0,
+                  "references": []
+                }
+              ],
+              "model": 65535
+            },
+            "manufacture_serial": 0,
+            "manufacture": null
+          },
+          "fraction": 0,
+          "remainder": 0,
+          "tick": 2683950,
+          "interval": 0
+        }
+      },
+      "orbital_consumed": {
+        "STEL": 16,
+        "GOOD": 24,
+        "PROP": 0
+      },
+      "additional_collected": {
+        "STEL": 36,
+        "GOOD": 50,
+        "PROP": 26
+      },
+      "cargo_abandoned": {
+        "STEL": 8,
+        "GOOD": 2,
+        "PROP": 0
+      },
+      "salt_delivery": {
+        "delivered": 60,
+        "consumed": 60,
+        "salt_input": 0,
+        "chemical_output": 0,
+        "oil_input": 723,
+        "processor": {
+          "industry": 15,
+          "controller": 0,
+          "recipe": 1296386115,
+          "work_ticks": 296,
+          "scale_fraction": 0,
+          "revision": 7440,
+          "dispatched": 180
+        }
+      },
+      "chemical_carrier": {
+        "vehicle": 55,
+        "label": "CHEM",
+        "held": 0,
+        "packets": [],
+        "tile": 2443,
+        "home": true,
+        "capacity": 27,
+        "engine": 134,
+        "age": 2566,
+        "life": 5490,
+        "stored": 0,
+        "reserved": 0
+      },
+      "propellant_carrier": {
+        "vehicle": 2,
+        "label": "PROP",
+        "held": 0,
+        "packets": [],
+        "tile": 2443,
+        "home": true,
+        "capacity": 27,
+        "engine": 134,
+        "age": 3500,
+        "life": 5490,
+        "stored": 0,
+        "reserved": 0
+      },
+      "space_orders": {
+        "next": 3,
+        "generations": {
+          "54": 1
+        },
+        "queues": {
+          "54": {
+            "generation": 1,
+            "cursor": 0,
+            "started": 0,
+            "blocked": 0,
+            "timer": 0,
+            "work": 0,
+            "entries": [],
+            "approach": null
+          }
+        }
+      },
+      "fuel_burned": 30,
+      "flight": {
+        "vehicle": 54,
+        "generation": 1,
+        "phase": 0,
+        "blocked": 0,
+        "layer": 0,
+        "source": [
+          65535,
+          0
+        ],
+        "recovery": [
+          65535,
+          0
+        ],
+        "destination": [
+          0,
+          4294967295,
+          0
+        ],
+        "departure": [
+          0,
+          0
+        ],
+        "remaining": 0,
+        "pad_remainder": 0,
+        "flags": 0,
+        "started": 2,
+        "completed": 2,
+        "canceled": 0
+      },
+      "goods_holds": {
+        "54": 0
+      },
+      "panel": {
+        "type": 0,
+        "id": 0,
+        "reference": 0,
+        "owner": 0,
+        "layer": 2,
+        "kind": 5,
+        "active": 1,
+        "epoch": 237437,
+        "a": 30000,
+        "b": 810,
+        "c": 0,
+        "d": 0,
+        "ticks": 1,
+        "remainder": 0,
+        "lifetime_generated": 192264030,
+        "lifetime_consumed": 0,
+        "transferred": 0,
+        "imported_link": 0,
+        "destination": 0,
+        "source_endpoint": 0,
+        "destination_endpoint": 0,
+        "town": 0,
+        "town_bonus": 0,
+        "town_applied": 0,
+        "town_suspended": 0,
+        "domain": 0,
+        "riser": 0,
+        "share": 0,
+        "parent": 0
+      },
+      "operational": true,
+      "delivery_stocks": {
+        "0": {
+          "STEL": 0,
+          "GOOD": 0,
+          "PROP": 0
+        },
+        "21": {
+          "STEL": 32,
+          "GOOD": 50,
+          "PROP": 38
+        }
+      },
+      "component_carriers_returned": false,
+      "components_at_member": false,
+      "components_at_center": true,
+      "farm_balance": {
+        "state": "backhaul",
+        "active": [
+          52,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          21,
+          22,
+          23,
+          50,
+          57,
+          39,
+          60
+        ],
+        "parked": [
+          18,
+          19,
+          20
+        ],
+        "parked_livestock": [],
+        "original_owned": [
+          7,
+          8,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46,
+          47,
+          49,
+          52
+        ],
+        "original_wagons_owned": 32,
+        "original_wagons_active": 29,
+        "new_wagons": [
+          {
+            "vehicle": 57,
+            "held": 25,
+            "capacity": 25,
+            "packets": [
+              {
+                "packet": 59,
+                "source": 15,
+                "source_xy": 1766,
+                "loaded_at_xy": 65535,
+                "count": 10,
+                "periods_in_transit": 6,
+                "feeder_share": 0,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 27
+              },
+              {
+                "packet": 72,
+                "source": 22,
+                "source_xy": 1316,
+                "loaded_at_xy": 65535,
+                "count": 5,
+                "periods_in_transit": 10,
+                "feeder_share": 2,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 26
+              },
+              {
+                "packet": 84,
+                "source": 22,
+                "source_xy": 1316,
+                "loaded_at_xy": 65535,
+                "count": 10,
+                "periods_in_transit": 7,
+                "feeder_share": 3,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 26
+              }
+            ]
+          }
+        ],
+        "goods_wagons": [
+          {
+            "vehicle": 39,
+            "held": 0,
+            "capacity": 25,
+            "packets": []
+          },
+          {
+            "vehicle": 60,
+            "held": 0,
+            "capacity": 25,
+            "packets": []
+          }
+        ],
+        "livestock_capacity": 200,
+        "grain_capacity": 90,
+        "goods_capacity": 50,
+        "parked_grain_capacity": 90,
+        "parked_livestock_capacity": 0,
+        "active_length": 112,
+        "train_bodies": 39,
+        "retired_livestock": [
+          58,
+          59
+        ],
+        "retired_livestock_capacity": 50
+      },
+      "new_fuel_at_member": false,
+      "new_fuel_at_center": true
+    },
+    "final": {
+      "company": {
+        "cash": 182302,
+        "debt": 5000000
+      },
+      "facility": {
+        "center": 21,
+        "generation": 1,
+        "anchor": 2890,
+        "rotation": 1,
+        "member": 0,
+        "member_generation": 1,
+        "next_center": 2,
+        "next_member": 2,
+        "cells": [
+          2890,
+          2891,
+          2892,
+          2954,
+          2955,
+          2956,
+          3018,
+          3019,
+          3020,
+          3082,
+          3083,
+          3084
+        ],
+        "empty_slots": false,
+        "workshop": [
+          1048575,
+          0
+        ],
+        "pad": [
+          1048575,
+          0
+        ],
+        "queue": [
+          [
+            54,
+            1
+          ]
+        ]
+      },
+      "totals": {
+        "STEL": 32,
+        "GOOD": 50,
+        "PROP": 38
+      },
+      "cohort": [
+        {
+          "packet": 4,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 6,
+          "periods_in_transit": 110,
+          "feeder_share": 48,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 5,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 3,
+          "periods_in_transit": 14323,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 7,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 3,
+          "periods_in_transit": 80,
+          "feeder_share": 3,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 8,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 5,
+          "periods_in_transit": 8316,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 10,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 56,
+          "feeder_share": 7,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 16,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 13,
+          "periods_in_transit": 108,
+          "feeder_share": 6,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 29,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 8315,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 34,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 2,
+          "periods_in_transit": 6417,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 40,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 12,
+          "periods_in_transit": 84,
+          "feeder_share": 9,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 41,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 4,
+          "periods_in_transit": 22,
+          "feeder_share": 6,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 44,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 25,
+          "periods_in_transit": 8,
+          "feeder_share": 587,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        },
+        {
+          "packet": 52,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 7,
+          "periods_in_transit": 89,
+          "feeder_share": 61,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 54,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 14338,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 65,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 107,
+          "feeder_share": 0,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 74,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 5,
+          "periods_in_transit": 109,
+          "feeder_share": 39,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 80,
+          "label": "STEL",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 1,
+          "source_xy": 2204,
+          "loaded_at_xy": 65535,
+          "count": 10,
+          "periods_in_transit": 111,
+          "feeder_share": 76,
+          "source_type": 0,
+          "source_id": 10,
+          "travelled.x": 20,
+          "travelled.y": -5
+        },
+        {
+          "packet": 81,
+          "label": "GOOD",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 19,
+          "source_xy": 2377,
+          "loaded_at_xy": 65535,
+          "count": 8,
+          "periods_in_transit": 57,
+          "feeder_share": 10,
+          "source_type": 0,
+          "source_id": 11,
+          "travelled.x": 1,
+          "travelled.y": -2
+        },
+        {
+          "packet": 85,
+          "label": "PROP",
+          "owner": [
+            "station",
+            21
+          ],
+          "source": 10,
+          "source_xy": 1896,
+          "loaded_at_xy": 65535,
+          "count": 1,
+          "periods_in_transit": 9,
+          "feeder_share": 24,
+          "source_type": 0,
+          "source_id": 6,
+          "travelled.x": 32,
+          "travelled.y": -10
+        }
+      ],
+      "shipments": {
+        "Surface Steel reserve 1": {
+          "vehicle": 4,
+          "label": "STEL",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 18
+        },
+        "Surface Steel reserve 2": {
+          "vehicle": 5,
+          "label": "STEL",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 18
+        },
+        "Surface Goods reserve": {
+          "vehicle": 6,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 14
+        },
+        "Surface Launch Goods reserve 1": {
+          "vehicle": 3,
+          "label": "GOOD",
+          "held": 13,
+          "packets": [
+            {
+              "packet": 17,
+              "source": 13,
+              "source_xy": 2572,
+              "loaded_at_xy": 65535,
+              "count": 13,
+              "periods_in_transit": 3,
+              "feeder_share": 22,
+              "source_type": 0,
+              "source_id": 5,
+              "travelled.x": 12,
+              "travelled.y": 40
+            }
+          ],
+          "tile": 2575,
+          "home": false,
+          "capacity": 18
+        },
+        "Surface Launch Goods reserve 2": {
+          "vehicle": 25,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2637,
+          "home": false,
+          "capacity": 18
+        },
+        "Surface Propellant reserve": {
+          "vehicle": 2,
+          "label": "PROP",
+          "held": 0,
+          "packets": [],
+          "tile": 2443,
+          "home": true,
+          "capacity": 27
+        }
+      },
+      "handling": {
+        "next_id": 7,
+        "jobs": [],
+        "remainder": 0
+      },
+      "service_lives": [
+        {
+          "vehicle": 10,
+          "name": "Surface Launch passenger 1",
+          "engine": 119,
+          "age": 3940,
+          "remaining": 1550
+        },
+        {
+          "vehicle": 24,
+          "name": "Surface Launch passenger 3",
+          "engine": 119,
+          "age": 3940,
+          "remaining": 1550
+        },
+        {
+          "vehicle": 42,
+          "name": "Surface Income coal",
+          "engine": 24,
+          "age": 4729,
+          "remaining": 3689
+        },
+        {
+          "vehicle": 48,
+          "name": "Surface ore delivery",
+          "engine": 263,
+          "age": 7761,
+          "remaining": 3219
+        },
+        {
+          "vehicle": 49,
+          "name": "Surface Income goods",
+          "engine": 24,
+          "age": 4729,
+          "remaining": 3689
+        },
+        {
+          "vehicle": 51,
+          "name": "Surface Steel delivery",
+          "engine": 152,
+          "age": 2390,
+          "remaining": 3100
+        },
+        {
+          "vehicle": 52,
+          "name": "Surface Income farm",
+          "engine": 24,
+          "age": 4729,
+          "remaining": 3689
+        },
+        {
+          "vehicle": 53,
+          "name": "Surface Launch passenger 2",
+          "engine": 119,
+          "age": 3940,
+          "remaining": 1550
+        },
+        {
+          "vehicle": 11,
+          "name": "Surface Regional passenger 2",
+          "engine": 119,
+          "age": 2390,
+          "remaining": 3100
+        },
+        {
+          "vehicle": 43,
+          "name": "Surface Regional passenger 3",
+          "engine": 119,
+          "age": 2390,
+          "remaining": 3100
+        },
+        {
+          "vehicle": 56,
+          "name": "Surface Regional passenger 1",
+          "engine": 119,
+          "age": 2390,
+          "remaining": 3100
+        }
+      ],
+      "plant": {
+        "consumed": 68,
+        "produced": 68,
+        "dispatched": 68,
+        "batches": 34,
+        "delivered": 27,
+        "additional_consumed": 26,
+        "additional_produced": 26,
+        "additional_dispatched": 26,
+        "chemical_input": 1,
+        "propellant_output": 0
+      },
+      "chemical_history": {
+        "0": {
+          "CHEM": 90,
+          "PCHM": 0
+        },
+        "1": {
+          "CHEM": 0,
+          "OIL_": 180,
+          "SALT": 180
+        },
+        "2": {
+          "CHEM": 180,
+          "PROP": 0
+        }
+      },
+      "finite_salt": {
+        "extracted": 10960,
+        "remaining": 13040
+      },
+      "surviving_packets": 100,
+      "sole_packet_owners": 100,
+      "goods_income": {
+        "Surface Launch Goods reserve 1": {
+          "vehicle": 3,
+          "label": "GOOD",
+          "held": 13,
+          "packets": [
+            {
+              "packet": 17,
+              "source": 13,
+              "source_xy": 2572,
+              "loaded_at_xy": 65535,
+              "count": 13,
+              "periods_in_transit": 3,
+              "feeder_share": 22,
+              "source_type": 0,
+              "source_id": 5,
+              "travelled.x": 12,
+              "travelled.y": 40
+            }
+          ],
+          "tile": 2575,
+          "home": false,
+          "capacity": 18,
+          "engine": 140,
+          "remaining": 1974,
+          "stopped": false,
+          "profit256": -25458,
+          "previous_profit256": -197361,
+          "orders": 8
+        },
+        "Surface Launch Goods reserve 2": {
+          "vehicle": 25,
+          "label": "GOOD",
+          "held": 0,
+          "packets": [],
+          "tile": 2637,
+          "home": false,
+          "capacity": 18,
+          "engine": 140,
+          "remaining": 1977,
+          "stopped": false,
+          "profit256": -17778,
+          "previous_profit256": -180721,
+          "orders": 15
+        }
+      },
+      "capital_service": {
+        "vehicle": 9,
+        "label": "PASS",
+        "held": 5,
+        "packets": [
+          {
+            "packet": 3,
+            "source": 20,
+            "source_xy": 1055,
+            "loaded_at_xy": 65535,
+            "count": 5,
+            "periods_in_transit": 15,
+            "feeder_share": 0,
+            "source_type": 1,
+            "source_id": 1,
+            "travelled.x": 31,
+            "travelled.y": 16
+          }
+        ],
+        "tile": 2546,
+        "home": false,
+        "capacity": 40,
+        "engine": 119,
+        "remaining": 3029,
+        "profit256": 70542,
+        "age": 2461,
+        "orders": 17,
+        "stopped": false
+      },
+      "farm_road": {
+        "vehicle": 62,
+        "label": "LVST",
+        "held": 10,
+        "packets": [
+          {
+            "packet": 26,
+            "source": 22,
+            "source_xy": 1316,
+            "loaded_at_xy": 65535,
+            "count": 10,
+            "periods_in_transit": 0,
+            "feeder_share": 0,
+            "source_type": 0,
+            "source_id": 7,
+            "travelled.x": 36,
+            "travelled.y": 20
+          }
+        ],
+        "tile": 1316,
+        "home": false,
+        "capacity": 18,
+        "engine": 137,
+        "remaining": 3863,
+        "profit256": -27250,
+        "previous_profit256": -230897,
+        "orders": 13,
+        "stopped": false
+      },
+      "paid_craft": [
+        {
+          "vehicle": 54,
+          "generation": 1,
+          "model": 14,
+          "placement": 2,
+          "remaining": 0,
+          "content": 3,
+          "capital": 400000,
+          "tile": 2891,
+          "deployed": false
+        }
+      ],
+      "embodied_inputs": {
+        "STEL": 12,
+        "GOOD": 16,
+        "PROP": 0
+      },
+      "constructor_retired": true,
+      "retired_embodied_inputs": {
+        "STEL": 4,
+        "GOOD": 8,
+        "PROP": 0
+      },
+      "retired_constructor": {
+        "vehicle": 38,
+        "generation": 2,
+        "model": 20,
+        "original_capital": 100000,
+        "embodied": {
+          "STEL": 4,
+          "GOOD": 8
+        },
+        "extinguished_unused_returns": 2,
+        "components_recovered": 0
+      },
+      "manifests": {
+        "54": {
+          "generation": 1,
+          "passenger": [
+            1048575,
+            0
+          ],
+          "carrier": [
+            1048575,
+            0
+          ],
+          "age": 174,
+          "returns": 0,
+          "fuel_burned": 30,
+          "supplies": [
+            [],
+            [],
+            []
+          ]
+        }
+      },
+      "core": {
+        "site": 0,
+        "row": {
+          "generation": 1,
+          "owner": 0,
+          "kind": 6,
+          "phase": 1,
+          "x": 10,
+          "y": 48,
+          "content": 3,
+          "capital": 700000,
+          "work": 740,
+          "age": 8,
+          "consumed": [
+            16,
+            24
+          ],
+          "inputs": [
+            {
+              "quantity": 0,
+              "references": []
+            },
+            {
+              "quantity": 0,
+              "references": []
+            }
+          ],
+          "module": {
+            "activation": 0,
+            "age": 47,
+            "stock": {},
+            "producer": 0,
+            "consumer": 4294967295,
+            "enabled": 1,
+            "completed": 0,
+            "service": {
+              "craft": 1048575,
+              "generation": 0,
+              "ticks": 0,
+              "paused": 0,
+              "interval": 0,
+              "serial": 0,
+              "inputs": [
+                {
+                  "quantity": 0,
+                  "references": []
+                },
+                {
+                  "quantity": 0,
+                  "references": []
+                }
+              ],
+              "model": 65535
+            },
+            "assembly_consumer": 4294967295,
+            "source": 65535,
+            "source_generation": 0,
+            "dock_service": {
+              "craft": 1048575,
+              "generation": 0,
+              "ticks": 0,
+              "paused": 0,
+              "interval": 0,
+              "serial": 0,
+              "inputs": [
+                {
+                  "quantity": 0,
+                  "references": []
+                },
+                {
+                  "quantity": 0,
+                  "references": []
+                }
+              ],
+              "model": 65535
+            },
+            "manufacture_serial": 0,
+            "manufacture": null
+          },
+          "fraction": 0,
+          "remainder": 0,
+          "tick": 2683950,
+          "interval": 0
+        }
+      },
+      "orbital_consumed": {
+        "STEL": 16,
+        "GOOD": 24,
+        "PROP": 0
+      },
+      "additional_collected": {
+        "STEL": 36,
+        "GOOD": 50,
+        "PROP": 26
+      },
+      "cargo_abandoned": {
+        "STEL": 8,
+        "GOOD": 2,
+        "PROP": 0
+      },
+      "salt_delivery": {
+        "delivered": 60,
+        "consumed": 60,
+        "salt_input": 0,
+        "chemical_output": 0,
+        "oil_input": 723,
+        "processor": {
+          "industry": 15,
+          "controller": 0,
+          "recipe": 1296386115,
+          "work_ticks": 296,
+          "scale_fraction": 0,
+          "revision": 7440,
+          "dispatched": 180
+        }
+      },
+      "chemical_carrier": {
+        "vehicle": 55,
+        "label": "CHEM",
+        "held": 0,
+        "packets": [],
+        "tile": 2443,
+        "home": true,
+        "capacity": 27,
+        "engine": 134,
+        "age": 2593,
+        "life": 5490,
+        "stored": 0,
+        "reserved": 0
+      },
+      "propellant_carrier": {
+        "vehicle": 2,
+        "label": "PROP",
+        "held": 0,
+        "packets": [],
+        "tile": 2443,
+        "home": true,
+        "capacity": 27,
+        "engine": 134,
+        "age": 3527,
+        "life": 5490,
+        "stored": 0,
+        "reserved": 0
+      },
+      "space_orders": {
+        "next": 3,
+        "generations": {
+          "54": 1
+        },
+        "queues": {
+          "54": {
+            "generation": 1,
+            "cursor": 0,
+            "started": 0,
+            "blocked": 0,
+            "timer": 0,
+            "work": 0,
+            "entries": [],
+            "approach": null
+          }
+        }
+      },
+      "fuel_burned": 30,
+      "flight": {
+        "vehicle": 54,
+        "generation": 1,
+        "phase": 0,
+        "blocked": 0,
+        "layer": 0,
+        "source": [
+          65535,
+          0
+        ],
+        "recovery": [
+          65535,
+          0
+        ],
+        "destination": [
+          0,
+          4294967295,
+          0
+        ],
+        "departure": [
+          0,
+          0
+        ],
+        "remaining": 0,
+        "pad_remainder": 0,
+        "flags": 0,
+        "started": 2,
+        "completed": 2,
+        "canceled": 0
+      },
+      "goods_holds": {
+        "54": 0
+      },
+      "panel": {
+        "type": 0,
+        "id": 0,
+        "reference": 0,
+        "owner": 0,
+        "layer": 2,
+        "kind": 5,
+        "active": 1,
+        "epoch": 239437,
+        "a": 30000,
+        "b": 810,
+        "c": 0,
+        "d": 0,
+        "ticks": 1,
+        "remainder": 0,
+        "lifetime_generated": 193884030,
+        "lifetime_consumed": 0,
+        "transferred": 0,
+        "imported_link": 0,
+        "destination": 0,
+        "source_endpoint": 0,
+        "destination_endpoint": 0,
+        "town": 0,
+        "town_bonus": 0,
+        "town_applied": 0,
+        "town_suspended": 0,
+        "domain": 0,
+        "riser": 0,
+        "share": 0,
+        "parent": 0
+      },
+      "operational": true,
+      "delivery_stocks": {
+        "0": {
+          "STEL": 0,
+          "GOOD": 0,
+          "PROP": 0
+        },
+        "21": {
+          "STEL": 32,
+          "GOOD": 50,
+          "PROP": 38
+        }
+      },
+      "component_carriers_returned": false,
+      "components_at_member": false,
+      "components_at_center": true,
+      "farm_balance": {
+        "state": "backhaul",
+        "active": [
+          52,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          21,
+          22,
+          23,
+          50,
+          57,
+          39,
+          60
+        ],
+        "parked": [
+          18,
+          19,
+          20
+        ],
+        "parked_livestock": [],
+        "original_owned": [
+          7,
+          8,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46,
+          47,
+          49,
+          52
+        ],
+        "original_wagons_owned": 32,
+        "original_wagons_active": 29,
+        "new_wagons": [
+          {
+            "vehicle": 57,
+            "held": 15,
+            "capacity": 25,
+            "packets": [
+              {
+                "packet": 14,
+                "source": 22,
+                "source_xy": 1316,
+                "loaded_at_xy": 65535,
+                "count": 4,
+                "periods_in_transit": 4,
+                "feeder_share": 2,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 30
+              },
+              {
+                "packet": 55,
+                "source": 15,
+                "source_xy": 2022,
+                "loaded_at_xy": 65535,
+                "count": 1,
+                "periods_in_transit": 2,
+                "feeder_share": 0,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 31
+              },
+              {
+                "packet": 67,
+                "source": 15,
+                "source_xy": 2022,
+                "loaded_at_xy": 65535,
+                "count": 10,
+                "periods_in_transit": 1,
+                "feeder_share": 0,
+                "source_type": 0,
+                "source_id": 7,
+                "travelled.x": 38,
+                "travelled.y": 31
+              }
+            ]
+          }
+        ],
+        "goods_wagons": [
+          {
+            "vehicle": 39,
+            "held": 0,
+            "capacity": 25,
+            "packets": []
+          },
+          {
+            "vehicle": 60,
+            "held": 0,
+            "capacity": 25,
+            "packets": []
+          }
+        ],
+        "livestock_capacity": 200,
+        "grain_capacity": 90,
+        "goods_capacity": 50,
+        "parked_grain_capacity": 90,
+        "parked_livestock_capacity": 0,
+        "active_length": 112,
+        "train_bodies": 39,
+        "retired_livestock": [
+          58,
+          59
+        ],
+        "retired_livestock_capacity": 50
+      },
+      "new_fuel_at_member": false,
+      "new_fuel_at_center": true
+    },
+    "source_pause": null,
+    "retained_harness": {
+      "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/harness.py",
+      "sha256": "01880d0688997dc222c0d9bcaa52e4ec5e2cce1bb23c99c00d70820cd87efbae"
+    },
+    "native_processes": [
+      {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/reports/native-4623d7399a4c47008cfcd55f9102689b.json",
+        "sha256": "eaeae4712c90055c6976d0a0044d9718ea568c3fd3a1b70fa7bdaf0fbd5c6bbe"
+      }
+    ],
+    "sources": [
+      {
+        "path": "src/tests/multilayer/acceptance/surface_construction_cash_native.py",
+        "sha256": "01880d0688997dc222c0d9bcaa52e4ec5e2cce1bb23c99c00d70820cd87efbae"
+      },
+      {
+        "path": "src/tests/surface_entry_productive_admission.cpp",
+        "sha256": "cff5bcbcfc973d5ada0189803ff8cfa2dcd0535da9d4049ecff47600116e8b47"
+      },
+      {
+        "path": "src/tests/surface_entry_resupply.cpp",
+        "sha256": "a7cb0a94963fa0f4fa62767178564f2f856863cc4f03d56653ab62f69a40daf3"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_construction_cash_native.py",
+        "sha256": "01880d0688997dc222c0d9bcaa52e4ec5e2cce1bb23c99c00d70820cd87efbae"
+      },
+      {
+        "path": "src/tests/surface_entry_productive_admission.cpp",
+        "sha256": "cff5bcbcfc973d5ada0189803ff8cfa2dcd0535da9d4049ecff47600116e8b47"
+      },
+      {
+        "path": "src/tests/surface_entry_resupply.cpp",
+        "sha256": "a7cb0a94963fa0f4fa62767178564f2f856863cc4f03d56653ab62f69a40daf3"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_construction_capital_native.py",
+        "sha256": "a05dc9f1acd77b2a5fb09c745002624e20dd76f9abbe80e355f8f58530bc6e51"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_working_cash_native.py",
+        "sha256": "8593f84e34b4aa2449cd967b8df8c0203a99bf339ee287674d36c6167a489fb4"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_funded_farm_goods_native.py",
+        "sha256": "6e186b5848cd74ff2f9006d99ee4cbf89328524068cd4321d60bb8b4e4e6c237"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_constructor_retirement_native.py",
+        "sha256": "ff5b09e956d3a9de89ed49d2193e3f2fcf7ab7b2765e2156f98fb2b85679f581"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_constructor_home_native.py",
+        "sha256": "6513816405c2a19b9d7fa7a448b1ceea2f7152f9d74303c40a354db48dab8ca0"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_surplus_recovery_native.py",
+        "sha256": "920531791f148373e71af74474906a99b84f44e76aef15ea45852d24e28468d0"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_surplus_home_native.py",
+        "sha256": "88ced2794f8f7626cce4bf9a45eaa85006a07c296e3940414f93dee1d0a99fa9"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_farm_backhaul_native.py",
+        "sha256": "c66e82caef6cf3964bdfa73cd0e1fefd9637a95cf16cd258ee1b8a00b3f0441d"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_farm_two_return_native.py",
+        "sha256": "009f633412e33c181db1d89cc8a0473939c9fc4c3b42d5fef5af862e517aebd2"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_rail_productivity_native.py",
+        "sha256": "61daf05111504f2b155fa989a78b1f41b5a15bed0a4e2ee934b1769aa31e03f7"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_productive_native.py",
+        "sha256": "145497bd4e58c81862f5a3b3d5a8cf2c3185814f15e81c68d94f4d7e7488761c"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_salt_native.py",
+        "sha256": "8d3b63d963609e8df9c2d196f186c87f1011f0437ac2dd6d805fe0d6a2108700"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_propellant_delivery_checks-1.py",
+        "sha256": "c715e144aede0614278ba8be5b53d149b2c61622f81746038be55e3fc488ff03"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_components_ledger.py",
+        "sha256": "02a356e3f5c0a582581fbf66c49a59bda15960c433da1d5249d5621d7fb5c366"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/orbital_save_checks-1.py",
+        "sha256": "19c556b6319f264e700adea92cbc159b31fceb8c70339dc712b9022c9056123d"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_mission_ledger.py",
+        "sha256": "1ce3fdc708c4a038e3f9f24ce7cb755cce139c5fe009f2912ee63ae278cd759c"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_facility_ledger.py",
+        "sha256": "e09879e2a395d6f2ab02df365a50c925f91dd30bfa14705cfb19218007314ce2"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_component_delivery_checks-1.py",
+        "sha256": "ac8a8eae993ffd79c93d44df1e116818c16dba48fafc750f63d467f19c8e4d82"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_chemical_checks-4.py",
+        "sha256": "4e6913645d9dd97e04a2d03f15613d19f5a42abcf6f89e022afa48061a7ffcfa"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_propellant_ledger.py",
+        "sha256": "d95a58078c3f294e5b7bad6cebd9c209ed509c8f5ff305b96e2380407ac6caa4"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_regional_ledger.py",
+        "sha256": "3574172cfa61781d3861cde647b5a49e4bae5042cf7d802197066c6ac4a7774e"
+      },
+      {
+        "path": "src/economy_type.h",
+        "sha256": "f544a4df9911e5d3115d3cfb1f347e22e65399af16bb9fbd1cc7314ef323ed1c"
+      },
+      {
+        "path": "src/company_base.h",
+        "sha256": "378ecfda9cccde2ccb657766816cea7ab50ab0b6816fd2e2b7d5ee465bf13da3"
+      },
+      {
+        "path": "src/surface_handling.cpp",
+        "sha256": "4df7f19bcbf82031036d0159539474feb125406c4a3b6a57b0b0cabb1e65b371"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_capital_recovery_checks-1.py",
+        "sha256": "5e193fb854b93a2582ca1793dce0340ed5074b8b94414073ab79e91b7254c1e8"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_capital_income_checks-1.py",
+        "sha256": "639315743c0a83fad4817247957bcc80c969da204e2c6a1ef2e1978230658e2f"
+      },
+      {
+        "path": "src/tests/surface_entry_capital_recovery.h",
+        "sha256": "27ff10483409e6f862cdf5650076d5596c24d23ffb572e9156a414576571e4c0"
+      },
+      {
+        "path": "src/tests/surface_entry_capital_renewals.h",
+        "sha256": "79dd79aa0d4842aa2ca553ca017f6c45f7ec9d9297f070d5aab1a592fd173b14"
+      },
+      {
+        "path": "src/tests/surface_entry_capital_income.h",
+        "sha256": "fbfcb2b996a5a5b7fc02274902a10fa0b43a620d7d6d09edfef9c02b6060db62"
+      },
+      {
+        "path": "src/tests/surface_entry_module_capital.h",
+        "sha256": "365d5eb5e0594308a5291310e3f08a9af0b52c2cc0fcd0db122506c4a85ff306"
+      },
+      {
+        "path": "src/tests/surface_regional_layout.h",
+        "sha256": "9d57b28912a57bfa57dc6387932bdc4156f7d4fa976774fd6959ea663b9bb8e4"
+      },
+      {
+        "path": "src/tests/surface_passenger_layout.h",
+        "sha256": "8cd7419ecdccfea1c4f972b33db9b0e844f435d773657f0f35f1a915729d5ad4"
+      },
+      {
+        "path": "src/engine.cpp",
+        "sha256": "d79041109de9c0d61c496095143c6dac30c2ef1246622758dca333ce8e989362"
+      },
+      {
+        "path": "src/roadveh_cmd.cpp",
+        "sha256": "c711cc29fe1edb6558d265d54fc8bd1b13d00d9ae93be92ea6a0210a42157a5d"
+      },
+      {
+        "path": "src/train_cmd.cpp",
+        "sha256": "78e78291e324817b256baaef790a07202f5ce987b73976333ea1b934c25cfd53"
+      },
+      {
+        "path": "src/order_cmd.cpp",
+        "sha256": "fec61474375ca96e72a87b9fde3635356dd6e430a5c028ffad575d785ae318a1"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_feeder_work_checks-1.py",
+        "sha256": "881c179db5e2a4e9cc015becbf05985e72ad5f54074c4ab6827afe2aeecf91ff"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_feeder_checks-1.py",
+        "sha256": "da356e4cf639adcf1358f523786ff849a242eb3df2f0d90ce808c4b3573ab7b4"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_road_work_checks-1.py",
+        "sha256": "6dd5b1b428c3d738f90e0535301674ec128a5f79b73d3e0044efd5fc5fbca04d"
+      },
+      {
+        "path": "src/tests/surface_entry_farm_feeder_work.h",
+        "sha256": "2f3b1a19b46b18810922cf4755e7cd65db42b38e2445fb79b339b5e339a638d5"
+      },
+      {
+        "path": "src/tests/surface_entry_farm_feeder.h",
+        "sha256": "7f176458b2d0ba6e4772108fca28c75b4a028747b881a07cff78d8b78b958612"
+      },
+      {
+        "path": "src/tests/surface_entry_farm_road_work.h",
+        "sha256": "31b5bfc805c5a6451cc975ad91a2a05c847003528e1be5c6b97ab07b2b947692"
+      },
+      {
+        "path": "src/tests/surface_entry_farm_rebalance.h",
+        "sha256": "8bbb1272260442986332f9cb22982c83fcf8bf58fc00f73a0c95388bd33c10c0"
+      },
+      {
+        "path": "src/tests/surface_entry_road_shortcut.h",
+        "sha256": "104adf8ba62d6329ce344f1926242d8f6fad5dd632a0eed6cb241253e67b1cb9"
+      },
+      {
+        "path": "src/tests/surface_entry_income_capitalization.h",
+        "sha256": "69a7399dc5af564984b246751dbf6f6471f26db1d04253fd5d7b77281706f1b2"
+      },
+      {
+        "path": "src/road_cmd.cpp",
+        "sha256": "bdb4bbc423546d1ec985c42bf98498e2d5d9be49a1f211b369f941bf6c93042f"
+      },
+      {
+        "path": "src/economy.cpp",
+        "sha256": "75f3ddc53c1d82ac0dda9929bf77bfb03202f22b098af77c205405e53870b34b"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_feeder_follow_checks-1.py",
+        "sha256": "ac24a4b9c28ff4e70e1ac458ed52983af48db6c7ec34d238953644e9b52a6fa7"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_feeder_rail_checks-1.py",
+        "sha256": "d228e6346561d997a4c860f006ba503380967b17bd62bad21ad04eb2bb60347a"
+      },
+      {
+        "path": "src/tests/surface_entry_farm_feeder_rail.h",
+        "sha256": "2cb786521f16283376d03b98888c332086c806df9cd2fb880d2d1c1bd5c881c7"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_factory_goods_checks-1.py",
+        "sha256": "27aa4e7aea9ddb0f4e96817739e2c824e3fca060a8e6cdc25dd4518a66d94e80"
+      },
+      {
+        "path": "src/tests/surface_entry_factory_goods.h",
+        "sha256": "d9de0b5bfbddee7a4f92adc1463417b4ed66a66f6357d1e23a0f12cb738539e9"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_factory_goods_work_checks-1.py",
+        "sha256": "3a1a630c83c00f0ce6e22c4b2ed05432b916a8e60baba8dd531e807fbbb19340"
+      },
+      {
+        "path": "src/tests/surface_entry_factory_goods_work.h",
+        "sha256": "1c310ab03fb5630efaaef311af4645c0a5aefad3efc985eef50cc68e8c20e64f"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_factory_goods_settlement_checks-1.py",
+        "sha256": "7c6229eaf544815d210c46220d9e8d4ff5be503ef9447835d3da08385f6e8a51"
+      },
+      {
+        "path": "src/tests/surface_entry_factory_goods_settlement.h",
+        "sha256": "49c4af31ddcb573933f5f8e61d17d25f5c9c140b830096c272c32e2e2c64746a"
+      },
+      {
+        "path": "src/economy_base.h",
+        "sha256": "1d1df97c9f586d512e10d69c9c73aa4284dd35f0faaa281d9edca9dd5a196a2c"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_factory_goods_liquidity_checks-1.py",
+        "sha256": "5e33d12829d3d36da17b70c787d1ee89c5b7d8c352b5eb7f4da1158d774f05de"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_return_passenger_checks-1.py",
+        "sha256": "d990dc571f6ae5a753efe3e10e9e8a21a2dff40c7e81108f1650edc354ba1706"
+      },
+      {
+        "path": "src/tests/surface_entry_return_passenger.h",
+        "sha256": "66d9a544063b82de4c22fc8ca25b7b8f15ba291eb60c8b69b397cd6d19310814"
+      },
+      {
+        "path": "src/tests/surface_entry_intertown.h",
+        "sha256": "5d0f94f559cff4dadcdb506e43a3ad7f2c3a94331f650931e0db0cb901e33969"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_return_passenger_work_checks-1.py",
+        "sha256": "f5633c033d5ccc2317fec523884f75d7b0739050d052e417c786231293e6b71e"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_return_passenger_delivery_checks-1.py",
+        "sha256": "bcda144b42de62da1f8df99817c813157635d2b44b3c4db03d1bb7e1e543310b"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_goods_rail_feeder_checks-1.py",
+        "sha256": "0814ea6ab72434ed96c83ecd5c6a72576bb837f72b37755e857deb1e0b573ce1"
+      },
+      {
+        "path": "src/tests/surface_entry_goods_rail_feeder.h",
+        "sha256": "40813fcd1654d5362a7aff0c6471f986f7d97088c273ce302a44244f40c883ad"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_goods_rail_feeder_work_checks-1.py",
+        "sha256": "bebdaaf5e4a883f73bd6596d73ea8b4fb1e4e7622fc782a2682d636266530f8a"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_refill_capital_checks-1.py",
+        "sha256": "2a18914b3b14a6de70b76a0c9e2025a131ce26f20621239f6b5081575b2ea918"
+      },
+      {
+        "path": "src/tests/surface_entry_refill_capital.h",
+        "sha256": "f364276e7fdf7490723c6080d617149c363535808d9d8575a2eab69698f7329f"
+      },
+      {
+        "path": "src/vehicle_cmd.cpp",
+        "sha256": "54b6f00f81539560a74465cb988427ea6c4796163541705639fa91c545e36525"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_refill_capital_sale_checks-1.py",
+        "sha256": "cc8c8cb88e3cbc60f2857e597d116477df4ef6614e8359762a253139ead6a641"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_goods_rail_transfer_checks-1.py",
+        "sha256": "f3e7bef893897df7b3f865b87da1824c99a590b72f83047ed35893f44d11ba04"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_goods_rail_delivery_checks-1.py",
+        "sha256": "2e182094e71622e2c329171fedf034ecb88be08b6f07793536e829eaa94648cc"
+      },
+      {
+        "path": "src/tests/surface_entry_goods_rail_delivery.h",
+        "sha256": "9b17eeb167d2c9f831cdf04aeb1fd84db027f512ca0a954d1addc97e87e379f9"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_feeder_reserve_checks-1.py",
+        "sha256": "cde752ffa9e8df1265717b296de325597b15d94e0fa9f18abe82c037156612bc"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_constructor_capital_checks-1.py",
+        "sha256": "716ff84d8998f418490ee040004d802d9a6d36a34d29009ac6cfb5ef682aebbf"
+      },
+      {
+        "path": "src/tests/surface_entry_constructor_capital.h",
+        "sha256": "fb455c130ff02e1cdf6f3cdbf2baa0480241f6abc7cd8b8327879ebe37af32e0"
+      },
+      {
+        "path": "src/space_orders.cpp",
+        "sha256": "78ac6041e5e15e73f1cc3c2fa248d2490ac82ae8518587e3259d5813d2ea3166"
+      },
+      {
+        "path": "src/space_manifest.cpp",
+        "sha256": "0a51de69788de4b07f4d5160822615801cdb3757925cd6714993c2f36a2c3b68"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_second_goods_feeder_checks-1.py",
+        "sha256": "36ebba7e375cd12e4fd4a14133355b47934a29be87148376eea46d92293f26c5"
+      },
+      {
+        "path": "src/tests/surface_entry_second_goods_feeder.h",
+        "sha256": "ee3821135106f7c8b88d2d478fa6961e6c2b8329378abdde9ffbcdffba469219"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_second_goods_feeder_work_checks-1.py",
+        "sha256": "6d028c04b34e19791c9b431b5fa3d4e55450b23e02fff48b3a42578f07eb69b4"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_joint_goods_rail_checks-1.py",
+        "sha256": "9f52a650a1e726b1dedca9f1e147e129c9bbb3426f9d75f313885f27199d1a70"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_joint_settlement_budget_checks-1.py",
+        "sha256": "550ba059d122819ec43075093facf9ad23a8fc7bea57aa57bc38cd2a003ee96e"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_joint_settlement_work_checks-1.py",
+        "sha256": "f4b6a64e22fc29b84d3685843768d32e33930e6892e3c4ddc84ab9e029ce5a12"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_joint_cycle_reserve_checks-1.py",
+        "sha256": "a01596c6aa92a6e1ce387a5dfbb5da5448e442bf5367b72bfafa96652b6e3723"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_reserve_bridge_checks-1.py",
+        "sha256": "4c9d1550e1b854749896a860fbc039333f8d124b713fa3cdc6ad6140ff81cce1"
+      },
+      {
+        "path": "logs/surface-entry-reserve-bridge-authorization.json",
+        "sha256": "b927fb32cded171947e14473b495b119ac1bf81f96abd02e0b99c6e78822a949"
+      },
+      {
+        "path": "logs/proofs/mlm/native-art/space/launch-presentation-v1/verification.json",
+        "sha256": "4084db878c7727d5face382f3f1c925c7c41ad6b8cdc5b77da7aa36474738bbb"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_loaded_goods_checks-1.py",
+        "sha256": "323c851a3bfeff71090b7e8a173b24068058777580327ddcf428fa98474a1eea"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_loaded_arrival_checks-1.py",
+        "sha256": "aadc610473dd641d055aed608709f87cebe9ec4569f069cdfad165a4f8dbf3c9"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_arrival_settlement_checks-1.py",
+        "sha256": "e6a89303007b0ddb15b6c7d3be7e042591a1c188502e6438f344991a05ff1c1e"
+      },
+      {
+        "path": "logs/surface-entry-arrival-settlement-proposal.json",
+        "sha256": "7b5695831a5c8f131fd5e7ef8fd08cc1c7b341537062b78fdddb048601d5f825"
+      },
+      {
+        "path": "logs/surface-entry-arrival-settlement-authorization.json",
+        "sha256": "737aa86cae3d8cf12d767d450da8f88fbc18bc90791fd8c453b53b891c164bd8"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_productive_admission_checks-1.py",
+        "sha256": "cdfc630360de4afc78f8044f6af6a3241e8bf1946d8ea67a8edd033ed2bf83cd"
+      },
+      {
+        "path": "CMakeLists.txt",
+        "sha256": "93cf5776270647b2d81fbed253b5986e702694c9088006c862e40e50398d244a"
+      },
+      {
+        "path": "logs/surface-entry-rail-productivity-before-edit.json",
+        "sha256": "32fa9d92fdaed13a7a121f128ce72cd1e47dcfeadd9df73899c98a958825d800"
+      },
+      {
+        "path": "src/tests/surface_entry_rail_productivity.h",
+        "sha256": "0ca7f2ec5cf3f6a477585d734b7c43acc3b971a9017e02c21552f484964e86f3"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_return_checks-1.py",
+        "sha256": "b2778b2e569cbc275a04367239a2138a8f4c760def8d894596e199061176fc4f"
+      },
+      {
+        "path": "logs/surface-entry-farm-return-before-edit.json",
+        "sha256": "6b3b522bb1b98c8c5a873ee3854b9d7abbb721899a5614614a005626eba24bc5"
+      },
+      {
+        "path": "logs/surface-entry-rail-productivity-recorder-versions.json",
+        "sha256": "64038a10a0bc3ad01afef0c1f83af7251a38404f5d53fbe755fd1e8baa281481"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_two_return_checks-1.py",
+        "sha256": "d5fd82ae736e7b347d3b55ce6e4d4a2ca584a7560be6088b8280fde06943242d"
+      },
+      {
+        "path": "src/tests/surface_entry_mixed_farm_return.h",
+        "sha256": "5d25dd2a4a249d246ba906334bcb29fe26c331fd6e49c3cda5dc7cb0fee70338"
+      },
+      {
+        "path": "logs/surface-entry-farm-two-return-before-edit.json",
+        "sha256": "98b4a028c4b9e00b95f8040aa519da0b41a3677ac247ac4494761611e7938d17"
+      },
+      {
+        "path": "logs/surface-entry-farm-backhaul-before-edit.json",
+        "sha256": "221bf6fb5932a94e327bb733d1a32b56de7048a9dd46a960d7ca0961094878f5"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_farm_backhaul_checks-1.py",
+        "sha256": "5df8ad480d7748496ae1afd893d3d0a17466c21ad7e9fdc7fc06497781d7f1dc"
+      },
+      {
+        "path": "logs/surface-entry-farm-backhaul-slot-reuse-before-edit.json",
+        "sha256": "b13968b1d83c3c3a30e255ba129d2ad446b48dab72d25cdca3e68e4eec5f8f3e"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_surplus_home_checks-1.py",
+        "sha256": "c8ede6d2e1cdc31abdc4dcf9dcd324a5bff7ab6c75ac410b1418e86005e79e93"
+      },
+      {
+        "path": "src/tests/surface_entry_surplus_home.h",
+        "sha256": "10c4450d891550b29e6183ca2379cde482b4a9ce8e69a21af54280cee1a6f46c"
+      },
+      {
+        "path": "logs/surface-entry-surplus-home-before-edit.json",
+        "sha256": "e1d85fcb9ede83a252f9ab5adc6119ac40471bb4c002bf7f99bfc3d36550400a"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_surplus_recovery_checks-1.py",
+        "sha256": "d4a7f99b892601e98417ce2ae3453717e562e65239f6544743664fc12303ffab"
+      },
+      {
+        "path": "src/tests/surface_entry_mixed_farm_backhaul.h",
+        "sha256": "25c98a4b3192fd53e25587115aab05e851c8556ec4ea024bc8729f89bce02aa8"
+      },
+      {
+        "path": "src/tests/surface_entry_surplus_recovery.h",
+        "sha256": "59db7b3e15a3a0977477da76a95a049216119c30a6f6549aaa53daca24cd1b46"
+      },
+      {
+        "path": "logs/surface-entry-surplus-recovery-before-edit.json",
+        "sha256": "f94aa891acaf0d4fe8b68587299d0cd7d49357530eb621ad18c8cebeb4cd9a01"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_constructor_home_checks-1.py",
+        "sha256": "d2c52169b8185effec705bfa3758040203c8b400b0124626a1ac7b849885adcd"
+      },
+      {
+        "path": "src/tests/surface_entry_constructor_home.h",
+        "sha256": "2b7a4535b9226b914dc96632faa7122f394a6e72f7c19d6fd01ead81ed13a3fa"
+      },
+      {
+        "path": "src/space.cpp",
+        "sha256": "e7314d44b2ed2e848582d4fc52cedf3bcb2b5c4c26d8fd6f6723bba236a7b461"
+      },
+      {
+        "path": "src/space_replacement.cpp",
+        "sha256": "a67280aec05f8601f612140ee0be059d52aa2dd1d46692ce1593c4c1c1f03fb3"
+      },
+      {
+        "path": "src/space_vehicle.cpp",
+        "sha256": "3b56c6782a009be3787f89b6d31e1c9dbac8ab3abd07dd3a22e540034324b19b"
+      },
+      {
+        "path": "src/autoreplace_cmd.cpp",
+        "sha256": "cdc26d9df1a0953f2a81b86f5259782e175119094150cafe92788530ce56b47f"
+      },
+      {
+        "path": "logs/surface-entry-constructor-home-before-edit.json",
+        "sha256": "594d3293a94a26eb79dd39525682310b99a54cdd16ac9966eb2439322f29aef1"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_core_ledger.py",
+        "sha256": "6220d8139e6fd9a9ebec13b60c4914562d310472d65d50aea3b5c9c534bd4237"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_assembly_ledger.py",
+        "sha256": "a2277db1569aad5eb9698d034fc182db409804dcc3acc4a93144682f48f70a8a"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_payload_ledger.py",
+        "sha256": "00a8f26401f12aee7f5b79010fe1ce8ba3259259893dc074719d7a50ebb5604a"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_material_ledger.py",
+        "sha256": "4c5f04de720965763d083ba3d5821bae908500e3abafd999650923744a3b512b"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_resupply_ledger.py",
+        "sha256": "526541cb79377502d5d48caa9e1b276e758905bbb123299e03676ba72410ce09"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_construction_ledger.py",
+        "sha256": "5fb6f6b8efd9fcf448d0e73a254232e3e8726de3806014addb8952458f929c3f"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+        "sha256": "cc2c83fe74e2e6ef5cec58fa877b382f03991b548ef8ea36ddc1f84dcf8b6294"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_farm_backhaul_ledger.py",
+        "sha256": "130d56a53d356d4ac5bde7a1ea3dc6c1223e25d715e7635ff53b76b016a4d2f6"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_surplus_recovery_ledger.py",
+        "sha256": "fea55007c6b559e4d204024dc7ba017a326a066b0a1547aedaaadbddf7de4bd1"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_constructor_home_ledger.py",
+        "sha256": "faf49a78f2a0265081cf9c2a3d81da1c9b3b7c9b1ca08d794c28de11fec89f83"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_constructor_retirement_checks-1.py",
+        "sha256": "04e5bdd5a9722d9d35665cf8576eedf120f2ab91fdd12b1bf4dbd978f0634d00"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_constructor_retirement_ledger.py",
+        "sha256": "501776d617a34d46beb2ac7f0f50a3aef4315785021c9111885641d7b9db5fde"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_evidence_identity_cache.py",
+        "sha256": "191a38771ab151590b649c0a22a4597e268b753a167bc5d493887a85d3b20600"
+      },
+      {
+        "path": "src/tests/surface_entry_constructor_retirement.h",
+        "sha256": "3e2a4570066668a2d85b8f8d7c6fdf06e4a81ada73fbd5b4ddb97d41ccb7b987"
+      },
+      {
+        "path": "logs/surface-entry-home-binding-before-edit.json",
+        "sha256": "a6a9f3359609889484064f06c258bb9351581a0c1a539d70113278e2ee3fec36"
+      },
+      {
+        "path": "logs/surface-entry-constructor-retirement-before-edit.json",
+        "sha256": "8e335b63892c8c91315cb866b48792c332f07d48c511ef98c9807009554e966e"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_funded_farm_goods_checks-1.py",
+        "sha256": "03d91972602c431a4297b9d7c9464c79849056f0c144cd405edd5fa979d6bd77"
+      },
+      {
+        "path": "logs/surface-entry-funded-farm-goods-before-edit.json",
+        "sha256": "65533302b9fc7ea2fd98c379885af85ad7a83e662c26510aa0350f0188cb1ff6"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_working_cash_checks-1.py",
+        "sha256": "83c539f0bf487ef20c93e764fe286263932f8771506b807e6e7fe2ca100c67c0"
+      },
+      {
+        "path": "src/tests/surface_entry_working_cash.h",
+        "sha256": "fcda37fdd8f1063d3ba759b561a83975ffc08da0a6915f938b6fdf16b406a75f"
+      },
+      {
+        "path": "logs/surface-entry-working-cash-before-edit.json",
+        "sha256": "dfd78b0ebb38d516fa0ae3723232aca627c3824fbe2786446b581095256d4fa7"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_construction_capital_checks-1.py",
+        "sha256": "b373d9feb000700cde90b95d26d5210f728159d2081c604afc700d7bc17b237c"
+      },
+      {
+        "path": "src/tests/surface_entry_construction_capital.h",
+        "sha256": "e24feeaa5ae845f0b93807ff76ff5d5fed51488641b8205206bb47382b9b274e"
+      },
+      {
+        "path": "src/space_structure.cpp",
+        "sha256": "addccdc7adc44c5f75f5b633008cbb176280a4a0b26b8ec99c6f4334efd2963a"
+      },
+      {
+        "path": "src/space_structure_cmd.h",
+        "sha256": "ae07f84d721717afb835d2df53f63a7faa2d3d7c095a4d431b2eae11ea6e5f7d"
+      },
+      {
+        "path": "src/launch_operations.cpp",
+        "sha256": "acbbc6cd66d095c414613bb4363985fd6b8ee3bfa07ab5b2b09bdfbf96fbc28f"
+      },
+      {
+        "path": "src/orbital_station.cpp",
+        "sha256": "5fcfc6558dbe801e207c84263b0fb99ff4b5d27faf50237f32e089ad00a26969"
+      },
+      {
+        "path": "src/multilayer_space_content.cpp",
+        "sha256": "e97819be1065c3426f848e1f0e13ca3889484563563f68cf8093d248e0fe39c0"
+      },
+      {
+        "path": "src/multilayer_space_content.h",
+        "sha256": "d05105e48b8ca162b5965a6d7949b92a10391f779acdcf81bb18e67d195eab70"
+      },
+      {
+        "path": "logs/surface-entry-construction-capital-before-edit.json",
+        "sha256": "0bbeccd39fc9262b64b8bb913bb4ffdfe1e781b6f8381262ba5472675df1532b"
+      },
+      {
+        "path": "src/tests/multilayer/acceptance/surface_entry_construction_cash_checks-1.py",
+        "sha256": "ca6cc4e0898241528a41d69e9b25cf7e38184b122a083cc9995ffc7b133d8841"
+      },
+      {
+        "path": "src/tests/surface_entry_funded_farm_goods.h",
+        "sha256": "4e6385ea37cce05c9fd0ad6ebe9bcbefa992520f29df8a399dcbe7eff7a46a10"
+      },
+      {
+        "path": "src/tests/surface_entry_construction_cash.h",
+        "sha256": "56c54861a058e49c156113d6309592ad70b7c67d4088192c091fdd583bdc065c"
+      },
+      {
+        "path": "logs/surface-entry-construction-cash-before-edit.json",
+        "sha256": "640b282f4d41e651ef1573b08b54c8643ad696b1988b74f40515df583ca14b36"
+      }
+    ],
+    "earned_ticks": 2000,
+    "startup_reserve": 40000,
+    "working_floor_policy": 100000,
+    "capital_milestone": 650000,
+    "capital_proposal_receipt": {
+      "path": "logs/surface-entry-construction-capital-query-RelWithDebInfo.json",
+      "sha256": "6c9a518e447a4bbb5bee30c0c105b6db544932e85f68bbd5cb17439fd83868a1"
+    },
+    "capital_milestone_reached": false,
+    "historical_versions": [
+      {
+        "path": "logs/surface-entry-farm-backhaul-before-edit.json",
+        "sha256": "221bf6fb5932a94e327bb733d1a32b56de7048a9dd46a960d7ca0961094878f5"
+      },
+      {
+        "path": "logs/surface-entry-farm-backhaul-slot-reuse-before-edit.json",
+        "sha256": "b13968b1d83c3c3a30e255ba129d2ad446b48dab72d25cdca3e68e4eec5f8f3e"
+      },
+      {
+        "path": "logs/surface-entry-farm-two-return-before-edit.json",
+        "sha256": "98b4a028c4b9e00b95f8040aa519da0b41a3677ac247ac4494761611e7938d17"
+      },
+      {
+        "path": "logs/surface-entry-rail-productivity-recorder-versions.json",
+        "sha256": "64038a10a0bc3ad01afef0c1f83af7251a38404f5d53fbe755fd1e8baa281481"
+      },
+      {
+        "path": "logs/surface-entry-surplus-home-before-edit.json",
+        "sha256": "e1d85fcb9ede83a252f9ab5adc6119ac40471bb4c002bf7f99bfc3d36550400a"
+      },
+      {
+        "path": "logs/surface-entry-surplus-recovery-before-edit.json",
+        "sha256": "f94aa891acaf0d4fe8b68587299d0cd7d49357530eb621ad18c8cebeb4cd9a01"
+      },
+      {
+        "path": "logs/surface-entry-constructor-home-before-edit.json",
+        "sha256": "594d3293a94a26eb79dd39525682310b99a54cdd16ac9966eb2439322f29aef1"
+      },
+      {
+        "path": "logs/surface-entry-home-binding-before-edit.json",
+        "sha256": "a6a9f3359609889484064f06c258bb9351581a0c1a539d70113278e2ee3fec36"
+      },
+      {
+        "path": "logs/surface-entry-constructor-retirement-before-edit.json",
+        "sha256": "8e335b63892c8c91315cb866b48792c332f07d48c511ef98c9807009554e966e"
+      },
+      {
+        "path": "logs/surface-entry-funded-farm-goods-before-edit.json",
+        "sha256": "65533302b9fc7ea2fd98c379885af85ad7a83e662c26510aa0350f0188cb1ff6"
+      },
+      {
+        "path": "logs/surface-entry-working-cash-before-edit.json",
+        "sha256": "dfd78b0ebb38d516fa0ae3723232aca627c3824fbe2786446b581095256d4fa7"
+      },
+      {
+        "path": "logs/surface-entry-construction-capital-before-edit.json",
+        "sha256": "0bbeccd39fc9262b64b8bb913bb4ffdfe1e781b6f8381262ba5472675df1532b"
+      },
+      {
+        "path": "logs/surface-entry-construction-cash-before-edit.json",
+        "sha256": "640b282f4d41e651ef1573b08b54c8643ad696b1988b74f40515df583ca14b36"
+      }
+    ],
+    "measured_cash_flow": {
+      "ticks": 2000,
+      "actual_fares": 12677,
+      "interest": 8333,
+      "other_operating_cost": 1615,
+      "cash_delta": 2729
+    },
+    "capital_scope": {
+      "window": 32,
+      "total_earned_ticks": 64000,
+      "maximum_windows": 32,
+      "tick_cap": 64000,
+      "ended": true,
+      "end_reason": "tick_cap"
+    }
+  }
+}

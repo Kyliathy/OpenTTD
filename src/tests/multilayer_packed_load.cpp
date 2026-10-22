@@ -6,6 +6,7 @@
 
 /**
  * @file multilayer_packed_load.cpp Actual application-loader proof for packed M1 art and the preserved native M0 prefix.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group18B; explicit current source inputs.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B/79C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoints8.6/10.4B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; independent final Space append.
@@ -91,15 +92,14 @@ static uint32_t HashArtPixels(const Sprite &sprite)
 /** Hidden isolated process: normal startup loads the actual distributed extra GRF, then one timer observes its real cache. */
 TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite", "[.m1-packed-art-load]")
 {
-	const auto root = FindTestRepositoryRoot();
-	const auto fixture = root / "logs/proofs/mlm/native-art/expected/m1-packed-sprites.bin";
+	const auto fixture = GetTestExpectedSprites("m1");
 	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Windows derives its local data search root from the configuration folder.
 	// Refuse missing repository data before native startup can display an error dialog.
 	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
-		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+		REQUIRE(std::filesystem::exists(config.parent_path() / "baseset" / name));
 	}
 	bool observed = false;
 	std::exception_ptr failure;
@@ -171,14 +171,13 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 /** Hidden isolated process observes final Space decoder bytes and the unchanged preview prefix; no paid mission state is claimed. */
 TEST_CASE("Actual native loader preserves previews and loads all final Space sprites", "[.space-packed-art-load]")
 {
-	const auto root = FindTestRepositoryRoot();
-	const auto fixture = root / "logs/proofs/mlm/native-art/expected/space-packed-sprites.bin";
+	const auto fixture = GetTestExpectedSprites("space");
 	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Native startup must use the real repository base-set payload; an absent data file must fail before a graphical error dialogue can block the headless observer.
 	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
-		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+		REQUIRE(std::filesystem::exists(config.parent_path() / "baseset" / name));
 	}
 	bool observed = false;
 	std::exception_ptr failure;
@@ -251,14 +250,13 @@ TEST_CASE("Actual native loader preserves previews and loads all final Space spr
 /** Hidden isolated process decodes every appended orbital source through the actual application; no ordinary-game procurement is claimed. */
 TEST_CASE("Actual native loader loads every appended orbital sprite exactly", "[.orbital-packed-art-load]")
 {
-	const auto root = FindTestRepositoryRoot();
-	const auto fixture = root / "logs/proofs/mlm/native-art/expected/orbital-packed-sprites.bin";
+	const auto fixture = GetTestExpectedSprites("orbital");
 	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Native startup must use the real repository base-set payload; an absent data file must fail before a graphical error dialogue can block the headless observer.
 	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
-		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+		REQUIRE(std::filesystem::exists(config.parent_path() / "baseset" / name));
 	}
 	bool observed = false;
 	std::exception_ptr failure;
@@ -331,15 +329,14 @@ TEST_CASE("Actual native loader loads every appended orbital sprite exactly", "[
 /** Hidden isolated process proves every qualified launch/fleet slot through the real GRF/cache owner, without loading any paid world. */
 TEST_CASE("Actual native loader loads every appended launch and rocket sprite exactly", "[.launch-fleet-packed-art-load]")
 {
-	const auto root = FindTestRepositoryRoot();
-	const auto fixture = root / "logs/proofs/mlm/native-art/expected/launch-fleet-packed-sprites.bin";
+	const auto fixture = GetTestExpectedSprites("launch-fleet");
 	const auto config = GetTestRuntimeConfig();
 	REQUIRE(std::filesystem::exists(fixture));
 	REQUIRE(std::filesystem::exists(config));
 	// Native startup must find actual original base graphics and the new shared
 	// payload before a headless observation can claim any decoded sprite coverage.
 	for (const auto name : {"orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf", "openttd.grf"}) {
-		REQUIRE(std::filesystem::exists(root / "build/baseset" / name));
+		REQUIRE(std::filesystem::exists(config.parent_path() / "baseset" / name));
 	}
 	bool observed = false;
 	std::exception_ptr failure;
@@ -366,7 +363,9 @@ TEST_CASE("Actual native loader loads every appended launch and rocket sprite ex
 			CHECK(start == LAUNCH_FLEET_SPRITE_START);
 			CHECK(bound == LAUNCH_FLEET_SPRITE_END);
 			CHECK(ORBITAL_SPRITE_END == start);
-			CHECK(MAP_LAYER_SPRITE_COUNT == LAUNCH_FLEET_SPRITE_END);
+			// Ground now follows this exact launch prefix. Preserve the launch
+			// scope's own bound while allowing its already-published later append.
+			CHECK(MAP_LAYER_SPRITE_COUNT >= LAUNCH_FLEET_SPRITE_END);
 			uint prior_seen = 0;
 			uint new_seen = 0;
 			uint16_t previous_offset = 0;

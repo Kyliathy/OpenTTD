@@ -1,0 +1,70 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md9/r2mlvs17; paused source checkpoint; partial five-model code has not been built or tested.",
+  "schema_version": 1,
+  "kind": "paused_underground_source_checkpoint",
+  "history": {
+    "path": "src/tests/fixtures/checkpoints/underground/history.json",
+    "sha256": "cb3c5e62cb71aebc58ce797620fc4104b31feb4f6474c119a78097beccfd4f6c"
+  },
+  "source_epochs": {
+    "before_edit": {
+      "path": "src/tests/fixtures/checkpoints/underground/history/before.json",
+      "sha256": "f3e85fe3a493f238fc44f2002bd690ae7873d898a4595865c1141fa716b7d46b"
+    },
+    "partial_definitions": {
+      "path": "src/tests/fixtures/checkpoints/underground/history/before-definitions.json",
+      "sha256": "d3b68c3ba6b6fa33dd94d7e2f3a3cd62ca2aca148f63873241cfe8ff5f42b5ef"
+    }
+  },
+  "provisional_sources": [
+    {
+      "original": {
+        "path": "src/transport_tube_fleet.h",
+        "sha256": "6e04024352aba2e419ac243f816f5e4daaba2164f860af4eb17d650b3cb51be1"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/underground/provisional/src/transport_tube_fleet.h",
+        "sha256": "6e04024352aba2e419ac243f816f5e4daaba2164f860af4eb17d650b3cb51be1"
+      }
+    },
+    {
+      "original": {
+        "path": "src/transport_tube_fleet.cpp",
+        "sha256": "aba419c584c422adb5becd2a5b5658b52f013c844bed03c6313201f8c8f785ea"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/underground/provisional/src/transport_tube_fleet.cpp",
+        "sha256": "aba419c584c422adb5becd2a5b5658b52f013c844bed03c6313201f8c8f785ea"
+      }
+    },
+    {
+      "original": {
+        "path": "src/transport_tube_engine.cpp",
+        "sha256": "02f4b74489d08ed84e47cf357b9ae973f623931f89c0e1cfee1aae54391508c3"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/underground/provisional/src/transport_tube_engine.cpp",
+        "sha256": "02f4b74489d08ed84e47cf357b9ae973f623931f89c0e1cfee1aae54391508c3"
+      }
+    },
+    {
+      "original": {
+        "path": "src/CMakeLists.txt",
+        "sha256": "7f1d0912fc1b07f5f9f43651473183b2c23b4b7b6746ace00f04ea3fd4efbe96"
+      },
+      "retained": {
+        "path": "src/tests/fixtures/checkpoints/underground/provisional/src/CMakeLists.txt",
+        "sha256": "7f1d0912fc1b07f5f9f43651473183b2c23b4b7b6746ace00f04ea3fd4efbe96"
+      }
+    }
+  ],
+  "status": {
+    "group9": "historically_complete",
+    "group10": "provisional_not_built_or_tested",
+    "feature_work_paused": true
+  },
+  "fresh_build_qualified": false,
+  "feature_work_paused": true,
+  "no_executable_archive": true,
+  "live_path_policy": "Only history.live_retained_inputs.retained and provisional_sources.retained are required physical history; nested old paths remain facts."
+}

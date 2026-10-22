@@ -1,6 +1,7 @@
 """Publish complete authored Space source matrices through the established atlas contract.
 
 @file convert_space_family_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups14BB/14BC/14BD/14BE/14BG
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups13C/13CB/13D
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups63/63B/63C/64/65.3e/65B.3c/66D
@@ -215,18 +216,17 @@ def state_pose(state, direction, frame, document=None, asset=parts.ASSET, source
     return pose, item
 
 
-def derive(output, asset=parts.ASSET):
+def derive(output, asset=parts.ASSET, context=None):
     """Produce a complete selected-role atlas and native contacts without packing or activation.
 
     @param output Fresh directory under the established native-art proof owner.
     @param asset Explicit original family; the accepted miner remains the default.
+    @param context Explicit recipe invocation for separate current images/reports.
     @return Direct source-manifest identity, including the same sprite box layout consumed by existing packers.
     @throws ValueError On missing original coverage, fake animation or unsafe output ownership.
     """
-    output = output.resolve()
-    # Reproducible derived source belongs to the repository's native-art home and must preserve prior accepted proofs and immutable originals.
-    if not output.is_relative_to(art.ROOT / "logs/proofs/mlm/native-art") or output.exists():
-        raise ValueError("family source publication requires a fresh native-art proof directory")
+    from regenerate_art_sources import source_directories
+    output, reports = source_directories(output, context)
     document = art.read_record()
     family = document["families"][asset]
     states = source_states(asset)
@@ -286,7 +286,7 @@ def derive(output, asset=parts.ASSET):
             if identical == family["state_policy"][state]["animated"]:
                 raise ValueError("source animation/static alias policy differs from actual native pixels")
             differences[state + "/" + direction] = not identical
-    output.mkdir(parents=True)
+    output.mkdir(parents=True, exist_ok=context is not None)
     native = output / f"vehicle-model-{family['native_model']:02}-authored.png"
     atlas.save(native, transparency=0)
     # Separate frame contacts keep each actual native/4x review legible without reducing a giant combined matrix.
@@ -300,11 +300,13 @@ def derive(output, asset=parts.ASSET):
     for field in ("mining_sources", "travel_sources", "travel_secondary_sources", "scanner_sources", "load_sources", "builder_sources", "descent_sources"):
         for heads in family.get(field, {}).values():
             source_keys.update(heads.values())
+    # Status phases retain their actual original ancestry just like moving/
+    # working components; no rendered contact sheet substitutes for an input.
     for phases in family.get("status_sources", {}).values():
         for heads in phases.values():
             source_keys.update(heads.values())
     originals = [art.source_candidate(key, document) for key in sorted(source_keys)]
-    report = output / "space-source-manifest.json"
+    report = reports / "space-source-manifest.json"
     # Reused actual gas sources remain explicitly registered instances, never new generated role hardware or newly authored directional views.
     instances = [candidate for candidate in originals if candidate.get("instance_of") is not None]
     parents = [art.source_candidate(candidate["instance_of"]["candidate"], document) for candidate in instances]

@@ -1,0 +1,25 @@
+{
+  "_documentation": "Plan11 Group15CSGZVEEF exact consumed worker/CPP/apps before explicit cash-goal mode; historical first-payment defaults and diagnostics stay unchanged.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/working-cash-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "68f7cb5a4c22ff411de1097a225f8ff93d1cb6b62f6780204d01efdf61404d85"
+    },
+    {
+      "source": "src/tests/surface_entry_funded_farm_goods.h",
+      "path": "test-cache/surface-entry/working-cash-before-edit/1-surface_entry_funded_farm_goods.h",
+      "sha256": "80c561323e72022bbdae639bdb8a792d3190f30a69b5e8b966147f5dfba282ef"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/working-cash-before-edit/2-openttd_surface_capital_test.exe",
+      "sha256": "9dfa8beccd05b90edb276990dbdba7f6631b34a84f80dde02a381090d3049767"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/working-cash-before-edit/3-openttd_surface_capital_test.exe",
+      "sha256": "eb06c6e084787b9926e22922e0819d1d9c5f41aaf89cebada6c464a69ea6dbc5"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "_documentation": "Read-only current whole-bill proposal; owner docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZS. No native invocation or authorization is supplied.",
+  "authorized": false,
+  "normal_ticks_executed": 0,
+  "reserve": 30000,
+  "default_reserve": 40000,
+  "maximum_windows": 8,
+  "tick_cap": 4000,
+  "window_ceiling": 500,
+  "stop_on_first_posted_payment": true,
+  "stop_on_funding_refusal": true,
+  "stop_on_actual_cash": 100000,
+  "foundation": {
+    "path": "logs/surface-entry-loaded-arrival-verification.json",
+    "sha256": "72592d9a812b84d9f3144f099fdf4a3796516c31b0e61610e90c978e6e6f204b"
+  },
+  "reviewed_callers": [
+    {
+      "path": "src/tests/multilayer/acceptance/surface_entry_arrival_settlement_checks-1.py",
+      "sha256": "e6a89303007b0ddb15b6c7d3be7e042591a1c188502e6438f344991a05ff1c1e"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/surface_entry_arrival_settlement_checks-2.py",
+      "sha256": "b94db7db8ffef8ee526e15be906a1819ebef22d4b73c07330dabe120c986140b"
+    }
+  ],
+  "configurations": {
+    "RelWithDebInfo": {
+      "receipt": {
+        "path": "logs/surface-entry-loaded-arrival-002-RelWithDebInfo.json",
+        "sha256": "05fa5ef67f50f9b82147669033f82977bd1bb097e3dcfecd2f81396c9e7d093b"
+      },
+      "original_quote": {
+        "ceiling": 500,
+        "ticks": 500,
+        "unpaid": 0,
+        "operating": 9479,
+        "reserve": 40000,
+        "target": 49479,
+        "cash": 46064,
+        "funded": false,
+        "future_income_counted": 0
+      },
+      "proposed_full_target": 39479,
+      "available_cash": 46064,
+      "first_window_headroom": 6585
+    },
+    "Debug": {
+      "receipt": {
+        "path": "logs/surface-entry-loaded-arrival-002-Debug.json",
+        "sha256": "df2a4ca1b68f70632527af99eb51c5e3beb8b38a84ddef7257055fce299b6178"
+      },
+      "original_quote": {
+        "ceiling": 500,
+        "ticks": 500,
+        "unpaid": 0,
+        "operating": 9479,
+        "reserve": 40000,
+        "target": 49479,
+        "cash": 46064,
+        "funded": false,
+        "future_income_counted": 0
+      },
+      "proposed_full_target": 39479,
+      "available_cash": 46064,
+      "first_window_headroom": 6585
+    }
+  }
+}

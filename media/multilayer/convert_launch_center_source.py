@@ -1,6 +1,7 @@
 """Export complete original launch-center source coverage with explicit still aliases.
 
 @file convert_launch_center_source.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17CB.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group61F.
 @see docs/zz-reach2/upgrades/2026-10/r2mlsp-z-z-z-z-z-q-launch-center-source.md.
 This converter consumes the selected genuine components and unchanged material
@@ -55,15 +56,14 @@ def write_json(path, document):
 
 
 def checked_occupied_policy(policy):
-    """Require actual qualified occupied cuts rather than a completion boolean alone.
+    """Validate original occupied-cut policy and its independent retained fixture.
 
     @param policy Explicit version-two complete source-state handoff.
-    @return Exact occupied contact/partition model after its proof/input bindings pass.
-    @throws ValueError On absent cuts, stale qualification or substituted original geometry.
+    @return Exact occupied contact/partition model after original input bindings pass.
+    @throws ValueError On absent cuts, changed retained fixture or original geometry.
     """
     model = base.bound_json(policy["foreground_model"])
     fixture = base.bound_json(policy["foreground_fixture"])
-    proof = base.bound_json(policy["foreground_verification"])
     # State pixels and occupied partitions must extend the same original
     # models. A copied success flag cannot authorize changed source or geometry.
     if (policy["asset_id"] != contract.ASSET or not policy["occupied_foregrounds_complete"]
@@ -73,15 +73,11 @@ def checked_occupied_policy(policy):
             or policy["state_mapping"] != model["state_mapping"]
             or policy["status_art_checkpoint"] != model["status_art_checkpoint"]
             or not model["occupied_foregrounds_complete"] or fixture["model"] != policy["foreground_model"]
-            or model["model_review"]["status"] != "approved_occupied_source_partitions"
-            or proof["status"] != "passed" or not proof["occupied_foregrounds_complete"]
-            or proof["model"] != policy["foreground_model"] or proof["fixture"] != policy["foreground_fixture"]):
+            or model["model_review"]["status"] != "approved_occupied_source_partitions"):
         raise ValueError("launch occupied source qualification does not match original state inputs")
-    # Qualification itself is current evidence, not a dated path name. Source
-    # helper/test changes require another focused occupied-cut verification.
-    for reference in (proof["helper"], proof["test"]):
-        if base.identity(ROOT / reference["path"]) != reference:
-            raise ValueError("launch occupied source qualification producer changed")
+    # The dated qualification identity remains historical policy metadata.
+    # Actual composition/decoding checks the unchanged retained fixture and
+    # original physical partition model; old success counters certify no run.
     occupied.checked_model(model)
     return model
 
@@ -113,15 +109,23 @@ def review_contacts(images, output):
     return dict(whole=base.identity(output / "source-contact.png"), glazing=base.identity(output / "glazing-contact.png"))
 
 
-def derive(output=OUTPUT):
+def derive(output=OUTPUT, context=None):
     """Rebuild all logical positions from original images without private artifact inputs.
 
     @param output Exact owned launch-center source proof directory.
+    @param context Explicit current source invocation with separate images/data/reports.
     @return Full source manifest with canonical indexed PNG locations and honest aliases.
     @throws ValueError On unsafe output location or invalid original/native source ownership.
     """
-    if output.resolve() != OUTPUT.resolve():
-        raise ValueError("launch source conversion requires its explicit owned proof directory")
+    if context is None:
+        if output.resolve() != OUTPUT.resolve():
+            raise ValueError("launch source conversion requires its explicit owned proof directory")
+        reports, ownership_directory = output, output
+    else:
+        from regenerate_art_sources import source_directories
+        output, reports = source_directories(output, context)
+        ownership_directory = context.data
+        ownership_directory.mkdir(parents=True, exist_ok=True)
     policy = json.loads(POLICY.read_text(encoding="utf-8"))
     # The plan requires physical occupied foreground source cuts even while
     # the current native stub hides Surface actors. Counted empty fronts alone
@@ -144,9 +148,9 @@ def derive(output=OUTPUT):
         images, owners, cells, front, source_evidence = occupied.compose_states(model, direction)
         evidence[direction] = source_evidence
         view_images[direction] = images
-        cell_path = output / f"{direction.lower()}-cell-ownership.bin"
-        component_path = output / f"{direction.lower()}-component-ownership.bin"
-        foreground_path = output / f"{direction.lower()}-foreground.bin"
+        cell_path = ownership_directory / f"{direction.lower()}-cell-ownership.bin"
+        component_path = ownership_directory / f"{direction.lower()}-component-ownership.bin"
+        foreground_path = ownership_directory / f"{direction.lower()}-foreground.bin"
         cell_path.write_bytes(cells)
         component_path.write_bytes(owners)
         foreground_path.write_bytes(front)
@@ -206,15 +210,16 @@ def derive(output=OUTPUT):
                   ownership=ownership, contacts=review_contacts(view_images, output),
                   whole_artifacts={direction: {state: whole_artifacts[direction, state] for state in ("ready", "working", "blocked")}
                                    for direction in contract.VIEWS})
-    write_json(output / "source-manifest.json", report)
+    write_json(reports / "source-manifest.json", report)
     return report
 
 
-def decode(report, atlas):
+def decode(report, atlas, context=None):
     """Decode every logical source position and refuse dishonest alias or native metadata.
 
     @param report Exact complete launch-center source manifest.
     @param atlas Actual stored indexed source PNG, opened independently after conversion.
+    @param context Optional current invocation requiring exact selected image/data ownership.
     @return Logical metadata/image pairs for per-pose original-pixel reassembly.
     @throws ValueError On lost coverage, palette drift, false aliases or native cell changes.
     """
@@ -248,11 +253,16 @@ def decode(report, atlas):
             or report["selected_bases"] != model["selected_bases"]):
         raise ValueError("launch source report changed its actual occupied-source provenance")
     maps = {}
+    if context is not None:
+        from regenerate_space_sources import selected_path
+        selected_path(report["atlas"], context, "images")
     # Every decoded pixel must retain the independently qualified native cell
     # and physical part. Locally rehashed PNGs cannot move between those parts.
     for direction in contract.VIEWS:
         owner = report["ownership"][direction]
         for reference in owner.values():
+            if context is not None:
+                selected_path(reference, context, "data")
             if base.identity(ROOT / reference["path"]) != reference:
                 raise ValueError("launch source original ownership artifact changed")
         cells = (ROOT / owner["cells"]["path"]).read_bytes()

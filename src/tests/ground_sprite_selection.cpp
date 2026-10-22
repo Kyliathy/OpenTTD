@@ -1,5 +1,6 @@
 /**
  * @file ground_sprite_selection.cpp Compile and verify the real selected-ground source-pose boundary.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20; retained independent original tuple bytes.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FB.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  * Expected tuples/IDs come from the independent qualified source producer,
@@ -47,7 +48,7 @@ static uint16_t ReadGroundPoseWord(std::ifstream &input)
 /** Actual compiled export must agree with every independently emitted source tuple/native ID. */
 TEST_CASE("Typed selected ground poses resolve every independent qualified source tuple", "[ground-sprite-contract]")
 {
-	const auto fixture = FindTestRepositoryRoot() / "logs/proofs/mlm/native-art/expected/ground-pose-tuples.bin";
+	const auto fixture = FindTestRepositoryRoot() / "src/tests/fixtures/graphics/ground-pose-tuples.bin";
 	std::ifstream input(fixture, std::ios::binary);
 	REQUIRE(input.good());
 	std::array<char, 8> magic{};

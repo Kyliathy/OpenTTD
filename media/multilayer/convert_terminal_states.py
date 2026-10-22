@@ -1,6 +1,7 @@
 """Assemble complete native terminal sources with actual preview/loading ownership.
 
 @file convert_terminal_states.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17DD, immutable source-era reconstruction.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md task25.3.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Atomic build/refusal poses remain previews. Installed loading reads the native
@@ -25,11 +26,12 @@ PREFIX = "terminal-source"
 STATES = ("construction", "ready", "working", "blocked")
 
 
-def checked_components(record, public):
+def checked_components(record, public, source_only=False):
     """Require approved visible fittings, native state owners and original material ancestry.
 
     @param record Terminal original and state-component registrations.
     @param public Authoritative shared facility.road-terminal source contract.
+    @param source_only Require the exact original record; grants no current native qualification.
     @return Approved fixed geometry and immutable status-glass donor description.
     @throws ValueError Before publication on changed owners, fittings or packed boundaries.
     """
@@ -58,9 +60,15 @@ def checked_components(record, public):
             expected = "parent-0" if graphics == 4 else "parent-1"
             if target["part"] != expected or len(target["points"]) != 1:
                 raise ValueError("terminal status glass changes its actual housing parent")
-    for name, digest in geometry["native_presentation_owner_sha256"].items():
-        if source_digest(terminal.ROOT / name) != digest:
-            raise ValueError("terminal native preview/loading presentation owner changed")
+    if source_only:
+        from station_source_facts import verify_original
+        verify_original(record, "record", asset="facility.road-terminal")
+    else:
+        # New native presentation still requires its actual current owners;
+        # historical physical art is a separate reconstruction role.
+        for name, digest in geometry["native_presentation_owner_sha256"].items():
+            if source_digest(terminal.ROOT / name) != digest:
+                raise ValueError("terminal native preview/loading presentation owner changed")
     if component["source_record"] != facilities.RECORD.relative_to(terminal.ROOT).as_posix() or component["source_key"] != "facility-status":
         raise ValueError("terminal status glass lacks its approved original donor")
     return geometry, component
@@ -163,14 +171,15 @@ def review_board(poses):
     return board
 
 
-def build(record, public):
+def build(record, public, source_only=False):
     """Build all288 native state/frame/view/parent slots with32 true structural absences.
 
     @param record Selected genuine originals, native registrations and glass ancestry.
     @param public Authoritative shared facility.road-terminal row.
+    @param source_only Reconstruct independently frozen physical artwork without current native proof.
     @return Complete source report and deterministic atlas/review artifact mapping.
     """
-    geometry, component = checked_components(record, public)
+    geometry, component = checked_components(record, public, source_only=source_only)
     lenses = original_lenses(component)
     native, sources, prior_artifacts = base_sources(record)
     atlas = Image.new("P", (1152, 1024), 0)

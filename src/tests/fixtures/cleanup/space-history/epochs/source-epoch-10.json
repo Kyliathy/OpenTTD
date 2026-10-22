@@ -1,0 +1,20 @@
+{
+  "_documentation": "Plan11Group15CSGZVEE exact consumed isolated CPP/apps before separately selected genuine post-retirement Goods worker; old workers/defaults unchanged.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/funded-farm-goods-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "c9d938914f504e85901691db5618cc9ee0d987061556922905526073dd3aa22a"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/funded-farm-goods-before-edit/1-openttd_surface_capital_test.exe",
+      "sha256": "efc7bc15f1b15d2bf9864598733e5b2ccfb76fc98dd5be755932de236898edec"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/funded-farm-goods-before-edit/2-openttd_surface_capital_test.exe",
+      "sha256": "95d30d25207de602f6683d94cc20fff342e5c13e638cc5d0c8c91aeb021c07d7"
+    }
+  ]
+}

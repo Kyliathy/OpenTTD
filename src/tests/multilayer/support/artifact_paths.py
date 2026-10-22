@@ -2,10 +2,12 @@
 
 @file artifact_paths.py Development-only artifact boundary; no simulation ownership.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Groups 3-10.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups9-10.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 """
 
 from dataclasses import dataclass
+from functools import lru_cache
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -135,6 +137,22 @@ class RunContext:
         return self.directory / "saves"
 
     @property
+    def data(self):
+        """Return generated selected payloads, distinct from immutable fixture inputs.
+
+        @return This feature/scenario/invocation's generated data directory.
+        """
+        return self.directory / "data"
+
+    @property
+    def evidence(self):
+        """Return required current-run transcripts and other non-frame observations.
+
+        @return This feature/scenario/invocation's disposable evidence directory.
+        """
+        return self.directory / "evidence"
+
+    @property
     def reports(self):
         """Return the directory for this feature's machine-readable evidence.
 
@@ -171,11 +189,11 @@ class RunContext:
     def output(self, kind, name):
         """Resolve a newly written artifact in this feature's declared namespace.
 
-        @param kind One of images, saves, reports, scratch or logs.
+        @param kind One of images, saves, data, reports, evidence, scratch or logs.
         @param name Artifact basename; callers may not redirect output directories.
         @return Canonical output path whose parent already exists.
         """
-        if kind not in ("images", "saves", "reports", "scratch", "logs"):
+        if kind not in ("images", "saves", "data", "reports", "evidence", "scratch", "logs"):
             raise ValueError(f"unknown artifact kind: {kind}")
         # A producer chooses an identity inside its case, not a new destination
         # that could replace immutable fixture inputs or another feature's data.
@@ -268,6 +286,12 @@ class RunContext:
             parts = resolved.relative_to(self.root / "mlm/reviews").parts
             if len(parts) < 5 or parts[2] != self.run_id:
                 raise ValueError("artifact belongs to another invocation")
+            if parts[3] not in ("images", "saves", "data", "reports", "evidence", "scratch"):
+                raise ValueError("artifact has no declared generated role")
+            # Broader evidence roles do not authorize moving native/derived
+            # frames out of their image owner or weakening frame provenance.
+            if resolved.suffix.lower() in (".png", ".ppm", ".bmp", ".pcx") and parts[3] != "images":
+                raise ValueError("frame artifacts require the images owner")
             records.append(identity(resolved))
         document = {"_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
                     "producer": producer, "native_writer": native_writer, "feature": self.feature,
@@ -284,7 +308,9 @@ def _materialize(context):
     @param context Invocation/feature/process identity already validated by its owner.
     @return The same immutable context after its output parents exist.
     """
-    for kind in ("images", "saves", "reports", "scratch"):
+    # Materialize only generated roles; adding payload/transcript directories
+    # never creates a fixture or changes how immutable source inputs are chosen.
+    for kind in ("images", "saves", "data", "reports", "evidence", "scratch"):
         contained(context.directory / kind, context.root).mkdir(parents=True, exist_ok=True)
     context.logs.mkdir(parents=True, exist_ok=True)
     context.runtime_dir.mkdir(parents=True, exist_ok=True)
@@ -319,12 +345,31 @@ def create_run_context(feature, scenario, run_id=None, root=None, profile="nativ
     return _materialize(RunContext(source, feature, scenario, name, profile, process))
 
 
+@lru_cache(maxsize=4)
+def _input_catalogue(path, signature):
+    """Read one immutable catalogue epoch without reparsing it for every save.
+
+    @param path Explicit multilayer-inputs.json path inside this checkout.
+    @param signature File size/mtime/inode tuple, invalidating replaced catalogues.
+    @return Parsed stable-key table; actual selected file bytes are never cached.
+    """
+    document = json.loads(path.read_text(encoding="utf-8"))
+    after = path.stat()
+    if (after.st_size, after.st_mtime_ns, after.st_ino) != signature:
+        raise ValueError("input catalogue changed while loading")
+    # The established schema1 identities and schema2 retained-first migration
+    # share one owner; unknown formats cannot silently fall back to old files.
+    if document.get("schema_version") not in (1, 2) or not isinstance(document.get("inputs"), dict):
+        raise ValueError("unsupported input catalogue schema")
+    return document["inputs"]
+
+
 def resolve_input_path(path, root=None):
     """Resolve a declared existing input without granting permission to write it.
 
     @param path Existing path or stable fixture key recorded in the input manifest.
     @param root Optional checkout root for isolated verification.
-    @return Canonical existing fixture/prior-run/legacy-regression input.
+    @return Hash-verified indexed fixture or explicit unindexed prior-run input.
     @throws ValueError For missing, ambiguous or out-of-owner inputs.
     """
     source = repository_root(root) if root is not None else repository_root()
@@ -333,14 +378,29 @@ def resolve_input_path(path, root=None):
         candidate = source / candidate
     candidate = contained(candidate, source)
     manifest = source / "src/tests/fixtures/multilayer-inputs.json"
-    # Stable keys survive directory migration. The manifest names one exact
-    # input; filesystem scans and latest-file guesses are deliberately excluded.
-    if not candidate.is_file() and manifest.is_file():
-        entries = json.loads(manifest.read_text(encoding="utf-8"))["inputs"]
+    expected = None
+    # A declared stable key always chooses its retained identity, even while an
+    # old file still exists. Unindexed explicit prior-run paths stay direct;
+    # no filesystem scan or latest-run fallback can substitute another input.
+    if manifest.is_file():
+        status = manifest.stat()
+        entries = _input_catalogue(manifest, (status.st_size, status.st_mtime_ns, status.st_ino))
         key = candidate.relative_to(source).as_posix()
         if key in entries:
-            candidate = contained(source / entries[key]["path"], source)
-    owners = ("src/tests/fixtures", "mlm/reviews", "regression", "build/save")
+            reference = entries[key]
+            expected = reference.get("sha256")
+            if not isinstance(expected, str) or not re.fullmatch("[0-9a-f]{64}", expected):
+                raise ValueError("indexed input requires an exact SHA256")
+            candidate = contained(source / reference["path"], source)
+    owners = ("src/tests/fixtures", "savegames/retained", "mlm/reviews", "regression", "build/save")
     if not candidate.is_file() or not any(candidate.is_relative_to(owned_root(source, owner)) for owner in owners):
         raise ValueError(f"input is missing or outside declared owners: {path}")
+    if expected is not None:
+        before = candidate.stat()
+        digest = hashlib.sha256(candidate.read_bytes()).hexdigest()
+        after = candidate.stat()
+        # An existing stale alias and a concurrently changing retained input
+        # must both fail rather than supplying a different regression baseline.
+        if digest != expected or (before.st_size, before.st_mtime_ns, before.st_ino) != (after.st_size, after.st_mtime_ns, after.st_ino):
+            raise ValueError(f"indexed input hash changed: {path}")
     return candidate

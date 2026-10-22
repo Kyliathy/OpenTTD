@@ -3,6 +3,7 @@
 /**
  * @file test_artifact_paths.h Shared development-only artifact and native data-home boundary.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Groups 3-10.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups9-10/18B.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  */
 
@@ -21,7 +22,9 @@ struct TestArtifactPaths {
 	std::string run_id; ///< Invocation shared across feature views and native children.
 	std::filesystem::path images; ///< Captures for this feature/scenario/invocation.
 	std::filesystem::path saves; ///< Newly generated checkpoints, never source fixtures.
+	std::filesystem::path data; ///< Selected generated payloads, never immutable inputs.
 	std::filesystem::path reports; ///< Machine-readable evidence for this feature.
+	std::filesystem::path evidence; ///< Required current-run transcripts, excluding frames.
 	std::filesystem::path scratch; ///< Disposable intermediates owned by this case.
 	std::filesystem::path logs; ///< Associated repository log directory.
 	std::filesystem::path runtime_dir; ///< Isolated native process data home.
@@ -29,7 +32,7 @@ struct TestArtifactPaths {
 
 	/**
 	 * Resolve an output without allowing a producer to redirect its ownership.
-	 * @param kind One of images, saves, reports, scratch or logs.
+	 * @param kind One of images, saves, data, reports, evidence, scratch or logs.
 	 * @param name Artifact basename, including its extension.
 	 * @return Canonical output inside this case's declared directory.
 	 */
@@ -72,10 +75,21 @@ TestArtifactPaths GetTestCaseArtifactPaths(std::string_view feature, std::string
 
 /**
  * Resolve an immutable fixture, explicit prior-run input or legacy regression save.
+ * Indexed retained identities take precedence over an existing old path; their
+ * full SHA256 must match. Unindexed prior-run paths remain direct selections.
  * @param input Existing source path or stable key in the input manifest.
  * @return Existing input path; does not grant the caller write permission.
  */
 std::filesystem::path ResolveTestInputPath(const std::filesystem::path &input);
+
+/**
+ * Resolve an explicitly bound source sprite payload before native loader startup.
+ * @param family Exact original binary family expected by the selected native case.
+ * @return Hash-verified current data path with matching source report/run/configuration.
+ * @throws std::runtime_error On missing/foreign/changed payloads, families or configurations.
+ * No historical expected directory or general saved-world alias lookup is used.
+ */
+std::filesystem::path GetTestExpectedSprites(std::string_view family);
 
 /**
  * Materialize native configuration/content in this invocation's process home.

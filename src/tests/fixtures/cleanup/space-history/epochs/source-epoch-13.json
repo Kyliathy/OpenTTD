@@ -1,0 +1,25 @@
+{
+  "_documentation": "Plan11 Group15CSGZVEEH: exact consumed cash-worker default, selected translation unit and isolated applications before explicit capital goal.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/construction-cash-before-edit/src/tests/surface_entry_productive_admission.cpp",
+      "sha256": "aec8385872550093e4ebe8a6f337b7f041747f279be593c149437774d6b0a70e"
+    },
+    {
+      "source": "src/tests/surface_entry_funded_farm_goods.h",
+      "path": "test-cache/surface-entry/construction-cash-before-edit/src/tests/surface_entry_funded_farm_goods.h",
+      "sha256": "a875abbeea757bd7f481a1de758acd70edee69a692ce7b79f3d6d6e1875b60d4"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/construction-cash-before-edit/build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "sha256": "cd356918efd16945cd4b41659679890c325d794c1548028f661153befbfc47b1"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/construction-cash-before-edit/build/Debug/openttd_surface_capital_test.exe",
+      "sha256": "35177820ef5b5295bf38cda31adc29002a20c737ee03d4cd621dcdaeaee577bc"
+    }
+  ]
+}

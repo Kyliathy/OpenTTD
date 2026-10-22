@@ -1,0 +1,137 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md8; sealed original history, fresh application qualification pending.",
+  "schema_version": 1,
+  "kind": "sealed_space_checkpoint",
+  "historical_validation": {
+    "path": "src/tests/fixtures/cleanup/space-history/audit.json",
+    "sha256": "cfbc5b47f56f66568569eb8e0303185cec1b0f2460afccb25906b9d89c1c2646"
+  },
+  "history": {
+    "path": "src/tests/fixtures/cleanup/space-history-facts.json",
+    "sha256": "c99f974e2dd89bef0a290901483c4a84a8a5229cb6189c7066c5652d1ce8ceb4"
+  },
+  "historical_roots": {
+    "original_bound": {
+      "path": "logs/surface-entry-construction-cash-verification.json",
+      "sha256": "5658d458171176b7625f73dfa063ab9a140cdf29bca29877231795bd256c7349"
+    },
+    "immediate_foundation": {
+      "path": "logs/surface-entry-construction-capital-verification.json",
+      "sha256": "941543a39e4516dfcc744ed866cc744da00f7ef656eebf6ee51682b9a3ca57ee"
+    },
+    "source_epochs": [
+      {
+        "path": "logs/surface-entry-farm-backhaul-before-edit.json",
+        "sha256": "221bf6fb5932a94e327bb733d1a32b56de7048a9dd46a960d7ca0961094878f5"
+      },
+      {
+        "path": "logs/surface-entry-farm-backhaul-slot-reuse-before-edit.json",
+        "sha256": "b13968b1d83c3c3a30e255ba129d2ad446b48dab72d25cdca3e68e4eec5f8f3e"
+      },
+      {
+        "path": "logs/surface-entry-farm-two-return-before-edit.json",
+        "sha256": "98b4a028c4b9e00b95f8040aa519da0b41a3677ac247ac4494761611e7938d17"
+      },
+      {
+        "path": "logs/surface-entry-rail-productivity-recorder-versions.json",
+        "sha256": "64038a10a0bc3ad01afef0c1f83af7251a38404f5d53fbe755fd1e8baa281481"
+      },
+      {
+        "path": "logs/surface-entry-surplus-home-before-edit.json",
+        "sha256": "e1d85fcb9ede83a252f9ab5adc6119ac40471bb4c002bf7f99bfc3d36550400a"
+      },
+      {
+        "path": "logs/surface-entry-surplus-recovery-before-edit.json",
+        "sha256": "f94aa891acaf0d4fe8b68587299d0cd7d49357530eb621ad18c8cebeb4cd9a01"
+      },
+      {
+        "path": "logs/surface-entry-constructor-home-before-edit.json",
+        "sha256": "594d3293a94a26eb79dd39525682310b99a54cdd16ac9966eb2439322f29aef1"
+      },
+      {
+        "path": "logs/surface-entry-home-binding-before-edit.json",
+        "sha256": "a6a9f3359609889484064f06c258bb9351581a0c1a539d70113278e2ee3fec36"
+      },
+      {
+        "path": "logs/surface-entry-constructor-retirement-before-edit.json",
+        "sha256": "8e335b63892c8c91315cb866b48792c332f07d48c511ef98c9807009554e966e"
+      },
+      {
+        "path": "logs/surface-entry-funded-farm-goods-before-edit.json",
+        "sha256": "65533302b9fc7ea2fd98c379885af85ad7a83e662c26510aa0350f0188cb1ff6"
+      },
+      {
+        "path": "logs/surface-entry-working-cash-before-edit.json",
+        "sha256": "dfd78b0ebb38d516fa0ae3723232aca627c3824fbe2786446b581095256d4fa7"
+      },
+      {
+        "path": "logs/surface-entry-construction-capital-before-edit.json",
+        "sha256": "0bbeccd39fc9262b64b8bb913bb4ffdfe1e781b6f8381262ba5472675df1532b"
+      },
+      {
+        "path": "logs/surface-entry-construction-cash-before-edit.json",
+        "sha256": "640b282f4d41e651ef1573b08b54c8643ad696b1988b74f40515df583ca14b36"
+      }
+    ]
+  },
+  "configurations": {
+    "RelWithDebInfo": {
+      "save": {
+        "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+        "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+      },
+      "original": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215542-242d79e2e7/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+      },
+      "expected_observation": {
+        "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/expected-observation.json",
+        "sha256": "ea4d0f3b94eaf9f5371983853f63950dd0717ddf9d9f836fe617380fa4c08e96"
+      },
+      "expected_chunks": {
+        "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/expected-chunks.json",
+        "sha256": "b5acc49973d652b5ad1214f73acea6550fdf4fa0c6e3526d29594013e42e0b00"
+      },
+      "save_version": 440
+    },
+    "Debug": {
+      "save": {
+        "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+        "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+      },
+      "original": {
+        "path": "mlm/reviews/space/surface-entry-resupply-construction-cash-work/20261020-215547-fa0b1bae22/saves/surface-resupply-construction-cash-work-440.sav",
+        "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+      },
+      "expected_observation": {
+        "path": "src/tests/fixtures/checkpoints/space/Debug/expected-observation.json",
+        "sha256": "1b235267c813f377be22dd84e19ab061c9df0da2cb1ba38aed57d8ea5bb27b97"
+      },
+      "expected_chunks": {
+        "path": "src/tests/fixtures/checkpoints/space/Debug/expected-chunks.json",
+        "sha256": "153d1b2c4c39c698b07832e2e015e1cc05aa8659112b5c35d51ee8e93f4e88db"
+      },
+      "save_version": 440
+    }
+  },
+  "closed_scope": {
+    "window": 32,
+    "total_earned_ticks": 64000,
+    "maximum_windows": 32,
+    "tick_cap": 64000,
+    "ended": true,
+    "end_reason": "tick_cap"
+  },
+  "financial_policy": {
+    "operating_floor": 40000,
+    "capital_floor": 100000,
+    "lower_floor_exceptions_spent": true,
+    "further_paid_scope_authorized": false
+  },
+  "next_task": "Plan11/15CSGZVEEI",
+  "fresh_build_qualified": false,
+  "migration_map": {
+    "path": "src/tests/fixtures/checkpoints/space/migration-c3c1c6468aef88fb5e74ec25b42f2b7ca725d27ad24e170a1b36aec0719d6a35.json",
+    "sha256": "c3c1c6468aef88fb5e74ec25b42f2b7ca725d27ad24e170a1b36aec0719d6a35"
+  }
+}

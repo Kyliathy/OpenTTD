@@ -1,0 +1,23 @@
+{
+  "_documentation": "Explicit new user decision for Plan11 Group15CSGZS, binding the unchanged read-only arrival-only proposal. The previous single bridge remains closed.",
+  "authorized": true,
+  "proposal": {
+    "path": "logs/surface-entry-arrival-settlement-proposal.json",
+    "sha256": "7b5695831a5c8f131fd5e7ef8fd08cc1c7b341537062b78fdddb048601d5f825"
+  },
+  "user_decision": "Authorize the bounded arrival-only scope",
+  "user_question": "Authorize one arrival-only scope with a temporary 30,000 reserve: at most eight freshly funded 500-tick windows (4,000 ticks total), stopping at the first posted Goods payment, funding refusal, or cap? The first complete bill plus reserve is 39,479 against 46,064 cash. The 40,000 default stays unchanged.",
+  "date": "2026-10-20",
+  "configurations": [
+    "RelWithDebInfo",
+    "Debug"
+  ],
+  "reserve": 30000,
+  "default_reserve": 40000,
+  "maximum_windows": 8,
+  "tick_cap": 4000,
+  "window_ceiling": 500,
+  "stop_on_first_posted_payment": true,
+  "stop_on_funding_refusal": true,
+  "no_later_scope_authorized": true
+}

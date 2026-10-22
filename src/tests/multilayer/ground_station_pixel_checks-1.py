@@ -1,6 +1,7 @@
 """Semantic corruption checks for actual native station/glass/vehicle source composition.
 
 @file ground_station_pixel_checks-1.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB; explicit current capture/source selection.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHCC.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 Three real appearance captures are copied only beneath repository test-cache.
@@ -18,8 +19,10 @@ import ground_station_pixel_checks as checks
 from ground_pack_check_support import ROOT, handoff
 from tools.ground_payload_binding import reference
 
-EXECUTION = "logs/graphics/selected-ground-runtime/20261021-station-corrected-01/modules-debug-02/modules.json"
-OUTPUT = ROOT / "logs/graphics/selected-ground-runtime/20261021-station-corrected-01/pixel-verifier-cases"
+
+from ground_pixel_refusal_support import run_checks, scratch_root
+
+EXECUTION = None
 
 
 class NativeStationPixelRefusals(unittest.TestCase):
@@ -30,7 +33,7 @@ class NativeStationPixelRefusals(unittest.TestCase):
 
         @param self Current semantic case; original native/source artifacts remain immutable.
         """
-        cache = ROOT / "test-cache/selected-ground-station-pixel-verifier"
+        cache = scratch_root("selected-ground-station-pixel-verifier")
         cache.mkdir(parents=True, exist_ok=True)
         self.temporary = tempfile.TemporaryDirectory(prefix="native-station-", dir=cache)
         self.directory = Path(self.temporary.name).resolve()
@@ -81,7 +84,7 @@ class NativeStationPixelRefusals(unittest.TestCase):
         """
         identities = {(row["asset_id"], row["graphics"], row["state"], row["frame"], row["appearance"]) for row in self.frames}
         with patch.object(checks, "expected_matrix", return_value=identities):
-            return checks.verify(self.execution.relative_to(ROOT).as_posix())
+            return checks.verify(self.execution.relative_to(ROOT).as_posix(), self.source_view)
 
     def test_actual_native_module_matches(self):
         """@param self Current case. The actual canopy source/glass/body composition has positive native foreground evidence."""
@@ -91,9 +94,8 @@ class NativeStationPixelRefusals(unittest.TestCase):
 
     def test_rehashed_wrong_native_pixel_refuses(self):
         """@param self Current case. A fresh raster hash cannot authorize a changed source-owned canopy pixel."""
-        scope, before, public = handoff.read_scope()
-        family = next(row for row in public["assets"] if row["asset_id"] == "facility.rail-station")
-        poses, atlas = handoff.source_poses(family, scope, before, {}, {})
+        family = self.source_view.families["facility.rail-station"]
+        poses, atlas = self.source_view.poses(family["asset_id"])
         points = checks.source_pixels(poses["working", 1, "NE", 3, "back"], atlas, (289, 131))
         x, y = next(iter(points))
         path = self.directory / "images" / (self.frames[0]["basename"] + ".idx")
@@ -151,7 +153,7 @@ class NativeStationPixelRefusals(unittest.TestCase):
     def test_partial_matrix_refuses_without_unit_scope(self):
         """@param self Current case. Production source qualification requires every real module, phase and appearance."""
         with self.assertRaisesRegex(ValueError, "incomplete or duplicated"):
-            checks.verify(self.execution.relative_to(ROOT).as_posix())
+            checks.verify(self.execution.relative_to(ROOT).as_posix(), self.source_view)
 
     def test_failed_native_process_refuses(self):
         """@param self Current case. Plausible composition cannot authorize an unsuccessful actual process."""
@@ -162,14 +164,4 @@ class NativeStationPixelRefusals(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    started = time.monotonic()
-    with (OUTPUT / "cases.log").open("w", encoding="utf-8") as stream:
-        result = unittest.TextTestRunner(stream=stream, verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(NativeStationPixelRefusals))
-    report = {"_documentation": __doc__, "passed": result.wasSuccessful(), "cases": result.testsRun,
-              "seconds": round(time.monotonic() - started, 3), "terminal": reference(OUTPUT / "cases.log"),
-              "native_execution": reference(handoff.bound(EXECUTION)),
-              "inputs": [reference(Path(__file__)), reference(Path(checks.__file__))]}
-    (OUTPUT / "verification.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({key: report[key] for key in ("passed", "cases", "seconds")}))
-    raise SystemExit(0 if result.wasSuccessful() else 1)
+    run_checks(NativeStationPixelRefusals, 'stations')

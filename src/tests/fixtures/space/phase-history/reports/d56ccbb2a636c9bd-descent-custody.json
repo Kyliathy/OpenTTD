@@ -1,0 +1,20 @@
+{
+  "_documentation": "Owner: r2mlvs9 Group13; one genuine paid-world phase, immediate release/completion/service checkpoint and ordinary paused resave. Full-storage and retired-center boundaries are separate isolated tests.",
+  "configuration": "Debug",
+  "phase": "replacement",
+  "source": {
+    "path": "mlm/reviews/space/descent-custody-native-complete-service/20261014-090631-8e548ce296/saves/descent-complete-service-423.sav",
+    "sha256": "de690aeee864e1ea967aa7a7f8b0c1faaa48dda9814b9892424c71b94fd61d8f"
+  },
+  "complete": {
+    "path": "mlm/reviews/space/descent-custody-native-replacement/20261014-091411-a9b8b9f3ed/saves/descent-replacement-423.sav",
+    "sha256": "049edf2efe695e5c3299a663e0f0b8d53ed5fd86ab8a9a0f417cb6776ec7d018"
+  },
+  "ordinary_resave": {
+    "path": "mlm/reviews/space/descent-custody-ordinary-replacement/20261014-091411-a9b8b9f3ed/saves/ordinary-resave.sav",
+    "sha256": "f4831aad9f78515308ec2408559eb8b34a0e35a1ecf4d41163b4b77511be2951"
+  },
+  "exact_owner_families": 26,
+  "conserved_mined_units": 20,
+  "actual_tick_expense_checked": true
+}

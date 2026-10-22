@@ -1,0 +1,70 @@
+{
+  "_documentation": "Plan11Group15CSGZVED exact consumed10observer owners/native CPP/two isolated apps before actual home-builder retirement support.",
+  "products": [
+    {
+      "source": "src/tests/surface_entry_productive_admission.cpp",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/0-surface_entry_productive_admission.cpp",
+      "sha256": "35db755b6b4394d7d1f263344ea787029101834ba453bb3390bf16e8a0d3140a"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_core_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/1-surface_gateway_core_ledger.py",
+      "sha256": "d0d2c7f7165b25d3460231d0bda1659319300d499100915e5b7f82488cf954b0"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_assembly_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/2-surface_gateway_assembly_ledger.py",
+      "sha256": "be3d5f070c0cf15358bf0557c537b6f5064a3796840777f080149c7d05d613b2"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_payload_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/3-surface_gateway_payload_ledger.py",
+      "sha256": "5f9a5c56079f874b99002444713b9249db2d8a04f1d655be44fd37a32a8af1a4"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_material_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/4-surface_gateway_material_ledger.py",
+      "sha256": "64647558da8face8a58bcf04cd17e7ebdbd555591241fd9f45dbcef0d1160b2b"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_resupply_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/5-surface_gateway_resupply_ledger.py",
+      "sha256": "d70c07a520c0320ee3e862a5c579339a3585954cac82ee6183aeccf1904f8912"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_construction_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/6-surface_gateway_construction_ledger.py",
+      "sha256": "25b4238ec4a3a557a21a67b1f60fe8b05f9b64c8c6df8811bb48b24d116c95e3"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_gateway_component_delivery_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/7-surface_gateway_component_delivery_ledger.py",
+      "sha256": "0ae5f9892099c5fb0575167d54cfe9ef26bb0e606a7ef9a32275611e5ec84163"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_farm_backhaul_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/8-surface_farm_backhaul_ledger.py",
+      "sha256": "4470edf65fdb5b2b8eb7bfee1940c36b1a49133097be5355d236071e603f1936"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_surplus_recovery_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/9-surface_surplus_recovery_ledger.py",
+      "sha256": "cffe90c5f658b063238ea5f3036d724bcf2b61a8165d9be81c951e7a674c58bc"
+    },
+    {
+      "source": "src/tests/multilayer/acceptance/surface_constructor_home_ledger.py",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/10-surface_constructor_home_ledger.py",
+      "sha256": "fca1758c144238a471a26d43da1818f2cc2aaf3f4db305742fbe9dc0460ccc3c"
+    },
+    {
+      "source": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/11-openttd_surface_capital_test.exe",
+      "sha256": "a123770a7d263e8fd8b51d9a277d0d1eeec4282c19c9d288a02c68cd9489d1b2"
+    },
+    {
+      "source": "build/Debug/openttd_surface_capital_test.exe",
+      "path": "test-cache/surface-entry/constructor-retirement-before-edit/12-openttd_surface_capital_test.exe",
+      "sha256": "7688e5ad9f4ebcceb5e82adbb389e3b9ccbb61becef41036323998a1f73f2ed1"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 """Verify and publish the selected native M1 runtime-consumer handoff.
 
 @file activate_m1_art.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group16.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
@@ -15,12 +16,12 @@ import json
 from pathlib import Path
 
 import pack_m1_art as pack
-from evidence import CACHE, DEFAULT_MANIFEST, EvidenceSet
+from evidence import DEFAULT_MANIFEST, EvidenceSet
 
 ROOT = Path(__file__).resolve().parents[2]
 PUBLIC = ROOT / "media/multilayer/contracts/multilayer_sprite_manifest.json"
-PACKED = CACHE / "derived/packed-manifest.json"
-RUNTIME = CACHE / "runtime-manifest.json"
+PACKED = None
+RUNTIME = None
 _ACTIVE_EVIDENCE = None
 
 
@@ -31,7 +32,7 @@ def evidence():
     """
     global _ACTIVE_EVIDENCE
     if _ACTIVE_EVIDENCE is None:
-        select_evidence(DEFAULT_MANIFEST)
+        raise ValueError("select an explicit schema2 evidence manifest before runtime validation")
     return _ACTIVE_EVIDENCE
 
 
@@ -64,15 +65,15 @@ def binding_for(asset):
     @return Selector, actual consumer source/symbol, owner descriptions and focused evidence.
     @throws ValueError If no implemented runtime consumer is declared for that family.
     """
-    terrain = [evidence().log("terrain-checks"), evidence().log("terrain-capture")]
-    controls = [evidence().log("control-checks"), evidence().log("control-capture")]
-    trains = [evidence().log("vehicle-checks")]
-    facilities = [evidence().log("facility-checks")]
+    terrain = [evidence().terminal("terrain-checks"), evidence().terminal("terrain-capture")]
+    controls = [evidence().terminal("control-checks"), evidence().terminal("control-capture")]
+    trains = [evidence().terminal("vehicle-checks")]
+    facilities = [evidence().terminal("facility-checks")]
     if asset in ("terrain.hardness", "terrain.hardness-edges"):
         selector = "GetMultiLayerTerrainEdgeSprites" if asset.endswith("edges") else "GetMultiLayerTerrainSprite"
         values = (selector, "src/clear_cmd.cpp", "DrawTile_Clear", selector,
                   ["GetGeologyWorldState.terrain", "GetExcavationCellHardness", "adjacent rock owns exposed walls"],
-                  [evidence().log("geology-checks"), evidence().log("geology-capture")])
+                  [evidence().terminal("geology-checks"), evidence().terminal("geology-capture")])
     elif asset.startswith("terrain."):
         values = ("GetMultiLayerTerrainSprite", "src/clear_cmd.cpp", "DrawTile_Clear", "GetMultiLayerTerrainSprite",
                   ["GetGeologyWorldState.terrain", "layer-bounded TileAddWrap", "retained legacy family; superseded by terrain.hardness"], terrain)
@@ -101,7 +102,7 @@ def binding_for(asset):
         values = ("GetMultiLayerCollectorSprite", "src/industry_cmd.cpp", "DrawTile_Industry", "GetMultiLayerIndustrySprite",
                   ["actual consumed site and native cells", "GetIndustryConstructionStage/IsIndustryCompleted", "IsGeothermalCollectorOperational",
                    "current shared Heat producer/interval; no graphics-owned energy"],
-                  [evidence().log("collector-checks"), evidence().log("collector-capture")])
+                  [evidence().terminal("collector-checks"), evidence().terminal("collector-capture")])
     elif asset.startswith("control."):
         values = ("GetMultiLayerControlSprite", "src/underground_gui.cpp", "UndergroundConstructionWindow::GetWidgetIcon", "GetMultiLayerControlSprite",
                   ["actual disabled/lowered widgets", "CheckDeepLayerAvailability/IsTBMCutterAvailable", "canonical area_quote/turn_envelope"], controls)
@@ -247,7 +248,7 @@ def validate(public, packed, rasters):
         assert path.read_bytes() == encoded, "actual packed source changed after runtime evidence"
     identity = packed["packed_grf"]
     assert identity["sha256"] == digest(ROOT / identity["path"]), "distributed native payload hash is stale"
-    assert identity["loader_log"] == evidence().log("packed-loader"), "loader log differs from selected proof"
+    assert identity["loader_log"] == evidence().terminal("packed-loader"), "loader log differs from selected proof"
     loaded = read_evidence(ROOT / identity["loader_log"])
     marker = (f"M1_PACKED_ART_LOADED sprites={66 + expected['pose_count']} native_bound={expected['native_sprite_bound']} "
               f"protected=66 selected={expected['pose_count']} pixel_hashes=exact")
@@ -259,11 +260,11 @@ def validate(public, packed, rasters):
         evidence().validate_capture(raster)
         assert raster["simulation_owners_unchanged_during_render"]
         assert digest(ROOT / raster["source"]) == raster["source_sha256"], "runtime source save is stale"
-        log = read_evidence(ROOT / raster["log"])
+        log = read_evidence(ROOT / evidence().capture_terminal(raster))
         assert "All tests passed" in log
         for frame in raster["frames"]:
             assert digest(ROOT / frame["path"]) == frame["sha256"], "runtime raster hash is stale"
-    assert "M1_CONTROL_RUNTIME frames=6 actual_widgets=true engines=5 cargo_icons=2" in read_evidence(ROOT / rasters[1]["log"])
+    assert "M1_CONTROL_RUNTIME frames=6 actual_widgets=true engines=5 cargo_icons=2" in read_evidence(ROOT / evidence().capture_terminal(rasters[1]))
     families = {family["asset_id"]: family for family in public["assets"]}
     result = []
     # Bind every selected family to its implemented call site and exact emitted
@@ -353,6 +354,8 @@ def main():
         except AssertionError:
             continue
         raise AssertionError("runtime metadata corruption was accepted: " + fault)
+    # Both requested modes publish generated runtime proof; only the separate
+    # source publication flag may advance authored activation metadata below.
     if args.publish or args.cache_only:
         gallery = verified_gallery(public, packed, bindings)
         if gallery is not None:
