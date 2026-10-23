@@ -3,6 +3,7 @@
 /**
  * @file artifact_paths_probe.cpp Small executable linking the actual native path owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups10/18B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group25 runtime parity.
  * Exercises routing only; it links no game/world implementation and claims no pixels.
  */
 
@@ -28,7 +29,7 @@ static nlohmann::json DescribePaths(const TestArtifactPaths &paths)
 /**
  * Invoke explicit actual routing/input/provenance boundaries in a small process.
  * @param argc Argument count including the executable name.
- * @param argv Mode: paths, input <path>, expected <family>, output <role> <basename>, record <path>.
+ * @param argv Mode: paths, runtime [template], input <path>, expected <family>, output <role> <basename>, record <path>.
  * @return Zero for an accepted boundary, two for malformed invocation, one on refusal.
  */
 int main(int argc, char **argv)
@@ -36,6 +37,12 @@ int main(int argc, char **argv)
 	if (argc < 2) return 2;
 	try {
 		const std::string mode = argv[1];
+		// Runtime parity exercises the actual native preparation owner, using
+		// only the caller's declared fixture/process home and no game execution.
+		if (mode == "runtime" && (argc == 2 || argc == 3)) {
+			std::cout << nlohmann::json{{"path", GetTestRuntimeConfig(argc == 3 ? argv[2] : "native-art.cfg").generic_string()}}.dump() << '\n';
+			return 0;
+		}
 		// Input resolution is read-only and must not reserve a runtime invocation.
 		if (mode == "input" && argc == 3) {
 			std::cout << nlohmann::json{{"path", ResolveTestInputPath(argv[2]).generic_string()}}.dump() << '\n';

@@ -3,6 +3,7 @@
 @file runner.py Reusable runner support; no subprocess monkey-patching.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Groups 3-5.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups10/18B/19B; exact inputs and delegated native producers.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group25 atomic image reuse.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 """
 
@@ -10,7 +11,6 @@ import os
 import hashlib
 from pathlib import Path
 import subprocess
-import shutil
 import json
 import sys
 import uuid
@@ -88,6 +88,26 @@ def collect_native_screenshots(context):
     return captures
 
 
+def _runtime_image(target, encoded):
+    """Reuse identical image bytes or atomically replace this process's image.
+
+    @param target Already-contained runtime EXE/DLL destination.
+    @param encoded Exact current source bytes, including any console projection.
+    @return None; replacing a directory entry preserves any historical peer links.
+    """
+    # Repeated observers in one process home must not rewrite a matching image.
+    # A changed build receives a fresh entry so old hard-linked peers stay exact.
+    if target.is_file() and target.read_bytes() == encoded:
+        return
+    temporary = target.with_name(target.name + "." + uuid.uuid4().hex + ".tmp")
+    try:
+        with temporary.open("xb") as sink:
+            sink.write(encoded)
+        temporary.replace(target)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def console_executable(context, executable):
     """Prepare a disposable Windows console copy with its exact build dependencies.
 
@@ -109,20 +129,11 @@ def console_executable(context, executable):
         raise ValueError("native executable has no supported PE subsystem")
     encoded[header + 92:header + 94] = (3).to_bytes(2, "little")
     target = context.runtime_dir / "openttd_console.exe"
-    # Cleanup can hard-link identical historical console copies. Replacing the
-    # directory entry gives this run its own bytes without modifying any peer
-    # or invalidating the executable hashes retained by historical reports.
-    temporary = target.with_name(target.name + "." + uuid.uuid4().hex + ".tmp")
-    try:
-        with temporary.open("xb") as sink:
-            sink.write(encoded)
-        temporary.replace(target)
-    finally:
-        temporary.unlink(missing_ok=True)
+    _runtime_image(target, encoded)
     # Windows searches beside the launched image for its runtime DLLs. Copy
     # the matching build dependencies rather than using installed user content.
     for dependency in source.parent.glob("*.dll"):
-        shutil.copyfile(dependency, context.runtime_dir / dependency.name)
+        _runtime_image(context.runtime_dir / dependency.name, dependency.read_bytes())
     return target
 
 

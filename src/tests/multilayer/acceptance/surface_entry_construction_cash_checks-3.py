@@ -1,6 +1,7 @@
 """Bind actual construction-cash recovery, full costs and ordinary saved-world convergence.
 
 @file surface_entry_construction_cash_checks-3.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group22, typed durable export replaces recursive retention.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZVEEH.
 The capital milestone threshold is restored only by actual banked native money.
 """
@@ -25,8 +26,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--windows", type=int, required=True)
     parser.add_argument("--retain", action="store_true")
+    parser.add_argument("--foundation", type=Path, help="Exact typed completed foundation for compact --retain export")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    if args.retain:
+        if args.foundation is None:
+            parser.error("--retain requires --foundation; use space_checkpoint.py --export-foundation for standalone export")
+        from space_checkpoint import export_foundation, load_foundation
+        selected = export_foundation(load_foundation(args.foundation))
+        print(json.dumps(dict(path=selected.manifest_path.relative_to(ROOT).as_posix(), sha256=selected.sha256)))
+        return
     output = ROOT / args.output
     assert output.resolve().is_relative_to(ROOT / "logs") and not output.exists()
     assert 1 <= args.windows <= CURRENT["MAX_WINDOWS"]
@@ -49,7 +58,7 @@ def main():
         "construction-cash-static", CURRENT["observe"],
         [Path(__file__), CALLER, CALLER.with_name("surface_entry_construction_cash_checks-2.py"),
          CALLER.with_name("surface_construction_cash_native.py")],
-        ROOT / "test-cache/surface-entry/construction-cash-products" if args.retain else None, identity_reader=cache)
+        None, identity_reader=cache)
     cache.assert_unchanged()
     cash = finals[0]["final"]["company"]["cash"]
     assert cash == finals[1]["final"]["company"]["cash"] and cash-101093 == flows[0]["cash_delta"]

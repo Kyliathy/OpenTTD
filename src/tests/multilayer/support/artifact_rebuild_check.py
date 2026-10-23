@@ -2,6 +2,7 @@
 
 @file artifact_rebuild_check.py No native game, paid workflow or source publication.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group14.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 direct output ownership.
 Synthetic catalogues exercise the actual executor with a real bounded text
 producer and independently supplied expectations; real recipes remain disabled.
 """
@@ -305,6 +306,15 @@ class RecipeRebuildChecks(unittest.TestCase):
         self.assertTrue(result["complete"])
         self.assertEqual(set(result["outputs"]), {"payload", "manifest"})
         original = self.input.read_bytes()
+        # A direct dispatcher request cannot use an otherwise valid declaration
+        # to overwrite its own immutable expectation before its handler runs.
+        unsafe = copy.deepcopy(request)
+        unsafe["outputs"]["payload"] = self.input.relative_to(self.root).as_posix()
+        unsafe_path = context.reports / "unsafe-output.json"
+        unsafe_path.write_text(json.dumps(unsafe), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "outside its selected recipe/run"):
+            dispatcher.execute_request(unsafe_path, self.root)
+        self.assertEqual(self.input.read_bytes(), original)
         self.input.write_bytes(original + b" ")
         with self.assertRaisesRegex(ValueError, "input/source changed"):
             dispatcher.execute_request(path, self.root)

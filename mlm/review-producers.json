@@ -5855,6 +5855,32 @@
       "invocation": "python -B src/tests/multilayer/acceptance/space_checkpoint_load.py --configuration <configuration> --application <fresh-capital-image>"
     },
     {
+      "producer": "src/tests/multilayer/acceptance/space_goods_capacity.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "goods-capacity"
+        }
+      ],
+      "test_tags": [
+        "[.space-goods-capacity]"
+      ],
+      "context_policy": "explicit qualified foundation/current build/configuration; pure whole-capital query and no paid mode",
+      "invocation": "python -B src/tests/multilayer/acceptance/space_goods_capacity.py run --foundation <selected-foundation> --configuration <configuration> --build-result <current-two-image-build> --run-id <fresh-id>; publish binds both actual operations"
+    },
+    {
+      "producer": "src/tests/multilayer/acceptance/space_operation_restore.py",
+      "features": [
+        {
+          "feature": "space",
+          "scenario": "goods-capacity-restore"
+        }
+      ],
+      "test_tags": [],
+      "context_policy": "actual native Goods output and selected ordinary image; one zero-tick ordinary reload",
+      "invocation": "Called by space_goods_capacity.py run; no standalone work mode"
+    },
+    {
       "producer": "src/tests/multilayer/acceptance/space_checkpoint_static.py",
       "features": [
         {
@@ -6364,10 +6390,8 @@
       "test_tags": [],
       "tag_sources": [],
       "execution": "read_only",
-      "enabled": false,
-      "pending_groups": [
-        21
-      ],
+      "enabled": true,
+      "pending_groups": [],
       "publishes_source": false,
       "stages": [
         "inspect",
@@ -6402,7 +6426,10 @@
       "original_parameters": {
         "scope": "completed Group9 terminal metadata only; Group10 remains provisional"
       },
-      "native_timeout_seconds": null
+      "native_timeout_seconds": null,
+      "implementation_sources": [
+        "src/tests/multilayer/qualify_tube_terminals.py"
+      ]
     },
     {
       "id": "m1-source-base",
@@ -51864,6 +51891,71 @@
         "src/tests/multilayer/ground_transport_body_pixel_checks.py",
         "src/tests/multilayer/ground_station_pixel_checks.py",
         "src/tests/native_art_render_fixture.h"
+      ]
+    },
+    {
+      "id": "state-prior-native",
+      "producer": "src/tests/multilayer/support/prior_stage_evidence.py",
+      "feature": "state",
+      "scenario": "metadata",
+      "target": "openttd",
+      "test_tags": [],
+      "tag_sources": [],
+      "execution": "native_application",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": true,
+      "configuration_reuse": "forbid",
+      "comparison": "current_native_observation",
+      "tools": [
+        "native-build",
+        "runtime-distribution"
+      ],
+      "retained_inputs": [
+        {
+          "role": "tool-requirements",
+          "path": "src/tests/fixtures/cleanup/tool-requirements.json"
+        },
+        {
+          "role": "original-metadata-save",
+          "path": "src/tests/fixtures/state/r2mlvs14-b-native-new.sav",
+          "sha256": "95ed8570f95b944cccb68f2428c1a5aba15233e04eff59b8d53c0e414ffca11c"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/prior-native-{configuration}.json"
+        },
+        {
+          "role": "semantics",
+          "path": "reports/prior-r2mlvs14-b-native-reload-semantics.json"
+        }
+      ],
+      "original_parameters": {
+        "native_arguments": [
+          "-g",
+          "-c",
+          "-v"
+        ],
+        "scope": "one actual metadata reload of a retained original version371 input; no historical-chain replay",
+        "build_targets": [
+          "openttd"
+        ]
+      },
+      "native_timeout_seconds": 60,
+      "implementation_sources": [
+        "src/tests/multilayer_state_fixture.py",
+        "src/tests/multilayer/support/runner.py",
+        "mlm/tools/run/run_dedicated.sh"
       ]
     }
   ]

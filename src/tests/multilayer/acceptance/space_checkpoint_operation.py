@@ -1,6 +1,7 @@
 """Publish genuine explicitly selected Plan11 operations after qualified recovery.
 
 @file space_checkpoint_operation.py No paid execution or inherited authorization.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Groups22/36, durable save and ordinary reload roles.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group12B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md.
 The Plan11producer performs its own authorized action; this module validates
@@ -28,6 +29,7 @@ RESULT_FIELDS = {"_documentation", "schema_version", "kind", "complete", "config
 FIELDS = {"_documentation", "schema_version", "kind", "complete", "foundation_type", "predecessor", "seal",
           "task", "next_task", "observer_contract", "configurations", "closed_scope", "financial_policy", "authorization_granted", "path_policy"}
 WITNESSES = {"operation_result", "native_process", "native_terminal", "before", "output", "build_result", "source_epoch", "tool_profile", "validator_source"}
+ORDINARY_WITNESSES = {"ordinary_result", "ordinary_process", "ordinary_terminal", "ordinary_output"}
 CLOSED_TASKS = {"Plan11/15CSGZVEEH", "Plan11/15CSGZVEEF", "Plan11/15CSGZVEE", "Plan11/15CSGZQ", "Plan11/15CSGZRB"}
 CLOSED_PHASES = {"construction-cash-query", "construction-cash-work", "working-cash-query", "working-cash-work", "reserve-bridge", "arrival-settlement"}
 
@@ -97,13 +99,36 @@ def _result_shape(operation, task, configuration):
     @param configuration Independent configuration being validated.
     @return None; no historical work/query receipt is auto-converted.
     """
-    if not isinstance(operation, dict) or set(operation) != RESULT_FIELDS:
+    if not isinstance(operation, dict):
+        raise ValueError("new operation requires its exact typed result fields")
+    fields = RESULT_FIELDS | ({"ordinary_result"} if operation.get("schema_version") == 2 else set())
+    if set(operation) != fields:
         raise ValueError("new operation requires its exact typed result fields")
     # Scope remains owned by the current Plan11task. Closed stages and a load-only
     # qualifier cannot masquerade as a genuine new capacity/operation producer.
-    if type(operation["schema_version"]) is not int or operation["schema_version"] != 1 or operation["kind"] != "space_operation_result" or operation["complete"] is not True or operation["configuration"] != configuration or operation["task"] != task or task in CLOSED_TASKS or operation["phase"] in CLOSED_PHASES or operation["tag"] == "[.space-checkpoint-load]" or operation["financial_policy"] != POLICY:
+    if type(operation["schema_version"]) is not int or operation["schema_version"] not in (1, 2) or operation["kind"] != "space_operation_result" or operation["complete"] is not True or operation["configuration"] != configuration or operation["task"] != task or task in CLOSED_TASKS or operation["phase"] in CLOSED_PHASES or operation["tag"] == "[.space-checkpoint-load]" or operation["financial_policy"] != POLICY:
         raise ValueError("operation task/configuration/closed financial scope disagrees")
     identifier(operation["phase"])
+
+
+def _ordinary_witnesses(operation, build, root, copies=None):
+    """Verify version-two ordinary reloads while preserving version-one history.
+
+    @param operation Exact typed operation whose schema selects its witness roles.
+    @param build Selected verified current or completed native build document.
+    @param root Checkout containing explicit physical inputs.
+    @param copies Copied witness paths after publication/export, or None for live proof.
+    @return Additional explicit ordinary identities; old completed operations return none.
+    """
+    if operation["schema_version"] == 1:
+        return {}
+    from space_operation_restore import verify_restore, witness_references
+    path = checked(operation["ordinary_result"], root) if copies is None else copies["ordinary_result"]
+    if file_identity(path)[0] != operation["ordinary_result"]["sha256"]:
+        raise ValueError("ordinary operation result changed during relocation")
+    document = json.loads(path.read_text(encoding="utf-8"))
+    verify_restore(document, operation, root, build, current=copies is None, copies=copies)
+    return witness_references(operation, document)
 
 
 def _saved_facts(operation, source, before, output, terminal, parent_row, observer):
@@ -152,6 +177,8 @@ def _validation_facts(validation, operation, facts):
     @param facts Independently measured saved counters/observations.
     @return None; no missing validator or inherited approval can become permission.
     """
+    # Only the complete measured business contract may certify this task;
+    # a convenient truthy summary cannot supply missing clocks or permissions.
     if not isinstance(validation, dict) or set(validation) != {"kind", "task", "phase", "elapsed_ticks", "authorizes_future_operations", "facts"}:
         raise ValueError("Plan11 validator must return its explicit measured business facts")
     # Completed business facts must agree with the measured native task and
@@ -166,6 +193,8 @@ def validate_receipt_shape(document):
     @param document Candidate or published typed operation receipt.
     @return None; original closed financial scopes remain immutable history.
     """
+    # Keep completed receipts within their exact role/authority boundary;
+    # missing or extra fields cannot silently introduce a new paid allowance.
     if not isinstance(document, dict) or set(document) != FIELDS:
         raise ValueError("operation receipt requires exact typed fields")
     # Publication records completed work, never permission for another action.
@@ -249,25 +278,27 @@ def publish_successor(predecessor, operations, next_task, destination, operation
         if validator_file is None or file_identity(Path(validator_file))[0] != operation["validator_source"]["sha256"] or operation["validator_source"] not in operation["source_files"]:
             raise ValueError("operation validator source does not match the actual callable")
         facts = _saved_facts(operation, source, before, output, terminal, parent["configurations"][configuration], actual_observer)
+        ordinary_references = _ordinary_witnesses(operation, build, root)
         validation = operation_validator(source, before, output, operation, root)
         _validation_facts(validation, operation, facts)
-        candidate_rows[configuration] = (operation, build, facts, validation)
+        candidate_rows[configuration] = (operation, build, facts, validation, ordinary_references)
     first, second = [candidate_rows[name][2]["final"] for name in CONFIGURATIONS]
     if first != second:
         raise ValueError("operation cross-configuration owner/material results disagree")
     rows = {}
     # Each configuration exports its own measured saves and bounded witnesses;
     # cross-configuration agreement does not permit sharing a world identity.
-    for configuration, (operation, build, facts, validation) in candidate_rows.items():
+    for configuration, (operation, build, facts, validation, ordinary_references) in candidate_rows.items():
         references = dict(operation_result=operations[configuration], native_process=operation["native_process"], native_terminal=operation["terminal"],
             before=operation["before"], output=operation["output"], build_result=operation["build_result"],
             source_epoch=build["source_epoch"], tool_profile=build["tool_profile"], validator_source=operation["validator_source"])
+        references.update(ordinary_references)
         witnesses = {}
         # Copy only bounded independent witnesses/current saves. Old image paths
         # remain completed facts and never become an executable retention rule.
         for role, reference in references.items():
             path = checked(reference, root)
-            owner = context.data if role in ("before", "output") else context.evidence
+            owner = context.data if role in ("before", "output", "ordinary_output") else context.evidence
             witnesses[role] = _publish_bytes(owner / f"{reference['sha256'][:16]}-{path.name}", path.read_bytes(), root)
         rows[configuration] = dict(source=operation["source"], output=witnesses["output"],
                                    facts=facts, validation=validation, witnesses=witnesses)
@@ -279,9 +310,13 @@ def publish_successor(predecessor, operations, next_task, destination, operation
     verify_operation_document(document, root, context, actual_observer, {target})
     # Close on actual current source/image epochs after all validation/copying;
     # this publication can never certify a different build that raced the checks.
-    for configuration, (operation, build, _facts, _validation) in candidate_rows.items():
+    for configuration, (operation, build, _facts, _validation, ordinary_references) in candidate_rows.items():
         foundation_owner.validate_build_document(build, foundation_owner.read(build["source_epoch"], root), foundation_owner.read(build["tool_profile"], root), configuration, root, True, ("openttd_surface_capital_test",))
         checked(operations[configuration], root)
+        # Close on every actual ordinary witness too; a replaced reload report
+        # cannot become part of an otherwise current native operation receipt.
+        for reference in ordinary_references.values():
+            checked(reference, root)
     _publish_bytes(target, (json.dumps(document, indent=2) + "\n").encode("utf-8"), root)
     return foundation_owner.load_foundation(target, root=root)
 
@@ -307,22 +342,29 @@ def verify_operation_document(document, root, context, observer, seen):
     # Recompute each independent saved world from its compact physical closure;
     # never trust a summary row as a replacement for actual owner observations.
     for configuration, row in document["configurations"].items():
-        if set(row) != {"source", "output", "facts", "validation", "witnesses"} or set(row["witnesses"]) != WITNESSES or row["source"] != parent["configurations"][configuration]["source"] or row["output"] != row["witnesses"]["output"]:
+        if set(row) != {"source", "output", "facts", "validation", "witnesses"} or set(row["witnesses"]) not in (WITNESSES, WITNESSES | ORDINARY_WITNESSES) or row["source"] != parent["configurations"][configuration]["source"] or row["output"] != row["witnesses"]["output"]:
             raise ValueError("successor source/output/witness closure disagrees")
         paths = {role: checked(reference, root) for role, reference in row["witnesses"].items()}
         for role, path in paths.items():
-            owner = context.data if role in ("before", "output") else context.evidence
+            owner = context.data if role in ("before", "output", "ordinary_output") else context.evidence
             if path.parent != owner:
                 raise ValueError("successor witness belongs to another invocation/role")
         operation, process, build, epoch, profile = [json.loads(paths[role].read_text(encoding="utf-8"))
             for role in ("operation_result", "native_process", "build_result", "source_epoch", "tool_profile")]
         _result_shape(operation, parent["next_task"], configuration)
+        expected_roles = WITNESSES | (ORDINARY_WITNESSES if operation["schema_version"] == 2 else set())
+        if set(paths) != expected_roles:
+            raise ValueError("operation version disagrees with its ordinary witness closure")
         # Completed copies still bind the original task source and observation
         # semantics. Historical classification cannot excuse a changed lineage.
-        if operation["source"] != row["source"] or operation["observer_contract"] != document["observer_contract"]:
+        # Export relocates the selected predecessor save. Preserve its exact
+        # original path/hash inside process facts and require identical bytes at
+        # the parent's newly verified physical owner.
+        if operation["source"]["sha256"] != row["source"]["sha256"] or operation["observer_contract"] != document["observer_contract"]:
             raise ValueError("successor completed source/observer facts disagree")
         references = dict(native_process=operation["native_process"], native_terminal=operation["terminal"], before=operation["before"], output=operation["output"],
                           build_result=operation["build_result"], source_epoch=build["source_epoch"], tool_profile=build["tool_profile"], validator_source=operation["validator_source"])
+        references.update(_ordinary_witnesses(operation, build, root, paths))
         # Relocated copies must preserve the original witness bytes, while old
         # machine paths inside those bytes remain historical facts.
         for role, reference in references.items():
@@ -331,7 +373,7 @@ def verify_operation_document(document, root, context, observer, seen):
         foundation_owner.validate_build_document(build, epoch, profile, configuration, root, False, ("openttd_surface_capital_test",))
         # Require the actually selected case and all emitted roles even after
         # their old image has been removed by a legitimate clean or rebuild.
-        if process["exit_status"] != 0 or process["executable"] != operation["application"] or process["inputs"] != [row["source"]] or operation["application"] != build["targets"]["openttd_surface_capital_test"] or len(process["argv"]) != 4 or not process["argv"][0].replace("\\", "/").endswith("/" + operation["application"]["path"]) or process["argv"][1:] != [operation["tag"], "--durations", "yes"] or any(operation[field] not in process["artifacts"] for field in ("before", "output", "terminal")) or operation["terminal"] not in process["transcripts"]:
+        if process["exit_status"] != 0 or process["executable"] != operation["application"] or process["inputs"] != [operation["source"]] or operation["application"] != build["targets"]["openttd_surface_capital_test"] or len(process["argv"]) != 4 or not process["argv"][0].replace("\\", "/").endswith("/" + operation["application"]["path"]) or process["argv"][1:] != [operation["tag"], "--durations", "yes"] or any(operation[field] not in process["artifacts"] for field in ("before", "output", "terminal")) or operation["terminal"] not in process["transcripts"]:
             raise ValueError("successor completed process/build facts disagree")
         facts = _saved_facts(operation, checked(row["source"], root), paths["before"], paths["output"], paths["native_terminal"], parent["configurations"][configuration], actual_observer)
         _validation_facts(row["validation"], operation, facts)

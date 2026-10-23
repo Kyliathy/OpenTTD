@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13. Portable observed Windows build profile; dependencies pin actual installed package versions, distinct from the source manifest historical baseline. No machine paths or CMakeCache authority.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13. Portable observed Windows build profile; dependencies pin actual installed package versions, distinct from the source manifest historical baseline. No machine paths or CMakeCache authority. Cold provider source completion: r2fc2-file-cleanup3.md Group30; initial profile retained separately.",
   "schema_version": 1,
   "kind": "portable_native_build_profile",
   "platform": "windows-x64",
@@ -143,9 +143,46 @@
       }
     ],
     "source_bundle": {
-      "path": "src/tests/fixtures/config/multilayer/native-dependency-sources.zip",
-      "sha256": "99b18d4c8413d10a2da00ba929d043492b5a91de524ada0a43abb547eb37a0c2"
-    }
+      "path": "src/tests/fixtures/config/multilayer/native-dependency-sources-complete.zip",
+      "sha256": "69027e8f51a38a031c88629873e1ee3d5456a7174e29fe532d9b39cd172e0012"
+    },
+    "runtime_assets": [
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trg1.grf",
+        "sha256": "38f0494a7f508dc6e471ca3eba91703f9a1df7aad2067f0f4e25f79b5e9aab51",
+        "destination": "baseset/trg1.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgc.grf",
+        "sha256": "a17c8f8bbac1306c49190942bfa06409eebb106e6290fae0f9930aefb80484f6",
+        "destination": "baseset/trgc.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgh.grf",
+        "sha256": "30d2e2d58797ee5c76a2a7a27fa04e3896028edf0f64abc1d6b3d7bf0b68ca41",
+        "destination": "baseset/trgh.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgi.grf",
+        "sha256": "81a8119afe3e7fa72b3147ee5826c1f9dec2ca39e6232905fe18a1948cf61859",
+        "destination": "baseset/trgi.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgt.grf",
+        "sha256": "7c5df28cc5d68e97ae0cb57e794060b76d2c927e90b36e6db69b245e042c7709",
+        "destination": "baseset/trgt.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/gm.cat",
+        "sha256": "111a393c09a18b780401b435a8f788d571bdfd915ae1d4bf29b0492412d121f7",
+        "destination": "baseset/gm.cat"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/sample.cat",
+        "sha256": "edb6233cb97546a11b4f50cf0fe3d95ed00e767d26c00246850ff992a7d495bd",
+        "destination": "baseset/sample.cat"
+      }
+    ]
   },
   "build_directory": "build"
 }

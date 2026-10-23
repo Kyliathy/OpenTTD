@@ -1,0 +1,4 @@
+pause
+set savegame_format lzma
+save "D:/Codez/Sandbox/OpenTTD/mlm/reviews/space/checkpoint-static/cleanup15-rwd-01/saves/ordinary"
+quit

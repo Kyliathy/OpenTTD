@@ -1,10 +1,12 @@
 """Focused source-epoch reconstruction and unique-byte preservation checks.
 
 @file artifact_source_epochs_check.py Protect authored sources before cleanup release.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group24 entry refresh of mutable original aliases.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group9.4.
 """
 
 import hashlib
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -69,6 +71,20 @@ class SourceEpochChecks(unittest.TestCase):
         with patch.object(Path, "mkdir", side_effect=AssertionError("verification writes")):
             self.assertEqual(verify_source_epochs(result, self.root), 2)
 
+    def test_changed_mutable_original_reuses_only_its_exact_retained_epoch(self):
+        """An ordinary rebuild cannot discard an already preserved older generated revision.
+
+        @param self Isolated source-epoch refresh boundary test owner.
+        """
+        digest = self.candidate("build/generated/rev.cpp", b"// @see r2fc-file-cleanup3.md; old generated epoch.\n")
+        result = preserve_source_epochs(self.candidates, self.root, {})
+        (self.root / "build/generated/rev.cpp").write_bytes(b"// @see r2fc-file-cleanup3.md; newer generated epoch.\n")
+        refreshed = preserve_source_epochs(self.candidates, self.root, {}, previous=result)
+        self.assertEqual(refreshed["payloads"][0]["sha256"], digest)
+        (self.root / result["payloads"][0]["reference"]["path"]).write_bytes(b"changed retained source")
+        with self.assertRaisesRegex(ValueError, "without a verified retained copy"):
+            preserve_source_epochs(self.candidates, self.root, {}, previous=result)
+
     def test_changed_live_source_requires_refresh_from_still_retained_original(self):
         """Later source edits cannot silently release the only matching old snapshot.
 
@@ -97,6 +113,24 @@ class SourceEpochChecks(unittest.TestCase):
         result = preserve_source_epochs(self.candidates, self.root, {})
         self.assertEqual(len(result["generated"]), 1)
         self.assertEqual(len(result["payloads"]), 1)
+
+    def test_consumed_native_source_inventory_survives_refresh_and_is_hash_checked(self):
+        """Refresh retains the exact consumed source manifest and refuses its corruption.
+
+        @param self Active isolated source/history owner.
+        @return None; old native inventory paths stay facts, not rebuilt EXE dependencies.
+        """
+        self.candidate("logs/original.cpp", b"// @file original.cpp @see r2fc2-file-cleanup3.md; old source.\n")
+        original = preserve_source_epochs(self.candidates, self.root, {})
+        history = self.root / "src/tests/fixtures/cleanup/source-epochs/native-history.json"
+        payload = json.dumps(dict(_documentation="r2fc2-file-cleanup3.md28 independent fixture", kind="native_source_epoch", files=[])).encode()
+        history.write_bytes(payload)
+        original["historical_native_epochs"] = [dict(path=history.relative_to(self.root).as_posix(), sha256=hashlib.sha256(payload).hexdigest())]
+        refreshed = preserve_source_epochs(self.candidates, self.root, {}, previous=original)
+        self.assertEqual(refreshed["historical_native_epochs"], original["historical_native_epochs"])
+        history.write_bytes(payload + b"changed")
+        with self.assertRaisesRegex(ValueError, "native source inventory changed"):
+            verify_source_epochs(refreshed, self.root)
 
 
 if __name__ == "__main__":

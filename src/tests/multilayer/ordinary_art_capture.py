@@ -2,6 +2,7 @@
 
 @file ordinary_art_capture.py Actual native screenshot/save commands; no live work or pose grants.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group19C.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group31 cold runtime setup.
 """
 
 import hashlib
@@ -92,6 +93,9 @@ def capture(context, configuration, application, source, producer, family, conso
     name = family + "-paused-field"
     pending = context.runtime_dir / "screenshot" / (name + ".png")
     startup = context.runtime_dir / "scripts/game_start.scr"
+    # Cold distributions may contain no scripts directory. This process owns
+    # its startup command and must create that private parent before writing it.
+    startup.parent.mkdir(parents=True, exist_ok=True)
     # The original ordinary capture commands are retained. A paused historical
     # world supplies every body/job/pose; no unpause, purchase or work command runs.
     startup.write_text("# @see r2fc-file-cleanup3.md19C; paused ordinary native field only.\n"

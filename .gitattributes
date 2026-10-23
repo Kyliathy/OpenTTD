@@ -1,0 +1,6 @@
+# Owners: docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md
+# and docs/zz-reach2/architecture/archi-historical-debug.md.
+# Fixture and save manifests pin exact bytes. Preserve their hashes when Git
+# stages or checks out payloads, regardless of the platform's line endings.
+/src/tests/fixtures/** -text
+/savegames/retained/** -text

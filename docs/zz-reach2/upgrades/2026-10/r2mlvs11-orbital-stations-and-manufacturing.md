@@ -1,8 +1,10 @@
 # R2MLVS11 - Orbital Stations and Manufacturing
 
-**Current dispatch,2026-10-20.** GZVEEHcomplete at32window/64,000tick cap:actual182,302cash/debt5m, wholefares374,517-interest241,666-other51,642=net81,209. Scope CLOSED/no033. [Bound proof](../../../../logs/surface-entry-construction-cash-verification.json):68processes/4080comparisons/two ordinary reloads/612products. OriginalCS.2/.3remainX/100,000capital floor restored;40,000operating default unchanged. NextGZVEEIpure additionalGoods demand/path/nativewholecapital proposal, codeNOTbegun. Known617,500minimum435,198short plusunpricedwholelaunch/service/7PROP; original15.1/.2remainOPEN. Six original apps exact; all runners stopped for usercleanup, idleownedMSBuildnode21240closedafter verifying its actual provenance. Both30,000exceptions spent; graphics/Group16docs complete.
+**Current recovery and dispatch,2026-10-23.** Use the [current Space handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and [shared artifact architecture](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer). GZVEEIis complete through actual native query/ordinary reloads in both configurations, zero ticks/all121families unchanged; the selected exported successor needs no historical EXE. Cash182302/debt5000000and closed GZVEEH32windows/64000ticks/no033remain exact. All requested Goods capital lots are affordable, but only2Goods wait at13while mixed52has50empty Goods spaces. **Next: Group15CSGZVEEJread-only incremental-usefulness gate.** Affordability alone grants no purchase, income window or other mutation. Both30000exceptions are spent; normal40000operating/100000capital floors remain. Original15.1/.2 and useful-route/human acceptance stay open. Dated log/EXE paths below describe history; the sole producer catalogue and current source-plan dispatch remain authoritative.
 
 ## Global Mandatory Reading
+
+> Current recovery: read the [live dispatch](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and only its selected [durable-input/rebuild contract](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer); older execution paths in completed groups remain historical.
 
 > **Execution protocol**
 >
@@ -2953,14 +2955,120 @@ _Applies to Group15CSGZVEEH only._ Read relevant Global/Presentation Area/AD-12 
 
 ### Local Mandatory Reading - Actual dedicated Goods capacity and whole capital admission
 
-_Applies to Group15CSGZVEEI only._ Read relevant Global/Presentation Area/AD-12 and GZVEEHbound actual182,302cash/debt5m/612products/current originals logs/surface-entry-construction-cash-work-032-{configuration}.json. GZVEEHis CLOSED/no033; earlier working/firstGoods scopes and both30,000exceptions stay closed. Read only current retired-constructor/material/mixed-capacity observer, native STNN/CAPA/VEHS/ORDR owners, actual rail depot1638/native rail connectivity/platform/train-length, public BuildVehicle/CloneVehicle and fixed-price whole-company cost owner. Query actual produced waiting Goods at13, actual15Goods acceptance, source packet provenance, current Goods49and mixed52capacity, and depot-to13/15 connectivity for the actual proposed compatible head. Preserve all existing35named bodies/32wagons/current mixed200LVST90GRAI50GOOD/112pixels/parked18..20 and original49orders. No purchase/refit/order/stock/geometry/clock mutation. Fresh public callback-free BuildVehicle estimates must price one currently available head plus concrete2/4/8/12Goods25wagon lots and their entire proposed first operating interval, alongside every current owner/interest/station/life cost and100,000capital working floor. Native CloneVehicle carries NoTest; a purported clone estimate cannot grant a reliable purchase invoice. If later selecting a clone, first prove actual callback-free body/recipe/full gross purchase equality through the correct native owner; do not clone cargo, old age or source identity. Report availability/refusal if the old head is no longer buildable; no copied predecessor or GUI-onlycapacity can bypass it. Actual waiting packets motivate capacity, never pay admission or predict profit. Archive consumedCPP/two isolated apps first; extend thirteen epochs, preserve old defaults/apps, add only a new selected pure case. Query both originals0ticks/all121families unchanged, bind two ordinary reloads/full current products. Define the next actual paid dedicated service only after current demand/path/full-cost admission succeeds; otherwise retain precise refusal and define its missing prerequisite. No new650,000savings scope or module spending before this concrete evidence. Logs/logs, native/mlm/reviews+runtime, temporary/test-cache; no regressions or subagents.
+_Applies to Group15CSGZVEEI only._ Read the relevant Global/Presentation Area,
+AD-12 and [current recovery boundary](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary).
+Load the explicitly selected durable `SpaceFoundation` through
+`space_checkpoint.load_foundation/verify_foundation`; use the existing
+`space-checkpoint` recipe for fresh qualification in the chosen checkout.
+The [shared architecture](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer)
+owns exact retained paths and tested commands. Its complete source/save/image
+conditions decide whether existing generated qualification is reusable.
+Recovery status,2026-10-23: [R2FC2](r2fc2-file-cleanup3.md) delivered actual
+recovery and the completed Goods query below in `D:/Codez/Sandbox/OpenTTD`.
+Both native/ordinary configurations preserve all121families at zero ticks.
+Group35is the qualified predecessor for reproducing GZVEEI; the current exported
+query successor dispatches GZVEEJ. Select it through the shared architecture.
+Group30's staged foundation remains historical; the removable note is deleted.
+
+Read actual station13 waiting Goods, station15 acceptance and packet origins;
+original Goods49/mixed52 capacity, depot1638 connectivity to13/15 and platform
+fit. Use the actual `QuoteSurfaceResupply<Commands::BuildVehicle>` owner to
+price a currently available callback-free head and2/4/8/12 Goods-wagon lots.
+Check the expected old head24/Goods32 against current availability; retain a
+real refusal or query a genuine compatible alternative. Include each whole new
+consist's first full operating interval, every existing company cost, useful
+lives and the100,000capital floor. Future fares, resale and loan room contribute0.
+`CloneVehicle` has `CommandFlag::NoTest`; it is not a reliable whole-purchase quote.
+
+This separately selected Goods query is implemented and passed in both current
+configurations through `space_goods_capacity.py`/`[.space-goods-capacity]`.
+Actual proposal/refusal and both ordinary reloads are bound by version-two
+operations through the typed `publish_successor` contract. The next Local below
+owns the resulting usefulness prerequisite. Reuse exact unchanged results;
+Group37exported the selected foundation before later cleaning. Current process,
+frame and terminal output remains in `mlm/reviews/`/`mlm/runtime/`; optional logs
+and scratch are cleanable. Original source epochs and independent saves remain
+durable; no EXE graph or historical cash replay is needed.
+
+GZVEEH remains closed/no033 at32windows/64,000ticks. Both30,000exceptions are
+spent; normal40,000operating and100,000capital floors remain. No purchase,
+refit, order, pose, stock, loan, clock or geometry change is admitted by this
+query. Any paid capacity producer needs its own source-plan/full native admission;
+original15.1/.2 remain open and no new650,000saving scope is created here.
 
 ### Group 15CSGZVEEI - Price genuine additional Goods service before further capital earnings
 
 {{HARD}}
-- [ ] 15CSGZVEEI.1 Add a separately selected pure current Goods demand/path/capacity and full new-consist capital proposal, retaining all old authorities and actual owners.
-- [ ] 15CSGZVEEI.2 Build only the isolated target sequentially/two workers and query both current originals without ticking or spending; retain actual whole costs/refusals and useful lives.
-- [ ] 15CSGZVEEI.3 Bind both originals/two ordinary reloads/current products and select only a genuinely fully funded next paid capacity producer or exact missing prerequisite; original15 remains open.
+- [X] 15CSGZVEEI.1 Add a separately selected pure current Goods demand/path/capacity and full new-consist capital proposal, retaining all old authorities and actual owners.
+- [X] 15CSGZVEEI.2 Compile only the changed isolated target sequentially/two workers; check the unchanged ordinary target up to date in the current two-image build receipt, whose source inventory also binds the new query/validator. Query both current originals without ticking or spending; retain actual whole costs/refusals and useful lives.
+- [X] 15CSGZVEEI.3 Bind both originals/two ordinary reloads/current products and select only a genuinely fully funded next paid capacity producer or exact missing prerequisite; original15 remains open.
+
+Result,2026-10-23: native runs `cleanup36-goods-{rwd,debug}-01` and their actual
+ordinary reloads passed at zero ticks with all121families and original
+body/material/finance observations unchanged. Thirteen focused query/ordinary/
+legacy-transport checks and ownership/argument/business-comment checks passed.
+Incremental builds selected only capital/ordinary images, two workers/no node
+reuse; shared generated content refreshed without an ordinary game source edit
+or broad regression. Public paired successor `cleanup36-goods-paired-01` binds
+all4actual processes and closed policies.
+
+Available callback-free head24costs35156and Goods32costs1113/capacity25.
+Both stations have7tileplatforms; all requested lots fit. First2000ticks/28days
+price16existing service owners at1641upkeep+8334interest+25station=10000;
+new head upkeep216and2per wagon are additional. Future fares/refunds/credit=0.
+
+| Wagons | Goods capacity | Gross purchase | New first-interval upkeep | Full target including100000floor | Funded |
+| --- | --- | --- | --- | --- | --- |
+|2|50|37382|220|147602|Yes|
+|4|100|39608|224|149832|Yes|
+|8|200|44060|232|154292|Yes|
+|12|300|48512|240|158752|Yes|
+
+Cash remains182302/debt5000000. Actual packet35contains2waiting Goods at13,
+first station13, source typeIndustry/source5; its source tile is still
+`INVALID_TILE` before first pickup. Receiver15accepts Goods. Original49has300
+capacity/93held on12/11; mixed52has50capacity/0held on15/13. Additional capital
+is affordable, but incremental useful demand is not yet established. Select the
+exact GZVEEJread-only usefulness prerequisite below; affordability alone grants
+no spending. Native wagon age has no independent engine lifetime/reliability
+limit; the powered head/current active owners keep actual useful-life checks.
+No033, purchase, income window, stock/order/geometry change or further650000
+saving scope occurred. Original15.1/.2remain open.
+
+### Local Mandatory Reading - Actual incremental Goods usefulness before capital
+
+_Applies to Group15CSGZVEEJ only._ Read relevant Global/Presentation Area/AD-12
+and the [current boundary](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary).
+Select its explicit durable query successor through `space_checkpoint.load_foundation/verify_foundation`.
+Read only `space_goods_capacity.h`, `space_goods_capacity.py`, actual native
+station packet/acceptance, Industry5production/history and49/52orders/capacity
+owners needed for this question. The [shared architecture](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer)
+owns the recovery/publication procedure. Old reports identify completed facts,
+not another cash window or executable archive dependency.
+
+The actual GZVEEI pair quoted available callback-free head24at35156and
+Goods32at1113/capacity25. All2/4/8/12lots fit both7tileplatforms and are financially
+funded including2000ticks/28days, every existing company charge and100000capital
+floor. Two wagons require147602against182302cash. This is a funding proposal,
+not a demonstrated need for another consist: station13has only2waiting Goods,
+while mixed52has50Goods capacity and0held on15/13. Original49has300capacity,
+93held and serves12/11; its capacity is a distinct real service. Preserve the
+actual packet35/first13/native source identity; do not invent a loaded source
+tile where the original packet has `INVALID_TILE` before first pickup.
+
+Next is a read-only usefulness gate. Read actual production/backlog and existing
+service timing/history before selecting paid capacity. No purchase, order,
+pose, stock, loan, clock or geometry changes; no033or renewed650000saving scope.
+Future fares, salvage and loan room remain0for upfront funding. Both30000
+exceptions stay spent; normal40000operating/100000capital floors remain.
+Original15.1/.2 and useful-route/human acceptance stay open.
+
+### Group 15CSGZVEEJ - Establish useful additional Goods service before buying capacity
+
+{{MEDIUM}}
+- [ ] 15CSGZVEEJ.1 Inspect actual Industry5Goods production/history, station13packet origins/backlog, mixed52positions/orders/cycle and existing Goods capacity through the selected successor without ticking or changing owners.
+- [ ] 15CSGZVEEJ.2 Determine whether actual unserved demand or retained measured service history establishes useful incremental capacity beyond the existing empty50spaces. Preserve a concrete missing-measurement/refusal if the current2waiting units do not establish that need; do not infer profitability from future fares or authorize a measurement window here.
+- [ ] 15CSGZVEEJ.3 Only after genuine additional usefulness is established, freshly price and select a separately bounded fully funded native capacity producer. Otherwise hand over the exact missing prerequisite. Keep the financial floors, closed GZVEEH scope and original15completion gates unchanged.
 
 ### Local Mandatory Reading - Current exports and conditional source-plan handoff
 

@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-static",
+  "run_id": "cleanup35-checkpoint-debug-01",
+  "configuration": "Debug",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+      "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-debug-01/evidence/native-435ab490278f496190ac58cbcd6a5616-stdout.txt",
+      "sha256": "be20dac50a5d8d3b98042a23acf0cb90ebcb82bf21f6b1148e8a74632fbf5c08"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-debug-01/saves/ordinary.sav",
+      "sha256": "062547ce795124cf8e05761bc402159a4887dd1a61ebe8985963237c30ce6674"
+    }
+  ],
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup35-checkpoint-debug-01\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup35-checkpoint-debug-01\\main\\native-art.cfg",
+    "-g",
+    "D:\\Codez\\Sandbox\\OpenTTD\\src\\tests\\fixtures\\checkpoints\\space\\Debug\\current.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup35-checkpoint-debug-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-debug-01/evidence/native-435ab490278f496190ac58cbcd6a5616-stdout.txt",
+      "sha256": "be20dac50a5d8d3b98042a23acf0cb90ebcb82bf21f6b1148e8a74632fbf5c08"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup35-checkpoint-debug-01/main/openttd_console.exe",
+    "sha256": "efc8a8d0ebe5c8cc043208233218b9b8e25290cc7f3e4f2cde189231e58c95f6"
+  }
+}

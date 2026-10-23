@@ -4,6 +4,7 @@
  * @file test_artifact_paths.cpp Native half of the development artifact routing contract.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Groups 3-10.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups9-10/18B.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group25 bounded distribution.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  */
 
@@ -18,6 +19,8 @@
 #include <fstream>
 #include <memory>
 #include <mutex>
+#include <regex>
+#include <set>
 #include <stdexcept>
 #include <vector>
 
@@ -332,6 +335,40 @@ std::filesystem::path GetTestExpectedSprites(std::string_view family)
 	return payload;
 }
 
+/**
+ * Select the same bounded native language set as Python's runtime_languages.
+ * @param config Exact isolated INI; [misc].language is the only explicit selector.
+ * @return English fallback basenames plus the requested language, never a path.
+ */
+static std::set<std::string> TestRuntimeLanguages(const std::filesystem::path &config)
+{
+	std::set<std::string> selected{"english.lng", "english_US.lng"};
+	std::ifstream input(config);
+	std::string line, section;
+	const std::regex key{R"(^language\s*=)"};
+	const std::regex fallback{R"(language\s*=\s*(?:""\s*)?(?:[;#].*)?)"};
+	const std::regex value{R"pack(language\s*=\s*"?([A-Za-z0-9_-]+\.lng)"?\s*([;#].*)?)pack"};
+	// Process-local mutable state remains private. Copying a selected pack, rather
+	// than every translation, bounds repeated homes without a shared writable cache.
+	while (std::getline(input, line)) {
+		// UTF-8 configuration templates may have a BOM; Python reads utf-8-sig,
+		// so native selection must recognize the same first section and pack.
+		if (line.starts_with("\xEF\xBB\xBF")) line.erase(0, 3);
+		const auto begin = line.find_first_not_of(" \t\r\n");
+		if (begin == std::string::npos) continue;
+		line = line.substr(begin, line.find_last_not_of(" \t\r\n") - begin + 1);
+		if (line.front() == '[') section = line;
+		// Other sections may acquire similarly named settings; only the actual
+		// native language setting can add files to a process distribution.
+		if (section != "[misc]" || !std::regex_search(line, key)) continue;
+		if (std::regex_match(line, fallback)) continue;
+		std::smatch match;
+		if (!std::regex_match(line, match, value)) throw std::runtime_error("runtime language must be a language-pack basename");
+		selected.insert(match[1].str());
+	}
+	return selected;
+}
+
 /** @copydoc GetTestRuntimeConfig */
 std::filesystem::path GetTestRuntimeConfig(std::string_view template_name)
 {
@@ -345,11 +382,21 @@ std::filesystem::path GetTestRuntimeConfig(std::string_view template_name)
 	// Config-local discovery must still find the exact repository distribution.
 	// Separate copies isolate mutable startup scripts and peer data homes; a
 	// repeated preparation call must not replace a caller's new startup command.
-	for (const auto folder : {"baseset", "newgrf", "lang", "scripts"}) {
+	for (const auto folder : {"baseset", "newgrf", "scripts"}) {
 		const auto original = context.root / "build" / folder;
 		const auto target = context.runtime_dir / folder;
 		if (std::filesystem::is_directory(original) && !std::filesystem::exists(target)) {
 			std::filesystem::copy(original, target, std::filesystem::copy_options::recursive);
+		}
+	}
+	const auto languages = context.root / "build/lang";
+	if (std::filesystem::is_directory(languages)) {
+		const auto target = context.runtime_dir / "lang";
+		std::filesystem::create_directories(target);
+		// A caller may select another language between observers; add that pack
+		// without overwriting existing process-local content or peer homes.
+		for (const auto &pack : TestRuntimeLanguages(destination)) {
+			if (!std::filesystem::exists(target / pack)) std::filesystem::copy_file(languages / pack, target / pack);
 		}
 	}
 	return destination;

@@ -1,0 +1,7 @@
+Filters: [.space-checkpoint-load]
+SPACE_CHECKPOINT_NATIVE company=0 cash=182302 debt=5000000 tick_before=2923387 tick_after=2923387 revision_text=6d33393531303362353637326339393261616432316363633932386361633234653838366332393465 revision_modified=2 revision_newgrf=536898916 save_version=440
+SPACE_CHECKPOINT_COMPLETE phase=load-only ticks=0 snapshots=2
+4.157 s: Space checkpoint inspection preserves every owner without earning a tick
+===============================================================================
+All tests passed (15 assertions in 1 test case)
+

@@ -1,6 +1,7 @@
 """Build/run only the active native tube terminal producer or cargo checks.
 
 @file tube_terminal_checks.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group20C, retained historical scope and fresh-source refusal.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.5.
 Retain exact source/application identities and protect completed ground/Space
@@ -35,6 +36,10 @@ def main():
     parser.add_argument("--run", required=True, help="New repository logs directory")
     parser.add_argument("--filter", default=PRODUCERS, help="Explicit native Catch tags")
     args = parser.parse_args()
+    # The legacy driver owns the original model9 terminal epoch. Provisional
+    # five-model edits cannot be compiled or executed as a replacement for it.
+    from qualify_tube_terminals import require_original_source
+    require_original_source(ROOT)
     output = handoff.bound(args.run)
     if not output.is_relative_to(ROOT / "logs"):
         raise ValueError("tube diagnostics belong in repository logs")

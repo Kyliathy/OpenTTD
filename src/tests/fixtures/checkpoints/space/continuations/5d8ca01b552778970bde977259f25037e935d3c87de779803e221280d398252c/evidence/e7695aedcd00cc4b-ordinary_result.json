@@ -1,0 +1,65 @@
+{
+  "_documentation": "Bind an actual ordinary zero-tick reload to a new typed Space operation.\n\n@file space_operation_restore.py Ordinary witnesses extend the existing successor owner.\n@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group36.\n@see docs/zz-reach2/architecture/archi-historical-debug.md Historical facts and current proof.\nCurrent publication verifies images/processes; durable copies retain the measured\nsave, terminal and process facts without requiring an archived application.\n",
+  "schema_version": 1,
+  "kind": "ordinary_space_operation_restore",
+  "complete": true,
+  "configuration": "RelWithDebInfo",
+  "task": "Plan11/15CSGZVEEI",
+  "phase": "ordinary-static",
+  "source": {
+    "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-rwd-01/saves/after.sav",
+    "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+  },
+  "application": {
+    "path": "build/RelWithDebInfo/openttd.exe",
+    "sha256": "a87898e2cceba6e1802c3de4fbfdcef727c1f0689f9ac8d877da1781cbd36f33"
+  },
+  "console_application": {
+    "path": "mlm/runtime/native/cleanup36-goods-rwd-01-ordinary/main/openttd_console.exe",
+    "sha256": "532467a2a6a450aaf43af2126016e09ea344f0998fbd43e1bce0fb7604486d4b"
+  },
+  "output": {
+    "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/saves/ordinary.sav",
+    "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+  },
+  "terminal": {
+    "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/evidence/native-f7c21b9f982c48dc9323e86d20bb7cd6-stdout.txt",
+    "sha256": "a2ad016a84030bf87c556a7143fdce514706b208235bf3e123b2f4c280d508f2"
+  },
+  "native_process": {
+    "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/reports/native-f7c21b9f982c48dc9323e86d20bb7cd6.json",
+    "sha256": "0b62eb70915afd5ea03ef4edf98ce6a07c440595653857fc995da069b359ddc4"
+  },
+  "run_id": "cleanup36-goods-rwd-01-ordinary",
+  "source_files": [
+    {
+      "path": "src/tests/multilayer/acceptance/space_operation_restore.py",
+      "sha256": "d81c41f303750c2125e1d949cbd019a316cfe5e949ff329890df1dbb4e7802b7"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/space_checkpoint_foundation.py",
+      "sha256": "139cd4ef0be9622d810dc8b664d6a48802574e50c493f33762ee5d42311ba2ba"
+    },
+    {
+      "path": "src/tests/multilayer/support/artifact_paths.py",
+      "sha256": "1793c8f35120c46c2d26ffefe19232cd67c3eb2ea34b3444dcaea92cf9a78e29"
+    },
+    {
+      "path": "src/tests/multilayer/support/runner.py",
+      "sha256": "3d89a6d6bc3091a244322fe29f06f812f13f66087c43b71fa9d54ecc7f89bb5c"
+    }
+  ],
+  "projection": {
+    "method": "pe_subsystem_2_to_3",
+    "application": {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "sha256": "a87898e2cceba6e1802c3de4fbfdcef727c1f0689f9ac8d877da1781cbd36f33"
+    },
+    "executable": {
+      "path": "mlm/runtime/native/cleanup36-goods-rwd-01-ordinary/main/openttd_console.exe",
+      "sha256": "532467a2a6a450aaf43af2126016e09ea344f0998fbd43e1bce0fb7604486d4b"
+    },
+    "dlls": {}
+  },
+  "gameplay_ticks_executed": 0
+}

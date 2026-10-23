@@ -2,6 +2,7 @@
 
 @file artifact_inventory.py Typed migration boundary, never a disposal authority.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups2-6 and24.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 bounded ownership scanning.
 @see docs/zz-reach2/architecture/savegame/archi-savegame.md.
 """
 
@@ -224,33 +225,49 @@ def walk_files(root, roots):
     @return Iterator of unique regular files, with no filesystem mutations.
     @throws ValueError If any selected subtree contains a nested repository or link.
     """
-    pending = [root if str(item) == "." else checked_path(item, root) for item in roots]
+    pending = []
+    for item in roots:
+        path = root if str(item) == "." else checked_path(item, root)
+        if not path.exists():
+            raise ValueError(f"missing inventory owner: {path}")
+        pending.append((path, path.is_file()))
     seen = set()
     # Overlapping roots must not create duplicate aliases or silently traverse a
     # second repository. Reject uncertain ownership instead of skipping valuable data.
     while pending:
-        path = pending.pop()
+        path, regular_file = pending.pop()
         if path in seen:
             continue
         seen.add(path)
-        if not path.exists():
-            raise ValueError(f"missing inventory owner: {path}")
-        if path.is_file():
+        if regular_file:
             yield path
             continue
+        # Recheck the current directory edge before entering it. Its parents were
+        # already admitted in this pass; repeating their full canonical/lstat
+        # chain for every directory caused the measured traversal CPU blowup.
+        status = path.lstat()
+        attributes = getattr(status, "st_file_attributes", 0)
+        if stat.S_ISLNK(status.st_mode) or attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT:
+            raise ValueError(f"redirected inventory path: {path}")
         # Root Git metadata is preserved as Git metadata, never classified as saves.
         if path != root and (path / ".git").exists():
             raise ValueError(f"nested repository in inventory: {path}")
-        for child in sorted(path.iterdir(), reverse=True):
-            if child == root / ".git":
-                continue
-            # Each parent was already admitted and scandir supplies direct names;
-            # inspect this edge once instead of resolving every ancestor for every
-            # copied runtime file. Any redirected edge still stops the whole scan.
-            attributes = getattr(child.lstat(), "st_file_attributes", 0)
-            if child.is_symlink() or attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT:
-                raise ValueError(f"redirected inventory path: {child}")
-            pending.append(child)
+        # Windows directory enumeration already supplies edge metadata. Reuse
+        # that one observation instead of reopening every generated object three
+        # times for exists/type/attributes. Each entered directory edge is rechecked;
+        # redirected/special edges still refuse, and protected bytes are hashed.
+        with os.scandir(path) as entries:
+            for entry in sorted(entries, key=lambda value: value.name, reverse=True):
+                child = Path(entry.path)
+                if child == root / ".git":
+                    continue
+                status = entry.stat(follow_symlinks=False)
+                attributes = getattr(status, "st_file_attributes", 0)
+                if stat.S_ISLNK(status.st_mode) or attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT:
+                    raise ValueError(f"redirected inventory path: {child}")
+                if not (stat.S_ISREG(status.st_mode) or stat.S_ISDIR(status.st_mode)):
+                    raise ValueError(f"special inventory path: {child}")
+                pending.append((child, stat.S_ISREG(status.st_mode)))
 
 
 def collect_candidates(root=None, roots=(".",)):

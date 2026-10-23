@@ -1,186 +1,205 @@
-"""Close exactly the selected50-family source/packing/current-consumer result.
+"""Close the selected Ground domain from explicitly selected current witnesses.
 
-@file qualify_ground_selected_closure.py
+@file qualify_ground_selected_closure.py Historical image hashes remain facts only.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group20BC.
+@see docs/zz-reach2/architecture/archi-historical-debug.md.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79FHD.
-@see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D.
-@see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
-Historical native view epochs remain immutable. Complete unaffected tuple
-identity links them to the current corrected container; later gameplay stays open.
 """
-
+import argparse
+from collections import Counter
 import json
 import math
+from pathlib import Path
 import struct
 
-from ground_pack_check_support import ROOT, handoff
-from run_ground_consumer_checks import preserved
-from tools.ground_payload_binding import checked_reference, reference
+from ground_viewport_review import ROOT, SOURCE_ROLES, checked_result
+from ground_review_sources import GroundSourceViews, WORLD_CONTRACT, handoff
+from ground_source_facts import load_facts, verify_facts
+from artifact_paths import contained, create_run_context
+from artifact_rebuild import identity
+from space_source_review import checked_result as checked_selectors
 
-RUN = ROOT / "logs/graphics/selected-ground-runtime/20261021-selected-closure-01"
-DIRECTORY = ROOT / "logs/proofs/mlm/native-art/ground/ground-consumers-v1"
-BASELINE = (RUN / "before-audit.json").relative_to(ROOT).as_posix()
+MODES = ("collector", "industry-states", "purchases", "rail", "road", "stations")
 
 
 def native_domain(path):
-    """Read the complete independently sourced fixture's exact native ID domain.
+    """Read the complete independently sourced domain exercised by the current decoder.
 
-    @param path Hash-verified native byte fixture already exercised by both actual loaders.
-    @return All22,018 native offsets, without decoding new sprites or changing source ownership.
+    @param path Hash-verified current expected native byte fixture.
+    @return All 22,018 unique native offsets, retaining the original prefix gaps.
     """
     data = path.read_bytes()
-    if data[:8] != b"GRDART1\0" or struct.unpack_from("<HHHH", data, 8) != (22018, 22045, 7791, 14254):
+    # The prefix and selected range jointly protect every original native family;
+    # accepting only the new Ground range would lose pre-existing sprite owners.
+    if (len(data) < 16 or data[:8] != b"GRDART1\0"
+            or struct.unpack_from("<HHHH", data, 8) != (22018, 22045, 7791, 14254)):
         raise ValueError("selected current native fixture header changed")
     cursor, offsets = 16, []
-    # Every record includes complete palette bytes. Traverse their declared
-    # lengths to preserve gaps/aliases rather than guessing a contiguous range.
+    # Traverse declared palette records to preserve gaps and aliases instead of
+    # guessing a contiguous range that could conceal missing original sprites.
     for _ in range(22018):
-        offset, width, height, x, y, digest = struct.unpack_from("<HHHhhI", data, cursor)
+        if cursor + 14 > len(data):
+            raise ValueError("selected current native fixture is truncated")
+        offset, width, height, _x, _y, _digest = struct.unpack_from("<HHHhhI", data, cursor)
         cursor += 14 + width * height
         offsets.append(offset)
+    # Complete coverage requires one record per unique offset, with neither
+    # trailing data nor truncation allowed to conceal a missing native owner.
     if cursor != len(data) or offsets != sorted(set(offsets)):
         raise ValueError("selected current native fixture has duplicate, truncated or trailing records")
     return set(offsets)
 
 
-def immutable_views(name):
-    """Validate retained actual execution/view receipts without rewriting their historical code/payload epoch.
+def immutable_views(witness, mode, configuration, selector):
+    """Validate an explicit current capture through its existing provenance contract.
 
-    @param name Exact completed qualification basename beneath the native consumer proof directory.
-    @return Existing immutable qualification and its exact reference.
+    @param witness Exact current capture identity, never a historical image receipt.
+    @param mode Original bounded capture mechanism required for this selected family.
+    @param configuration Actual current native configuration of the selected captures.
+    @param selector Exact current source/decoder/selector prerequisite identity.
+    @return Checked current native view, without historical retained-EXE dependencies.
     """
-    path = DIRECTORY / (name + ".json")
-    proof = handoff.read_json(path.relative_to(ROOT).as_posix())
-    if proof.get("passed") is not True:
-        raise ValueError("selected current consumer view proof is incomplete: " + name)
-    # The actual old executing image survives later working-target relinks.
-    # Its source/current-container hashes remain dated; never rehash that old
-    # receipt and pretend its execution happened under a newer publication.
-    for native in proof["native"]:
-        checked_reference(native["retained_application"])
-        for observation in native.get("scopes", [native]):
-            checked_reference(observation["execution"])
-            checked_reference(observation["pixels"])
-    return proof, reference(path)
+    proof = checked_result(witness, mode, configuration, ROOT)
+    if proof["source_selector"] != selector:
+        raise ValueError("selected current views name another source/decoder/selector epoch")
+    return proof
 
 
-def qualify():
-    """Join current source/native/publication/viewport/retained-world facts with the exact selected dispatch boundary.
+def coverage_rows(dispatch, families, selected, domain, views):
+    """Join exact physical domains to current views, preserving deferred owner gates.
 
-    @return Complete selected10.4 source/packing/current-view result; whole underground gameplay remains incomplete.
+    @param dispatch Original owner dispatch; old qualification fields remain historical.
+    @param families Detached current source families and their original native geometry.
+    @param selected Exact fifty selected original Ground and M1 family IDs.
+    @param domain Complete independently decoded native offset set.
+    @param views Explicit mode-to-current-capture identities checked by their owners.
+    @return Fifty disjoint family rows with twenty-four current drawing bindings.
     """
-    source_path, dispatch_path = RUN / "current-source-audit.json", RUN / "current-dispatch-audit.json"
-    source = handoff.read_json(source_path.relative_to(ROOT).as_posix())
-    dispatch_audit = handoff.read_json(dispatch_path.relative_to(ROOT).as_posix())
-    # Complete originals and source matrices are prerequisites. A packing or
-    # viewport success cannot silently drop any original selected family.
-    if (source["selected_families"] != 50 or source["selected_source_poses"] != 15488 or source["source_coverage_complete"] is not True
-            or dispatch_audit.get("passed") is not True or dispatch_audit["selected_families"] != 50
-            or dispatch_audit["selected_poses"] != 15488
-            or dispatch_audit["dispatch_counts"] != {"current_bound": 21, "current_existing": 3, "later_owner": 26}):
-        raise ValueError("selected source/dispatch closure changed its exact fifty-family scope")
-    checked_reference(source["public_manifest"])
-    checked_reference(dispatch_audit["contract"])
-    checked_reference(dispatch_audit["packed_handoff"])
-    for row in source["families"]:
-        for key in ("original", "native_atlas", "source_manifest"):
-            checked_reference(row[key])
-    publication_path = ROOT / "logs/proofs/mlm/native-art/ground/ground-station-offsets-v1/publication.json"
-    publication = handoff.read_json(publication_path.relative_to(ROOT).as_posix())
-    if publication.get("native_loading_verified") is not True or publication["unchanged_native_sprites"] != 21586:
-        raise ValueError("selected current native container lacks complete decoded/native qualification")
-    for key in ("payload", "public", "packed_handoff", "retained_payload", "build_proof"):
-        checked_reference(publication[key])
-    build = handoff.read_json(publication["build_proof"]["path"])
-    domain = native_domain(checked_reference(build["fixture"]))
-    changed = set(handoff.read_json(publication["packed_handoff"]["path"])["changed_native_offsets"])
-    if len(changed) != 432:
-        raise ValueError("selected corrected native tuple scope changed")
-    industry, industry_ref = immutable_views("industry-states")
-    bodies, bodies_ref = immutable_views("transport-bodies")
-    purchases, purchases_ref = immutable_views("transport-purchases")
-    station, station_ref = immutable_views("station-viewports")
-    if station["corrected_publication"] != reference(publication_path):
-        raise ValueError("selected station foreground proof belongs to another native publication")
-    retained = []
-    # Current actual application reloads the original funded input without
-    # replacement construction/materials. Exact source pixels and complete old
-    # RGB/index bytes establish preservation under the current container.
-    for configuration in ("Debug", "RelWithDebInfo"):
-        path = RUN / ("current-retained-" + configuration.lower()) / "retained.json"
-        proof = handoff.read_json(path.relative_to(ROOT).as_posix())
-        if (proof.get("passed") is not True or proof["assertions"] != 17 or proof["exit_code"] != 0
-                or proof["pixels"]["matched_source_pixels"] != 8930 or proof["original_world_viewport_bytes_preserved"] is not True
-                or proof["runtime_payload"]["sha256"] != publication["payload"]["sha256"]
-                or proof["replacement_funding_or_materials"] is not False):
-            raise ValueError("selected retained actual world/collector preservation is incomplete")
-        for row in proof["inputs"] + proof["captures"] + [proof[key] for key in ("source", "terminal", "retained_application", "runtime_payload")]:
-            checked_reference(row)
-        retained.append({"configuration": configuration, "execution": reference(path),
-                         "retained_application": proof["retained_application"], "native_assertions": 17,
-                         "matched_source_pixels": 8930, "source": proof["source"]})
-    public = handoff.read_json(handoff.PUBLIC.relative_to(ROOT).as_posix())
-    families = {row["asset_id"]: row for row in public["assets"]}
-    dispatch = handoff.read_json(dispatch_audit["contract"]["path"])
-    if dispatch["packed_handoff"] != publication["packed_handoff"]:
-        raise ValueError("selected dispatch does not name the current corrected native handoff")
-    source_families = {row["asset_id"] for row in source["families"]}
-    coverage, allocated, current = [], set(), set()
-    # Every selected source keeps its whole native Cartesian range. Current
-    # view evidence is joined explicitly; twenty-six later owners retain their
-    # exact dispatched gameplay tasks and acquire no operating claim from art.
+    counts = Counter(row["dispatch"] for row in dispatch["families"])
+    assets = [row["asset_id"] for row in dispatch["families"]]
+    # Exact identities and owner counts prevent art qualification from dropping
+    # a deferred feature or promoting it into the current operating scope.
+    if (counts != {"current_bound": 21, "current_existing": 3, "later_owner": 26}
+            or len(assets) != 50 or set(assets) != selected):
+        raise ValueError("selected current/later dispatch changed its exact fifty-family scope")
+    result, allocated = [], set()
+    # Each family keeps its complete native Cartesian range. Only existing
+    # current owners receive view evidence; deferred owners retain their tasks.
     for row in dispatch["families"]:
         asset = row["asset_id"]
         family = families[asset]
         begin, count = family["packed"]["native_offset"], family["packed"]["sprite_count"]
-        required = math.prod((len(family["states"]), family["frames"], len(family["directions"]), family["tile_variants"], len(family["parts"])))
+        required = math.prod((len(family["states"]), family["frames"], len(family["directions"]),
+                              family["tile_variants"], len(family["parts"])))
         offsets = set(range(begin, begin + count))
-        if count != required or not offsets <= domain or offsets & allocated or family["packed"]["sha256"] != publication["payload"]["sha256"]:
-            raise ValueError("selected native source domain/range/checksum changed: " + asset)
+        # Complete source coverage may neither overlap another owner nor escape
+        # the decoder domain, and the original dispatch must name that same range.
+        if (count != required or not offsets <= domain or offsets & allocated
+                or row["native_offset"] != begin or row["sprite_count"] != count):
+            raise ValueError("selected native source domain/range changed: " + asset)
         allocated.update(offsets)
         evidence = None
-        if row["dispatch"] != "later_owner":
-            current.add(asset)
+        if row["dispatch"] == "later_owner":
+            # Native art does not complete deferred gameplay; retain every
+            # explicit source-plan task and its reason for remaining open.
+            if not row.get("group") or not row.get("master") or not row.get("reason"):
+                raise ValueError("selected later owner lost its unfinished gameplay dispatch")
+        else:
             if asset in ("facility.rail-station", "facility.road-terminal"):
-                evidence = station_ref
+                mode = "stations"
             elif asset == "facility.vent-collector":
-                evidence = {"current_retained": [item["execution"] for item in retained]}
+                mode = "collector"
             elif asset.startswith("vehicle.model-"):
-                evidence = bodies_ref
+                mode = "rail" if int(asset.rsplit("-", 1)[1]) <= 6 else "road"
             elif asset.startswith("purchase.model-"):
-                evidence = purchases_ref
-            elif asset in industry["families"]:
-                evidence = industry_ref
+                mode = "purchases"
+            # Mines and the four existing processors share the original industry
+            # observer; no other facility may inherit its current drawing claim.
+            elif asset.startswith("mine.") or asset in (
+                    "facility.metal-refinery", "facility.chemical-works",
+                    "facility.battery-works", "facility.electronics-works"):
+                mode = "industry-states"
             else:
                 raise ValueError("selected current family lacks an actual native viewport: " + asset)
-            # Earlier actual views retain their old publication epoch. Only
-            # fully unchanged decoded tuples may carry their accepted pixels
-            # into this current container; corrected facilities use fresh views.
-            if asset not in ("facility.rail-station", "facility.road-terminal") and offsets & changed:
-                raise ValueError("historical view reused after its native pixels/offsets changed: " + asset)
-        elif not row.get("group") or not row.get("master") or not row.get("reason"):
-            raise ValueError("selected later owner lost its explicit unfinished gameplay dispatch")
-        coverage.append({"asset_id": asset, "native_offset": begin, "sprite_count": count, "dispatch": row["dispatch"],
-                         "owner": row["owner"], "group": row.get("group"), "master": row.get("master"),
-                         "actual_view_evidence": evidence, "native_decoded_and_loaded": True,
-                         "operating_claimed": False if row["dispatch"] == "later_owner" else None})
-    if {row["asset_id"] for row in coverage} != source_families or len(current) != 24 or len(allocated) != 15488:
-        raise ValueError("selected current/later coverage omitted a required family or pose")
-    transitions, count = preserved(BASELINE)
-    result = {"_documentation": __doc__, "passed": True, "selected_families": 50, "selected_native_poses": 15488,
-              "current_viewport_families": 24, "later_owner_families": 26, "coverage": coverage,
-              "source_audit": reference(source_path), "dispatch_audit": reference(dispatch_path),
-              "publication": reference(publication_path), "retained_current_world": retained,
-              "native_current_views": [industry_ref, bodies_ref, purchases_ref, station_ref],
-              "historical_view_epochs_preserved": True, "unchanged_tuple_bridge": publication["build_proof"],
-              "baseline": reference(handoff.bound(BASELINE)), "preserved_file_count": count, "transitions": transitions,
-              "inputs": [reference(ROOT / path) for path in ("src/tests/multilayer/qualify_ground_selected_closure.py",
-                         "src/tests/multilayer/ground_selected_closure_checks.py")],
-              "master_10_4_selected_scope_complete": True, "whole_underground_plan_complete": False,
-              "later_tube_plant_riser_lifecycle_and_human_gates": "open", "transported_bootstrap_claimed": False}
-    (DIRECTORY / "selected-current-closure.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+            evidence = views[mode]
+        result.append(dict(asset_id=asset, native_offset=begin, sprite_count=count,
+            dispatch=row["dispatch"], owner=row["owner"], group=row.get("group"), master=row.get("master"),
+            actual_view_evidence=evidence, native_decoded_and_loaded=True, operating_claimed=False))
+    if len(allocated) != 15488:
+        raise ValueError("selected current/later coverage omitted a required native pose")
     return result
 
 
+def qualify(configuration, selector_reference, views):
+    """Close one explicit source/decoder/selector/capture selection without publication.
+
+    @param configuration Independently executed native configuration selected by the caller.
+    @param selector_reference Exact completed current Ground source-selector identity.
+    @param views All six explicit original current capture identities, keyed by mode.
+    @return Technical closure; useful-route, operating and human gates remain open.
+    """
+    if set(views) != set(MODES):
+        raise ValueError("selected closure requires all six explicit original native capture modes")
+    selector = checked_selectors(selector_reference, "ground", configuration, ROOT)
+    native_reference = selector["decoder_prerequisite"]
+    native = json.loads((ROOT / native_reference["path"]).read_text(encoding="utf-8"))
+    domain = native_domain(ROOT / native["expected_payload"]["path"])
+    source_inputs = None
+    # Each capture retains its existing frame/process contract. Join only one
+    # source/build/container epoch rather than independently plausible mixed runs.
+    for mode in MODES:
+        proof = immutable_views(views[mode], mode, configuration, selector_reference)
+        inputs = {role: proof["source_inputs"][role] for role in SOURCE_ROLES}
+        if source_inputs is None:
+            source_inputs = inputs
+        # Shared input and payload identities bind all fifty families to one
+        # selected closure, even when the cameras were captured in separate runs.
+        if (inputs != source_inputs or proof["build_result"] != selector["build_result"]
+                or proof["runtime_payload"]["sha256"] != native["runtime_payload"]["sha256"]):
+            raise ValueError("selected current views mix source/build/native-container epochs")
+    facts = load_facts()
+    preservation = verify_facts()
+    dispatch_ref = selector["selected_inputs"]["dispatch"]
+    dispatch = json.loads((ROOT / dispatch_ref["path"]).read_text(encoding="utf-8"))
+    with GroundSourceViews(ROOT, selector["run_id"], source_inputs) as sources:
+        rows = coverage_rows(dispatch, sources.families, sources.allowed, domain, views)
+        sources.verify_current()
+    worlds = json.loads((ROOT / WORLD_CONTRACT).read_text(encoding="utf-8"))
+    return dict(_documentation=__doc__, schema_version=2, kind="selected_ground_current_closure", passed=True,
+        configuration=configuration, selected_families=50, selected_native_poses=15488,
+        current_viewport_families=24, later_owner_families=26, coverage=rows,
+        source_inputs=source_inputs, source_selector=selector_reference, native_decoder=native_reference,
+        native_current_views=views, dispatch=dispatch_ref, preservation=preservation,
+        public_manifest=identity(handoff.PUBLIC, ROOT),
+        historical_source_audit=facts["historical_source_audit"],
+        historical_view_epochs={mode: worlds["modes"][mode]["historical_origin"] for mode in MODES},
+        historical_view_dependencies_required=False, master_10_4_selected_scope_complete=True,
+        whole_underground_plan_complete=False, later_tube_plant_riser_lifecycle_and_human_gates="open",
+        paid_progress_claimed=False, human_acceptance=False, transported_bootstrap_claimed=False,
+        source=identity(Path(__file__), ROOT))
+
+
+def main():
+    """Publish an explicit current selected closure under a fresh cleanable review run.
+
+    @return None; missing, mixed or stale current witnesses propagate a refusal.
+    """
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--configuration", choices=("Debug", "RelWithDebInfo"), required=True)
+    parser.add_argument("--selector-result", type=Path, required=True)
+    parser.add_argument("--run-id", required=True)
+    for mode in MODES:
+        parser.add_argument("--" + mode + "-result", type=Path, required=True)
+    args = parser.parse_args()
+    views = {mode: identity(getattr(args, mode.replace("-", "_") + "_result").resolve(), ROOT) for mode in MODES}
+    result = qualify(args.configuration, identity(args.selector_result.resolve(), ROOT), views)
+    context = create_run_context("selected-ground", "selected-closure", run_id=args.run_id, root=ROOT)
+    target = contained(context.reports / ("current-" + args.configuration + ".json"), context.reports)
+    with target.open("x", encoding="utf-8") as stream:
+        stream.write(json.dumps(result, indent=2) + "\n")
+    print(json.dumps(dict(result=identity(target, ROOT), passed=True, selected_families=50,
+                          selected_native_poses=15488, current_viewport_families=24, later_owner_families=26)))
+
+
 if __name__ == "__main__":
-    result = qualify()
-    print(json.dumps({key: result[key] for key in ("passed", "selected_families", "selected_native_poses", "current_viewport_families", "later_owner_families", "master_10_4_selected_scope_complete")}))
+    main()

@@ -1,16 +1,21 @@
 """Bind actual paid windows and publish only two own ordinary-game runtime records.
 
 @file launch_craft_window_publication.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 retired cache publication.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JDB.
 The earlier physical62JD/native62JC checkpoints stay immutable. Actual current
 public window selections, source compatibility and native counterpart pixels
 qualify only the facility/model14 records; probe/pod acceptance remains separate.
 """
+# Refuse this completed historical entry before importing any old cache readers.
+# Current recipes preserve its original facts without rerunning source publication.
+if __name__ == "__main__":
+    raise SystemExit("Historical craft-window publication is retired; current art recovery grants no paid replay or old EXE-cache dependency. Use artifact_rebuild.py launch-occupied-viewports --configuration RelWithDebInfo for current evidence.")
+
 import argparse
 import copy
 import json
 from pathlib import Path
-import shutil
 import launch_facility_selector_checks as selectors
 
 ROOT=selectors.ROOT
@@ -32,70 +37,12 @@ def checked(reference):
 
 
 def verify():
-    """Verify current typed selections, immutable physical evidence and exact counterparts.
+    """Refuse the completed historical publication and its obsolete cache graph.
 
-    @return Complete native evidence, applications and preserved preceding publication.
-    @throws ValueError On partial execution, wrong selection, source drift or changed native pixels.
+    @return None; this retired entry always raises before reading or writing artifacts.
+    @throws ValueError Current evidence requires the registered recipe and live source plan.
     """
-    selectors.boundary()
-    physical_path=ROOT/"logs/proofs/mlm/native-art/space/launch-fleet-paid-review-v1/viewport-queue-verification.json"
-    physical=selectors.art.read_json(physical_path)
-    for reference in physical["reviews"]:
-        checked(reference);review=selectors.art.read_json(ROOT/reference["path"]);checked(review["retained_application"])
-        for image in review["review_images"]:
-            checked(image)
-        for original in review["proofs"]:
-            checked(original)
-    evidence=[selectors.art.source.identity(physical_path)];applications=[];corpora=[]
-    # Each compiler must run all three actual native contexts. Archived earlier
-    # physics/viewport qualification never substitutes for current window dispatch.
-    for configuration in ("Debug","RelWithDebInfo"):
-        records=[];assertions=0
-        for case in ("surface","orbit","queue"):
-            path=OUTPUT/(configuration+"-"+case+".json");proof=selectors.art.read_json(path)
-            if not proof["complete"] or proof["cases"]!=1 or not proof["actual_generic_dispatch"]:
-                raise ValueError("incomplete current public window dispatch")
-            for reference in [proof["application"],proof["source"],proof["qualification"],proof["terminal"],proof["observation"],*proof["sources"],*proof["images"]]:
-                checked(reference)
-            observation=selectors.art.read_json(ROOT/proof["observation"]["path"])
-            if observation["capture_ticks"] or observation["component_pose_inputs"] or observation["owner_digests_before"]!=observation["owner_digests_after"]:
-                raise ValueError("actual window changed paid gameplay owners")
-            for selection in observation["selections"]:
-                if (selection["vehicle"],selection["generation"])!=(selection["selected_vehicle"],selection["selected_generation"]):
-                    raise ValueError("actual native inspector selected a different hull")
-            evidence.append(selectors.art.source.identity(path));assertions+=proof["assertions"];records.append(proof)
-        if assertions!=612:
-            raise ValueError("current native window cases are incomplete")
-        application=records[0]["application"];retained=OUTPUT/("qualified-window-review-"+configuration+".exe")
-        if retained.exists():
-            if selectors.art.source.identity(retained)["sha256"]!=application["sha256"]:
-                raise ValueError("refusing to replace an earlier qualified actual-window application")
-        else:
-            shutil.copyfile(ROOT/application["path"],retained)
-        applications.append(dict(observed=application,retained=selectors.art.source.identity(retained)));corpora.append(records)
-    # Actual native window pixels, including the unchanged stale-refused views,
-    # transfer physical inspection to the other compiler only after exact equality.
-    pairs=0
-    for left,right in zip(corpora[0],corpora[1],strict=True):
-        frames=[]
-        for proof in (left,right):
-            frames.append({Path(row["path"]).name:row["sha256"] for row in proof["images"] if Path(row["path"]).suffix==".ppm"})
-        if frames[0]!=frames[1]:
-            raise ValueError("actual native window counterparts differ")
-        pairs+=len(frames[0])
-    preceding_path=ROOT/"logs/proofs/mlm/native-art/space/launch-fleet-runtime-v1/publication-verification.json"
-    preceding=selectors.art.read_json(preceding_path);checked(preceding["runtime_manifest"])
-    baseline=OUTPUT/"public-before-window-review.json"
-    # Only the exact prior qualified public bytes can supply an expectation;
-    # never seed it from already changed ordinary-game metadata.
-    if not baseline.exists():
-        if selectors.art.source.identity(PUBLIC)!=preceding["public_manifest"]:
-            raise ValueError("preceding native-only public baseline is unavailable")
-        baseline.write_bytes(PUBLIC.read_bytes())
-    import hashlib
-    if hashlib.sha256(baseline.read_bytes()).hexdigest()!=preceding["public_manifest"]["sha256"]:
-        raise ValueError("preceding native public baseline changed")
-    return evidence,applications,pairs,selectors.art.read_json(baseline),preceding
+    raise ValueError("Historical craft-window publication is retired; current art recovery grants no paid replay or old EXE-cache dependency.")
 
 
 def publish(write=False,reviewed=False):

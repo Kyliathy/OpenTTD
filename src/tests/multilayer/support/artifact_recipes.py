@@ -2,17 +2,133 @@
 
 @file artifact_recipes.py Inspection never reserves a run, builds or imports producers.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups6/14/17DE.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 explicit dependency roles.
 """
 
 import json
 from pathlib import Path
 
-from artifact_inventory import checked_path
+from artifact_inventory import checked_path, file_identity, in_disposable
 from artifact_paths import contained, identifier, owned_root, repository_root
 from artifact_space_graph import graph_cycles
 
 STAGES = ("inspect", "build", "prepare", "verify")
 EXECUTIONS = {"read_only", "pure_conversion", "native_fixture", "native_application"}
+
+
+def check_reference_roles(document, root, generated_inputs=(), run_id=None, verify_bytes=True, input_aliases=None):
+    """Validate live typed references while leaving quoted historical facts inert.
+
+    @param document Current request/result, known retained world/checkpoint, or role-annotated metadata.
+    @param root Explicit source checkout; original workstation paths grant no ownership.
+    @param generated_inputs Exact selected graph prerequisite path/hash records.
+    @param run_id Current invocation for generated references, or the envelope's own ID.
+    @param verify_bytes Hash live references; declaration-only callers defer bytes to the existing input observer.
+    @param input_aliases Optional invocation-local canonical alias map, avoiding catalogue rereads per declaration.
+    @return Number of distinct live files inspected; no directory or output is created.
+    """
+    root = Path(root).resolve()
+    catalogue = root / "src/tests/fixtures/multilayer-inputs.json"
+    aliases = input_aliases
+    if aliases is None:
+        aliases = json.loads(catalogue.read_text(encoding="utf-8"))["inputs"] if catalogue.is_file() else {}
+    supplied = {(row["path"], row["sha256"]) for row in generated_inputs}
+    seen, inspected = set(), set()
+    invocation = run_id or document.get("run_id")
+    live_kinds = {"artifact_recipe_stage_request", "artifact_recipe_stage_result", "native_process_result", "native_capture_result"}
+    fields = dict(inputs="retained_input", retained_inputs="retained_input", outputs="current_output",
+                  current_application="current_executable", application="current_executable", applications="current_executable",
+                  sources="current_source", diagnostics="diagnostic")
+
+    def visit(value, role=None, current=False):
+        """Inspect only schema-owned live fields or explicit reference role annotations.
+
+        @param value Selected metadata node, never arbitrary string path discovery.
+        @param role Physical dependency/output meaning inherited from its owner.
+        @param current Whether this subtree belongs to a typed current result/request.
+        @return None; historical branches are deliberately not dereferenced.
+        """
+        if isinstance(value, list):
+            for child in value:
+                visit(child, role, current)
+            return
+        if not isinstance(value, dict):
+            return
+        current = current or value.get("kind") in live_kinds
+        annotation = value.get("role")
+        if annotation in {"retained_input", "generated_prerequisite", "current_output", "current_source", "current_executable", "diagnostic", "historical_fact"}:
+            role = annotation
+        # History is permitted to quote vanished EXEs/logs. It must never be
+        # promoted to a live input merely because a nested object has a path/hash.
+        if role == "historical_fact" or str(annotation).startswith("historical_fact_only"):
+            return
+        if "path" in value and role in set(fields.values()) | {"generated_prerequisite"}:
+            declared = value["path"]
+            expected = value.get("sha256")
+            physical = aliases.get(declared) if role == "retained_input" else None
+            if physical is not None:
+                if expected is not None and expected != physical["sha256"]:
+                    raise ValueError("retained alias disagrees with live manifest identity")
+                declared, expected = physical["path"], physical["sha256"]
+            path = checked_path(declared, root)
+            relative = path.relative_to(root).as_posix()
+            prepared = (relative, expected) in supplied
+            # Generated prerequisites require the exact supplying result and
+            # current invocation; a familiar filename cannot select old output.
+            if role == "generated_prerequisite" or prepared:
+                if not prepared or not relative.startswith("mlm/reviews/") or invocation not in path.parts:
+                    raise ValueError("unbound generated prerequisite recipe/run")
+            elif role in {"retained_input", "current_source"}:
+                if in_disposable(relative):
+                    raise ValueError(f"live retained input/source is inside deletion roots: {relative}")
+            elif role == "current_executable":
+                local_image = relative.startswith("mlm/runtime/") and invocation in path.parts
+                parts = path.relative_to(root).parts
+                current_build_slot = len(parts) == 3 and parts[0] == "build" and parts[1] in {"Debug", "RelWithDebInfo", "Release", "MinSizeRel"} and path.suffix == ".exe"
+                # Current build slots and this exact process projection can be
+                # live; a nested build archive remains historical despite its hash.
+                if not (current_build_slot or local_image):
+                    raise ValueError("stale archived executable cannot be a current application")
+            elif role == "current_output":
+                if not relative.startswith("mlm/reviews/") or invocation not in path.parts:
+                    raise ValueError("unowned generated output or fixture overwrite")
+            elif role == "diagnostic":
+                if not relative.startswith(("logs/", "test-cache/", "mlm/reviews/")):
+                    raise ValueError("diagnostic output is outside generated owners")
+                return
+            if not path.is_file():
+                raise ValueError(f"missing live manifest input/output: {relative}")
+            inspected.add(relative)
+            if verify_bytes and expected is not None and file_identity(path)[0] != expected:
+                raise ValueError(f"corrupt live manifest input/output: {relative}")
+            # Follow only selected live JSON. Its typed owner chooses further
+            # live roles; untyped authoring facts are not arbitrary dependencies.
+            if path.suffix == ".json" and relative not in seen:
+                seen.add(relative)
+                visit(json.loads(path.read_text(encoding="utf-8")))
+            return
+        kind = value.get("kind")
+        if kind in {"paused_graphics_review_worlds", "independent_ground_viewport_expectations"}:
+            for row in value.get("worlds", value.get("modes", {})).values():
+                visit(row["source"], "retained_input")
+            return
+        if kind == "sealed_space_checkpoint":
+            for name in ("history", "historical_validation"):
+                visit(value[name], "retained_input")
+            for row in value["configurations"].values():
+                visit(row["save"], "retained_input")
+            return
+        # Generic historical/authoring metadata can carry explicit annotations;
+        # only current envelopes give ordinary input/output field names live meaning.
+        for name, child in value.items():
+            # A declaration contains relative output proposals, already checked
+            # by validate_recipes; only the executed envelope has physical paths.
+            if name in {"history", "declaration"} or name.startswith("historical_"):
+                continue
+            visit(child, fields.get(name, role) if current else role, current)
+
+    visit(document)
+    return len(inspected)
 
 
 def load_catalogue(root=None):
@@ -70,6 +186,9 @@ def validate_recipes(catalogue, root=None):
     if catalogue.get("recipe_schema_version") != 1:
         raise ValueError("unsupported recipe declaration schema")
     result = {}
+    checked_inputs = set()
+    alias_path = root / "src/tests/fixtures/multilayer-inputs.json"
+    input_aliases = json.loads(alias_path.read_text(encoding="utf-8"))["inputs"] if alias_path.is_file() else {}
     # Each leaf has one explicit identity and one original owner. A duplicate ID
     # would make prerequisites depend on catalogue ordering rather than intention.
     for recipe in catalogue["recipes"]:
@@ -165,11 +284,20 @@ def validate_recipes(catalogue, root=None):
             if role in input_roles:
                 raise ValueError(f"duplicate retained input role: {name}: {role}")
             input_roles.add(role)
-            path = checked_path(declared["path"], root)
+            physical = input_aliases.get(declared["path"], declared)
+            path = checked_path(physical["path"], root)
             # Missing retained material needs an exact supplying task, not an old
             # workstation fallback. Enabled leaves must have their real inputs.
             if not path.is_file() and (recipe["enabled"] or not declared.get("provider_group")):
                 raise ValueError(f"missing required input {declared['path']} for {name}; supplying group {declared.get('provider_group')}")
+            # Check ownership once per selected physical declaration. The existing
+            # input observer hashes bytes later; this pass prevents new cache/log
+            # dependencies and follows only known typed/annotated live manifests.
+            if path.is_file() and declared["path"] not in checked_inputs:
+                reference = {key: declared[key] for key in ("path", "sha256") if key in declared}
+                check_reference_roles(dict(kind="artifact_recipe_stage_request", inputs=[reference]), root,
+                                      verify_bytes=False, input_aliases=input_aliases)
+                checked_inputs.add(declared["path"])
     adjacency = {}
     # Connect roles only after all leaves exist, so forward declarations remain
     # deterministic and an unknown dependency cannot silently become optional.

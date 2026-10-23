@@ -1,0 +1,353 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md13; actual selected native build, never gameplay qualification.",
+  "schema_version": 1,
+  "kind": "native_build_result",
+  "complete": true,
+  "configuration": "RelWithDebInfo",
+  "build_directory": "build",
+  "targets": {
+    "openttd": {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "sha256": "ee12b7b7059b40803834991897da04b0c7b9d785a7a107d0ddabc0b75451571f"
+    },
+    "openttd_ground_art_test": {
+      "path": "build/RelWithDebInfo/openttd_ground_art_test.exe",
+      "sha256": "dda182c1b3d15752d7914f04bfc3920dfba257fd16fe945a6a9eae855fc1eeab"
+    },
+    "openttd_ground_consumer_test": {
+      "path": "build/RelWithDebInfo/openttd_ground_consumer_test.exe",
+      "sha256": "63bf54ed9068ba44de6653145203e9b9f360441f49acda18197b55bafba89d16"
+    },
+    "openttd_ground_viewport_test": {
+      "path": "build/RelWithDebInfo/openttd_ground_viewport_test.exe",
+      "sha256": "3700d3fcbd944f9aef1148d43a9d64ecc891d78bc82dce28f09966eb7ffd8e59"
+    },
+    "openttd_space_art_test": {
+      "path": "build/RelWithDebInfo/openttd_space_art_test.exe",
+      "sha256": "a001b55793210c62a0d49366187fe91637563ebee0dc2b6daa4855ab549ee5ce"
+    },
+    "openttd_surface_capital_test": {
+      "path": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+      "sha256": "6925832336793b3ba06b72cc80074718be9ab44bb3182f1dd7647fbcbe58e617"
+    }
+  },
+  "source_epoch": {
+    "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/data/source-epoch.json",
+    "sha256": "33ba6c075f273963701a4ed9408a01efbf979ca34bd8cdec7d077c2e76abdcd4"
+  },
+  "tool_profile": {
+    "path": "src/tests/fixtures/config/multilayer/native-build-profile.json",
+    "sha256": "0eb40da99c0711f537cec3e141b5e9274e539a2cf1aafdc6e74906d83ced657b"
+  },
+  "tools": {
+    "cmake": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+      "version": "3.31.6-msvc6"
+    },
+    "compiler": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+      "version": "19.44.35216"
+    },
+    "msbuild": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+      "version": "17.14.23.42201"
+    },
+    "vcpkg": {
+      "path": "D:\\Codez\\Tools\\vcpkg\\vcpkg.exe",
+      "version": "2026-09-26-51bf87ca6e9bf3e622d84ff323bd202ab1ca0c0b",
+      "root": "D:\\Codez\\Tools\\vcpkg"
+    },
+    "grfcodec": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfcodec.exe",
+      "version": "6.2.0"
+    },
+    "nforenum": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\nforenum.exe",
+      "version": "6.2.0"
+    },
+    "grfid": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfid.exe",
+      "version": "paired GRFCodec distribution"
+    },
+    "git": {
+      "path": "C:\\Program Files\\Git\\cmd\\git.exe",
+      "version": "git version 2.56.0.windows.1"
+    },
+    "patch": {
+      "path": "C:\\Program Files\\Git\\usr\\bin\\patch.exe",
+      "version": "GNU patch 2.8"
+    },
+    "visual_studio": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools",
+      "toolset": "14.44.35207"
+    },
+    "windows_sdk": {
+      "path": "C:\\Program Files (x86)\\Windows Kits\\10",
+      "version": "10.0.26100.0"
+    },
+    "dependencies": {
+      "packages": {
+        "atl": {
+          "version": "0",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "vcpkg-cmake": {
+          "version": "2024-04-23",
+          "port_version": 0,
+          "triplet": "x64-windows"
+        },
+        "libdisasm": {
+          "version": "0.23",
+          "port_version": 12,
+          "triplet": "x64-windows-static"
+        },
+        "vcpkg-cmake-config": {
+          "version": "2024-05-23",
+          "port_version": 0,
+          "triplet": "x64-windows"
+        },
+        "breakpad": {
+          "version": "2024-02-16",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "liblzma": {
+          "version": "5.8.3",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "libogg": {
+          "version": "1.3.6",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "zlib": {
+          "version": "1.3.2",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "libpng": {
+          "version": "1.6.58",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "lzo": {
+          "version": "2.10",
+          "port_version": 9,
+          "triplet": "x64-windows-static"
+        },
+        "opus": {
+          "version": "1.5.2",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "opusfile": {
+          "version": "0.12+20221121",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "soxr": {
+          "version": "0.1.3",
+          "port_version": 8,
+          "triplet": "x64-windows-static"
+        }
+      },
+      "payload_files": 298,
+      "status": {
+        "path": "build/vcpkg_installed/vcpkg/status",
+        "sha256": "7700773e7f55183c0e5f6b108a5f30387eadda890cccfc2c2471f8e5b13c768d"
+      }
+    }
+  },
+  "options": {
+    "OPTION_DEDICATED": "OFF",
+    "OPTION_TOOLS_ONLY": "OFF",
+    "OPTION_DOCS_ONLY": "OFF",
+    "OPTION_USE_ASSERTS": "ON",
+    "OPTION_INSTALL_FHS": "OFF",
+    "OPTION_USE_NSIS": "OFF",
+    "OPTION_PACKAGE_DEPENDENCIES": "OFF",
+    "OPTION_ALLOW_INVALID_SIGNATURE": "OFF"
+  },
+  "steps": [
+    {
+      "stage": "configure",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "-S",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a",
+        "-B",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "-G",
+        "Visual Studio 17 2022",
+        "-A",
+        "x64",
+        "-T",
+        "v143,version=14.44.35207",
+        "-DCMAKE_GENERATOR_INSTANCE=C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools",
+        "-DCMAKE_SYSTEM_VERSION=10.0.26100.0",
+        "-DCMAKE_TOOLCHAIN_FILE=C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build\\.native-tools\\vcpkg-cb14f144002cbbd5\\scripts\\buildsystems\\vcpkg.cmake",
+        "-DZ_VCPKG_ROOT_DIR=C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build\\.native-tools\\vcpkg-cb14f144002cbbd5",
+        "-DVCPKG_INSTALLED_DIR=C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build\\vcpkg_installed",
+        "-DVCPKG_MANIFEST_INSTALL=OFF",
+        "-DVCPKG_TARGET_TRIPLET=x64-windows-static",
+        "-DOPTION_DEDICATED=OFF",
+        "-DOPTION_TOOLS_ONLY=OFF",
+        "-DOPTION_DOCS_ONLY=OFF",
+        "-DOPTION_USE_ASSERTS=ON",
+        "-DOPTION_INSTALL_FHS=OFF",
+        "-DOPTION_USE_NSIS=OFF",
+        "-DOPTION_PACKAGE_DEPENDENCIES=OFF",
+        "-DOPTION_ALLOW_INVALID_SIGNATURE=OFF",
+        "-DGRFCODEC_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfcodec.exe",
+        "-DGRFID_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfid.exe",
+        "-DNFORENUM_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\nforenum.exe"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 26.422,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/configure.txt",
+        "sha256": "c9d5ea5573e08773a6678abe80e0abff4b069a0a259aa425c7046ad4a8cd6f0b"
+      }
+    },
+    {
+      "stage": "build-openttd",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 73.969,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd.txt",
+        "sha256": "1fa3fb4df53993d518e8de8a30f7f6fba89d17e2ada9cdab0face1d912af05bd"
+      }
+    },
+    {
+      "stage": "build-openttd_ground_art_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd_ground_art_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 50.312,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd_ground_art_test.txt",
+        "sha256": "c06b066fe010a4410c31e3f26c5ecf4f44d02276ef8123f5e8020919b45857b8"
+      }
+    },
+    {
+      "stage": "build-openttd_ground_consumer_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd_ground_consumer_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 50.531,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd_ground_consumer_test.txt",
+        "sha256": "05cfe20abc5254d5c92df956efadfa843d21a4a033f4ffd12a10e9210f9a2053"
+      }
+    },
+    {
+      "stage": "build-openttd_ground_viewport_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd_ground_viewport_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 42.843,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd_ground_viewport_test.txt",
+        "sha256": "0a29f33f970775c37ee1e1047494e83e61919ecca8115cb5e7e532b0004757d1"
+      }
+    },
+    {
+      "stage": "build-openttd_space_art_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd_space_art_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 47.0,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd_space_art_test.txt",
+        "sha256": "1580fcea3ba510b31edce87fc31fcac599eb75486a40f5ebf9ee1653b01501f1"
+      }
+    },
+    {
+      "stage": "build-openttd_surface_capital_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\build",
+        "--config",
+        "RelWithDebInfo",
+        "--target",
+        "openttd_surface_capital_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 36.5,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261022-182103-8faa06edca/evidence/build-openttd_surface_capital_test.txt",
+        "sha256": "39dd5c63e346f401c114174c8c3b19ff7ce55d197137923d51541c240fafd298"
+      }
+    }
+  ]
+}

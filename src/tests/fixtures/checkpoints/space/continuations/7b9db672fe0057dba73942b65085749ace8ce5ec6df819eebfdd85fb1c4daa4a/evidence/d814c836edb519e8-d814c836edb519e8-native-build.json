@@ -1,0 +1,245 @@
+{
+  "_documentation": "Owner: r2fc-file-cleanup3.md13; actual selected native build, never gameplay qualification.",
+  "schema_version": 1,
+  "kind": "native_build_result",
+  "complete": true,
+  "configuration": "Debug",
+  "build_directory": "build",
+  "targets": {
+    "openttd_surface_capital_test": {
+      "path": "build/Debug/openttd_surface_capital_test.exe",
+      "sha256": "17acb43dfb98a14e1569a2cd68e1b9caa7b251f364ffc82fec6436275cd7c2e6"
+    },
+    "openttd": {
+      "path": "build/Debug/openttd.exe",
+      "sha256": "e870aa247b92f01f2ceb53387e80554b19937837ea471b391d022d145a81691d"
+    }
+  },
+  "source_epoch": {
+    "path": "mlm/reviews/build/selected-native/20261021-172204-70521c5e90/data/source-epoch.json",
+    "sha256": "811e14cafee7bdcc2ac68414d91ce613f2963fbdd2cc4daa9b824e20ee7f21b2"
+  },
+  "tool_profile": {
+    "path": "src/tests/fixtures/config/multilayer/native-build-profile.json",
+    "sha256": "ee54e052c17477b396096dea8bb8e983190d56f68eef96977d3108e90e8c3232"
+  },
+  "tools": {
+    "cmake": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+      "version": "3.31.6-msvc6"
+    },
+    "compiler": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+      "version": "19.44.35216"
+    },
+    "msbuild": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+      "version": "17.14.23.42201"
+    },
+    "vcpkg": {
+      "path": "D:\\Codez\\Tools\\vcpkg\\vcpkg.exe",
+      "version": "2026-09-26-51bf87ca6e9bf3e622d84ff323bd202ab1ca0c0b",
+      "root": "D:\\Codez\\Tools\\vcpkg"
+    },
+    "grfcodec": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfcodec.exe",
+      "version": "6.2.0"
+    },
+    "nforenum": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\nforenum.exe",
+      "version": "6.2.0"
+    },
+    "grfid": {
+      "path": "D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfid.exe",
+      "version": "paired GRFCodec distribution"
+    },
+    "git": {
+      "path": "C:\\Program Files\\Git\\cmd\\git.exe",
+      "version": "git version 2.56.0.windows.1"
+    },
+    "patch": {
+      "path": "C:\\Program Files\\Git\\usr\\bin\\patch.exe",
+      "version": "GNU patch 2.8"
+    },
+    "visual_studio": {
+      "path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools",
+      "toolset": "14.44.35207"
+    },
+    "windows_sdk": {
+      "path": "C:\\Program Files (x86)\\Windows Kits\\10",
+      "version": "10.0.26100.0"
+    },
+    "dependencies": {
+      "packages": {
+        "vcpkg-cmake-config": {
+          "version": "2024-05-23",
+          "port_version": 0,
+          "triplet": "x64-windows"
+        },
+        "vcpkg-cmake": {
+          "version": "2024-04-23",
+          "port_version": 0,
+          "triplet": "x64-windows"
+        },
+        "libdisasm": {
+          "version": "0.23",
+          "port_version": 12,
+          "triplet": "x64-windows-static"
+        },
+        "atl": {
+          "version": "0",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "breakpad": {
+          "version": "2024-02-16",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "liblzma": {
+          "version": "5.8.3",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "zlib": {
+          "version": "1.3.2",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "libpng": {
+          "version": "1.6.58",
+          "port_version": 0,
+          "triplet": "x64-windows-static"
+        },
+        "lzo": {
+          "version": "2.10",
+          "port_version": 9,
+          "triplet": "x64-windows-static"
+        },
+        "opus": {
+          "version": "1.5.2",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "libogg": {
+          "version": "1.3.6",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "opusfile": {
+          "version": "0.12+20221121",
+          "port_version": 1,
+          "triplet": "x64-windows-static"
+        },
+        "soxr": {
+          "version": "0.1.3",
+          "port_version": 8,
+          "triplet": "x64-windows-static"
+        }
+      },
+      "payload_files": 298,
+      "status": {
+        "path": "build/vcpkg_installed/vcpkg/status",
+        "sha256": "4cc02d0973d768d7605b1e30a116b7f2561b5858b64270525f392f7b0134e260"
+      }
+    }
+  },
+  "options": {
+    "OPTION_DEDICATED": "OFF",
+    "OPTION_TOOLS_ONLY": "OFF",
+    "OPTION_DOCS_ONLY": "OFF",
+    "OPTION_USE_ASSERTS": "ON",
+    "OPTION_INSTALL_FHS": "OFF",
+    "OPTION_USE_NSIS": "OFF",
+    "OPTION_PACKAGE_DEPENDENCIES": "OFF",
+    "OPTION_ALLOW_INVALID_SIGNATURE": "OFF"
+  },
+  "steps": [
+    {
+      "stage": "configure",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "-S",
+        "D:\\Codez\\Sandbox\\OpenTTD",
+        "-B",
+        "D:\\Codez\\Sandbox\\OpenTTD\\build",
+        "-G",
+        "Visual Studio 17 2022",
+        "-A",
+        "x64",
+        "-T",
+        "v143,version=14.44.35207",
+        "-DCMAKE_GENERATOR_INSTANCE=C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools",
+        "-DCMAKE_SYSTEM_VERSION=10.0.26100.0",
+        "-DCMAKE_TOOLCHAIN_FILE=D:\\Codez\\Sandbox\\OpenTTD\\build\\.native-tools\\vcpkg-a38169a4f271afcb\\scripts\\buildsystems\\vcpkg.cmake",
+        "-DZ_VCPKG_ROOT_DIR=D:\\Codez\\Sandbox\\OpenTTD\\build\\.native-tools\\vcpkg-a38169a4f271afcb",
+        "-DVCPKG_INSTALLED_DIR=D:\\Codez\\Sandbox\\OpenTTD\\build\\vcpkg_installed",
+        "-DVCPKG_MANIFEST_INSTALL=OFF",
+        "-DVCPKG_TARGET_TRIPLET=x64-windows-static",
+        "-DOPTION_DEDICATED=OFF",
+        "-DOPTION_TOOLS_ONLY=OFF",
+        "-DOPTION_DOCS_ONLY=OFF",
+        "-DOPTION_USE_ASSERTS=ON",
+        "-DOPTION_INSTALL_FHS=OFF",
+        "-DOPTION_USE_NSIS=OFF",
+        "-DOPTION_PACKAGE_DEPENDENCIES=OFF",
+        "-DOPTION_ALLOW_INVALID_SIGNATURE=OFF",
+        "-DGRFCODEC_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfcodec.exe",
+        "-DGRFID_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\grfid.exe",
+        "-DNFORENUM_EXECUTABLE=D:\\Codez\\Tools\\grfcodec\\grfcodec-6.2.0-windows-win64\\bin\\nforenum.exe"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 11.5,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261021-172204-70521c5e90/evidence/configure.txt",
+        "sha256": "de60f7b2f9370085d74118082ffdb39dd7f9ab6832337a15d13b2aae4f47fed7"
+      }
+    },
+    {
+      "stage": "build-openttd_surface_capital_test",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "D:\\Codez\\Sandbox\\OpenTTD\\build",
+        "--config",
+        "Debug",
+        "--target",
+        "openttd_surface_capital_test",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 10.641,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261021-172204-70521c5e90/evidence/build-openttd_surface_capital_test.txt",
+        "sha256": "cc927f90a333d4130a903fe211691ad0e0a4e3765a965c71de6fb650f676793b"
+      }
+    },
+    {
+      "stage": "build-openttd",
+      "argv": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+        "--build",
+        "D:\\Codez\\Sandbox\\OpenTTD\\build",
+        "--config",
+        "Debug",
+        "--target",
+        "openttd",
+        "--parallel",
+        "2",
+        "--",
+        "/nodeReuse:false",
+        "/p:CL_MPCount=2"
+      ],
+      "exit_status": 0,
+      "elapsed_seconds": 10.453,
+      "terminal": {
+        "path": "mlm/reviews/build/selected-native/20261021-172204-70521c5e90/evidence/build-openttd.txt",
+        "sha256": "ebc46804b9ffd616c4274c06b70b4b3ba5bba17378ffa9956cc575aa594f5a55"
+      }
+    }
+  ]
+}

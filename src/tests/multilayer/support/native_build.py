@@ -2,6 +2,8 @@
 
 @file native_build.py Read-only tool discovery; generated build/run evidence is disposable.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups13/15/30.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 complete source inventory.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 retained runtime distribution.
 No CMakeCache is transferred as authority. Builds use two workers, preserve
 read-only Git version discovery and record actual current source/image identities.
 """
@@ -18,7 +20,7 @@ import time
 
 from artifact_paths import contained, create_run_context, repository_root
 from artifact_inventory import file_identity
-from native_build_dependencies import (dependency_command, prepare_provider, source_archives, verify_installed)
+from native_build_dependencies import (dependency_command, prepare_provider, source_archives, verify_installed, write_exact)
 
 ROOT = Path(__file__).resolve().parents[4]
 PROFILE = "src/tests/fixtures/config/multilayer/native-build-profile.json"
@@ -60,6 +62,7 @@ def load_profile(path=None, root=None):
     if not set(dependencies["roots"]) <= names:
         raise ValueError("top-level dependency lacks an exact port pin")
     source_archives(document, root)
+    runtime_asset_sources(document, root)
     return document
 
 
@@ -177,6 +180,53 @@ def build_directory(profile, root, override=None):
     return candidate
 
 
+def runtime_asset_sources(profile, root):
+    """Verify exact retained runtime data independently of an old build directory.
+
+    @param profile Portable profile declaring optional pinned distribution inputs.
+    @param root Checkout owning immutable user-provided base graphics and audio.
+    @return Ordered pairs of declarations and verified fixture source paths.
+    """
+    result = []
+    destinations = set()
+    # Native observers select original_dos explicitly. Its proprietary input
+    # bytes must travel as retained fixtures, rather than survive only in build/.
+    for reference in profile["dependencies"].get("runtime_assets", []):
+        if set(reference) != {"path", "sha256", "destination"}:
+            raise ValueError("runtime asset needs exact source, hash and destination")
+        source = contained(root / reference["path"], root / "src/tests/fixtures")
+        parts = Path(reference["destination"]).parts
+        # Only base-set files may populate this distribution seam. Duplicate or
+        # redirected entries could replace another runtime input before a test.
+        if len(parts) != 2 or parts[0] != "baseset" or reference["destination"].casefold() in destinations:
+            raise ValueError("runtime asset requires a unique baseset destination")
+        destinations.add(reference["destination"].casefold())
+        if file_identity(source)[0] != reference["sha256"]:
+            raise ValueError("retained runtime asset changed")
+        result.append((reference, source))
+    return result
+
+
+def prepare_runtime_assets(profile, build, root):
+    """Materialize pinned immutable distribution inputs into the current build.
+
+    @param profile Portable profile with exact retained fixture identities.
+    @param build Current contained disposable distribution owner.
+    @param root Checkout owning the fixture sources and generated build.
+    @return None; conflicting existing bytes refuse instead of being overwritten.
+    """
+    # Complete validation precedes all copies; a missing later asset must not
+    # produce a partial distribution that appears ready for native observation.
+    for reference, source in runtime_asset_sources(profile, root):
+        destination = contained(build / reference["destination"], build)
+        payload = source.read_bytes()
+        if file_identity(source)[0] != reference["sha256"]:
+            raise ValueError("runtime asset changed while preparing distribution")
+        write_exact(destination, payload)
+        if file_identity(destination)[0] != reference["sha256"]:
+            raise ValueError("prepared runtime asset identity differs")
+
+
 def source_epoch(root, profile_path=None):
     """Capture actual native/build and qualifier sources without archived fixture trees.
 
@@ -189,6 +239,7 @@ def source_epoch(root, profile_path=None):
     paths = {root / "CMakeLists.txt", root / "vcpkg.json", selected}
     profile = json.loads(selected.read_text(encoding="utf-8"))
     paths.add(root / profile["dependencies"]["source_bundle"]["path"])
+    paths.update(source for _reference, source in runtime_asset_sources(profile, root))
     # Immutable historical source fixtures are data, not translation units.
     # Capture live native/build/language/resource owners and explicit Python
     # qualification/continuation adapters without walking old output archives.
@@ -199,7 +250,7 @@ def source_epoch(root, profile_path=None):
             relative = path.relative_to(root).as_posix()
             if relative.startswith("src/tests/fixtures/"):
                 continue
-            if path.suffix in (".cpp", ".c", ".h", ".hpp", ".cmake", ".in", ".rc", ".manifest") or path.name == "CMakeLists.txt" or relative.startswith("src/lang/") and path.suffix == ".txt":
+            if path.suffix in (".cpp", ".cc", ".cxx", ".c", ".h", ".hh", ".hxx", ".hpp", ".inc", ".cmake", ".in", ".rc", ".manifest") or path.name == "CMakeLists.txt" or relative.startswith("src/lang/") and path.suffix == ".txt":
                 paths.add(path)
     paths.update(path for directory in ("src/tests/multilayer/support", "src/tests/multilayer/acceptance")
                  for path in (root / directory).glob("*.py"))
@@ -217,6 +268,20 @@ def identity(path, root):
     """
     path = contained(path, root)
     return dict(path=path.relative_to(root).as_posix(), sha256=file_identity(path)[0])
+
+
+def verify_source_epoch(expected, root, profile_path=None):
+    """Require exact source membership and bytes for a still-current native build.
+
+    @param expected Original complete native_source_epoch captured before compilation.
+    @param root Explicit selected checkout, never a workstation cache.
+    @param profile_path Exact portable profile used by that build.
+    @return None; added, removed or changed translation/qualification files refuse reuse.
+    """
+    # Checking only old filenames misses newly added build inputs. Reuse the
+    # original inventory policy for both membership and bytes in a single pass.
+    if source_epoch(root, profile_path) != expected:
+        raise ValueError("current recipe build source changed or source inventory was added/removed")
 
 
 def write_document(path, document, root):
@@ -335,6 +400,7 @@ def build_selected(profile_path, configuration, targets, overrides=None, root=No
         raise ValueError("select explicit existing native executable targets")
     tools = discover_tools(profile, overrides)
     build = build_directory(profile, root, build_override)
+    prepare_runtime_assets(profile, build, root)
     existing = verify_installed(profile, build / "vcpkg_installed", root, allow_partial=True)
     epoch = source_epoch(root, profile_path)
     context = create_run_context("build", "selected-native", root=root)
@@ -359,9 +425,7 @@ def build_selected(profile_path, configuration, targets, overrides=None, root=No
             "--config", configuration, "--target", target, "--parallel", "2", "--", "/nodeReuse:false", "/p:CL_MPCount=2"], environment))
     # Refuse a build whose source changed during compilation. Publication is
     # about the measured epoch, never merely an EXE left in a known directory.
-    for reference in epoch["files"]:
-        if identity(root / reference["path"], root) != reference:
-            raise ValueError("native source changed during the selected build")
+    verify_source_epoch(epoch, root, profile_path)
     epoch_reference = write_document(context.data / "source-epoch.json", epoch, root)
     selected_profile = Path(profile_path or PROFILE)
     profile_reference = identity(selected_profile if selected_profile.is_absolute() else root / selected_profile, root)

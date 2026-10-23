@@ -1,0 +1,72 @@
+{
+  "_documentation": "Prepare only the ordinary paused console/load/save seam for checkpoint qualification.\n\n@file space_checkpoint_static.py Dedicated ordinary restore, never the old paid replay.\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups12/15.\nSource is staged here; actual application compilation/execution belongs to15.\n",
+  "schema_version": 1,
+  "kind": "ordinary_space_checkpoint_restore",
+  "complete": true,
+  "configuration": "RelWithDebInfo",
+  "phase": "ordinary-static",
+  "seal": {
+    "path": "src/tests/fixtures/checkpoints/space/checkpoint.json",
+    "sha256": "5083a1e8c64359f06eb3f9913032ad8b25b7ba5fea73d2c5ad16519985928df9"
+  },
+  "source": {
+    "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+    "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+  },
+  "application": {
+    "path": "build/RelWithDebInfo/openttd.exe",
+    "sha256": "8091b63390d5404873bad7aaf83a15e6c15e748a6c227216cf562cf4e2ca288c"
+  },
+  "console_application": {
+    "path": "mlm/runtime/native/cleanup15-rwd-01/main/openttd_console.exe",
+    "sha256": "de804180602c25a3565ea136a5560dda1d3da3a87a5ed6964cc9e1bde6d8a429"
+  },
+  "output": {
+    "path": "mlm/reviews/space/checkpoint-static/cleanup15-rwd-01/saves/ordinary.sav",
+    "sha256": "6bf9eb21d33f7db03a1f0e99ef68f21e424a060d7affdba10ff2b1de8ffc68c3"
+  },
+  "terminal": {
+    "path": "mlm/reviews/space/checkpoint-static/cleanup15-rwd-01/evidence/native-a988302e80864d2681ff3481687d8731-stdout.txt",
+    "sha256": "f92562a27e8a5945ad4bf70cf1a0fe8e452372ac91b7aebd0870b197e8b80591"
+  },
+  "native_process": {
+    "path": "mlm/reviews/space/checkpoint-static/cleanup15-rwd-01/reports/native-a988302e80864d2681ff3481687d8731.json",
+    "sha256": "ef4c565d5d3500168c1970cb118d6169ac1b38bb7ac2304f74c784c78ee5d1da"
+  },
+  "native_load": {
+    "path": "mlm/reviews/space/checkpoint-load/cleanup15-rwd-01/reports/space-checkpoint-load.json",
+    "sha256": "747b479dc990743cb7339bf693d11698c32c720cc3d8e4adf6216f19b6ed74d2"
+  },
+  "run_id": "cleanup15-rwd-01",
+  "source_files": [
+    {
+      "path": "src/tests/multilayer/acceptance/space_checkpoint_static.py",
+      "sha256": "14b32637f2174c3f02dd58701e84aae484eacd8ae6bf14f341311ea1d64cb017"
+    },
+    {
+      "path": "src/tests/multilayer/acceptance/space_checkpoint_foundation.py",
+      "sha256": "4113917514a2946683fb026be58f9dd38bbcb2c206e415b867528aa928fcedbb"
+    },
+    {
+      "path": "src/tests/multilayer/support/runner.py",
+      "sha256": "963f5e363224ce9d28e951982dd719e857c373c78a17c033b8b658921bf86aa6"
+    },
+    {
+      "path": "src/tests/multilayer/support/artifact_paths.py",
+      "sha256": "40e578c3eec4a36475d714f15abc1188aaba469af2d748964e37ceaf2bce3c5e"
+    }
+  ],
+  "gameplay_ticks_executed": 0,
+  "projection": {
+    "method": "pe_subsystem_2_to_3",
+    "application": {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "sha256": "8091b63390d5404873bad7aaf83a15e6c15e748a6c227216cf562cf4e2ca288c"
+    },
+    "executable": {
+      "path": "mlm/runtime/native/cleanup15-rwd-01/main/openttd_console.exe",
+      "sha256": "de804180602c25a3565ea136a5560dda1d3da3a87a5ed6964cc9e1bde6d8a429"
+    },
+    "dlls": {}
+  }
+}

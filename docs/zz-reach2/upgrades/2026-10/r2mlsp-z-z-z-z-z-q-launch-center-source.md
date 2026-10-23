@@ -4,20 +4,45 @@ Owner: [Space master](r2mlsp-space-master-plan.md), completed Plan9task16.2/Plan
 
 ## Current boundary
 
-Cleanup migration,2026-10-21: the exact GZVEEH originals and compact historical witnesses are now sealed at [Space checkpoint](../../../../src/tests/fixtures/checkpoints/space/checkpoint.json). Verify read-only with `python -B src/tests/multilayer/acceptance/space_checkpoint.py`. Both configuration saves retain their original hashes and actual owner/material state; all121chunk families and75historical witnesses verify. Fresh-build qualification passed in both configurations through four actual zero-tick native/static processes; see [qualified foundation](../../../../mlm/reviews/space/checkpoint-qualification/cleanup15-qualified-01/reports/foundation.json), SHA256 `7b9db672fe0057dba73942b65085749ace8ce5ec6df819eebfdd85fb1c4daa4a`. Its current-run witnesses remain generated until the later export gates; the immutable original seal is unchanged. GZVEEH remains closed/no033, both30,000exceptions spent,40,000operating/100,000capital floors restored,15CSGZVEEI next. See [R2FC-3 execution](r2fc-file-cleanup3-a-execution.md#group8---durable-space-seal-and-pure-save-observation).
+Current boundary,2026-10-23: source-plan **GZVEEIis complete** after actual
+post-cleanup development in `D:/Codez/Sandbox/OpenTTD`. R2FC2delivered cleanup,
+verified packaging, fresh both-configuration qualification and the pure Goods
+query/ordinary-reload pair. Both worlds retain all121families at zero gameplay
+ticks, original body/material/finance state and182302cash/debt5000000.
 
+Select the [durable query successor](../../../../src/tests/fixtures/checkpoints/space/continuations/5d8ca01b552778970bde977259f25037e935d3c87de779803e221280d398252c/reports/foundation.json),
+SHA256 `8cc7f8743c2922537d49b1745641049692a3c297a1e1d72208526748c76a1f6e`,
+through `space_checkpoint.load_foundation/verify_foundation`. Its native and
+ordinary result/process/transcript/save witnesses travel without old EXEs.
+The [original seal](../../../../src/tests/fixtures/checkpoints/space/checkpoint.json)
+remains SHA256 `5083a1e8c64359f06eb3f9913032ad8b25b7ba5fea73d2c5ad16519985928df9`;
+Group35's qualified predecessor and earlier Group22/30foundations remain history.
+[Shared recovery and query reproduction commands](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer)
+are authoritative. Fresh qualification must preserve the latest successor's
+source-plan dispatch, rather than reset it to the original seal's dated task.
 
-Owner: Space master / Plan11GZVEEHcomplete/GZVEEInext, parentAD-12. Actual182,302cash/debt5m; originalCS.2/.3areX/100,000floor restored for later capital admission. Original15.1/.2continuouschainremainOPEN. GZVEEHclosed/no033at32window/64000tick cap. Wholeactualfares374,517-interest241,666-other51,642=net81,209from101,093cash. Bound logs/surface-entry-construction-cash-verification.json:68native/ordinary processes/4080comparisons/two ordinary reloads/612products. Exactfinal originals logs/surface-entry-construction-cash-work-032-{configuration}.json. Cachedbind80.594seconds/1641distinctSHAreads/10827unchangedreuses/0gameboundariesrepeated. No native/save/reload action needs repeating. Originalsixappsbyte-exactcheckedbeforefinalnativewindows; no buildfollowed.
+Actual head24is available/callback-free at35156; Goods32costs1113/capacity25.
+All2/4/8/12lots fit both7tileplatforms and are financially funded including the
+whole2000tick/28dayfirst interval, all16existing service charges and100000capital
+floor. The smallest2wagon target is147602. However only2Goods currently wait at13
+(packet35, Industry5), and mixed52already has50empty Goods spaces on15/13.
+Original49's300capacity/93held serves12/11. This quote establishes affordability;
+useful additional service remains an exact prerequisite.
 
-CLEANUP COORDINATION: userrunning clean.ps1; it refused an idle MSBuild.exe21240/nodemode1/nodeReuse:true from our23:40:15constructioncapitalRelbuild. No activebuild/native/test remained. The node's birth23:40:16matchedtheexactbuildlog; parent29248gone/onlyconsolechildconhost8804/CPUstable5.765625/allotherbuildprocessesabsent. ClosedONLYthisverifiedownedidleworker; toolconfirmed0remaininggame/buildrunners. One earlier mixedPowerShelltablehidprocessrowsandcausedanincorrectexitedclaim, correctedafterexplicitJSONinspection. Usercanretrycleanup. Do not launch anotherbuild/testuntiltheuser'scleanupisfinished; source/read-only documentation cancontinue. No cleanupscriptmodification or deletion performed bythiscontinuation. FuturebuildpassMSBuild /nodeReuse:falseifappropriate soidleworkerdoesnotblockcleanupagain. Ordinarycleanmainapps/logs/currentSpaceoriginals/retainedtest-cache/source remainkept; native runtimehomes/compilerintermediates removed, sofuturebuildmaybeexpensive. Do not require olddeletedruntimeexe copies whenexactretainedsource/app identities alreadyqualifythem; old ordinary harnesshasitsdeclared runtime-exe ownership. Revalidateactualnextinputsaftercleanup; neverreplayclosedworkbecausecleanupremovesdisposableoutput.
+**Next actual task: [Plan11Group15CSGZVEEJ](r2mlvs11-orbital-stations-and-manufacturing.md#group-15csgzveej---establish-useful-additional-goods-service-before-buying-capacity).**
+Read its Global/Presentation Area/AD-12 and closest incremental-usefulness Local.
+Inspect real production/backlog, packet origins and existing service timing/history
+through the selected successor at zero ticks before selecting paid capacity.
+No purchase, route/order/stock/pose/loan/clock change or measurement window is
+approved here; future fares, refunds and loan room fund0up front.
 
-NextGZVEEIcodeNOTbegun. Read only relevantPlan11Global/Presentation Area/AD-12 and nearestGZVEEILocalaftercompaction. OlddatedStatusandearlierpartialparagraphsremainhistorical; currentdispatch/actualGroupCSX/latestboundproofauthoritative. NoGZVEEIcompactioncountyet(noimplementation). Purecurrent13Goodswaiting/15acceptance/actualsourcepacketprovenance/currentGoods49andmixed52/railconnectivitydepot1638->13/15/platformfit. NativepublicfreshBuildVehiclehead24+Goods32cap25lots2/4/8/12andfullnew-consistoperating+existingwholecompanycost+100,000capitalfloor. No purchase/stock/clock/order/geometrychange. NativeCloneVehiclehasNoTest(src/vehicle_cmd.h); genericwholecloneestimatecannotfinanciallyauthorizepurchase. If oldheadunbuildablenow, retainactualrefusal/querycompatiblegenuinealternative. Do not assumecurrentdemandfromolderstationreadings. Nativefuturefares/refund/loanroom0. ArchiveconsumedCPP/twoisolatedappsbeforeaddingnewselectedpureheader; latestTHIRTEENVERSIONSfrom surface_entry_construction_cash_checks-3.py. Twoactualpurequeries/121unchanged/0ticks/twoordinaryreloads/exactcachedbindbeforepaidcapacityproducer. No blind continuationofcashwindow033.
-
-Actualcurrentcontract: mixed52active[52,12..17,21..23,50,57,39,60],200LVST90GRAI50GOOD/112pixels/max7. CurrentGoods39/60empty; nativecropsstilloperate. Original35namedtrainbodies/32wagonsowned, Grain18->19->20empty1638. Additional58/59sold. Builder38/gen2reallyhome-retired; currentSpaceonly54/gen1storedzero-rate/exhausted. Stock32Steel50Goods38PROP, Coreoperational740work/16Steel24Goodsconsumed, rocketembodied12Steel16Goods, retiredbuilder4Steel8Goods/quota2extinguished/componentsRecovered0. Shortestoriginalactive1550days(10/24/53); trains42/49/52remaining3689days. Currentobserver surface_constructor_retirement_ledger.observe strictnativepacket/materialand originalbodycensus39. Anylaternewtrainrequiresanexplicitnewdefault-falsepaid-bodymode; preserveallolddefaults/predecessorobservation. NumericreusedIDisnotoldincarnation.
-
-Capital: nativebuilder100,000/4Steel8Goods/148work, Dock160,000/444work11277/Assembly180,000/592work11467 againstrealCore. Aggregate20Steel36Goodsvs32/50current. Incomplete610,000base/427,698gap; builderextra1,000assemblywork/1,500pad/5,000missionmakes617,500knownminimum/435,198gapbeforewholeunpricedlaunch/service/logistics. Selected3flights45PROP/current38/missing7. Cashmilestone650,000still467,698shortandnevergrantsconstructionbyitself. FirstGoods50/posted1,510payment remainsclosedGZVEEproof/no003; actualworkingreserveclosedGZVEEF/no005; both30,000approvalsfullyspent/native40,000normaldefaultunchanged. Plan9graphics/Plan14launch/pod/Plan11Group16docscomplete; nooldrenderer/nativegraphreplay.
-
-Evidenceverify/bindoptionalidentity_reader=Nonepreservesallhistoricaldefaults. UseexplicitIdentityCacheactualuniqueSHA/metadata/fullclosechecks; exact-source dedupONLYAFTEReachoriginalrefverified. Latest13epochsincludehome-bindingmetadatasplit/retired13entry/newconstructioncapital3entry+constructioncash4entry. Cashheader WorkSurfaceFundedFarmGoods(settlement,stop_on_payment=true,cash_goal=100000); olddefaults/outputsunchanged/new650000onlyselectedconstructioncash. All consumedepochsimmutable. Split -1native/-2ordinary/-3bindingkeepsactivefilesunder2minutes. BuildONLYopenttd_surface_capital_test sequential2workers/CL_MPCount2/absoluteCmake/explicitexitcode/loginfalse; polls>=50s. NoGitwrites/subagents/fullregressions. Sourceguardproductive-admission-before-edit.json.files listsoriginal6apps. Allnewfunctions/arguments/classes/interfaces/compoundifs/nontrivialloopsneedbusinessdocs. Logs/logs temporary/test-cache native/mlm/reviews+runtime. Nonewsource/test/JSONr2prefix; assistingMDonlybesidemaster. Currentqandplansupdated; allfollowingparagraphshistorical.
+GZVEEH remains closed/no033 at32windows/64000ticks. Both30000exceptions are
+spent;40000normal operating/100000capital floors remain restored. The old earned
+net81209is historical, not a new income allowance. Original15.1/.2, useful-chain
+and human acceptance remain open. Underground Group9history stays separate from
+paused, unqualified five-model Group10work. The removable recovery note is deleted.
+Generated current reports/images/runtime remain cleanable after the public
+preservation gates; no historical executable graph or cash replay is required.
 
 ## Historical arrival checkpoints
 

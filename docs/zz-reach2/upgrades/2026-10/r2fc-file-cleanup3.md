@@ -46,17 +46,21 @@ Owner: this plan, following [R2FC](r2fc-file-cleanup.md) and [R2FC-2](r2fc-file-
 
 ## Status and transfer objective
 
-**Paused at the user's request,2026-10-22.** Groups1-20BB and12B are complete; every task retained below is checked. Group20BB finished its complete optimized matrix and Debug smoke per distinct native callback. No later implementation group has started. See the [execution checkpoint](r2fc-file-cleanup3-a-execution.md#checkpoint-paused-after-group20bb) for exact current witnesses and remaining hazards. No project cleanup, feature resumption or Git mutation has been performed.
+**Completed predecessor; continuation current as of2026-10-23.** Groups1-20BB
+and12B remain complete here. The original pause after20BB is recorded in its
+[historical checkpoint](r2fc-file-cleanup3-a-execution.md#checkpoint-paused-after-group20bb).
+[R2FC2](r2fc2-file-cleanup3.md) delivered the remaining migrations, shared cold
+rehearsal,55.07GiBverified real cleanup, complete source package and actual
+chosen-checkout Space recovery/GZVEEIquery. Its durable successor dispatches the
+read-only GZVEEJusefulness gate; source/useful-route/human gates stay open.
 
-This file contains the146 completed tasks through Group20BB and stays at its
-original path. All78 remaining tasks are in one continuation:
-[**R2FC2 - Remaining migrations, cleanup, transfer and Space resumption**](r2fc2-file-cleanup3.md).
-That plan starts at20BC and explicitly requires fewer debug and verification
-cycles. Execution remains paused; do not reread completed groups to resume.
+This file retains146completed tasks at its original path. The continuation began
+with78unchecked tasks and records later bounded fixes and current checkboxes.
+Read its Global and current Area rather than reloading completed groups here.
 
 The stable [historical debugging architecture](../../architecture/archi-historical-debug.md) describes file ownership, retained saves, current/historical evidence, artifact reconstruction and cleanup gates with Mermaid diagrams. It replaces the obsolete proposed recovery CLI at the end of this plan.
 
-The deliverable is a small transferable development repository containing source, original graphical assets, saves, compact regression inputs and the tools/instructions to rebuild everything else. Default `clean.ps1` remains a preview; its explicit `-Apply` must eventually remove all disposable logs, test-cache, runtime profiles, generated reviews and declared build products. It must not preserve tens of gigabytes because validators read yesterday's outputs.
+The deliverable is a small transferable development repository containing source, original graphical assets, saves, compact regression inputs and the tools/instructions to rebuild everything else. Default `clean.ps1` remains a preview; its explicit `-Apply` now removes audited disposable logs, test-cache, runtime profiles, generated reviews and declared build products. It must not preserve tens of gigabytes because validators read yesterday's outputs.
 
 This plan replaces R2FC-2's unimplemented retention/migration approach where it would leave a permanent archive of review images, executables or machine-consumed diagnostics. Retain its safety findings and minimum-fixture principle. Update predecessor status links during implementation; do not mark their unchecked tasks completed merely because this replacement plan exists.
 
@@ -980,10 +984,11 @@ Context has compacted 1 times while executing this group.
 
 ## Continuation and reconstruction
 
-All remaining groups and their Area Mandatory Reading blocks are in
-[R2FC2](r2fc2-file-cleanup3.md), beginning at20BC. Their task IDs and unchecked
-states are preserved; descriptions were reviewed to eliminate duplicate debug,
-verification and cold-rehearsal cycles. The former B/C/D continuation files have
+Continuation groups and their Area Mandatory Reading blocks are in
+[R2FC2](r2fc2-file-cleanup3.md), beginning at20BC. Its live checkboxes and results
+record delivered migration/cleanup/transfer and actual Space recovery/query;
+original task IDs are preserved.
+Descriptions were reviewed to eliminate duplicate debug, verification and cold-rehearsal cycles. The former B/C/D continuation files have
 been consolidated and removed. This plan retains completed tasks only.
 Use the architecture's [reconstruction commands](../../architecture/archi-historical-debug.md#reconstituting-debug-artifacts).
 

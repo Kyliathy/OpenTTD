@@ -1,6 +1,10 @@
 # R2MLVS10 - Asteroids and Mining Probes
 
+**Current recovery contract,2026-10-22.** Use the [current Space handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and [shared artifact architecture](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer) before continuing. The exact original save pair and compact foundation are durable; current native qualification, frames, reports and runtime homes are generated. Dated log/EXE paths below are historical facts. Select actual prerequisites through the [producer/recipe catalogue](../../../../mlm/review-producers.json); an unresolved recipe or missing original input remains a refusal. Cleanup qualification completes no gameplay or human-acceptance checkbox.
+
 ## Global Mandatory Reading
+
+> Current recovery: read the [live dispatch](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and only its selected [durable-input/rebuild contract](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer); older execution paths in completed groups remain historical.
 
 > **Execution protocol**
 >

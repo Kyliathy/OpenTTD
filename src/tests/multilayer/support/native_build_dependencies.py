@@ -2,6 +2,7 @@
 
 @file native_build_dependencies.py Disposable local vcpkg provider and exact package checks.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 cold dependency recovery.
 Original port trees were retained through read-only git archive. Rebuilds need
 only their compact immutable source bundle, without an external Git history.
 No Git mutation, baseline refresh or external installation is performed.
@@ -108,6 +109,27 @@ def source_archives(profile, root):
                                           for row in dependencies["packages"]]
 
 
+def archived_provider_sources(profile, root):
+    """Identify exact reconstructible dependency source bytes from retained archives.
+
+    @param profile Explicit portable profile with original bundle/provider/port pins.
+    @param root Checkout retaining that hash-verified original source bundle.
+    @return Provider-relative path/SHA256 map; no extraction or writes.
+    """
+    provider, ports = source_archives(profile, root)
+    files = {}
+    # A newly materialized provider is generated, but an edited local source file
+    # is valuable. Only exact archived bytes can be classified reproducible here;
+    # modified/transformed source still needs its own explicit disposition.
+    archives = [("", provider), *(("ports/" + package["name"] + "/", payload) for package, payload in ports)]
+    for prefix, payload in archives:
+        with tarfile.open(fileobj=io.BytesIO(payload)) as archive:
+            for member in archive.getmembers():
+                if member.isfile():
+                    files[prefix + member.name] = hashlib.sha256(archive.extractfile(member).read()).hexdigest()
+    return files
+
+
 def write_exact(path, payload):
     """Create a local generated provider file, refusing changed interrupted contents.
 
@@ -158,7 +180,7 @@ def provider_files(provider):
     @param provider Explicit repository-local provider root.
     @return Stable relative-file/hash rows for detecting changed reusable providers.
     """
-    paths = {provider / name for name in (".vcpkg-root", "vcpkg.exe", "vcpkg.disable-metrics")}
+    paths = {provider / name for name in (".vcpkg-root", "LICENSE.txt", "vcpkg.exe", "vcpkg.disable-metrics")}
     # Lock files created by vcpkg are generated state, not source identities.
     # Restrict reuse verification to the actual pinned tool/scripts/ports.
     for name in ("scripts", "triplets", "ports"):
@@ -176,7 +198,12 @@ def prepare_provider(profile, tools, build, root):
     @return Local provider root; external installations remain read-only.
     """
     patch_template = Path(__file__).with_name("native_build_apply_patches.cmake.in").read_text(encoding="utf-8")
-    selection = dict(profile=profile, patch_template=patch_template,
+    # Runtime graphics/audio are verified by the distribution owner. They do
+    # not change compiler dependencies; including them here would change the
+    # toolchain path and force a complete PCH rebuild for a data-only correction.
+    provider_profile = dict(profile, dependencies={key: value for key, value in profile["dependencies"].items()
+                                                  if key != "runtime_assets"})
+    selection = dict(profile=provider_profile, patch_template=patch_template,
                      tool_paths={name: tools[name]["path"] for name in ("patch", "vcpkg")},
                      tool_hashes={name: file_identity(Path(tools[name]["path"]))[0] for name in ("patch", "vcpkg")})
     key = hashlib.sha256(json.dumps(selection, sort_keys=True).encode("utf-8")).hexdigest()[:16]

@@ -2,6 +2,7 @@
 
 @file ground_viewport_capture.py Actual native rasters and independent original pixel obligations.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group20BB.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group31 cold runtime preparation.
 """
 import hashlib
 import json
@@ -110,6 +111,8 @@ def run_capture(context, mode, configuration, application, source, world, source
     specification = MODES[mode]
     context.prepare_runtime()
     startup = context.runtime_dir / "scripts/game_start.scr"
+    # Cold runtimes need their private script owner before the observer can start.
+    startup.parent.mkdir(parents=True, exist_ok=True)
     startup.write_text("# @see r2fc-file-cleanup3.md20BB; isolated original art observer only.\n"
                        + specification["command"] + "\n", encoding="utf-8")
     source_before = identity(source, context.root)

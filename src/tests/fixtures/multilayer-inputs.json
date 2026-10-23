@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: r2fc-file-cleanup3.md9; hash-bound stable keys prefer retained copies; unindexed explicit prior runs remain direct inputs.",
+  "_documentation": "Owner: r2fc-file-cleanup3.md9; hash-bound stable keys prefer retained copies; unindexed explicit prior runs remain direct inputs. Owner: r2fc2-file-cleanup3.md32; legacy stable aliases also select durable physical owners.",
   "schema_version": 2,
   "inputs": {
     "src/tests/fixtures/acceptance/acceptance-connected-roundtrip-3085e5cfeb8140acb0fa727c80099fd6-loaded.sav": {
@@ -1591,411 +1591,411 @@
       "sha256": "9227445eed61604f0135c5c5c2baa77f4ab03f6de19c88e76f455cf7d3016bb9"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-built.sav",
       "sha256": "15f7dd27053e2f9f15406c8de54255ad496d29076fe110a8ac181a2a71a67e66"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-commissioned.sav",
       "sha256": "ed6aab294cb97a20a54cea0331bb1a0002d1b5e19b3a05b172a5eff5453461c6"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
       "sha256": "7947949f0ba4992aee6b4ba91e82f4602d107828946a940d8da850e297c94988"
     },
     "src/tests/fixtures/haulage/tbm-exit-built-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-commissioned.sav",
       "sha256": "ed6aab294cb97a20a54cea0331bb1a0002d1b5e19b3a05b172a5eff5453461c6"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-built.sav",
       "sha256": "15f7dd27053e2f9f15406c8de54255ad496d29076fe110a8ac181a2a71a67e66"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
       "sha256": "7947949f0ba4992aee6b4ba91e82f4602d107828946a940d8da850e297c94988"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-2-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-2-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-commissioned.sav",
       "sha256": "ed6aab294cb97a20a54cea0331bb1a0002d1b5e19b3a05b172a5eff5453461c6"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-2-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-2-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-commissioned.sav",
       "sha256": "ed6aab294cb97a20a54cea0331bb1a0002d1b5e19b3a05b172a5eff5453461c6"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-2-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-2-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-2-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-2-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
       "sha256": "7947949f0ba4992aee6b4ba91e82f4602d107828946a940d8da850e297c94988"
     },
     "src/tests/fixtures/haulage/tbm-exit-commissioned-2-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-commissioned-2-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-focused-1-exit-surface-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-focused-1-exit-surface-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-focused-1-exit-surface-accepted.sav",
       "sha256": "a662101005545c11bcabb1d961f4614050e80c86357e88ff88451af9b17ccb0c"
     },
     "src/tests/fixtures/haulage/tbm-exit-focused-1-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-focused-1-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-focused-1-exit-underground-accepted.sav",
       "sha256": "93a3fb53417b831c201eaa4052a4c05d42b5e92c475614305da4f632661afd07"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-1-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
       "sha256": "d72972809d7a4846bc4093fdb5a469d8a8133c31f47c0a1039896f0d6cd166be"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-1-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
       "sha256": "341d073fcbfca52cae8c7f30988716aca394d1455ee6f8b3a6aa937e34983a3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-2-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-2-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
       "sha256": "d72972809d7a4846bc4093fdb5a469d8a8133c31f47c0a1039896f0d6cd166be"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-2-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-2-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
       "sha256": "341d073fcbfca52cae8c7f30988716aca394d1455ee6f8b3a6aa937e34983a3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-surface-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-accepted.sav",
       "sha256": "a9e902c2e883fa6522e2864a2db90e37d2f07e790b3ccf583f746331711343bf"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-surface-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-built.sav",
       "sha256": "63acca12c4f911e9036ffacf6dcad8e30588f2b144854b380c80e99f83fd3847"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-surface-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-surface-local-stage.sav",
       "sha256": "fe7102b32d8a3c5622161cc9d698fe5aee0ba5aa2470b27b5e47536923f38546"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
       "sha256": "d72972809d7a4846bc4093fdb5a469d8a8133c31f47c0a1039896f0d6cd166be"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-underground-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-built.sav",
       "sha256": "58de1892713afb2e48c71303f0b38231f1a18382e2db8af1017e76eb3a2a6d11"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-3-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
       "sha256": "341d073fcbfca52cae8c7f30988716aca394d1455ee6f8b3a6aa937e34983a3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
       "sha256": "d72972809d7a4846bc4093fdb5a469d8a8133c31f47c0a1039896f0d6cd166be"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-built.sav",
       "sha256": "58de1892713afb2e48c71303f0b38231f1a18382e2db8af1017e76eb3a2a6d11"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-commissioned.sav",
       "sha256": "9c10f14e23b109b2900253d73deddff84871166f304dd6da5a0312a1c1c05557"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
       "sha256": "341d073fcbfca52cae8c7f30988716aca394d1455ee6f8b3a6aa937e34983a3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-parked.sav",
       "sha256": "4b335089c747a923361d5f5fe243a61f1a4e50d83c70a108c23fa2091447a7d6"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-released.sav",
       "sha256": "7627e129dfb657b51806aa6b92deb4893f511568328335da4da0bfab938f4883"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-4-exit-underground-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-withdrawing.sav",
       "sha256": "c2e7bca26ac51d7d817a9badd73aacb85ca7a756bb3fb4f0b9944c84aa5d0e97"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-accepted.sav",
       "sha256": "4c9895225e71e3f50922bc669111ba9b9afbc8674f058b0537a3246080b47c2b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-built.sav",
       "sha256": "e51eeddfcda1055604a6dbac2a4bf777b1dc3ff72d2510fc589289a6d4e4f45d"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-commissioned.sav",
       "sha256": "300a7def4b4a2c24b32a5cee6a7854c1d7602565c4c131070f364e1eb75bb496"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-local-stage.sav",
       "sha256": "b2d8682b055b2cf07727b0cfc551e2c99fd241f8a6d6e2511e67cae6cd0cbd55"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-parked.sav",
       "sha256": "4293f14e0f389c6995fa3ac5145846fa4fa737ebb4d4aa7f250817af5c37137a"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-released.sav",
       "sha256": "d6d22ee547ee38e48c174c9b574a09a047a545e518ef30c1d9767189ad97916d"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-traffic.sav",
       "sha256": "7b20781823b2f340eadc9237b2e93fed8bd2fce9a6330586814031e8929c823a"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-surface-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-surface-withdrawing.sav",
       "sha256": "f21cce4c9833b3b3fbc03f4f1ec6ac283cf4388479544bd56f345c5cc4ad87e3"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-accepted.sav",
       "sha256": "d72972809d7a4846bc4093fdb5a469d8a8133c31f47c0a1039896f0d6cd166be"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-3-exit-underground-built.sav",
       "sha256": "58de1892713afb2e48c71303f0b38231f1a18382e2db8af1017e76eb3a2a6d11"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-commissioned.sav",
       "sha256": "9c10f14e23b109b2900253d73deddff84871166f304dd6da5a0312a1c1c05557"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-1-exit-underground-local-stage.sav",
       "sha256": "341d073fcbfca52cae8c7f30988716aca394d1455ee6f8b3a6aa937e34983a3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-parked.sav",
       "sha256": "4b335089c747a923361d5f5fe243a61f1a4e50d83c70a108c23fa2091447a7d6"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-released.sav",
       "sha256": "7627e129dfb657b51806aa6b92deb4893f511568328335da4da0bfab938f4883"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-traffic.sav",
       "sha256": "08830ad786aed8650b07c561cfa8643d00a9165b5d1beb3dbbf61a6266e81cdb"
     },
     "src/tests/fixtures/haulage/tbm-exit-journey-5-exit-underground-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-4-exit-underground-withdrawing.sav",
       "sha256": "c2e7bca26ac51d7d817a9badd73aacb85ca7a756bb3fb4f0b9944c84aa5d0e97"
     },
     "src/tests/fixtures/haulage/tbm-exit-moving-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-moving-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-moving-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-moving.sav",
       "sha256": "f68edb36a88038e01943d86bdae2c1d12c2eae4c195f389a1f205565645ba641"
     },
     "src/tests/fixtures/haulage/tbm-exit-moving-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-parked.sav",
       "sha256": "b0c426b2f1f3005ef393b721444ae79d057f3b589950d9f79ed399aff092329e"
     },
     "src/tests/fixtures/haulage/tbm-exit-moving-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-moving-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-parked-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-parked-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
       "sha256": "7947949f0ba4992aee6b4ba91e82f4602d107828946a940d8da850e297c94988"
     },
     "src/tests/fixtures/haulage/tbm-exit-parked-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-parked-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-parked-1-exit-parked.sav",
       "sha256": "df62fa01545af6071cb879afcf9ba4564378d076fa024d65652aac05cc05d6a7"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-built.sav",
       "sha256": "7384d303ad6ce1ec008612bf817544bed262069ba19a7cfd8e0a5bfc6eb2f80e"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-commissioned.sav",
       "sha256": "8017955278520c4b7230f2817b414b3b3f586d94f42c6ae65f98bdcc9f79eee5"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-moving.sav",
       "sha256": "91f72c2145e3b00245fc6fbf9e4df284cbf6c2e755cd82bfcd4383036b91d7f4"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-parked.sav",
       "sha256": "6483ad43e9d272d7f03eab573120be3065f8cb4861466b86056453a5ee9c6da6"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-2-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-withdrawing.sav",
       "sha256": "b8fcc61535c140d6c6be9b9c757ca528f66c9aed3d3e24a52a93fc37e18be03d"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-built.sav",
       "sha256": "7384d303ad6ce1ec008612bf817544bed262069ba19a7cfd8e0a5bfc6eb2f80e"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-commissioned.sav",
       "sha256": "8017955278520c4b7230f2817b414b3b3f586d94f42c6ae65f98bdcc9f79eee5"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-moving.sav",
       "sha256": "91f72c2145e3b00245fc6fbf9e4df284cbf6c2e755cd82bfcd4383036b91d7f4"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-parked.sav",
       "sha256": "6483ad43e9d272d7f03eab573120be3065f8cb4861466b86056453a5ee9c6da6"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-3-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-3-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-withdrawing.sav",
       "sha256": "b8fcc61535c140d6c6be9b9c757ca528f66c9aed3d3e24a52a93fc37e18be03d"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-built.sav",
       "sha256": "7384d303ad6ce1ec008612bf817544bed262069ba19a7cfd8e0a5bfc6eb2f80e"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-commissioned.sav",
       "sha256": "8017955278520c4b7230f2817b414b3b3f586d94f42c6ae65f98bdcc9f79eee5"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-moving.sav",
       "sha256": "91f72c2145e3b00245fc6fbf9e4df284cbf6c2e755cd82bfcd4383036b91d7f4"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-parked.sav",
       "sha256": "6483ad43e9d272d7f03eab573120be3065f8cb4861466b86056453a5ee9c6da6"
     },
     "src/tests/fixtures/haulage/tbm-exit-surface-4-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-4-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-surface-2-exit-withdrawing.sav",
       "sha256": "b8fcc61535c140d6c6be9b9c757ca528f66c9aed3d3e24a52a93fc37e18be03d"
     },
     "src/tests/fixtures/haulage/tbm-exit-traffic-load-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-traffic-load-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-traffic-load-1-loaded.sav",
       "sha256": "fe8601efe46c97c0a2f80e2a41577a791bba98e00456a44a34e1fa0a8ec60bd0"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-built.sav",
       "sha256": "5182e8d9f7c08f434434d47a9bb7b906b7d0e7146a06b885d3a4d2b627c3b38d"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-commissioned.sav",
       "sha256": "a103ffddad48ad94a9cff7e1a6c36c0820024501fa8f7e9d15b2d696f06c1c98"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-moving.sav",
       "sha256": "36ec304609e4c02f470ae9b0e5c157c673a5bf6eafeaa6af35e864ae920b1090"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-parked.sav",
       "sha256": "94e2bedc376a653809c1277c641cb516404f44548e8cf06c631dfb51abe39fce"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-2-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-withdrawing.sav",
       "sha256": "67e4c2740af663d3487e233a8805896245e29bb9d6354cf5949ffae8499c4961"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-built.sav",
       "sha256": "5182e8d9f7c08f434434d47a9bb7b906b7d0e7146a06b885d3a4d2b627c3b38d"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-commissioned.sav",
       "sha256": "a103ffddad48ad94a9cff7e1a6c36c0820024501fa8f7e9d15b2d696f06c1c98"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-moving.sav",
       "sha256": "36ec304609e4c02f470ae9b0e5c157c673a5bf6eafeaa6af35e864ae920b1090"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-parked.sav",
       "sha256": "94e2bedc376a653809c1277c641cb516404f44548e8cf06c631dfb51abe39fce"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-3-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-3-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-withdrawing.sav",
       "sha256": "67e4c2740af663d3487e233a8805896245e29bb9d6354cf5949ffae8499c4961"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-built.sav",
       "sha256": "5182e8d9f7c08f434434d47a9bb7b906b7d0e7146a06b885d3a4d2b627c3b38d"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-commissioned.sav",
       "sha256": "a103ffddad48ad94a9cff7e1a6c36c0820024501fa8f7e9d15b2d696f06c1c98"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-loaded.sav",
       "sha256": "81ac6935eb6796bc763b322f6d001e78c5dc240192816828329b3293738c7a24"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-moving.sav",
       "sha256": "36ec304609e4c02f470ae9b0e5c157c673a5bf6eafeaa6af35e864ae920b1090"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-parked.sav",
       "sha256": "94e2bedc376a653809c1277c641cb516404f44548e8cf06c631dfb51abe39fce"
     },
     "src/tests/fixtures/haulage/tbm-exit-underground-4-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-4-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-underground-2-exit-withdrawing.sav",
       "sha256": "67e4c2740af663d3487e233a8805896245e29bb9d6354cf5949ffae8499c4961"
     },
     "src/tests/fixtures/haulage/tbm-exit-withdrawing-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-withdrawing-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-withdrawing-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-withdrawing-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-exit-withdrawing-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-withdrawing-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-moving.sav",
       "sha256": "123ef23766c5e69a76f158a1e64f0812aef4b8d8611458dbc3abe93d0d797917"
     },
     "src/tests/fixtures/haulage/tbm-exit-withdrawing-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-withdrawing-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-parked.sav",
       "sha256": "7947949f0ba4992aee6b4ba91e82f4602d107828946a940d8da850e297c94988"
     },
     "src/tests/fixtures/haulage/tbm-exit-withdrawing-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-withdrawing-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-built-1-exit-withdrawing.sav",
       "sha256": "35954ef0174d64d5fdbabc52c42907dcfaa49bcfa2105cffafda216f467f4d3b"
     },
     "src/tests/fixtures/haulage/tbm-extended-area-393.sav": {
@@ -2011,115 +2011,115 @@
       "sha256": "1636aeffe562df1e2c40c6f67f076303da4aec4bb0ac9cbcc3e020a4043f78ae"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-built.sav",
       "sha256": "ad7bd7f941a1fa243b5ddaf7874a3bfc89a29386a8a519f48217e2bf6abb4c2e"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-commissioned.sav",
       "sha256": "107ec919aa5723538636082a664d9b97c789ae0669d176f714ca9e8526b079b1"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-freight-outward.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-freight-outward.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-freight-outward.sav",
       "sha256": "ea14adfb81d3e775e0c8744ad994c253ae186b03294da85fe5aac32f3a85e56b"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-loaded.sav",
       "sha256": "b12b8ae20df9542f174fb9736af867ad6f89779506107473100d6aef6977a297"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-moving.sav",
       "sha256": "2ddafa1da9ec787d2293688894d102c5cc734ee5a81eed6643f9fae34f19a3d4"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-parked.sav",
       "sha256": "030dd19918fb42fb721907477ecad355c3b137cebff19c615ba855143316b738"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-released.sav",
       "sha256": "8cc13f0ac643b38685fcdc51bca5d92024ddda37e8cfb639464d3360934c35bf"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-traffic.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/far-exit/underground-demo-tunnel-399.sav",
       "sha256": "3626b195b6c9c78ffc5796f197ae40621e03304e04df59d5d6f64140ca563a60"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-exit-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-withdrawing.sav",
       "sha256": "63955653232b2f12941dd3b06bcc9d704daf482a716514259a344586b0d79478"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-accepted.sav",
       "sha256": "853fecd04368b7c8eab421dd5b78a80912131ba5a1bd922c8f7b70f12328336f"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-built.sav",
       "sha256": "bfd0efb5c245877f3f627f733e5a0ed7fb0e004e96432afa994acb2cded592f0"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-commissioned.sav",
       "sha256": "1b825ef12fe52542e2800f07b5a2531c2cf8771a566540ec68ac4b32f0b3bdda"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-local-stage.sav",
       "sha256": "7f20a820086ebb7a38e8a5745ff40d64af790196d64c86a79ed24c65a97ff75b"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-parked.sav",
       "sha256": "4807eaed8e72e86c0a4f8669d234c4372418348f1fdd2b2988fd30b4426ae81b"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-released.sav",
       "sha256": "0a2ea85f1ce41ced0ed9d85b3948559194a9809c9f48a707ff98c705f66cd5c8"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-traffic.sav",
       "sha256": "09511768db2d0b4d4be4204f41cb5d3ba4e0f31bbe7764a3a1b17067eecf1ca7"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-surface-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-withdrawing.sav",
       "sha256": "74e1f8a3b9b2a7f5d08be6f831febfc97a622aa198ed55c4697887ef6f4481c1"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-accepted.sav",
       "sha256": "853fecd04368b7c8eab421dd5b78a80912131ba5a1bd922c8f7b70f12328336f"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-built.sav",
       "sha256": "9e3c953a21b327f43488ff1051f58ff77052ff489b79587c73df664fb112ea17"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-commissioned.sav",
       "sha256": "3959e2a26af0550088ff174b9f5e091db3a3b5050b4f10d75bd0af2395f11259"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-surface-local-stage.sav",
       "sha256": "7f20a820086ebb7a38e8a5745ff40d64af790196d64c86a79ed24c65a97ff75b"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-parked.sav",
       "sha256": "0639a1272a8a48fa4e2c1a2d98da536b1b8f9c8c97e36aff0fab1b90a95d828a"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-released.sav",
       "sha256": "85e97107c58b19b9aa58d28c2d69ec9474bb64cd066bf543dc13ce29a662d49c"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-traffic.sav",
       "sha256": "6eebbf95c7e37a001e99c3542c071d55658899a4202f58536364a19cc4e08639"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-repeat-exit-1-exit-underground-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-repeat-exit-1-exit-underground-withdrawing.sav",
       "sha256": "8e9d87a898bc15119dea4b0d145f51c88ced6887a2326fcc9bc2df3e436c9ff8"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-ui-1-accepted.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-debug-ui-1-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-debug-ui-1-accepted.sav",
       "sha256": "d2df7903b70bd9a88c734a4e760964e6243fd0c1910ecc7d56421aa89d694f5d"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-ui-1-local-stage.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-debug-ui-1-local-stage.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/far-exit/underground-demo-exit-399.sav",
       "sha256": "e742b9901b25503f8ce2dedc77e233a205d5df5b726c9950adf8b3a71d609168"
     },
     "src/tests/fixtures/haulage/tbm-final-debug-ui-1-ready.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-debug-ui-1-ready.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/planning/underground-demo-tbm-399.sav",
       "sha256": "1669002c38dc808e17bb5d2436fc39eb5cc4dbc3d3576f85dc893ca46bdfd41f"
     },
     "src/tests/fixtures/haulage/tbm-final-release-396-cancel-return.sav": {
@@ -2127,167 +2127,167 @@
       "sha256": "bc7054e7ce0157dd2fab9d2b4a63e11c0f4b6d6de913615720cf0bc2f873ec9e"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-built.sav",
       "sha256": "ad7bd7f941a1fa243b5ddaf7874a3bfc89a29386a8a519f48217e2bf6abb4c2e"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-commissioned.sav",
       "sha256": "107ec919aa5723538636082a664d9b97c789ae0669d176f714ca9e8526b079b1"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-freight-outward.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-freight-outward.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-freight-outward.sav",
       "sha256": "ea14adfb81d3e775e0c8744ad994c253ae186b03294da85fe5aac32f3a85e56b"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-loaded.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-loaded.sav",
       "sha256": "b12b8ae20df9542f174fb9736af867ad6f89779506107473100d6aef6977a297"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-moving.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-moving.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-moving.sav",
       "sha256": "2ddafa1da9ec787d2293688894d102c5cc734ee5a81eed6643f9fae34f19a3d4"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-parked.sav",
       "sha256": "030dd19918fb42fb721907477ecad355c3b137cebff19c615ba855143316b738"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-released.sav",
       "sha256": "8cc13f0ac643b38685fcdc51bca5d92024ddda37e8cfb639464d3360934c35bf"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-traffic.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/far-exit/underground-demo-tunnel-399.sav",
       "sha256": "3626b195b6c9c78ffc5796f197ae40621e03304e04df59d5d6f64140ca563a60"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-exit-1-exit-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-exit-1-exit-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-debug-exit-1-exit-withdrawing.sav",
       "sha256": "63955653232b2f12941dd3b06bcc9d704daf482a716514259a344586b0d79478"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-accepted.sav",
       "sha256": "f20d41e0e9a3ad72312e05773f89292a4f64422a51c5f21a24bbf7cabd6c723d"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-built.sav",
       "sha256": "5611b71905156e540e0b6c0eb65887497649ddb33ad7de7e068ce99b938c0f21"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-commissioned.sav",
       "sha256": "3563fd362399c3dcdd082467093eaf91aef6536cea29af5f80651af2b3606743"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-local-stage.sav",
       "sha256": "6be5349984930441a2b72e1b00d3286d476f7aea4b2b98f0c12638f40d9e40dc"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-parked.sav",
       "sha256": "40beff5af47cc1daac1234b6658bd697acdb27d34df22d6e863b1d8b51ddaf39"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-released.sav",
       "sha256": "ac090b212fd8ea74d038468ae6d410db6684670f31f0af9691e07cf7dd0d212b"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-traffic.sav",
       "sha256": "ca5d9ba71bd778a1238dd6d931f51d06ba66e967f69879db696a60399dd6be36"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-surface-withdrawing.sav",
       "sha256": "a8e8bc87c5f9534963fc4d5b90b3b625af9d1318dd02283541b6c80a8872dbe4"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-accepted.sav",
       "sha256": "2ad8065280ade5979e025500db45ec2e65522257df2e0dd16122a32e1f2ae590"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-built.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-built.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-built.sav",
       "sha256": "0bdc926b538a8a81e6cf0f067e07a2737bd04f74ea1a50a9f69a39eed979cbe5"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-commissioned.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-commissioned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-commissioned.sav",
       "sha256": "7aa117246b857e9cccdca578ad9586e7cf99ceaab692dd1d6a188b2b32d3ee50"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-local-stage.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-local-stage.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-local-stage.sav",
       "sha256": "e3638a653a54ca27d39bbd2cebe42c3ac9c44d26a6e8be10721ef7068ac16fce"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-parked.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-parked.sav",
       "sha256": "78ecb01cf591b0400717c00f826b760fc690ed151f6c3933734c8057f38413e8"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-released.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-released.sav",
       "sha256": "e657c035b5703c5ab45f2ad594f1c4390a964b6ab253ab8d6f798c48ac8f458d"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-traffic.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-traffic.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-traffic.sav",
       "sha256": "8a720386ee4fbf0a6404760071197cb92154f0f4f3b290ca9cb9061ec6bc7328"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-withdrawing.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-withdrawing.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-repeat-exit-1-exit-underground-withdrawing.sav",
       "sha256": "99193c60569e39cb7413497aa79ba8ac14c89e46b0f3e9a3e06ab24f8ce283d2"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-seed-1-exit-final-accepted.sav": {
-      "path": "mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-final-relwithdebinfo-seed-1-exit-final-accepted.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/planning/underground-demo-planning-399.sav",
       "sha256": "b8b3ccba313225f213ef323cdaf54eb01d1f2cc1584d97704c0bea3a1ad62565"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-ui-1-accepted.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-relwithdebinfo-ui-1-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-debug-ui-1-accepted.sav",
       "sha256": "d2df7903b70bd9a88c734a4e760964e6243fd0c1910ecc7d56421aa89d694f5d"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-ui-1-local-stage.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-relwithdebinfo-ui-1-local-stage.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/far-exit/underground-demo-exit-399.sav",
       "sha256": "e742b9901b25503f8ce2dedc77e233a205d5df5b726c9950adf8b3a71d609168"
     },
     "src/tests/fixtures/haulage/tbm-final-relwithdebinfo-ui-1-ready.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-final-relwithdebinfo-ui-1-ready.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/planning/underground-demo-tbm-399.sav",
       "sha256": "1669002c38dc808e17bb5d2436fc39eb5cc4dbc3d3576f85dc893ca46bdfd41f"
     },
     "src/tests/fixtures/haulage/tbm-fresh-deep-area-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-deep-area-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-deep-area-393.sav",
       "sha256": "6eb8618f2dca17ea6c0a2ab955cb75ec8219db234994288a77180cd73d86b990"
     },
     "src/tests/fixtures/haulage/tbm-fresh-deep-tunnel-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-deep-tunnel-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-deep-tunnel-393.sav",
       "sha256": "3dc8e8c67f0d1ccee6734e19ab33e19461beaccf5dacd5d6439d3441954f343e"
     },
     "src/tests/fixtures/haulage/tbm-fresh-underground-area-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-underground-area-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-underground-area-393.sav",
       "sha256": "93f0f163ef388bfe1cfc19c7fb0b34eb7143ed1a286769137b0c48e489aaf13b"
     },
     "src/tests/fixtures/haulage/tbm-fresh-underground-tunnel-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-underground-tunnel-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-fresh-underground-tunnel-393.sav",
       "sha256": "4108782114ffcc36cf08cda75718be2c76f01aa022d887ea41fec5f425305244"
     },
     "src/tests/fixtures/haulage/tbm-geology-bad-algorithm-1.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-algorithm-1.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-algorithm-1.sav",
       "sha256": "0c2d569db1daa2a3cdd0a87f2ebb23c98823efe934b6fa3e71cf70ad89fe7e49"
     },
     "src/tests/fixtures/haulage/tbm-geology-bad-inactive-1.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-inactive-1.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-inactive-1.sav",
       "sha256": "b5a046e0f8777ca2e67b053e67bd89f001e5687318eaaedc8d5a4f9ba3c59594"
     },
     "src/tests/fixtures/haulage/tbm-geology-bad-legacy-seed-1.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-legacy-seed-1.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-legacy-seed-1.sav",
       "sha256": "597703b93c4ebd8c413ca2f7af8e49fdcb41a9771b301f51ae0ba6b3cd3a34f9"
     },
     "src/tests/fixtures/haulage/tbm-geology-bad-truncated-1.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-truncated-1.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-truncated-1.sav",
       "sha256": "f8802968935f2abccc126bf155b5fa8bd148b548f09a2a307d36c1dfd0f2d384"
     },
     "src/tests/fixtures/haulage/tbm-geology-bad-wire-1.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-wire-1.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-bad-wire-1.sav",
       "sha256": "41447f9071910e0157174936877d14bb6a6c6bb50d119983264e3b052f1bfa1e"
     },
     "src/tests/fixtures/haulage/tbm-geology-boundary-3-boundary-parked.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-boundary-3-boundary-parked.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-boundary-3-boundary-parked.sav",
       "sha256": "853156443b4d351995825b3407d49024012a683439609db1a410f81aa6027e6a"
     },
     "src/tests/fixtures/haulage/tbm-geology-boundary-3-boundary-paused.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-boundary-3-boundary-paused.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-boundary-3-boundary-paused.sav",
       "sha256": "32bb9ba8ab71374fd4d1ff0da20d02e9fad1e493db8f6b5715dfac9a222c69cc"
     },
     "src/tests/fixtures/haulage/tbm-geology-journey-1-regional-accepted.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-accepted.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-accepted.sav",
       "sha256": "ce0fdd78cfa2a937894da359837a846631c03a82de90e6f35d29e5c6a6b28830"
     },
     "src/tests/fixtures/haulage/tbm-geology-journey-1-regional-midcut.sav": {
@@ -2295,35 +2295,35 @@
       "sha256": "08575b43de9a0cb6ec31a42ef1975ec46de25d6e18faefdca0d162986c83b24b"
     },
     "src/tests/fixtures/haulage/tbm-geology-journey-1-regional-parked.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-parked.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-parked.sav",
       "sha256": "dbf1f3db695c10fe1b10808d88ac0424c75651e9a050dcd6d48209fe21278000"
     },
     "src/tests/fixtures/haulage/tbm-geology-journey-1-regional-return.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-return.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-journey-1-regional-return.sav",
       "sha256": "5ec26c1d095d56d17bf5efcaf3f423358917766c99e9ab41b61275e7ce02899c"
     },
     "src/tests/fixtures/haulage/tbm-geology-native-1-resaved.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-1-resaved.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/20261009-204800-f909243ce9-geology-6a2bb2bd/saves/tbm-geology-native-1-resaved.sav",
       "sha256": "5cef6b959e4d3c9b06ffdb80aef496152b4d293a53a13d86e1a1b549e01539a4"
     },
     "src/tests/fixtures/haulage/tbm-geology-native-2-resaved.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-2-resaved.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-2-resaved.sav",
       "sha256": "e66b8514be1a0303138c1402d09e3a98d4affc73965451000aac6ecf4ecd48d8"
     },
     "src/tests/fixtures/haulage/tbm-geology-native-3-resaved.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-3-resaved.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/20261009-204800-f909243ce9-geology-6a2bb2bd/saves/tbm-geology-native-1-resaved.sav",
       "sha256": "5cef6b959e4d3c9b06ffdb80aef496152b4d293a53a13d86e1a1b549e01539a4"
     },
     "src/tests/fixtures/haulage/tbm-geology-native-4-resaved.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-4-resaved.sav",
+      "path": "savegames/retained/mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-native-2-resaved.sav",
       "sha256": "e66b8514be1a0303138c1402d09e3a98d4affc73965451000aac6ecf4ecd48d8"
     },
     "src/tests/fixtures/haulage/tbm-geology-network-4-joined.sav": {
-      "path": "mlm/reviews/geology/terrain-hardness/import-20261009/saves/tbm-geology-network-4-joined.sav",
+      "path": "savegames/retained/mlm/reviews/geology/network/20261009-205917-52658980e4/saves/tbm-geology-network-1-joined.sav",
       "sha256": "66d7d9f51bd2c28ebceea78481beeac6d88c727fc6493cdc7d8fd2d0d5f2e361"
     },
     "src/tests/fixtures/haulage/tbm-hangar-397-1-hangar-return.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-397-1-hangar-return.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-397-1-hangar-return.sav",
       "sha256": "4145f241f8abbf21b61b58c661767d65e5fa69a9db3157fc054d40715198f56b"
     },
     "src/tests/fixtures/haulage/tbm-hangar-397-2-hangar-parked.sav": {
@@ -2331,75 +2331,75 @@
       "sha256": "6cb57d3c4ba8b42df1d02bc75cedff1a86b1a2342e5d42c7954d7f35ee51088c"
     },
     "src/tests/fixtures/haulage/tbm-hangar-397-2-hangar-return.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-397-2-hangar-return.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-397-2-hangar-return.sav",
       "sha256": "7be614d5334b599b0c03c71b1d3e1c468a9e49c8880bff24f15bb68d1044435e"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-hangar-parked.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-hangar-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-hangar-parked.sav",
       "sha256": "1d152f1cd2905c1ab4bd8c8d81fb79bee088614842f83b39ff401580e0bc4fa1"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-hangar-return.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-hangar-return.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-hangar-return.sav",
       "sha256": "ea27e5da9453929d1efc9e9d9024674b26a21b31b9e5589c95ce572471cd6c78"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-station.sav",
       "sha256": "6d107b7d4a58892aa9f957b0f23b55fed3c8d8e3e764bffaa3f10bcfef67b696"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-orders-travel.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-travel.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-travel.sav",
       "sha256": "35f1c74abb56cc31c48d530f72244e31fa58284d6f5f2086c7d8c82f0bb73d3f"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-orders-wait.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-wait.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-orders-wait.sav",
       "sha256": "e229fac836f781cf59fea1492dbff21eb0151a88b7072748ea9f78c2c23d3ef8"
     },
     "src/tests/fixtures/haulage/tbm-hangar-398-batch-2-remote-released.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-remote-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-398-batch-2-remote-released.sav",
       "sha256": "12fbe816a8173a2fc215e73bb974d0432a41ca3600450811c0d2c5ee0ba335b6"
     },
     "src/tests/fixtures/haulage/tbm-hangar-bad-397-DEPT-xy-2.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-397-DEPT-xy-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-397-DEPT-xy-2.sav",
       "sha256": "dcad1ceaf4b610cc0675ebdb5c801d5c2de3bde9718ee853c1d10edaba2cf431"
     },
     "src/tests/fixtures/haulage/tbm-hangar-bad-397-TBMP-phase-2.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-397-TBMP-phase-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-397-TBMP-phase-2.sav",
       "sha256": "7880aa0675ec4d4d21f5beafdb927fe7a3851c00912787dc1fa7ef459ad58f6d"
     },
     "src/tests/fixtures/haulage/tbm-hangar-bad-398-TBMP-blocked-2.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-398-TBMP-blocked-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-398-TBMP-blocked-2.sav",
       "sha256": "b3aee035c65c6a4b08843e847ac11d6c78493deac4f0bc4d5ce432995249592f"
     },
     "src/tests/fixtures/haulage/tbm-hangar-bad-398-TBMP-phase-2.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-398-TBMP-phase-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-bad-398-TBMP-phase-2.sav",
       "sha256": "19410db687adac6da87067b6028acfc8cf511b2f8da730e07cdcff3bb92bffb9"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-reload-run-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-loaded.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/hangar-orders/tbm-hangar-reload-orders-run-1-orders-travel.sav",
       "sha256": "e0c2f39c7885dc4300e69e57fae5d268a995de4ea9c964de5b92a2542a015185"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-reload-run-1-orders-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-resumed.sav",
       "sha256": "18761179aedab2305b780059015aac9d0cd5b7610b172fed7d9ec161f5b21806"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-reload-run-1-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-station.sav",
       "sha256": "9a41280f6a913790eb00c0b4fae45b8c7e1c8a55f34dab2cf2103e5a2b0406b4"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-reload-run-1-orders-travel.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-travel.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-reload-run-1-orders-travel.sav",
       "sha256": "3fc55516be6a1469a78228c678627858ba7492660caff5428b8ef035b9eb50fe"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-loaded.sav",
       "sha256": "86997c5802a019aeacbcdf6736f4e6bf5dad6d972b1681b12f8c6a66e22141b5"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-1-orders-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-orders-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-orders-resumed.sav",
       "sha256": "720be5d5ae3989a2124a7877c045976707772d124ae9e27c4761c4a0dde618f7"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-1-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-orders-station.sav",
       "sha256": "a17be73d3562eba3e5a8a27443a5e2b9f57eec409b5ed632d66f951f6b4ad0d8"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-1-orders-travel.sav": {
@@ -2407,15 +2407,15 @@
       "sha256": "e0c2f39c7885dc4300e69e57fae5d268a995de4ea9c964de5b92a2542a015185"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-2-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-2-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-loaded.sav",
       "sha256": "86997c5802a019aeacbcdf6736f4e6bf5dad6d972b1681b12f8c6a66e22141b5"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-2-orders-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-2-orders-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-2-orders-resumed.sav",
       "sha256": "3d43b517026cb70a5559a829ef1f531b5749e3ddba3c37391fe27fb1fdb54581"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-2-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-2-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-orders-run-1-orders-station.sav",
       "sha256": "a17be73d3562eba3e5a8a27443a5e2b9f57eec409b5ed632d66f951f6b4ad0d8"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-orders-run-2-orders-travel.sav": {
@@ -2423,95 +2423,95 @@
       "sha256": "e0c2f39c7885dc4300e69e57fae5d268a995de4ea9c964de5b92a2542a015185"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-parked-397-1-hangar-parked.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-hangar-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-hangar-parked.sav",
       "sha256": "bdffba3a6d311ed75a77d0d92ae82a35e039b4b20139864011d1c7f124886f12"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-parked-397-1-hangar-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-hangar-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-hangar-resumed.sav",
       "sha256": "a895ff0d6e32ce9960ba30d210022ac76a4b7e2909c5715b80a39982b35b0133"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-parked-397-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-loaded.sav",
       "sha256": "da3d50f68d3278e8e06f83ea091a8b7a5745e41d30ddd27187dabb4a545e06ee"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-project-397-1-hangar-parked.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-hangar-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-hangar-parked.sav",
       "sha256": "9b46f43e5ef72a27787d5822b0d305211b8076ed5d1a94c7b03317c311b19c3d"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-project-397-1-hangar-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-hangar-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-hangar-resumed.sav",
       "sha256": "3b998571bab44abc3e49d70d5724708bc6a88485e7f4babd90c08807513927e7"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-project-397-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-loaded.sav",
       "sha256": "a355cce25eb6c4558d7bd5718e7ffa994a596f25e873ad4468fe3cb8395dc190"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-reassigned-run-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-reassigned-run-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-reassigned-run-1-loaded.sav",
       "sha256": "67f4c741f45b082e16976c830cf35541c7c0dc97fcb469db605693c63939ac68"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-reassigned-run-1-reassigned-cut.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-reassigned-run-1-reassigned-cut.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-reassigned-run-1-reassigned-cut.sav",
       "sha256": "8bef386e748aa351d64fa9b450e5a67335c3e001cfed25df68e85db2c7fb9a5e"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-return-397-1-hangar-parked.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-return-397-1-hangar-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-return-397-1-hangar-parked.sav",
       "sha256": "6092024cdbc82132dad2a17910a31eaffe658711eff1b17fa6c006fcdcb87922"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-return-397-1-hangar-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-return-397-1-hangar-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-return-397-1-hangar-resumed.sav",
       "sha256": "ead89f77667cd4d84dca027c9ee8dd93e1c8e8144547b5c0d82c1c75505dd865"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-return-397-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-return-397-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-project-397-1-loaded.sav",
       "sha256": "a355cce25eb6c4558d7bd5718e7ffa994a596f25e873ad4468fe3cb8395dc190"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-loaded.sav",
       "sha256": "da3d50f68d3278e8e06f83ea091a8b7a5745e41d30ddd27187dabb4a545e06ee"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-2-hangar-wait.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-2-hangar-wait.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-2-hangar-wait.sav",
       "sha256": "cb2de81d00848bc19f25f171b9f19e87aa39522c93163ecde52549095a85b91e"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-2-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-2-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-loaded.sav",
       "sha256": "da3d50f68d3278e8e06f83ea091a8b7a5745e41d30ddd27187dabb4a545e06ee"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-3-hangar-parked.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-3-hangar-parked.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-3-hangar-parked.sav",
       "sha256": "8a7868e27dde728f661792fcee9ce0a85a8a971cd4fbe21bcadaffe9fe24d7ee"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-3-hangar-resumed.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-3-hangar-resumed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-3-hangar-resumed.sav",
       "sha256": "29812228296faf72f2f3a5a3fe62ede013ddd04811ec0d6d112d75188606ae80"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reload-vehicle-397-3-loaded.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-vehicle-397-3-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reload-parked-397-1-loaded.sav",
       "sha256": "da3d50f68d3278e8e06f83ea091a8b7a5745e41d30ddd27187dabb4a545e06ee"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reuse-398-3-remote-released.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-3-remote-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-3-remote-released.sav",
       "sha256": "83234188fdeddc881d351f1574cbd245ac27fbdc5259b10831fee5e4be4af6da"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reuse-398-4-remote-released.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-4-remote-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-3-remote-released.sav",
       "sha256": "83234188fdeddc881d351f1574cbd245ac27fbdc5259b10831fee5e4be4af6da"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reuse-398-5-remote-reassigned.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-5-remote-reassigned.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-5-remote-reassigned.sav",
       "sha256": "dfe423244414cc89364ea5a12b1db60af7aec1203b7cc7f8ea7250ee12f204d3"
     },
     "src/tests/fixtures/haulage/tbm-hangar-reuse-398-5-remote-released.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-5-remote-released.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-hangar-reuse-398-5-remote-released.sav",
       "sha256": "803f2600add1c9bfa26d28b720e96e03cacd2dcd7fa5b0855c59d072faf8f520"
     },
     "src/tests/fixtures/haulage/tbm-motion-approach-393.sav": {
-      "path": "mlm/reviews/tbm/motion/import-20261009/saves/tbm-motion-approach-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/motion/import-20261009/saves/tbm-motion-approach-393.sav",
       "sha256": "41fb82e56d8d802ad593ee44b4fb400d058ef861ff9c5eeaa5951287814809f9"
     },
     "src/tests/fixtures/haulage/tbm-motion-bend-393.sav": {
-      "path": "mlm/reviews/tbm/motion/import-20261009/saves/tbm-motion-bend-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/motion/import-20261009/saves/tbm-motion-bend-393.sav",
       "sha256": "a5046689cfd1b398c69fd26d12d793a61131a4ecddd7f3fa3d30249f6817babd"
     },
     "src/tests/fixtures/haulage/tbm-motion-wait-393.sav": {
@@ -2519,87 +2519,87 @@
       "sha256": "6ba9a973215928367f407fbf1a2642bdc60c45a5a203b18414bf72e177e2342c"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-1-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-station.sav",
       "sha256": "fd53445c72d979295171cee378ba22c74142dc5cf38937415476adb12f728781"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-1-orders-travel.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-travel.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-travel.sav",
       "sha256": "38b31190ddc622a214ddb33ad2c25eb20bed750361999966a88cc75b636d999b"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-1-orders-wait.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-wait.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-1-orders-wait.sav",
       "sha256": "6a07e74ea79c3c20b6c82a40d5f0b570cf86af2a9d9303c22755e0f972739aa8"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-2-orders-station.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-station.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-station.sav",
       "sha256": "307040e5113dbfd30d949d9613f0cf1ebf17237febbf39baa5441bcb7cb1a2a1"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-2-orders-travel.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-travel.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-travel.sav",
       "sha256": "8e534af46db89b98846251d4a7416a7d2f545f8dd50339bf69e7ca4b7f320007"
     },
     "src/tests/fixtures/haulage/tbm-native-orders-398-2-orders-wait.sav": {
-      "path": "mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-wait.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/hangar-orders/import-20261009/saves/tbm-native-orders-398-2-orders-wait.sav",
       "sha256": "f362e5532996137bc140b03378cd03626af1a7f96112adaadf4e28f6464221e7"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-393-bad-fraction-2.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393-bad-fraction-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393-bad-fraction-2.sav",
       "sha256": "9f6f88b5dc756358a1799c4c37754525c83901ca6660d01b1f2a3a299c4b4f12"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-393-bad-fraction-65535.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393-bad-fraction-65535.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393-bad-fraction-65535.sav",
       "sha256": "ba75e40d8c38a3f94ed29bb0164bd5977c239300dad7438c0387d2c4151389eb"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-393.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-393.sav",
       "sha256": "a49f16c7fe0deea010e6bb1a3ed8fd9e7959ef0ec2e7427d3f2afa932af4657f"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-394-bad-fraction-4.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394-bad-fraction-4.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394-bad-fraction-4.sav",
       "sha256": "1b8858f868badbd76306a3642442336bbbbe4b17f7559d5ce72afa335651a1f8"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-394-bad-fraction-65535.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394-bad-fraction-65535.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394-bad-fraction-65535.sav",
       "sha256": "c154d9da3d9db1579c406cbb0f10a4562a7c43070637cce89fbcf04e1d36aab4"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-394.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-394.sav",
       "sha256": "9561f6233bf958c600d3a58f8fda24a7d094662608b91a8d47f7bae3fc341db1"
     },
     "src/tests/fixtures/haulage/tbm-pace-deep-fraction-394.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-fraction-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-deep-fraction-394.sav",
       "sha256": "64b9ef96a779ce784eb39505655a219ad6ddf19568ed43e9ad6f9830146be5aa"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-393-bad-fraction-1.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393-bad-fraction-1.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393-bad-fraction-1.sav",
       "sha256": "cc2fa89ef21c2aa32a531a4c8fb784301d2aedb3fd132285536c1b4e53c4e6e4"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-393-bad-fraction-65535.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393-bad-fraction-65535.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393-bad-fraction-65535.sav",
       "sha256": "563dc4125e8fc4272fc8b6f62ba039e09b6062a6b8f6be49ced42d3afb91acd2"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-393.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-393.sav",
       "sha256": "76b7da97ccec8412d5df85fdc8a6e352db2a7c2729170fe9aa41f3b9ac32728d"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-394-bad-fraction-2.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394-bad-fraction-2.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394-bad-fraction-2.sav",
       "sha256": "702e201f3578c38f0bf54d175401fb903e277da03135254d28d875cdddcf6de6"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-394-bad-fraction-65535.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394-bad-fraction-65535.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394-bad-fraction-65535.sav",
       "sha256": "1410a11d9d6e7608eaad31be12c7e1c56bfbc1d8465027792e0fc64644f02145"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-394.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-394.sav",
       "sha256": "ed18393f2cd17365af57cd7a170f3fe641f52dbe0574b92efad079821e498925"
     },
     "src/tests/fixtures/haulage/tbm-pace-underground-fraction-394.sav": {
-      "path": "mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-fraction-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/pacing/import-20261009/saves/tbm-pace-underground-fraction-394.sav",
       "sha256": "f889dbb77f13ff5e2f19f13268f96ea3e8e6cad251b0e83109eedec19bc50df7"
     },
     "src/tests/fixtures/haulage/tbm-parking-enter-395.sav": {
-      "path": "mlm/reviews/tbm/parking/import-20261009/saves/tbm-parking-enter-395.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/parking/import-20261009/saves/tbm-parking-enter-395.sav",
       "sha256": "943ab34057dda4d428e6333b0a108a0eb11c5c3611a570107f3765b26e724b88"
     },
     "src/tests/fixtures/haulage/tbm-parking-parked-395.sav": {
@@ -2607,39 +2607,39 @@
       "sha256": "dcfea99487f15580c01eeb26f5671a96dc7e46f12dcc0dab2a82c80039ac9e6e"
     },
     "src/tests/fixtures/haulage/tbm-parking-return-395.sav": {
-      "path": "mlm/reviews/tbm/parking/import-20261009/saves/tbm-parking-return-395.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/parking/import-20261009/saves/tbm-parking-return-395.sav",
       "sha256": "956b07743c8b5e31b87ba522778e358734ef3755ef46e891e36f1dff7a33eebe"
     },
     "src/tests/fixtures/haulage/tbm-planning-deep-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-planning-deep-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-planning-deep-393.sav",
       "sha256": "feaa7816e4d5321a185fe1b06c97160ccd0707dbfd0c48545bebcc3c8f32623b"
     },
     "src/tests/fixtures/haulage/tbm-planning-underground-393.sav": {
-      "path": "mlm/reviews/tbm/planning/import-20261009/saves/tbm-planning-underground-393.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/planning/import-20261009/saves/tbm-planning-underground-393.sav",
       "sha256": "98af9f2a29d2df061b5faa3593f2c5f2fa7b752729e25dafa4b8d67cc4c99f8b"
     },
     "src/tests/fixtures/haulage/tbm-release-cancel-396-1-complete-loop.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-cancel-396-1-complete-loop.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-cancel-396-1-complete-loop.sav",
       "sha256": "9beaa5d06af0d4dac67c3a4bb68f035de2c74eebad0f3398b251a8180ff4cad0"
     },
     "src/tests/fixtures/haulage/tbm-release-cancel-396-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-cancel-396-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-cancel-396-1-loaded.sav",
       "sha256": "6cdc048635ef5f47aab44e4d30aa96438db5857f8ea3ecee453a91d18ae450d4"
     },
     "src/tests/fixtures/haulage/tbm-release-connected-396-1-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-connected-396.sav",
       "sha256": "c037b3681f1023b0d016a0d8e8d27de4ac2ae2dce9d5837d9b2172f2c12e5f19"
     },
     "src/tests/fixtures/haulage/tbm-release-connected-396-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-loaded.sav",
       "sha256": "d1570ed5b5d5198b266a988ed52e7db1558086204d3dbe724c42a81acd2ce825"
     },
     "src/tests/fixtures/haulage/tbm-release-connected-396-1-next-exchange.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-next-exchange.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-next-exchange.sav",
       "sha256": "bb459fe6ce8e892d214fd69147e93ac8610f1f1617959db1885d44b0d80fafa0"
     },
     "src/tests/fixtures/haulage/tbm-release-connected-396-1-observed.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-observed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-connected-396-1-observed.sav",
       "sha256": "c29ad767f23d81272531f3a24b304183a010a625c99205c62ffddb8df487d693"
     },
     "src/tests/fixtures/haulage/tbm-release-connected-396.sav": {
@@ -2647,75 +2647,75 @@
       "sha256": "c037b3681f1023b0d016a0d8e8d27de4ac2ae2dce9d5837d9b2172f2c12e5f19"
     },
     "src/tests/fixtures/haulage/tbm-release-enter-396.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-enter-396.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-enter-396.sav",
       "sha256": "5bb37811fc5fe37afb282bdb56ff01aada6caa108d00f4329a388f93614c2801"
     },
     "src/tests/fixtures/haulage/tbm-release-legacy-396-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-legacy-396-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/parking/import-20261009/saves/tbm-release-parked-396.sav",
       "sha256": "659f60c2ce21ce0637192a274f705c8dffa0452c610092e42956b440fae194ac"
     },
     "src/tests/fixtures/haulage/tbm-release-legacy-396-1-next-exchange.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-legacy-396-1-next-exchange.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-legacy-396-1-next-exchange.sav",
       "sha256": "0ebd282bc07e3a58d85f15d814f049e5e1793cd6ca7646e88888fbd1a6c1298d"
     },
     "src/tests/fixtures/haulage/tbm-release-parked-396.sav": {
-      "path": "mlm/reviews/tbm/parking/import-20261009/saves/tbm-release-parked-396.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/parking/import-20261009/saves/tbm-release-parked-396.sav",
       "sha256": "659f60c2ce21ce0637192a274f705c8dffa0452c610092e42956b440fae194ac"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-1-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-1-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-released-396.sav",
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-1-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-1-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-1-loaded.sav",
       "sha256": "9a22191afb9a2ec17c9017415f7755b8194b03c654e245774ac9c83e0d9b694f"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-2-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-2-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-released-396.sav",
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-2-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-2-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-1-loaded.sav",
       "sha256": "9a22191afb9a2ec17c9017415f7755b8194b03c654e245774ac9c83e0d9b694f"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-2-observed.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-2-observed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-2-observed.sav",
       "sha256": "1e9b2297d134e1c887646074ea0d731342c02c874fc80c33c91819c97062f5fe"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-3-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-3-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-released-396.sav",
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-3-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-3-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-3-loaded.sav",
       "sha256": "e714b7cb44f38387f28ed06c6d99fe0273fddbaaed36c91162e0d2d51dcd3eb2"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-4-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-4-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-released-396.sav",
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-4-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-4-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-3-loaded.sav",
       "sha256": "e714b7cb44f38387f28ed06c6d99fe0273fddbaaed36c91162e0d2d51dcd3eb2"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-4-observed.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-4-observed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-4-observed.sav",
       "sha256": "8af807b12488a7841455a8ca22aa337ae8ac534960e261212d4d362d193558b8"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-5-before-reuse.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-before-reuse.sav",
+      "path": "savegames/retained/logs/proofs/mlm/clean-checkout/src/tests/fixtures/haulage/release/tbm-release-released-396.sav",
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-5-loaded.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-loaded.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-loaded.sav",
       "sha256": "25ed778d326ee6ddf10d4838df1b5d800574296deac66f3aa4a68648eae7549e"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-5-next-exchange.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-next-exchange.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-next-exchange.sav",
       "sha256": "8f4617cbe786417263fae20317d35dc7899571b848f55423c11c46a07e804ff0"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396-5-observed.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-observed.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-released-396-5-observed.sav",
       "sha256": "5d92f3212d07822c3635a804d6f14d7f3308c9635abb355449d116d20ce711bd"
     },
     "src/tests/fixtures/haulage/tbm-release-released-396.sav": {
@@ -2723,15 +2723,15 @@
       "sha256": "f3ca33f0a545a00430804c9047a48293872c6119dc4eebfe7a1e0c65ac1ce145"
     },
     "src/tests/fixtures/haulage/tbm-release-return-396.sav": {
-      "path": "mlm/reviews/tbm/release/import-20261009/saves/tbm-release-return-396.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/release/import-20261009/saves/tbm-release-return-396.sav",
       "sha256": "443ec8ff16700f568bf5ae1a5a1b28d425680f420305e137f8216678bc55d4fd"
     },
     "src/tests/fixtures/haulage/tbm-spoil-haul50-loaded-394.sav": {
-      "path": "mlm/reviews/tbm/work-advice/import-20261009/saves/tbm-spoil-haul50-loaded-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/work-advice/import-20261009/saves/tbm-spoil-haul50-loaded-394.sav",
       "sha256": "d0ad336fc0d1b8b6a7cd695c96821dac1473bc43d162b908bab337b17d5c05c7"
     },
     "src/tests/fixtures/haulage/tbm-spoil-old-work-loaded-394.sav": {
-      "path": "mlm/reviews/tbm/work-advice/import-20261009/saves/tbm-spoil-old-work-loaded-394.sav",
+      "path": "savegames/retained/mlm/reviews/tbm/work-advice/import-20261009/saves/tbm-spoil-old-work-loaded-394.sav",
       "sha256": "b98a6e4bc249976af2a34f8b6336549574c9c756788783a093410cc282ba4b9e"
     },
     "src/tests/fixtures/haulage/underground-demo-390.sav": {

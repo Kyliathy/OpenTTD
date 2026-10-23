@@ -2,6 +2,7 @@
 """Focused actual metadata round trips and unchanged legacy save loading.
 
 @file multilayer_state_fixture.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21, compact prior-stage semantics.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md
 """
@@ -19,6 +20,7 @@ FIXTURES = ROOT / "src/tests/fixtures"
 sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path, RunContext, identifier, contained
 from runner import current_run_context, run_native, console_executable
+from prior_stage_evidence import publish_stage, prior_save, semantic_text
 CONTEXT = current_run_context("state", "metadata")
 RUNTIME = CONTEXT.runtime_dir
 CONTEXT.prepare_runtime("grftest.cfg")
@@ -30,7 +32,7 @@ def prior_artifact(context, run_id, kind, name):
 
     @param context Current feature/scenario whose earlier run is being checked.
     @param run_id Explicit prior invocation supplied by the operator.
-    @param kind Either saves or logs; this function never creates evidence.
+    @param kind Saved-output role; diagnostic logs no longer provide prior-stage authority.
     @param name Exact expected basename, including refusal outputs allowed to be absent.
     @return Canonical prior path; the caller checks existence or semantic refusal.
     """
@@ -39,8 +41,15 @@ def prior_artifact(context, run_id, kind, name):
     if kind not in ("saves", "logs") or Path(name).name != name:
         raise ValueError("prior evidence requires an exact save/log basename")
     previous = RunContext(context.root, context.feature, context.scenario, identifier(run_id))
-    directory = previous.saves if kind == "saves" else previous.logs
-    return contained(directory / name, directory)
+    if kind == "logs":
+        raise ValueError("prior diagnostics are disposable; select compact semantic_text explicitly")
+    saved = prior_save(context, run_id, name[:-4] + ".log", name, "Debug")
+    if saved is not None:
+        return saved
+    absent = contained(previous.saves / name, previous.saves)
+    if absent.exists():
+        raise ValueError("prior refused case unexpectedly has a saved output")
+    return absent
 
 
 def log_path(name, root=ROOT, context=CONTEXT):
@@ -104,7 +113,7 @@ def save_path(name, context=CONTEXT):
     raise ValueError(f"unknown fixture save owner: {name}")
 
 
-def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False, context=CONTEXT):
+def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", single_player=False, context=CONTEXT, producer=None, configuration="Debug"):
     """Run one repository-local dedicated boundary and retain its evidence.
 
     @param name Stable evidence suffix for this owned fixture.
@@ -114,6 +123,8 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     @param prefix Owning plan's evidence prefix; saves live in feature fixture directories.
     @param single_player Use null-video nonnetworked mode and the actual start_ai command to create an owned company for portal fixtures; default preserves dedicated behavior.
     @param context Explicit feature invocation used for runtime and evidence ownership.
+    @param producer Optional actual calling fixture source, retained as its executed source identity.
+    @param configuration Explicit independently built native configuration; legacy callers use Debug.
     @return Saved output path; failure preserves supplied inputs through the caller's finally block.
     """
     output = output_save_path(f"{prefix}-{name}.sav", context)
@@ -126,22 +137,33 @@ def run_case(name, arguments, expected, accepted=True, prefix="r2mlvs14-b", sing
     (context.runtime_dir / "scripts/game_start.scr").write_text(f'exec "{script.as_posix()}"\n', encoding="utf-8")
     env = dict(os.environ, OTTD_TIMEOUT="60", OTTD_DEBUG="misc=5,net=2,sl=3,grf=2,desync=5,script=2")
     env.pop("OTTD_MULTILAYER_LOADER_PROBE", None)
-    command = ["C:/Program Files/Git/bin/bash.exe", (ROOT / "mlm/tools/run/run_dedicated.sh").as_posix(),
-               (ROOT / "build").as_posix(), "Debug", log.as_posix(), "-X", "-c", "grftest.cfg", *arguments]
+    application = ROOT / "build" / configuration / "openttd.exe"
     try:
+        # Launch the actual console image directly so the shared runner records
+        # native failure diagnostics before raising, without a nested shell driver.
+        console = console_executable(context, application)
+        application = console
         if single_player:
             # Null media suppresses automatic company creation. The nonnetworked start_ai command executes synchronously and supplies the actual owner.
-            console = console_executable(context, ROOT / "build/Debug/openttd.exe")
             game_arguments = arguments if "-g" in arguments else ["-g", *arguments]
-            with log.open("wb") as sink:
-                run_native(context, [str(console), "-v", "null", "-s", "null", "-m", "null", "-x", "-X", "-d", env["OTTD_DEBUG"],
-                                "-c", "grftest.cfg", *game_arguments], cwd=ROOT / "build", env=env, stdout=sink,
-                               stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW, check=True, timeout=70)
+            flags = ["-v", "null", "-s", "null", "-m", "null", "-x"]
         else:
-            run_native(context, command, check=True, env=env, timeout=70)
+            game_arguments = arguments
+            flags = ["-D", "-x"]
+        with log.open("wb") as sink:
+            result = run_native(context, [str(console), *flags, "-X", "-d", env["OTTD_DEBUG"],
+                               "-c", "grftest.cfg", *game_arguments], cwd=context.runtime_dir,
+                               env=env, stdout=sink, stderr=subprocess.STDOUT, timeout=60)
+        result.check_returncode()
         evidence = log.read_text(encoding="utf-8", errors="replace")
         assert expected in evidence, (name, "required metadata evidence missing")
         assert output.is_file() == accepted, (name, "acceptance/save boundary differs")
+        # Later partial runs need the actual accepted/refused observations and
+        # exact save roles, while the full diagnostic stream remains disposable.
+        inputs = [resolve_input_path(arguments[arguments.index("-g") + 1], ROOT)] if "-g" in arguments else []
+        sources = [Path(__file__)] + ([producer] if producer is not None else [])
+        publish_stage(context, log.name, [line for line in evidence.splitlines() if expected in line],
+                      configuration, application, sources, inputs, {output.name: output if accepted else None}, accepted)
         print(f"{name}: metadata boundary passed", flush=True)
         return output
     finally:
@@ -159,8 +181,8 @@ def main():
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     legacy = [("surface", ROOT / "regression/gs_compat/test.sav"),
-              ("layers369", ROOT / "build/save/epic_1234_8x8.sav"),
-              ("layers370", ROOT / "build/save/camera-deep-repaired.sav")]
+              ("layers369", resolve_input_path("build/save/epic_1234_8x8.sav", ROOT)),
+              ("layers370", resolve_input_path("build/save/camera-deep-repaired.sav", ROOT))]
     hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for _, path in legacy}
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true", help="load only an existing native and a supplied Classic save")

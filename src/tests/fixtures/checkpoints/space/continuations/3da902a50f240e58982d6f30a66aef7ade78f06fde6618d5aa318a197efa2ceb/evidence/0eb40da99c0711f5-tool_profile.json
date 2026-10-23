@@ -1,0 +1,188 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13. Portable observed Windows build profile; dependencies pin actual installed package versions, distinct from the source manifest historical baseline. No machine paths or CMakeCache authority. Cold provider source completion: r2fc2-file-cleanup3.md Group30; initial profile retained separately.",
+  "schema_version": 1,
+  "kind": "portable_native_build_profile",
+  "platform": "windows-x64",
+  "generator": "Visual Studio 17 2022",
+  "architecture": "x64",
+  "configurations": [
+    "RelWithDebInfo",
+    "Debug"
+  ],
+  "cxx_standard": 20,
+  "maximum_workers": 2,
+  "msbuild_node_reuse": false,
+  "tools": {
+    "cmake": "3.31.6-msvc6",
+    "compiler": "19.44.35216",
+    "toolset": "14.44.35207",
+    "msbuild": "17.14.23.42201",
+    "windows_sdk": "10.0.26100.0",
+    "grfcodec": "6.2.0",
+    "nforenum": "6.2.0",
+    "vcpkg": "2026-09-26-51bf87ca6e9bf3e622d84ff323bd202ab1ca0c0b",
+    "patch": "GNU patch 2.8"
+  },
+  "options": {
+    "OPTION_DEDICATED": "OFF",
+    "OPTION_TOOLS_ONLY": "OFF",
+    "OPTION_DOCS_ONLY": "OFF",
+    "OPTION_USE_ASSERTS": "ON",
+    "OPTION_INSTALL_FHS": "OFF",
+    "OPTION_USE_NSIS": "OFF",
+    "OPTION_PACKAGE_DEPENDENCIES": "OFF",
+    "OPTION_ALLOW_INVALID_SIGNATURE": "OFF"
+  },
+  "dependencies": {
+    "source_manifest": "vcpkg.json",
+    "manifest_baseline": "f3e10653cc27d62a37a3763cd84b38bca07c6075",
+    "provider_revision": "dd6ff8e6b0128654815bc4daa0e46fde459f63e9",
+    "target_triplet": "x64-windows-static",
+    "host_triplet": "x64-windows",
+    "mode": "classic_pinned_ports",
+    "roots": [
+      "breakpad",
+      "liblzma",
+      "libpng",
+      "lzo",
+      "opusfile",
+      "soxr",
+      "zlib"
+    ],
+    "packages": [
+      {
+        "name": "atl",
+        "version": "0",
+        "port_version": 1,
+        "triplet": "x64-windows-static",
+        "git_tree": "8377a72c91d9c135f3cb8524c3d43571de2e3d20"
+      },
+      {
+        "name": "breakpad",
+        "version": "2024-02-16",
+        "port_version": 1,
+        "triplet": "x64-windows-static",
+        "git_tree": "e8447b574fa2cbca8b2343a609dcec8779ea7611"
+      },
+      {
+        "name": "libdisasm",
+        "version": "0.23",
+        "port_version": 12,
+        "triplet": "x64-windows-static",
+        "git_tree": "47902ad2036122af64af8f08807d4d390b779ef4"
+      },
+      {
+        "name": "liblzma",
+        "version": "5.8.3",
+        "port_version": 0,
+        "triplet": "x64-windows-static",
+        "git_tree": "ae94eaf58eb64ce5b0dfba7769095c43c6c65d71"
+      },
+      {
+        "name": "libogg",
+        "version": "1.3.6",
+        "port_version": 1,
+        "triplet": "x64-windows-static",
+        "git_tree": "0631c72b35b0e169220b9c0fa9a6af4b229268cb"
+      },
+      {
+        "name": "libpng",
+        "version": "1.6.58",
+        "port_version": 0,
+        "triplet": "x64-windows-static",
+        "git_tree": "909d98e06046a0901fd11300b3d725d6a80d27bf"
+      },
+      {
+        "name": "lzo",
+        "version": "2.10",
+        "port_version": 9,
+        "triplet": "x64-windows-static",
+        "git_tree": "fcd8844a4e80d418bf894cf93a0453f067e404de"
+      },
+      {
+        "name": "opus",
+        "version": "1.5.2",
+        "port_version": 1,
+        "triplet": "x64-windows-static",
+        "git_tree": "2235818841e936376b19642c7a94fc7f17b2c2c2"
+      },
+      {
+        "name": "opusfile",
+        "version": "0.12+20221121",
+        "port_version": 1,
+        "triplet": "x64-windows-static",
+        "git_tree": "6b39a2d4ff309c4e2bedf74adeb1cd18f7ab16c9"
+      },
+      {
+        "name": "soxr",
+        "version": "0.1.3",
+        "port_version": 8,
+        "triplet": "x64-windows-static",
+        "git_tree": "89f01ea88aee3a0468ba3bf335a7a537a105cae1"
+      },
+      {
+        "name": "vcpkg-cmake",
+        "version": "2024-04-23",
+        "port_version": 0,
+        "triplet": "x64-windows",
+        "git_tree": "e74aa1e8f93278a8e71372f1fa08c3df420eb840"
+      },
+      {
+        "name": "vcpkg-cmake-config",
+        "version": "2024-05-23",
+        "port_version": 0,
+        "triplet": "x64-windows",
+        "git_tree": "97a63e4bc1a17422ffe4eff71da53b4b561a7841"
+      },
+      {
+        "name": "zlib",
+        "version": "1.3.2",
+        "port_version": 0,
+        "triplet": "x64-windows-static",
+        "git_tree": "e2a9ce8cf8f5d07e489e14c256eefdd58cd535c1"
+      }
+    ],
+    "source_bundle": {
+      "path": "src/tests/fixtures/config/multilayer/native-dependency-sources-complete.zip",
+      "sha256": "69027e8f51a38a031c88629873e1ee3d5456a7174e29fe532d9b39cd172e0012"
+    },
+    "runtime_assets": [
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trg1.grf",
+        "sha256": "38f0494a7f508dc6e471ca3eba91703f9a1df7aad2067f0f4e25f79b5e9aab51",
+        "destination": "baseset/trg1.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgc.grf",
+        "sha256": "a17c8f8bbac1306c49190942bfa06409eebb106e6290fae0f9930aefb80484f6",
+        "destination": "baseset/trgc.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgh.grf",
+        "sha256": "30d2e2d58797ee5c76a2a7a27fa04e3896028edf0f64abc1d6b3d7bf0b68ca41",
+        "destination": "baseset/trgh.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgi.grf",
+        "sha256": "81a8119afe3e7fa72b3147ee5826c1f9dec2ca39e6232905fe18a1948cf61859",
+        "destination": "baseset/trgi.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/trgt.grf",
+        "sha256": "7c5df28cc5d68e97ae0cb57e794060b76d2c927e90b36e6db69b245e042c7709",
+        "destination": "baseset/trgt.grf"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/gm.cat",
+        "sha256": "111a393c09a18b780401b435a8f788d571bdfd915ae1d4bf29b0492412d121f7",
+        "destination": "baseset/gm.cat"
+      },
+      {
+        "path": "src/tests/fixtures/baseset/original-dos/sample.cat",
+        "sha256": "edb6233cb97546a11b4f50cf0fe3d95ed00e767d26c00246850ff992a7d495bd",
+        "destination": "baseset/sample.cat"
+      }
+    ]
+  },
+  "build_directory": "build"
+}

@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-static",
+  "run_id": "cleanup35-checkpoint-rwd-01",
+  "configuration": "RelWithDebInfo",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+      "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-rwd-01/evidence/native-1aa38b2ed51d4944b726f2b4795970be-stdout.txt",
+      "sha256": "7da5fce062115774f5a0110388155225931b8715133b367eb49fc29d2c73e31a"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-rwd-01/saves/ordinary.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    }
+  ],
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup35-checkpoint-rwd-01\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup35-checkpoint-rwd-01\\main\\native-art.cfg",
+    "-g",
+    "D:\\Codez\\Sandbox\\OpenTTD\\src\\tests\\fixtures\\checkpoints\\space\\RelWithDebInfo\\current.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup35-checkpoint-rwd-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup35-checkpoint-rwd-01/evidence/native-1aa38b2ed51d4944b726f2b4795970be-stdout.txt",
+      "sha256": "7da5fce062115774f5a0110388155225931b8715133b367eb49fc29d2c73e31a"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup35-checkpoint-rwd-01/main/openttd_console.exe",
+    "sha256": "af3c93e14fa8f7b9f5cc344a862ac1ec7ce16375f48e326ef21dcc154c819cb0"
+  }
+}

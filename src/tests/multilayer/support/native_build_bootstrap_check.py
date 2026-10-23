@@ -2,6 +2,7 @@
 
 @file native_build_bootstrap_check.py Explicit tools are rediscovered and version checked.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 cold patch line endings.
 Rebuild tools metadata through native_build --inspect; this runner requires the
 same explicit external prerequisite paths and writes only disposable test owners.
 """
@@ -88,9 +89,12 @@ class NativeBootstrapChecks(unittest.TestCase):
         source = self.root / "source"
         source.mkdir()
         sample = source / "sample.txt"
-        sample.write_text("old value\n", encoding="utf-8")
+        sample.write_bytes(b"old value\n")
         patch_file = self.root / "change.patch"
-        patch_file.write_text("--- a/sample.txt\n+++ b/sample.txt\n@@ -1 +1 @@\n-old value\n+new value\n", encoding="utf-8")
+        # The actual libdisasm cold source is LF and its pinned patch is CRLF.
+        # Exercise that mismatch rather than letting Windows give both CRLF.
+        patch_bytes = b"--- a/sample.txt\r\n+++ b/sample.txt\r\n@@ -1 +1 @@\r\n-old value\r\n+new value\r\n"
+        patch_file.write_bytes(patch_bytes)
         helper = self.root / "apply.cmake"
         template = Path(build.__file__).with_name("native_build_apply_patches.cmake.in").read_text(encoding="utf-8")
         helper.write_text(template.replace("@PATCH_EXECUTABLE@", Path(TOOLS["patch"]["path"]).as_posix()), encoding="utf-8")
@@ -100,6 +104,7 @@ class NativeBootstrapChecks(unittest.TestCase):
                    "-P", str(Path(build.__file__).with_name("native_build_patch_fixture.cmake"))]
         build.run_step(self.context, "patch-probe", command, self.environment, timeout=60)
         self.assertEqual(sample.read_text(encoding="utf-8"), "new value\n")
+        self.assertEqual(patch_file.read_bytes(), patch_bytes)
         with self.assertRaisesRegex(ValueError, "stage failed"):
             build.run_step(self.context, "bad-patch-probe", command, self.environment, timeout=60)
         self.assertTrue((self.context.reports / "bad-patch-probe.json").is_file())

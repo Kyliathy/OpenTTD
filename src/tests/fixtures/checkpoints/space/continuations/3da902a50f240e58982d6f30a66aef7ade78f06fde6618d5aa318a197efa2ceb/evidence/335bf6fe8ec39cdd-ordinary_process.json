@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-static",
+  "run_id": "cleanup30-checkpoint-rwd-04",
+  "configuration": "RelWithDebInfo",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+      "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-rwd-04/evidence/native-977cac8d297a40c594288180bc91551e-stdout.txt",
+      "sha256": "c393957005b1dc4fa5777898191085534ec6aacd824e17864532d38651a33ee9"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-rwd-04/saves/ordinary.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    }
+  ],
+  "argv": [
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\mlm\\runtime\\native\\cleanup30-checkpoint-rwd-04\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\mlm\\runtime\\native\\cleanup30-checkpoint-rwd-04\\main\\native-art.cfg",
+    "-g",
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\src\\tests\\fixtures\\checkpoints\\space\\RelWithDebInfo\\current.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup30-checkpoint-rwd-04/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-rwd-04/evidence/native-977cac8d297a40c594288180bc91551e-stdout.txt",
+      "sha256": "c393957005b1dc4fa5777898191085534ec6aacd824e17864532d38651a33ee9"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup30-checkpoint-rwd-04/main/openttd_console.exe",
+    "sha256": "e48dac56c4380c90cac13ec82bc73121e873c857556acf70bb03ea1003ad4ca4"
+  }
+}

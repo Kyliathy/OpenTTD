@@ -3,6 +3,8 @@
 @file artifact_paths.py Development-only artifact boundary; no simulation ownership.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Groups 3-10.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups9-10.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group25 runtime growth.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group32 retained cold runtime templates.
 @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
 """
 
@@ -73,6 +75,36 @@ def owned_root(root, relative):
     @return Namespace path, with all existing parent links resolved.
     """
     return contained(Path(root) / relative, root)
+
+
+def runtime_languages(config):
+    """Select English fallback packs and the process's explicit native language.
+
+    @param config Existing process-local INI; only [misc].language selects a pack.
+    @return Basenames copied independently into this mutable process home.
+    @throws ValueError For malformed language names instead of path traversal.
+    """
+    selected = {"english.lng", "english_US.lng"}
+    section = ""
+    # Native/art runners need no copy of every translation. Keep both existing
+    # English defaults and an explicit language without changing host/client
+    # settings, scripts or autosaves, or sharing a writable distribution tree.
+    for line in config.read_text(encoding="utf-8-sig").splitlines():
+        value = line.strip()
+        if value.startswith("["):
+            section = value
+        if section != "[misc]":
+            continue
+        if re.match(r"^language\s*=", value):
+            # An empty native setting requests the normal English fallback;
+            # it must not turn a valid isolated configuration into a refusal.
+            if re.fullmatch(r'language\s*=\s*(?:""\s*)?(?:[;#].*)?', value):
+                continue
+            match = re.fullmatch(r'language\s*=\s*"?([A-Za-z0-9_-]+\.lng)"?\s*(?:[;#].*)?', value)
+            if match is None:
+                raise ValueError("runtime language must be a language-pack basename")
+            selected.add(match[1])
+    return selected
 
 
 @dataclass(frozen=True)
@@ -237,7 +269,7 @@ class RunContext:
     def prepare_runtime(self, template="native-art.cfg"):
         """Materialize config and required repository distribution for native use.
 
-        @param template Existing build configuration basename, or the native-art fixture.
+        @param template Retained fixture or existing build configuration basename.
         @return Path to a writable config in this process's isolated data home.
         """
         if Path(template).name != template:
@@ -245,18 +277,37 @@ class RunContext:
         self.runtime_dir.mkdir(parents=True, exist_ok=True)
         source = self.root / "src/tests/fixtures/config/multilayer" / template
         if not source.is_file():
-            source = self.root / "build" / template
+            retained = self.root / "src/tests/fixtures/config/multilayer/retained/build" / template
+            if retained.is_file():
+                # Migrated build templates keep their exact catalogue identity;
+                # a cold checkout must not depend on the retired build copy.
+                source = resolve_input_path("build/" + template, self.root)
+            else:
+                source = self.root / "build" / template
         target = contained(self.runtime_dir / template, self.runtime_dir)
         if not target.exists():
             shutil.copyfile(source, target)
         # Copy only repository-owned distribution inputs. Per-process copies
         # prevent startup/config/autosave writes from modifying the shared build
         # or a peer; existing runtime scripts must survive repeated preparation.
-        for name in ("baseset", "newgrf", "lang", "scripts"):
+        for name in ("baseset", "newgrf", "scripts"):
             origin = self.root / "build" / name
             destination = self.runtime_dir / name
             if origin.is_dir() and not destination.exists():
                 shutil.copytree(origin, destination)
+        # Startup scripts are process-local even when the cold distribution has
+        # no scripts to copy. Callers may create their bounded observer here.
+        (self.runtime_dir / "scripts").mkdir(exist_ok=True)
+        languages = self.root / "build/lang"
+        if languages.is_dir():
+            destination = self.runtime_dir / "lang"
+            destination.mkdir(exist_ok=True)
+            # Repeated preparation may add a newly selected language, but cannot
+            # replace a process-local file or another process's mutable state.
+            for name in sorted(runtime_languages(target)):
+                pack = destination / name
+                if not pack.exists():
+                    shutil.copyfile(languages / name, pack)
         return target
 
     def write_report(self, name, producer, artifacts, inputs=(), configuration="unknown", native_writer=None):

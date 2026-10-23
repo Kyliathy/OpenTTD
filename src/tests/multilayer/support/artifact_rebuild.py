@@ -2,6 +2,9 @@
 
 @file artifact_rebuild.py Inspection is read-only and never imports producer entry points.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups14/18C.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 current dependency guards.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Groups30-32 shared cold build.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group31 bounded native final verification.
 Every native/generated prerequisite has a separate outcome. Only actual completed
 verification publishes successful output identities; failed requests grant no scope.
 """
@@ -156,9 +159,15 @@ def load_recipe(name, configuration=None, root=None):
         if not recipe["enabled"]:
             pending[item] = recipe["pending_groups"]
         for row in recipe["retained_inputs"]:
-            if not (root / row["path"]).is_file():
+            # Enabled physical inputs were validated retained-first above and
+            # are hashed by the observer below; missing old logical paths alone
+            # cannot make a cold aliased recipe non-executable.
+            if not recipe["enabled"] and not (root / row["path"]).is_file():
                 missing.append(dict(recipe=item, **row))
-        if all((root / row["path"]).is_file() for row in recipe["retained_inputs"]):
+        # Enabled recipes may deliberately use a stable key whose generated old
+        # original is gone. The retained-first observer, not raw path existence,
+        # decides whether their cold inputs are present and hash-correct.
+        if recipe["enabled"] or all((root / row["path"]).is_file() for row in recipe["retained_inputs"]):
             observed_retained_inputs(recipe, root, observations)
         # Shared invocation IDs do not authorize two prerequisite recipes to
         # overwrite the same feature/scenario/output role.
@@ -215,7 +224,17 @@ def write_state(path, document):
     """
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    # Windows scanners may briefly deny replacement after a completed write.
+    # Retry only documented access/sharing failures for a bounded interval;
+    # persistent errors keep the previous complete state and fail this operation.
+    for attempt in range(4):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError as error:
+            if getattr(error, "winerror", None) not in (5, 32, 33) or attempt == 3:
+                raise
+            time.sleep(0.05 * (attempt + 1))
 
 
 def alive(pid):
@@ -282,12 +301,19 @@ def run_stage(context, stage, request, lock, attempt):
     environment = {key: value for key, value in os.environ.items() if not key.startswith("OTTD_")}
     environment = context.environment(environment)
     environment.update(PYTHONDONTWRITEBYTECODE="1", GIT_OPTIONAL_LOCKS="0")
+    requested = json.loads(request.read_text(encoding="utf-8"))
+    timeout = 120
+    # Native verification includes bounded execution plus complete frame/source
+    # provenance checks. Let those checks finish without relaxing native process
+    # caps or granting a longer budget to preparation and pure conversions.
+    if stage == "verify" and requested["declaration"]["target"]:
+        timeout = 300
     started = time.monotonic()
     with terminal.open("xb") as stream:
         process = subprocess.Popen(command, cwd=context.root, env=environment, stdout=stream, stderr=subprocess.STDOUT)
         write_state(lock, dict(owner_pid=os.getpid(), child_pid=process.pid))
         try:
-            status = process.wait(timeout=120)
+            status = process.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             process.kill()
             process.wait()
@@ -350,14 +376,21 @@ def verify_current_build(stage, configuration, recipe, root):
     # prerequisites; historical image identities cannot satisfy this boundary.
     if document["kind"] != "native_build_result" or document["complete"] is not True or document["configuration"] != configuration or not set(targets) <= document["targets"].keys() or not document["steps"] or any(step["exit_status"] != 0 for step in document["steps"]):
         raise ValueError("current recipe build configuration/targets/status disagree")
+    build = contained(root / document["build_directory"], root)
+    if build.relative_to(root).parts[0] not in ("build", "test-cache"):
+        raise ValueError("current recipe build is outside an audited build owner")
+    # An exact old EXE hash is still historical when its path is an archive.
+    # Require each declared current target in this build/configuration's slot.
+    for target, image in document["targets"].items():
+        if contained(root / image["path"], root) != build / configuration / (target + ".exe"):
+            raise ValueError("current recipe build image is an archived or foreign target")
     references = [document["source_epoch"], document["tool_profile"], *document["targets"].values()]
     for current in references:
         if identity(root / current["path"], root) != current:
             raise ValueError("current recipe build input/image changed")
     epoch = json.loads((root / document["source_epoch"]["path"]).read_text(encoding="utf-8"))
-    for source in epoch["files"]:
-        if identity(root / source["path"], root) != source:
-            raise ValueError("current recipe build source changed")
+    from native_build import verify_source_epoch
+    verify_source_epoch(epoch, root, document["tool_profile"]["path"])
 
 
 def shared_current_build(state, configuration, recipe, root):
@@ -406,7 +439,55 @@ def selected_build_targets(selection):
     return sorted(targets)
 
 
-def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None, tool_overrides=None):
+def compile_plan(selection, configuration, root, prebuild_recipes=(), build_result=None):
+    """Plan explicit future image targets or validate an explicitly selected current build.
+
+    @param selection Current selected recipe closure; later recipes are not executed here.
+    @param configuration Exact native configuration for every selected image.
+    @param root Current checkout owning source, retained inputs and generated images.
+    @param prebuild_recipes Explicit registered future graphs whose targets compile now.
+    @param build_result Optional current native-build report path; never an implicit cache search.
+    @return Bound compile scope with selected targets, future recipe names and optional build identity.
+    """
+    targets = set(selected_build_targets(selection))
+    additional = sorted(set(prebuild_recipes))
+    # A future target must be built by this graph's first native prerequisite;
+    # an entirely pure conversion cannot silently claim to have compiled it.
+    if additional and not targets:
+        raise ValueError("explicit prebuild requires a selected native recipe closure")
+    # Compile planned later observers before the first native image is observed.
+    # Each future graph still performs its own source/native verification later;
+    # target preparation grants no execution or financial acceptance for it.
+    for name in additional:
+        future = load_recipe(name, configuration, root)
+        if not future["executable"]:
+            raise ValueError(f"explicit prebuild recipe is pending or missing inputs: {name}")
+        targets.update(selected_build_targets(future))
+    reference = None
+    if build_result is not None:
+        if not targets:
+            raise ValueError("a pure conversion cannot claim an unrequested native build")
+        reference = identity(root / Path(build_result), root)
+        required = dict(target=sorted(targets)[0], original_parameters=dict(build_targets=sorted(targets)))
+        verify_current_build(dict(result=reference), configuration, required, root)
+    return dict(targets=sorted(targets), prebuild_recipes=additional, provided_build=reference)
+
+
+def execution_signature(selection, root, compilation):
+    """Bind restart and stage checks to the exact explicit compilation selection.
+
+    @param selection Current recipe closure; its catalogue hash binds future declarations too.
+    @param root Current source/input owner.
+    @param compilation Explicit compile_plan result, never a historical latest-build lookup.
+    @return Existing source/input signature extended with this invocation's compile intent.
+    """
+    result = snapshot(selection, root)
+    result["compilation"] = compilation
+    return result
+
+
+def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None, tool_overrides=None,
+                   prebuild_recipes=(), build_result=None):
     """Execute one bounded selected closure, or explicitly resume identical interrupted work.
 
     @param name Exact registered selected recipe ID.
@@ -415,6 +496,8 @@ def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None
     @param run_id Optional fresh explicit invocation ID; duplicates always refuse.
     @param resume Explicit existing invocation ID, mutually exclusive with run_id.
     @param tool_overrides Optional current native-build external prerequisite paths.
+    @param prebuild_recipes Explicit registered future graph names whose images compile before observers.
+    @param build_result Explicit current native-build report path to reuse after full current-source/image checks.
     @return Exact completed rebuild report identity; failures retain incomplete state.
     """
     root = repository_root(root)
@@ -423,8 +506,9 @@ def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None
         raise ValueError(f"recipe prerequisites are pending/missing: {selection['pending_groups']} {selection['missing_inputs']}")
     if run_id is not None and resume is not None:
         raise ValueError("choose a fresh run or explicit resume, never both")
-    signature = snapshot(selection, root)
-    compile_targets = selected_build_targets(selection)
+    compilation = compile_plan(selection, configuration, root, prebuild_recipes, build_result)
+    signature = execution_signature(selection, root, compilation)
+    compile_targets = compilation["targets"]
     if resume is None:
         context = create_run_context("rebuild", name, run_id=run_id or ("rebuild-" + uuid.uuid4().hex), root=root, profile="rebuild")
         state = dict(_documentation="Owner: r2fc-file-cleanup3.md14; generated stage progress, no gameplay authority.",
@@ -466,18 +550,23 @@ def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None
             if node["stages"].get("build", {}).get("status") not in ("passed", "not_required"):
                 if recipe["target"]:
                     from native_build import build_selected
-                    shared = shared_current_build(state, configuration, recipe, root)
+                    # A supplied current build is an explicit checked prerequisite,
+                    # not inherited native success. Every leaf still executes its
+                    # own prepare/verify stages and rechecks the actual images.
+                    shared = (dict(status="passed", result=compilation["provided_build"], provided_current_build=True)
+                              if compilation["provided_build"] is not None else
+                              shared_current_build(state, configuration, recipe, root))
                     if shared is not None:
                         node["stages"]["build"] = shared
                     else:
                         node["stages"]["build"] = dict(status="running")
                         write_state(report, state)
                         try:
-                            build_result = build_selected(None, configuration, compile_targets, tool_overrides, root)
+                            built = build_selected(None, configuration, compile_targets, tool_overrides, root)
                         except BaseException as error:
                             node["stages"]["build"] = dict(status="failed", error=str(error))
                             raise
-                        node["stages"]["build"] = dict(status="passed", result=build_result)
+                        node["stages"]["build"] = dict(status="passed", result=built)
                 else:
                     node["stages"]["build"] = dict(status="not_required")
                 write_state(report, state)
@@ -488,7 +577,7 @@ def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None
             for stage in ("prepare", "verify"):
                 if node["stages"].get(stage, {}).get("status") == "passed":
                     continue
-                if snapshot(selection, root) != signature:
+                if execution_signature(selection, root, compilation) != signature:
                     raise ValueError("recipe source/input changed during execution")
                 attempt = node["attempts"].get(stage, 0) + 1
                 node["attempts"][stage] = attempt
@@ -517,7 +606,7 @@ def prepare_recipe(name, configuration=None, root=None, run_id=None, resume=None
                                for row in recipe["outputs"]}
             node["status"] = "verified"
             write_state(report, state)
-        if snapshot(selection, root) != signature:
+        if execution_signature(selection, root, compilation) != signature:
             raise ValueError("recipe source/input changed before completion")
         state.update(complete=True, status="verified")
         write_state(report, state)
@@ -546,17 +635,25 @@ def main():
     parser.add_argument("--inspect", action="store_true")
     parser.add_argument("--run-id")
     parser.add_argument("--resume")
+    parser.add_argument("--prebuild-recipe", action="append", default=[], help="Compile this registered later graph's targets before the first observer; do not execute it")
+    parser.add_argument("--build-result", type=Path, help="Explicit current build to verify/reuse; never searches historical outputs")
     for name in ("cmake", "visual-studio", "vcpkg", "grfcodec", "git", "patch", "windows-sdk"):
         parser.add_argument("--" + name, type=Path)
     arguments = parser.parse_args()
     if arguments.inspect:
         result = load_recipe(arguments.recipe, arguments.configuration)
+        # Inspection exposes the same explicit compile scope without reserving
+        # a run or executing a future recipe, so callers can review the union.
+        if arguments.prebuild_recipe or arguments.build_result is not None:
+            result["compilation"] = compile_plan(result, arguments.configuration, repository_root(),
+                                                  arguments.prebuild_recipe, arguments.build_result)
         result.pop("recipes")
     else:
         overrides = {name: value for name, value in vars(arguments).items()
                      if name in ("cmake", "visual_studio", "vcpkg", "grfcodec", "git", "patch", "windows_sdk") and value is not None}
         result = prepare_recipe(arguments.recipe, arguments.configuration, run_id=arguments.run_id,
-                                resume=arguments.resume, tool_overrides=overrides)
+                                resume=arguments.resume, tool_overrides=overrides,
+                                prebuild_recipes=arguments.prebuild_recipe, build_result=arguments.build_result)
     print(json.dumps(result, indent=2))
 
 

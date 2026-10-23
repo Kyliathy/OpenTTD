@@ -1,6 +1,7 @@
 """Execute only implemented, explicitly registered cleanup recipe stage adapters.
 
 @file artifact_recipe_stage.py The producer catalogue remains the sole recipe authority.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21, bounded prior-stage and historical Tube adapters.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups14/16-22.
 Adapters added by their supplying groups call original pure/native owners with
 explicit current-run inputs and outputs. No source publication or paid-work
@@ -12,7 +13,7 @@ import json
 from pathlib import Path
 import sys
 
-from artifact_paths import contained, repository_root
+from artifact_paths import contained, identifier, repository_root
 from artifact_inventory import file_identity
 from artifact_recipes import load_catalogue, validate_selection
 
@@ -145,7 +146,38 @@ def ground_viewport_stage(request, root):
     return execute_stage(request, root)
 
 
+def prior_metadata_stage(request, root):
+    """Dispatch one bounded metadata prerequisite through the shared native fixture.
+
+    @param request Exact registered selected metadata reload stage.
+    @param root Checkout owning the retained old-format save and current application.
+    @return Actual native reload/semantic checks without replaying a historical chain.
+    """
+    from prior_stage_evidence import execute_stage
+    return execute_stage(request, root)
+
+
+def tube_history_stage(request, root):
+    """Verify original terminal history without compiling provisional Tube work.
+
+    @param request Exact registered historical-metadata stage with no native target.
+    @param root Checkout containing both durable source epochs and model9 terminal facts.
+    @return Historical preservation checks, granting no current native qualification.
+    """
+    sys.path.insert(0, str(root / "src/tests/multilayer"))
+    from qualify_tube_terminals import verify_checkpoint
+    result = verify_checkpoint(root)
+    if request["stage"] == "verify":
+        target = contained(root / request["outputs"]["manifest"], root / "mlm/reviews")
+        with target.open("x", encoding="utf-8") as stream:
+            stream.write(json.dumps(result, indent=2) + "\n")
+    return dict(checks=["retained original24-case/eight-tag model9 terminal history verified",
+                        "both source epochs and original media preserved; five-model work remains paused"])
+
+
 HANDLERS = {"space-checkpoint": space_checkpoint_stage,
+            "state-prior-native": prior_metadata_stage,
+            "tube-checkpoint": tube_history_stage,
             **{"ground-viewport-" + mode: ground_viewport_stage for mode in
                ("collector", "industry-states", "purchases", "rail", "road", "stations")},
             **{family + "-paused-viewports": ordinary_paused_viewport_stage for family in ("space", "orbital")},
@@ -205,6 +237,17 @@ def execute_request(path, root=None):
     # as the supervisor. Editing a request cannot enable a pending producer.
     if recipe is None or not recipe["enabled"] or request["declaration"] != recipe:
         raise ValueError("recipe stage declaration is unregistered, changed or pending")
+    from artifact_recipes import check_reference_roles
+    expected_roles = {row["role"] for row in recipe["retained_inputs"]} | {row["as"] for row in recipe["requires"]}
+    if set(request["inputs"]) != expected_roles:
+        raise ValueError("recipe stage input roles differ from selected declaration")
+    run = contained(root / "mlm/reviews" / recipe["feature"] / recipe["scenario"] / identifier(request["run_id"]), root / "mlm/reviews")
+    expected_outputs = {row["role"]: (run / row["path"].format(configuration=request["configuration"])).relative_to(root).as_posix()
+                        for row in recipe["outputs"]}
+    if request["outputs"] != expected_outputs:
+        raise ValueError("recipe stage output is outside its selected recipe/run")
+    prerequisites = [request["inputs"][row["as"]] for row in recipe["requires"]]
+    check_reference_roles(request, root, prerequisites, request["run_id"], verify_bytes=False)
     for reference in [*request["inputs"].values(), *request["sources"]]:
         if file_identity(contained(root / reference["path"], root))[0] != reference["sha256"]:
             raise ValueError("recipe stage input/source changed")

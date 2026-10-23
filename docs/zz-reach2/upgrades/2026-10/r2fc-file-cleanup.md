@@ -1,9 +1,12 @@
 # R2FC - Repository files, test fixtures and review output cleanup
 
-Successor execution: [R2FC-3](r2fc-file-cleanup3.md) replaces long-term generated
-proof retention with transfer-ready regeneration. Its Groups1-9 are complete;
-original validation/sealing and all-save export pass; cleanup remains pending. This completed layout
-plan remains historical authority for its delivered work; no new Git writes are authorized.
+Successor execution,2026-10-23: [R2FC-3](r2fc-file-cleanup3.md) and
+[R2FC2](r2fc2-file-cleanup3.md) delivered retained inputs, shared cold rehearsal,
+55.07GiBguarded real cleanup, verified source packaging and chosen-checkout
+Space recovery/query. Actual GZVEEIis complete; its durable successor dispatches
+read-only GZVEEJusefulness before paid capacity. The successor's live results own
+current closure. This original layout plan remains historical authority for its
+delivered work; Git operations stay read-only.
 
 ## Global Mandatory Reading
 
@@ -56,7 +59,7 @@ The architecture spine below establishes one asset authority, content-bound veri
 
 Status: **execution complete, 2026-10-09**. Groups 1-11 are complete. Final scope and file reduction: [commit-selection handoff](../../../zz-rhr/upgrades/2026-10/r2fc-j-commit-handoff.md). Git operations remain read-only. Evidence and continuation notes: [execution record](../../../zz-rhr/upgrades/2026-10/r2fc-a-execution-notes.md).
 
-**Follow-up, 2026-10-15:** [R2FC-2](r2fc-file-cleanup-2.md) records the later disk cleanup, minimal local baseline retention, hard-link accounting and remaining test dependencies under `logs/`. It plans moving required test data/evidence out of logs; that migration is not implemented yet. The completed status above describes this original layout migration, not proof that logs can now be emptied.
+**Historical follow-up, 2026-10-15 (superseded above):** [R2FC-2](r2fc-file-cleanup-2.md) records the later disk cleanup, minimal local baseline retention, hard-link accounting and remaining test dependencies under `logs/`. It plans moving required test data/evidence out of logs; that migration is not implemented yet. The completed status above describes this original layout migration, not proof that logs can now be emptied.
 
 Execution-standard revision: 2026-10-09. Tests must group screenshots by feature and document their producers. The original audit snapshot below is retained; it is not a new status measurement.
 

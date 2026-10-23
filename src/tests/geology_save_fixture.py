@@ -2,6 +2,7 @@
 """Actual geological round trips, older absence migration and malformed owned save refusals.
 
 @file geology_save_fixture.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 4
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
@@ -25,12 +26,13 @@ from artifact_paths import resolve_input_path
 from savegame_tables import chunks
 from runner import current_run_context, run_native
 from multilayer_state_fixture import output_save_path, prior_artifact
+from prior_stage_evidence import semantic_text
 CONTEXT = current_run_context("geology", "geology-save-fixture")
 RUNTIME = CONTEXT.runtime_dir
 CONTEXT.prepare_runtime("grftest.cfg")
 output_save_path = partial(output_save_path, context=CONTEXT)
 save_path = partial(save_path, context=CONTEXT)
-run_case = partial(run_case, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT, producer=Path(__file__))
 log_path = partial(log_path, context=CONTEXT)
 
 
@@ -150,6 +152,24 @@ def corrupt(records, kind):
     terrain["payload"] = bytes(payload)
 
 
+def preserved_geology(original, restored):
+    """Require exact original geology authority with only the documented old-header migration.
+
+    @param original Original older-format GEOS/GDEP/GSPN records keyed by native chunk label.
+    @param restored Current native resave records keyed by the same owner labels.
+    @return None; changed terrain, balances, surveys or span ownership refuse.
+    """
+    before, after = original[b"GEOS"]["payload"], restored[b"GEOS"]["payload"]
+    # Since version399, old uniform-hardness worlds gain exactly ten zero bytes
+    # and wire version2. Their saved terrain and every other header byte remain exact.
+    expected = b"\x00\x02" + before[2:29] + bytes(10) + before[29:]
+    if after != expected:
+        raise ValueError("original older-format terrain changed beyond its uniform-hardness migration")
+    for label in (b"GDEP", b"GSPN"):
+        if original[label]["raw"] != restored[label]["raw"]:
+            raise ValueError("original geological deposit/span authority changed on reload")
+
+
 def main():
     """Run focused geological save/refusal cases, preserving original scripts/config and older supplied saves.
 
@@ -160,8 +180,12 @@ def main():
     original_script = startup.read_bytes()
     original_config = config.read_bytes()
     older = (("native371", save_path("r2mlvs14-b-native-new.sav")),
-             ("legacy370", ROOT / "build/save/camera-deep-repaired.sav"))
+             ("legacy370", resolve_input_path("build/save/camera-deep-repaired.sav", ROOT)))
     older_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for _, path in older}
+    # Corrupt/partial wire fixtures require their original old codec. A current
+    # generator writes a newer save format and cannot recreate that test input.
+    compatibility = resolve_input_path("src/tests/fixtures/geology/r2mlvs2-g-native.sav", ROOT)
+    older_hashes[compatibility] = hashlib.sha256(compatibility.read_bytes()).hexdigest()
     parser = argparse.ArgumentParser()
     parser.add_argument("--refusals-only", action="store_true", help="retain/verify accepted-load evidence and repeat only the current corrupt boundaries")
     parser.add_argument("--prior-run", help="exact earlier invocation supplying the skipped acceptance evidence")
@@ -178,15 +202,14 @@ def main():
             source = run_case("native", ["-G", "1234"], "MLVS_GEOLOGY generator=1", prefix="r2mlvs2-g")
             source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
             reloaded = run_case("reload", ["-g", source.as_posix()], "MLVS_GEOLOGY_LOADED generator=1 deposits=10 packed_bytes=2048", prefix="r2mlvs2-g")
-            partial = variant(source, "partial", change_partial)
+            partial = variant(compatibility, "partial", change_partial)
             saved_partial = run_case("partial", ["-g", partial.as_posix()], "MLVS_GEOLOGY_LOADED generator=1 deposits=10 packed_bytes=2048", prefix="r2mlvs2-g")
             repeated_partial = run_case("partial-reload", ["-g", saved_partial.as_posix()], "MLVS_GEOLOGY_LOADED generator=1 deposits=10 packed_bytes=2048", prefix="r2mlvs2-g")
             original_rows = {record["name"]: record for record in chunks(read_stream(partial)[1])}
             # Complete authority survives two actual loaders; spatial cache addresses and reserve/survey quantities cannot be reconstructed differently.
             for output in (saved_partial, repeated_partial):
                 restored_rows = {record["name"]: record for record in chunks(read_stream(output)[1])}
-                for label in (b"GEOS", b"GDEP", b"GSPN"):
-                    assert restored_rows[label]["raw"] == original_rows[label]["raw"], (label, "geological authority changed on reload")
+                preserved_geology(original_rows, restored_rows)
             assert saved_geology_seed(read_stream(source)[1]) == saved_geology_seed(read_stream(reloaded)[1]), "seed changed"
             # Older explicit native and four-layer infrastructure files have no geological chunks: neither becomes solid after migration.
             for name, path in older:
@@ -201,7 +224,7 @@ def main():
                                    ("partial-reload", "MLVS_GEOLOGY_LOADED generator=1"),
                                    ("native371", "MLVS_GEOLOGY_LOADED generator=0"),
                                    ("legacy370", "MLVS_GEOLOGY_LOADED generator=0")):
-                evidence = prior_artifact(CONTEXT, args.prior_run, "logs", f"r2mlvs2-g-{name}.log").read_text(encoding="utf-8", errors="replace")
+                evidence = semantic_text(CONTEXT, args.prior_run, f"r2mlvs2-g-{name}.log", "Debug")
                 assert expected in evidence, (name, "prior acceptance evidence missing")
                 assert prior_artifact(CONTEXT, args.prior_run, "saves", f"r2mlvs2-g-{name}.sav").is_file(), (name, "prior accepted save missing")
         for kind, expected in (("reserved", "Reserved geology terrain encoding"),
@@ -209,7 +232,7 @@ def main():
                                ("dimensions", "Invalid geology dimensions"),
                                ("reference", "Invalid geology span reference"),
                                ("missing", "Missing required geology header")):
-            malformed = variant(source, kind, bind_fixture_mutation(corrupt, kind=kind))
+            malformed = variant(compatibility, kind, bind_fixture_mutation(corrupt, kind=kind))
             run_case(kind, ["-g", malformed.as_posix()], expected, accepted=False, prefix="r2mlvs2-g")
         assert hashlib.sha256(source.read_bytes()).hexdigest() == source_hash, "source fixture changed"
     finally:

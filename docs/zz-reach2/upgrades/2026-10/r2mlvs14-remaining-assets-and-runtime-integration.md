@@ -1,5 +1,7 @@
 # R2MLVS14 - Remaining assets and runtime integration
 
+**Current recovery contract,2026-10-22.** Use the [current Space handover](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and [shared artifact architecture](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer) before continuing. The exact original save pair and compact foundation are durable; current native qualification, frames, reports and runtime homes are generated. Dated log/EXE paths below are historical facts. Select actual prerequisites through the [producer/recipe catalogue](../../../../mlm/review-producers.json); an unresolved recipe or missing original input remains a refusal. Cleanup qualification completes no gameplay or human-acceptance checkbox.
+
 Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). Dispatch: [R2MLVS3MP](r2mlvs3mp-master-plan.md). Completed producer: [Plan13 - Completed graphics foundations and assets](r2mlvs13-graphics-and-asset-pipeline.md). Architecture: [map layers](../../architecture/map-layers/archi-map-layers.md).
 
 Split,2026-10-10: this continuation owns all169 previously unchecked tasks. Original task/group IDs remain stable, including mixed55.3 and79C.3-79C.4. Completed tasks and evidence remain in Plan13. Existing persistence, acceptance, tube and geothermal Plans14-17 are now15-18. This reorganization grants no implementation or art acceptance.
@@ -13,6 +15,8 @@ Split,2026-10-10: this continuation owns all169 previously unchecked tasks. Orig
 **Earlier general-source dispatch.** Collector Group79C/master10.4B and chemical works40C source are complete. The user requested an underground demo before continuing the selected source queue. That general source queue resumes at Group41 battery works under master10.4C. Vent-Tap55.3/55B, Magma-Loop56, utilities/risers60, controls78C, selected fleet19-22, station/terminal24-25, all seven selected mines and Metal39/39C/39D retain their completed source evidence. Collector native loading and ordinary-game display are delivered; later source families still require master10.4D packing/runtime integration.
 
 ## Global Mandatory Reading
+
+> Current recovery: read the [live dispatch](r2mlsp-z-z-z-z-z-q-launch-center-source.md#current-boundary) and only its selected [durable-input/rebuild contract](../../architecture/archi-historical-debug.md#checkpoints-cleanup-and-transfer); older execution paths in completed groups remain historical.
 
 > **Execution protocol**
 >

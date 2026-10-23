@@ -1,0 +1,48 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/acceptance/space_goods_capacity.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "goods-capacity",
+  "run_id": "cleanup36-goods-debug-01",
+  "configuration": "Debug",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+      "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-debug-01/evidence/native-d9e27553e4834a6dadf6dc3a205986b6-stdout.txt",
+      "sha256": "a709abb608bab1d7d70d61af4b88141a571ffa197f37f48980d25087b1a8a33f"
+    },
+    {
+      "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-debug-01/saves/after.sav",
+      "sha256": "062547ce795124cf8e05761bc402159a4887dd1a61ebe8985963237c30ce6674"
+    },
+    {
+      "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-debug-01/saves/before.sav",
+      "sha256": "062547ce795124cf8e05761bc402159a4887dd1a61ebe8985963237c30ce6674"
+    }
+  ],
+  "entrypoint": "-",
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\build\\Debug\\openttd_surface_capital_test.exe",
+    "[.space-goods-capacity]",
+    "--durations",
+    "yes"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup36-goods-debug-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-debug-01/evidence/native-d9e27553e4834a6dadf6dc3a205986b6-stdout.txt",
+      "sha256": "a709abb608bab1d7d70d61af4b88141a571ffa197f37f48980d25087b1a8a33f"
+    }
+  ],
+  "executable": {
+    "path": "build/Debug/openttd_surface_capital_test.exe",
+    "sha256": "7a1f419159a890f714811ffe6f6ee3fc4ca623e12b748f5e2aa8ece05dcdc066"
+  }
+}

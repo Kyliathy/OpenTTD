@@ -1,0 +1,4 @@
+pause
+set savegame_format lzma
+save "C:/Users/Axonn/AppData/Local/cxc-a/mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-rwd-04/saves/ordinary"
+quit

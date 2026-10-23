@@ -2,6 +2,7 @@
 """Real saved editor policy and exact-content/corrupt-metadata refusal fixtures.
 
 @file multilayer_profile_save_fixture.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, Group 21
 """
 
@@ -22,12 +23,13 @@ sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path
 from runner import current_run_context, run_native
 from multilayer_state_fixture import output_save_path, prior_artifact
+from prior_stage_evidence import semantic_text
 CONTEXT = current_run_context("content", "multilayer-profile-save-fixture")
 RUNTIME = CONTEXT.runtime_dir
 CONTEXT.prepare_runtime("grftest.cfg")
 output_save_path = partial(output_save_path, context=CONTEXT)
 save_path = partial(save_path, context=CONTEXT)
-run_case = partial(run_case, context=CONTEXT)
+run_case = partial(run_case, context=CONTEXT, producer=Path(__file__))
 log_path = partial(log_path, context=CONTEXT)
 
 
@@ -127,7 +129,7 @@ def main():
                     ("missing-metadata", "Missing required multilayer metadata chunk", False),
                     ("bad-policy", "Unknown multilayer policy flags", False))
         for name, expected, accepted in previous:
-            evidence = prior_artifact(CONTEXT, args.prior_run, "logs", f"r2mlvs1-h-{name}.log").read_text(encoding="utf-8", errors="replace")
+            evidence = semantic_text(CONTEXT, args.prior_run, f"r2mlvs1-h-{name}.log", "Debug")
             assert expected in evidence, (name, "prior boundary evidence missing")
             assert prior_artifact(CONTEXT, args.prior_run, "saves", f"r2mlvs1-h-{name}.sav").is_file() == accepted, (name, "prior save boundary differs")
     scope = "Two package refusals rerun; five earlier editor/metadata boundaries verified from retained evidence.\n" if args.packages_only else "All seven boundaries executed in this run.\n"

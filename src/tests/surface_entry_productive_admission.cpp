@@ -2,6 +2,7 @@
 /** @file surface_entry_productive_admission.cpp Pure original-world productive recovery admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CSGZU.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group11; separate load-only callback.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group36; Plan11GZVEEIpure Goods proposal.
  * Original command, cargo, company and clock owners remain authoritative.
  * The historical resupply translation unit supplies its exact command/save/
  * complete-cost adapters; its hidden test is registered but never selected by
@@ -111,3 +112,4 @@ TEST_CASE("Current original productive recovery has only native fully priced adm
 
 #include "surface_entry_construction_cash.h"
 #include "space_checkpoint_load.h"
+#include "space_goods_capacity.h"

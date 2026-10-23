@@ -1,0 +1,47 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-load",
+  "run_id": "cleanup35-checkpoint-rwd-01",
+  "configuration": "RelWithDebInfo",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/RelWithDebInfo/current.sav",
+      "sha256": "5b11bc4b38a33f80ab49fc66f5908085ad387a6a50624d0a86b100541726919a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-load/cleanup35-checkpoint-rwd-01/evidence/native-1d13ce4115e74815b10b32501373c5ec-stdout.txt",
+      "sha256": "c6f09764fb923c0d9fc023953ec27a04015a78c1df1fbc71a84660ebd8d62070"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-load/cleanup35-checkpoint-rwd-01/saves/checkpoint-after.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-load/cleanup35-checkpoint-rwd-01/saves/checkpoint-before.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    }
+  ],
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\build\\RelWithDebInfo\\openttd_surface_capital_test.exe",
+    "[.space-checkpoint-load]",
+    "--durations",
+    "yes"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup35-checkpoint-rwd-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-load/cleanup35-checkpoint-rwd-01/evidence/native-1d13ce4115e74815b10b32501373c5ec-stdout.txt",
+      "sha256": "c6f09764fb923c0d9fc023953ec27a04015a78c1df1fbc71a84660ebd8d62070"
+    }
+  ],
+  "executable": {
+    "path": "build/RelWithDebInfo/openttd_surface_capital_test.exe",
+    "sha256": "5589182bd1f73436211aeb89b728d9d991ba4045d48bcb7537155422e5989acc"
+  }
+}

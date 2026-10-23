@@ -1,6 +1,7 @@
 # Disposable provider adapter; pinned source patches use GNU patch without Git writes.
 # @file native_build_apply_patches.cmake.in Only provider materialization substitutes the tool path.
 # @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13.
+# @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 cold patch line endings.
 
 #[[/**
  * Apply the selected port's original patches inside its generated source owner.
@@ -20,8 +21,11 @@ function(z_vcpkg_apply_patches)
     foreach(patch IN LISTS arg_PATCHES)
         get_filename_component(absolute_patch "${patch}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         set(logname "patch-${TARGET_TRIPLET}-${patchnum}")
+        # Pinned Git patch bytes can use CRLF while downloaded source uses LF.
+        # GNU patch text mode reconciles that transport difference; binary mode
+        # rejects valid context. Keep the original patch/source fixtures intact.
         vcpkg_execute_in_download_mode(
-            COMMAND "${patch_executable}" -p1 --binary --batch --forward --ignore-whitespace
+            COMMAND "${patch_executable}" -p1 --batch --forward --ignore-whitespace
                     --no-backup-if-mismatch --input "${absolute_patch}"
                     --reject-file "${CURRENT_BUILDTREES_DIR}/${logname}.rej"
             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${logname}-out.log"

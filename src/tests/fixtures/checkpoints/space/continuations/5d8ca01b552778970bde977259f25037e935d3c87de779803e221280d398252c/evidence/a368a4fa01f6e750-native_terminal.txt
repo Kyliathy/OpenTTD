@@ -1,0 +1,115 @@
+Filters: [.space-goods-capacity]
+SPACE_GOODS_PACKET station=13 id=35 next=65535 first=13 source_tile=4294967295 quantity=2
+SPACE_GOODS_STATION station=13 tile=3280 available=2 packet_quantity=2 packets=1 accepts=false platform=7 owner=0
+SPACE_GOODS_STATION station=15 tile=1702 available=0 packet_quantity=0 packets=0 accepts=true platform=7 owner=0
+SPACE_GOODS_EXISTING head=49 parts=13 capacity=300 held=93 length=104 remaining_days=3689
+SPACE_GOODS_EXISTING head=52 parts=14 capacity=50 held=0 length=112 remaining_days=3689
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=3 engine=140 annual256=288000 pending=67 remaining=1974 profit_last=-197361 profit_this=-25458 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=3 type=1 destination=13 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=3 type=1 destination=12 load=4 unload=2
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=9 engine=119 annual256=288000 pending=61 remaining=3029 profit_last=960015 profit_this=70542 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=9 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=9 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=10 engine=119 annual256=288000 pending=60 remaining=1550 profit_last=1421071 profit_this=163470 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=10 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=10 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=11 engine=119 annual256=288000 pending=59 remaining=3100 profit_last=1232143 profit_this=184718 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=11 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=11 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=24 engine=119 annual256=288000 pending=46 remaining=1550 profit_last=1189135 profit_this=120718 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=24 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=24 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=25 engine=140 annual256=288000 pending=45 remaining=1977 profit_last=-180721 profit_this=-17778 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=25 type=1 destination=13 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=25 type=1 destination=12 load=4 unload=2
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=42 engine=24 annual256=738000 pending=28 remaining=3689 profit_last=5021055 profit_this=638830 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=42 type=1 destination=14 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=42 type=1 destination=16 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=43 engine=119 annual256=288000 pending=27 remaining=3100 profit_last=1748495 profit_this=126606 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=43 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=43 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=48 engine=263 annual256=120000 pending=22 remaining=3219 profit_last=108632 profit_this=-13776 orders=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=1 destination=0 load=2 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=48 type=1 destination=3 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=49 engine=24 annual256=738000 pending=21 remaining=3689 profit_last=8225151 profit_this=-84882 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=49 type=1 destination=12 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=49 type=1 destination=11 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=51 engine=152 annual256=288000 pending=19 remaining=3100 profit_last=-67569 profit_this=-33138 orders=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=1 destination=1 load=2 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=8 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=51 type=1 destination=2 load=4 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=52 engine=24 annual256=738000 pending=18 remaining=3689 profit_last=12678527 profit_this=2120046 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=52 type=1 destination=15 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=52 type=1 destination=13 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=53 engine=119 annual256=288000 pending=17 remaining=1550 profit_last=1096719 profit_this=91022 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=53 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=53 type=1 destination=18 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=54 engine=266 annual256=0 pending=0 remaining=7508 profit_last=0 profit_this=0 orders=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=56 engine=119 annual256=288000 pending=14 remaining=3100 profit_last=1404175 profit_this=176526 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=56 type=1 destination=17 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=56 type=1 destination=20 load=0 unload=0
+SURFACE_RESUPPLY_CAPITAL_SERVICE vehicle=62 engine=137 annual256=288000 pending=8 remaining=3863 profit_last=-230897 profit_this=-27250 orders=2
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=62 type=1 destination=22 load=0 unload=4
+SURFACE_RESUPPLY_CAPITAL_ROUTE vehicle=62 type=1 destination=15 load=4 unload=2
+SURFACE_RESUPPLY_INCOME_FIXED_PRICES ticks=2000 inflation=false callback_free=true priced_bodies=16 year_boundary=false days=28 months=1 upkeep=1641 interest=8334 station_charge=25
+SPACE_GOODS_EXPECTED engine=24 available=true callback_free=true quoted=true error=65535 invoice=35156 capacity=0
+SPACE_GOODS_EXPECTED engine=32 available=true callback_free=true quoted=true error=65535 invoice=1113 capacity=25
+SPACE_GOODS_WAGON engine=27 quoted=true error=65535 invoice=1447 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=28 quoted=true error=65535 invoice=1335 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=29 quoted=true error=65535 invoice=1031 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=30 quoted=true error=65535 invoice=1171 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=31 quoted=true error=65535 invoice=1125 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=32 quoted=true error=65535 invoice=1113 capacity=25 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=33 quoted=true error=65535 invoice=1066 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=34 quoted=true error=65535 invoice=1060 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=35 quoted=true error=65535 invoice=1048 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=36 quoted=true error=65535 invoice=1148 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=37 quoted=true error=65535 invoice=1494 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=57 quoted=false error=65535 invoice=1447 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=58 quoted=false error=65535 invoice=1335 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=59 quoted=false error=65535 invoice=1031 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=60 quoted=false error=65535 invoice=1171 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=61 quoted=false error=65535 invoice=1125 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=62 quoted=false error=65535 invoice=1113 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=63 quoted=false error=65535 invoice=1066 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=64 quoted=false error=65535 invoice=1060 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=65 quoted=false error=65535 invoice=1048 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=66 quoted=false error=65535 invoice=1148 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=67 quoted=false error=65535 invoice=1494 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=89 quoted=false error=65535 invoice=1447 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=90 quoted=false error=65535 invoice=1335 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=91 quoted=false error=65535 invoice=1031 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=92 quoted=false error=65535 invoice=1171 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=93 quoted=false error=65535 invoice=1125 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=94 quoted=false error=65535 invoice=1113 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=95 quoted=false error=65535 invoice=1066 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=96 quoted=false error=65535 invoice=1060 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=97 quoted=false error=65535 invoice=1048 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=98 quoted=false error=65535 invoice=1148 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=99 quoted=false error=65535 invoice=1494 capacity=0 annual=0 length=8 life_days=7320 age_limited=false
+SPACE_GOODS_WAGON engine=258 quoted=false error=35019 invoice=0 capacity=0 annual=0 length=8 life_days=10980 age_limited=false
+SPACE_GOODS_WAGON engine=259 quoted=false error=35019 invoice=0 capacity=0 annual=0 length=8 life_days=10980 age_limited=false
+SPACE_GOODS_WAGON engine=261 quoted=true error=65535 invoice=497 capacity=120 annual=0 length=8 life_days=10980 age_limited=false
+SPACE_GOODS_WAGON engine=262 quoted=false error=35019 invoice=0 capacity=0 annual=0 length=8 life_days=10980 age_limited=false
+SPACE_GOODS_HEAD engine=24 quoted=true error=65535 invoice=35156 annual=2882 source_connected=true receiver_connected=true length=8 life_days=8418
+SPACE_GOODS_HEAD engine=54 quoted=false error=65535 invoice=60937 annual=3234 source_connected=false receiver_connected=false length=8 life_days=7320
+SPACE_GOODS_HEAD engine=84 quoted=false error=65535 invoice=82031 annual=3515 source_connected=false receiver_connected=false length=8 life_days=7320
+SPACE_GOODS_HEAD engine=85 quoted=false error=65535 invoice=86718 annual=3557 source_connected=false receiver_connected=false length=8 life_days=7320
+SPACE_GOODS_HEAD engine=86 quoted=false error=65535 invoice=96093 annual=3571 source_connected=false receiver_connected=false length=8 life_days=7320
+SPACE_GOODS_HEAD engine=87 quoted=false error=65535 invoice=111328 annual=3585 source_connected=false receiver_connected=false length=16 life_days=7320
+SPACE_GOODS_HEAD engine=256 quoted=false error=65535 invoice=0 annual=0 source_connected=true receiver_connected=true length=8 life_days=10980
+SPACE_GOODS_HEAD engine=257 quoted=false error=65535 invoice=0 annual=0 source_connected=true receiver_connected=true length=8 life_days=10980
+SPACE_GOODS_HEAD engine=260 quoted=true error=65535 invoice=164062 annual=1828 source_connected=true receiver_connected=true length=8 life_days=10980
+SPACE_GOODS_BUDGET cash=182302 debt=5000000 depot=1638 ticks=2000 days=28 months=1 upkeep=1641 interest=8334 station=25 capital_floor=100000 operating_floor=40000 head=24 wagon=32 head_invoice=35156 wagon_invoice=1113 head_upkeep=216 wagon_upkeep=2 wagon_capacity=25 head_length=8 wagon_length=8 platform_length=112 quote_complete=true year_boundary=false future_fares=0 refunds=0 credit=0 paid=0
+SPACE_GOODS_LOT wagons=2 capacity=50 invoice=37382 added_upkeep=220 existing_operating=10000 target=147602 cash=182302 length=24 platform_length=112 fits=true quote_complete=true funded=true spending_permission=false
+SPACE_GOODS_LOT wagons=4 capacity=100 invoice=39608 added_upkeep=224 existing_operating=10000 target=149832 cash=182302 length=40 platform_length=112 fits=true quote_complete=true funded=true spending_permission=false
+SPACE_GOODS_LOT wagons=8 capacity=200 invoice=44060 added_upkeep=232 existing_operating=10000 target=154292 cash=182302 length=72 platform_length=112 fits=true quote_complete=true funded=true spending_permission=false
+SPACE_GOODS_LOT wagons=12 capacity=300 invoice=48512 added_upkeep=240 existing_operating=10000 target=158752 cash=182302 length=104 platform_length=112 fits=true quote_complete=true funded=true spending_permission=false
+SPACE_OPERATION_RESULT task=Plan11/15CSGZVEEI phase=goods-capacity-query ticks_before=2923387 ticks_after=2923387 revision_text=6d38666261306565346331376166356361643033616239663934353137613964643533313738393937 revision_modified=2 revision_newgrf=536898916 save_version=440 inherited_paid_scope=false
+1.738 s: Dedicated Goods capacity has only real native whole capital admission
+===============================================================================
+All tests passed (272 assertions in 1 test case)
+

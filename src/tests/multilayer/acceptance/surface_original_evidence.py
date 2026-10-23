@@ -1,6 +1,7 @@
 """Verify exact original native stages and ordinary static loading without replaying work.
 
 @file surface_original_evidence.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group22, legacy EXE-graph retention retired.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CK.
 Callers supply explicit observers, ordered receipts and before-edit manifests.
 This helper verifies artifacts; it owns no gameplay inventory, money or time.
@@ -10,7 +11,6 @@ reuse; every historical caller retains the original uncached default behavior.
 import json
 from pathlib import Path
 import runpy
-import shutil
 
 from space_preview_checks import ROOT, chunks, identity
 from surface_gateway_replay import RESTORE
@@ -79,10 +79,12 @@ def bind(foundation_path, versions, names, static_name, observer, sources, retai
     @param static_name Ordinary receipt suffix for each selected current original.
     @param observer Caller-specific actual current custody/material observation.
     @param sources Current caller/helper authorities additionally retained with their hashes.
-    @param retained_directory Fresh test-cache destination, or None for verification only.
+    @param retained_directory Legacy archive argument, now refused; use export_foundation on a typed continuation.
     @param identity_reader Optional explicit read-only identity provider; None preserves every original uncached read.
     @return Exact native/cross-build/static acceptance and current original observations.
     """
+    if retained_directory is not None:
+        raise ValueError("legacy executable-graph retention is closed; publish_successor/export_foundation owns durable continuation")
     read_identity = identity if identity_reader is None else identity_reader
 
     def check_reference(reference, selected_versions):
@@ -167,26 +169,4 @@ def bind(foundation_path, versions, names, static_name, observer, sources, retai
     result = dict(complete=True, foundation=read_identity(foundation_path), historical_versions=[read_identity(path) for path in versions],
                   configurations=configurations, native_processes=len(processes), cross_build_gameplay_comparisons=comparisons,
                   ordinary_static_reloads=2, source=read_identity(Path(__file__)))
-    if retained_directory is not None:
-        retained_directory.mkdir(parents=True, exist_ok=False)
-        copies = [product for product in previous["products"] if product["source"]["path"] not in changed]
-        existing = {product["source"]["path"] for product in copies}
-        for path in [Path(__file__)] + list(sources) + list(versions):
-            reference = read_identity(path)
-            products[reference["path"]] = reference
-        # Keep unchanged prior authorities at their exact retained locations.
-        # Copy only new current tested authorities; historical versions remain
-        # qualified by the caller's explicit immutable before-edit manifests.
-        for index, reference in enumerate(products.values()):
-            if reference["path"] in existing:
-                continue
-            source = ROOT / reference["path"]
-            target = retained_directory / f"{index:03d}-{source.parent.name}-{source.name}"
-            shutil.copyfile(source, target)
-            assert read_identity(target)["sha256"] == reference["sha256"]
-            copies.append(dict(source=reference, retained=read_identity(target)))
-            existing.add(reference["path"])
-        manifest = retained_directory / "retained.json"
-        manifest.write_text(json.dumps(dict(_documentation=__doc__, predecessor=foundation["products"], products=copies), indent=2) + "\n", encoding="utf-8")
-        result.update(products=read_identity(manifest), retained_products=len(copies))
     return result

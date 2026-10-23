@@ -2,6 +2,8 @@
 
 @file native_build_check.py Independent fault cases for the bounded native bootstrap.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group13.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 dependency-source cleanup classification.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 pinned provider license.
 """
 
 import copy
@@ -44,6 +46,12 @@ class NativeBuildChecks(unittest.TestCase):
         self.write_profile(self.profile)
         bundle = self.root / self.profile["dependencies"]["source_bundle"]["path"]
         shutil.copyfile(build.ROOT / self.profile["dependencies"]["source_bundle"]["path"], bundle)
+        # The portable fixture includes the same retained distribution inputs
+        # as a cold checkout; an existing workstation build cannot supply them.
+        for reference in self.profile["dependencies"].get("runtime_assets", []):
+            target = self.root / reference["path"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(build.ROOT / reference["path"], target)
 
     def write_profile(self, document):
         """Write only the test's explicitly selected portable profile.
@@ -101,6 +109,57 @@ class NativeBuildChecks(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "versions differ"):
             dependencies.verify_installed(profile, installed, self.root)
 
+    def test_retained_runtime_assets_are_required_and_conflicts_preserve_bytes(self):
+        """Rebuild the original DOS distribution without an old build fallback.
+
+        @param self Isolated source profile and exact retained base-set fixture copies.
+        @return None; missing/corrupt inputs and conflicting destinations refuse safely.
+        """
+        profile = self.profile
+        assets = profile["dependencies"]["runtime_assets"]
+        first, last = assets[0], assets[-1]
+        missing = self.root / last["path"]
+        payload = missing.read_bytes()
+        missing.unlink()
+        destination = self.root / "build"
+        with self.assertRaises(FileNotFoundError):
+            build.prepare_runtime_assets(profile, destination, self.root)
+        with self.assertRaises(FileNotFoundError):
+            build.load_profile(root=self.root)
+        self.assertFalse(destination.exists())
+        missing.write_bytes(payload)
+        build.prepare_runtime_assets(profile, destination, self.root)
+        source = self.root / first["path"]
+        target = destination / first["destination"]
+        self.assertEqual(source.read_bytes(), target.read_bytes())
+        target.write_bytes(b"independent existing user bytes")
+        with self.assertRaisesRegex(ValueError, "provider changed"):
+            build.prepare_runtime_assets(profile, destination, self.root)
+        self.assertEqual(target.read_bytes(), b"independent existing user bytes")
+        source.write_bytes(source.read_bytes() + b"changed")
+        with self.assertRaisesRegex(ValueError, "runtime asset changed"):
+            build.runtime_asset_sources(profile, self.root)
+        with self.assertRaisesRegex(ValueError, "runtime asset changed"):
+            build.source_epoch(self.root)
+
+    def test_runtime_data_does_not_replace_the_verified_compiler_provider(self):
+        """Keep data-only distribution repairs from changing the CMake toolchain path.
+
+        @param self Isolated retained provider bundle and profile with runtime assets.
+        @return None; provider reuse still verifies every pinned script, port and tool byte.
+        """
+        tools = {}
+        for name in ("patch", "vcpkg"):
+            path = self.root / (name + ".exe")
+            path.write_bytes(b"independent tool identity fixture")
+            tools[name] = dict(path=str(path))
+        before = copy.deepcopy(self.profile)
+        before["dependencies"].pop("runtime_assets")
+        first = dependencies.prepare_provider(before, tools, self.root / "build", self.root)
+        with patch.object(dependencies, "source_archives", side_effect=AssertionError("unexpected provider reconstruction")):
+            second = dependencies.prepare_provider(self.profile, tools, self.root / "build", self.root)
+        self.assertEqual(first, second)
+
     def test_dependency_source_bundle_is_independent_and_hash_bound(self):
         """Verify retained recipes without an external Git checkout and reject changed bytes.
 
@@ -110,10 +169,51 @@ class NativeBuildChecks(unittest.TestCase):
         scripts, ports = dependencies.source_archives(self.profile, self.root)
         self.assertGreater(len(scripts), 0)
         self.assertEqual(len(ports), 13)
+        # Both pinned CMake helper ports install the provider's own license.
+        # A warm installed tree concealed this missing cold-build dependency.
+        with tarfile.open(fileobj=io.BytesIO(scripts)) as archive:
+            license_bytes = archive.extractfile("LICENSE.txt").read()
+        self.assertIn(b"Microsoft Corporation", license_bytes)
+        provider = self.root / "build/provider"
+        dependencies.unpack_archive(scripts, provider, self.root)
+        for name in ("vcpkg.exe", "vcpkg.disable-metrics"):
+            (provider / name).write_bytes(b"")
+        records = {row["path"]: row["sha256"] for row in dependencies.provider_files(provider)}
+        self.assertIn("LICENSE.txt", records)
+        (provider / "LICENSE.txt").write_bytes(license_bytes + b"changed")
+        changed = {row["path"]: row["sha256"] for row in dependencies.provider_files(provider)}
+        self.assertNotEqual(records["LICENSE.txt"], changed["LICENSE.txt"])
         bundle = self.root / self.profile["dependencies"]["source_bundle"]["path"]
         bundle.write_bytes(bundle.read_bytes() + b"tampered")
         with self.assertRaisesRegex(ValueError, "source bundle changed"):
             build.load_profile(root=self.root)
+
+    def test_cleanup_accepts_exact_archived_port_but_protects_a_local_edit(self):
+        """Reconstructible dependency source cannot conceal a uniquely edited local port.
+
+        @param self Active isolated fixture with the real hash-bound source bundle.
+        @return None; local edited bytes remain intact after the actual cleanup gate refuses.
+        """
+        from artifact_preservation import verify_cleanup_inputs
+
+        _provider, ports = dependencies.source_archives(self.profile, self.root)
+        package, payload = ports[0]
+        with tarfile.open(fileobj=io.BytesIO(payload)) as archive:
+            original = archive.extractfile("portfile.cmake").read()
+        port = self.root / "build/.native-tools/vcpkg-fixture/ports" / package["name"] / "portfile.cmake"
+        port.parent.mkdir(parents=True)
+        port.write_bytes(original)
+        owner = self.root / "src/tests/fixtures/cleanup"
+        owner.mkdir(parents=True)
+        (owner / "migration.json").write_text(json.dumps(dict(payloads=[], original_path_count=0)), encoding="utf-8")
+        (owner / "source-epochs.json").write_text(json.dumps(dict(payloads=[], generated=[], original_candidates=0)), encoding="utf-8")
+        (owner.parent / "multilayer-inputs.json").write_text('{"inputs":{}}', encoding="utf-8")
+        self.assertEqual(verify_cleanup_inputs(self.root, ["build"])["unresolved_required_inputs"], 0)
+        changed = original + b"\n# Independent locally authored port change.\n"
+        port.write_bytes(changed)
+        with self.assertRaisesRegex(ValueError, "unclassified valuable source"):
+            verify_cleanup_inputs(self.root, ["build"])
+        self.assertEqual(port.read_bytes(), changed)
 
     def test_archive_traversal_and_links_fail_before_export(self):
         """A tar member cannot redirect a pinned port export outside its local owner.

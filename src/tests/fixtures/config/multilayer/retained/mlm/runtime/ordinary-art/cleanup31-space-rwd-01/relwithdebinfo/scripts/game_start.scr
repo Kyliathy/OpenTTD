@@ -1,0 +1,7 @@
+# @see r2fc-file-cleanup3.md19C; paused ordinary native field only.
+pause
+set savegame_format lzma
+space_view
+zoomto 1
+save "C:/Users/Axonn/AppData/Local/cxc-a/mlm/reviews/space/space-paused-viewports/cleanup31-space-rwd-01/saves/ordinary-paused-view"
+screenshot giant "space-paused-field"

@@ -1,0 +1,57 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/acceptance/space_operation_restore.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "goods-capacity-restore",
+  "run_id": "cleanup36-goods-rwd-01-ordinary",
+  "configuration": "RelWithDebInfo",
+  "inputs": [
+    {
+      "path": "mlm/reviews/space/goods-capacity/cleanup36-goods-rwd-01/saves/after.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/evidence/native-f7c21b9f982c48dc9323e86d20bb7cd6-stdout.txt",
+      "sha256": "a2ad016a84030bf87c556a7143fdce514706b208235bf3e123b2f4c280d508f2"
+    },
+    {
+      "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/saves/ordinary.sav",
+      "sha256": "b34448bdbab38b0eaede992c42e661d051f4a0003e7bf7a3cf4ef99b917a7bb6"
+    }
+  ],
+  "entrypoint": "-",
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup36-goods-rwd-01-ordinary\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup36-goods-rwd-01-ordinary\\main\\native-art.cfg",
+    "-g",
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\reviews\\space\\goods-capacity\\cleanup36-goods-rwd-01\\saves\\after.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup36-goods-rwd-01-ordinary/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/goods-capacity-restore/cleanup36-goods-rwd-01-ordinary/evidence/native-f7c21b9f982c48dc9323e86d20bb7cd6-stdout.txt",
+      "sha256": "a2ad016a84030bf87c556a7143fdce514706b208235bf3e123b2f4c280d508f2"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup36-goods-rwd-01-ordinary/main/openttd_console.exe",
+    "sha256": "532467a2a6a450aaf43af2126016e09ea344f0998fbd43e1bce0fb7604486d4b"
+  }
+}

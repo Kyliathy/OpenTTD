@@ -7,49 +7,65 @@
       "source": "src/tests/multilayer_profile_save_fixture.py",
       "selector": "--packages-only --prior-run <exact-id>",
       "role": "five prior editor/metadata acceptance/refusal logs and exact accepted-save presence",
-      "disposition": "regenerate_selected_prior_stage_or_retain_minimal_independent_semantic_fixture"
+      "disposition": "implemented_explicit_prior_stage_semantics_and_hash_bound_retained_first_save_roles",
+      "adapter": "src/tests/multilayer/support/prior_stage_evidence.py",
+      "diagnostic_logs_required": false,
+      "verification": "r2fc2-file-cleanup3.md Group21: focused semantic/compatibility refusals and state-prior-native selected native regeneration"
     },
     {
       "reader": "geology_save_fixture.main/prior_artifact",
       "source": "src/tests/geology_save_fixture.py",
       "selector": "--refusals-only --prior-run <exact-id>",
       "role": "native/reload/partial/partial-reload/legacy accepted logs and saves",
-      "disposition": "regenerate_selected_prior_stage_or_retain_minimal_independent_semantic_fixture"
+      "disposition": "implemented_explicit_prior_stage_semantics_and_hash_bound_retained_first_save_roles",
+      "adapter": "src/tests/multilayer/support/prior_stage_evidence.py",
+      "diagnostic_logs_required": false,
+      "verification": "r2fc2-file-cleanup3.md Group21: focused semantic/compatibility refusals and state-prior-native selected native regeneration"
     },
     {
       "reader": "multilayer_state_fixture.save_path/run_case",
       "source": "src/tests/multilayer_state_fixture.py",
       "selector": "explicit fixture or reserved same-run output; no latest fallback",
       "role": "immutable save-format input versus newly generated output",
-      "disposition": "retain_curated_save_and_regenerate_owned_outputs"
+      "disposition": "implemented_retained_older_formats_and_explicit_native_prerequisite_recipe",
+      "recipe": "state-prior-native",
+      "diagnostic_logs_required": false
     },
     {
       "reader": "native_feedback.main",
       "source": "src/tests/multilayer/tbm/native_feedback.py",
       "selector": "--reload-accepted --prior-run <exact-id>",
       "role": "one accepted prior save and FEEDBACK_RESULT line for uninterrupted/reload equality",
-      "disposition": "run_owned_evidence_and_explicit_prior_stage_preparation"
+      "disposition": "implemented_explicit_prior_stage_semantics_and_hash_bound_retained_first_save_roles",
+      "adapter": "src/tests/multilayer/support/prior_stage_evidence.py",
+      "diagnostic_logs_required": false,
+      "verification": "r2fc2-file-cleanup3.md Group21: focused semantic/compatibility refusals and state-prior-native selected native regeneration"
     },
     {
       "reader": "native_motion.main",
       "source": "src/tests/multilayer/tbm/native_motion.py",
       "selector": "--replay <kind> / --pace-check-layer <layer> --prior-run <exact-id>",
       "role": "matching native motion/pacing log markers, saved fractions and frame observations",
-      "disposition": "run_owned_evidence_and_explicit_prior_stage_preparation"
+      "disposition": "implemented_explicit_prior_stage_semantics_and_hash_bound_retained_first_save_roles",
+      "adapter": "src/tests/multilayer/support/prior_stage_evidence.py",
+      "diagnostic_logs_required": false,
+      "verification": "r2fc2-file-cleanup3.md Group21: focused semantic/compatibility refusals and state-prior-native selected native regeneration"
     },
     {
       "reader": "pacing_files.verify_migration/main",
       "source": "src/tests/multilayer/tbm/pacing_files.py",
       "selector": "explicit retained 393/394 rate-migration pairs",
       "role": "fraction-only schema expectations and malformed-copy preview/startup refusals",
-      "disposition": "retain_curated_pair_and_regenerate_malformed_copies"
+      "disposition": "retained_curated_393_394_pairs_and_owned_malformed_outputs; no_old_format_generation_from_current_save"
     },
     {
       "reader": "phase_pair_index_checks-1.main/read_bound",
       "source": "src/tests/multilayer/acceptance/phase_pair_index_checks-1.py",
       "selector": "both explicit configurations plus --handling-release/--handling-debug",
       "role": "paid-probe/descent progress steps and module prior_positive_release/report identities; distinguish genuine paid from seeded handling",
-      "disposition": "seal_historical_paid_pairs_or_explicitly_prepare_selected_synthetic_fixture_never_replay_paid_work"
+      "disposition": "implemented_explicit_current_progress_or_exact_retained_historical_graph",
+      "diagnostic_logs_required": false,
+      "verification": "r2fc2-file-cleanup3.md Group22:23 original pairs per configuration and complete nested report/save identities"
     }
   ],
   "candidate_owners": [

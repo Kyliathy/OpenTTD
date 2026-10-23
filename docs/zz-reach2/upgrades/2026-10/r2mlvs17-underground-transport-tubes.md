@@ -1,5 +1,7 @@
 # R2MLVS17 - Underground Transport Tubes
 
+Storage/recovery: [historical debugging architecture](../../architecture/archi-historical-debug.md) and [R2FC2](r2fc2-file-cleanup3.md); these do not resume paused Tube feature work.
+
 ## Global Mandatory Reading
 
 > **Execution protocol**
@@ -351,7 +353,7 @@ Group10 baseline,2026-10-21: `logs/underground-tubes/20261021-models-01/before.j
 
 #### Checkpoint handover — paused at the user's request,2026-10-21
 
-Cleanup migration,2026-10-21: [paused source checkpoint](../../../../src/tests/fixtures/checkpoints/underground/checkpoint.json) now retains both distinct original source epochs, four exact provisional source owners and compact Group9history/terminal/source witnesses. Group10 remains paused and unqualified; cleanup Group15 incidentally compiled its preserved provisional source into the shared engine for Space recovery, without implementing or testing Tube10. The older not-built statement describes the original pause snapshot; no tube feature was resumed. Historical EXE paths are facts rather than required retained images. Space remains ongoing in this checkout; use its live master/handover instead of the older other-worktree sentence below. See [R2FC-3 Group9](r2fc-file-cleanup3-a-execution.md#group9---save-export-comparison-witnesses-and-unique-source-preservation).
+Cleanup handover,2026-10-23: the [paused source checkpoint](../../../../src/tests/fixtures/checkpoints/underground/checkpoint.json) retains both `before.json` and `before-definitions.json`, four provisional source owners and completed Group9terminal history. Public `python -B src/tests/multilayer/support/artifact_rebuild.py tube-checkpoint --run-id recovery-tube-history-001` verifies42retained witnesses/772original art files and the historical24cases/8687assertions/eight-tag model9 scope; this mechanism passed staged R2FC2Group32. Group10remains provisional and unqualified. Its incidental shared-engine compilation does not implement or test the five-model feature. Real cleanup passed Group33; old EXE paths are facts, not required images. Space recovered and completed its pure Goods query in the user-selected original checkout; its exported successor dispatches a read-only usefulness gate. Use the live Space master/handover. Tube work remains paused. The earlier other-worktree/not-built statements below describe the original pause snapshot.
 
 
 **This handover note can be deleted once we pick up again and have recovered the checkpoint.** Stop here: Group9 is complete; current work is **master10.5 / this Group10**, with every10.1-10.6 checkbox still unchecked. Do not interpret the older2026-10-08 skip below as current authority. Space is complete in another worktree. No Git writes, subagents, commits or checkout operations are authorized. No build, test or game process remains running at this checkpoint.

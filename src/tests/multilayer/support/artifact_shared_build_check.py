@@ -2,14 +2,18 @@
 
 @file artifact_shared_build_check.py Real local identity checks; no compiler or gameplay.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups18C/19D.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group28 complete inventory fixtures.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group30 explicit planned/current builds.
 """
 
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import artifact_rebuild as rebuild
+import native_build
 
 
 class SharedBuildChecks(unittest.TestCase):
@@ -39,6 +43,41 @@ class SharedBuildChecks(unittest.TestCase):
                                      later=dict(target="ground", original_parameters={})))
         self.assertEqual(rebuild.selected_build_targets(selection), ["ground", "space"])
 
+    def test_explicit_prebuild_only_adds_selected_targets_and_rejects_pending_graphs(self):
+        """Precompile later selected images without executing or accepting their observations.
+
+        @param self Active isolated compile-selection fixture owner.
+        @return None; pending graphs and undeclared image scope cannot enter the plan.
+        """
+        current = dict(recipes=dict(current=dict(target="space", original_parameters={})))
+        future = dict(executable=True, recipes=dict(later=dict(target="ground", original_parameters={})))
+        with patch.object(rebuild, "load_recipe", return_value=future) as load:
+            plan = rebuild.compile_plan(current, "Debug", self.root, ["later", "later"])
+        self.assertEqual(plan, dict(targets=["ground", "space"], prebuild_recipes=["later"], provided_build=None))
+        load.assert_called_once_with("later", "Debug", self.root)
+        with patch.object(rebuild, "load_recipe", return_value=dict(future, executable=False)):
+            with self.assertRaisesRegex(ValueError, "pending or missing"):
+                rebuild.compile_plan(current, "Debug", self.root, ["later"])
+        pure = dict(recipes=dict(source=dict(target=None, original_parameters={})))
+        with self.assertRaisesRegex(ValueError, "selected native recipe closure"):
+            rebuild.compile_plan(pure, "Debug", self.root, ["later"])
+
+    def test_explicit_current_build_reuse_requires_current_images_source_and_configuration(self):
+        """Treat the selected current build as a prerequisite, never a native test pass.
+
+        @param self Active isolated physical build/source/image fixture owner.
+        @return None; changed source and another configuration still refuse before execution.
+        """
+        selection = dict(recipes=dict(current=self.recipe))
+        plan = rebuild.compile_plan(selection, "Debug", self.root, build_result=self.result)
+        self.assertEqual(plan["provided_build"], self.stage["result"])
+        self.assertNotIn("verify", plan)
+        with self.assertRaisesRegex(ValueError, "configuration/targets/status"):
+            rebuild.compile_plan(selection, "RelWithDebInfo", self.root, build_result=self.result)
+        self.source.write_bytes(self.source.read_bytes() + b"changed")
+        with self.assertRaisesRegex(ValueError, "source changed"):
+            rebuild.compile_plan(selection, "Debug", self.root, build_result=self.result)
+
     def setUp(self):
         """Create actual source/profile/image files and a bound synthetic build result.
 
@@ -50,20 +89,26 @@ class SharedBuildChecks(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory(prefix="shared-build-", dir=cache)
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
-        self.source = self.root / "native.cpp"
+        self.source = self.root / "src/native.cpp"
+        self.source.parent.mkdir()
         self.profile = self.root / "profile.json"
-        self.image = self.root / "Debug/space.exe"
-        self.image.parent.mkdir()
+        self.image = self.root / "build/Debug/space.exe"
+        self.image.parent.mkdir(parents=True)
         # These deliberately tiny bytes exercise actual SHA closure rather
         # than replacing the identity validator with a mocked success outcome.
-        for path, data in ((self.source, b"source"), (self.profile, b"profile"), (self.image, b"image")):
+        for path, data in ((self.source, b"// @file native.cpp @see r2fc2-file-cleanup3.md; independent source."), (self.profile, b'{"_documentation":"r2fc2-file-cleanup3.md fixture","dependencies":{"source_bundle":{"path":"dependency.bin"}}}'), (self.image, b"image")):
             path.write_bytes(data)
+        (self.root / "dependency.bin").write_bytes(b"independent dependency fixture")
+        (self.root / "CMakeLists.txt").write_text("# @see r2fc2-file-cleanup3.md; isolated source inventory.\n", encoding="utf-8")
+        (self.root / "vcpkg.json").write_text('{"_documentation":"r2fc2-file-cleanup3.md; isolated manifest"}', encoding="utf-8")
+        self.ground_image = self.image.with_name("ground.exe")
+        self.ground_image.write_bytes(b"independent ground image")
         epoch = self.root / "epoch.json"
-        epoch.write_text(json.dumps(dict(files=[rebuild.identity(self.source, self.root)])), encoding="utf-8")
+        epoch.write_text(json.dumps(native_build.source_epoch(self.root, self.profile)), encoding="utf-8")
         self.result = self.root / "build.json"
         document = dict(kind="native_build_result", complete=True, configuration="Debug",
-                        targets=dict(space=rebuild.identity(self.image, self.root),
-                                     ground=rebuild.identity(self.image, self.root)),
+                        build_directory="build", targets=dict(space=rebuild.identity(self.image, self.root),
+                                     ground=rebuild.identity(self.ground_image, self.root)),
                         source_epoch=rebuild.identity(epoch, self.root),
                         tool_profile=rebuild.identity(self.profile, self.root), steps=[dict(exit_status=0)])
         self.result.write_text(json.dumps(document), encoding="utf-8")
@@ -117,6 +162,37 @@ class SharedBuildChecks(unittest.TestCase):
         """
         with self.assertRaisesRegex(ValueError, "configuration/targets/status"):
             rebuild.shared_current_build(self.state, "RelWithDebInfo", self.recipe, self.root)
+
+    def test_added_and_removed_sources_each_refuse_current_build_reuse(self):
+        """Complete inventory comparison catches changes that old-file hashing misses.
+
+        @param self Active isolated build/source fixture owner.
+        @return None; added and removed files are independent refusal scenarios.
+        """
+        added = self.root / "src/added.cpp"
+        added.write_bytes(b"// @file added.cpp @see r2fc2-file-cleanup3.md; new independent input.")
+        with self.assertRaisesRegex(ValueError, "inventory was added/removed"):
+            rebuild.shared_current_build(self.state, "Debug", self.recipe, self.root)
+        added.unlink()
+        self.source.unlink()
+        with self.assertRaisesRegex(ValueError, "inventory was added/removed"):
+            rebuild.shared_current_build(self.state, "Debug", self.recipe, self.root)
+
+    def test_archived_executable_cannot_be_called_current_even_with_same_hash(self):
+        """Current build evidence requires its actual target slot, not a retained EXE.
+
+        @param self Active isolated build/source fixture owner.
+        @return None; the historical copy remains present and byte-identical.
+        """
+        archive = self.root / "logs/old/ground.exe"
+        archive.parent.mkdir(parents=True)
+        archive.write_bytes(self.ground_image.read_bytes())
+        document = json.loads(self.result.read_text())
+        document["targets"]["ground"] = rebuild.identity(archive, self.root)
+        self.result.write_text(json.dumps(document), encoding="utf-8")
+        self.stage["result"] = rebuild.identity(self.result, self.root)
+        with self.assertRaisesRegex(ValueError, "archived or foreign"):
+            rebuild.shared_current_build(self.state, "Debug", self.recipe, self.root)
 
 
 if __name__ == "__main__":

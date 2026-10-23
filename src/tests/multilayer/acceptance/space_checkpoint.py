@@ -1,6 +1,7 @@
 """Seal and read exact Space continuation inputs without native execution.
 
 @file space_checkpoint.py Durable checkpoint boundary, separate from operation receipts.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group22, durable foundation export.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups8/11/12.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md.
 Only explicit retained references are live dependencies. Paths nested inside
@@ -120,6 +121,17 @@ def load_foundation(path, configuration=None, root=None):
     """
     from space_checkpoint_foundation import load_foundation as load
     return load(path, configuration, root)
+
+
+def export_foundation(foundation, observer=None):
+    """Export a verified continuation's declared compact witnesses to durable storage.
+
+    @param foundation Explicit typed qualification or genuine operation receipt.
+    @param observer Optional explicit Plan11 observer for a later operation contract.
+    @return Verified durable SpaceFoundation; neither images nor permission are retained.
+    """
+    from space_checkpoint_foundation import export_foundation as export
+    return export(foundation, observer)
 
 
 def verify_foundation(foundation, observer=None):
@@ -484,7 +496,14 @@ def main():
     parser.add_argument("--checkpoint", type=Path)
     parser.add_argument("--configuration", choices=CONFIGURATIONS)
     parser.add_argument("--seal-original", action="store_true")
+    parser.add_argument("--export-foundation", type=Path, help="Export this exact completed foundation; no native execution")
     args = parser.parse_args()
+    if args.export_foundation is not None:
+        if args.checkpoint is not None or args.seal_original:
+            parser.error("foundation export selects its own typed manifest")
+        exported = export_foundation(load_foundation(args.export_foundation, args.configuration))
+        print(json.dumps(dict(path=exported.manifest_path.relative_to(exported.root).as_posix(), sha256=exported.sha256)))
+        return
     if args.seal_original:
         if args.checkpoint is not None:
             parser.error("--seal-original owns its exact original checkpoint destination")

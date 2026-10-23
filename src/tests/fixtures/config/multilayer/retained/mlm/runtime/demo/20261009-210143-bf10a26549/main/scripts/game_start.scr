@@ -1,0 +1,5 @@
+# @see r2fc-file-cleanup.md9.7
+set savegame_format lzma
+save cleanup-default
+save "autosave/cleanup-autosave"
+screenshot minimap cleanup-runtime

@@ -2,6 +2,8 @@
 
 @file artifact_preservation_check.py Legacy/corrupt inputs and complete alias safety.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group9.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group32 portable aliases and disposable-input refusals.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group33 retired-owner independence and fresh selected-source refusals.
 """
 
 import copy
@@ -12,7 +14,9 @@ import unittest
 from unittest.mock import patch
 
 from artifact_paths import repository_root
-from artifact_preservation import migrated_catalogue, preserve_payloads, verify_preservation
+from artifact_inventory import checked_path
+from artifact_preservation import cleanup_operation, migrated_catalogue, preserve_payloads, publish_document, verify_cleanup_inputs, verify_preservation
+from save_retention import apply_save_exports, plan_save_exports
 
 
 class PreservationChecks(unittest.TestCase):
@@ -76,6 +80,79 @@ class PreservationChecks(unittest.TestCase):
         (self.root / result["payloads"][0]["destination"]).write_bytes(b"conflicting retained")
         with self.assertRaisesRegex(ValueError, "conflicting retained"):
             preserve_payloads(self.manifest, self.root)
+
+    def test_stable_key_redirects_to_retained_payload_after_original_removal(self):
+        """Keep older logical keys usable after their generated physical alias is removed.
+
+        @param self Active isolated migration check.
+        @return None; conflicting original identities remain an explicit refusal.
+        """
+        result = preserve_payloads(self.manifest, self.root)
+        row = result["payloads"][0]
+        key = "src/tests/fixtures/legacy/original.sav"
+        catalogue = dict(inputs={key: dict(path=row["original_paths"][0], sha256=row["sha256"])})
+        (self.root / row["original_paths"][0]).unlink()
+        migrated = migrated_catalogue(catalogue, result, self.root)
+        self.assertEqual(migrated["inputs"][key], dict(path=row["destination"], sha256=row["sha256"]))
+        self.assertEqual(catalogue["inputs"][key]["path"], row["original_paths"][0])
+        catalogue["inputs"][key]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "stable input identity"):
+            migrated_catalogue(catalogue, result, self.root)
+
+    def test_existing_required_payload_inside_cleanup_scope_refuses(self):
+        """Refuse a source transfer that would omit an existing required physical input.
+
+        @param self Active isolated cleanup boundary check.
+        @return None; presence and matching hashes cannot authorize deleting an input owner.
+        """
+        row = self.manifest["payloads"][0]
+        documentation = "Owner: r2fc2-file-cleanup3.md32; isolated disposable-input refusal fixture."
+        publish_document("src/tests/fixtures/cleanup/migration.json",
+                         dict(_documentation=documentation, payloads=[], original_path_count=0), self.root)
+        publish_document("src/tests/fixtures/cleanup/source-epochs.json",
+                         dict(_documentation=documentation, payloads=[], generated=[], original_candidates=0), self.root)
+        publish_document("src/tests/fixtures/multilayer-inputs.json",
+                         dict(_documentation=documentation, inputs=dict(legacy=dict(path=row["original_paths"][0], sha256=row["sha256"]))), self.root)
+        with self.assertRaisesRegex(ValueError, "required retained input is inside cleanup target"):
+            verify_cleanup_inputs(self.root, ["logs"])
+
+    def test_selected_verification_ignores_retired_owners_and_rechecks_live_candidates(self):
+        """Keep deleted foreign owners out of current-target IO without weakening save refusals.
+
+        @param self Active isolated export/deletion boundary check.
+        @return None; changed/new selected inputs and malformed measurements still refuse.
+        """
+        peer = self.root / "mlm/runtime-peer/current.sav"
+        peer.parent.mkdir(parents=True)
+        peer.write_bytes(b"unsupported legacy")
+        plan = plan_save_exports(self.root, ["logs", "mlm/runtime", "mlm/runtime-peer"])
+        apply_save_exports(plan, self.root)
+        foreign = {Path("logs/a/current.sav"), Path("logs/b/current.sav"), Path("mlm/runtime-peer/current.sav")}
+        # Previously removed owners, including a similarly prefixed sibling,
+        # have no physical role in admission of this next target's deletion.
+        for relative in foreign:
+            (self.root / relative).unlink()
+        request = dict(plan=plan, scope="mlm/runtime")
+        with patch("artifact_preservation.checked_path", wraps=checked_path) as paths:
+            result = cleanup_operation("verify", request, self.root)
+        self.assertTrue(result["verified"])
+        self.assertEqual(result["save_aliases"], 1)
+        # Foreign alias lookup is the expensive and incorrect dependency being
+        # excluded; the real selected-source observer above remains unmocked.
+        for invocation in paths.call_args_list:
+            self.assertNotIn(Path(invocation.args[0]), foreign)
+        selected = self.root / "mlm/runtime/b/old.ss0"
+        selected.write_bytes(b"changed selected source")
+        with self.assertRaisesRegex(ValueError, "save candidates changed"):
+            cleanup_operation("verify", request, self.root)
+        selected.write_bytes(b"unsupported legacy")
+        (self.root / "mlm/runtime/new.sav").write_bytes(b"new unobserved save")
+        with self.assertRaisesRegex(ValueError, "save candidates changed"):
+            cleanup_operation("verify", request, self.root)
+        malformed = copy.deepcopy(plan)
+        malformed["observations"].append(copy.deepcopy(plan["observations"][0]))
+        with self.assertRaisesRegex(ValueError, "duplicate observations"):
+            cleanup_operation("verify", dict(plan=malformed, scope="mlm/runtime"), self.root)
 
     def test_same_destination_different_payload_is_rejected(self):
         """Deduplication is permitted only when payload identities agree.

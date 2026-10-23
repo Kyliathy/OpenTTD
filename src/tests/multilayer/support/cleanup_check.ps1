@@ -1,144 +1,107 @@
 #requires -Version 5.1
 <#
-.SYNOPSIS
-Exercise development cleanup against disposable files inside this repository.
-.DESCRIPTION
-No Pester or game build is required. Live runtimes/builds/reviews and the local
-baseline archive are never changed. Run:
-powershell -NoProfile -File src/tests/multilayer/support/cleanup_check.ps1
+ * @file cleanup_check.ps1 Actual cleaner scope/export/preview fixture burst.
+ * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group27.
+ * @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
+ * Run powershell -NoProfile -File src/tests/multilayer/support/cleanup_check.ps1.
+ * Native game/build output is untouched; all scratch is below test-cache/cleanup.
 #>
 [CmdletBinding()]
 param()
-Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
-$repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../../..'))
-. (Join-Path $repository 'clean.ps1')
-$scratchOwner = Join-Path $repository 'mlm/runtime/routing-checks'
-$scratch = Assert-CleanupContainment (Join-Path $scratchOwner ('cleanup-' + [Guid]::NewGuid().ToString('N'))) $repository
-Assert-CleanupNoLinks $scratch
-$null = [IO.Directory]::CreateDirectory($scratch)
-$checks = 0
-
-function Assert-Check([bool]$Condition, [string]$Message) {
-    if (-not $Condition) { throw "Check failed: $Message" }
-    $script:checks++
-}
-
-function Assert-Refused([scriptblock]$Action, [string]$Message) {
-    $refused = $false
-    try { & $Action | Out-Null } catch { $refused = $true }
-    Assert-Check $refused $Message
-}
-
-function Write-CheckFile([string]$Path, [string]$Text = 'fixture bytes') {
-    $null = Assert-CleanupContainment $Path $scratch
-    $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($Path))
-    [IO.File]::WriteAllText($Path, $Text)
-}
-
-$junction = $null
+. (Join-Path $PSScriptRoot 'cleanup_fixture.ps1')
 try {
-    $fixture = Join-Path $scratch 'OpenTTD'
+    $fixture = New-CleanupFixture 'scope'
     $discard = @(
+        'logs/current-proof.json', 'test-cache/temporary.bin',
         'mlm/runtime/native/first/main/native-art.cfg',
         'mlm/runtime/native/first/main/save/automatic.sav',
+        'mlm/runtime/demo/player/save.sav',
+        'mlm/runtime/host/first/host/autosave.ss0',
+        'mlm/runtime/client/first/client/scenario.scn.bak',
         'mlm/runtime/.runs/old/marker',
-        'mlm/runtime/routing-checks/old/output.txt',
-        'build-probe/compiler.obj',
-        'build-probe-tree/src/old-copy.cpp',
-        'build-probe-tree/build/old.pdb',
-        'build/openttd.dir/Debug/main.obj',
-        'build/openttd_lib.dir/Debug/library.lib',
-        'build/openttd_test.dir/Debug/test.obj',
-        'build/x64/Debug/linker.state',
-        'build/Debug/openttd.pdb',
-        'build/RelWithDebInfo/openttd_test.pdb',
-        'mlm/reviews/acceptance/data-home/old/report.json'
-    )
-    foreach ($number in 10..17) { $discard += "mlm/reviews/acceptance/demo-guide-load-$number/run/saves/resave.sav" }
-    foreach ($relative in $discard) { Write-CheckFile (Join-Path $fixture $relative) }
-    $preserve = @(
-        'src/source.cpp', 'docs/plan.md', 'media/source.png',
-        'src/tests/fixtures/demos/original.sav',
+        'build-probe/compiler.obj', 'build-probe-tree/build/old.pdb',
         'build/Debug/openttd.exe', 'build/RelWithDebInfo/openttd_test.exe',
         'build/Debug/runtime.dll', 'build/vcpkg_installed/x64/lib/dependency.lib',
         'build/play.cfg', 'build/private.cfg', 'build/CMakeCache.txt',
         'build/save/manual.sav', 'build/scripts/game_start.scr',
-        'build/baseset/original.grf', 'build/lang/english.lng',
-        'OpenTTD-baseline/build/save/original.sav',
-        'OpenTTD-baseline/build/openttd_console.exe',
-        'mlm/runtime/demo/player/save.sav',
+        'build/baseset/copied.grf', 'build/lang/english.lng',
+        'mlm/reviews/acceptance/data-home/old/report.json',
         'mlm/reviews/space/continuation/run/saves/input.sav',
         'mlm/reviews/space/capture/run/images/frame.png',
-        'mlm/reviews/space/capture/run/images/unique.ppm',
-        'mlm/reviews/README.md', 'logs/current-proof.json'
+        'mlm/reviews/space/capture/run/images/unique.ppm'
     )
-    foreach ($relative in $preserve) { Write-CheckFile (Join-Path $fixture $relative) }
-    $pairedRaw = Join-Path $fixture 'mlm/reviews/space/capture/run/images/frame.ppm'
-    Write-CheckFile $pairedRaw 'raw capture with a retained PNG'
-    $discard += 'mlm/reviews/space/capture/run/images/frame.ppm'
+    foreach ($relative in $discard) { Write-CheckFile (Join-Path $fixture $relative) }
+    $sourceText = [IO.File]::ReadAllText((Join-Path $fixture 'src/source.cpp'))
+    Write-CheckFile (Join-Path $fixture 'build-probe-tree/src/old-copy.cpp') $sourceText
+    $discard += 'build-probe-tree/src/old-copy.cpp'
+    Write-CheckFile (Join-Path $fixture 'src/helper.py') '"""@file helper.py @see r2fc2-file-cleanup3.md; source-backed cache fixture."""'
+    Write-CheckFile (Join-Path $fixture 'src/__pycache__/helper.cpython-312.pyc') 'classified synthetic bytecode'
+    $discard += 'src/__pycache__/helper.cpython-312.pyc'
+    $preserve = @(
+        'src/source.cpp', 'src/helper.py', 'docs/notes.txt', 'media/source.png',
+        'src/tests/fixtures/demos/original.sav',
+        'src/tests/fixtures/__pycache__/immutable.pyc',
+        'savegames/user-original.sav', 'OpenTTD-baseline/build/save/original.sav',
+        'OpenTTD-baseline/build/openttd_console.exe',
+        '!kit/OpenTTD/save/legacy.sav', 'build-unknown/preserved.txt',
+        'mlm/reviews/README.md', 'test-cache/.gitignore', 'src/orphan/__pycache__/unknown.cpython-312.pyc'
+    )
+    foreach ($relative in $preserve) {
+        if (-not (Test-Path -LiteralPath (Join-Path $fixture $relative))) { Write-CheckFile (Join-Path $fixture $relative) }
+    }
+    $script:CleanupTracked = @('test-cache/.gitignore')
 
-    # Two paths share an allocation entirely inside the deletion set. A second
-    # allocation also has a preserved outside link, so deleting its native path
-    # must not be reported as freeing that allocation.
+    # One allocation is wholly selected, another has a link in a durable owner.
+    # Distinct freed bytes must count the first once and the second zero times.
     $shared = Join-Path $fixture 'mlm/runtime/native/first/main/openttd_console.exe'
     Write-CheckFile $shared 'shared executable'
-    $second = Join-Path $fixture 'mlm/runtime/native/first/main/same-executable.exe'
-    $null = New-Item -ItemType HardLink -Path $second -Value $shared
+    $null = New-Item -ItemType HardLink -Path (Join-Path $fixture 'mlm/runtime/native/first/main/same-executable.exe') -Value $shared
     $outsideShared = Join-Path $fixture 'mlm/runtime/native/first/main/outside-shared.exe'
-    Write-CheckFile $outsideShared 'allocation retained by a saved outside link'
-    $outsideLink = Join-Path $fixture 'build/save/preserved-link.bin'
+    Write-CheckFile $outsideShared 'allocation kept by a durable outside link'
+    $outsideLink = Join-Path $fixture 'savegames/preserved-link.bin'
     $null = New-Item -ItemType HardLink -Path $outsideLink -Value $outsideShared
-    $preserve += 'build/save/preserved-link.bin'
 
-    $before = @(Get-CleanupFiles $fixture | ForEach-Object { $_.FullName })
+    $before = @(Get-CheckSnapshot $fixture)
     $plan = @(Get-DevelopmentCleanupPlan $fixture $false)
     Set-CleanupEstimates $plan
-    $after = @(Get-CleanupFiles $fixture | ForEach-Object { $_.FullName })
-    Assert-Check (@(Compare-Object $before $after).Count -eq 0) 'planning changes no files'
-    $native = @($plan | Where-Object { $_.Kind -eq 'Old native runtimes' })[0]
+    $native = @($plan | Where-Object { $_.Kind -eq 'All runtime profiles' })[0]
     $expectedNative = $native.LogicalBytes - (Get-Item -LiteralPath $shared).Length - (Get-Item -LiteralPath $outsideShared).Length
-    Assert-Check ($native.ReclaimableBytes -eq $expectedNative) 'hard links count once and outside links prevent claimed savings'
+    Assert-Check ($native.ReclaimableBytes -eq $expectedNative) 'hard-link estimates account for a durable outside owner'
+    $preview = Invoke-DevelopmentCleanup -Repository $fixture -Apply -DryRun
+    $whatIf = Invoke-DevelopmentCleanup -Repository $fixture -Apply -WhatIf
+    $after = @(Get-CheckSnapshot $fixture)
+    Assert-Check (($before -join "\n") -ceq ($after -join "\n")) 'planning, DryRun and WhatIf write no fixture bytes or paths'
+    Assert-Check ($preview.Preview -and $whatIf.Preview) 'explicit preview switches override Apply'
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'src/tests/fixtures/cleanup/save-exports.json'))) 'preview commits no archive or journal'
+    $keepBuild = @(Get-DevelopmentCleanupPlan $fixture $true)
+    Assert-Check (@($keepBuild | Where-Object { $_.Kind -like 'Audited*' }).Count -eq 0) 'keep-build option retains complete audited roots'
     $listing = & { Show-CleanupPaths $plan } 6>&1 | Out-String -Width 4096
-    foreach ($entry in $plan) { Assert-Check ($listing.Contains($entry.Path)) 'dry run lists every full deletion path' }
-    $keepCaches = @(Get-DevelopmentCleanupPlan $fixture $true)
-    Assert-Check (@($keepCaches | Where-Object { $_.Kind -in @('Compiler intermediates', 'Generated symbols/linker output') }).Count -eq 0) 'keep-intermediates option omits caches and debug symbols'
-    foreach ($relative in @('build', 'build/save', 'build/Debug/openttd.exe', 'src', 'OpenTTD-baseline', 'mlm/reviews', 'mlm/reviews/space/continuation')) {
-        Assert-Refused { Assert-CleanupTarget (Join-Path $fixture $relative) $fixture } "refuse protected target $relative"
+    foreach ($entry in $plan) { Assert-Check ($listing.Contains($entry.Path)) 'preview lists every absolute deletion target' }
+    foreach ($relative in @('src', 'media', 'savegames', 'OpenTTD-baseline', '!kit', 'build-unknown', 'mlm/reviews', 'mlm/reviews/README.md', 'test-cache', 'test-cache/.gitignore')) {
+        Assert-Refused { Assert-CleanupTarget (Join-Path $fixture $relative) $fixture } 'target' "protected target: $relative"
     }
-    Assert-Refused { Assert-CleanupContainment ($fixture + '-other') $fixture } 'similarly named sibling is outside the checkout'
-    Assert-Refused { Assert-CleanupUntracked $plan @((Join-Path $fixture 'build-probe/compiler.obj')) } 'tracked candidate prevents cleanup'
-    $nestedGit = Join-Path $fixture 'build-probe/.git'
-    Write-CheckFile $nestedGit 'gitdir: elsewhere'
-    Assert-Refused { Get-DevelopmentCleanupPlan $fixture $false } 'probe containing a nested repository is refused'
-    Remove-Item -LiteralPath $nestedGit
-    $outside = Join-Path $scratch 'outside-native'
-    Write-CheckFile (Join-Path $outside 'keep.txt')
-    $junction = Join-Path $fixture 'mlm/runtime/native/redirect'
-    $null = New-Item -ItemType Junction -Path $junction -Target $outside
-    Assert-Refused { Get-DevelopmentCleanupPlan $fixture $false } 'junction in a deletion tree is refused'
-    Assert-Check (Test-Path -LiteralPath (Join-Path $outside 'keep.txt')) 'junction target survives'
-    [IO.Directory]::Delete($junction)
-    $junction = $null
+    Assert-Refused { Assert-CleanupContainment ($fixture + '-other') $fixture } 'escapes' 'similarly named sibling remains outside this checkout'
+    Assert-Refused { Assert-CleanupUntracked $plan @((Join-Path $fixture 'build-probe/compiler.obj')) } 'tracked' 'one tracked candidate blocks its target'
 
-    foreach ($entry in $plan) {
-        Assert-CleanupTarget $entry.Path $fixture
-        $null = @(Get-CleanupFiles $entry.Path)
-        Assert-CleanupUntracked @($entry) @()
-        Remove-Item -LiteralPath $entry.Path -Recurse -Force
-    }
-    foreach ($relative in $discard) { Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture $relative))) "discarded $relative" }
-    foreach ($relative in $preserve) {
-        Assert-Check (Test-Path -LiteralPath (Join-Path $fixture $relative)) "preserved $relative"
-    }
-    Assert-Check ([IO.File]::ReadAllText($outsideLink) -eq 'allocation retained by a saved outside link') 'preserved hard link retains its bytes'
-    Set-CleanupEstimates $plan -ReuseIdentities
-    Assert-Check ($native.ReclaimableBytes -eq $expectedNative) 'completed cleanup can report saved metadata after paths disappear'
-    Assert-Check (@(Get-DevelopmentCleanupPlan $fixture $false).Count -eq 0) 'cleanup is repeatable'
-    Write-Host "Passed $checks cleanup behavior checks. Live development output was untouched."
-} finally {
-    if ($null -ne $junction -and (Test-Path -LiteralPath $junction)) { [IO.Directory]::Delete($junction) }
-    $null = Assert-CleanupContainment $scratch $scratchOwner
-    $null = @(Get-CleanupFiles $scratch)
-    Remove-Item -LiteralPath $scratch -Recurse -Force
-}
+    $result = Invoke-DevelopmentCleanup -Repository $fixture -Apply
+    Assert-Check ($result.Failed.Count -eq 0) 'actual export-and-delete pipeline completed every target'
+    foreach ($relative in $discard) { Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture $relative))) "removed generated target: $relative" }
+    foreach ($relative in $preserve) { Assert-Check (Test-Path -LiteralPath (Join-Path $fixture $relative)) "preserved durable input: $relative" }
+    # Expectations come from the independently authored original fixture text,
+    # not from the exporter's chosen filename or its own reported hash.
+    foreach ($relative in @(
+        'mlm/runtime/native/first/main/save/automatic.sav',
+        'mlm/runtime/demo/player/save.sav',
+        'mlm/runtime/host/first/host/autosave.ss0',
+        'mlm/runtime/client/first/client/scenario.scn.bak',
+        'build/save/manual.sav',
+        'mlm/reviews/space/continuation/run/saves/input.sav',
+        'mlm/runtime/native/first/main/native-art.cfg',
+        'build/play.cfg', 'build/private.cfg', 'build/scripts/game_start.scr'
+    )) { $null = Assert-Exported $fixture $relative 'independent fixture bytes' }
+    Assert-Check ([IO.File]::ReadAllText($outsideLink) -eq 'allocation kept by a durable outside link') 'durable hard-link bytes survive removal'
+    Assert-Check ([IO.File]::ReadAllText((Join-Path $fixture '.git')) -eq 'fixture git marker') 'checkout Git marker stays outside all deletion targets'
+    $repeat = Invoke-DevelopmentCleanup -Repository $fixture -Apply
+    Assert-Check ($repeat.Completed.Count -eq 0) 'repeated apply is idempotent'
+    Write-Host "Passed $checks cleanup scope/export checks; real workspace output was untouched."
+} finally { Complete-CleanupChecks }

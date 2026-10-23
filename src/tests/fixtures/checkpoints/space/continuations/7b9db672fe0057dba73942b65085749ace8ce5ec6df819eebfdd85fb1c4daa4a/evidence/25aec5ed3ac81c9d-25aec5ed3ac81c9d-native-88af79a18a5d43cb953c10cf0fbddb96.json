@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-static",
+  "run_id": "cleanup15-debug-01",
+  "configuration": "Debug",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+      "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup15-debug-01/saves/ordinary.sav",
+      "sha256": "42e9954c506d9fcca4ccf1301b0817a79a01f78fb1d10df431f20bc8f8513627"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup15-debug-01/evidence/native-88af79a18a5d43cb953c10cf0fbddb96-stdout.txt",
+      "sha256": "6b04e34c7375e81223bf7ec6b779dd1b0033fbc906de7f4cdc2cb2dc855ab970"
+    }
+  ],
+  "argv": [
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup15-debug-01\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "D:\\Codez\\Sandbox\\OpenTTD\\mlm\\runtime\\native\\cleanup15-debug-01\\main\\native-art.cfg",
+    "-g",
+    "D:\\Codez\\Sandbox\\OpenTTD\\src\\tests\\fixtures\\checkpoints\\space\\Debug\\current.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup15-debug-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup15-debug-01/evidence/native-88af79a18a5d43cb953c10cf0fbddb96-stdout.txt",
+      "sha256": "6b04e34c7375e81223bf7ec6b779dd1b0033fbc906de7f4cdc2cb2dc855ab970"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup15-debug-01/main/openttd_console.exe",
+    "sha256": "ac1986837bf251c743acecd2da42c7cc4f2d4cc16b21cbb86f94775d4d0f4369"
+  }
+}

@@ -1,6 +1,7 @@
 """Run bounded native TBM feedback reproduction, preserving the demo and startup script.
 
 @file native_feedback.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21, selected prior semantics.
 @see r2tbmf-tbm-fixes.md Group1
 @see ../../architecture/gui/archi-gui.md
 """
@@ -22,6 +23,7 @@ import sys
 sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path, RunContext, identifier
 from runner import save_native_capture, current_run_context, run_native, start_native
+from prior_stage_evidence import publish_stage, semantic_text, prior_save
 
 CONTEXT = current_run_context("tbm", "native-feedback")
 RUNTIME = CONTEXT.runtime_dir
@@ -81,9 +83,6 @@ def main():
     accepted_name = evidence_prefix + "393.sav" if args.fresh_layer else "tbm-extended-tunnel-393.sav" if args.straight_tunnel else "tbm-extended-area-393.sav"
     if args.fresh_layer:
         protected.append(resolve_input_path(ROOT / "src/tests/fixtures/haulage" / f"tbm-planning-{args.fresh_layer}-393.sav"))
-    if args.reload_accepted:
-        protected.append(resolve_input_path(prior.saves / accepted_name))
-    before = {str(path.relative_to(ROOT)): digest(path) for path in protected}
     suffix = "-haul50" if args.long_haul else "-reload" if args.reload_demo else ""
     log = CONTEXT.logs / f"r2tbmf-c-native-ui{suffix}.log"
     if args.extend_work:
@@ -94,10 +93,15 @@ def main():
         log = CONTEXT.logs / f"r2tbmf-g-native-{args.fresh_layer}-{intent_name}.log"
     reference = None
     if args.reload_accepted:
-        reference = [line for line in (prior.logs / log.name).read_text(encoding="utf-8").splitlines() if line.startswith("FEEDBACK_RESULT ")]
+        reference = [line for line in semantic_text(CONTEXT, args.prior_run, log.name, "RelWithDebInfo").splitlines() if line.startswith("FEEDBACK_RESULT ")]
+        accepted_source = prior_save(CONTEXT, args.prior_run, log.name, accepted_name, "RelWithDebInfo")
+        if accepted_source is None:
+            raise ValueError("selected feedback stage did not produce an accepted continuation save")
+        protected.append(accepted_source)
         assert len(reference) == 1, "Run the corresponding uninterrupted journey first"
         kind = "tunnel" if args.straight_tunnel else "area"
         log = log.with_name(log.stem + "-reload.log") if args.fresh_layer else CONTEXT.logs / f"r2tbmf-f-native-{kind}-reload.log"
+    before = {str(path.relative_to(ROOT)): digest(path) for path in protected}
     environment = dict(os.environ)
     environment.pop("OTTD_TBM_FEEDBACK_LONG_HAUL", None)
     environment.pop("OTTD_TBM_FEEDBACK_RELOAD", None)
@@ -110,7 +114,7 @@ def main():
     environment.pop("OTTD_TBM_FEEDBACK_ACCEPTED_SOURCE", None)
     if args.reload_accepted:
         environment["OTTD_TBM_FEEDBACK_ACCEPTED"] = "1"
-        environment["OTTD_TBM_FEEDBACK_ACCEPTED_SOURCE"] = str(resolve_input_path(prior.saves / accepted_name))
+        environment["OTTD_TBM_FEEDBACK_ACCEPTED_SOURCE"] = str(accepted_source)
     if args.straight_tunnel:
         environment["OTTD_TBM_FEEDBACK_TUNNEL"] = "1"
     if args.extend_work:
@@ -155,6 +159,12 @@ def main():
         reloaded = [line for line in log.read_text(encoding="utf-8").splitlines() if line.startswith("FEEDBACK_RESULT ")]
         assert reloaded == reference, "Reload result differs from uninterrupted movement/owners; inspect both native logs"
         print("Accepted snapshot reload matches uninterrupted owners, cash, RNG and every actual train part.")
+    observations = [line for line in log.read_text(encoding="utf-8").splitlines() if line.startswith("FEEDBACK_RESULT ")]
+    if observations:
+        publish_stage(CONTEXT, log.name, observations, "RelWithDebInfo", executable,
+                      [Path(__file__), ROOT / "src/tests/tbm_feedback_runtime.cpp"],
+                      [path for path in protected if path.suffix == ".sav"],
+                      {path.name: path for path in CONTEXT.saves.glob("*.sav")})
 
 
 if __name__ == "__main__":

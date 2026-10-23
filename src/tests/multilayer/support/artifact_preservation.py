@@ -2,6 +2,9 @@
 
 @file artifact_preservation.py Save/config migration and source-epoch preservation.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group9.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group26 structured cleaner adapter.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group32 portable stable aliases and deletion owners.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group33 selected-scope verification without retired-owner reads.
 Uses the existing migration and multilayer input catalogues; neither ignore
 rules nor successful decoding establish permission to discard an original.
 """
@@ -117,6 +120,7 @@ def migrated_catalogue(catalogue, manifest, root):
     """
     result = copy.deepcopy(catalogue)
     entries = result["inputs"]
+    redirects = {}
     # Every exported original becomes a stable key. Canonical retained paths
     # also receive identities so direct fixture selection validates the bytes.
     for row in manifest["payloads"]:
@@ -128,7 +132,15 @@ def migrated_catalogue(catalogue, manifest, root):
             if previous is not None and previous["sha256"] != row["sha256"]:
                 raise ValueError(f"existing input identity disagrees with migration: {original}")
             entries[original] = reference
+            redirects[original] = reference
+    # Older stable keys can select a migrated physical alias rather than the
+    # retained destination. Redirect those keys too so removing review folders
+    # cannot strand otherwise preserved saves in the transferred checkout.
     for key, reference in entries.items():
+        replacement = redirects.get(reference["path"], reference)
+        if replacement["sha256"] != reference["sha256"]:
+            raise ValueError(f"stable input identity disagrees with migration: {key}")
+        entries[key] = reference = dict(replacement)
         if file_identity(checked_path(reference["path"], root))[0] != reference["sha256"]:
             raise ValueError(f"retained input catalogue hash changed: {key}")
     result.update(schema_version=2, alias_precedence="retained_before_existing",
@@ -198,6 +210,148 @@ def verify_migration_catalogue(manifest, catalogue, root):
                 original_aliases=aliases, retained_alias_precedence_verified=True)
 
 
+def verify_cleanup_inputs(root, scopes):
+    """Check durable identities and refuse unclassified source in deletion owners.
+
+    @param root Explicit checkout; no original diagnostic/EXE graph is imported.
+    @param scopes Exact proposed deletion owners, already audited by PowerShell.
+    @return Compact required-input counts; unknown valuable source refuses cleanup.
+    """
+    from artifact_source_epochs import MANIFEST, unclassified_cleanup_sources, verify_source_epochs
+
+    manifest = json.loads(checked_path("src/tests/fixtures/cleanup/migration.json", root).read_text(encoding="utf-8"))
+    epochs = json.loads(checked_path(MANIFEST, root).read_text(encoding="utf-8"))
+    catalogue = json.loads(checked_path("src/tests/fixtures/multilayer-inputs.json", root).read_text(encoding="utf-8"))
+    verified = {}
+    owners = tuple(checked_path(scope, root) for scope in scopes)
+
+    def exact(reference):
+        """Verify each distinct durable path once in this preservation pass.
+
+        @param reference Explicit durable path and full SHA256, never a latest alias.
+        @return None; conflicting authorities for a path still fail independently.
+        """
+        spelling = reference["path"]
+        if spelling not in verified:
+            path = checked_path(spelling, root)
+            # Present bytes cannot make a disposable owner durable. Reject these
+            # physical dependencies before export/deletion or source-only staging.
+            if any(path == owner or path.is_relative_to(owner) for owner in owners):
+                raise ValueError(f"required retained input is inside cleanup target: {spelling}")
+            verified[spelling] = file_identity(path)[0]
+        if verified[spelling] != reference["sha256"]:
+            raise ValueError(f"required retained input changed: {reference['path']}")
+
+    # These are declared physical authorities, unlike nested historical paths in
+    # old receipts. A missing inventory or partial migration is a refusal, never
+    # permission to assume that all ignored content was already preserved.
+    aliases = 0
+    for row in manifest["payloads"]:
+        if row["verification"] not in ("exported_verified", "retained_verified"):
+            raise ValueError("cleanup requires a fully verified original migration")
+        exact(dict(path=row["destination"], sha256=row["sha256"]))
+        aliases += len(row["original_paths"])
+    if aliases != manifest["original_path_count"]:
+        raise ValueError("cleanup migration alias coverage changed")
+    for reference in catalogue["inputs"].values():
+        exact(reference)
+    verify_source_epochs(epochs, root)
+
+    space_owner = root / "src/tests/multilayer/acceptance/space_checkpoint.py"
+    if space_owner.is_file():
+        import sys
+        sys.path.insert(0, str(space_owner.parent))
+        from space_checkpoint import load_foundation, verify_foundation
+        continuations = checked_path("src/tests/fixtures/checkpoints/space/continuations", root)
+        foundations = sorted(continuations.glob("*/reports/foundation.json"))
+        if not foundations:
+            raise ValueError("export the selected Space foundation before cleanup")
+        # Each foundation verifies its sealed predecessor too. Avoid another
+        # duplicate root traversal while checking all explicitly durable owners,
+        # without guessing a newest continuation or reading old EXE graphs.
+        for path in foundations:
+            verify_foundation(load_foundation(path, root=root))
+    underground = root / "src/tests/fixtures/checkpoints/underground/checkpoint.json"
+    if underground.is_file():
+        checkpoint = json.loads(underground.read_text(encoding="utf-8"))
+        exact(checkpoint["history"])
+        history = json.loads(checked_path(checkpoint["history"]["path"], root).read_text(encoding="utf-8"))
+        # Only the paused contract's declared physical history is live. Old
+        # EXE/source strings nested in receipts remain historical facts.
+        for row in history["live_retained_inputs"]:
+            exact(row["retained"])
+        for row in checkpoint["provisional_sources"]:
+            exact(row["retained"])
+
+    # Unique sources are not disposable merely because they sit in build/cache.
+    # Exact live/retained equivalents or the explicit Group9 generated epochs
+    # account for them. Unknown source is left for classification/export by its
+    # existing source-epoch owner; this adapter never archives output wholesale.
+    unresolved = unclassified_cleanup_sources(root, scopes, epochs)
+    if unresolved:
+        error = ValueError("unclassified valuable source; preserve/classify before cleanup: " + ", ".join(unresolved[:20]))
+        error.unclassified_sources = unresolved
+        raise error
+    return dict(required_paths=len(verified), source_payloads=len(epochs["payloads"]), unresolved_required_inputs=0)
+
+
+def cleanup_operation(operation, request, root):
+    """Adapt PowerShell's structured request to existing preservation operations.
+
+    @param operation plan, apply or verify; none can delete source files.
+    @param request Scopes for planning, or the exact plan and optional selected scope.
+    @param root Explicit checkout whose targets the cleaner independently guards.
+    @return JSON-compatible proposal or completed verification facts.
+    """
+    from save_retention import apply_save_exports, plan_save_exports, verify_save_exports
+
+    if operation == "plan":
+        plan = plan_save_exports(root, request["scopes"], configurations=True)
+        try:
+            inputs = verify_cleanup_inputs(root, request["scopes"])
+        except (ValueError, OSError, KeyError) as error:
+            inputs = dict(unresolved_required_inputs=1, refusal=str(error),
+                          unclassified_sources=getattr(error, "unclassified_sources", []))
+        return dict(plan=plan, retained_inputs=inputs)
+    plan = request["plan"]
+    if operation == "apply":
+        inputs = verify_cleanup_inputs(root, plan["scopes"])
+        result = apply_save_exports(plan, root)
+        return dict(exports=result, retained_inputs=inputs)
+    if operation != "verify":
+        raise ValueError("unsupported cleanup preservation operation")
+    selected = copy.deepcopy(plan)
+    scope = checked_path(request["scope"], root)
+    relative_scope = scope.relative_to(root)
+    selected["scopes"] = [relative_scope.as_posix()]
+    selected["observations"] = []
+    selected["payloads"] = []
+    observations = {row["path"]: row for row in plan["observations"]}
+    # One path has one observed identity. Indexing cannot hide duplicated plan
+    # measurements that the selected physical-source comparison would refuse.
+    if len(observations) != len(plan["observations"]):
+        raise ValueError("save export plan contains duplicate observations")
+    # Planning already recorded canonical relative aliases. Select membership
+    # lexically: retired/foreign owners must not become filesystem dependencies
+    # of this deletion. The selected observer below still checks actual paths,
+    # redirects, new/changed candidates, retained hashes and committed aliases.
+    for row in plan["payloads"]:
+        aliases = [name for name in row["original_paths"]
+                   if Path(name).is_relative_to(relative_scope)]
+        if not aliases:
+            continue
+        # A selected alias needs its original measurement before fresh physical
+        # verification; missing measurements cannot grant deletion authority.
+        if any(name not in observations for name in aliases):
+            raise ValueError("selected save alias lacks an observed identity")
+        narrowed = copy.deepcopy(row)
+        narrowed["original_paths"] = aliases
+        selected["payloads"].append(narrowed)
+        selected["observations"].extend(observations[name] for name in aliases)
+    selected["observations"].sort(key=lambda row: row["path"])
+    return verify_save_exports(selected, root)
+
+
 def main():
     """Verify by default; explicitly export before publishing updated catalogues.
 
@@ -207,8 +361,14 @@ def main():
     parser.add_argument("--export", action="store_true")
     parser.add_argument("--retained-only", action="store_true")
     parser.add_argument("--verify-catalogue", action="store_true")
+    parser.add_argument("--cleanup", choices=("plan", "apply", "verify"))
+    parser.add_argument("--root", type=Path)
     args = parser.parse_args()
-    root = repository_root()
+    root = repository_root(args.root)
+    if args.cleanup is not None:
+        import sys
+        print(json.dumps(cleanup_operation(args.cleanup, json.load(sys.stdin), root), indent=2))
+        return
     migration = root / "src/tests/fixtures/cleanup/migration.json"
     manifest = json.loads(migration.read_text(encoding="utf-8"))
     if args.export:

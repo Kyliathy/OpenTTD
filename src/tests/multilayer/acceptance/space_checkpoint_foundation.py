@@ -1,6 +1,7 @@
 """Qualify original checkpoints and verify compact completed execution witnesses.
 
 @file space_checkpoint_foundation.py Current checks and historical qualification have explicit roles.
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group22, durable compact continuation export.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Groups12/12B.
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md.
 Publication checks actual current EXEs/source. Later verification rechecks copied
@@ -11,6 +12,7 @@ inside those witnesses are historical facts, never prerequisites for another bui
 import json
 from pathlib import Path
 import re
+from types import SimpleNamespace
 
 from space_checkpoint import (ROOT, CONFIGURATIONS, POLICY, SCOPE, FoundationKind, SpaceCheckpoint,
                               SpaceFoundation, _publish_bytes, load_checkpoint, verify_checkpoint)
@@ -246,14 +248,25 @@ def _shape(document):
             raise ValueError("qualified foundation policy field types changed")
 
 
-def _destination(path, root):
+def _destination(path, root, allow_retained=False):
     """Resolve an explicit current Space review report and its run-local witness owner.
 
     @param path Caller-selected foundation report destination.
     @param root Source checkout.
+    @param allow_retained Admit the exact durable exported owner for read-only loading/verification.
     @return Contained report path and pure RunContext; no reservation or write occurs.
     """
     selected = checked_path(path, root)
+    retained = checked_path("src/tests/fixtures/checkpoints/space/continuations", root)
+    # Durable continuation reads admit only content-addressed complete manifests;
+    # ordinary native publication still belongs to a fresh generated review run.
+    if allow_retained and selected.is_relative_to(retained):
+        relative = selected.relative_to(retained).parts
+        if (len(relative) != 3 or re.fullmatch("[0-9a-f]{64}", relative[0]) is None
+                or relative[1:] != ("reports", "foundation.json")):
+            raise ValueError("retained foundation requires its exact content-addressed owner")
+        home = selected.parent.parent
+        return selected, SimpleNamespace(directory=home, reports=home / "reports", data=home / "data", evidence=home / "evidence")
     relative = selected.relative_to(checked_path("mlm/reviews", root)).parts
     # A published result belongs to one current review run. It must never turn
     # a fixture, log file or partially written pending file into a foundation.
@@ -416,7 +429,7 @@ def load_foundation(path, configuration=None, root=None):
     @return SpaceFoundation bound to the exact document and discriminator.
     """
     source = Path(root or ROOT).resolve()
-    selected, _context = _destination(path, source)
+    selected, _context = _destination(path, source, allow_retained=True)
     if configuration not in (*CONFIGURATIONS, None):
         raise ValueError("unknown foundation configuration")
     digest = file_identity(selected)[0]
@@ -449,7 +462,7 @@ def verify_foundation(foundation, observer=None, _seen=None):
     seen.add(foundation.manifest_path)
     if file_identity(foundation.manifest_path)[0] != foundation.sha256:
         raise ValueError("foundation changed since typed selection")
-    _target, context = _destination(foundation.manifest_path, foundation.root)
+    _target, context = _destination(foundation.manifest_path, foundation.root, allow_retained=True)
     document = json.loads(foundation.manifest_path.read_text(encoding="utf-8"))
     if foundation.foundation_type is FoundationKind.OPERATION_RECEIPT:
         from space_checkpoint_operation import verify_operation_document
@@ -459,3 +472,77 @@ def verify_foundation(foundation, observer=None, _seen=None):
     if file_identity(foundation.manifest_path)[0] != foundation.sha256:
         raise ValueError("foundation changed during verification")
     return result
+
+
+def export_foundation(foundation, observer=None):
+    """Durably export the declared compact continuation closure without copying old EXEs.
+
+    @param foundation Explicit verified generated or already retained typed foundation.
+    @param observer Optional exact Plan11 observer required by a later operation receipt.
+    @return Verified durable foundation; repeated export reuses identical bytes.
+    """
+    facts = verify_foundation(foundation, observer)
+    root = foundation.root
+    retained = checked_path("src/tests/fixtures/checkpoints/space/continuations", root)
+    if foundation.manifest_path.is_relative_to(retained):
+        return foundation
+    document = json.loads(foundation.manifest_path.read_text(encoding="utf-8"))
+    home = retained / foundation.sha256
+    existing = home / "reports/foundation.json"
+    if existing.is_file():
+        exported = load_foundation(existing, foundation.configuration, root)
+        verify_foundation(exported, observer)
+        previous = json.loads(existing.read_text(encoding="utf-8"))
+        expected_witnesses = {name: {role: ref["sha256"] for role, ref in row["witnesses"].items()}
+                              for name, row in document["configurations"].items()}
+        actual_witnesses = {name: {role: ref["sha256"] for role, ref in row["witnesses"].items()}
+                            for name, row in previous["configurations"].items()}
+        # Already published exports retain their existing safe spelling. Exact
+        # original witness bytes and dispatch must agree before idempotent reuse.
+        if (actual_witnesses != expected_witnesses or previous["next_task"] != document["next_task"]
+                or previous["foundation_type"] != document["foundation_type"]):
+            raise ValueError("existing durable continuation differs from the selected original witnesses")
+        return exported
+    parent = None
+    if foundation.foundation_type is FoundationKind.OPERATION_RECEIPT:
+        predecessor = load_foundation(checked(document["predecessor"], root), root=root)
+        parent = export_foundation(predecessor, observer)
+        parent_facts = verify_foundation(parent, observer)
+        document["predecessor"] = dict(path=parent.manifest_path.relative_to(root).as_posix(), sha256=parent.sha256)
+    # Every live witness is copied by its declared role. Nested image/source
+    # paths inside those immutable receipts remain historical facts, never files
+    # discovered by a recursive archive walk.
+    for configuration, row in document["configurations"].items():
+        original_output = row.get("output")
+        for role, reference in row["witnesses"].items():
+            source = checked(reference, root)
+            is_save = role in ("before", "output", "native_before", "native_output", "ordinary_output")
+            owner = home / ("data" if is_save else "evidence")
+            target = owner / (reference["sha256"][:16] + "-" + role + source.suffix)
+            row["witnesses"][role] = _publish_bytes(target, source.read_bytes(), root)
+            if row["witnesses"][role]["sha256"] != reference["sha256"]:
+                raise ValueError("continuation witness changed while exporting")
+        if parent is not None:
+            row["source"] = parent_facts["configurations"][configuration]["source"]
+            row["output"] = row["witnesses"]["output"]
+            if row["output"]["sha256"] != original_output["sha256"]:
+                raise ValueError("successor export changed saved output identity")
+    target = home / "reports/foundation.json"
+    context = SimpleNamespace(directory=home, reports=home / "reports", data=home / "data", evidence=home / "evidence")
+    if parent is None:
+        _verify_document(document, root, context)
+    else:
+        from space_checkpoint_operation import verify_operation_document
+        verify_operation_document(document, root, context, observer, set())
+    if file_identity(foundation.manifest_path)[0] != foundation.sha256:
+        raise ValueError("source foundation changed while exporting")
+    _publish_bytes(target, (json.dumps(document, indent=2) + "\n").encode("utf-8"), root)
+    exported = load_foundation(target, foundation.configuration, root)
+    retained_facts = verify_foundation(exported, observer)
+    # Export changes physical owners, never saved bytes, task dispatch, closed
+    # policies or observations. A partial copied graph cannot become resumable.
+    if (retained_facts["next_task"] != facts["next_task"]
+            or {name: row["source"]["sha256"] for name, row in retained_facts["configurations"].items()}
+            != {name: row["source"]["sha256"] for name, row in facts["configurations"].items()}):
+        raise ValueError("durable continuation export changed selected saved state/dispatch")
+    return exported

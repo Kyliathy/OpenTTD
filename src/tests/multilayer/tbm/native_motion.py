@@ -1,6 +1,7 @@
 """Retain real moving TBM saves and compare their frame-by-frame native continuations.
 
 @file native_motion.py
+@see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group21, selected prior semantics.
 @see r2tbmf-tbm-fixes.md Group4
 @see ../../architecture/savegame/archi-savegame.md
 """
@@ -22,6 +23,7 @@ import sys
 sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path
 from runner import save_native_capture, capture_path, current_run_context, run_native, start_native
+from prior_stage_evidence import publish_stage, semantic_text, prior_save
 
 CONTEXT = current_run_context("tbm", "motion")
 RUNTIME = CONTEXT.runtime_dir
@@ -53,6 +55,10 @@ def main():
     parser.add_argument("--pace-fraction", action="store_true", help="Reload the naturally earned new-rate half/quarter and compare the same actual cut")
     parser.add_argument("--prior-run", help="exact motion or pacing invocation supplying continuation evidence")
     args = parser.parse_args()
+    # The old-rate seed is a version393 compatibility input. Today's native
+    # writer cannot reconstruct that source epoch by using an old-looking name.
+    if args.pace_seed_layer:
+        parser.error("old-rate version393 seeds must use the retained original fixture; current saves cannot regenerate that format")
     # Replay must identify the baseline whose frames and native saves it compares.
     if args.replay and not args.prior_run:
         parser.error("--replay requires --prior-run")
@@ -95,12 +101,24 @@ def main():
         if args.pace_resaved:
             env["OTTD_TBM_PACE_RESAVED"] = "1"
         suffix = "-fraction-394" if args.pace_fraction else "-394" if args.pace_resaved else "-393"
-        env["OTTD_TBM_REPLAY_SOURCE"] = str(resolve_input_path(prior.saves / f"tbm-pace-{args.pace_check_layer}{suffix}.sav"))
+        old_log = f"r2tbmf-j-pace-new-{args.pace_check_layer}.log" if args.pace_fraction or args.pace_resaved else f"r2tbmf-j-pace-seed-{args.pace_check_layer}.log"
+        source = prior_save(CONTEXT, args.prior_run, old_log,
+                            f"tbm-pace-{args.pace_check_layer}{suffix}.sav", "RelWithDebInfo")
+        if source is None:
+            raise ValueError("selected pacing stage did not produce its continuation save")
+        expected_version = 394 if args.pace_fraction or args.pace_resaved else 393
+        actual_version = int.from_bytes(source.read_bytes()[4:6], "big")
+        if actual_version != expected_version:
+            raise ValueError(f"pacing compatibility requires retained version{expected_version}, not current-format output{actual_version}")
+        env["OTTD_TBM_REPLAY_SOURCE"] = str(source)
         protected.append(Path(env["OTTD_TBM_REPLAY_SOURCE"]))
     if args.replay:
-        reference_path = prior.logs / "r2tbmf-h-motion-native.log"
-        env["OTTD_TBM_REPLAY_SOURCE"] = str(resolve_input_path(prior.saves / f"tbm-motion-{args.replay}-393.sav"))
-        reference = reference_path.read_text(encoding="utf-8").splitlines()
+        source = prior_save(CONTEXT, args.prior_run, "r2tbmf-h-motion-native.log",
+                            f"tbm-motion-{args.replay}-393.sav", "RelWithDebInfo")
+        if source is None:
+            raise ValueError("selected motion stage did not produce its continuation save")
+        env["OTTD_TBM_REPLAY_SOURCE"] = str(source)
+        reference = semantic_text(CONTEXT, args.prior_run, "r2tbmf-h-motion-native.log", "RelWithDebInfo").splitlines()
         matches = [line for line in reference if line.startswith(f"MOTION_SNAPSHOT kind={args.replay} ")]
         assert len(matches) == 1, "Run the uninterrupted native baseline first"
         tick = int(re.search(r"tick=(\d+)", matches[0]).group(1))
@@ -153,7 +171,7 @@ def main():
         print(f"Exact match: {len(observed)} frames, cursor {first_cursor}->{last_cursor}, every native part/cargo/support reservation and owner digest.")
     elif args.pace_check_layer:
         old_log = f"r2tbmf-j-pace-new-{args.pace_check_layer}.log" if args.pace_fraction or args.pace_resaved else f"r2tbmf-j-pace-seed-{args.pace_check_layer}.log"
-        old_lines = (prior.logs / old_log).read_text(encoding="utf-8").splitlines()
+        old_lines = semantic_text(CONTEXT, args.prior_run, old_log, "RelWithDebInfo").splitlines()
         prefix = "PACE_FRACTION " if args.pace_fraction else "PACE_LOADED " if args.pace_resaved else "PACE_SEED "
         old = next(line for line in old_lines if line.startswith(prefix)).split(" clock=", 1)[1]
         new = next(line for line in actual if line.startswith("PACE_LOADED ")).split(" clock=", 1)[1]
@@ -167,7 +185,7 @@ def main():
             actual_cut = next(line for line in actual if line.startswith("PACE_CUT ")).split(" clock=", 1)[1]
             assert actual_cut == expected_cut, "Splitting execution at the actual fractional save changed the next cut"
         if args.pace_resaved:
-            first = (prior.logs / f"r2tbmf-j-pace-new-{args.pace_check_layer}.log").read_text(encoding="utf-8").splitlines()
+            first = semantic_text(CONTEXT, args.prior_run, f"r2tbmf-j-pace-new-{args.pace_check_layer}.log", "RelWithDebInfo").splitlines()
             assert [line for line in actual if line.startswith(("PACE_LOADED ", "PACE_CUT "))] == [line for line in first if line.startswith(("PACE_LOADED ", "PACE_CUT "))]
         print("Pacing migration preserves terrain, cargo, partial work, cash, RNG and native positions; next cut matches the half-speed budget.")
     elif not args.pace_seed_layer:
@@ -176,6 +194,14 @@ def main():
     else:
         assert any(line.startswith(f"PACE_SEED layer={args.pace_seed_layer} ") for line in actual)
     print(f"Executable SHA256: {digest(build / 'RelWithDebInfo/openttd_test.exe')}")
+    # Preserve the native continuation comparisons and exact saved fractions;
+    # optional debug chatter and full executable copies are not prerequisites.
+    observations = [line for line in actual if line.startswith(("MOTION_TRACE ", "MOTION_SNAPSHOT ",
+                    "MOTION_RESULT ", "PACE_SEED ", "PACE_LOADED ", "PACE_FRACTION ", "PACE_CUT "))]
+    publish_stage(CONTEXT, log.name, observations, "RelWithDebInfo", build / "RelWithDebInfo/openttd_test.exe",
+                  [Path(__file__), ROOT / "src/tests/tbm_motion_reload.cpp"],
+                  [path for path in protected if path.suffix == ".sav"],
+                  {path.name: path for path in CONTEXT.saves.glob("*.sav")})
 
 
 if __name__ == "__main__":

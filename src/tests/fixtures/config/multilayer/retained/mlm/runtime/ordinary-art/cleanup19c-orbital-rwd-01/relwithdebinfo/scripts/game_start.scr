@@ -1,0 +1,7 @@
+# @see r2fc-file-cleanup3.md19C; paused ordinary native field only.
+pause
+set savegame_format lzma
+space_view
+zoomto 1
+save "D:/Codez/Sandbox/OpenTTD/mlm/reviews/space/orbital-paused-viewports/cleanup19c-orbital-rwd-01/saves/ordinary-paused-view"
+screenshot giant "orbital-paused-field"

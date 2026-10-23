@@ -1,0 +1,56 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; observed artifact identities",
+  "producer": "src/tests/multilayer/support/artifact_recipe_stage.py",
+  "native_writer": null,
+  "feature": "space",
+  "scenario": "checkpoint-static",
+  "run_id": "cleanup30-checkpoint-debug-01",
+  "configuration": "Debug",
+  "inputs": [
+    {
+      "path": "src/tests/fixtures/checkpoints/space/Debug/current.sav",
+      "sha256": "cb3c4ba4b44a09dd76250c540d83860c7e0e812423028d0d45bb4a6ce59e5f01"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-debug-01/evidence/native-dc1a0e0005814242a31931699f05a6ba-stdout.txt",
+      "sha256": "e80ad5c4b7fe83666d95812466c14acf6a306a6df8ca06449978fed46be69a83"
+    },
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-debug-01/saves/ordinary.sav",
+      "sha256": "062547ce795124cf8e05761bc402159a4887dd1a61ebe8985963237c30ce6674"
+    }
+  ],
+  "argv": [
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\mlm\\runtime\\native\\cleanup30-checkpoint-debug-01\\main\\openttd_console.exe",
+    "-v",
+    "null:ticks=2",
+    "-s",
+    "null",
+    "-m",
+    "null",
+    "-x",
+    "-X",
+    "-I",
+    "original_dos",
+    "-d",
+    "sl=3",
+    "-c",
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\mlm\\runtime\\native\\cleanup30-checkpoint-debug-01\\main\\native-art.cfg",
+    "-g",
+    "C:\\Users\\Axonn\\AppData\\Local\\cxc-a\\src\\tests\\fixtures\\checkpoints\\space\\Debug\\current.sav"
+  ],
+  "exit_status": 0,
+  "runtime": "mlm/runtime/native/cleanup30-checkpoint-debug-01/main",
+  "transcripts": [
+    {
+      "path": "mlm/reviews/space/checkpoint-static/cleanup30-checkpoint-debug-01/evidence/native-dc1a0e0005814242a31931699f05a6ba-stdout.txt",
+      "sha256": "e80ad5c4b7fe83666d95812466c14acf6a306a6df8ca06449978fed46be69a83"
+    }
+  ],
+  "executable": {
+    "path": "mlm/runtime/native/cleanup30-checkpoint-debug-01/main/openttd_console.exe",
+    "sha256": "d6a7945019e03b943ef7c1c17ba7aa4a5c114816a9f19306604be9f1b1eff241"
+  }
+}
