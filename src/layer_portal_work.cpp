@@ -130,6 +130,14 @@ LayerPortalWorkError CheckLayerPortalAvailability(TileIndex tile)
 	return LayerPortalWorkError::None;
 }
 
+/** @copydoc IsLayerPortalOpenToNetwork */
+bool IsLayerPortalOpenToNetwork(TileIndex tile)
+{
+	// Both conditions must hold: a saved Connected Deep pair stays closed before the shared technology date, and a
+	// date-available pair stays closed while its work is Sealed or Commissioning.
+	return CheckLayerPortalAvailability(tile) == LayerPortalWorkError::None && GetLayerPortalWorkState(tile) == LayerPortalWorkState::Connected;
+}
+
 /**
  * Validate actual assignment without treating a train reference as a shipped TBM capability.
  * @param tile Actual entering endpoint.
@@ -208,6 +216,35 @@ DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front)
 		}
 		return GetLayerPortalShaftDirection(tile);
 	}
+	if (IsTBMHaulerAdmittedAtBay(front, tile)) {
+		// Plan18 8FA: face availability can change while a queuing hauler is
+		// only partly stored. Finish that whole physical ingress before changing
+		// its magazine exit; otherwise trailing hoppers miss their storage point
+		// and continue onto nonexistent rail beyond the upper housing.
+		// A path query may name this future portal while the train is stored
+		// in another real depot. Only actual ingress at this housing preserves
+		// its incoming orientation; remote storage cannot select this exit.
+		if (front.tile == tile && front.track == Track::Depot) {
+			// Ordinary IsChainInDepot requires a railway-depot tile. A portal
+			// magazine instead checks each real part's native storage state.
+			for (const Train *part = &front; part != nullptr; part = part->Next()) {
+				if (part->track != Track::Depot || part->tile != tile) return ReverseDiagDir(DirToDiagDir(front.direction));
+			}
+		}
+		// Once a whole-chain departure has selected an exit, each still-stored
+		// part retains that actual orientation until it follows the engine out.
+		for (const Train *part = &front; part != nullptr; part = part->Next()) {
+			if (front.track != Track::Depot && part->tile == tile && part->track == Track::Depot) return DirToDiagDir(part->direction);
+		}
+	}
+	// A hauler passing through to or from the face is never stored (r2df2 task 3.4). The face turn holder already queued
+	// here leaves through the shaft; one moving through keeps the ordinary end rules.
+	if (IsTBMHaulerAdmittedThroughPortal(front, tile)) {
+		for (const Train *part = &front; part != nullptr; part = part->Next()) {
+			if (part->tile == tile && part->track == Track::Depot) return GetLayerPortalShaftDirection(tile);
+		}
+		return DiagDirection::Invalid;
+	}
 	if (IsTBMHaulerAdmittedAtBay(front, tile)) return GetLayerPortalDoorDirection(tile);
 	return DiagDirection::Invalid;
 }
@@ -238,8 +275,10 @@ TrackdirBits GetLayerPortalAdmittedTrackdirs(TileIndex tile, const Train &front,
 	}
 	if (work == nullptr || work->state != LayerPortalWorkState::Commissioning) return {};
 	const bool cutter = CheckLayerPortalWorkAccess(tile, front.index, work->project) == LayerPortalWorkError::None;
-	// A hauler reaches only the key of its own Source bay, and only through the door: it never passes the cutter.
-	const bool hauler = !cutter && side != DiagDirection::Invalid && IsTBMHaulerAdmittedAtBay(front, tile);
+	// A hauler reaches the key of its own Source bay through the door to queue there. Only to serve the face, or to
+	// leave it, does it pass either end of its own project's pair, shaft steps included (r2df2 task 3.3).
+	const bool queuing = side != DiagDirection::Invalid && IsTBMHaulerAdmittedAtBay(front, tile);
+	const bool hauler = !cutter && (queuing || IsTBMHaulerAdmittedThroughPortal(front, tile));
 	if (!cutter && !hauler) return {};
 	// A source housing occupied by another moving train stays unavailable,
 	// including a servicing cutter that passes through instead of parking.

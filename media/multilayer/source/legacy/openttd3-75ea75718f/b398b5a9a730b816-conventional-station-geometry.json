@@ -1,0 +1,482 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups24B/24C",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Compiled read-only native layout snapshot for source authoring; no sprite activation or gameplay authority"
+  },
+  "schema_version": 2,
+  "owner": "GetStationTileLayout(StationType::Rail, graphics)",
+  "part_order": [
+    "back",
+    "front",
+    "roof"
+  ],
+  "native_source_hash_policy": "utf8_lf",
+  "native_source_sha256": {
+    "src/conventional_station_art.h": "a2b320dd8d38d4f18e1da804295d7d02276ef067cf5a772e53103bea8209dfcb",
+    "src/conventional_station_art.cpp": "c05f3012305bc66628e9ffc87a17e7de83a96f97812683c013c5cb453aa9a2e5",
+    "src/station_cmd.cpp": "d110b64b701c3ca0264cc1bb6fbae2f5554e7a2b82008222a340bf0d92b0b624",
+    "src/station_map.h": "50a60d4e7d06094c5db20c93ba7cf47a726f03ac7dbd76a526e10a2086b20291",
+    "src/table/station_land.h": "739971f99adbd33e2f04e206bdb801df3fd2c03e948f933cffb5eb781c811263",
+    "src/sprite.h": "10ac43f1118403a3048ad0d2d329e971ad1dc4b7efdf519e073eef4cd016cff5",
+    "src/sprite.cpp": "a56506890a7b0651bf304a395a713264393d830f64affe72dbb4523b9e2f0b4b",
+    "src/excavation_guard.cpp": "04c747f6562ec826dc58fa3c71113c113ef5e549924f924f4b24c94b6eec7ff1",
+    "src/tests/conventional_station_art.cpp": "bb61627fdf79de6333c4064101bc46e837a279b4ae87c79e84f7ffcafbd7c69d"
+  },
+  "native_proof": {
+    "log": "logs/geothermal/generator-operation/20261017-140529-792243e0b9/geometry-station.log",
+    "log_sha256": "8d46f98a521dd633a62e440db68a9f9a59051fd6c8734224df4635fd3e0b6b9c",
+    "binary": "build/RelWithDebInfo/openttd_test.exe",
+    "binary_sha256": "698720d7ad635e99740c8e8d690fcf50ca7e891d286ad40852e5de391619e929",
+    "exit_code": 0,
+    "assertions": 3355,
+    "test_cases": 4,
+    "fixture": "Explicit geological fixture floor; actual normal station commands on both rock layers/axes and variable dimensions; no paid TBM bootstrap claim"
+  },
+  "layouts": [
+    {
+      "graphics": 0,
+      "axis": "X",
+      "role": 0,
+      "roof_children": 0,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            11,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ],
+      "roof_glass": null
+    },
+    {
+      "graphics": 1,
+      "axis": "Y",
+      "role": 0,
+      "roof_children": 0,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            11,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ],
+      "roof_glass": null
+    },
+    {
+      "graphics": 2,
+      "axis": "X",
+      "role": 1,
+      "roof_children": 0,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            15
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            11,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ],
+      "roof_glass": null
+    },
+    {
+      "graphics": 3,
+      "axis": "Y",
+      "role": 1,
+      "roof_children": 0,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            15
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            11,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        null
+      ],
+      "roof_glass": null
+    },
+    {
+      "graphics": 4,
+      "axis": "X",
+      "role": 2,
+      "roof_children": 1,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            7
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            11,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            16
+          ],
+          "extent": [
+            16,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "roof_glass": {
+        "screen_offset": [
+          0,
+          0
+        ],
+        "transparent": true,
+        "palette": "PALETTE_TO_TRANSPARENT"
+      }
+    },
+    {
+      "graphics": 5,
+      "axis": "Y",
+      "role": 2,
+      "roof_children": 1,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            11,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            16
+          ],
+          "extent": [
+            16,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "roof_glass": {
+        "screen_offset": [
+          0,
+          0
+        ],
+        "transparent": true,
+        "palette": "PALETTE_TO_TRANSPARENT"
+      }
+    },
+    {
+      "graphics": 6,
+      "axis": "X",
+      "role": 3,
+      "roof_children": 1,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            11,
+            0
+          ],
+          "extent": [
+            16,
+            5,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            16
+          ],
+          "extent": [
+            16,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "roof_glass": {
+        "screen_offset": [
+          0,
+          0
+        ],
+        "transparent": true,
+        "palette": "PALETTE_TO_TRANSPARENT"
+      }
+    },
+    {
+      "graphics": 7,
+      "axis": "Y",
+      "role": 3,
+      "roof_children": 1,
+      "parts": [
+        {
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            11,
+            0,
+            0
+          ],
+          "extent": [
+            5,
+            16,
+            2
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            0,
+            0,
+            16
+          ],
+          "extent": [
+            16,
+            16,
+            10
+          ],
+          "offset": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "roof_glass": {
+        "screen_offset": [
+          0,
+          0
+        ],
+        "transparent": true,
+        "palette": "PALETTE_TO_TRANSPARENT"
+      }
+    }
+  ]
+}

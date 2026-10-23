@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file signal_func.h Functions related to signals. */
+/** @file signal_func.h Native signal ownership and closed portal block updates. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
 
 #ifndef SIGNAL_FUNC_H
 #define SIGNAL_FUNC_H
@@ -63,5 +63,14 @@ void SetSignalsOnBothDir(TileIndex tile, Track track, Owner owner);
 void AddTrackToSignalBuffer(TileIndex tile, Track track, Owner owner);
 void AddSideToSignalBuffer(TileIndex tile, DiagDirection side, Owner owner);
 void UpdateSignalsInBuffer();
+
+/**
+ * Update the signal block that starts at a rail portal end, from inside a game tick (r2df task 6.3). Signal work
+ * queued earlier in the same tick, such as support track a TBM controller laid, is finished first, because
+ * UpdateSignalsOnSegment needs an empty queue.
+ * @param tile Rail portal end whose block changed: a train left or entered its magazine, or crossed its shaft.
+ * @param owner Owner of the portal end and its signals.
+ */
+void UpdateLayerPortalSignals(TileIndex tile, Owner owner);
 
 #endif /* SIGNAL_FUNC_H */

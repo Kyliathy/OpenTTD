@@ -12,6 +12,8 @@
  * Plan 5 bay admission and the actual wagon contents.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 3-8 and 12, task 4.2B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 1-5 (exchange bay)
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md native phase and cargo ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23 (installed face wait).
  */
 
 #include "stdafx.h"
@@ -112,7 +114,7 @@ bool IsTBMProjectFinished(TBMPhase phase)
  * @param project Record to check.
  * @return The live cutter front engine of the project's company and model, or nullptr.
  */
-static const Train *GetLiveTBMCutter(const TBMProject &project)
+const Train *GetLiveTBMCutter(const TBMProject &project)
 {
 	const Train *front = Train::GetIfValid(project.cutter);
 	// Only this company's front engine of this exact cutter model can carry the assignment.
@@ -146,7 +148,7 @@ static bool IsTBMPortalKey(TileIndex tile)
  * @param project Record to check.
  * @return The live geological job this project may work on, or nullptr.
  */
-static const ExcavationJob *GetLiveTBMJob(const TBMProject &project)
+const ExcavationJob *GetLiveTBMJob(const TBMProject &project)
 {
 	if (project.job == ExcavationJobID{UINT32_MAX}) return nullptr;
 	const auto *job = GetExcavationJob(project.job);
@@ -319,7 +321,7 @@ TBMProjectError ValidateTBMProject(const TBMProject &project)
 {
 	if (project.id == TBMProjectID{UINT32_MAX}) return TBMProjectError::InvalidProject;
 	// Unknown phases or reasons cannot be resumed, and an unusable stamp cannot order later transitions.
-	if (to_underlying(project.phase) > to_underlying(TBMPhase::FollowOrders) || to_underlying(project.blocked) >= to_underlying(TBMBlockedReason::End) || !IsValidDirection(project.heading) || project.revision == 0 || project.revision == UINT64_MAX) return TBMProjectError::InvalidProject;
+	if (to_underlying(project.phase) > to_underlying(TBMPhase::AwaitFaceTransfer) || to_underlying(project.blocked) >= to_underlying(TBMBlockedReason::End) || !IsValidDirection(project.heading) || project.revision == 0 || project.revision == UINT64_MAX) return TBMProjectError::InvalidProject;
 	const auto *model = GetTBMCutterModel(project.model_id);
 	// The fractional work remainder is a numerator below the model's own divisor; anything else was never produced.
 	if (model == nullptr || project.work_remainder >= model->work_rate_denominator) return TBMProjectError::InvalidProject;
@@ -827,7 +829,8 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 	// soon as the order takes control: a later project pause can replace the
 	// displayed Servicing reason, but must never erase the required return trip.
 	if ((inputs.servicing || inputs.service_finished) && project.phase != TBMPhase::FollowOrders) {
-		const bool face = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport;
+		// A face transfer interrupted by service must physically rejoin its accepted face before working again.
+		const bool face = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport || IsTBMAwaitingFaceTransfer(project.phase);
 		step.phase = IsTBMFinishing(project.phase) ? TBMPhase::ReturnToRelease : IsTBMParking(project.phase) ? TBMPhase::ReturnToPark : face ? TBMPhase::TravelToFace : TBMPhase::ReturnForExchange;
 		step.phase_changed = step.phase != project.phase;
 	}
@@ -849,7 +852,7 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 	if (step.blocked != TBMBlockedReason::None) return step;
 
 	/* A cancelled job turns every forward phase back to the bay along the supported retreat (Group 17.1). */
-	const bool forward = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport;
+	const bool forward = project.phase == TBMPhase::Commissioning || project.phase == TBMPhase::TravelToFace || project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport || IsTBMAwaitingFaceTransfer(project.phase);
 	if (inputs.cancelled && forward) {
 		step.phase = TBMPhase::ReturnForExchange;
 		step.phase_changed = true;
@@ -868,8 +871,9 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 			break;
 		case TBMPhase::Bore:
 			// An exchange that is due must happen before the next cut; otherwise a committed cut moves on to support.
+			// Actual paid geometry chooses a face meeting; a cramped approach retains the original bay settlement.
 			if (exchange_due) {
-				step.phase = TBMPhase::ReturnForExchange;
+				step.phase = GetTBMMeetingKind(project) == TBMMeetingKind::Face ? TBMPhase::AwaitFaceTransfer : TBMPhase::ReturnForExchange;
 			} else if (inputs.cut_committed) {
 				step.phase = TBMPhase::AdvanceSupport;
 			}
@@ -877,11 +881,20 @@ TBMPhaseStep StepTBMProjectPhase(const TBMProject &project, const TBMPhaseInputs
 		case TBMPhase::AdvanceSupport:
 			if (!inputs.support_advanced) break;
 			if (exchange_due) {
-				step.phase = TBMPhase::ReturnForExchange;
+				step.phase = GetTBMMeetingKind(project) == TBMMeetingKind::Face ? TBMPhase::AwaitFaceTransfer : TBMPhase::ReturnForExchange;
 			} else if (inputs.route_complete) {
 				step.error = TBMProjectError::InvalidProject; // Frozen terms always end with a final return; finishing without one is inconsistent.
 			} else {
 				step.phase = TBMPhase::Bore;
+			}
+			break;
+		case TBMPhase::AwaitFaceTransfer:
+			// Only actual removal of the due load releases this wait. A cut can leave the cutter behind the new
+			// support end, so its physical advance must finish before more boring; a finished route returns empty.
+			if (!inputs.exchange_due) {
+				step.phase = inputs.route_complete ? TBMPhase::ReturnForExchange : inputs.at_face ? TBMPhase::Bore : TBMPhase::AdvanceSupport;
+			} else if (GetTBMMeetingKind(project) != TBMMeetingKind::Face) {
+				step.phase = TBMPhase::ReturnForExchange; // Lost stand: use the existing safe bay and withdrawal holds.
 			}
 			break;
 		case TBMPhase::ReturnForExchange:
@@ -1043,8 +1056,8 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 		project->work_remainder = work.work_remainder; // Face work never touches the store, so the pointer is still valid.
 		if (work.cut_committed) {
 			project->heading = work.heading; // Only a committed advance turns the cutter.
-			// A commit that makes the exchange due (wagons full, or the final return) sends the consist straight back,
-			// rather than first onto support it would not use before the exchange.
+			// Re-read actual loaded custody after the paid commit. The phase owner chooses the face wait or bay
+			// return before another advance; no stale pre-cut observation may permit another cut.
 			inputs.exchange_due = IsTBMExchangeDue(*project);
 		}
 	}
@@ -1058,7 +1071,7 @@ TBMProjectError AdvanceTBMWork(TBMProjectID id)
 			// Explicit travel interruptions already selected their direction from
 			// both actual ends; later ticks must not force them backwards again.
 			const bool leaving_face = previous_phase == TBMPhase::Bore || previous_phase == TBMPhase::AdvanceSupport ||
-				previous_phase == TBMPhase::TravelToFace || previous_phase == TBMPhase::Commissioning;
+				previous_phase == TBMPhase::TravelToFace || previous_phase == TBMPhase::Commissioning || IsTBMAwaitingFaceTransfer(previous_phase);
 			if (leaving_face && IsTBMReturning(stepped->phase) && stepped->blocked == TBMBlockedReason::None) BackUpTBMConsist(*front);
 			if (IsTBMStored(stepped->phase) && IsTBMReadyToPark(*stepped)) front->vehstatus.Set(VehState::Stopped); // Stop only after every actual part and its cargo passed parking admission.
 		}

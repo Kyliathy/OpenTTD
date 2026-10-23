@@ -13,13 +13,14 @@
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
+#include "layer_window_fixture.h"
 #include "transport_tube_freight_fixture.h"
 #include "../safeguards.h"
 
 /** Native transfer moves one actual packet to the shared stock; a conventional truck loads it without booking final income. */
 TEST_CASE("Tube interchange transfers actual packets to an ordinary freight carrier", "[transport-tube-interchange]")
 {
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	const auto source = rig.BuildSource();
 	const auto cash = Company::Get(_current_company)->money;
 	const auto packet = rig.LoadPacket(*rig.capsule, 17, source->index);
@@ -51,7 +52,7 @@ TEST_CASE("Tube interchange transfers actual packets to an ordinary freight carr
 TEST_CASE("Tube interchange bounded transfer retains refused packets and feeder shares", "[transport-tube-interchange]")
 {
 	const uint room = GENERATE(0u, 3u, 17u);
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	const auto source = rig.BuildSource();
 	auto &stock = rig.station->goods[rig.cargo].GetOrCreateData().cargo;
 	rig.AppendStock(TUBE_TERMINAL_TRANSFER_CAPACITY - room, source->index);
@@ -81,7 +82,7 @@ TEST_CASE("Tube interchange bounded transfer retains refused packets and feeder 
 /** Earlier actual arrivals reserve transfer space in their own staged packets; a second arrival cannot allocate it again. */
 TEST_CASE("Tube interchange pending unloads and loading reservations share the bound", "[transport-tube-interchange]")
 {
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	const auto source = rig.BuildSource();
 	auto &stock = rig.station->goods[rig.cargo].GetOrCreateData().cargo;
 	rig.AppendStock(TUBE_TERMINAL_TRANSFER_CAPACITY - 17, source->index);
@@ -93,6 +94,8 @@ TEST_CASE("Tube interchange pending unloads and loading reservations share the b
 	PrepareUnload(rig.capsule);
 	CHECK(rig.capsule->cargo.ActionCount(VehicleCargoList::MoveToAction::Transfer) == 17);
 	CHECK(GetTubeStationTransferRoom(rig.station->index, rig.cargo) == 0);
+	CHECK(GetTubeInterchangeTransferRoom(rig.station->index, rig.cargo, &stock, true) == 0);
+	CHECK(GetTubeInterchangeTransferRoom(rig.station->index, rig.cargo, &stock) == 17);
 	Train *second = rig.BuyCapsule();
 	rig.LoadPacket(*second, 7, source->index);
 	rig.Arrive(*second, TileAddWrap(rig.tube_tile, 0, 1));
@@ -107,6 +110,41 @@ TEST_CASE("Tube interchange pending unloads and loading reservations share the b
 	CHECK(stock.Reserve(10, &truck->cargo, any, rig.road_tile) == 10);
 	CHECK(stock.ReservedCount() == 10);
 	CHECK(GetTubeStationTransferRoom(rig.station->index, rig.cargo) == 0);
+	CHECK(GetTubeInterchangeTransferRoom(rig.station->index, rig.cargo, &stock, true) == 0);
+	CHECK(GetTubeInterchangeTransferRoom(rig.station->index, rig.cargo, &stock) == 0);
 	CHECK(truck->cargo.Return(10, &stock, StationID::Invalid(), rig.road_tile) == 10);
 	CHECK(stock.ReservedCount() == 0);
+}
+
+/** Exact queue identity and installed berth membership distinguish zero tube room from no applicable tube policy. */
+TEST_CASE("Tube room adapters share one bound only for the actual joined station queue", "[transport-tube-room]")
+{
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig; auto *ordinary = rig.BuildSource(); const auto id = rig.station->index;
+	CHECK_FALSE(rig.station->goods[rig.cargo].HasData()); CHECK(GetTubeStationTransferRoom(id, rig.cargo) == 1024);
+	CHECK_FALSE(rig.station->goods[rig.cargo].HasData());
+	StationCargoList detached{};
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(id, rig.cargo, &detached).has_value());
+	CHECK_FALSE(rig.station->goods[rig.cargo].HasData());
+	auto &queue = rig.station->goods[rig.cargo].GetOrCreateData().cargo;
+	auto &other = ordinary->goods[rig.cargo].GetOrCreateData().cargo;
+	CHECK(GetTubeInterchangeTransferRoom(id, rig.cargo, &queue) == 1024);
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(id, rig.cargo, &other).has_value());
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(id, rig.cargo, nullptr).has_value());
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(id, INVALID_CARGO, &queue).has_value());
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(StationID::Invalid(), rig.cargo, &queue).has_value());
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(ordinary->index, rig.cargo, &other).has_value());
+	CHECK(GetTubeStationTransferRoom(id, INVALID_CARGO) == 0); CHECK(GetTubeStationTransferRoom(ordinary->index, rig.cargo) == UINT_MAX);
+	{
+		// A foreign tube berth inside a claimed rectangle cannot confer native
+		// station membership or cap this ordinary station's actual queue.
+		AutoRestoreBackup rectangle(ordinary->train_station, rig.station->train_station);
+		CHECK(GetTubeStationTransferRoom(ordinary->index, rig.cargo) == UINT_MAX);
+		CHECK_FALSE(GetTubeInterchangeTransferRoom(ordinary->index, rig.cargo, &other).has_value());
+	}
+	rig.AppendStock(1021, ordinary->index); CHECK(GetTubeInterchangeTransferRoom(id, rig.cargo, &queue) == 3);
+	CHECK(GetTubeInterchangeTransferRoom(Station::GetByTile(rig.rail_tile)->index, rig.cargo, &queue) == 3);
+	CHECK(GetTubeInterchangeTransferRoom(Station::GetByTile(rig.road_tile)->index, rig.cargo, &queue) == 3);
+	rig.AppendStock(3, ordinary->index); CHECK(GetTubeInterchangeTransferRoom(id, rig.cargo, &queue) == 0);
+	rig.AppendStock(UINT16_MAX, ordinary->index); CHECK(GetTubeInterchangeTransferRoom(id, rig.cargo, &queue) == 0);
+	CHECK(queue.TotalCount() == 1024 + UINT16_MAX); CHECK(GetTubeStationTransferRoom(id, rig.cargo) == 0);
 }

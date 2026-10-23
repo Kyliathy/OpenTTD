@@ -8,10 +8,12 @@
  * @file acceptance_ground_fixture.cpp Declared isolated connected three-plane fixture, saved through real native descriptors.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs16-integrated-acceptance-and-balance.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint11.1
+ * @see docs/zz-reach2/architecture/archi-historical-debug.md immutable inputs and run-owned saves.
  */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
+#include "test_artifact_paths.h"
 #include "mock_environment.h"
 #include "layer_window_fixture.h"
 #include "underground_workflow_fixture.h"
@@ -19,7 +21,6 @@
 #include "../saveload/saveload_func.h"
 #include "../gfx_func.h"
 #include "../table/sprites.h"
-#include <filesystem>
 
 #include "../safeguards.h"
 
@@ -52,11 +53,10 @@ TEST_CASE("Acceptance fixture connects Surface Underground and Deep through actu
 	// coincident tile or a painted line is not accepted as connectivity.
 	for (const auto &pair : pairs) CHECK(pair.state == LayerPortalWorkState::Connected);
 	CHECK(CaptureTBMProjects().empty());
-	const auto root = std::filesystem::current_path().parent_path();
-	REQUIRE(std::filesystem::exists(root / ".git"));
-	const auto directory = root / "src/tests/fixtures/acceptance";
-	std::filesystem::create_directories(directory);
-	const auto output = directory / "ground-connected.sav";
+	// A newly authored connected world belongs to this invocation. The original
+	// version384 source fixture is an immutable compatibility input and cannot be
+	// replaced merely because the current writer generated another world successfully.
+	const auto output = GetTestCaseArtifactPaths("acceptance", "ground-connected").Output("saves", "ground-connected.sav");
 	LayerSaveContent content(world.ActivatedContent(), true);
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
 	AutoRestoreBackup no_ui(_game_mode, GameMode::Menu); // Save exact actual owners without creating progress UI in the isolated fixture.

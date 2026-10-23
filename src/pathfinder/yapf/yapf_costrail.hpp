@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_costrail.hpp Rail costs and uncached native cutter work-face target recognition. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B */
+/** @file yapf_costrail.hpp Rail costs and uncached native cutter/hauler work-target recognition. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B; docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md, Group8FA. */
 
 #ifndef YAPF_COSTRAIL_HPP
 #define YAPF_COSTRAIL_HPP
@@ -413,8 +413,11 @@ no_entry_cost: // jump here at the beginning if the node has no parent (it is th
 			segment_cost += Yapf().ReservationCost(n, cur.tile, cur.td, follower->tiles_skipped);
 
 			end_segment_reason = segment.end_segment_reason;
-			// A cutter's next face is plain paid support, rather than a station/depot. End its uncached segment at that actual target so a chamber junction can route there.
-			if (Yapf().IsCutterSteeringDestination() && Yapf().PfDetectDestination(cur.tile, cur.td)) end_segment_reason.Set(EndSegmentReason::TargetReached);
+			// Cutter faces and hauler stands/bays need not be ordinary station or
+			// depot endpoints. End their uncached segment at the exact admitted
+			// target so a chamber junction can route there, including a closed
+			// Source magazine that would otherwise be discarded as a dead end.
+			if (Yapf().IsWorkSteeringDestination() && Yapf().PfDetectDestination(cur.tile, cur.td)) end_segment_reason.Set(EndSegmentReason::TargetReached);
 
 			/* Tests for 'potential target' reasons to close the segment. */
 			if (cur.tile == prev.tile) {

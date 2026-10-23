@@ -19,6 +19,7 @@
 #include "cargoaction.h"
 #include "order_type.h"
 #include "transport_tube_cargo.h"
+#include "surface_supply_order_runtime.h"
 
 #include "safeguards.h"
 
@@ -89,6 +90,8 @@ CargoPacket::CargoPacket(CargoPacketID index, uint16_t count, Money feeder_share
 		source_xy(original.source_xy),
 		travelled(original.travelled),
 		source(original.source),
+		company_supply_order(original.company_supply_order),
+		company_supply_shipped(original.company_supply_shipped),
 #ifdef WITH_ASSERT
 		in_vehicle(original.in_vehicle),
 #endif /* WITH_ASSERT */
@@ -96,6 +99,32 @@ CargoPacket::CargoPacket(CargoPacketID index, uint16_t count, Money feeder_share
 		next_hop(original.next_hop)
 {
 	assert(count != 0);
+}
+
+/** @copydoc CargoPacket::CanMarkCompanySupplyShipped */
+bool CargoPacket::CanMarkCompanySupplyShipped(uint16_t quantity) const
+{
+	// Zero or excessive fragments cannot alter history. Unlinked A supplies
+	// remain valid non-paying cargo and never acquire a legacy shipped flag.
+	if (quantity == 0 || quantity > this->count) return false;
+	if (this->company_supply_order == 0) return !this->company_supply_shipped;
+	const auto *record = GetSurfaceSupplyOrder(this->company_supply_order);
+	// An ordinary source, unknown identity or native receipt cannot back legacy
+	// rights, even if a malformed original packet claimed to have shipped already.
+	if (!this->source.IsCompanySupply() || record == nullptr || record->Legacy() == nullptr) return false;
+	return this->company_supply_shipped || CanRecordSurfaceSupplyDispatch(this->company_supply_order, quantity);
+}
+
+/** @copydoc CargoPacket::MarkCompanySupplyShipped */
+bool CargoPacket::MarkCompanySupplyShipped()
+{
+	if (!this->CanMarkCompanySupplyShipped(this->count)) return false;
+	// Returning or reserving a shipped fragment again cannot consume history
+	// twice, and native unlinked stock has no legacy counter to alter.
+	if (this->company_supply_order == 0 || this->company_supply_shipped) return true;
+	if (!RecordSurfaceSupplyDispatch(this->company_supply_order, this->count)) return false;
+	this->company_supply_shipped = true;
+	return true;
 }
 
 /**
@@ -600,23 +629,36 @@ uint VehicleCargoList::Reassign(uint max_move)
  * Reassign cargo from MoveToAction::Deliver to MoveToAction::Transfer and take care of the next
  * station the cargo wants to visit.
  * @param max_move Maximum amount of cargo to reassign.
- * @return Amount of cargo actually reassigned.
+ * @return Amount of cargo actually reassigned; a required split with no pool room refuses unchanged.
  */
 template <>
 uint VehicleCargoList::Reassign<VehicleCargoList::MoveToAction::Deliver, VehicleCargoList::MoveToAction::Transfer>(uint max_move)
 {
 	max_move = std::min(this->action_counts[MoveToAction::Deliver], max_move);
+	if (max_move == 0) return 0;
+	const uint transfer_end = this->action_counts[MoveToAction::Transfer] + max_move;
 
+	// Only the final selected packet can straddle the requested transfer boundary.
+	// Split that excess first: exhaustion must leave every earlier packet's route,
+	// quantity, feeder share and action designation unchanged, even for a request
+	// spanning several packets. The remainder stays in the Deliver suffix.
 	uint sum = 0;
-	for (Iterator it(this->packets.begin()); sum < this->action_counts[MoveToAction::Transfer] + max_move;) {
+	for (Iterator it(this->packets.begin()); sum < transfer_end;) {
 		CargoPacket *cp = *it++;
 		sum += cp->Count();
-		if (sum <= this->action_counts[MoveToAction::Transfer]) continue;
-		if (sum > this->action_counts[MoveToAction::Transfer] + max_move) {
-			CargoPacket *cp_split = cp->Split(sum - this->action_counts[MoveToAction::Transfer] + max_move);
-			sum -= cp_split->Count();
+		if (sum > transfer_end) {
+			CargoPacket *cp_split = cp->Split(sum - transfer_end);
+			if (cp_split == nullptr) return 0;
 			this->packets.insert(it, cp_split);
 		}
+	}
+	// Allocation succeeded (or no split was needed). Preserve the routes of
+	// cargo already staged for Transfer and clear only the newly reassigned units.
+	sum = 0;
+	for (CargoPacket *cp : this->packets) {
+		if (sum >= transfer_end) break;
+		sum += cp->Count();
+		if (sum <= this->action_counts[MoveToAction::Transfer]) continue;
 		cp->next_hop = StationID::Invalid();
 	}
 
@@ -672,8 +714,10 @@ uint VehicleCargoList::Unload(uint max_move, StationCargoList *dest, CargoType c
 		// A producer or earlier unload may fill the shared buffer after staging.
 		// Revalidate actual physical room at the move; pending packets are not
 		// subtracted again here, and a refused remainder stays aboard unchanged.
-		if (payment != nullptr) move = std::min(move, GetTubeStationTransferRoom(payment->current_station, cargo, false));
-		this->ShiftCargo(CargoTransfer(this, dest, move, current_tile));
+		if (payment != nullptr) {
+			if (const auto room = GetTubeInterchangeTransferRoom(payment->current_station, cargo, dest)) move = std::min(move, *room);
+		}
+		if (move != 0) this->ShiftCargo(CargoTransfer(this, dest, move, current_tile));
 		moved += move;
 	}
 	if (this->action_counts[MoveToAction::Transfer] == 0 && this->action_counts[MoveToAction::Deliver] > 0 && moved < max_move) {
@@ -888,7 +932,11 @@ uint StationCargoList::TruncateImpl(uint max_move, StationCargoAmountMap *cargo_
  */
 uint StationCargoList::Reserve(uint max_move, VehicleCargoList *dest, std::span<const StationID> next_station, TileIndex current_tile)
 {
-	return this->ShiftCargo(CargoReservation(this, dest, max_move, current_tile), next_station, true);
+	const uint waiting = this->AvailableCount();
+	this->ShiftCargo(CargoReservation(this, dest, max_move, current_tile), next_station, true);
+	// Stopping a refused movement consumes its traversal budget, not physical
+	// stock. Report actual waiting-cache removal, including newly reserved units.
+	return waiting - this->AvailableCount();
 }
 
 /**
@@ -911,7 +959,11 @@ uint StationCargoList::Load(uint max_move, VehicleCargoList *dest, std::span<con
 		dest->Reassign<VehicleCargoList::MoveToAction::Load, VehicleCargoList::MoveToAction::Keep>(move);
 		return move;
 	} else {
-		return this->ShiftCargo(CargoLoad{this, dest, max_move, current_tile}, next_station, true);
+		const uint waiting = this->AvailableCount();
+		this->ShiftCargo(CargoLoad{this, dest, max_move, current_tile}, next_station, true);
+		// A reference or allocation refusal may stop traversal without loading
+		// any units; exhausted movement budget is not a delivered quantity.
+		return waiting - this->AvailableCount();
 	}
 }
 
@@ -940,3 +992,35 @@ template class CargoList<StationCargoList, StationCargoPacketMap>;
  * @return Amount of cargo actually reassigned.
  */
 template uint VehicleCargoList::Reassign<VehicleCargoList::MoveToAction::Deliver, VehicleCargoList::MoveToAction::Keep>(uint);
+
+/** @copydoc StationCargoList::CountUnshippedCompanySupply */
+uint64_t StationCargoList::CountUnshippedCompanySupply(uint64_t order) const
+{
+	if (order == 0) return 0;
+	uint64_t eligible = 0;
+	// Inspect every real routing bucket. Current label totals or original order
+	// quantities cannot substitute for these exact never-shipped source fragments.
+	for (ConstIterator it(this->packets.begin()); it != this->packets.end(); ++it) {
+		const auto *packet = *it;
+		if (packet->source.IsCompanySupply() && packet->GetCompanySupplyOrder() == order && !packet->HasCompanySupplyShipped()) eligible += packet->Count();
+	}
+	return eligible;
+}
+
+/** @copydoc StationCargoList::RemoveUnshippedCompanySupply */
+bool StationCargoList::RemoveUnshippedCompanySupply(uint64_t order, uint16_t expected)
+{
+	// The canonical command must still see the complete quoted physical stock.
+	// Zero identities and stale counts never select ordinary or partial inventory.
+	if (order == 0 || this->CountUnshippedCompanySupply(order) != expected) return false;
+	// Remove only the admitted exact fragments, correcting native weighted-age
+	// and waiting counts. Other orders, unlinked A assets and returned units stay.
+	for (Iterator it(this->packets.begin()); it != this->packets.end();) {
+		auto *packet = *it;
+		if (!packet->source.IsCompanySupply() || packet->GetCompanySupplyOrder() != order || packet->HasCompanySupplyShipped()) { ++it; continue; }
+		this->RemoveFromCache(packet, packet->Count());
+		it = this->packets.erase(it);
+		delete packet;
+	}
+	return true;
+}

@@ -6,6 +6,7 @@
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
+#include "surface_supply_legacy_fixture.h"
 #include "processor_fixture.h"
 #include "../train.h"
 #include "../map_func.h"
@@ -85,6 +86,39 @@ public:
 		return this->carrier->cargo.Unload(100, &station.goods[this->cargo].GetOrCreateData().cargo, this->cargo, this->payment, station.xy);
 	}
 };
+
+/** Migrated stock uses the same rating, reservation, physical intake and statistics owners without recovering freight income. */
+TEST_CASE("Legacy purchased stock keeps useful bounded delivery and statistics without rating loss or revenue", "[surface-supply-legacy-delivery]")
+{
+	SupplyCustodyRig rig; LegacySupplyComponent legacy(rig.origin->index);
+	auto &origin = rig.origin->goods[rig.cargo].GetOrCreateData().cargo;
+	origin.Append(legacy.Packet(8), StationID::Invalid()); legacy.Restore(legacy.Candidate(8));
+	const auto cash = Company::Get(_current_company)->money; const auto history = CaptureSurfaceSupplyOrders();
+	CHECK(origin.TruncateAbandonedOffers(UINT_MAX) == 0); CHECK(origin.TotalCount() == 8);
+	rig.Offer(Source{Source::Invalid, SourceType::Industry}, 3);
+	CHECK(origin.TruncateAbandonedOffers(UINT_MAX) == 3); CHECK(origin.TotalCount() == 8);
+	CHECK(CaptureSurfaceSupplyOrders() == history); CHECK(origin.CountUnshippedCompanySupply(1) == 8);
+	const std::array intermediate{rig.transfer->index};
+	REQUIRE(origin.Reserve(8, &rig.carrier->cargo, intermediate, rig.origin->xy) == 8);
+	CHECK(origin.CountUnshippedCompanySupply(1) == 0); CHECK(GetSurfaceSupplyOrder(1)->Legacy()->dispatched == 8);
+	REQUIRE(origin.Load(8, &rig.carrier->cargo, intermediate, rig.origin->xy) == 8); CHECK(origin.ReservedCount() == 0);
+	REQUIRE(rig.Unload(*rig.transfer, true) == 8); CHECK(rig.payment->visual_transfer == 0); CHECK(rig.payment->route_profit == 0);
+	rig.ClosePayment(); CHECK(Company::Get(_current_company)->money == cash);
+	auto &transferred = rig.transfer->goods[rig.cargo].GetData().cargo;
+	const auto *packet = transferred.Packets()->begin()->second.front();
+	CHECK(packet->GetCompanySupplyOrder() == 1); CHECK(packet->HasCompanySupplyShipped()); CHECK(packet->GetSource().IsCompanySupply()); CHECK(packet->GetFeederShare() == 0);
+	const std::array final{rig.destination->index}; REQUIRE(transferred.Load(8, &rig.carrier->cargo, final, rig.transfer->xy) == 8);
+	REQUIRE(ReceiveLayerProcessorCargo(*rig.industry, rig.cargo, 1023) == 1023);
+	const auto delivered = Company::Get(_current_company)->cur_economy.delivered_cargo[rig.cargo];
+	REQUIRE(rig.Unload(*rig.destination, false) == 1); CHECK(rig.Input(CargoLabel{"RFMT"}).waiting == 1024);
+	CHECK(Company::Get(_current_company)->cur_economy.delivered_cargo[rig.cargo] == delivered + 1);
+	CHECK(rig.destination->goods[rig.cargo].status.Test(GoodsEntry::State::EverAccepted));
+	CHECK(rig.carrier->cargo.TotalCount() == 7); CHECK(rig.payment->route_profit == 0); CHECK(rig.payment->visual_profit == 0);
+	rig.ClosePayment(); CHECK(Company::Get(_current_company)->money == cash);
+	packet = rig.carrier->cargo.Packets()->front(); CHECK(packet->GetCompanySupplyOrder() == 1); CHECK(packet->HasCompanySupplyShipped());
+	CHECK(packet->GetSource().IsCompanySupply()); CHECK(packet->GetFeederShare() == 0); CHECK(GetSurfaceSupplyOrder(1)->Legacy()->dispatched == 8);
+	CHECK(GetSurfaceSupplyOrder(1)->Legacy()->refunded == 0); CHECK(ValidateSurfaceSupplyOrderBook());
+}
 
 /** Native station/vehicle merging cannot erase purpose or buyer, and invalidating the original buyer cannot enable income. */
 TEST_CASE("Company supplies retain native purpose through split transfer merge and buyer invalidation", "[surface-supply-custody]")

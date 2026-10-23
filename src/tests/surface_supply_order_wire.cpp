@@ -32,10 +32,10 @@ TEST_CASE("Surface order native metadata codec matches an independent exact lite
 	const auto literal = SurfaceSupplyLiteral("0200000000000000640000000100010000000000000000000300140014005354454c0200c8000000000000000000010000000000bc07000064000000000000ffffff00");
 	REQUIRE(literal.size() == 67); const auto decoded = DecodeSurfaceSupplyOrders(literal); REQUIRE(decoded.has_value());
 	CHECK(decoded->snapshot.next_id == 2); CHECK(decoded->saved_day == TimerGameEconomy::Date{100}); REQUIRE(decoded->snapshot.records.size() == 1);
-	const auto &record = decoded->snapshot.records[0]; CHECK(record.id == 1); CHECK(record.origin == StationID{3}); CHECK(record.origin_x == 20); CHECK(record.origin_y == 20);
-	CHECK(record.purchaser == CompanyID{0}); CHECK(record.owner == CompanyID{0}); CHECK(record.label == CargoLabel{"STEL"}); CHECK(record.quantity == 2);
-	CHECK(record.cost == 200); CHECK(record.inflation_prices == 65536); CHECK(record.purchase_year == TimerGameCalendar::Year{1980});
-	CHECK(record.purchase_day == TimerGameEconomy::Date{100}); CHECK(record.packet_buyer == 0); CHECK(record.state == SurfaceSupplyOrderState::Pending); CHECK(record.issued_packet == CargoPacketID::Invalid());
+	const auto &record = decoded->snapshot.records[0]; CHECK(record.id == 1); CHECK(record.origin == StationID{3}); CHECK(record.Native()->origin_x == 20); CHECK(record.Native()->origin_y == 20);
+	CHECK(record.Native()->purchaser == CompanyID{0}); CHECK(record.owner == CompanyID{0}); CHECK(record.label == CargoLabel{"STEL"}); CHECK(record.quantity == 2);
+	CHECK(record.Native()->cost == 200); CHECK(record.Native()->inflation_prices == 65536); CHECK(record.Native()->purchase_year == TimerGameCalendar::Year{1980});
+	CHECK(record.purchase_day == TimerGameEconomy::Date{100}); CHECK(record.Native()->packet_buyer == 0); CHECK(record.Native()->state == SurfaceSupplyOrderState::Pending); CHECK(record.Native()->issued_packet == CargoPacketID::Invalid());
 	const auto encoded = EncodeSurfaceSupplyOrders(*decoded); REQUIRE(encoded.has_value()); CHECK(*encoded == literal);
 }
 

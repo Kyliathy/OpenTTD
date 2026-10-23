@@ -68,6 +68,14 @@ bool IsTrainStoppedAtPortalSite(const Train &front);
 void BackUpTBMConsist(Train &front);
 
 /**
+ * Turn an assigned hauler round where it stands, so it backs out of its project's corridor the way it came (rule F6,
+ * r2df2 task 4.4): at once when stopped, otherwise once it has stopped, as the reverse command does. Its reservation
+ * towards the cutter is given up first. A hauler already reversing, or with any part still in a depot/magazine, is left alone.
+ * @param front Front engine of the hauler.
+ */
+void BackUpTBMHauler(Train &front);
+
+/**
  * Choose the physical direction for an explicit return from ordinary travel.
  * The native pathfinder compares both real ends against the controller's bay;
  * a moving train brakes before reversing and a whole stored train stays put.
@@ -76,6 +84,17 @@ void BackUpTBMConsist(Train &front);
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
  */
 void ChooseTBMReturnDirection(Train &front);
+
+/**
+ * Recover a hauler trapped in a directed chamber loop after route work.
+ * Compare both actual train ends against its existing native bay/face target
+ * or unchanged ordinary Surface order, according to its actual cycle;
+ * reverse only when native routing prefers that legal exit. The normal native
+ * brake, reservation and physical movement rules still own the turnaround.
+ * @param front Actual assigned hauler reported lost by its native pathfinder.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8FA.
+ */
+void ChooseTBMHaulerRouteDirection(Train &front);
 
 /**
  * Exchange whole wagon units between two stationary consists that stand on one rearrangement tile, as one

@@ -1,0 +1,589 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Actual native command-body quoted funding/complete4x4 construction and pure stock/work/calendar status; injected full/history/malformed boundary probes are not a driven game loop"
+  },
+  "schema_version": 1,
+  "owner": "InstallLayerProcessorDefinition/GetLayerProcessorOperationalStatus",
+  "native_source_hash_policy": "utf8_lf",
+  "native_source_sha256": {
+    "src/layer_industry_definitions.cpp": "6861c02e352928d4a7d725b445823d58a2e0e1366e71d7af9e86c18c53cb19f5",
+    "src/layer_industry_policy.cpp": "657f40ff54a94c5ebc0a3155a1eec5c68d4aeecee2eacd430be4a5d0e67921c3",
+    "src/layer_industry_processor.cpp": "c20ddad7d612cbb8f2f953f3e9d31e6f4d3ee327583c35b1c710693cf71574e5",
+    "src/layer_industry_processor.h": "0c7237267d6d0f424755234ec2d05c0aad208e26a267e3a8dc2bd26c8b0f466b",
+    "src/layer_processor_presentation.cpp": "ce08686327bedd5be6878e85b8e9c6dc0da8396476e0c47e1f030e5d785cb6b0",
+    "src/layer_processor_presentation.h": "678ebc9dd5f36b072069dca078707a91647ad53f849e6f456dd1d468dc140978",
+    "src/multilayer_recipe.cpp": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57",
+    "src/multilayer_recipe.h": "2e7b74de6dabbd948f74072c2eb7ab64f96cb6c052e0f7ee8a35d11810f2fb4d",
+    "src/multilayer_industry.h": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+    "src/industry_map.h": "a4799cdc7f7135c9d76a0352b0df358bbd7fc3670344291a3c5f1bbc7d415264",
+    "src/industry_cmd.cpp": "3d1dc89569803ce712d2aa03753fb08aabfdb3143fe4822564ba86a53f1e8a28",
+    "src/multilayer_sprite.cpp": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+    "src/CMakeLists.txt": "5bc4ea776870597f82a6039ab0cbcf3e5415909b0c58a8e99d6877801d1b7e71",
+    "src/tests/CMakeLists.txt": "a84e2696984c837958d12e2bed65a778a512b0e238f733d6f440593f3ea9e7bf",
+    "src/tests/layer_processor_definition.cpp": "5ca7a3d8695a662115a46655aed4ce8b87fb570b592cd15abc909e313bacc621",
+    "src/tests/layer_processor_presentation.cpp": "e5d02779e8b60dc5cadbae7452a2e43528bdfd8cbe52e5d807bef2b8574a5893",
+    "src/tests/layer_processor.cpp": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+  },
+  "native_proof": {
+    "log": "logs/geothermal/generator-operation/20261017-140529-792243e0b9/geometry-processor.log",
+    "log_sha256": "0fa0abbee3915e57089cee98391d288813dd578da76151247fb5bfc60a4863f0",
+    "binary": "build/RelWithDebInfo/openttd_test.exe",
+    "binary_sha256": "698720d7ad635e99740c8e8d690fcf50ca7e891d286ad40852e5de391619e929",
+    "exit_code": 0,
+    "assertions": 1907,
+    "test_cases": 7,
+    "fixture": "Four actual fixed16-cell native families; pure all-input/work/output/history/pause/construction/date/foreign/missing-state status; existing atomic processor batch cases"
+  },
+  "families": [
+    {
+      "asset_id": "facility.metal-refinery",
+      "primary_recipe": "CFMT",
+      "industry_local_id": 33280,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33280,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33281,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33282,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33283,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33284,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33285,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33286,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33287,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33288,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33289,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33290,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33291,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33292,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33293,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33294,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33295,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.chemical-works",
+      "primary_recipe": "CHEM",
+      "industry_local_id": 33281,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33296,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33297,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33298,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33299,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33300,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33301,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33302,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33303,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33304,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33305,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33306,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33307,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33308,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33309,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33310,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33311,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.battery-works",
+      "primary_recipe": "BATT",
+      "industry_local_id": 33282,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33312,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33313,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33314,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33315,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33316,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33317,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33318,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33319,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33320,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33321,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33322,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33323,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33324,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33325,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33326,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33327,
+          "substitute_graphics": 42
+        }
+      ]
+    },
+    {
+      "asset_id": "facility.electronics-works",
+      "primary_recipe": "ELEC",
+      "industry_local_id": 33283,
+      "layout_count": 1,
+      "machinery_count": 16,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33328,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33329,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33330,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "tile_local_id": 33331,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33332,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33333,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33334,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "tile_local_id": 33335,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33336,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33337,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33338,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "tile_local_id": 33339,
+          "substitute_graphics": 42
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "tile_local_id": 33340,
+          "substitute_graphics": 39
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "tile_local_id": 33341,
+          "substitute_graphics": 40
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "tile_local_id": 33342,
+          "substitute_graphics": 41
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "tile_local_id": 33343,
+          "substitute_graphics": 42
+        }
+      ]
+    }
+  ]
+}

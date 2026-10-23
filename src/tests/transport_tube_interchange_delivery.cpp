@@ -14,6 +14,7 @@
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
+#include "layer_window_fixture.h"
 #include "transport_tube_freight_fixture.h"
 #include "movement_fixture.h"
 #include "../order_func.h"
@@ -25,7 +26,7 @@
 TEST_CASE("Tube transfer settles final freight once through conventional rail or road", "[transport-tube-interchange-delivery]")
 {
 	const bool road = GENERATE(false, true);
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	const Station *source = rig.BuildSource();
 	rig.LoadPacket(*rig.capsule, 17, source->index);
 	rig.Arrive(*rig.capsule, rig.tube_tile);
@@ -110,7 +111,7 @@ TEST_CASE("Tube transfer settles final freight once through conventional rail or
 TEST_CASE("Tube freight follows paid native orders and returns empty to its service depot", "[transport-tube-interchange-delivery]")
 {
 	PathfinderDefaults pathfinder;
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	AutoRestoreBackup<uint64_t> tick(TimerGameTick::counter, uint64_t{0});
 	const auto source = rig.BuildSource();
 	rig.LoadPacket(*rig.capsule, 17, source->index);
@@ -157,7 +158,7 @@ TEST_CASE("Tube freight follows paid native orders and returns empty to its serv
 /** Space is revalidated when packets actually move; ordinary stations keep their unrestricted native transfer behavior. */
 TEST_CASE("Tube unload rechecks physical room without capping ordinary station stock", "[transport-tube-interchange-delivery]")
 {
-	TubeFreightRig rig;
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig;
 	const auto source = rig.BuildSource();
 	CHECK(GetTubeStationTransferRoom(source->index, rig.cargo) == UINT_MAX);
 	rig.LoadPacket(*rig.capsule, 17, source->index);
@@ -175,4 +176,26 @@ TEST_CASE("Tube unload rechecks physical room without capping ordinary station s
 	CHECK(stock.TotalCount() == TUBE_TERMINAL_TRANSFER_CAPACITY);
 	delete rig.capsule->cargo_payment;
 	rig.station->loading_vehicles.remove(rig.capsule);
+}
+
+/** An unrelated real queue must not inherit the payment station's finite tube limit. */
+TEST_CASE("Tube unload applicability follows the exact receiving list without capping another native queue", "[transport-tube-room]")
+{
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); TubeFreightRig rig; auto *ordinary = rig.BuildSource();
+	rig.LoadPacket(*rig.capsule, 17, ordinary->index); rig.Arrive(*rig.capsule, rig.tube_tile);
+	rig.capsule->current_order.MakeLoading(false); rig.capsule->current_order.SetUnloadType(OrderUnloadType::Transfer);
+	PrepareUnload(rig.capsule); REQUIRE(rig.capsule->cargo.ActionCount(VehicleCargoList::MoveToAction::Transfer) == 17);
+	rig.AppendStock(TUBE_TERMINAL_TRANSFER_CAPACITY, ordinary->index);
+	auto &other = ordinary->goods[rig.cargo].GetOrCreateData().cargo;
+	const auto cash = Company::Get(_current_company)->money; const auto share = rig.capsule->cargo.GetFeederShare();
+	CHECK_FALSE(GetTubeInterchangeTransferRoom(rig.station->index, rig.cargo, &other).has_value());
+	// Explicit mismatched payment/destination component: native transfer still
+	// owns the supplied list. The tube adapter declines applicability instead
+	// of borrowing a full unrelated queue or substituting another inventory.
+	CHECK(rig.capsule->cargo.Unload(17, &other, rig.cargo, rig.capsule->cargo_payment, rig.tube_tile) == 17);
+	CHECK(rig.capsule->cargo.TotalCount() == 0); CHECK(other.TotalCount() == 17);
+	CHECK(rig.station->goods[rig.cargo].TotalCount() == TUBE_TERMINAL_TRANSFER_CAPACITY);
+	CHECK(other.Packets()->begin()->second.front()->GetFeederShare() == share);
+	delete rig.capsule->cargo_payment; rig.station->loading_vehicles.remove(rig.capsule);
+	CHECK(Company::Get(_current_company)->money == cash);
 }

@@ -29,6 +29,7 @@
 #include "space_manifest.h"
 #include "space_pod.h"
 #include "space_structure.h"
+#include "cargo_custody.h"
 #include "orbital_service.h"
 #include "orbital_manufacturing.h"
 #include "space_transition.h"
@@ -512,47 +513,32 @@ bool PrepareNativeSpaceMiningDemo()
 	return ValidateSpaceVehicles();
 }
 
-/** Audit asteroid provenance through actual vehicles, construction, Core stock, descent and Surface hauling.
+/** Audit asteroid provenance through the shared complete physical-owner traversal.
  * @return Whether each extracted packet retains its original body/cargo identity in exactly one physical container.
  */
 static bool ValidateAsteroidPacketCustody()
 {
 	const auto &field = GetAsteroidField(); std::set<CargoPacketID> owned;
-	/** @param packet Actual packet in one inspected physical container. @param cargo That container's declared cargo.
-     * @return Whether asteroid provenance is unique and retains its original valid resource identity.
-     */
-	auto add = [&](const CargoPacket *packet, CargoType cargo) {
-		const auto source = packet->GetSource(); if (source.type != SourceType::Asteroid) return true;
-		// No second container, missing natural source, wrong extraction plane or invented pickup station may legitimize an asteroid packet.
-		if (!owned.insert(packet->index).second || source.id >= field.bodies.size() || !IsValidTile(packet->GetSourceTile()) ||
-			GetTileLayer(packet->GetSourceTile()) != MapLayer::Space || packet->GetFirstStation() != StationID::Invalid()) return false;
+	/** Check original natural provenance without taking ownership or granting a material receipt.
+	 * @param packet Actual packet in one visited physical container.
+	 * @param cargo That container's resolved cargo meaning.
+	 * @param station Actual goods queue, unused by natural provenance; no receipt/source queue is invented here.
+	 * @return Whether asteroid identity, physical origin and unique custody remain valid.
+	 */
+	const auto add = [&](const CargoPacket &packet, CargoType cargo, [[maybe_unused]] StationID station) {
+		const auto source = packet.GetSource(); if (source.type != SourceType::Asteroid) return true;
+		// No duplicate container, missing natural body, wrong extraction plane or
+		// invented pickup station may legitimize an originally mined packet.
+		if (!owned.insert(packet.index).second || source.id >= field.bodies.size() || !IsValidTile(packet.GetSourceTile()) ||
+			GetTileLayer(packet.GetSourceTile()) != MapLayer::Space || packet.GetFirstStation() != StationID::Invalid()) return false;
 		return cargo == GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(field.bodies[source.id].resource_class)].cargo);
 	};
-	/** @param list Actual station-style packet owner. @param cargo Declared cargo for this owner. @return Whether all routed fragments retain unique valid provenance. */
-	auto station_list = [&](const StationCargoList &list, CargoType cargo) {
-		// Inspect every routing bucket; a next-hop split cannot hide duplicated physical ownership.
-		for (const auto &[hop, packets] : *list.Packets()) { (void)hop; for (const auto *packet : packets) if (!add(packet, cargo)) return false; } return true;
-	};
-	// All Surface inventory and handling owners participate in the same custody audit, preventing a returned packet from remaining in two containers.
-	for (const auto *s : Station::Iterate()) {
-		// Only existing goods data owns packets; inactive cargo slots must not create an inventory during validation.
-		for (CargoType cargo : EnumRange(NUM_CARGO)) if (s->goods[cargo].HasData() && !station_list(s->goods[cargo].GetData().cargo, cargo)) return false;
-		if (s->launch_hub) for (const auto &job : s->launch_hub->handling) if (!station_list(job->packets, job->cargo)) return false;
+	if (!VisitNativeCargoPackets(add)) return false;
+	// Only after actual owners have supplied references may the pool reveal a
+	// missing extracted fragment. Pool membership never supplies its container.
+	for (const auto *packet : CargoPacket::Iterate()) {
+		if (packet->GetSource().type == SourceType::Asteroid && !owned.contains(packet->index)) return false;
 	}
-	// Ordinary carriers, native supply compartments and paid descent shells all retain the same production provenance after transport.
-	for (const auto *v : Vehicle::Iterate()) for (const auto *packet : *v->cargo.Packets()) if (!add(packet, v->cargo_type)) return false;
-	for (const auto *v : SpaceVehicle::Iterate()) if (v->manifest) for (uint i = 0; i < SPACE_SUPPLY_COUNT; ++i) if (!station_list(v->manifest->supplies[i], GetSpaceSupplyCargo(static_cast<SpaceSupply>(i)))) return false;
-	// Only a retained descent job owns return packets; a paid empty shell cannot supply a second cargo inventory.
-	for (const auto *pod : SpacePod::Iterate()) if (pod->descent && !station_list(pod->descent->packets, pod->descent->cargo)) return false;
-	// Asteroid provenance remains accountable when freight is stored in an actual completed Core, separately from job material.
-	for (const auto *site : SpaceStructure::Iterate()) {
-		for (uint i = 0; i < 2; ++i) if (!station_list(site->job.inputs[i], GetCargoTypeByLabel(GetSpaceConstructionDefinition(site->state.kind)->inputs[i].label))) return false;
-		if (site->module) for (CargoType cargo : EnumRange(NUM_CARGO)) if (!station_list(site->module->stock[cargo], cargo)) return false;
-		// Both contained service jobs retain their actual cargo provenance; a second Dock berth cannot hide a mislabelled asteroid packet.
-		if (site->module) for (const auto *job : site->module->GetServiceJobs()) for (uint i = 0; i < 2; ++i) if (!station_list(job->inputs[i], GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1)))) return false;
-	}
-	// Every physically allocated asteroid packet must have exactly one inspected owner; an unreferenced remainder is lost custody, not new reserve.
-	for (const auto *packet : CargoPacket::Iterate()) if (packet->GetSource().type == SourceType::Asteroid && !owned.contains(packet->index)) return false;
 	return true;
 }
 

@@ -40,10 +40,13 @@ enum class TBMPhase : uint8_t {
 	TravelToHangar, ///< Empty actual consist follows its ordinary depot order; cutting remains suspended.
 	ParkedHangar, ///< Whole empty consist arrived at its selected actual hangar; explicit Resume retains the job.
 	FollowOrders, ///< Native station/waypoint/depot list owns travel until an explicit work resume or hangar action.
+	AwaitFaceTransfer, ///< Appended identity20: native face-exchange wait; original-file dialect admission remains separate.
 };
 
 /** @param phase Actual controller phase. @return Whether native travel returns to the exchange/hangar bay. */
 inline bool IsTBMReturning(TBMPhase phase) { return phase == TBMPhase::ReturnForExchange || phase == TBMPhase::ReturnToPark || phase == TBMPhase::ReturnToRelease || phase == TBMPhase::ReturnForHangar; }
+/** @param phase Original native controller identity. @return Whether the appended face-exchange wait is selected; this query performs no transition. */
+inline bool IsTBMAwaitingFaceTransfer(TBMPhase phase) { return phase == TBMPhase::AwaitFaceTransfer; }
 /** @param phase Actual controller phase. @return Whether actual empty wagons can complete the current bay exchange. */
 inline bool IsTBMWaitingForExchange(TBMPhase phase) { return phase == TBMPhase::WaitForEmpties || phase == TBMPhase::WaitToPark || phase == TBMPhase::WaitToRelease || phase == TBMPhase::WaitForHangar; }
 /** @param phase Actual controller phase. @return Whether cancellation is awaiting safe withdrawal and final haulage settlement. */
@@ -612,8 +615,10 @@ struct TBMPhaseStep {
 /**
  * Decide one phase step without changing anything (Group 4.2A and 4.2B edges, 4.3 resumable conditions).
  * Edges: Commissioning to TravelToFace; TravelToFace to Bore at the face; Bore to AdvanceSupport when the cut commits,
- * or to ReturnForExchange when an exchange is due first; AdvanceSupport back to Bore, or to ReturnForExchange when an
- * exchange is due. Group 4.2B, through the Plan 5 exchange (tbm_exchange.h): ReturnForExchange to WaitForEmpties once
+ * or to AwaitFaceTransfer/ReturnForExchange when an exchange is due first; AdvanceSupport back to Bore, or to the
+ * same geometry-selected meeting. AwaitFaceTransfer waits for actual whole-load removal, then advances onto any
+ * new support before boring; a lost stand or completed route returns to the bay. Group 4.2B, through the Plan 5
+ * exchange (tbm_exchange.h): ReturnForExchange to WaitForEmpties once
  * the consist is admitted at its bay; WaitForEmpties to Resume once no exchange is due, which only an executed exchange
  * makes true (the actual wagons then hold no spoil); Resume to TravelToFace, or to Completed after the final return.
  * Conditions: a lost reference, a player pause, a stopped, broken-down or servicing train, or a face work wait each
@@ -941,6 +946,81 @@ bool MayTBMSupportCarry(const Train &part, TileIndex tile);
  * @return Its retreat path and laid support tiles, sorted and unique.
  */
 std::vector<TileIndex> GetTBMWorkCorridor(const TBMProject &project);
+
+/** Derived next meeting; never serialized or owned by a viewport. */
+enum class TBMMeetingKind : uint8_t {
+	Bay, ///< Original source magazine or actual underground depot.
+	Face, ///< Validated stand behind a live cutter at its eligible face.
+};
+
+/** Derive Source-only Face versus Bay from original references, phase, body and hauler clearance.
+	* @param project Actual native project; a copy may ask about a phase without publishing it.
+	* @return Face only for a safe live Source project: working at current/previous approach,
+	* or returning with due spoil exactly at the face (previous approach only for an already-inside hauler).
+	* Invalid references, a real underground-depot bay, insufficient whole-hauler room or a missing stand return Bay.
+	* This reads no camera and changes no geometry, phase, train, admission or RNG state.
+	*/
+TBMMeetingKind GetTBMMeetingKind(const TBMProject &project);
+
+/** Observe readiness without performing a transfer or activating a controller edge.
+	* @param project Original native project in a face wait or return phase.
+	* @return Whether its meeting is Face and actual spoil/frozen pass terms require exchange.
+	* Stand orientation, whole hauler capacity and dwell remain the transfer owner's independent checks.
+	*/
+bool IsTBMReadyForFaceTransfer(const TBMProject &project);
+
+/** The tile where the face turn holder's front stops behind the cutter, and its direction of travel there. */
+struct TBMFaceStand {
+	TileIndex tile = INVALID_TILE; ///< Plain support rail on the work path, one clear tile behind the cutter's rearmost part.
+	Trackdir trackdir = Trackdir::Invalid; ///< Laid piece on the stand, in the path's forward direction (towards the cutter).
+	/** @param other Stand to compare. @return Whether both fields match. */
+	bool operator==(const TBMFaceStand &other) const = default;
+};
+
+/**
+ * Find the stand behind the cutter: two work-path cells behind its rearmost part, so one clear tile separates the
+ * hauler's front from the cutter. Only the path tail is searched, bounded by the consist's part count (I-9).
+ * @param project Project whose live cutter and job are read.
+ * @return The stand, or nothing when a part stands off the last path cells (in the housing's shaft, on another layer or
+ *         further back), when the stand would be the housing, lie in the next cut's sweep or not be plain rail, or when
+ *         its tile does not carry the laid path piece.
+ */
+std::optional<TBMFaceStand> FindTBMFaceStand(const TBMProject &project);
+
+/**
+ * The trackdirs a hauler may stand on at a face stand: every piece laid on the stand tile that leaves it on the same
+ * side as the stand's own trackdir, towards the cutter. A chamber tile can carry a straight and a diagonal piece at
+ * once, and a hauler arrives on whichever its way in reaches (r2df2 Group 6).
+ * @param stand Found stand.
+ * @return Its trackdirs; they include the stand's own trackdir.
+ */
+TrackdirBits GetTBMFaceStandTrackdirs(const TBMFaceStand &stand);
+
+/** Shared original live-cutter predicate, also consumed by pure face observations.
+ * @param project Actual project record whose company/model/front reference is checked.
+ * @return Original live cutter front of that company/model, or nullptr; no repair or saved-state mutation.
+ */
+const Train *GetLiveTBMCutter(const TBMProject &project);
+
+/** Shared original live-job predicate; completed/cancelled history still anchors safe return.
+ * @param project Actual project record whose job/company/model/binding/housing is checked.
+ * @return Its original job or nullptr; this reference alone authorizes no new cut.
+ */
+const ExcavationJob *GetLiveTBMJob(const TBMProject &project);
+
+/** Observe an assigned hauler's actual running parts in the project's paid corridor or either portal end.
+ * @param project Original project whose exact assignment and geometry are consumed.
+ * @param hauler Actual front identity; unassigned/foreign-project/missing trains do not count.
+ * @return Whether any running part is inside; stored Track::Depot parts in a magazine or depot are excluded.
+ */
+bool IsTBMHaulerInCorridor(const TBMProject &project, VehicleID hauler);
+
+/** Select the deterministic existing occupant without admitting a new hauler or changing its route.
+ * @param project Original project whose assigned native trains are observed.
+ * @return Lowest actual assigned vehicle ID with a running corridor/portal part, or Invalid.
+ */
+VehicleID FindTBMHaulerInCorridor(const TBMProject &project);
+
 
 /**
  * @param project Assigned project.

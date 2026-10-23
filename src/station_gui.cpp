@@ -5,9 +5,13 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_gui.cpp The GUI for stations. */
+/** @file station_gui.cpp The GUI for stations.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md retained native window ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Groups14B-14C; transient supply controls.
+ */
 
 #include "stdafx.h"
+#include "surface_supply_gui.h"
 #include "launch_center.h"
 #include "launch_center_cmd.h"
 #include "launch_operations.h"
@@ -867,6 +871,31 @@ static constexpr std::initializer_list<NWidgetPart> _nested_station_view_widgets
 		NWidget(NWID_VSCROLLBAR, Colours::Grey, WID_SV_SCROLLBAR),
 	EndContainer(),
 	NWidget(WWT_PANEL, Colours::Grey, WID_SV_ACCEPT_RATING_LIST), SetMinimalSize(249, 23), SetResize(1, 0), EndContainer(),
+	// Paid requests live in the original station lifecycle; collapsing this
+	// optional panel changes only local layout, never physical source stock.
+	NWidget(NWID_SELECTION, Colours::Invalid, WID_SV_SUPPLY_OUTER),
+		NWidget(NWID_VERTICAL),
+			NWidget(WWT_TEXTBTN, Colours::Grey, WID_SV_SUPPLIES), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLIES, STR_SURFACE_SUPPLY_TOOLTIP),
+			NWidget(NWID_SELECTION, Colours::Invalid, WID_SV_SUPPLY_STACK),
+				// Plain labels inherit this native panel background rather than the map behind the station window.
+				NWidget(WWT_PANEL, Colours::Grey),
+				NWidget(NWID_VERTICAL), SetPadding(2),
+					NWidget(NWID_HORIZONTAL),
+						NWidget(WWT_DROPDOWN, Colours::Grey, WID_SV_SUPPLY_CARGO), SetMinimalSize(150, 12), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING, STR_SURFACE_SUPPLY_TOOLTIP),
+						NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_SV_SUPPLY_QUANTITY), SetMinimalSize(100, 12), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING, STR_SURFACE_SUPPLY_TOOLTIP),
+					EndContainer(),
+					NWidget(WWT_TEXT, Colours::Invalid, WID_SV_SUPPLY_TERMS), SetMinimalSize(300, 12), SetFill(1, 0), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING),
+					NWidget(WWT_TEXT, Colours::Invalid, WID_SV_SUPPLY_LIMIT), SetMinimalSize(300, 12), SetFill(1, 0), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING),
+					NWidget(WWT_TEXT, Colours::Invalid, WID_SV_SUPPLY_QUOTE), SetMinimalSize(300, 12), SetFill(1, 0), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING),
+					NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_SV_SUPPLY_BUY), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLY_BUY, STR_SURFACE_SUPPLY_TOOLTIP),
+					NWidget(WWT_DROPDOWN, Colours::Grey, WID_SV_SUPPLY_ORDERS), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING, STR_SURFACE_SUPPLY_TOOLTIP),
+					NWidget(WWT_TEXT, Colours::Invalid, WID_SV_SUPPLY_HISTORY), SetMinimalSize(300, 12), SetFill(1, 0), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING),
+					NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_SV_SUPPLY_CANCEL), SetFill(1, 1), SetStringTip(STR_SURFACE_SUPPLY_NONPAYING, STR_SURFACE_SUPPLY_TOOLTIP),
+				EndContainer(),
+				EndContainer(),
+			EndContainer(),
+		EndContainer(),
+	EndContainer(),
 	NWidget(NWID_SELECTION, Colours::Invalid, WID_SV_LAUNCH_HUB_SEL),
 		NWidget(NWID_HORIZONTAL),
 			NWidget(WWT_DROPDOWN, Colours::Grey, WID_SV_LAUNCH_HUB), SetMinimalSize(168, 12), SetResize(1, 0), SetFill(1, 1), SetStringTip(STR_LAUNCH_HUB_NONE, STR_LAUNCH_HUB_TOOLTIP),
@@ -1371,9 +1400,16 @@ struct StationViewWindow : public Window {
 	CargoDataVector displayed_rows{}; ///< Parent entry of currently displayed rows (including collapsed ones).
 	std::vector<LaunchCenterRef> launch_hub_choices; ///< UI snapshot preserves the center generation until command execution.
 
-	StationViewWindow(WindowDesc &desc, WindowNumber window_number) : Window(desc)
+	SurfaceSupplyControls supplies; ///< Local requests only; canonical commands and native packets own all gameplay state.
+
+	/** Construct the existing station window and its transient supply controls.
+	 * @param desc Existing native StationView layout/lifetime description.
+	 * @param window_number Actual station identity, never a camera-derived source.
+	 */
+	StationViewWindow(WindowDesc &desc, WindowNumber window_number) : Window(desc), supplies(static_cast<StationID>(window_number))
 	{
 		this->CreateNestedTree();
+		this->supplies.Configure(*this);
 		this->GetWidget<NWidgetStacked>(WID_SV_CLOSE_AIRPORT_SEL)->SetDisplayedPlane(Station::Get(window_number)->facilities.Test(StationFacility::Airport) ? 0 : SZSP_NONE);
 		const auto *station = Station::Get(window_number);
 		this->GetWidget<NWidgetStacked>(WID_SV_LAUNCH_HUB_SEL)->SetDisplayedPlane(IsLaunchCenterTechnologyAvailable() && MultiLayerMap::IsTileInLayer(station->xy, MapLayer::Surface) ? 0 : SZSP_NONE);
@@ -1472,8 +1508,10 @@ struct StationViewWindow : public Window {
 		}
 	}
 
+	/** Refresh native-backed controls and draw local presentation without purchasing, dispatching or advancing simulation. */
 	void OnPaint() override
 	{
+		this->supplies.Refresh(*this);
 		const Station *st = Station::Get(this->window_number);
 		CargoDataEntry cargo;
 		BuildCargoList(&cargo, st);
@@ -1538,8 +1576,14 @@ struct StationViewWindow : public Window {
 		}
 	}
 
+	/** Read station or supply presentation through its existing owner.
+	 * @param widget Actual local control requesting text.
+	 * @param stringid Original fallback native string for unrelated controls.
+	 * @return Translated current presentation; no stock, payment or receipt mutation.
+	 */
 	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
 	{
+		if (auto text = this->supplies.GetWidgetText(widget)) return *text;
 		if (widget == WID_SV_CAPTION) {
 			const Station *st = Station::Get(this->window_number);
 			return GetString(STR_STATION_VIEW_CAPTION, st->index, st->facilities);
@@ -2020,8 +2064,14 @@ struct StationViewWindow : public Window {
 		this->SetWidgetDirty(WID_SV_SCROLLBAR);
 	}
 
+	/** Delegate supply drafts before the original station/launch actions.
+	 * @param pt Native click position for cargo-row handling.
+	 * @param widget Actual clicked control; supply handling consumes only its own range.
+	 * @param click_count Native repeated-click count.
+	 */
 	void OnClick([[maybe_unused]] Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
+		if (this->supplies.OnClick(*this, widget)) return;
 		Window *w = FindWindowByClass(WindowClass::QueryString);
 
 		switch (widget) {
@@ -2221,8 +2271,14 @@ struct StationViewWindow : public Window {
 		this->SetDirty();
 	}
 
-	void OnDropdownSelect(WidgetID widget, int index, int) override
+	/** Route transient supply options without changing native launch or cargo selections.
+	 * @param widget Dropdown that created this callback.
+	 * @param index Original transient option, revalidated by its owning component.
+	 * @param button Native click source, unused by these station selectors.
+	 */
+	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int button) override
 	{
+		if (this->supplies.OnDropdownSelect(*this, widget, index)) return;
 		if (widget == WID_SV_LAUNCH_HUB) {
 			if (index < 0 || static_cast<size_t>(index) > this->launch_hub_choices.size()) return;
 			const auto ref = index == 0 ? LaunchCenterRef{} : this->launch_hub_choices[index - 1];
@@ -2236,8 +2292,12 @@ struct StationViewWindow : public Window {
 		}
 	}
 
+	/** Complete only the active supply quantity query, otherwise retain native station renaming.
+	 * @param str Complete native input or cancellation; quantity parsing cannot rename a station.
+	 */
 	void OnQueryTextFinished(std::optional<std::string> str) override
 	{
+		if (this->supplies.OnQueryTextFinished(*this, str)) return;
 		if (!str.has_value()) return;
 
 		Command<Commands::RenameStation>::Post(STR_ERROR_CAN_T_RENAME_STATION, this->window_number, *str);

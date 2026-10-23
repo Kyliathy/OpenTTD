@@ -1,0 +1,1015 @@
+{
+  "_documentation": {
+    "owner": "docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group27B",
+    "architecture": "docs/zz-reach2/architecture/map-layers/archi-map-layers.md",
+    "scope": "Actual installed layout/funding/finite production/presentation with explicit fixture excavation; source only, no native sprite activation"
+  },
+  "schema_version": 1,
+  "owner": "InitialiseLayerMineDefinitions/ValidateMineDepositClaim",
+  "native_source_hash_policy": "utf8_lf",
+  "native_source_sha256": {
+    "src/layer_industry_definitions.cpp": "6861c02e352928d4a7d725b445823d58a2e0e1366e71d7af9e86c18c53cb19f5",
+    "src/layer_industry_policy.cpp": "657f40ff54a94c5ebc0a3155a1eec5c68d4aeecee2eacd430be4a5d0e67921c3",
+    "src/layer_industry_mine.cpp": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614",
+    "src/multilayer_industry.h": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b",
+    "src/industry_cmd.cpp": "3d1dc89569803ce712d2aa03753fb08aabfdb3143fe4822564ba86a53f1e8a28",
+    "src/industry_map.h": "a4799cdc7f7135c9d76a0352b0df358bbd7fc3670344291a3c5f1bbc7d415264",
+    "src/industry_type.h": "f8edc6bef3f12e7fd18cf7699d81f3467510593565ca3c66dcedab626bb9d4db",
+    "src/multilayer_sprite.cpp": "d4ab5803bb64ee39948b4953cb4874c8733781042e971a5dcaaceff3ca695b70",
+    "src/timer/timer_game_tick.h": "9b2c19319b97ab83958789122fea5f081c654c3eacab1a4dd804c959ba5576c2",
+    "src/tests/layer_mine_definition.cpp": "d64a57d2bc9e066dcebd95c894ba9ca85b8777f3930ad6337acda030513458a0",
+    "src/tests/layer_mine_presentation.cpp": "3272f41625e9122f44320b8137ecbf77e2277879e176a9e64bf110e0c62ad788"
+  },
+  "native_proof": {
+    "log": "logs/geothermal/generator-operation/20261017-140529-792243e0b9/geometry-mine.log",
+    "log_sha256": "6f9c0403aeea1397fd875381f579338c48c44876617322cfed63c422b62cbe08",
+    "binary": "build/RelWithDebInfo/openttd_test.exe",
+    "binary_sha256": "698720d7ad635e99740c8e8d690fcf50ca7e891d286ad40852e5de391619e929",
+    "exit_code": 0,
+    "assertions": 2715,
+    "test_cases": 6,
+    "fixture": "Actual native nine-cell funding/finite extraction for all ten definitions;14 selected missing machinery/loading-floor configurations preserve geology/cash/RNG/allocation; existing read-only lifecycle/output/depletion presentation"
+  },
+  "families": [
+    {
+      "resource": "COAL",
+      "industry_local_id": 33024,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33024,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33025,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33026,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33027,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33028,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33029,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33030,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33031,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33032,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "IORE",
+      "industry_local_id": 33025,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33040,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33041,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33042,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33043,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33044,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33045,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33046,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33047,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33048,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "CORE",
+      "industry_local_id": 33026,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33056,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33057,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33058,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33059,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33060,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33061,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33062,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33063,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33064,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "BAUX",
+      "industry_local_id": 33027,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33072,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33073,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33074,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33075,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33076,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33077,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33078,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33079,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33080,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "SALT",
+      "industry_local_id": 33028,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33088,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33089,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33090,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33091,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33092,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33093,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33094,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33095,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33096,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "LITH",
+      "industry_local_id": 33029,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33104,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33105,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33106,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33107,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33108,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33109,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33110,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33111,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33112,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "NORE",
+      "industry_local_id": 33030,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33120,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33121,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33122,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33123,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33124,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33125,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33126,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33127,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33128,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "COBT",
+      "industry_local_id": 33031,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33136,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33137,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33138,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33139,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33140,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33141,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33142,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33143,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33144,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "RARE",
+      "industry_local_id": 33032,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33152,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33153,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33154,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33155,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33156,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33157,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33158,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33159,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33160,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "resource": "URAN",
+      "industry_local_id": 33033,
+      "layout_count": 1,
+      "cells": [
+        {
+          "cell": [
+            0,
+            0
+          ],
+          "tile_local_id": 33168,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "tile_local_id": 33169,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "tile_local_id": 33170,
+          "substitute_graphics": 5
+        },
+        {
+          "cell": [
+            0,
+            1
+          ],
+          "tile_local_id": 33171,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            1,
+            1
+          ],
+          "tile_local_id": 33172,
+          "substitute_graphics": 3
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "tile_local_id": 33173,
+          "substitute_graphics": 6
+        },
+        {
+          "cell": [
+            0,
+            2
+          ],
+          "tile_local_id": 33174,
+          "substitute_graphics": 0
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "tile_local_id": 33175,
+          "substitute_graphics": 2
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "tile_local_id": 33176,
+          "substitute_graphics": 5
+        }
+      ],
+      "machinery_count": 9,
+      "loading": [
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    }
+  ]
+}

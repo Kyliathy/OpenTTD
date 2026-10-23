@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file yapf_destrail.hpp Rail destinations and canonical native cutter/hauler steering. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (recurring native depot destination) */
+/** @file yapf_destrail.hpp Rail destinations and canonical native cutter/hauler steering. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (recurring native depot destination); docs/zz-reach2/upgrades/2026-10/r2df2-face-exchange-and-demo-acceptance.md Group 4 (the face stand) */
 
 #ifndef YAPF_DESTRAIL_HPP
 #define YAPF_DESTRAIL_HPP
@@ -20,10 +20,13 @@
 class CYapfDestinationRailBase {
 protected:
 	RailTypes compatible_railtypes;
-	bool cutter_steering_destination = false; ///< Native plain-support destinations are checked without shared segment caching.
+	bool work_steering_destination = false; ///< Native cutter/hauler work destinations are checked without shared segment caching.
+	bool cutter_steering_destination = false; ///< Only cutter work travel retains its existing two-way-signal search policy.
 
 public:
-	/** @return Whether this search must recognize a cutter's project-owned plain work-face tile. */
+	/** @return Whether this search must stop at its project-owned cutter face, hauler stand or exchange bay instead of skipping that tile inside a segment. */
+	bool IsWorkSteeringDestination() const { return this->work_steering_destination; }
+	/** @return Whether the target belongs to a cutter whose existing work-travel signal policy applies; hauler targets retain ordinary signal behavior. */
 	bool IsCutterSteeringDestination() const { return this->cutter_steering_destination; }
 
 	/** @param v Actual train supplying compatible rail types. @param override_rail_type Whether this search permits every physically compatible type. */
@@ -141,9 +144,11 @@ public:
 	void SetDestination(const Train *v)
 	{
 		this->any_depot = false;
+		this->work_steering_destination = false;
 		this->cutter_steering_destination = false;
 		if (const auto target = GetTBMCutterSteeringTarget(*v); target.has_value()) {
 			// Revisited chamber rails must lead to the live face approach instead of an arbitrary branch toward an empty order.
+			this->work_steering_destination = true;
 			this->cutter_steering_destination = true;
 			Yapf().DisableCache(true);
 			this->dest_tile = target->tile;
@@ -152,17 +157,26 @@ public:
 			this->CYapfDestinationRailBase::SetDestination(v);
 			return;
 		}
-		/* Empty returns use the validated Source magazine or genuine depot's own door without changing their ordinary
-		 * origin order. Only the assignment supplies this destination, so the search stays outside shared segment caching. */
-		if (const TileIndex bay = GetTBMHaulerSteeringTarget(*v); bay != INVALID_TILE) {
+		/* Empty returns use the face stand behind the cutter, or the validated Source magazine or genuine depot's own
+		 * door, without changing their ordinary origin order. Only the assignment supplies this destination and its
+		 * trackdirs, so the search stays outside shared segment caching. */
+		if (const auto target = GetTBMHaulerSteeringTarget(*v); target.has_value()) {
+			// A closed Source magazine can end a segment as a dead end, rather
+			// than a native depot. Recognize the admitted goal before that reason
+			// discards a valid empty-return route at a chamber junction (Plan18 8FA).
+			this->work_steering_destination = true;
 			Yapf().DisableCache(true);
-			this->dest_tile = bay;
+			this->dest_tile = target->tile;
 			this->dest_station_id = StationID::Invalid();
-			const DiagDirection door = IsLayerPortalTile(bay) ? GetLayerPortalDoorDirection(bay) : GetRailDepotDirection(bay);
-			this->dest_trackdirs = TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(door)));
+			this->dest_trackdirs = target->trackdirs;
 			this->CYapfDestinationRailBase::SetDestination(v);
 			return;
 		}
+		// Loaded haulers still follow their ordinary Surface orders. Their
+		// support clearance depends on the cutter's current body, so a shared
+		// segment cached while that body blocked a junction cannot authorize or
+		// permanently refuse a later egress after the physical clearance changes.
+		if (GetTBMExchangeAssignmentForHauler(v->First()->index) != nullptr) Yapf().DisableCache(true);
 		switch (v->current_order.GetType()) {
 			case OT_GOTO_WAYPOINT:
 				if (!Waypoint::Get(v->current_order.GetDestination().ToStationID())->IsSingleTile()) {

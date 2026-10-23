@@ -262,6 +262,24 @@ add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     src/tests/surface_supply.cpp
     src/tests/surface_supply_custody.cpp
     src/tests/surface_supply_order.cpp
+    # Exact native/legacy receipt provenance: archi-map-layers.md; m2o23-1-come-space.md Group10.
+    src/tests/surface_supply_receipts.cpp
+    src/tests/surface_supply_conversion.cpp
+    src/tests/surface_supply_packet_evidence.cpp
+    src/tests/surface_supply_departure.cpp
+    src/tests/surface_supply_refund_stock.cpp
+    src/tests/cargo_custody.cpp
+    src/tests/surface_supply_custody_policy.cpp
+    src/tests/surface_supply_adoption.cpp
+    src/tests/surface_supply_space_custody.cpp
+    src/tests/surface_supply_window.cpp
+    src/tests/surface_supply_refund.cpp
+    src/tests/surface_supply_legacy_lifecycle.cpp
+    src/tests/cargo_partial_transfer.cpp
+    src/tests/surface_supply_cross_owner.cpp
+    # Unified exact tube admission: archi-map-layers.md; m2o23-1-come-space.md Group18.
+    src/tests/transport_tube_interchange.cpp
+    src/tests/transport_tube_interchange_delivery.cpp
     src/tests/surface_supply_order_owner.cpp
     src/tests/surface_supply_order_wire.cpp
     src/tests/surface_supply_order_native.cpp
@@ -407,6 +425,20 @@ add_executable(openttd_tube_test EXCLUDE_FROM_ALL
     src/tests/mock_spritecache.cpp
     src/tests/multilayer_bootstrap.cpp
     src/tests/transport_tube_model.cpp
+    # Read-only native TBM merge prerequisites: archi-map-layers.md; m2o23-1-come-space.md Group20.
+    src/tests/tbm_merge_observation.cpp
+    src/tests/tbm_face_stand.cpp
+    src/tests/tbm_face_meeting.cpp
+    src/tests/tbm_face_deep.cpp
+    src/tests/tbm_face_preflight.cpp
+    src/tests/tbm_face_transfer.cpp
+    src/tests/tbm_face_turn.cpp
+    src/tests/tbm_face_steering.cpp
+    src/tests/tbm_face_access.cpp
+    src/tests/tbm_face_cycle.cpp
+    # Native installed phase activation: archi-map-layers.md; m2o23-2-come-space.md Group23.
+    src/tests/tbm_face_controller.cpp
+    src/tests/portal_signal_boundary.cpp
     src/tests/transport_tube_construction.cpp
     src/tests/transport_tube_readiness.cpp
     src/tests/transport_tube_meter.cpp

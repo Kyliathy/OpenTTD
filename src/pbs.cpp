@@ -12,6 +12,7 @@
 #include "vehicle_func.h"
 #include "newgrf_station.h"
 #include "pathfinder/follow_track.hpp"
+#include "tbm_exchange.h"
 
 #include "safeguards.h"
 
@@ -438,10 +439,22 @@ Train *GetTrainForReservation(TileIndex tile, Track track)
  */
 bool IsSafeWaitingPosition(const Train *v, TileIndex tile, Trackdir trackdir, bool include_line_end, bool forbid_90deg)
 {
-	//A portal is a crossing, not a place to wait.
-	if (IsLayerPortalTile(tile)) return false;
+	if (IsLayerPortalTile(tile)) {
+		if (v == nullptr) return false;
+		const auto exit = GetLayerPortalMagazineExit(tile, *v->First());
+		// A public shaft remains a crossing. Only an admitted arrival into its
+		// actual off-line magazine is a safe native endpoint, like depot entry.
+		// Without it a reserved empty hauler stops before the storage point and
+		// holds a returning cutter out forever (Plan18 8FA). The exit owner must
+		// authorize storage, and this exact piece must face its inner point.
+		return exit != DiagDirection::Invalid && TrackdirToTrack(trackdir) == DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)) &&
+				TrackdirToExitdir(trackdir) == ReverseDiagDir(exit);
+	}
 
 	if (IsRailDepotTile(tile)) return true;
+
+	/* The face turn holder's stand behind the cutter is where its own hold stops it (r2df2 task 3.5). */
+	if (v != nullptr && IsTBMHaulerFaceStand(*v, tile, trackdir)) return true;
 
 	/* For non-pbs signals, stop on the signal tile. */
 	if (HasBlockSignalOnTrackdir(tile, trackdir)) return true;

@@ -126,6 +126,8 @@ add_files(
     cargomonitor.h
     cargopacket.cpp
     cargopacket.h
+    cargo_custody.cpp
+    cargo_custody.h
     cargotype.cpp
     cargotype.h
     cheat.cpp
@@ -539,6 +541,9 @@ add_files(
     surface_supply_order_runtime.h
     # Dormant synchronized ABI reserved with persistence: r2mlvs6-mines-and-resource-chains.md Groups13CCC/13CCD.
     surface_supply_cmd.h
+    # Canonical native station presentation: archi-gui.md; m2o23-1 Groups14B-14C.
+    surface_supply_gui.cpp
+    surface_supply_gui.h
     # Bounded native/full/copied original transport: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_order_wire.cpp
     surface_supply_order_wire.h
@@ -554,6 +559,8 @@ add_files(
     mixer.h
     music.cpp
     music_gui.cpp
+    # Existing ordinary startup declaration: archi-map-layers.md; m2o23-1-come-space.md Groups9/9B.
+    newgame_settings.h
     newgrf.cpp
     newgrf.h
     newgrf_act5.h

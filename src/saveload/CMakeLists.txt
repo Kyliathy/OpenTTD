@@ -4,6 +4,9 @@
 add_subdirectory(compat)
 
 add_files(
+    # Pure parallel-lineage policy; archi-savegame.md and m2o23-1-come-space.md Groups5/9B.
+    save_lineage.cpp
+    save_lineage.h
     afterload.cpp
     space_order_sl.cpp
     space_production_sl.cpp

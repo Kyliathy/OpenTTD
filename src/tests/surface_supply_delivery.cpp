@@ -276,7 +276,7 @@ TEST_CASE("Bought construction materials physically cross both rail portals into
 		}
 		CHECK(accepted == bill[index]);
 		CHECK(Station::Get(origin)->goods[GetCargoTypeByLabel(DELIVERY_LABELS[index])].TotalCount() == 0);
-		CHECK(GetSurfaceSupplyOrder(index + 1)->state == SurfaceSupplyOrderState::Fulfilled);
+		CHECK(GetSurfaceSupplyOrder(index + 1)->Native()->state == SurfaceSupplyOrderState::Fulfilled);
 		CHECK(CmdCancelSurfaceSupplyOrder({}, index + 1).Failed());
 	}
 	CHECK((ObserveDrivenSurfaceSupply(*front, origin) == std::array<uint32_t, 4>{1, 1, 1, 1}));

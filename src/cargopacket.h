@@ -48,6 +48,8 @@ private:
 	Coord2D<int16_t> travelled{0, 0}; ///< If cargo is in station: the vector from the unload tile to the source tile. If in vehicle: an intermediate value.
 
 	Source source{Source::Invalid, SourceType::Industry}; ///< Source of the cargo
+	uint64_t company_supply_order = 0; ///< Optional exact legacy receipt ID; zero includes valid non-paying A CompanySupply without any refund link.
+	bool company_supply_shipped = false; ///< Original first-departure evidence, permanent across splits, return and buyer retirement.
 
 #ifdef WITH_ASSERT
 	bool in_vehicle = false; ///< NOSAVE: Whether this cargo is in a vehicle or not.
@@ -64,19 +66,56 @@ private:
 	/** We want this to be saved, right? */
 	friend SaveLoadTable GetCargoPacketDesc();
 public:
+	/** @return Exact optional uint64 legacy receipt link; zero never changes the source's permanent paying/non-paying purpose. */
+	uint64_t GetCompanySupplyOrder() const { return this->company_supply_order; }
+	/** @return Whether these exact linked units have already left refundable original-source custody. */
+	bool HasCompanySupplyShipped() const { return this->company_supply_shipped; }
+	/** Restore original packet evidence once, before complete same-file custody validation or native publication.
+	 * @param order Exact nonzero historical receipt identity, losslessly widened from B; never a newly purchased native right.
+	 * @param shipped Original saved departure flag, not a new dispatch event or inferred current location.
+	 * @return Whether structurally compatible evidence was attached; relinking, zero and ordinary-paying sources refuse unchanged.
+	 * This does not validate an order reference or update its counters. The complete candidate custody join must resolve it before installation.
+	 */
+	bool RestoreCompanySupplyOrder(uint64_t order, bool shipped)
+	{
+		// Original metadata may describe only already non-paying bought cargo.
+		// It cannot relabel ordinary freight or rewrite an existing refund link.
+		if (order == 0 || this->company_supply_order != 0 || this->company_supply_shipped || !this->source.IsCompanySupply()) return false;
+		this->company_supply_order = order;
+		this->company_supply_shipped = shipped;
+		return true;
+	}
+	/** Check a selected fragment before native splitting or cache mutation.
+	 * @param quantity Nonzero selected units, at most this packet's physical count.
+	 * @return Whether ordinary/unlinked purpose or actual installed legacy history permits departure without mutation.
+	 */
+	bool CanMarkCompanySupplyShipped(uint16_t quantity) const;
+	/** Commit this actual fragment's first departure through the sole installed receipt owner.
+	 * @return Complete accounting/flag update or unchanged refusal; already-shipped and unlinked cargo never increment history.
+	 * Call only after movement admission and before native cache transfer; original metadata restoration is a different operation.
+	 */
+	bool MarkCompanySupplyShipped();
+
 	/** Maximum number of items in a single cargo packet. */
 	static const uint16_t MAX_COUNT = UINT16_MAX;
 
+	/** Create empty native load storage. @param index Original pool identity; semantic fields are filled and validated by the loader. */
 	CargoPacket(CargoPacketID index);
+	/** Create actual source cargo with no legacy link. @param index Native pool identity. @param first_station Original receiving station. @param count Nonzero whole units. @param source Permanent native provenance/purpose. */
 	CargoPacket(CargoPacketID index, StationID first_station, uint16_t count, Source source);
+	/** Restore historical partial transport. @param index Native pool identity. @param count Nonzero whole units. @param periods_in_transit Original age. @param first_station Original source station. @param source_xy Original pickup tile. @param feeder_share Actual accrued feeder credit. */
 	CargoPacket(CargoPacketID index, uint16_t count, uint16_t periods_in_transit, StationID first_station, TileIndex source_xy, Money feeder_share);
+	/** Copy an actual fragment with all purpose/link/departure evidence. @param index New native pool identity. @param count Nonzero split units. @param feeder_share Original proportional credit. @param original Actual source fragment, whose metadata remains authoritative. */
 	CargoPacket(CargoPacketID index, uint16_t count, Money feeder_share, CargoPacket &original);
 
 	/** Destroy the packet. */
 	~CargoPacket() { }
 
+	/** Split native quantity and credit while preserving all evidence. @param new_size Whole units to split. @return New fragment, or nullptr on pool exhaustion with the original unchanged. */
 	CargoPacket *Split(uint new_size);
+	/** Merge an already eligible native fragment. @param cp Fragment consumed after the owning list's provenance/state and MAX_COUNT checks. */
 	void Merge(CargoPacket *cp);
+	/** Consume part of this native fragment. @param count Whole units to remove, strictly less than the packet count; remaining purpose/history is unchanged. */
 	void Reduce(uint count);
 
 	/**
@@ -505,7 +544,10 @@ public:
 	 */
 	static bool AreMergable(const CargoPacket *cp1, const CargoPacket *cp2)
 	{
+		// Combining distinct paid histories or departure states would either
+		// erase finite refund evidence or let returned cargo regain eligibility.
 		return cp1->source_xy == cp2->source_xy &&
+				cp1->company_supply_order == cp2->company_supply_order && cp1->company_supply_shipped == cp2->company_supply_shipped &&
 				cp1->periods_in_transit == cp2->periods_in_transit &&
 				cp1->first_station == cp2->first_station &&
 				cp1->source == cp2->source;
@@ -615,6 +657,19 @@ public:
 
 	uint Reserve(uint max_move, VehicleCargoList *dest, std::span<const StationID> next, TileIndex current_tile);
 	uint Load(uint max_move, VehicleCargoList *dest, std::span<const StationID> next, TileIndex current_tile);
+	/** Count exact never-shipped linked supplies actually present in this native waiting queue.
+	 * @param order Nonzero exact uint64 legacy identity; zero never selects ordinary or unlinked A stock.
+	 * @return Whole eligible physical units across routing buckets; no reservation, history or refund is granted.
+	 * Returned shipped, carrier-reserved and unrelated-purpose/order fragments are excluded by their actual owner/evidence.
+	 */
+	uint64_t CountUnshippedCompanySupply(uint64_t order) const;
+	/** Remove exactly the recaptured never-shipped linked stock through native caches before a separately admitted refund.
+	 * @param order Exact nonzero original legacy identity, already admitted by the caller's canonical receipt/source checks.
+	 * @param expected Complete physical quantity from current cancellation preflight; a changed count refuses unchanged.
+	 * @return Complete removal, including a legitimate zero-eligible selection, or unchanged refusal. No money/history is modified.
+	 * This helper alone grants no cancellation or settlement authority; only the canonical command may close/refund a valid receipt.
+	 */
+	bool RemoveUnshippedCompanySupply(uint64_t order, uint16_t expected);
 	uint Truncate(uint max_move = UINT_MAX, StationCargoAmountMap *cargo_per_source = nullptr);
 	/** Discard abandoned transport offers while preserving actual bought company material in the same native station container.
 	 * @param max_move Maximum ordinary offered units to discard; owned CompanySupply does not count toward the requested removal.
@@ -633,7 +688,10 @@ public:
 	 */
 	static bool AreMergable(const CargoPacket *cp1, const CargoPacket *cp2)
 	{
+		// The station queue keeps the same historical boundary as a carrier;
+		// a shared cargo label, source and age cannot merge different refund rights.
 		return cp1->source_xy == cp2->source_xy &&
+				cp1->company_supply_order == cp2->company_supply_order && cp1->company_supply_shipped == cp2->company_supply_shipped &&
 				cp1->periods_in_transit == cp2->periods_in_transit &&
 				cp1->first_station == cp2->first_station &&
 				cp1->source == cp2->source;

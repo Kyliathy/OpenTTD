@@ -4,3 +4,8 @@
 # stages or checks out payloads, regardless of the platform's line endings.
 /src/tests/fixtures/** -text
 /savegames/retained/** -text
+
+# Parallel-import originals and archived source contracts are hash-bound inputs.
+# Preserve retained donor bytes through staging and checkout as for fixtures.
+/docs/zz-rhr/imports/** -text
+/media/multilayer/source/legacy/** -text

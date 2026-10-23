@@ -88,6 +88,14 @@ inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_CENTERS = 1048576; ///< Nati
 inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_HUBS = 2097152; ///< Explicit freight links or retired-link history, version408.
 inline constexpr uint32_t MULTILAYER_FEATURE_SURFACE_HANDLING = 4194304; ///< Saved handling jobs and retired job identity, version409.
 
+/** Reserved imported history identities; declaration alone neither publishes these bits nor admits a legacy version.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Group7; save_lineage.h owns dialect-specific capabilities.
+ */
+inline constexpr uint32_t MULTILAYER_FEATURE_SURFACE_SUPPLIES = 8388608; ///< Complete canonical supply history; original B bit23 keeps its original meaning.
+inline constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS = 16777216; ///< Original generator construction/operation history, donor bit24.
+inline constexpr uint32_t MULTILAYER_FEATURE_HEAT_CONVERSIONS = 33554432; ///< Original coupled heat-conversion lineage, donor bit25.
+inline constexpr uint32_t MULTILAYER_FEATURE_TUBE_GEOTHERMAL = 67108864; ///< Original geothermal inlet references/retired history, donor bit26.
+
 /**
  * Stage one structurally validated save row until activated content can be checked.
  * @param schema Candidate read by the save handler; this does not publish gameplay policy.
@@ -130,6 +138,9 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	SurfaceHandlingRoot, ///< Actual timed packet owners, age, remaining work and fractional fees.
 	SpacePodRoot, ///< Paid passive native shells, custody, construction and monotonic incarnation history.
 	SpaceStructureRoot, ///< Orbital site and its one delivered construction job inventory.
+	SurfaceSupplyRoot, ///< Group7 reserved append: one canonical tagged history/packet-purpose digest; no second stock owner.
+	GeothermalGeneratorRoot, ///< Group7 reserved append: original generator machinery/history, excluding utility balances.
+	TubeGeothermalRoot, ///< Group7 reserved append: original inlet references/history, excluding grants or derived readiness.
 	End,
 };
 

@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file station_widget.h Types related to the station widgets. */
+/** @file station_widget.h Types related to the station widgets.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md native window composition.
+ */
 
 #ifndef WIDGETS_STATION_WIDGET_H
 #define WIDGETS_STATION_WIDGET_H
@@ -34,6 +36,18 @@ enum StationViewWidgets : WidgetID {
 	WID_SV_LAUNCH_COLLECTION,  ///< Separate collection-circle overlay.
 	WID_SV_LAUNCH_HUB_SEL,     ///< Hide hub controls outside supported Surface stations.
 	WID_SV_LAUNCH_ASSEMBLY,    ///< Open the owned native launch workshop.
+	WID_SV_SUPPLIES,          ///< Optional native paid construction-supply foldout.
+	WID_SV_SUPPLY_STACK,      ///< Expanded transient request controls.
+	WID_SV_SUPPLY_CARGO,      ///< One of the four canonical construction meanings.
+	WID_SV_SUPPLY_QUANTITY,   ///< Native whole-quantity query editor.
+	WID_SV_SUPPLY_TERMS,      ///< Actual current import tariff and original introduction date.
+	WID_SV_SUPPLY_LIMIT,      ///< Company-wide remaining native economy-day allowance.
+	WID_SV_SUPPLY_QUOTE,      ///< Complete actual quote or precise current refusal.
+	WID_SV_SUPPLY_BUY,        ///< Post one native purchase with its expected cursor.
+	WID_SV_SUPPLY_ORDERS,     ///< Select real retained source history.
+	WID_SV_SUPPLY_CANCEL,     ///< Post the selected receipt's separately admitted canonical cancellation.
+	WID_SV_SUPPLY_HISTORY,    ///< Paid/dispatched/refunded/closed native status.
+	WID_SV_SUPPLY_OUTER,      ///< Hide the complete service outside eligible source context.
 };
 
 /** Widgets of the #CompanyStationsWindow class. */

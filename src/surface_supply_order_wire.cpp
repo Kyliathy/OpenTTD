@@ -47,14 +47,18 @@ std::optional<std::vector<uint8_t>> EncodeSurfaceSupplyOrders(const SurfaceSuppl
 	WriteSurfaceSupplyScalar(bytes, snapshot.next_id, 8); WriteSurfaceSupplyScalar(bytes, static_cast<uint32_t>(transport.saved_day.base()), 4); WriteSurfaceSupplyScalar(bytes, snapshot.records.size(), 2);
 	// Emit original scalar receipts in their existing order. Cargo quantities remain history/commitments and cannot become a second serialized physical stock.
 	for (const auto &record : snapshot.records) {
-		if (record.cost < 0) return std::nullopt;
-		WriteSurfaceSupplyScalar(bytes, record.id, 8); WriteSurfaceSupplyScalar(bytes, record.purchaser.base(), 1); WriteSurfaceSupplyScalar(bytes, record.owner.base(), 1);
-		WriteSurfaceSupplyScalar(bytes, record.origin.base(), 2); WriteSurfaceSupplyScalar(bytes, record.origin_x, 2); WriteSurfaceSupplyScalar(bytes, record.origin_y, 2);
+		const auto *evidence = record.Native();
+		// A440 has no variant tag or legacy tariff fields. Refuse other receipts
+		// instead of fabricating native payer/inflation/anchor facts for old bytes.
+		if (evidence == nullptr || evidence->cost < 0) return std::nullopt;
+		const auto &native = *evidence;
+		WriteSurfaceSupplyScalar(bytes, record.id, 8); WriteSurfaceSupplyScalar(bytes, native.purchaser.base(), 1); WriteSurfaceSupplyScalar(bytes, record.owner.base(), 1);
+		WriteSurfaceSupplyScalar(bytes, record.origin.base(), 2); WriteSurfaceSupplyScalar(bytes, native.origin_x, 2); WriteSurfaceSupplyScalar(bytes, native.origin_y, 2);
 		// Preserve the actual four-byte canonical label, independent of the candidate world's configured cargo ordinal.
 		for (const auto byte : record.label) bytes.push_back(byte);
-		WriteSurfaceSupplyScalar(bytes, record.quantity, 2); WriteSurfaceSupplyScalar(bytes, static_cast<uint64_t>(record.cost), 8); WriteSurfaceSupplyScalar(bytes, record.inflation_prices, 8);
-		WriteSurfaceSupplyScalar(bytes, static_cast<uint32_t>(record.purchase_year.base()), 4); WriteSurfaceSupplyScalar(bytes, static_cast<uint32_t>(record.purchase_day.base()), 4);
-		WriteSurfaceSupplyScalar(bytes, record.packet_buyer, 2); WriteSurfaceSupplyScalar(bytes, to_underlying(record.state), 1); WriteSurfaceSupplyScalar(bytes, record.issued_packet.base(), 4);
+		WriteSurfaceSupplyScalar(bytes, record.quantity, 2); WriteSurfaceSupplyScalar(bytes, static_cast<uint64_t>(native.cost), 8); WriteSurfaceSupplyScalar(bytes, native.inflation_prices, 8);
+		WriteSurfaceSupplyScalar(bytes, static_cast<uint32_t>(native.purchase_year.base()), 4); WriteSurfaceSupplyScalar(bytes, static_cast<uint32_t>(record.purchase_day.base()), 4);
+		WriteSurfaceSupplyScalar(bytes, native.packet_buyer, 2); WriteSurfaceSupplyScalar(bytes, to_underlying(native.state), 1); WriteSurfaceSupplyScalar(bytes, native.issued_packet.base(), 4);
 	}
 	assert(bytes.size() == SURFACE_SUPPLY_WIRE_HEADER_SIZE + snapshot.records.size() * SURFACE_SUPPLY_WIRE_RECORD_SIZE);
 	return bytes;
@@ -73,16 +77,58 @@ std::optional<SurfaceSupplyOrderTransport> DecodeSurfaceSupplyOrders(std::span<c
 	// Reconstruct detached original records only after exact length admission. Shared model/native-owner joins decide semantics; this loop issues neither packets nor payment rights.
 	for (uint16_t index = 0; index < count; ++index) {
 		SurfaceSupplyOrderRecord record;
-		record.id = reader.Read(8); record.purchaser = CompanyID{static_cast<uint8_t>(reader.Read(1))}; record.owner = CompanyID{static_cast<uint8_t>(reader.Read(1))};
-		record.origin = StationID{static_cast<uint16_t>(reader.Read(2))}; record.origin_x = static_cast<uint16_t>(reader.Read(2)); record.origin_y = static_cast<uint16_t>(reader.Read(2));
+		auto &native = *record.Native(); // The exact A440 wire layout supplies only NativeSupplyReceipt evidence.
+		record.id = reader.Read(8); native.purchaser = CompanyID{static_cast<uint8_t>(reader.Read(1))}; record.owner = CompanyID{static_cast<uint8_t>(reader.Read(1))};
+		record.origin = StationID{static_cast<uint16_t>(reader.Read(2))}; native.origin_x = static_cast<uint16_t>(reader.Read(2)); native.origin_y = static_cast<uint16_t>(reader.Read(2));
 		// Each original label byte is retained without registering or resolving a runtime cargo slot during decoding.
 		for (auto &byte : record.label) byte = static_cast<uint8_t>(reader.Read(1));
 		record.quantity = static_cast<uint16_t>(reader.Read(2)); const auto cost = reader.Read(8); if (cost > static_cast<uint64_t>(INT64_MAX)) return std::nullopt;
-		record.cost = Money{static_cast<int64_t>(cost)}; record.inflation_prices = reader.Read(8);
-		record.purchase_year = TimerGameCalendar::Year{std::bit_cast<int32_t>(static_cast<uint32_t>(reader.Read(4)))};
+		native.cost = Money{static_cast<int64_t>(cost)}; native.inflation_prices = reader.Read(8);
+		native.purchase_year = TimerGameCalendar::Year{std::bit_cast<int32_t>(static_cast<uint32_t>(reader.Read(4)))};
 		record.purchase_day = TimerGameEconomy::Date{std::bit_cast<int32_t>(static_cast<uint32_t>(reader.Read(4)))};
-		record.packet_buyer = static_cast<SourceID>(reader.Read(2)); record.state = static_cast<SurfaceSupplyOrderState>(reader.Read(1)); record.issued_packet = CargoPacketID{static_cast<uint32_t>(reader.Read(4))};
+		native.packet_buyer = static_cast<SourceID>(reader.Read(2)); native.state = static_cast<SurfaceSupplyOrderState>(reader.Read(1)); native.issued_packet = CargoPacketID{static_cast<uint32_t>(reader.Read(4))};
 		transport.snapshot.records.push_back(record);
 	}
 	return transport;
+}
+
+/** @copydoc ConvertLegacyBSupply */
+std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupplyTransport &original, const SurfaceSupplyRecordContext &same_file)
+{
+	// An absent/malformed header or partial table cannot reset paid history to
+	// a fresh empty book. Admit the complete original bound before allocation.
+	if (original.schema != 1 || original.count > MAX_LEGACY_SURFACE_SUPPLY_RECORDS ||
+		original.count != original.orders.size() || original.next_order != original.count + 1) return std::nullopt;
+	// Identity and raw closure are wire facts, not repairable canonical defaults.
+	// Check every original ordinal before creating any replacement receipt.
+	for (size_t index = 0; index < original.orders.size(); ++index) {
+		if (original.orders[index].id != index + 1 || original.orders[index].closed > 1) return std::nullopt;
+	}
+	SurfaceSupplyOrderSnapshot candidate;
+	candidate.next_id = original.next_order;
+	candidate.records.reserve(original.count);
+	// Preserve only facts B actually saved. Missing native payer, inflation,
+	// anchor and issuance history remain structurally absent in the legacy tag.
+	for (const auto &row : original.orders) {
+		SurfaceSupplyOrderRecord record;
+		record.id = row.id; record.owner = CompanyID{row.owner}; record.origin = StationID{row.station};
+		record.label = row.label; record.quantity = row.quantity; record.purchase_day = TimerGameEconomy::Date{row.economy_day};
+		record.receipt = LegacyBSupplyReceipt{Money{row.unit_price}, row.calendar_date, row.refunded, row.dispatched, row.closed != 0};
+		candidate.records.push_back(record);
+	}
+	if (ValidateSurfaceSupplyRecords(candidate, same_file) != SurfaceSupplyRecordError::None) return std::nullopt;
+	return candidate;
+}
+
+/** @copydoc ConvertLegacyASupply */
+std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyASupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file)
+{
+	if (original.snapshot.records.size() > MAX_SURFACE_SUPPLY_RECORDS) return std::nullopt;
+	// A440 has no receipt tag. A caller cannot pass an imported/unknown row
+	// through this adapter to invent an original native payer or Pending right.
+	for (const auto &record : original.snapshot.records) {
+		if (record.Native() == nullptr) return std::nullopt;
+	}
+	if (ValidateSurfaceSupplyRecords(original.snapshot, same_file) != SurfaceSupplyRecordError::None) return std::nullopt;
+	return original.snapshot;
 }

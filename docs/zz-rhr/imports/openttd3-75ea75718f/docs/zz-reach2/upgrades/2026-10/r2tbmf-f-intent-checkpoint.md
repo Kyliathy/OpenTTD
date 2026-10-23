@@ -1,0 +1,46 @@
+> **Historical donor snapshot — not an execution plan.** OpenTTD3 `75ea75718f`, imported2026-10-23.
+> Original: `docs/zz-reach2/upgrades/2026-10/r2tbmf-f-intent-checkpoint.md`; exact source SHA256 `6bb31c95617072839af688ee0cb0119d2730ff113d135cf10271f0539cd92c65`.
+> Current integration: [M2O23-1](../../../../../../../zz-reach2/upgrades/2026-10/m2o23-1-come-space.md); storage and evidence roles: [archi-historical-debug.md](../../../../../../../zz-reach2/architecture/archi-historical-debug.md). Original completion claims, instructions and human-review limits below remain dated; they grant no new execution, spending, publication or deletion authority.
+
+# R2TBMF F - Explicit work intent and visible cutter path
+
+Owner: [fixing Group3C](r2tbmf-tbm-fixes.md#group-3c---explain-tunnel-versus-area-intent-and-prove-the-whole-planning-workflow). Architecture: [GUI/viewport](../../../../../../../zz-reach2/architecture/gui/archi-viewport.md), [map layers](../../architecture/map-layers/archi-map-layers.md). Verified preceding command/UI evidence is in [checkpoint E](r2tbmf-e-command-ui-checkpoint.md). **Group3C is complete; [checkpoint G](r2tbmf-g-fresh-checkpoint.md) closes the remaining fresh/Deep and refusal acceptance.**
+
+## Current implementation
+
+- `ExcavationPlanIntent` distinguishes area coverage from `StraightTunnel`. It is transient command/preview input; saved accepted geometry retains sole work authority. Existing planner call sites default to area coverage.
+- The internal canonical route planner shares all start/support/model/owner/claim checks, then straight intent advances in the current heading to the exact cutter-centre endpoint. It cannot stop one body-width short, turn around an obstruction, or silently become area sweeps. Each advance uses `AdvanceExcavationPlanningPose`, `CheckPlanningCut` and the same paid material quote. Failed prefixes stay unaccepted.
+- `MakeTBMTunnelOutline` accepts at most64 straight advances, retains old approach authorization, and derives the full canonical body sweep, including diagonal outside corners. The centreline is requested floor and the rest is explicit extra working space. Area rectangles share a factored existing one-cell-ring helper.
+- Fresh and existing-machine preview/confirmation carry the typed intent. Straight starts must equal the actual portal's rock-side housing or the existing job's full accepted endpoint. Fingerprints bind intent as well as geometry/participants/amounts. The original immediate `CommissionTBM` remains area-default; the newer reviewed confirmation and extension commands carry explicit intent.
+- The compact palette has an intent dropdown only while the work tool owns placement. Area mode keeps drag input. Straight mode accepts one endpoint click, derives the real start, and gives an actionable alignment refusal. Switching intent clears the previous quote. Cancellation retains the machine's explicit pause.
+- Construction preview has derived numbered cutter visits; repeated visits retain their sequence numbers. The viewport draws these as small native map labels. Cancellation clears the overlay; no saved state, route or RNG is changed. Quotes also show approximate uninterrupted simulation cutting ticks using the actual model rate, with travel/haulage explicitly additional.
+
+## Verified evidence,2026-10-09
+
+- Optimized ordinary game and tests build: `logs/r2tbmf-f-intent-build-2.log`, exit0. Final test-only reload observer build: `logs/r2tbmf-f-reload-build.log`, exit0. **No build is live.** The first intent build caught the repository safeguard against `std::to_string`; new formatting now uses `fmt::format`.
+- Focused `logs/r2tbmf-f-intent-focused.log`: **21,125 assertions/16 cases**, under one second. Includes `[tbm-planning-intent]`, `[tbm-planning-command]`, continuation producers and current area/viewport flows. Run from `build` so generated language is found. Tests verify exact fresh/extended endpoints, heading/identity preservation, mismatched-intent refusal and complete conservative sweeps for all eight headings on both rock layers.
+- `python docs/zz-reach2/upgrades/2026-10/r2tbmf-a-native-feedback.py --straight-tunnel`: **166 assertions**, approximately4seconds,40,000 native ticks. `logs/r2tbmf-f-native-tunnel.log`. Actual dropdown/endpoint/cancel/reselect/confirm/resume input changes original20 cuts into exactly26, retaining cutter5/Train#2, project0 and job0. All cuts and return finish. Additional108Earth/216Rock match the quote.
+- [Actual straight quote](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-tunnel-quote.png): six numbered cutter centres,24extra working-space cells,18new cut cells,540native currency future cutting and1,332workticks. Pacing/yields are still pre-Group5 values. The quote palette is396pixels wide; the default palette remains compact because intent and quote rows are conditional.
+- `--extend-work`: **144 assertions**, `logs/r2tbmf-e-native-extension.log`. Existing area clearing remains functional with numbered path/intent presentation. Original20 cuts become33 with the same real machine, and additional90Earth/180Rock match the quote. Both runs preserve original390, published renamed393, configs and startup bytes.
+- `--straight-tunnel --reload-accepted` and `--extend-work --reload-accepted`: **72 assertions each**, plus exact cross-process comparison of `FEEDBACK_RESULT`. `logs/r2tbmf-f-native-tunnel-reload.log` / `r2tbmf-f-native-area-reload.log`; runner reports are `r2tbmf-f-tunnel-reload-runner.log` / `r2tbmf-f-area-reload-runner.log`. Each uses the actual startup loader on its paused accepted file and resumes through native portal controls. At40,000 ticks, reloaded and uninterrupted geology/controller/exchange/receiver digests, money, synchronized RNG and all actual train-part positions/headings/cargo/reservations match exactly. This is real load-and-drive evidence, not reconstructed fixture geometry.
+
+Current ordinary executable SHA256: `1a2390e35ba6fc462f2030d0eace708c0f8f5ffc85cb509d752d116afa115d5b`; final test executable: `d0527d8e186d130c050f0db7b911907fdd827051ae801c259b81d0d5648fb834`.
+
+Accepted snapshots under `src/tests/fixtures/haulage/`:
+
+- `tbm-extended-tunnel-393.sav`: `0c27d26b46b1cfca716511c44cb8abb69af120d1cbfe2edc33d356f3786ec9a1`.
+- `tbm-extended-area-393.sav`: `91ef12b7b382bb0580d6f81644680b3960ebf1885ddccb9c9a3be0e2edd4d74c`.
+
+Re-run the corresponding uninterrupted runner before its reload variant if evidence needs regeneration: the runner requires that matching final-reference log and protects the accepted snapshot during reload. `tbm-tunnel-*.png` and `tbm-extend-*.png` preserve their separate actual input captures; reload pictures add `reload-`.
+
+## Historical handoff, resolved by checkpoint G
+
+Current task is **3C.3**, compaction count0. Re-read fixing Global/user requirements and nearest Group3C Local list after compaction, then this checkpoint and only applicable current owners. Do not reread old baseline logs, D's obsolete pending-command text or paused geothermal work. Group3C.1/3C.2 are checked. The accepted Underground area and straight extension reload portions of3C.3 now pass, but the full task stays open.
+
+Remaining3C.3 acceptance: **fresh portal commissioning and existing-machine continuation through actual input and physical cutting in both rock layers**, plus specific wrong-layer/occupied/locked/capacity refusals. Existing command tests and native Underground extension evidence cover portions; both-layer outline tests do not establish a Deep driven GUI journey.
+
+Useful next setup owner: `UndergroundWorkflowWorld` in `src/tests/underground_workflow_fixture.h` accepts `(layer, paid_setup, full_save)`, supplies actual funded native hauler/receivers/portal and leaves the target layer solid. Its Deep scenario declares existing upper Underground access and constructs a real Surface connection; it does not open Deep work for free. `LayerSaveContent(world.ActivatedContent(), true)` and `LayerSaveFileSink` are the established real-save output helpers. A new source/test filename must not begin with `r2`; auxiliary notes/scripts remain beside this plan under the next chronological suffix.
+
+The old `RunVisibleExcavation` in `underground_workflow.cpp` is useful for scenario sequencing and final actual spoil/disposal checks, but `ClickWorkflowControl` invokes `OnClick` directly and its area release is injected. Do not describe it alone as actual native mouse-hit-test proof. The verified `TBMFeedbackProbe` uses real mouse/window-timer input and renders the actual canvas, but currently assumes an existing project loaded from the published demo. A fresh/Deep journey should generate/load a suitable scenario and use the same ordinary input and normal tick owners; never move vehicles, edit work phases or replace geological claims to simulate success.
+
+The latest supplied workspace instructions prohibit write Git commands, including commit. **No Git writes were performed.** Preserve earlier requested commit-message plan names for a later explicitly authorized commit; current master/geothermal work remains paused. Groups4-11 remain untouched.

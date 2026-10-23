@@ -1,0 +1,137 @@
+{
+  "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md84ED; exact selected public/runtime/gallery technical delivery;human/network/operator/future-profile gates remain pending",
+  "controller": {
+    "path": "src/tests/multilayer/selected_gallery_delivery_report.py",
+    "bytes": 8959,
+    "sha256": "4eab15bf7b6afc9cd6b34bf573f2ae5690f661d7148d49f0a3d667428b376411"
+  },
+  "selection": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/evidence.json",
+    "bytes": 24213,
+    "sha256": "197e188b08cf5f835706aa8af2bbdba740590c0e6e07bbfde6fd7a8b4255295c"
+  },
+  "default_selection": {
+    "path": "logs/proofs/mlm/native-art/evidence.json",
+    "bytes": 24213,
+    "sha256": "197e188b08cf5f835706aa8af2bbdba740590c0e6e07bbfde6fd7a8b4255295c"
+  },
+  "public_manifest": {
+    "path": "media/multilayer/contracts/multilayer_sprite_manifest.json",
+    "bytes": 469677,
+    "sha256": "f71049479b9f5b4dec96f50a958707405f7c13de5f979b44a67bb9d03110e258"
+  },
+  "packed_manifest": {
+    "path": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+    "bytes": 11049132,
+    "sha256": "393f42d2771d8f088ed1adec9627bf07c987028f4838cb2257528991fc63314d"
+  },
+  "runtime_manifest": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/runtime-manifest.json",
+    "bytes": 115307,
+    "sha256": "24cf6c5247bf17259d8d92a3895dcfb2c20d0bd8959646b036e267b92cb0a271"
+  },
+  "gallery": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/gallery/m1-runtime-gallery.json",
+    "bytes": 4354484,
+    "sha256": "2c2425d2b2718642d368679a4ed73e43209ce633360c5e91a17f487082d40b87"
+  },
+  "html": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/gallery/m1-runtime-gallery.html",
+    "bytes": 486557,
+    "sha256": "c7450879876cf4a6f5462c8a13ce33808616ab8cf9e83f5c5198bc83fb3d701d"
+  },
+  "contact_sheet": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/gallery/m1-runtime-contact-sheet.png",
+    "bytes": 890370,
+    "sha256": "95a0402957da55138abb198770a823a8efc12537a017e169025ca3327d401e7d"
+  },
+  "summary": {
+    "selected_families": 69,
+    "selected_sprites": 10557,
+    "current_families": 27,
+    "retained_review_families": 42,
+    "active_consumers": 65,
+    "native_version": 434,
+    "closures": {
+      "selected-purchase": {
+        "path": "logs/graphics/selected-guidance/20261019-native-01/purchase-verification.json",
+        "bytes": 358470,
+        "sha256": "e2f5241947d7120015c0f7999bd3f63cc08090d58059182944a1b9e92023e948"
+      },
+      "selected-structures": {
+        "path": "logs/graphics/selected-tube-gallery/20261018-native-01/structures-verification.json",
+        "bytes": 513296,
+        "sha256": "0ca740b9ee18fed4e8505986a8cfe17be3f66d055bd7d7c41a24471742b73152"
+      },
+      "selected-movement": {
+        "path": "logs/graphics/selected-tube-gallery/20261018-native-01/movement-verification.json",
+        "bytes": 3082128,
+        "sha256": "636ce65f13b5695e910f145c54b051b7ab2a5105139542ffca6aa1c5909ba694"
+      },
+      "selected-geothermal": {
+        "path": "logs/graphics/selected-guidance/20261019-native-01/geothermal-verification.json",
+        "bytes": 4987287,
+        "sha256": "70c3b1021e93e21edce314aa4bd36e7b904fe5a94cd733ad947e6f1ab28c9796"
+      }
+    },
+    "retained_gallery": {
+      "path": "logs/proofs/mlm/native-art/selected-pack-runtime-20261016/gallery/m1-runtime-gallery.json",
+      "bytes": 148306,
+      "sha256": "637735ff7b1ac93ed6b860639925a396c1896c2a19fa5d45daf2391b24acba9e"
+    },
+    "boundary": {
+      "public": {
+        "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/public-before-delivery.json",
+        "bytes": 469677,
+        "sha256": "73e2fb02bfc68057f2c903674ad4e138d3d36af2bff4ff08833a963b0d077fa0"
+      },
+      "packed": {
+        "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/packed-before-delivery.json",
+        "bytes": 11049132,
+        "sha256": "1fba4a2ea2db2cf1a5ce18c48995ea44ae82958d60597b006cb266fbc8bbd2b5"
+      },
+      "scope": {
+        "path": "media/multilayer/m1-pack-scope.json",
+        "bytes": 11369,
+        "sha256": "39692446a987faedb62737c623dc06ccc93ff801ce39804c704a66106418c8bd"
+      },
+      "previous_selection": {
+        "path": "logs/proofs/mlm/native-art/selected-gallery-20261018/evidence.json",
+        "bytes": 23974,
+        "sha256": "d34c3da2b4a633603e5b37bfcbd18bdafa1e14c7c4d8b6b33bf023c63d841f4e"
+      }
+    },
+    "native_cases_unique": 68,
+    "native_assertions_unique": 159302,
+    "scope_note": "Four exact closures reference68 cases;0 exact Forge observations are shared by purchase/movement. Retained43-family review refreshes collector,leaving42dated rows."
+  },
+  "native_frames": 2209,
+  "offline_targets": 2212,
+  "native_canvases": {
+    "scenes": 20,
+    "size": [
+      1920,
+      2968
+    ],
+    "complete_rgb_exact": true
+  },
+  "focused_checks": [
+    {
+      "path": "logs/graphics/selected-guidance/20261019-native-01/snapshot-checks-1.log",
+      "bytes": 115,
+      "sha256": "6d4e017829d1da3564c63a4a8fdda00eb63585601cadafada70181a5f105dd79"
+    },
+    {
+      "path": "logs/graphics/selected-guidance/20261019-native-01/delivery-preflight-1.log",
+      "bytes": 109,
+      "sha256": "fa5d31dd67d88c42ca5750147ce70860ab84d2424c27c3267813a907026b21b0"
+    },
+    {
+      "path": "logs/graphics/selected-guidance/20261019-native-01/delivery-published-1.log",
+      "bytes": 103,
+      "sha256": "1db00c0ecbea50c23cb5e9aa78ef5b3d52acdd2af6e523eaedb101cc0f9306ff"
+    }
+  ],
+  "technical_acceptance": "verified",
+  "user_feedback": "deferred"
+}

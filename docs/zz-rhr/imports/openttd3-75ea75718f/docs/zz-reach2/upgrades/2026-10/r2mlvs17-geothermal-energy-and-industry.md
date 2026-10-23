@@ -1,0 +1,478 @@
+> **Historical donor snapshot — not an execution plan.** OpenTTD3 `75ea75718f`, imported2026-10-23.
+> Original: `docs/zz-reach2/upgrades/2026-10/r2mlvs17-geothermal-energy-and-industry.md`; exact source SHA256 `6b4d8d65b290e79a3e5d79096dbfe9801a70ac01026a99567dd02a001965aba6`.
+> Current integration: [M2O23-1](../../../../../../../zz-reach2/upgrades/2026-10/m2o23-1-come-space.md); storage and evidence roles: [archi-historical-debug.md](../../../../../../../zz-reach2/architecture/archi-historical-debug.md). Original completion claims, instructions and human-review limits below remain dated; they grant no new execution, spending, publication or deletion authority.
+
+# R2MLVS17 - Geothermal Energy and Industry
+
+## Global Mandatory Reading
+
+> **Execution protocol**
+>
+> - Read this Global Mandatory Reading section before the first task and again
+>   after every context compaction.
+> - Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
+> - A referenced heading or exported symbol is authoritative. Global navigation
+>   hints and Area line ranges are for navigation only; if they drift, relocate
+>   the named section or symbol rather than expanding to the whole file.
+> - Mandatory reading is non-transitive. Do not preload a linked file's own
+>   Mandatory Reading, Consult on Demand, or Planning Provenance entries unless
+>   this plan names them directly for the current area.
+> - Do not read Consult on Demand or Planning Provenance merely because those
+>   sources are listed. Use a Consult on Demand source only when its trigger
+>   occurs.
+> - No created source file, test file or JSON file should start with same prefix as a planning MD file (such as r2). Only MD files can have that prefix. No MD file should be created anywhere in source directories unless specifically asked.
+> - After EVERY CONTEXT COMPACTION, you must add a note above the task group
+>   which is currently in execution. The note will say: "Context has compacted
+>   X times while executing this group.". If the compaction occurs before any
+>   meaningful work was done (this can happen when there is a lot of baggage
+>   from the previous compaction), then and ONLY then you can skip this step.
+> - When exceeding 3 context compactions, YOU MUST ask yourself if you're not 
+>   chewing more than we can handle :). Heck, plans change! :). In such a case, 
+>   the way out is to split the group on the spot,
+>   in the plan, into more groups, 
+>   by appending B, C, D as a suffixes to those groups (splitting sub-groups 
+>   themselves is also allowed). When you do this, create Local Mandatory
+>   Reading areas so you can optimize your context only for the
+>   ACTUAL task at hand.
+>   Before starting or resuming a task group, read the nearest preceding Area
+>   Mandatory Reading block whose `Applies to` label includes that group. Area
+>   blocks appear immediately before the first group they govern.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 310-316 | `AD-16` supplies the canonical gameplay/ownership decision for every group of this plan. It constrains one bounded thermal budget, explicit electricity export and later direct-heat recipes; a consumer must not redefine it locally. |
+| [src/map_layer.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/29c86bf77e2c7b62-map_layer.h) | 78-85 | `MultiLayerMap` ownership preamble: `Map` owns packed storage/geometry and this controller owns layer semantics. Every group uses world tiles/explicit layer helpers; camera selection and ad hoc plane offsets cannot define gameplay. |
+| [src/timer/timer_game_calendar.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/1c2e911d6fe35ac2-timer_game_calendar.h) | 15-39 | `TimerGameCalendar` technology-clock contract and date conversions govern 1980/model/factory introductions; economic/realtime scheduling cannot unlock a technology. |
+
+Status: master10.3 is paused again after the user corrected staged queued messages and selected TBM fixes on2026-10-09. Preserve completed5B.1 and partial5B.2 native definition work. Natural vent handoff1.1, cold claims1.2/lifecycle1.3A, actual paid collector1B, shared native Heat2B, bounded source/request2, installed paths3B, connected allocation3 and live topology4 are delivered. Task5B.2 is the later resume point, before original Group5. Operating plant lifecycle1.3B returns after master10.6. Riser/export/bootstrap/operating plant integration remains pending; futuristic facilities below are game designs, not assertions of real industrial capabilities. Parent: [R2MLVS master](r2mlvs-multilayer-vehicles-and-structures.md). Depends on geology/1980 access from r2mlvs2/3, industry lifecycle from r2mlvs6 and the useful-power contract from r2mlvs1. r2mlvs16 consumes available electricity but does not require geothermal for its bootstrap. Separate [TBM fixes](r2tbmf-tbm-fixes.md) are active and incomplete.
+
+## Outcome and Boundaries
+
+Deep geothermal vents become useful energy sites and eventually host direct-heat factories.
+
+## Proposed technology timeline
+
+| Available from | Facility | Gameplay |
+| --- | --- | --- |
+| 1 January 1980 | Deep access, Vent Collector and Vent-Tap Powerhouse | Excavate/claim a vent, tap a bounded heat rate and turn it into electricity for Deep users or explicit Surface export |
+| 2000 | Magma-Loop Power Station | A fictional advanced closed-loop installation with better heat-to-electric conversion, higher capital/service costs and larger footprint |
+| 2010 | Geothermal Smelter | Use direct vent heat with delivered Iron/Copper/Nickel ore to produce Steel/Refined Metals; saved alternative recipes, no requirement to generate electricity first |
+| 2030 | Lithothermal Battery Works | Use heat, Lithium/Cobalt and delivered Chemicals to manufacture Batteries near their mineral sources |
+| 2045 | Mantle Forge | Use heat, Refined Metals and Electronics to manufacture Station Components/Robotics Parts for orbital construction |
+
+These recipes reuse existing planned cargos, so vents/heat introduce no extra freight cargo slot. Exact dates after the 1980 access baseline, input quantities, conversion efficiencies and throughput are tuning proposals. Every plant requires transported construction/service inputs, sufficient heat, output space and paid operation. Conventional Surface processing remains available so the timeline never leaves a mineral without a receiver.
+
+## Public Handoff Contract
+
+Partial public owner: [`src/geothermal.h`](../../../../src/geothermal.h) now publishes `GeothermalSiteRequest`, `GeothermalSiteAdmission` and tested pure `PrepareGeothermalSite`, consuming actual natural IDs and frozen per-utility construction terms from `multilayer_bootstrap.h`. This cold geometry view creates no claim, delivered construction, heat or power. Cold `ClaimGeothermalSite`/`CancelGeothermalSite`, retained identities and independent388 GCSH/GCSD coordinate/source transport are delivered. Cold reservations protect their actual floor and cancel on company/world lifecycle; they do not supply constructed collectors. Delivered [`geothermal_collector.h`](../../../../src/geothermal_collector.h) publishes actual native construction/control/receipt/work and `IsGeothermalCollectorOperational`; `CmdBuildGeothermalCollector` charges full frozen capital through the ordinary command kernel, and independent389 GCBH/GCBD resolves native floor/stock/source references. Group2 adds actual `PublishGeothermalCollectorHeat`, `HasGeothermalHeatSources` and `PublishGeothermalHeatSources`, with one391 GCBD shared-meter reference and no private heat balance. [`geothermal_heat.h`](../../../../src/geothermal_heat.h) publishes pure typed `GeothermalHeatRequest`/`PrepareGeothermalHeatRequest`; endpoint admission alone proves no physical path or grant. The common synchronized driver closes heat/electrical intervals even without capsules, and operating plant lifecycle remains staged1.3B. Delivered [`geothermal_utility.h`](../../../../src/geothermal_utility.h) now publishes actual `GeothermalUtilityLink`, paid build/remove preparation, declared native collector ports and deterministic `FindGeothermalUtilityPath`, backed by shared392 local link records and topology. Still publish `GeothermalHeatAllocation`, `AllocateVentHeat`, `ExportGeothermalPower`. These symbols are producer obligations, not existing code. Keep one authority for the fields/commands they expose; downstream plans consume the public contract rather than private pools or copied tables.
+
+## Implementation Tasks
+
+Deepening pass, 2026-10-04: implementation groups use only SIMPLE, MEDIUM or HARD difficulty, with at most eight pending tasks each. Sketches describe proposed implementation contracts; verify the named earlier producers at each assumption gate. No gameplay or asset implementation is marked complete by this planning pass.
+
+Groups are chronological and contain consecutive tasks of one difficulty. Each difficulty batch has at most eight tasks; area reading changes only when the implementation boundary or source of truth changes.
+
+### Area Mandatory Reading - Vent sites, heat and utilities
+
+_Applies to Groups 1-7._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/multilayer_content.h`: `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`; `src/excavation.h`: `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`; `src/layer_portal_cmd.h`: `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`; `src/multilayer_industry.h`: `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 1-7. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/industry_cmd.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/03eb5b5f93fd2a73-industry_cmd.h) | 18-28 | Industry construction/funding command declarations and `DEF_CMD_TRAIT` entries are the shared UI/script mutation boundary; availability must agree on every entry path. |
+| [src/command.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/99c9ff0dcef87e2f-command.cpp) | 301-328 | `CommandHelperBase::InternalExecuteValidateTestAndPrepExec` defines refusal/estimate before execution; no validation phase may consume inventory, RNG or funds. |
+| [src/core/random_func.hpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/61408bb93262db84-random_func.hpp) | 24-43 | `Randomizer` and simulation versus interactive state constrain feature-seed generation: preserve Surface simulation RNG and exclude presentation randomness. |
+| `src/multilayer_content.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs1-gameplay-contracts-and-content.md](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md) Groups 1-6, ending with Group 6's public-contract task, publish `MultiLayerGameplayProfile`, `LayerVehicleCapability`, `GetMultiLayerContentProfile`, `CheckDeepLayerAvailability`, `UtilityPowerAccount`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/excavation.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs2-geology-and-excavation.md](r2mlvs2-geology-and-excavation.md) Groups 1-7, ending with Group 7's public-contract task, publish `ExcavationState`, `GeologyDeposit`, `ExcavationJob`, `CheckExcavatedFootprint`, `CommitExcavationCut`, `GeothermalVentField`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| [src/layer_portal_cmd.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/c9b88cad24d07722-layer_portal_cmd.h) | Live definitions; no fixed range | [r2mlvs3-sealed-portals-and-deep-rail.md](r2mlvs3-sealed-portals-and-deep-rail.md) Groups 1-7, ending with Group 7's public-contract task, publish `LayerPortalWorkState`, `GetLayerPortalWorkState`, `CheckLayerPortalWorkAccess`, `CommissionLayerPortalTBM`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/multilayer_industry.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs6-mines-and-resource-chains.md](r2mlvs6-mines-and-resource-chains.md) Groups 1-6, ending with Group 6's public-contract task, publish `LayerIndustryCapability`, `ValidateMineDepositClaim`, `ProduceLayerMineCargo`, `PrepareLayerRecipeBatch`, `CommitLayerRecipeBatch`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/utility_power.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs12](r2mlvs12-solar-farms-mirrors-and-eti.md) `Useful Power Handoff`, produced by its native-ledger, atomic-mutation and consumer-effect groups, supplies `PublishUtilityGeneration`, `AllocateUtilityPower`, `GetUtilityAllocation`, `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation`, `CommitUtilityMutation`. Verify its allocation, consume/release/layer-transfer, effect and save/retry fixtures before dependent power mutations; no private account writes or duplicate grid. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Ownership and allocation sketch.** Vents already belong to r2mlvs2. This plan adds claims/links and one shared heat allocator; r2mlvs12 owns the common electric ledger. No consumer gets a private copy of the vent capacity.
+
+```mermaid
+flowchart LR
+    Vent[One vent interval offer] --> Allocate[Stable shared heat allocation]
+    Allocate --> Generator[Generator heat grant]
+    Allocate --> Direct[Direct-recipe heat grant]
+    Generator --> Loss[Recorded conversion loss]
+    Generator --> Electric[One electrical source publication]
+    Electric --> Local[Linked Deep consumers]
+    Electric --> Riser[Metered portal riser export]
+    Direct --> Products[Delivered inputs to bounded products]
+```
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. The existing gates supply geology, profile, portal and industry contracts; electrical export additionally requires r2mlvs12's tested `Useful Power Handoff`. Verify `src/utility_power.h` generation/allocation/query exports and focused tests before export/grid mutation. If absent, stop those dependent operations but continue heat-domain fixtures; do not invent a local grid or use coordinate catchment.
+
+### Local Mandatory Reading - Natural vent and site claims
+
+_Applies to Group1; supplements the Vent sites, heat and utilities Area._
+
+Read Global/AD-16, geology's `GeothermalVentField`, `FindGeothermalVentField`, `ValidateGeothermalVentFields`, `GetGeologyWorldState` and `CheckExcavatedFootprint`/`CheckExcavationConstruction`, shared Deep calendar admission and actual industry/cargo construction participants only when binding them. Natural source IDs/rates remain in geology. Native survey is public/free; vents currently have no separate surveyed-company bit (the mineral field is optional information). Do not add a second discovery registry or regenerate fields. Consume frozen [first utility construction](r2mlvs1-f-utility-and-transfer-contracts.md#group-19---direct-heat-and-early-power-bootstrap): collector3x3/STEL8 RFMT4 ELEC2/180,000/296ticks; powerhouse4x4/STEL12 RFMT8 ELEC4 BATY2/180,000/592; riser2x2/STEL4 RFMT4 ELEC2 BATY2/120,000/296. Site planning/claims must not impersonate paid finished construction or produce heat/electricity; actual operating plant proof remains master10.6. Retain source capacity through ordinary clearing, claim cancellation and rebuild. Scope later heat interval/link APIs to their actual owning groups rather than preloading their entire areas.
+
+### Group 1 - Consume vent geology and bind excavated collectors
+
+Resumed2026-10-08 after master10.2: consume actual natural vent identity/rate and publish validated site/collector claims before heat/utility foundations. The prior finalization skip is historical.
+
+{{MEDIUM}}
+- [X] 1.1 Consume r2mlvs2 `GeothermalVentField` IDs, the current public/free survey policy and bounded source capacity; verify its guaranteed-vent/map-size fixture. Do not generate a second set of vents or overwrite geological source identity here.
+- [X] 1.2 Define this owner's collector/plant claim record referencing a vent, owner and utility endpoint. Validate full excavation, suitable footprint/access and shared Deep unlock before binding.
+- [ ] 1.3 Test ordinary clearing and plant removal/rebuilding preserve the original vent ID/capacity; only the consumer claim changes. Discovery or a blueprint alone produces no heat/power. Whole1.3 closes only after both scoped rows below.
+- [X] 1.3A Complete the cold site portion: native clearing/overbuild refusal, explicit cancellation/clearing/reclaim, company takeover/world reset and exact saved history preserve original natural ID/capacity/cavity, with no completed construction or heat/power.
+- [ ] 1.3B After actual plant definitions and operation at master10.6, test the operating collector/plant removal/rebuild and original natural-source preservation through the actual native lifecycle hooks. Return with master10.7/9.5B; cold blueprint tests cannot close this row.
+
+1.1 producer verification,2026-10-08: actual geology supplies a distinct stable-ID Deep vent at1MW on supported square/rectangular maps, leaves its cells solid and mineral identities intact, and restores capacity/ID through a saved cavity. Global Surface RNG remains unchanged; one-plane/unsupported maps refuse. Native information is public/free, with no vent-specific surveyed bit; do not copy the mineral `surveyed_companies` mask into another source authority. [Focused geology/profile/bootstrap/electrical/recipe boundaries] (historical reference: `../../../../logs/r2mlvs3mp-z-h-geothermal-prerequisites-2.log`) pass1,226 assertions/18 cases. First discovery/clearing grants no heat or electricity. **1.2 is current; Group1 and master10.3 remain unchecked for validated claims and lifecycle.**
+
+1.2/1.3A closure,2026-10-08: actual bounded cold site claims retain original natural source/owner/boundary endpoint and full empty excavated floor/access under shared1980 policy. Duplicate/foreign/invalid geometry refuses; cold cancellation preserves monotonic IDs, natural capacity and the cavity. Native clearing/rail-overbuild, actual company takeover and world reset respect the planning owner. Independent388 GCSH/GCSD transport retains original/cancelled geometry and source references; copied preview uses saved local coordinates and decoded vent records rather than the live map. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-reference-checks.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-optimized-checks.log`) focused natural/site/lifecycle/metadata checks pass857 assertions/14 cases. [Actual388 files] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-site-native-checks-1.log`) preserve claimed/cancelled identity, exact natural/electrical bytes, six malformed preview refusals and [ordinary game reload/resave] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-site-normal-loader.log`); the input387 file remains hash-identical. The native cold fixture explicitly supplies test-open floor and claims no paid operating plant. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-reference-build.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-i-geothermal-optimized-build.log`) targets build. Whole1.3/actual1.3B remains staged. **Group1B is current before Group2: thermal publication cannot consume a cold blueprint as a finished collector.**
+
+### Local Mandatory Reading - Actual first collector construction
+
+_Applies to Group1B._
+
+Read Global/AD-16 and actual `geothermal.h` cold planning/388 handoff. Read frozen `GetMultiLayerGeothermalConstruction(Collector)`3x3/STEL8 RFMT4 ELEC2/180,000/296 and shared Deep date/footprint guards. Inspect existing native IIDS/TIDS industry definition/funding, actual Industry input stock and construction flags, bounded inventory/work participants, native industry tick/removal and lifecycle hooks. Publish the collector's real definition and actual construction participant before Group2 operational source offers; pure blueprints cannot authorize heat. Consume actual canonical industry/cargo/identity owners, with no local stand-in inventory, invented UtilityConsumerID or copied energy budget. First collector work is cash/material driven and requires no own electricity. Final Surface procurement/driven delivery/operating generator remains master10.6; final art remains10.4. Read later heat/recipe/plant internals only when their specific producer is active.
+
+Context has compacted 1 times while executing this group.
+
+### Group 1B - Construct a real collector before thermal publication
+
+Scheduling repair2026-10-08: Group1's claim record was correctly cold, while Groups2/8 presumed an already constructed collector. Deliver its actual native construction here, before dependent heat offers, and retain the original later operating generator/plant-removal acceptance. No logical planning claim is promoted by a boolean shortcut.
+
+{{HARD}}
+- [X] 1B.1 Register the1980 native Vent Collector through canonical industry/tile definitions, with its frozen3x3 footprint, actual Surface-deliverable construction inputs and exclusive Deep capability. Generic production/automatic completion cannot create heat or construction for free.
+- [X] 1B.2 Fund/build and complete the collector through the actual native industry/stock owner with the full180,000 capital and296 cash-driven work ticks. Revalidate/consume its cold planning reservation atomically; missing stock/cash/date/footprint or interrupted construction remains recoverable and produces no heat.
+- [X] 1B.3 Persist and expose actual collector identity/source/owner/construction state, with native company/removal/reset hooks and original natural capacity preserved. Operational readiness must inspect actual completed native construction before a heat allocator can publish/use its source.
+- [X] 1B.4 Verify actual native stock/work/capital admission, shortage/refusal/retry, save/load and lifecycle, retaining clearly labelled boundary fixtures. No collector or first plant requires geothermal electricity; actual transported bootstrap retains master10.6.
+
+1B closure,2026-10-08: canonical1980 Deep collector IIDS/TIDS restores through the normal content loader and refuses altered/foreign/capacity/input definitions before writes. The ordinary synchronized funding command revalidates/consumes the original cold claim and settles180,000 once; that prepaid bill covers296 construction labour ticks, without an additional unfrozen work fee or electricity dependency. Actual Industry stocks/history receive preciselySTEL8 RFMT4 ELEC2; shortage retains arrived stock, and one whole receipt plus once-per-tick work completes all9 native cells. Generic tile growth, arrival conversion and random closure cannot complete/destroy it. Actual stock-aware demolition, company takeover/abandonment and reset preserve the original natural field and cavity. Independent389 GCBH/GCBD, feature16384 and canonical construction digest resolve actual native IDs/floor/stock/work/receipt/cold source/company after load; copied preview uses this file's native INDY IDs, cold rows and companies. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-j-collector-final-checks-1.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-j-collector-optimized-checks.log`) focused collector/affected-industry boundaries pass8,420 assertions/29 cases; both targets build. [Actual389 files] (historical reference: `../../../../logs/r2mlvs3mp-z-j-collector-native-checks-1.log`) prove exact funded/shortage/partial/completed reload,8 corrupt preview refusals and [ordinary completed reload/resave] (historical reference: `../../../../logs/r2mlvs3mp-z-j-collector-normal-loader.log`), preserving the retained388 input hash and original natural/electrical bytes. Boundary fixtures explicitly supply excavated floor/material delivery; actual paid Surface procurement/driven construction bootstrap remains master10.6. **Group2 is current; no thermal allocator or generator/export behavior is claimed.**
+
+### Local Mandatory Reading - Native shared heat identities and accounting
+
+_Applies to Group2B._
+
+Read Global/AD-16, frozen [Group15 utility ownership](r2mlvs1-f-utility-and-transfer-contracts.md#group-15---one-conserved-utility-ledger), existing `UtilityEnergyDomain`/typedIDs and `UtilityHeatUse`, and actual `utility_power.h/.cpp` registration/publication/allocation/grant mutation/rotation/lifecycle/validation. Read its concrete `utility_power_sl.cpp` family, independent preview, native electrical/tube fixtures only as affected. One shared native owner allocates typed IDs and retains Heat/Electricity balances separately; Plan17 owns actual native source readiness, thermal network and whole physical consumers. Never cast GeothermalSiteID into a shared utility identity, manufacture a dummy electrical grant or copy heat energy into another private ledger. Existing electrical/mirror/export/effect APIs must refuse heat, while old valid electrical saves/carries/grants remain playable and unchanged. Only this native domain producer is active; collector source publication/heat routing remains Groups2-4.
+
+Context has compacted 1 times while executing this group.
+
+### Group 2B - Supply the missing shared native heat domain
+
+Scheduling repair2026-10-08: pure frozen `UtilityPowerAccount` already names Heat, but actual native `RegisterUtilityPowerProducer`/consumer and saved validation admit Electricity only. Supply that shared producer before Group2 creates typed actual source offers/requests; no feature-local utility ID/energy registry substitutes for it.
+
+{{HARD}}
+- [X] 2B.1 Extend the shared native owner with actual Heat producer/consumer identities and immutable direct-recipe/generator roles, typed publication/allocation/settlement and strict domain separation. Preserve canonical ID/capacity/once-only interval/integer carry policy and electrical API refusals.
+- [X] 2B.2 Persist authoritative domain/role/heat allocation/accounting in its existing utility family with an explicit new save boundary and independent preview; actual company/reset/source-loss hooks retain consumed quantities and retire only unused rights. Genuine pre-boundary electrical saves remain valid, with no implicit heat participant.
+- [X] 2B.3 Run focused mixed-domain conservation/refusal/interval/carry/atomic settlement and native saved domain/role/legacy/corruption cases, with affected electrical/tube checks only as justified. Publish the actual shared handoff before Group2 source publication, retaining transported/native generator proof at10.6.
+
+2B closure,2026-10-08: `utility_power.h/.cpp` issues Heat and Electricity identities through the same canonical native owner, with immutable direct-recipe/generator roles, separate once-only phases and typed publication/allocation/use/release. Stable ConsumerID allocation, integer source fractions, atomic whole-owner settlement, consumed history and actual company takeover/removal retain their original authority. Electrical publication/effects/export and thermal consumers refuse cross-domain substitution; no second energy registry exists. Explicit390 UPLD domain/revision6 UPLH phase bits and metadata32768 validate actual roles/domain/eligibility independently in copied preview; genuine389 electrical participants acquire no implicit heat. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-k-heat-reference-checks-2.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-k-heat-optimized-checks.log`) focused accounting/refusal/carry/lifecycle cases each pass1,247 assertions/23 cases. Affected tube power/native movement/recovery passes10,089 assertions/23 cases in [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-k-heat-affected-tube-debug-checks.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-k-heat-affected-tube-optimized-checks.log`). [Native390 migration/reservation/expense/reload] (historical reference: `../../../../logs/r2mlvs3mp-z-k-heat-native-checks-1.log`) and ordinary game resave preserve the original389 file hash, natural/collector/cold/native/tube chunks and decoded electrical lineage; six intentionally malformed copies refuse preview without changing the live ledger. The physical collector-to-source association, tick scheduling, connected heat links and actual generator remain their upcoming groups. [Checkpoint and shared-domain handoff](r2mlvs3mp-z-l-demo-checkpoint.md) publish the exact APIs and demo limits. **Group2 is current; master10.3 remains unchecked.**
+
+### Local Mandatory Reading - Bounded thermal intervals and shared heat
+
+_Applies to Groups2-3; supplements the Vent sites, heat and utilities Area._
+
+Read Global/AD-16, this executing group and the frozen heat/interval/ID ownership paragraphs in [utility contracts](r2mlvs1-f-utility-and-transfer-contracts.md#group-15---one-conserved-utility-ledger), plus `multilayer_utility.h/.cpp` interval integration/thermal proposal contracts and focused tests. Verify actual `UtilityConsumerID`/producer/consumer registration and domains in `utility_power.h/.cpp` before binding any thermal participant; declarations/pure helpers are not a runtime identity issuer. Read `geothermal_collector.h` source readiness and actual original cold-source/native machinery references, geology's immutable vent rate and canonical tick/save owners. Cold claims, cancelled/unfinished/abandoned machinery and repeated interval queries cannot publish usable heat. The one common utility owner retains Heat and Electricity accounting in separate domains; geothermal owns actual source availability/thermal routing and whole physical consumers, with no copied energy ledger. Requests use actual shared utility identities, never a cast GeothermalSiteID or another private energy registry. Real physical link/connected-path construction belongs to Group4; do not publish proximity eligibility or free link capacity before that owner exists. Read later export/riser/plant internals only at their actual groups.
+
+### Group 2 - Produce one bounded thermal offer per interval
+
+Resumed2026-10-08 after actual collector1B: implement source intervals and separately typed requests before allocation. Earlier GP-TG finalization dispositions are historical; pending tasks below are active in the master queue.
+
+{{HARD}}
+- [X] 2.1 Convert the vent sustainable rate into an integer interval heat offer with one saved source remainder/epoch. Repeated update/query calls cannot create a second offer for the same interval.
+- [X] 2.2 Define consumer requests separately for generators and direct-heat recipes, with owner, connected endpoint, needed quantity and priority policy from the profile.
+- [X] 2.3 Specify allocation versus actual use, unused-grant release and closed-interval accounting. Save authoritative grants/cursor/remainders; do not infer consumed heat from an animation or a rebuilt graph.
+
+Group2 closure,2026-10-08: actual completed machinery publishes the immutable vent rate through one shared native Heat meter, with saved epoch/millijoule carry and once-only publication. Pure typed generator/direct requests retain actual company/shared identity/Deep port/feasible quantity and stable ConsumerID priority; they never create proximity connectivity. The existing native pre-vehicle driver rotates both domains, including collector-only worlds, curtails unused offers and respects pause/date waits. Native removal expires only unused rights and rebuilding obtains a new meter without reviving prior grants or use. Explicit391 GCBD/revision2 GCBH stores only the shared reference; source/grants/carry/history remain in UPLH/UPLD. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-n-thermal-debug-checks-1.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-n-thermal-optimized-checks.log`) focused source/receipt/request/carry/reload/refusal boundaries each pass1,971 assertions/21 cases, and affected capsule power/movement/recovery each pass10,089/23. [Real files] (historical reference: `../../../../logs/r2mlvs3mp-z-n-thermal-native-checks-1.log`) prove genuine389/390 migration, actual association/reservation/whole expense, exact reload/next tick, six malformed previews and ordinary executable resave; original inputs/startup are preserved. Both configurations build. [Handoff and continuation](r2mlvs3mp-z-n-thermal-interval-notes.md) distinguish accounting-only role participants from physical links/operating generators. **Group3B is current before Group3; master10.3 remains unchecked.**
+
+### Local Mandatory Reading - Actual native utility paths before allocation
+
+_Applies to Group3B; supplements the Vent sites, heat and utilities Area._
+
+Read Global/AD-16, frozen Group15 utility identity/domain/priority and Group19 construction/bootstrap terms, plus the actual Group2 source/request/391 handoff. Inspect shared `utility_power.h/.cpp` link identity issuance and validation before extending it: its current `UtilityPowerLink` is a commissioned inter-layer electrical route, and cannot stand in for a Deep heat path. Any needed utility ID is issued by that owner, never a cast site ID or feature-local energy registry. Read only actual command traits, native excavation/occupied-tile/industry-port/road/rail/tube coexistence guards, source/company/world hooks and the feature-owned save/preview entry points. Geometry/topology caches may be rebuilt; installed paid path/identity/capacity/owner must survive real files. Freeze missing per-link tuning in its canonical utility/profile owner before commands consume it; first collector/plant/riser capital/input terms retain their original owners. Do not preload generator/export internals. Physical path preparation creates no source energy or consumer grant.
+
+### Group 3B - Supply installed Deep utility paths before allocation
+
+Scheduling repair,2026-10-08: original Group3 presumed eligible connected paths, while original Group4 built them later. Source intervals and typed requests now exist, but no `GeothermalUtilityLink` or native link command exists. Deliver the physical producer here before allocating heat; Group4's original tasks remain unchecked until construction, caches and its actual live-grant removal/reconnection cases all pass.
+
+{{HARD}}
+- [X] 3B.1 Define installed layer-local Heat/Electricity path ownership, canonical per-link capacity/cost and explicit native collector/future-consumer ports. Publish checked preparation over fully excavated Deep footprints, declaring road/rail/tube coexistence without changing their packed metadata or protected retreat. Resolve required typed link identity through the existing shared issuer; no source/consumer or energy registry is copied.
+- [X] 3B.2 Implement actual synchronized build/remove commands and bounded installed-path records, with full date/company/funds/occupied/endpoint admission before mutation. Save their physical identities, capacities and geometry through an explicit feature boundary and independent preview; genuine older absence supplies no implicit connection.
+- [X] 3B.3 Publish deterministic bounded connected-path/capacity queries and topology revisions from committed construction/removal/company/world changes. Traverse active installed links in stable order; no per-tick rock-plane scan, catchment eligibility or heat edge across layers. Derived caches never own energy or grants.
+- [X] 3B.4 Verify real construction/refusal/coexistence/source-port/ownership, split/reconnect and native save/preview/legacy cases in focused bursts. Publish the usable producer for Group3. Original Group4's live uncommitted-grant invalidation/consumed-history rows return after Group3; no operating generator, free link capacity or numerical-only connected-loop claim is made here.
+
+3B closure,2026-10-08: actual synchronized build/remove commands charge1,000/250 per installed cell through the ordinary kernel, preserving every native road/rail/tube field and refusing unsupported floors/ports, foreign ownership, occupancy, protected support and incompatible building overbuild. Shared link IDs retain separate Heat/Electricity local geometry/capacity/control and committed topology, with no new energy registry. Stable bounded path queries use actual installed endpoints; lifecycle/reset/load retain nonreused history and derived-only caches. Explicit392 revision7 UPLH/UPLD plus metadata65536 preserve genuine391 absence and validate independent copied geometry/domain/owner/rate/revision before full native port acceptance. Debug path checks pass1,041 assertions/nine cases; affected source/ledger/capsule checks pass12,060/44 and construction checks1,287/18. Optimized passes the combined14,388/71. [Final native suite] (historical reference: `../../../../logs/r2mlvs3mp-z-o-utility-path-native-checks-3.log`) proves actual paid five-cell construction, source port, split/repaired identity, exact reload, seven malformed previews and ordinary resave, preserving original391 input/startup and all original source/meter/stock rows. Both builds pass. [Handoff and continuation](r2mlvs3mp-z-o-utility-path-notes.md) retain actual live-grant/operating plant limits. **Group3 is current; original Group4 and master10.3 remain unchecked.**
+
+### Local Mandatory Reading - Connected allocation over installed native paths
+
+_Applies to Groups3-4; supplements the Vent sites, heat and utilities Area._
+
+Read Global/AD-16, Group2 source/request/391 handoff and the completed Group3B installed-path public APIs/evidence. Read the frozen Group15 stable ConsumerID policy and actual shared heat allocation/whole consume/release/rotation/save owner. Validate every grant against current operational source, real installed path and residual capacity; save authoritative route rights only where rebuilding a cache would lose them. Actual whole consumers prepare feasible input/output/auxiliary requirements before requesting heat. Topology changes revoke only unused rights, preserve consumed history and permit bounded deterministic replan; coordinates and a transient request never prove a path. Read generator/export internals only at their later groups.
+
+Context has compacted 1 times while executing this group.
+
+### Group 3 - Allocate shared heat through explicit connected capacity
+
+Resumed2026-10-08 after actual bounded source intervals: connected allocation follows the inserted actual path producer3B, then Group4 returns for live topology integration. Numerical declarations or endpoint proximity supply no installed path. The earlier GP-TG finalization disposition is historical. No original task below is complete until its actual connected capacity and whole shared reservations are verified.
+
+{{HARD}}
+- [X] 3.1 Build a deterministic allocation pass over eligible connected claims in stable priority/ID order, using a saved fair cursor only if the frozen policy requires it.
+- [X] 3.2 Bound every grant by the vent residual offer, request and explicit link/path residual capacity. Choose deterministic bounded routing on topology change; an optimal flow solver is unnecessary for the first release.
+- [X] 3.3 Reserve grants for generator and direct-processing participants from the same source budget. Prepare input/output constraints before requesting useful heat, so a full factory cannot consume heat it cannot use.
+- [X] 3.4 Test two generators plus a direct consumer, zero supply, partial requests and disconnected claims. Sum committed use plus unconsumed reservations never exceeds the interval offer.
+
+Group3 closure,2026-10-09: actual completed source/installed port/path admission, common interval rate limits, stable ConsumerID/ProducerID priority and whole participant demand admission feed the sole native Heat reservation owner. Source/request/shared-cell residuals bound every grant; saturated cells permit bounded deterministic installed alternatives. Complete owner/role/commit refusal preserves cash and energy;393 GHTH/GHTD stores only exact original physical references, with independent copied preview and atomic native acceptance. [Final Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-p-heat-allocation-final-debug-checks.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-p-heat-allocation-optimized-checks.log`) active/affected source/path/ledger/capsule checks each pass13,614 assertions/51 cases; both game/test configurations build. [Native suite3] (historical reference: `../../../../logs/r2mlvs3mp-z-p-heat-allocation-native-checks-3.log`) proves genuine392 absence, connected grants, actual whole expense use, byte-exact reservation/use reload, native next-tick expiry, seven malformed previews and ordinary resave, preserving original source/stock/path/startup/input bytes. [Handoff](r2mlvs3mp-z-p-heat-allocation-notes.md) distinguishes tested actual whole company expense participants from operating plant output at10.6. **Original Group4 is current for immediate unused-right topology invalidation and actual repaired recovery; master10.3 remains unchecked.**
+
+### Group 4 - Build Deep utility links and invalidate connectivity
+
+Resumed2026-10-09 after verified connected allocation3: the earlier finalization exception is historical. Actual paid construction/cache geometry has3B evidence; finish live unused-right invalidation, consumed-history retention and repaired recovery below before marking this original group complete.
+
+{{HARD}}
+- [X] 4.1 Add heat/electric utility link commands on fully excavated Deep footprints with owner/capacity and declared coexistence rules for road/rail/tube tiles; preserve their packed tile metadata.
+- [X] 4.2 Keep heat edges layer-local. A broken link yields a recoverable shortage or an explicitly paid backup source; catchment/coordinate proximity never supplies heat.
+- [X] 4.3 Build/rebuild derived connected-component/path caches on committed topology changes, with stable traversal and bounded work. Do not scan all rock-plane tiles per tick.
+- [X] 4.4 Test occupied/invalid construction, link removal during an uncommitted grant and reconnection; retain consumed energy and revoke/replan only unused reservations through the allocator.
+
+Group4 closure,2026-10-09: actual paid commands/coexistence and layer-local paths retain3B's native evidence. The shared owner now immediately expires only unused exact-path slices during Heat-cell/company loss, preserving consumed history and invalidating stale whole-use proposals. Fresh paid repair cannot revive old rights; next-interval allocation uses the new cell identity. Stable bounded component/canonical-path caches rebuild on committed topology and isolate residual exclusions. Native load settles older393 lost-path unused rights once, without regenerating energy or changing healthy files. [Debug] (historical reference: `../../../../logs/r2mlvs3mp-z-q-heat-topology-final-debug-checks.log`) and [optimized] (historical reference: `../../../../logs/r2mlvs3mp-z-q-heat-topology-optimized-checks.log`) each pass14,032 assertions/57 focused cases; both game/test targets build. [Native suite2] (historical reference: `../../../../logs/r2mlvs3mp-z-q-heat-topology-native-checks-2.log`) proves actual unused/part-used removal, exact reload, paid fresh repair/replan/use, legacy settlement/idempotence, seven malformed previews and ordinary resave. [Handoff](r2mlvs3mp-z-q-heat-topology-notes.md) preserves exact scope and evidence. **The user initially stopped after this group for TBM feedback, then explicitly resumed the master at Group5. Its remaining tasks stay unchecked.**
+
+### Local Mandatory Reading - Electrical risers and metered transfer
+
+_Applies to Groups5B-5; supplements the Vent sites, heat and utilities Area._
+
+Read Global/AD-16 and the frozen Group19 riser construction/rate contract in `r2mlvs1-f-utility-and-transfer-contracts.md`. Read actual `UtilityPowerLink`/`RegisterUtilityPowerLink`, portal incarnation validation, `PrepareUtilityMutation(TransferLayer)`, `CommitUtilityMutation` and their source-share/save owners. Inspect commissioned two-end portal state and paid collector construction participants only to provide actual riser construction. Reuse native local electrical paths from `geothermal_utility.h`; no Heat may cross a layer and imported electrical grants cannot be regenerated. Check existing transfer tests and native393 transport before extending them. Actual operating generator/transported first-build proof remains10.6; a numerical link registration is not a completed paid riser.
+
+### Group 5B - Establish actual riser construction before electrical export
+
+Inserted2026-10-09 before original Group5: `RegisterUtilityPowerLink` supplies metering and commissioned-pair checks, but its public contract explicitly leaves physical funding to the feature builder. Original5.1 cannot close from that numerical registration. Develop this prerequisite in order, preserving the original export tasks below.
+
+{{HARD}}
+- [X] 5B.1 Publish/test pure complete riser admission: actual owner at both Connected housings, saved incarnation,1980 gate, source-side2x2 excavated machinery/loading space and real cardinal portal attachment. Publish the already frozen200-kW rate beside its construction terms; preview creates no building, materials, capacity or utility identity.
+- [ ] 5B.2 Add actual native riser machinery/funding through the existing industry/command owners. Charge120,000 once, retain real delivered STEL4/RFMT4/ELEC2/BATY2 stock and require296 once-only construction ticks before activating electrical transfer. Preserve ordinary portal traffic and both endpoint tiles.
+- [ ] 5B.3 Integrate company/removal/sealing/rebuild ownership and native cargo delivery. Unfinished/abandoned/removed machinery cannot activate a link; stored stock and prior consumed energy retain their existing owners.
+- [ ] 5B.4 Version/save actual construction, material receipt, complete machinery and original portal incarnation. Verify independent copied preview, malformed refusal, exact native reload and ordinary executable loading before completing the prerequisite.
+
+5B.1 closure,2026-10-09: `geothermal_riser.h/.cpp` publishes pure two-endpoint/full-floor admission, with the frozen200-kW rate added to the content-owned construction terms. Actual native accepted portal geometry covers Deep/Underground rail, Underground/Surface relay and direct Deep/Surface elevator; direct access leaves intermediate geology solid. Both endpoint owners, calendar, Connected incarnation, complete excavated empty floor/access and cardinal attachment must agree. Optimized game/test targets build, and [focused admission/shared-ledger/frozen-contract checks] (historical reference: `../../../../logs/r2mlvs3mp-z-r-riser-admission-final-checks.log`) pass1,592 assertions/nine cases. [Notes](r2mlvs3mp-z-r-riser-notes.md) distinguish admission from still-pending funding, delivered materials, persistence and export. **5B.2 is current; original5.1/master10.3 remain unchecked.**
+
+### Group 5 - Export metered electricity through commissioned portals
+
+Resumed2026-10-09 on the user's explicit return to the master. The earlier GP-TG finalization exception is historical. Verify the existing shared transfer producer and supply actual paid riser construction before claiming the exported runtime behavior below.
+
+{{HARD}}
+- [ ] 5.1 Consume r2mlvs12 `Useful Power Handoff` and r2mlvs3 commissioned pair state. Validate both endpoint owners, date, excavation and electrical riser capacity before constructing an inter-layer link.
+- [ ] 5.2 Route electricity through explicit paid riser edges, including any required intermediate layer links. Heat itself cannot cross a portal; a direct road elevator still leaves unrelated Underground terrain untouched.
+- [ ] 5.3 Implement `ExportGeothermalPower` as a movement of metered electrical allocation with source identity/epoch, not a second generation event. Debit source allocation and publish destination availability once.
+- [ ] 5.4 Test export bottleneck, closed/removed portal, full destination demand and retry/reload. Reject a pre-1980 or uncommissioned connection without partial endpoint mutation.
+
+### Group 6 - Prove the first plant and riser bootstrap requirements
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{MEDIUM}}
+- [ ] 6.1 List the collector/powerhouse/riser cash and construction inputs from r2mlvs1, with a Surface producer and conventional delivery vehicle for each; no Deep batteries/geothermal output/tube-only supply is allowed.
+- [ ] 6.2 Work a 1980 commissioning ledger covering rail-origin excavation, spoil removal, plant/utility footprint and input delivery through valid rail/elevator routes.
+- [ ] 6.3 Specify the first-plant acceptance fixture for the later completed definitions. Check the dependency graph here without claiming an operating generator before the next area builds it.
+- [ ] 6.4 Retain the independent paid-grid tube service from r2mlvs12/16. Later geothermal substitution changes its source connection, not the ability to build the first tube.
+
+### Group 7 - Publish heat allocation and electrical export APIs
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{HARD}}
+- [ ] 7.1 Publish `src/geothermal.h` exports `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`, with source/claim IDs, grant epoch, units and cancellation ownership.
+- [ ] 7.2 Document the public prepare/commit participant used by r2mlvs6 recipe batches and the common utility ledger. Profile1 owns definitions, geology2 owns vents, this plan owns heat, and12 owns shared electricity allocation.
+- [ ] 7.3 Register source/build entries and publish focused shared-capacity/export fixtures. Actual plant recipes/functions are implemented next; API declarations alone do not prove them.
+
+### Area Mandatory Reading - Plants and future production
+
+_Applies to Groups 8-14._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/geothermal.h`: `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 8-14. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/industrytype.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/dafd3af073e65076-industrytype.h) | 109-152 | `IndustrySpec` owns layouts, climate/availability, recipes and callbacks; layer capabilities must be explicit and not inferred from fallback graphics. |
+| [src/industry.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/775b4d3c972f76c6-industry.h) | 75-106 | `ProducedCargo`, `AcceptedCargo`, `ProducedCargoes`, `AcceptedCargoes` expose bounded inventory and economy-time history; conserve materials and avoid narrow-counter overflow. |
+| [src/industry_cmd.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/5316863e999d8f04-industry_cmd.cpp) | 1152-1240 | `ProduceIndustryGoodsHelper` and `ProduceIndustryGoods` expose complete rate/callback production paths; augment output once before authoritative monthly accounting. |
+| `src/geothermal.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) Groups 1-7, ending with Group 7's public-contract task, publish `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/multilayer_industry.h` (planned public contract; link after implementation) | Live definitions; no fixed range | r2mlvs6 `Publish layer-industry and recipe boundaries` declares `PrepareLayerRecipeBatch`/`CommitLayerRecipeBatch`; its production groups deliver the tested all-input inventory/utility participant contract. Geothermal extends that participant instead of duplicating recipes. |
+| `src/utility_power.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs12](r2mlvs12-solar-farms-mirrors-and-eti.md) `Useful Power Handoff`, produced by its native-ledger, atomic-mutation and consumer-effect groups, supplies `PublishUtilityGeneration`, `AllocateUtilityPower`, `GetUtilityAllocation`, `UtilityGrantID`, `UtilityMutationKind`, `PrepareUtilityMutation`, `CommitUtilityMutation`. Verify its allocation, consume/release/layer-transfer, effect and save/retry fixtures before dependent power mutations; no private account writes or duplicate grid. |
+| `src/transport_tube.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs16](r2mlvs16-underground-transport-tubes.md) `Publish tube construction and fleet contracts` supplies `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`; verify its powered movement tests only before the tube-consuming integration. |
+| [src/industry_cmd.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/5316863e999d8f04-industry_cmd.cpp) | 150-215 | Complete industry destructor clears tiles/references; settle geothermal grants and inventory before generic removal. |
+| [src/economy.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/8e05f708c74fe386-economy.cpp) | 1134-1167 | Complete `TriggerIndustryProduction` otherwise consumes inputs independently; exclude geothermal recipes from that duplicate production path. |
+| [src/industry_cmd.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/5316863e999d8f04-industry_cmd.cpp) | 525-554 | Complete `TransportIndustryGoods` may remove unsent stock; reuse r2mlvs6 finite-output dispatch for geothermal products. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Recipe/heat commit sketch (proposed).** The preceding allocator supplies grants; the shared industry batch executor owns all-input/output arithmetic.
+
+```text
+batch = prepare recipe against actual transported stock and every output capacity
+grant = reserve heat for the feasible batch at the current vent epoch
+if batch and grant remain valid:
+    commit inputs + heat use + output + saved milestone exactly once
+else:
+    release only unconsumed grant; retain stock/progress according to contract
+```
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Verify r2mlvs6 `PrepareLayerRecipeBatch`/`CommitLayerRecipeBatch` tests before adding direct-processing mutations. A missing executor stops those plants; pure heat/generator tests may continue. The first generator fixture runs only after its definition/conversion is implemented in this area.
+
+**Scoped tube gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Supplying live tube consumers needs the r2mlvs16 power-demand/movement contract and tests. If missing, stop only that integration; generators, direct-heat recipes and conventional freight remain independently testable. Do not emulate capsule demand as completed tube gameplay.
+
+### Group 8 - Implement the two dated geothermal generators
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{HARD}}
+- [ ] 8.1 Register the 1980 Vent-Tap Powerhouse with Surface-supplied construction inputs, bounded heat request, electrical efficiency, service cost and output capacity.
+- [ ] 8.2 Implement checked heat-to-electric conversion with saved remainder and explicit losses. Commit heat use and electrical generation once through `PublishUtilityGeneration`; output congestion reduces/pauses the prepared conversion.
+- [ ] 8.3 Register the 2000 Magma-Loop variant with its own footprint/capital/service/efficiency values on the same conversion implementation.
+- [ ] 8.4 Run the previously specified 1980 first-collector/plant/riser bootstrap using actual Surface supply and compare one interval heat/useful power ledger for both models at valid dates.
+
+### Group 9 - Bind direct heat to the shared batch executor
+
+{{HARD}}
+- [ ] 9.1 Consume r2mlvs6 `PrepareLayerRecipeBatch`/`CommitLayerRecipeBatch` and the previous heat API. Implement a geothermal inventory/utility participant, reusing the shared all-input algorithm.
+- [ ] 9.2 Prepare all transported inputs/output headroom before reserving heat; revalidate the grant epoch/claim before commit. Commit inputs, heat use, output and progress once or retain them unchanged.
+- [ ] 9.3 Persist recipe choice/version, reserved versus consumed quantities and work/conversion remainders. Test retry, missing one input, full one output and lost heat after preparation.
+- [ ] 9.4 Record product provenance through the canonical source contract and consumed-input ledger. A direct-heat benefit must not also receive an unrecorded electricity subsidy.
+
+### Group 10 - Implement the 2010 Geothermal Smelter
+
+{{MEDIUM}}
+- [ ] 10.1 Register the frozen Iron/Copper/Nickel alternative recipes producing Steel/Refined Metals, with explicit saved recipe selection and delivered input forms.
+- [ ] 10.2 Bind the smelter to a connected heat claim, shared batch participant and bounded product inventory; transport ore in and products out by existing freight.
+- [ ] 10.3 Test before/on 2010, one complete recipe of each supported alternative and a starved/full-buffer case. Compare with the earlier Surface receiver route.
+
+### Group 11 - Implement the 2030 Lithothermal Battery Works
+
+{{MEDIUM}}
+- [ ] 11.1 Register the Lithium/Cobalt/Chemicals plus heat recipe using existing Batteries cargo, construction/service inputs and canonical date.
+- [ ] 11.2 Run a delivered-input batch through the same participant; test missing Chemicals, insufficient heat and full Batteries output without consuming the other inputs.
+- [ ] 11.3 Verify before/on 2030 and useful downstream battery transport. The original Surface battery plant remains a valid earlier source.
+
+### Group 12 - Implement the 2045 Mantle Forge
+
+{{MEDIUM}}
+- [ ] 12.1 Register the Refined Metals/Electronics plus heat recipes for Station Components/Robotics Parts, with explicit alternative/product policy and no new duplicate cargo meanings.
+- [ ] 12.2 Run one bounded batch and transport its product to a real Surface/orbital consumer; test heat competition with a generator and exhausted output space.
+- [ ] 12.3 Verify before/on 2045 and demonstrate these supplies improve later manufacture without becoming a first-station/robot dependency.
+
+### Group 13 - Plants and future production
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{MEDIUM}}
+- [ ] 13.1 Keep input/output cargo accounting compatible with r2mlvs6 mines and Surface chains. One plant must not consume both a full heat allocation and an unrecorded electricity subsidy for the same production benefit.
+- [ ] 13.2 Enforce availability at purchase/funding, commissioning, script commands, clone/conversion and production entry points. Before 1980, Deep operations remain locked; factories introduced later cannot be made early by reusing an older plant ID.
+- [ ] 13.3 Integrate Deep electricity with facilities/tubes and explicit Surface export. Native/ETI modes choose one accounting authority; report exported electricity at a Surface adapter/riser without also crediting its Deep generator as an independent Surface supply. Solar mirrors never boost geothermal output.
+
+### Group 14 - Recover plants and grants through lifecycle changes
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{HARD}}
+- [ ] 14.1 Define shutdown, link loss and full storage as saved recoverable states that retain unconsumed inputs/products. Settle/release only the current uncommitted heat/electric grant.
+- [ ] 14.2 Handle vent claim transfer, company takeover/bankruptcy and plant demolition through owner-checked public hooks before generic industry destruction. Removing a consumer never resets the natural vent.
+- [ ] 14.3 Invalidate typed target references and affected connectivity before ID reuse; compare retained inventory/grants after a plant is rebuilt on the same tile.
+- [ ] 14.4 Test one failure per lifecycle row and a combined shared-vent case so a removed claimant cannot retain its old allocation.
+
+### Area Mandatory Reading - Controls, art and acceptance
+
+_Applies to Groups 15-18._
+
+**Entry gate.** The following public contracts must exist before dependent implementation in this area: `src/geothermal.h`: `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`.
+Verify each public file/export/schema field with `rg` in the current workspace and inspect its command/field ownership. For a same-plan contract, compile its type/signature fixture or validate its artifact after the preceding producer groups. For cross-plan behavior, also run the producer's focused executable boundary test; declarations alone cannot authorize dependent mutations or runtime claims.
+If a required export is absent, stop the dependent implementation, mutation and runtime claims in Groups 15-18. Read-only characterization, source/range verification, test-case design and asset-template work that does not assume the missing behavior may continue.
+Do not bypass this gate by copying private pool/tile state, inventing local IDs or cargo registries, using a historical plan as a delivered implementation, opening user-wide content stores, substituting a second utility/accounting authority, or adding an unreviewed fallback path. Finish the named producer or revise the shared contract and its direct consumers first.
+
+**Scoped integration gates.** The following producer dependencies apply only to the named implementation/test families. Verify each required public export and its focused producer test before those integrations; absent late producers do not block already independent features.
+
+- `src/underground_gui.h` is required for the integration with the underground toolbar/controls in Group 15 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/transport_tube.h` is required for the tube-routing branch of the manufacturing supply chain; conventional freight can be tested independently in Group 15 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+- `src/solar_power.h` is required for the solar/native-ETI accounting subscenario; independent thermal-capacity/loss tests may proceed in Groups 16-17 (only the named integration/subscenario). If absent, stop only that integration/subscenario and its passing claim. Other independent code, art, persistence and tests in this area may continue.
+
+Do not emulate an absent producer with copied private state, fake inventories/energy, local IDs or a second registry/grid. A final combined closure/gallery/round-trip still waits for every required family; an independent passing case is not a pass for the missing integration.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/cargopacket.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/4b67849d158c5190-cargopacket.h) | 458-489 | `VehicleCargoList::Append`, `AgeCargo`, `Stage`, `Return`, `Unload`, `Shift` move accountable packets; exchange/descent/processing must not clone packet age or feeder shares. |
+| [src/network/network_command.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/cab07f5ceefcfdf4-network_command.cpp) | 256-288 | `NetworkExecuteLocalCommandQueue` executes agreed frame order/company authority; all jobs use deterministic simulation time. |
+| [src/network/network_server.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/6a45d374c71c770f-network_server.cpp) | 670-687 | `ServerNetworkGameSocketHandler::SendSync` compares RNG seeds, not a full gameplay checksum; validate orbital/geology/cargo ledgers in addition to a no-desync result. |
+| `src/geothermal.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs17-geothermal-energy-and-industry.md](r2mlvs17-geothermal-energy-and-industry.md) Groups 1-7, ending with Group 7's public-contract task, publish `GeothermalHeatAllocation`, `GeothermalUtilityLink`, `AllocateVentHeat`, `ExportGeothermalPower`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. |
+| `src/underground_gui.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs7-underground-construction-and-fleet.md](r2mlvs7-underground-construction-and-fleet.md) Groups 1-5, ending with Group 5's public-contract task, publish `ShowUndergroundConstructionToolbar`, `BuildUndergroundVehicleFilter`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the integration with the underground toolbar/controls in Group 15 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/solar_power.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) Groups 1-6, ending with Group 6's public-contract task, publish `SolarGenerationAccount`, `MirrorAssignment`, `ComputeMirrorSolarOutput`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the solar/native-ETI accounting subscenario; independent thermal-capacity/loss tests may proceed in Groups 16-17 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| `src/transport_tube.h` (planned public contract; link after implementation) | Live definitions; no fixed range | [r2mlvs16-underground-transport-tubes.md](r2mlvs16-underground-transport-tubes.md) Groups 1-8, ending with Group 8's public-contract task, publish `TubeVehicleCapability`, `TubeTerminal`, `CheckTubeConstruction`, `ComputeTubePowerDemand`. These exports/schema fields are authoritative for this area. Same-plan consumers follow those earlier groups; cross-plan consumers verify the producer's required implementation/tests as well. Proposed names alone do not prove delivery. Read this producer for the tube-routing branch of the manufacturing supply chain; conventional freight can be tested independently in Group 15 (only the named integration/subscenario); missing it blocks only that integration, not independent work. |
+| [Sprite Contract and delivery owner](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md#public-handoff-contract) | Live definitions; no fixed range | `Sprite Contract Handoff` defines manifest fields `asset_id`, `consumer`, `directions`, `frames`, `anchor`, `source`; the matching authoring/conversion/runtime groups deliver actual assets. Verify the requested family and packed loading fixture before graphics integration; template/manifest publication alone is not final art. |
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**. This applies only to the producer contracts named in this area's gate, after their listed producer groups have run. Verify their actual exports and focused tests before using the sketches below; proposed types and helper names in sketches are not evidence of delivered code.
+
+**Scoped graphics gate. ASSUMPTION: this was already built previously. If not, re-asses at runtime**. Final graphics tasks in this area require the corresponding r2mlvs13 manifest entries, delivered sprites and packed loading fixture. Verify them before binding/review; if absent, stop only those art tasks and their acceptance claims, continue independent code/state tests, and never count placeholders as finished assets.
+
+### Group 15 - Controls, art and acceptance
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{MEDIUM}}
+- [ ] 15.1 Add vent surveys and heat-capacity overlays, utility links and calendar-aware plant tools to Underground Construction. Show allocated/available heat, electric conversion, direct-heat consumption and blocked reasons.
+- [ ] 15.2 Deliver distinct vent/collector, two powerhouses, smelter, battery works, forge and utility sprites with construction/working/starved states. Smelter/furnace animation must reflect production state but never drive it.
+- [ ] 15.3 Verify every Deep rail/elevator/construction/vehicle/plant path refuses operation on 31 December 1979 and unlocks on 1 January 1980.
+- [ ] 15.4 Verify the 2000 Magma-Loop introduction boundary.
+- [ ] 15.5 Verify the 2010 smelter, 2030 battery works and 2045 Mantle Forge introduction boundaries.
+- [ ] 15.6 Repeat calendar boundary cases with varied economic time/simulation speed and explicit saved legacy/editor policies.
+- [ ] 15.7 Run mineral mine -> tube/conventional freight -> geothermal smelter -> Surface or orbital supply chain.
+- [ ] 15.8 Demonstrate a battery and Station Components/Robotics Parts chain at their later dates without cheat-supplied inputs.
+
+### Group 16 - Verify shared thermal and grid accounting
+
+{{HARD}}
+- [ ] 16.1 Connect two generators and a direct smelter to one vent and compare each requested/granted/consumed quantity against the single offer, link capacities and conversion losses.
+- [ ] 16.2 Disconnect one consumer/riser and verify predictable reassignment or unused-grant settlement at the declared epoch; no stale path or query creates extra heat.
+- [ ] 16.3 After solar integration, test that only solar receives +300% and geothermal source/export is credited once under native/ETI authority. Missing mirror implementation leaves this combined case pending, not the basic heat tests.
+
+### Group 17 - Verify saved geothermal work and hidden-layer replay
+
+Goal-authorized skip (2026-10-08, master finalization): dispatched expansion work in this group is skipped under [finalization exception GP-TG](r2mlvs3mp-z-a-finalization-ledger.md#gp-tg-tube-and-geothermal-expansion-requires-major-gap-planning). Existing delivered prefixes stay complete; unimplemented profile work remains pending. No skipped task is markedX.
+
+{{HARD}}
+- [ ] 17.1 Round-trip vent claims, partial recipe inputs, grant/conversion remainders and failed utilities at mid-action points; compare the next allocation/production step.
+- [ ] 17.2 Run matching replay/host-client state with Deep visible versus hidden and different presentation settings; compare per-source heat/electric and per-cargo inventories.
+- [ ] 17.3 Repeat the 1980 and later introduction boundaries under different economic time modes, with explicit legacy/editor policies; no local clock or old plant ID bypasses the date.
+
+### Group 18 - Controls, art and acceptance
+
+{{SIMPLE}}
+- [ ] 18.1 Record capacity/price/throughput comparisons for r2mlvs15.
+- [ ] 18.2 Record the implemented public exports, focused test commands/results and remaining runtime/art/network gaps in this plan; retain original supplied saves and repository-local evidence.
+- [ ] 18.3 Update affected architecture/handoff documentation to describe delivered behavior and reconcile the parent index only when this plan's Completion Conditions are met. Keep every unfinished task unchecked.
+
+## Consult on Demand
+
+| Trigger | File name | Start at | Expand only when | Consultation purpose |
+| --- | --- | --- | --- | --- |
+| Deep export gets credited twice or native/ETI town control conflicts | [r2mlvs12-solar-farms-mirrors-and-eti.md](r2mlvs12-solar-farms-mirrors-and-eti.md) | `Public Handoff Contract` and `ETI Feasibility Handoff` | Vent allocation and riser output ledgers are correct but Surface consumer totals/growth differ | Resolve the already selected solar/utility adapter authority; thermal generation is not mirror-eligible and cannot install a second grid owner. |
+| A required public export is absent and its owner/location is disputed | [r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | `Requirements and ownership` and `Plan Index` | The named producer confirms an intentional contract/ownership change | Find the responsible producer and reconcile its public handoff with direct consumers; the hub cannot substitute for missing implementation. |
+| Current behavior contradicts a historical subsystem description | [../../architecture/map-layers/archi-map-layers.md](../../architecture/map-layers/archi-map-layers.md) | `Invariants` and the relevant named source in `Code map` | The live symbol and executable test do not explain the difference | Locate layer addressing or lifecycle rationale. Live code/tests govern delivered behavior; this architecture page does not prove future interfaces exist. |
+
+## Planning Provenance
+
+This is not an execution reading queue. Do not preload it after context compaction. It is non-transitive; ranges record planning use, not runtime authority.
+
+| File name | Sections or Line Ranges used while planning | Planning contribution |
+| --- | --- | --- |
+| [docs/zz-reach2/architecture/initial-inventory.md](../../../../../../../zz-reach2/architecture/initial-inventory.md) | 185-220 | `Command as the only world mutation`, `Pool-indexed game objects`, `Tile map as a packed array` and `File-suffix modules` oriented command/pool/header ownership and source registration. This historical inventory is a location survey, not authority for current layer behavior. |
+| [docs/zz-reach2/architecture/@archi-ttd-level0.md](../../../../../../../../../OpenTTD3/docs/zz-reach2/architecture/@archi-ttd-level0.md) | 24-63 | `How the program fits together` and `Source and runtime boundaries` located shared simulation, data/presentation, CMake targets and subsystem handoffs used to choose the live reading sources. |
+| [docs/zz-reach2/upgrades/2026-10/r2mlvs-multilayer-vehicles-and-structures.md](r2mlvs-multilayer-vehicles-and-structures.md) | 119-140 | `Requirements and ownership` assigned this plan's feature responsibilities; it shaped the decomposition without making every sibling plan a mandatory reading dependency. |
+| [src/timer/timer_game_calendar.h](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/1c2e911d6fe35ac2-timer_game_calendar.h) | 15-39 | The inspected live boundary helped separate characterization, public-contract production, implementation and acceptance batches. It materially constrained one bounded thermal budget, explicit electricity export and later direct-heat recipes; this entry records planning influence rather than an additional reading obligation. |
+| [User planning-format instructions] (historical reference: `<C:/Users/Axonn/.codex/attachments/cd59b20a-3a96-4d54-b4bd-1e8f37639e7d/Pasted text.txt>`) | `Global Mandatory Reading`, `Area Mandatory Reading`, `Consult on Demand`, `Planning Provenance`, `Final validation` | Supplies the exact protocol, chronological difficulty batches of at most eight tasks, reading gates and validation format. |
+| [src/economy.cpp](../../../../../../../../src/tests/fixtures/cleanup/source-epochs/openttd3-75ea75718f/8e05f708c74fe386-economy.cpp) | 1134-1167 | Deeper planning pass, 2026-10-04: Legacy input conversion cannot own direct-heat recipes, so the plan consumes shared atomic recipe participants and explicit grants. |
+
+## Completion Conditions
+
+Deep opens in the proposed 1980 era; excavated geothermal sites then provide bounded useful energy. Later, visibly distinct fictional factories use direct heat and transported materials for useful products. Heat allocation, electrical export and recipes conserve resources across saves and competing consumers; no first facility requires its own future output.

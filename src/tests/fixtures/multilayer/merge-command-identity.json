@@ -1,0 +1,4364 @@
+{
+  "_documentation": "Independent command ABI expectations for m2o23-1-come-space.md Group7 and m2o23-2-come-space.md Group47; ownership: docs/zz-reach2/architecture/map-layers/archi-map-layers.md. Fixture only, never a runtime dispatch registry. Original B order IDs are uint32; canonical SurfaceSupplyOrderID is uint64.",
+  "schema": 1,
+  "source_heads": {
+    "A": "cfeff84db52f8a3753a43c2a770a6363c62b2c67",
+    "B": "75ea75718fa7d14632bf795105721df1e390f753"
+  },
+  "common_prefix_last": 203,
+  "merged_end": 223,
+  "commands": [
+    {
+      "name": "BuildRailLong",
+      "merged_value": 0,
+      "original_a": {
+        "value": 0,
+        "function": "CmdBuildRailroadTrack",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RailType railtype, Track track, bool auto_remove_signals, bool fail_on_obstacle",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 0,
+        "function": "CmdBuildRailroadTrack",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RailType railtype, Track track, bool auto_remove_signals, bool fail_on_obstacle",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RailType railtype, Track track, bool auto_remove_signals, bool fail_on_obstacle",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "RemoveRailLong",
+      "merged_value": 1,
+      "original_a": {
+        "value": 1,
+        "function": "CmdRemoveRailroadTrack",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 1,
+        "function": "CmdRemoveRailroadTrack",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, Track track",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "BuildRail",
+      "merged_value": 2,
+      "original_a": {
+        "value": 2,
+        "function": "CmdBuildSingleRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, Track track, bool auto_remove_signals",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 2,
+        "function": "CmdBuildSingleRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, Track track, bool auto_remove_signals",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, Track track, bool auto_remove_signals",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "RemoveRail",
+      "merged_value": 3,
+      "original_a": {
+        "value": 3,
+        "function": "CmdRemoveSingleRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 3,
+        "function": "CmdRemoveSingleRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "LandscapeClear",
+      "merged_value": 4,
+      "original_a": {
+        "value": 4,
+        "function": "CmdLandscapeClear",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "original_b": {
+        "value": 4,
+        "function": "CmdLandscapeClear",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile",
+      "implementation": "src/landscape.cpp"
+    },
+    {
+      "name": "BuildBridge",
+      "merged_value": 5,
+      "original_a": {
+        "value": 5,
+        "function": "CmdBuildBridge",
+        "arguments": "DoCommandFlags flags, TileIndex tile_end, TileIndex tile_start, TransportType transport_type, BridgeType bridge_type, RailType railtype, RoadType roadtype",
+        "declaration": "src/tunnelbridge_cmd.h",
+        "implementation": "src/tunnelbridge_cmd.cpp"
+      },
+      "original_b": {
+        "value": 5,
+        "function": "CmdBuildBridge",
+        "arguments": "DoCommandFlags flags, TileIndex tile_end, TileIndex tile_start, TransportType transport_type, BridgeType bridge_type, RailType railtype, RoadType roadtype",
+        "declaration": "src/tunnelbridge_cmd.h",
+        "implementation": "src/tunnelbridge_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile_end, TileIndex tile_start, TransportType transport_type, BridgeType bridge_type, RailType railtype, RoadType roadtype",
+      "implementation": "src/tunnelbridge_cmd.cpp"
+    },
+    {
+      "name": "BuildRailStation",
+      "merged_value": 6,
+      "original_a": {
+        "value": 6,
+        "function": "CmdBuildRailStation",
+        "arguments": "DoCommandFlags flags, TileIndex tile_org, RailType rt, Axis axis, uint8_t numtracks, uint8_t plat_len, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 6,
+        "function": "CmdBuildRailStation",
+        "arguments": "DoCommandFlags flags, TileIndex tile_org, RailType rt, Axis axis, uint8_t numtracks, uint8_t plat_len, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile_org, RailType rt, Axis axis, uint8_t numtracks, uint8_t plat_len, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildRailDepot",
+      "merged_value": 7,
+      "original_a": {
+        "value": 7,
+        "function": "CmdBuildTrainDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, DiagDirection dir",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 7,
+        "function": "CmdBuildTrainDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, DiagDirection dir",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, RailType railtype, DiagDirection dir",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "BuildSignal",
+      "merged_value": 8,
+      "original_a": {
+        "value": 8,
+        "function": "CmdBuildSingleSignal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track, SignalType sigtype, SignalVariant sigvar, bool convert_signal, bool skip_existing_signals, bool ctrl_pressed, SignalType cycle_start, SignalType cycle_stop, uint8_t num_dir_cycle, uint8_t signals_copy",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 8,
+        "function": "CmdBuildSingleSignal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track, SignalType sigtype, SignalVariant sigvar, bool convert_signal, bool skip_existing_signals, bool ctrl_pressed, SignalType cycle_start, SignalType cycle_stop, uint8_t num_dir_cycle, uint8_t signals_copy",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Track track, SignalType sigtype, SignalVariant sigvar, bool convert_signal, bool skip_existing_signals, bool ctrl_pressed, SignalType cycle_start, SignalType cycle_stop, uint8_t num_dir_cycle, uint8_t signals_copy",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "RemoveSignal",
+      "merged_value": 9,
+      "original_a": {
+        "value": 9,
+        "function": "CmdRemoveSingleSignal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 9,
+        "function": "CmdRemoveSingleSignal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Track track",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "TerraformLand",
+      "merged_value": 10,
+      "original_a": {
+        "value": 10,
+        "function": "CmdTerraformLand",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Slope slope, bool dir_up",
+        "declaration": "src/terraform_cmd.h",
+        "implementation": "src/terraform_cmd.cpp"
+      },
+      "original_b": {
+        "value": 10,
+        "function": "CmdTerraformLand",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Slope slope, bool dir_up",
+        "declaration": "src/terraform_cmd.h",
+        "implementation": "src/terraform_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Slope slope, bool dir_up",
+      "implementation": "src/terraform_cmd.cpp"
+    },
+    {
+      "name": "BuildObject",
+      "merged_value": 11,
+      "original_a": {
+        "value": 11,
+        "function": "CmdBuildObject",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ObjectType type, uint8_t view",
+        "declaration": "src/object_cmd.h",
+        "implementation": "src/object_cmd.cpp"
+      },
+      "original_b": {
+        "value": 11,
+        "function": "CmdBuildObject",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ObjectType type, uint8_t view",
+        "declaration": "src/object_cmd.h",
+        "implementation": "src/object_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, ObjectType type, uint8_t view",
+      "implementation": "src/object_cmd.cpp"
+    },
+    {
+      "name": "BuildObjectArea",
+      "merged_value": 12,
+      "original_a": {
+        "value": 12,
+        "function": "CmdBuildObjectArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, ObjectType type, uint8_t view, bool diagonal",
+        "declaration": "src/object_cmd.h",
+        "implementation": "src/object_cmd.cpp"
+      },
+      "original_b": {
+        "value": 12,
+        "function": "CmdBuildObjectArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, ObjectType type, uint8_t view, bool diagonal",
+        "declaration": "src/object_cmd.h",
+        "implementation": "src/object_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, ObjectType type, uint8_t view, bool diagonal",
+      "implementation": "src/object_cmd.cpp"
+    },
+    {
+      "name": "BuildTunnel",
+      "merged_value": 13,
+      "original_a": {
+        "value": 13,
+        "function": "CmdBuildTunnel",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, TransportType transport_type, RailType railtype, RoadType roadtype",
+        "declaration": "src/tunnelbridge_cmd.h",
+        "implementation": "src/tunnelbridge_cmd.cpp"
+      },
+      "original_b": {
+        "value": 13,
+        "function": "CmdBuildTunnel",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, TransportType transport_type, RailType railtype, RoadType roadtype",
+        "declaration": "src/tunnelbridge_cmd.h",
+        "implementation": "src/tunnelbridge_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start_tile, TransportType transport_type, RailType railtype, RoadType roadtype",
+      "implementation": "src/tunnelbridge_cmd.cpp"
+    },
+    {
+      "name": "BuildLayerPortal",
+      "merged_value": 14,
+      "original_a": {
+        "value": 14,
+        "function": "CmdBuildLayerPortal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TransportType transport_type, MapLayer target_layer, DiagDirection shaft_dir, RailType railtype, RoadType roadtype",
+        "declaration": "src/layer_portal_cmd.h",
+        "implementation": "src/layer_portal_cmd.cpp"
+      },
+      "original_b": {
+        "value": 14,
+        "function": "CmdBuildLayerPortal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TransportType transport_type, MapLayer target_layer, DiagDirection shaft_dir, RailType railtype, RoadType roadtype",
+        "declaration": "src/layer_portal_cmd.h",
+        "implementation": "src/layer_portal_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TransportType transport_type, MapLayer target_layer, DiagDirection shaft_dir, RailType railtype, RoadType roadtype",
+      "implementation": "src/layer_portal_cmd.cpp"
+    },
+    {
+      "name": "RemoveFromRailStation",
+      "merged_value": 15,
+      "original_a": {
+        "value": 15,
+        "function": "CmdRemoveFromRailStation",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 15,
+        "function": "CmdRemoveFromRailStation",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "ConvertRail",
+      "merged_value": 16,
+      "original_a": {
+        "value": 16,
+        "function": "CmdConvertRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RailType totype, bool diagonal",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 16,
+        "function": "CmdConvertRail",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RailType totype, bool diagonal",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RailType totype, bool diagonal",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "BuildRailWaypoint",
+      "merged_value": 17,
+      "original_a": {
+        "value": 17,
+        "function": "CmdBuildRailWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "original_b": {
+        "value": 17,
+        "function": "CmdBuildRailWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, StationClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+      "implementation": "src/waypoint_cmd.cpp"
+    },
+    {
+      "name": "RenameWaypoint",
+      "merged_value": 18,
+      "original_a": {
+        "value": 18,
+        "function": "CmdRenameWaypoint",
+        "arguments": "DoCommandFlags flags, StationID waypoint_id, const std::string &text",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "original_b": {
+        "value": 18,
+        "function": "CmdRenameWaypoint",
+        "arguments": "DoCommandFlags flags, StationID waypoint_id, const std::string &text",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID waypoint_id, const std::string &text",
+      "implementation": "src/waypoint_cmd.cpp"
+    },
+    {
+      "name": "MoveWaypointNAme",
+      "merged_value": 19,
+      "original_a": {
+        "value": 19,
+        "function": "CmdMoveWaypointName",
+        "arguments": "DoCommandFlags flags, StationID waypoint_id, TileIndex tile",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "original_b": {
+        "value": 19,
+        "function": "CmdMoveWaypointName",
+        "arguments": "DoCommandFlags flags, StationID waypoint_id, TileIndex tile",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID waypoint_id, TileIndex tile",
+      "implementation": "src/waypoint_cmd.cpp"
+    },
+    {
+      "name": "RemoveFromRailWaypoint",
+      "merged_value": 20,
+      "original_a": {
+        "value": 20,
+        "function": "CmdRemoveFromRailWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 20,
+        "function": "CmdRemoveFromRailWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start, TileIndex end, bool keep_rail",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildRoadWaypoint",
+      "merged_value": 21,
+      "original_a": {
+        "value": 21,
+        "function": "CmdBuildRoadWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "original_b": {
+        "value": 21,
+        "function": "CmdBuildRoadWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start_tile, Axis axis, uint8_t width, uint8_t height, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+      "implementation": "src/waypoint_cmd.cpp"
+    },
+    {
+      "name": "RemoveFromRoadWaypoint",
+      "merged_value": 22,
+      "original_a": {
+        "value": 22,
+        "function": "CmdRemoveFromRoadWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 22,
+        "function": "CmdRemoveFromRoadWaypoint",
+        "arguments": "DoCommandFlags flags, TileIndex start, TileIndex end",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex start, TileIndex end",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildRoadStop",
+      "merged_value": 23,
+      "original_a": {
+        "value": 23,
+        "function": "CmdBuildRoadStop",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t length, RoadStopType stop_type, bool is_drive_through, DiagDirection ddir, RoadType rt, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 23,
+        "function": "CmdBuildRoadStop",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t length, RoadStopType stop_type, bool is_drive_through, DiagDirection ddir, RoadType rt, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t length, RoadStopType stop_type, bool is_drive_through, DiagDirection ddir, RoadType rt, RoadStopClassID spec_class, uint16_t spec_index, StationID station_to_join, bool adjacent",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "RemoveRoadStop",
+      "merged_value": 24,
+      "original_a": {
+        "value": 24,
+        "function": "CmdRemoveRoadStop",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t height, RoadStopType stop_type, bool remove_road",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 24,
+        "function": "CmdRemoveRoadStop",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t height, RoadStopType stop_type, bool remove_road",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, uint8_t width, uint8_t height, RoadStopType stop_type, bool remove_road",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildRoadLong",
+      "merged_value": 25,
+      "original_a": {
+        "value": 25,
+        "function": "CmdBuildLongRoad",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, DisallowedRoadDirections drd, bool start_half, bool end_half, bool is_ai",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "original_b": {
+        "value": 25,
+        "function": "CmdBuildLongRoad",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, DisallowedRoadDirections drd, bool start_half, bool end_half, bool is_ai",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, DisallowedRoadDirections drd, bool start_half, bool end_half, bool is_ai",
+      "implementation": "src/road_cmd.cpp"
+    },
+    {
+      "name": "RemoveRoadLong",
+      "merged_value": 26,
+      "original_a": {
+        "value": 26,
+        "function": "CmdRemoveLongRoad",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, bool start_half, bool end_half",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "original_b": {
+        "value": 26,
+        "function": "CmdRemoveLongRoad",
+        "arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, bool start_half, bool end_half",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex end_tile, TileIndex start_tile, RoadType rt, Axis axis, bool start_half, bool end_half",
+      "implementation": "src/road_cmd.cpp"
+    },
+    {
+      "name": "BuildRoad",
+      "merged_value": 27,
+      "original_a": {
+        "value": 27,
+        "function": "CmdBuildRoad",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RoadBits pieces, RoadType rt, DisallowedRoadDirections toggle_drd, TownID town_id",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "original_b": {
+        "value": 27,
+        "function": "CmdBuildRoad",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RoadBits pieces, RoadType rt, DisallowedRoadDirections toggle_drd, TownID town_id",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, RoadBits pieces, RoadType rt, DisallowedRoadDirections toggle_drd, TownID town_id",
+      "implementation": "src/road_cmd.cpp"
+    },
+    {
+      "name": "BuildRoadDepot",
+      "merged_value": 28,
+      "original_a": {
+        "value": 28,
+        "function": "CmdBuildRoadDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RoadType rt, DiagDirection dir",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "original_b": {
+        "value": 28,
+        "function": "CmdBuildRoadDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, RoadType rt, DiagDirection dir",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, RoadType rt, DiagDirection dir",
+      "implementation": "src/road_cmd.cpp"
+    },
+    {
+      "name": "ConvertRoad",
+      "merged_value": 29,
+      "original_a": {
+        "value": 29,
+        "function": "CmdConvertRoad",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RoadType to_type, bool diagonal",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "original_b": {
+        "value": 29,
+        "function": "CmdConvertRoad",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RoadType to_type, bool diagonal",
+        "declaration": "src/road_cmd.h",
+        "implementation": "src/road_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex area_start, RoadType to_type, bool diagonal",
+      "implementation": "src/road_cmd.cpp"
+    },
+    {
+      "name": "BuildAirport",
+      "merged_value": 30,
+      "original_a": {
+        "value": 30,
+        "function": "CmdBuildAirport",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t airport_type, uint8_t layout, StationID station_to_join, bool allow_adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 30,
+        "function": "CmdBuildAirport",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t airport_type, uint8_t layout, StationID station_to_join, bool allow_adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, uint8_t airport_type, uint8_t layout, StationID station_to_join, bool allow_adjacent",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildDock",
+      "merged_value": 31,
+      "original_a": {
+        "value": 31,
+        "function": "CmdBuildDock",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 31,
+        "function": "CmdBuildDock",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StationID station_to_join, bool adjacent",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, StationID station_to_join, bool adjacent",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "BuildShipDepot",
+      "merged_value": 32,
+      "original_a": {
+        "value": 32,
+        "function": "CmdBuildShipDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Axis axis",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "original_b": {
+        "value": 32,
+        "function": "CmdBuildShipDepot",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Axis axis",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Axis axis",
+      "implementation": "src/water_cmd.cpp"
+    },
+    {
+      "name": "BuildBuoy",
+      "merged_value": 33,
+      "original_a": {
+        "value": 33,
+        "function": "CmdBuildBuoy",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "original_b": {
+        "value": 33,
+        "function": "CmdBuildBuoy",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/waypoint_cmd.h",
+        "implementation": "src/waypoint_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile",
+      "implementation": "src/waypoint_cmd.cpp"
+    },
+    {
+      "name": "PlantTree",
+      "merged_value": 34,
+      "original_a": {
+        "value": 34,
+        "function": "CmdPlantTree",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, uint8_t tree_to_plant, bool diagonal",
+        "declaration": "src/tree_cmd.h",
+        "implementation": "src/tree_cmd.cpp"
+      },
+      "original_b": {
+        "value": 34,
+        "function": "CmdPlantTree",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, uint8_t tree_to_plant, bool diagonal",
+        "declaration": "src/tree_cmd.h",
+        "implementation": "src/tree_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, uint8_t tree_to_plant, bool diagonal",
+      "implementation": "src/tree_cmd.cpp"
+    },
+    {
+      "name": "BuildVehicle",
+      "merged_value": 35,
+      "original_a": {
+        "value": 35,
+        "function": "CmdBuildVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, EngineID eid, bool use_free_vehicles, CargoType cargo, ClientID client_id",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 35,
+        "function": "CmdBuildVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, EngineID eid, bool use_free_vehicles, CargoType cargo, ClientID client_id",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, EngineID eid, bool use_free_vehicles, CargoType cargo, ClientID client_id",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "SellVehicle",
+      "merged_value": 36,
+      "original_a": {
+        "value": 36,
+        "function": "CmdSellVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID v_id, bool sell_chain, bool backup_order, ClientID client_id",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 36,
+        "function": "CmdSellVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID v_id, bool sell_chain, bool backup_order, ClientID client_id",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID v_id, bool sell_chain, bool backup_order, ClientID client_id",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "RefitVehicle",
+      "merged_value": 37,
+      "original_a": {
+        "value": 37,
+        "function": "CmdRefitVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, CargoType new_cargo_type, uint8_t new_subtype, bool auto_refit, bool only_this, uint8_t num_vehicles",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 37,
+        "function": "CmdRefitVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, CargoType new_cargo_type, uint8_t new_subtype, bool auto_refit, bool only_this, uint8_t num_vehicles",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, CargoType new_cargo_type, uint8_t new_subtype, bool auto_refit, bool only_this, uint8_t num_vehicles",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "SendVehicleToDepot",
+      "merged_value": 38,
+      "original_a": {
+        "value": 38,
+        "function": "CmdSendVehicleToDepot",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, DepotCommandFlags depot_cmd, const VehicleListIdentifier &vli",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 38,
+        "function": "CmdSendVehicleToDepot",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, DepotCommandFlags depot_cmd, const VehicleListIdentifier &vli",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, DepotCommandFlags depot_cmd, const VehicleListIdentifier &vli",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "SetVehicleVisibility",
+      "merged_value": 39,
+      "original_a": {
+        "value": 39,
+        "function": "CmdSetVehicleVisibility",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, bool hide",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "original_b": {
+        "value": 39,
+        "function": "CmdSetVehicleVisibility",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, bool hide",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, EngineID engine_id, bool hide",
+      "implementation": "src/engine.cpp"
+    },
+    {
+      "name": "MoveRailVehicle",
+      "merged_value": 40,
+      "original_a": {
+        "value": 40,
+        "function": "CmdMoveRailVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID src_veh, VehicleID dest_veh, bool move_chain",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "original_b": {
+        "value": 40,
+        "function": "CmdMoveRailVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID src_veh, VehicleID dest_veh, bool move_chain",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID src_veh, VehicleID dest_veh, bool move_chain",
+      "implementation": "src/train_cmd.cpp"
+    },
+    {
+      "name": "ForceTrainProceed",
+      "merged_value": 41,
+      "original_a": {
+        "value": 41,
+        "function": "CmdForceTrainProceed",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "original_b": {
+        "value": 41,
+        "function": "CmdForceTrainProceed",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id",
+      "implementation": "src/train_cmd.cpp"
+    },
+    {
+      "name": "ReverseTrainDirection",
+      "merged_value": 42,
+      "original_a": {
+        "value": 42,
+        "function": "CmdReverseTrainDirection",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool reverse_single_veh",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "original_b": {
+        "value": 42,
+        "function": "CmdReverseTrainDirection",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool reverse_single_veh",
+        "declaration": "src/train_cmd.h",
+        "implementation": "src/train_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, bool reverse_single_veh",
+      "implementation": "src/train_cmd.cpp"
+    },
+    {
+      "name": "ClearOrderBackup",
+      "merged_value": 43,
+      "original_a": {
+        "value": 43,
+        "function": "CmdClearOrderBackup",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ClientID user_id",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_backup.cpp"
+      },
+      "original_b": {
+        "value": 43,
+        "function": "CmdClearOrderBackup",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ClientID user_id",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_backup.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, ClientID user_id",
+      "implementation": "src/order_backup.cpp"
+    },
+    {
+      "name": "ModifyOrder",
+      "merged_value": 44,
+      "original_a": {
+        "value": 44,
+        "function": "CmdModifyOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, ModifyOrderFlags mof, uint16_t data",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 44,
+        "function": "CmdModifyOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, ModifyOrderFlags mof, uint16_t data",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, ModifyOrderFlags mof, uint16_t data",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "SkipToOrder",
+      "merged_value": 45,
+      "original_a": {
+        "value": 45,
+        "function": "CmdSkipToOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 45,
+        "function": "CmdSkipToOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "DeleteOrder",
+      "merged_value": 46,
+      "original_a": {
+        "value": 46,
+        "function": "CmdDeleteOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 46,
+        "function": "CmdDeleteOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, VehicleOrderID sel_ord",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "InsertOrder",
+      "merged_value": 47,
+      "original_a": {
+        "value": 47,
+        "function": "CmdInsertOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, const Order &new_order",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 47,
+        "function": "CmdInsertOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, const Order &new_order",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID sel_ord, const Order &new_order",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "ChangeServiceInterval",
+      "merged_value": 48,
+      "original_a": {
+        "value": 48,
+        "function": "CmdChangeServiceInt",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, uint16_t serv_int, bool is_custom, bool is_percent",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 48,
+        "function": "CmdChangeServiceInt",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, uint16_t serv_int, bool is_custom, bool is_percent",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, uint16_t serv_int, bool is_custom, bool is_percent",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "BuildIndustry",
+      "merged_value": 49,
+      "original_a": {
+        "value": 49,
+        "function": "CmdBuildIndustry",
+        "arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t first_layout, bool fund, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 49,
+        "function": "CmdBuildIndustry",
+        "arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t first_layout, bool fund, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t first_layout, bool fund, uint32_t seed",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "IndustrySetFlags",
+      "merged_value": 50,
+      "original_a": {
+        "value": 50,
+        "function": "CmdIndustrySetFlags",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, IndustryControlFlags ctlflags",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 50,
+        "function": "CmdIndustrySetFlags",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, IndustryControlFlags ctlflags",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID ind_id, IndustryControlFlags ctlflags",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "IndustrySetExclusivity",
+      "merged_value": 51,
+      "original_a": {
+        "value": 51,
+        "function": "CmdIndustrySetExclusivity",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, Owner company_id, bool consumer",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 51,
+        "function": "CmdIndustrySetExclusivity",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, Owner company_id, bool consumer",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID ind_id, Owner company_id, bool consumer",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "IndustrySetText",
+      "merged_value": 52,
+      "original_a": {
+        "value": 52,
+        "function": "CmdIndustrySetText",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, const EncodedString &text",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 52,
+        "function": "CmdIndustrySetText",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, const EncodedString &text",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID ind_id, const EncodedString &text",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "IndustrySetProduction",
+      "merged_value": 53,
+      "original_a": {
+        "value": 53,
+        "function": "CmdIndustrySetProduction",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, uint8_t prod_level, bool show_news, const EncodedString &text",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 53,
+        "function": "CmdIndustrySetProduction",
+        "arguments": "DoCommandFlags flags, IndustryID ind_id, uint8_t prod_level, bool show_news, const EncodedString &text",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID ind_id, uint8_t prod_level, bool show_news, const EncodedString &text",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "SetCompanyManagerFace",
+      "merged_value": 54,
+      "original_a": {
+        "value": 54,
+        "function": "CmdSetCompanyManagerFace",
+        "arguments": "DoCommandFlags flags, uint style, uint32_t bits",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 54,
+        "function": "CmdSetCompanyManagerFace",
+        "arguments": "DoCommandFlags flags, uint style, uint32_t bits",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, uint style, uint32_t bits",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "SetCompanyColour",
+      "merged_value": 55,
+      "original_a": {
+        "value": 55,
+        "function": "CmdSetCompanyColour",
+        "arguments": "DoCommandFlags flags, LiveryScheme scheme, bool primary, Colours colour",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 55,
+        "function": "CmdSetCompanyColour",
+        "arguments": "DoCommandFlags flags, LiveryScheme scheme, bool primary, Colours colour",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LiveryScheme scheme, bool primary, Colours colour",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "IncreaseLoan",
+      "merged_value": 56,
+      "original_a": {
+        "value": 56,
+        "function": "CmdIncreaseLoan",
+        "arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 56,
+        "function": "CmdIncreaseLoan",
+        "arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "DecreaseLoan",
+      "merged_value": 57,
+      "original_a": {
+        "value": 57,
+        "function": "CmdDecreaseLoan",
+        "arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 57,
+        "function": "CmdDecreaseLoan",
+        "arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LoanCommand cmd, Money amount",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "SetCompanyMaxLoan",
+      "merged_value": 58,
+      "original_a": {
+        "value": 58,
+        "function": "CmdSetCompanyMaxLoan",
+        "arguments": "DoCommandFlags flags, CompanyID company, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 58,
+        "function": "CmdSetCompanyMaxLoan",
+        "arguments": "DoCommandFlags flags, CompanyID company, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyID company, Money amount",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "WantEnginePreview",
+      "merged_value": 59,
+      "original_a": {
+        "value": 59,
+        "function": "CmdWantEnginePreview",
+        "arguments": "DoCommandFlags flags, EngineID engine_id",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "original_b": {
+        "value": 59,
+        "function": "CmdWantEnginePreview",
+        "arguments": "DoCommandFlags flags, EngineID engine_id",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, EngineID engine_id",
+      "implementation": "src/engine.cpp"
+    },
+    {
+      "name": "EngineControl",
+      "merged_value": 60,
+      "original_a": {
+        "value": 60,
+        "function": "CmdEngineCtrl",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, CompanyID company_id, bool allow",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "original_b": {
+        "value": 60,
+        "function": "CmdEngineCtrl",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, CompanyID company_id, bool allow",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, EngineID engine_id, CompanyID company_id, bool allow",
+      "implementation": "src/engine.cpp"
+    },
+    {
+      "name": "RenameVehicle",
+      "merged_value": 61,
+      "original_a": {
+        "value": 61,
+        "function": "CmdRenameVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, const std::string &text",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 61,
+        "function": "CmdRenameVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, const std::string &text",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, const std::string &text",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "RenameEngine",
+      "merged_value": 62,
+      "original_a": {
+        "value": 62,
+        "function": "CmdRenameEngine",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, const std::string &text",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "original_b": {
+        "value": 62,
+        "function": "CmdRenameEngine",
+        "arguments": "DoCommandFlags flags, EngineID engine_id, const std::string &text",
+        "declaration": "src/engine_cmd.h",
+        "implementation": "src/engine.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, EngineID engine_id, const std::string &text",
+      "implementation": "src/engine.cpp"
+    },
+    {
+      "name": "RenameCompany",
+      "merged_value": 63,
+      "original_a": {
+        "value": 63,
+        "function": "CmdRenameCompany",
+        "arguments": "DoCommandFlags flags, const std::string &text",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 63,
+        "function": "CmdRenameCompany",
+        "arguments": "DoCommandFlags flags, const std::string &text",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, const std::string &text",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "RenamePresident",
+      "merged_value": 64,
+      "original_a": {
+        "value": 64,
+        "function": "CmdRenamePresident",
+        "arguments": "DoCommandFlags flags, const std::string &text",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 64,
+        "function": "CmdRenamePresident",
+        "arguments": "DoCommandFlags flags, const std::string &text",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, const std::string &text",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "RenameStation",
+      "merged_value": 65,
+      "original_a": {
+        "value": 65,
+        "function": "CmdRenameStation",
+        "arguments": "DoCommandFlags flags, StationID station_id, const std::string &text",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 65,
+        "function": "CmdRenameStation",
+        "arguments": "DoCommandFlags flags, StationID station_id, const std::string &text",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID station_id, const std::string &text",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "MoveStationName",
+      "merged_value": 66,
+      "original_a": {
+        "value": 66,
+        "function": "CmdMoveStationName",
+        "arguments": "DoCommandFlags flags, StationID station_id, TileIndex tile",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 66,
+        "function": "CmdMoveStationName",
+        "arguments": "DoCommandFlags flags, StationID station_id, TileIndex tile",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID station_id, TileIndex tile",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "RenameDepot",
+      "merged_value": 67,
+      "original_a": {
+        "value": 67,
+        "function": "CmdRenameDepot",
+        "arguments": "DoCommandFlags flags, DepotID depot_id, const std::string &text",
+        "declaration": "src/depot_cmd.h",
+        "implementation": "src/depot_cmd.cpp"
+      },
+      "original_b": {
+        "value": 67,
+        "function": "CmdRenameDepot",
+        "arguments": "DoCommandFlags flags, DepotID depot_id, const std::string &text",
+        "declaration": "src/depot_cmd.h",
+        "implementation": "src/depot_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, DepotID depot_id, const std::string &text",
+      "implementation": "src/depot_cmd.cpp"
+    },
+    {
+      "name": "PlaceSign",
+      "merged_value": 68,
+      "original_a": {
+        "value": 68,
+        "function": "CmdPlaceSign",
+        "arguments": "DoCommandFlags flags, TileIndex tile, const std::string &text",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "original_b": {
+        "value": 68,
+        "function": "CmdPlaceSign",
+        "arguments": "DoCommandFlags flags, TileIndex tile, const std::string &text",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, const std::string &text",
+      "implementation": "src/signs_cmd.cpp"
+    },
+    {
+      "name": "RenameSign",
+      "merged_value": 69,
+      "original_a": {
+        "value": 69,
+        "function": "CmdRenameSign",
+        "arguments": "DoCommandFlags flags, SignID sign_id, const std::string &text, Colours text_colour",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "original_b": {
+        "value": 69,
+        "function": "CmdRenameSign",
+        "arguments": "DoCommandFlags flags, SignID sign_id, const std::string &text, Colours text_colour",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SignID sign_id, const std::string &text, Colours text_colour",
+      "implementation": "src/signs_cmd.cpp"
+    },
+    {
+      "name": "MoveSign",
+      "merged_value": 70,
+      "original_a": {
+        "value": 70,
+        "function": "CmdMoveSign",
+        "arguments": "DoCommandFlags flags, SignID sign_id, TileIndex tile",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "original_b": {
+        "value": 70,
+        "function": "CmdMoveSign",
+        "arguments": "DoCommandFlags flags, SignID sign_id, TileIndex tile",
+        "declaration": "src/signs_cmd.h",
+        "implementation": "src/signs_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SignID sign_id, TileIndex tile",
+      "implementation": "src/signs_cmd.cpp"
+    },
+    {
+      "name": "TurnRoadVehicle",
+      "merged_value": 71,
+      "original_a": {
+        "value": 71,
+        "function": "CmdTurnRoadVeh",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/roadveh_cmd.h",
+        "implementation": "src/roadveh_cmd.cpp"
+      },
+      "original_b": {
+        "value": 71,
+        "function": "CmdTurnRoadVeh",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/roadveh_cmd.h",
+        "implementation": "src/roadveh_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id",
+      "implementation": "src/roadveh_cmd.cpp"
+    },
+    {
+      "name": "Pause",
+      "merged_value": 72,
+      "original_a": {
+        "value": 72,
+        "function": "CmdPause",
+        "arguments": "DoCommandFlags flags, PauseMode mode, bool pause",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 72,
+        "function": "CmdPause",
+        "arguments": "DoCommandFlags flags, PauseMode mode, bool pause",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, PauseMode mode, bool pause",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "BuyCompany",
+      "merged_value": 73,
+      "original_a": {
+        "value": 73,
+        "function": "CmdBuyCompany",
+        "arguments": "DoCommandFlags flags, CompanyID target_company, bool hostile_takeover",
+        "declaration": "src/economy_cmd.h",
+        "implementation": "src/economy.cpp"
+      },
+      "original_b": {
+        "value": 73,
+        "function": "CmdBuyCompany",
+        "arguments": "DoCommandFlags flags, CompanyID target_company, bool hostile_takeover",
+        "declaration": "src/economy_cmd.h",
+        "implementation": "src/economy.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyID target_company, bool hostile_takeover",
+      "implementation": "src/economy.cpp"
+    },
+    {
+      "name": "FoundTown",
+      "merged_value": 74,
+      "original_a": {
+        "value": 74,
+        "function": "CmdFoundTown",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TownSize size, bool city, TownLayout layout, bool random_location, uint32_t townnameparts, const std::string &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 74,
+        "function": "CmdFoundTown",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TownSize size, bool city, TownLayout layout, bool random_location, uint32_t townnameparts, const std::string &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TownSize size, bool city, TownLayout layout, bool random_location, uint32_t townnameparts, const std::string &text",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "RenameTown",
+      "merged_value": 75,
+      "original_a": {
+        "value": 75,
+        "function": "CmdRenameTown",
+        "arguments": "DoCommandFlags flags, TownID town_id, const std::string &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 75,
+        "function": "CmdRenameTown",
+        "arguments": "DoCommandFlags flags, TownID town_id, const std::string &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, const std::string &text",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "TownAction",
+      "merged_value": 76,
+      "original_a": {
+        "value": 76,
+        "function": "CmdDoTownAction",
+        "arguments": "DoCommandFlags flags, TownID town_id, TownAction action",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 76,
+        "function": "CmdDoTownAction",
+        "arguments": "DoCommandFlags flags, TownID town_id, TownAction action",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, TownAction action",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "TownCargoGoal",
+      "merged_value": 77,
+      "original_a": {
+        "value": 77,
+        "function": "CmdTownCargoGoal",
+        "arguments": "DoCommandFlags flags, TownID town_id, TownAcceptanceEffect tae, uint32_t goal",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 77,
+        "function": "CmdTownCargoGoal",
+        "arguments": "DoCommandFlags flags, TownID town_id, TownAcceptanceEffect tae, uint32_t goal",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, TownAcceptanceEffect tae, uint32_t goal",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "TownGrowthRate",
+      "merged_value": 78,
+      "original_a": {
+        "value": 78,
+        "function": "CmdTownGrowthRate",
+        "arguments": "DoCommandFlags flags, TownID town_id, uint16_t growth_rate",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 78,
+        "function": "CmdTownGrowthRate",
+        "arguments": "DoCommandFlags flags, TownID town_id, uint16_t growth_rate",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, uint16_t growth_rate",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "TownRating",
+      "merged_value": 79,
+      "original_a": {
+        "value": 79,
+        "function": "CmdTownRating",
+        "arguments": "DoCommandFlags flags, TownID town_id, CompanyID company_id, int16_t rating",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 79,
+        "function": "CmdTownRating",
+        "arguments": "DoCommandFlags flags, TownID town_id, CompanyID company_id, int16_t rating",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, CompanyID company_id, int16_t rating",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "TownSetText",
+      "merged_value": 80,
+      "original_a": {
+        "value": 80,
+        "function": "CmdTownSetText",
+        "arguments": "DoCommandFlags flags, TownID town_id, const EncodedString &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 80,
+        "function": "CmdTownSetText",
+        "arguments": "DoCommandFlags flags, TownID town_id, const EncodedString &text",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, const EncodedString &text",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "ExpandTown",
+      "merged_value": 81,
+      "original_a": {
+        "value": 81,
+        "function": "CmdExpandTown",
+        "arguments": "DoCommandFlags flags, TownID town_id, uint32_t grow_amount, TownExpandModes modes",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 81,
+        "function": "CmdExpandTown",
+        "arguments": "DoCommandFlags flags, TownID town_id, uint32_t grow_amount, TownExpandModes modes",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id, uint32_t grow_amount, TownExpandModes modes",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "DeleteTown",
+      "merged_value": 82,
+      "original_a": {
+        "value": 82,
+        "function": "CmdDeleteTown",
+        "arguments": "DoCommandFlags flags, TownID town_id",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 82,
+        "function": "CmdDeleteTown",
+        "arguments": "DoCommandFlags flags, TownID town_id",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TownID town_id",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "PlaceHouse",
+      "merged_value": 83,
+      "original_a": {
+        "value": 83,
+        "function": "CmdPlaceHouse",
+        "arguments": "DoCommandFlags flags, TileIndex tile, HouseID house, bool house_protected, bool replace",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 83,
+        "function": "CmdPlaceHouse",
+        "arguments": "DoCommandFlags flags, TileIndex tile, HouseID house, bool house_protected, bool replace",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, HouseID house, bool house_protected, bool replace",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "PlaceHouseArea",
+      "merged_value": 84,
+      "original_a": {
+        "value": 84,
+        "function": "CmdPlaceHouseArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, HouseID house, bool is_protected, bool replace, bool diagonal",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "original_b": {
+        "value": 84,
+        "function": "CmdPlaceHouseArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, HouseID house, bool is_protected, bool replace, bool diagonal",
+        "declaration": "src/town_cmd.h",
+        "implementation": "src/town_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, HouseID house, bool is_protected, bool replace, bool diagonal",
+      "implementation": "src/town_cmd.cpp"
+    },
+    {
+      "name": "OrderRefit",
+      "merged_value": 85,
+      "original_a": {
+        "value": 85,
+        "function": "CmdOrderRefit",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, CargoType cargo",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 85,
+        "function": "CmdOrderRefit",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, CargoType cargo",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, CargoType cargo",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "CloneOrder",
+      "merged_value": 86,
+      "original_a": {
+        "value": 86,
+        "function": "CmdCloneOrder",
+        "arguments": "DoCommandFlags flags, CloneOptions action, VehicleID veh_dst, VehicleID veh_src",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 86,
+        "function": "CmdCloneOrder",
+        "arguments": "DoCommandFlags flags, CloneOptions action, VehicleID veh_dst, VehicleID veh_src",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CloneOptions action, VehicleID veh_dst, VehicleID veh_src",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "ClearArea",
+      "merged_value": 87,
+      "original_a": {
+        "value": 87,
+        "function": "CmdClearArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "original_b": {
+        "value": 87,
+        "function": "CmdClearArea",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal",
+      "implementation": "src/landscape.cpp"
+    },
+    {
+      "name": "MoneyCheat",
+      "merged_value": 88,
+      "original_a": {
+        "value": 88,
+        "function": "CmdMoneyCheat",
+        "arguments": "DoCommandFlags, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 88,
+        "function": "CmdMoneyCheat",
+        "arguments": "DoCommandFlags, Money amount",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags, Money amount",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "ChangeBankBalance",
+      "merged_value": 89,
+      "original_a": {
+        "value": 89,
+        "function": "CmdChangeBankBalance",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Money delta, CompanyID company, ExpensesType expenses_type",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "original_b": {
+        "value": 89,
+        "function": "CmdChangeBankBalance",
+        "arguments": "DoCommandFlags flags, TileIndex tile, Money delta, CompanyID company, ExpensesType expenses_type",
+        "declaration": "src/misc_cmd.h",
+        "implementation": "src/misc_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, Money delta, CompanyID company, ExpensesType expenses_type",
+      "implementation": "src/misc_cmd.cpp"
+    },
+    {
+      "name": "BuildCanal",
+      "merged_value": 90,
+      "original_a": {
+        "value": 90,
+        "function": "CmdBuildCanal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, WaterClass wc, bool diagonal",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "original_b": {
+        "value": 90,
+        "function": "CmdBuildCanal",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, WaterClass wc, bool diagonal",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, WaterClass wc, bool diagonal",
+      "implementation": "src/water_cmd.cpp"
+    },
+    {
+      "name": "CreateSubsidy",
+      "merged_value": 91,
+      "original_a": {
+        "value": 91,
+        "function": "CmdCreateSubsidy",
+        "arguments": "DoCommandFlags flags, CargoType cargo_type, Source src, Source dst",
+        "declaration": "src/subsidy_cmd.h",
+        "implementation": "src/subsidy.cpp"
+      },
+      "original_b": {
+        "value": 91,
+        "function": "CmdCreateSubsidy",
+        "arguments": "DoCommandFlags flags, CargoType cargo_type, Source src, Source dst",
+        "declaration": "src/subsidy_cmd.h",
+        "implementation": "src/subsidy.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CargoType cargo_type, Source src, Source dst",
+      "implementation": "src/subsidy.cpp"
+    },
+    {
+      "name": "CompanyControl",
+      "merged_value": 92,
+      "original_a": {
+        "value": 92,
+        "function": "CmdCompanyCtrl",
+        "arguments": "DoCommandFlags flags, CompanyCtrlAction cca, CompanyID company_id, CompanyRemoveReason reason, ClientID client_id",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 92,
+        "function": "CmdCompanyCtrl",
+        "arguments": "DoCommandFlags flags, CompanyCtrlAction cca, CompanyID company_id, CompanyRemoveReason reason, ClientID client_id",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyCtrlAction cca, CompanyID company_id, CompanyRemoveReason reason, ClientID client_id",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "CompanyAllowListControl",
+      "merged_value": 93,
+      "original_a": {
+        "value": 93,
+        "function": "CmdCompanyAllowListCtrl",
+        "arguments": "DoCommandFlags flags, CompanyAllowListCtrlAction action, const std::string &public_key",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 93,
+        "function": "CmdCompanyAllowListCtrl",
+        "arguments": "DoCommandFlags flags, CompanyAllowListCtrlAction action, const std::string &public_key",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyAllowListCtrlAction action, const std::string &public_key",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "CreateCustomNewsItem",
+      "merged_value": 94,
+      "original_a": {
+        "value": 94,
+        "function": "CmdCustomNewsItem",
+        "arguments": "DoCommandFlags flags, NewsType type, CompanyID company, NewsReference reference, const EncodedString &text",
+        "declaration": "src/news_cmd.h",
+        "implementation": "src/news_gui.cpp"
+      },
+      "original_b": {
+        "value": 94,
+        "function": "CmdCustomNewsItem",
+        "arguments": "DoCommandFlags flags, NewsType type, CompanyID company, NewsReference reference, const EncodedString &text",
+        "declaration": "src/news_cmd.h",
+        "implementation": "src/news_gui.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, NewsType type, CompanyID company, NewsReference reference, const EncodedString &text",
+      "implementation": "src/news_gui.cpp"
+    },
+    {
+      "name": "CreateGoal",
+      "merged_value": 95,
+      "original_a": {
+        "value": 95,
+        "function": "CmdCreateGoal",
+        "arguments": "DoCommandFlags flags, CompanyID company, GoalType type, GoalTypeID dest, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 95,
+        "function": "CmdCreateGoal",
+        "arguments": "DoCommandFlags flags, CompanyID company, GoalType type, GoalTypeID dest, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyID company, GoalType type, GoalTypeID dest, const EncodedString &text",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "RemoveGoal",
+      "merged_value": 96,
+      "original_a": {
+        "value": 96,
+        "function": "CmdRemoveGoal",
+        "arguments": "DoCommandFlags flags, GoalID goal",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 96,
+        "function": "CmdRemoveGoal",
+        "arguments": "DoCommandFlags flags, GoalID goal",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GoalID goal",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "SetGoalDestination",
+      "merged_value": 97,
+      "original_a": {
+        "value": 97,
+        "function": "CmdSetGoalDestination",
+        "arguments": "DoCommandFlags flags, GoalID goal, GoalType type, GoalTypeID dest",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 97,
+        "function": "CmdSetGoalDestination",
+        "arguments": "DoCommandFlags flags, GoalID goal, GoalType type, GoalTypeID dest",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GoalID goal, GoalType type, GoalTypeID dest",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "SetGoalText",
+      "merged_value": 98,
+      "original_a": {
+        "value": 98,
+        "function": "CmdSetGoalText",
+        "arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 98,
+        "function": "CmdSetGoalText",
+        "arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "SetGoalProgress",
+      "merged_value": 99,
+      "original_a": {
+        "value": 99,
+        "function": "CmdSetGoalProgress",
+        "arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 99,
+        "function": "CmdSetGoalProgress",
+        "arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GoalID goal, const EncodedString &text",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "SetGoalCompleted",
+      "merged_value": 100,
+      "original_a": {
+        "value": 100,
+        "function": "CmdSetGoalCompleted",
+        "arguments": "DoCommandFlags flags, GoalID goal, bool completed",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 100,
+        "function": "CmdSetGoalCompleted",
+        "arguments": "DoCommandFlags flags, GoalID goal, bool completed",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GoalID goal, bool completed",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "GoalQuestion",
+      "merged_value": 101,
+      "original_a": {
+        "value": 101,
+        "function": "CmdGoalQuestion",
+        "arguments": "DoCommandFlags flags, uint16_t uniqueid, uint32_t target, bool is_client, GoalQuestionButtons buttons, GoalQuestionType type, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 101,
+        "function": "CmdGoalQuestion",
+        "arguments": "DoCommandFlags flags, uint16_t uniqueid, uint32_t target, bool is_client, GoalQuestionButtons buttons, GoalQuestionType type, const EncodedString &text",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, uint16_t uniqueid, uint32_t target, bool is_client, GoalQuestionButtons buttons, GoalQuestionType type, const EncodedString &text",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "GoalQuestionAnswer",
+      "merged_value": 102,
+      "original_a": {
+        "value": 102,
+        "function": "CmdGoalQuestionAnswer",
+        "arguments": "DoCommandFlags flags, uint16_t uniqueid, GoalQuestionButton button",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "original_b": {
+        "value": 102,
+        "function": "CmdGoalQuestionAnswer",
+        "arguments": "DoCommandFlags flags, uint16_t uniqueid, GoalQuestionButton button",
+        "declaration": "src/goal_cmd.h",
+        "implementation": "src/goal.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, uint16_t uniqueid, GoalQuestionButton button",
+      "implementation": "src/goal.cpp"
+    },
+    {
+      "name": "CreateStoryPage",
+      "merged_value": 103,
+      "original_a": {
+        "value": 103,
+        "function": "CmdCreateStoryPage",
+        "arguments": "DoCommandFlags flags, CompanyID company, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 103,
+        "function": "CmdCreateStoryPage",
+        "arguments": "DoCommandFlags flags, CompanyID company, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, CompanyID company, const EncodedString &text",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "CreateStoryPageElement",
+      "merged_value": 104,
+      "original_a": {
+        "value": 104,
+        "function": "CmdCreateStoryPageElement",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageID page_id, StoryPageElementType type, uint32_t reference, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 104,
+        "function": "CmdCreateStoryPageElement",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageID page_id, StoryPageElementType type, uint32_t reference, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, StoryPageID page_id, StoryPageElementType type, uint32_t reference, const EncodedString &text",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "UpdateStoryPageElement",
+      "merged_value": 105,
+      "original_a": {
+        "value": 105,
+        "function": "CmdUpdateStoryPageElement",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, uint32_t reference, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 105,
+        "function": "CmdUpdateStoryPageElement",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, uint32_t reference, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, uint32_t reference, const EncodedString &text",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "SetStoryPageTitle",
+      "merged_value": 106,
+      "original_a": {
+        "value": 106,
+        "function": "CmdSetStoryPageTitle",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 106,
+        "function": "CmdSetStoryPageTitle",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id, const EncodedString &text",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StoryPageID page_id, const EncodedString &text",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "SetStoryPageDate",
+      "merged_value": 107,
+      "original_a": {
+        "value": 107,
+        "function": "CmdSetStoryPageDate",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id, TimerGameCalendar::Date date",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 107,
+        "function": "CmdSetStoryPageDate",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id, TimerGameCalendar::Date date",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StoryPageID page_id, TimerGameCalendar::Date date",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "ShowStoryPage",
+      "merged_value": 108,
+      "original_a": {
+        "value": 108,
+        "function": "CmdShowStoryPage",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 108,
+        "function": "CmdShowStoryPage",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StoryPageID page_id",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "RemoveStoryPage",
+      "merged_value": 109,
+      "original_a": {
+        "value": 109,
+        "function": "CmdRemoveStoryPage",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 109,
+        "function": "CmdRemoveStoryPage",
+        "arguments": "DoCommandFlags flags, StoryPageID page_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StoryPageID page_id",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "RemoveStoryPageElement",
+      "merged_value": 110,
+      "original_a": {
+        "value": 110,
+        "function": "CmdRemoveStoryPageElement",
+        "arguments": "DoCommandFlags flags, StoryPageElementID page_element_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 110,
+        "function": "CmdRemoveStoryPageElement",
+        "arguments": "DoCommandFlags flags, StoryPageElementID page_element_id",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StoryPageElementID page_element_id",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "ScrollViewport",
+      "merged_value": 111,
+      "original_a": {
+        "value": 111,
+        "function": "CmdScrollViewport",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ViewportScrollTarget target, uint32_t ref",
+        "declaration": "src/viewport_cmd.h",
+        "implementation": "src/viewport.cpp"
+      },
+      "original_b": {
+        "value": 111,
+        "function": "CmdScrollViewport",
+        "arguments": "DoCommandFlags flags, TileIndex tile, ViewportScrollTarget target, uint32_t ref",
+        "declaration": "src/viewport_cmd.h",
+        "implementation": "src/viewport.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, ViewportScrollTarget target, uint32_t ref",
+      "implementation": "src/viewport.cpp"
+    },
+    {
+      "name": "StoryPageButton",
+      "merged_value": 112,
+      "original_a": {
+        "value": 112,
+        "function": "CmdStoryPageButton",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, VehicleID reference",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "original_b": {
+        "value": 112,
+        "function": "CmdStoryPageButton",
+        "arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, VehicleID reference",
+        "declaration": "src/story_cmd.h",
+        "implementation": "src/story.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, StoryPageElementID page_element_id, VehicleID reference",
+      "implementation": "src/story.cpp"
+    },
+    {
+      "name": "LevelLand",
+      "merged_value": 113,
+      "original_a": {
+        "value": 113,
+        "function": "CmdLevelLand",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal, LevelMode lm",
+        "declaration": "src/terraform_cmd.h",
+        "implementation": "src/terraform_cmd.cpp"
+      },
+      "original_b": {
+        "value": 113,
+        "function": "CmdLevelLand",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal, LevelMode lm",
+        "declaration": "src/terraform_cmd.h",
+        "implementation": "src/terraform_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex start_tile, bool diagonal, LevelMode lm",
+      "implementation": "src/terraform_cmd.cpp"
+    },
+    {
+      "name": "BuildLock",
+      "merged_value": 114,
+      "original_a": {
+        "value": 114,
+        "function": "CmdBuildLock",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "original_b": {
+        "value": 114,
+        "function": "CmdBuildLock",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/water_cmd.h",
+        "implementation": "src/water_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile",
+      "implementation": "src/water_cmd.cpp"
+    },
+    {
+      "name": "BuildSignalLong",
+      "merged_value": 115,
+      "original_a": {
+        "value": 115,
+        "function": "CmdBuildSignalTrack",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, SignalType sigtype, SignalVariant sigvar, bool mode, bool autofill, bool minimise_gaps, uint8_t signal_density",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 115,
+        "function": "CmdBuildSignalTrack",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, SignalType sigtype, SignalVariant sigvar, bool mode, bool autofill, bool minimise_gaps, uint8_t signal_density",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, SignalType sigtype, SignalVariant sigvar, bool mode, bool autofill, bool minimise_gaps, uint8_t signal_density",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "RemoveSignalLong",
+      "merged_value": 116,
+      "original_a": {
+        "value": 116,
+        "function": "CmdRemoveSignalTrack",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, bool autofill",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "original_b": {
+        "value": 116,
+        "function": "CmdRemoveSignalTrack",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, bool autofill",
+        "declaration": "src/rail_cmd.h",
+        "implementation": "src/rail_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, Track track, bool autofill",
+      "implementation": "src/rail_cmd.cpp"
+    },
+    {
+      "name": "GiveMoney",
+      "merged_value": 117,
+      "original_a": {
+        "value": 117,
+        "function": "CmdGiveMoney",
+        "arguments": "DoCommandFlags flags, Money money, CompanyID dest_company",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "original_b": {
+        "value": 117,
+        "function": "CmdGiveMoney",
+        "arguments": "DoCommandFlags flags, Money money, CompanyID dest_company",
+        "declaration": "src/company_cmd.h",
+        "implementation": "src/company_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, Money money, CompanyID dest_company",
+      "implementation": "src/company_cmd.cpp"
+    },
+    {
+      "name": "ChangeSetting",
+      "merged_value": 118,
+      "original_a": {
+        "value": 118,
+        "function": "CmdChangeSetting",
+        "arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+        "declaration": "src/settings_cmd.h",
+        "implementation": "src/settings.cpp"
+      },
+      "original_b": {
+        "value": 118,
+        "function": "CmdChangeSetting",
+        "arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+        "declaration": "src/settings_cmd.h",
+        "implementation": "src/settings.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+      "implementation": "src/settings.cpp"
+    },
+    {
+      "name": "ChangeCompanySetting",
+      "merged_value": 119,
+      "original_a": {
+        "value": 119,
+        "function": "CmdChangeCompanySetting",
+        "arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+        "declaration": "src/settings_cmd.h",
+        "implementation": "src/settings.cpp"
+      },
+      "original_b": {
+        "value": 119,
+        "function": "CmdChangeCompanySetting",
+        "arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+        "declaration": "src/settings_cmd.h",
+        "implementation": "src/settings.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, const std::string &name, int32_t value",
+      "implementation": "src/settings.cpp"
+    },
+    {
+      "name": "SetAutoreplace",
+      "merged_value": 120,
+      "original_a": {
+        "value": 120,
+        "function": "CmdSetAutoReplace",
+        "arguments": "DoCommandFlags flags, GroupID id_g, EngineID old_engine_type, EngineID new_engine_type, bool when_old",
+        "declaration": "src/autoreplace_cmd.h",
+        "implementation": "src/autoreplace_cmd.cpp"
+      },
+      "original_b": {
+        "value": 120,
+        "function": "CmdSetAutoReplace",
+        "arguments": "DoCommandFlags flags, GroupID id_g, EngineID old_engine_type, EngineID new_engine_type, bool when_old",
+        "declaration": "src/autoreplace_cmd.h",
+        "implementation": "src/autoreplace_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID id_g, EngineID old_engine_type, EngineID new_engine_type, bool when_old",
+      "implementation": "src/autoreplace_cmd.cpp"
+    },
+    {
+      "name": "CloneVehicle",
+      "merged_value": 121,
+      "original_a": {
+        "value": 121,
+        "function": "CmdCloneVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleID veh_id, bool share_orders",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 121,
+        "function": "CmdCloneVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleID veh_id, bool share_orders",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, VehicleID veh_id, bool share_orders",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "StartStopVehicle",
+      "merged_value": 122,
+      "original_a": {
+        "value": 122,
+        "function": "CmdStartStopVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool evaluate_startstop_cb",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 122,
+        "function": "CmdStartStopVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool evaluate_startstop_cb",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, bool evaluate_startstop_cb",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "MassStartStop",
+      "merged_value": 123,
+      "original_a": {
+        "value": 123,
+        "function": "CmdMassStartStopVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, bool do_start, bool vehicle_list_window, const VehicleListIdentifier &vli",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 123,
+        "function": "CmdMassStartStopVehicle",
+        "arguments": "DoCommandFlags flags, TileIndex tile, bool do_start, bool vehicle_list_window, const VehicleListIdentifier &vli",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, bool do_start, bool vehicle_list_window, const VehicleListIdentifier &vli",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "AutoreplaceVehicle",
+      "merged_value": 124,
+      "original_a": {
+        "value": 124,
+        "function": "CmdAutoreplaceVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/autoreplace_cmd.h",
+        "implementation": "src/autoreplace_cmd.cpp"
+      },
+      "original_b": {
+        "value": 124,
+        "function": "CmdAutoreplaceVehicle",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id",
+        "declaration": "src/autoreplace_cmd.h",
+        "implementation": "src/autoreplace_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id",
+      "implementation": "src/autoreplace_cmd.cpp"
+    },
+    {
+      "name": "DepotMassSell",
+      "merged_value": 125,
+      "original_a": {
+        "value": 125,
+        "function": "CmdDepotSellAllVehicles",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 125,
+        "function": "CmdDepotSellAllVehicles",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "DepotMassAutoreplace",
+      "merged_value": 126,
+      "original_a": {
+        "value": 126,
+        "function": "CmdDepotMassAutoReplace",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "original_b": {
+        "value": 126,
+        "function": "CmdDepotMassAutoReplace",
+        "arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+        "declaration": "src/vehicle_cmd.h",
+        "implementation": "src/vehicle_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, VehicleType vehicle_type",
+      "implementation": "src/vehicle_cmd.cpp"
+    },
+    {
+      "name": "CreateGroup",
+      "merged_value": 127,
+      "original_a": {
+        "value": 127,
+        "function": "CmdCreateGroup",
+        "arguments": "DoCommandFlags flags, VehicleType vt, GroupID parent_group",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 127,
+        "function": "CmdCreateGroup",
+        "arguments": "DoCommandFlags flags, VehicleType vt, GroupID parent_group",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleType vt, GroupID parent_group",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "DeleteGroup",
+      "merged_value": 128,
+      "original_a": {
+        "value": 128,
+        "function": "CmdDeleteGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 128,
+        "function": "CmdDeleteGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID group_id",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "AlterGroup",
+      "merged_value": 129,
+      "original_a": {
+        "value": 129,
+        "function": "CmdAlterGroup",
+        "arguments": "DoCommandFlags flags, AlterGroupMode mode, GroupID group_id, GroupID parent_id, const std::string &text",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 129,
+        "function": "CmdAlterGroup",
+        "arguments": "DoCommandFlags flags, AlterGroupMode mode, GroupID group_id, GroupID parent_id, const std::string &text",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, AlterGroupMode mode, GroupID group_id, GroupID parent_id, const std::string &text",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "AddVehicleToGroup",
+      "merged_value": 130,
+      "original_a": {
+        "value": 130,
+        "function": "CmdAddVehicleGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id, VehicleID veh_id, bool add_shared, const VehicleListIdentifier &vli",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 130,
+        "function": "CmdAddVehicleGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id, VehicleID veh_id, bool add_shared, const VehicleListIdentifier &vli",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID group_id, VehicleID veh_id, bool add_shared, const VehicleListIdentifier &vli",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "AddSharedVehiclesToGroup",
+      "merged_value": 131,
+      "original_a": {
+        "value": 131,
+        "function": "CmdAddSharedVehicleGroup",
+        "arguments": "DoCommandFlags flags, GroupID id_g, VehicleType type",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 131,
+        "function": "CmdAddSharedVehicleGroup",
+        "arguments": "DoCommandFlags flags, GroupID id_g, VehicleType type",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID id_g, VehicleType type",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "RemoveAllVehiclesGroup",
+      "merged_value": 132,
+      "original_a": {
+        "value": 132,
+        "function": "CmdRemoveAllVehiclesGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 132,
+        "function": "CmdRemoveAllVehiclesGroup",
+        "arguments": "DoCommandFlags flags, GroupID group_id",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID group_id",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "SetGroupFlag",
+      "merged_value": 133,
+      "original_a": {
+        "value": 133,
+        "function": "CmdSetGroupFlag",
+        "arguments": "DoCommandFlags flags, GroupID group_id, GroupFlag flag, bool value, bool recursive",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 133,
+        "function": "CmdSetGroupFlag",
+        "arguments": "DoCommandFlags flags, GroupID group_id, GroupFlag flag, bool value, bool recursive",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID group_id, GroupFlag flag, bool value, bool recursive",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "SetGroupLivery",
+      "merged_value": 134,
+      "original_a": {
+        "value": 134,
+        "function": "CmdSetGroupLivery",
+        "arguments": "DoCommandFlags flags, GroupID group_id, bool primary, Colours colour",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "original_b": {
+        "value": 134,
+        "function": "CmdSetGroupLivery",
+        "arguments": "DoCommandFlags flags, GroupID group_id, bool primary, Colours colour",
+        "declaration": "src/group_cmd.h",
+        "implementation": "src/group_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GroupID group_id, bool primary, Colours colour",
+      "implementation": "src/group_cmd.cpp"
+    },
+    {
+      "name": "MoveOrder",
+      "merged_value": 135,
+      "original_a": {
+        "value": 135,
+        "function": "CmdMoveOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID moving_order, VehicleOrderID target_order",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "original_b": {
+        "value": 135,
+        "function": "CmdMoveOrder",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID moving_order, VehicleOrderID target_order",
+        "declaration": "src/order_cmd.h",
+        "implementation": "src/order_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID moving_order, VehicleOrderID target_order",
+      "implementation": "src/order_cmd.cpp"
+    },
+    {
+      "name": "ChangeTimetable",
+      "merged_value": 136,
+      "original_a": {
+        "value": 136,
+        "function": "CmdChangeTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, ModifyTimetableFlags mtf, uint16_t data",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "original_b": {
+        "value": 136,
+        "function": "CmdChangeTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, ModifyTimetableFlags mtf, uint16_t data",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, VehicleOrderID order_number, ModifyTimetableFlags mtf, uint16_t data",
+      "implementation": "src/timetable_cmd.cpp"
+    },
+    {
+      "name": "ChangeTimetableBulk",
+      "merged_value": 137,
+      "original_a": {
+        "value": 137,
+        "function": "CmdBulkChangeTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, ModifyTimetableFlags mtf, uint16_t data",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "original_b": {
+        "value": 137,
+        "function": "CmdBulkChangeTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, ModifyTimetableFlags mtf, uint16_t data",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, ModifyTimetableFlags mtf, uint16_t data",
+      "implementation": "src/timetable_cmd.cpp"
+    },
+    {
+      "name": "SetVehicleOnTime",
+      "merged_value": 138,
+      "original_a": {
+        "value": 138,
+        "function": "CmdSetVehicleOnTime",
+        "arguments": "DoCommandFlags flags, VehicleID veh, bool apply_to_group",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "original_b": {
+        "value": 138,
+        "function": "CmdSetVehicleOnTime",
+        "arguments": "DoCommandFlags flags, VehicleID veh, bool apply_to_group",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, bool apply_to_group",
+      "implementation": "src/timetable_cmd.cpp"
+    },
+    {
+      "name": "AutofillTimetable",
+      "merged_value": 139,
+      "original_a": {
+        "value": 139,
+        "function": "CmdAutofillTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, bool autofill, bool preserve_wait_time",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "original_b": {
+        "value": 139,
+        "function": "CmdAutofillTimetable",
+        "arguments": "DoCommandFlags flags, VehicleID veh, bool autofill, bool preserve_wait_time",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh, bool autofill, bool preserve_wait_time",
+      "implementation": "src/timetable_cmd.cpp"
+    },
+    {
+      "name": "SetTimetableStart",
+      "merged_value": 140,
+      "original_a": {
+        "value": 140,
+        "function": "CmdSetTimetableStart",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool timetable_all, TimerGameTick::TickCounter start_tick",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "original_b": {
+        "value": 140,
+        "function": "CmdSetTimetableStart",
+        "arguments": "DoCommandFlags flags, VehicleID veh_id, bool timetable_all, TimerGameTick::TickCounter start_tick",
+        "declaration": "src/timetable_cmd.h",
+        "implementation": "src/timetable_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID veh_id, bool timetable_all, TimerGameTick::TickCounter start_tick",
+      "implementation": "src/timetable_cmd.cpp"
+    },
+    {
+      "name": "OpenCloseAirport",
+      "merged_value": 141,
+      "original_a": {
+        "value": 141,
+        "function": "CmdOpenCloseAirport",
+        "arguments": "DoCommandFlags flags, StationID station_id",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 141,
+        "function": "CmdOpenCloseAirport",
+        "arguments": "DoCommandFlags flags, StationID station_id",
+        "declaration": "src/station_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID station_id",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "CreateLeagueTable",
+      "merged_value": 142,
+      "original_a": {
+        "value": 142,
+        "function": "CmdCreateLeagueTable",
+        "arguments": "DoCommandFlags flags, const EncodedString &title, const EncodedString &header, const EncodedString &footer",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "original_b": {
+        "value": 142,
+        "function": "CmdCreateLeagueTable",
+        "arguments": "DoCommandFlags flags, const EncodedString &title, const EncodedString &header, const EncodedString &footer",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, const EncodedString &title, const EncodedString &header, const EncodedString &footer",
+      "implementation": "src/league_cmd.cpp"
+    },
+    {
+      "name": "CreateLeagueTableElement",
+      "merged_value": 143,
+      "original_a": {
+        "value": 143,
+        "function": "CmdCreateLeagueTableElement",
+        "arguments": "DoCommandFlags flags, LeagueTableID table, int64_t rating, CompanyID company, const EncodedString &text, const EncodedString &score, LinkType link_type, LinkTargetID link_target",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "original_b": {
+        "value": 143,
+        "function": "CmdCreateLeagueTableElement",
+        "arguments": "DoCommandFlags flags, LeagueTableID table, int64_t rating, CompanyID company, const EncodedString &text, const EncodedString &score, LinkType link_type, LinkTargetID link_target",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LeagueTableID table, int64_t rating, CompanyID company, const EncodedString &text, const EncodedString &score, LinkType link_type, LinkTargetID link_target",
+      "implementation": "src/league_cmd.cpp"
+    },
+    {
+      "name": "UpdateLeagueTableElementData",
+      "merged_value": 144,
+      "original_a": {
+        "value": 144,
+        "function": "CmdUpdateLeagueTableElementData",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element, CompanyID company, const EncodedString &text, LinkType link_type, LinkTargetID link_target",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "original_b": {
+        "value": 144,
+        "function": "CmdUpdateLeagueTableElementData",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element, CompanyID company, const EncodedString &text, LinkType link_type, LinkTargetID link_target",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LeagueTableElementID element, CompanyID company, const EncodedString &text, LinkType link_type, LinkTargetID link_target",
+      "implementation": "src/league_cmd.cpp"
+    },
+    {
+      "name": "UpdateLeagueTableElementScore",
+      "merged_value": 145,
+      "original_a": {
+        "value": 145,
+        "function": "CmdUpdateLeagueTableElementScore",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element, int64_t rating, const EncodedString &score",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "original_b": {
+        "value": 145,
+        "function": "CmdUpdateLeagueTableElementScore",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element, int64_t rating, const EncodedString &score",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LeagueTableElementID element, int64_t rating, const EncodedString &score",
+      "implementation": "src/league_cmd.cpp"
+    },
+    {
+      "name": "RemoveLeagueTableElement",
+      "merged_value": 146,
+      "original_a": {
+        "value": 146,
+        "function": "CmdRemoveLeagueTableElement",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "original_b": {
+        "value": 146,
+        "function": "CmdRemoveLeagueTableElement",
+        "arguments": "DoCommandFlags flags, LeagueTableElementID element",
+        "declaration": "src/league_cmd.h",
+        "implementation": "src/league_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, LeagueTableElementID element",
+      "implementation": "src/league_cmd.cpp"
+    },
+    {
+      "name": "PaintExcavationTerrain",
+      "merged_value": 147,
+      "original_a": {
+        "value": 147,
+        "function": "CmdPaintExcavationTerrain",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, bool excavated",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "original_b": {
+        "value": 147,
+        "function": "CmdPaintExcavationTerrain",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, bool excavated",
+        "declaration": "src/landscape_cmd.h",
+        "implementation": "src/landscape.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex end_tile, bool excavated",
+      "implementation": "src/landscape.cpp"
+    },
+    {
+      "name": "ChangeLayerPortalConnection",
+      "merged_value": 148,
+      "original_a": {
+        "value": 148,
+        "function": "CmdChangeLayerPortalConnection",
+        "arguments": "DoCommandFlags flags, TileIndex tile, bool connected",
+        "declaration": "src/layer_portal_cmd.h",
+        "implementation": "src/layer_portal_cmd.cpp"
+      },
+      "original_b": {
+        "value": 148,
+        "function": "CmdChangeLayerPortalConnection",
+        "arguments": "DoCommandFlags flags, TileIndex tile, bool connected",
+        "declaration": "src/layer_portal_cmd.h",
+        "implementation": "src/layer_portal_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, bool connected",
+      "implementation": "src/layer_portal_cmd.cpp"
+    },
+    {
+      "name": "ControlTBMProject",
+      "merged_value": 149,
+      "original_a": {
+        "value": 149,
+        "function": "CmdControlTBMProject",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TBMProjectAction action",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "original_b": {
+        "value": 149,
+        "function": "CmdControlTBMProject",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TBMProjectAction action",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, TBMProjectAction action",
+      "implementation": "src/tbm_project.cpp"
+    },
+    {
+      "name": "ConvertTBMSupport",
+      "merged_value": 150,
+      "original_a": {
+        "value": 150,
+        "function": "CmdConvertTBMSupport",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_support.cpp"
+      },
+      "original_b": {
+        "value": 150,
+        "function": "CmdConvertTBMSupport",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_support.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile",
+      "implementation": "src/tbm_support.cpp"
+    },
+    {
+      "name": "AssignTBMHauler",
+      "merged_value": 151,
+      "original_a": {
+        "value": 151,
+        "function": "CmdAssignTBMHauler",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "original_b": {
+        "value": 151,
+        "function": "CmdAssignTBMHauler",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+      "implementation": "src/tbm_exchange.cpp"
+    },
+    {
+      "name": "ReleaseTBMHauler",
+      "merged_value": 152,
+      "original_a": {
+        "value": 152,
+        "function": "CmdReleaseTBMHauler",
+        "arguments": "DoCommandFlags flags, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "original_b": {
+        "value": 152,
+        "function": "CmdReleaseTBMHauler",
+        "arguments": "DoCommandFlags flags, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID hauler",
+      "implementation": "src/tbm_exchange.cpp"
+    },
+    {
+      "name": "SetTBMExchangeBay",
+      "merged_value": 153,
+      "original_a": {
+        "value": 153,
+        "function": "CmdSetTBMExchangeBay",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex tile",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "original_b": {
+        "value": 153,
+        "function": "CmdSetTBMExchangeBay",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex tile",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex tile",
+      "implementation": "src/tbm_exchange.cpp"
+    },
+    {
+      "name": "ExchangeTBMWagons",
+      "merged_value": 154,
+      "original_a": {
+        "value": 154,
+        "function": "CmdExchangeTBMWagons",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "original_b": {
+        "value": 154,
+        "function": "CmdExchangeTBMWagons",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_exchange.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, VehicleID hauler",
+      "implementation": "src/tbm_exchange.cpp"
+    },
+    {
+      "name": "SetTBMProjectOrigin",
+      "merged_value": 155,
+      "original_a": {
+        "value": 155,
+        "function": "CmdSetTBMProjectOrigin",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, StationID station",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "original_b": {
+        "value": 155,
+        "function": "CmdSetTBMProjectOrigin",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, StationID station",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, StationID station",
+      "implementation": "src/tbm_project.cpp"
+    },
+    {
+      "name": "SetSpoilReceiverMode",
+      "merged_value": 156,
+      "original_a": {
+        "value": 156,
+        "function": "CmdSetSpoilReceiverMode",
+        "arguments": "DoCommandFlags flags, IndustryID industry, SpoilReceiverMode mode",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/spoil_receiver.cpp"
+      },
+      "original_b": {
+        "value": 156,
+        "function": "CmdSetSpoilReceiverMode",
+        "arguments": "DoCommandFlags flags, IndustryID industry, SpoilReceiverMode mode",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/spoil_receiver.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID industry, SpoilReceiverMode mode",
+      "implementation": "src/spoil_receiver.cpp"
+    },
+    {
+      "name": "CommissionTBM",
+      "merged_value": 157,
+      "original_a": {
+        "value": 157,
+        "function": "CmdCommissionTBM",
+        "arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_commission.cpp"
+      },
+      "original_b": {
+        "value": 157,
+        "function": "CmdCommissionTBM",
+        "arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_commission.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, bool accept_partial",
+      "implementation": "src/tbm_commission.cpp"
+    },
+    {
+      "name": "BuildLayerMine",
+      "merged_value": 158,
+      "original_a": {
+        "value": 158,
+        "function": "CmdBuildLayerMine",
+        "arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t layout, GeologyDepositID deposit, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 158,
+        "function": "CmdBuildLayerMine",
+        "arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t layout, GeologyDepositID deposit, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, IndustryType it, uint32_t layout, GeologyDepositID deposit, uint32_t seed",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "SelectLayerIndustryRecipe",
+      "merged_value": 159,
+      "original_a": {
+        "value": 159,
+        "function": "CmdSelectLayerIndustryRecipe",
+        "arguments": "DoCommandFlags flags, IndustryID industry, uint32_t recipe_value",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 159,
+        "function": "CmdSelectLayerIndustryRecipe",
+        "arguments": "DoCommandFlags flags, IndustryID industry, uint32_t recipe_value",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID industry, uint32_t recipe_value",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "BuildGeothermalCollector",
+      "merged_value": 160,
+      "original_a": {
+        "value": 160,
+        "function": "CmdBuildGeothermalCollector",
+        "arguments": "DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 160,
+        "function": "CmdBuildGeothermalCollector",
+        "arguments": "DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "BuildGeothermalUtilityLink",
+      "merged_value": 161,
+      "original_a": {
+        "value": 161,
+        "function": "CmdBuildGeothermalUtilityLink",
+        "arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+        "declaration": "src/geothermal_utility_cmd.h",
+        "implementation": "src/geothermal_utility.cpp"
+      },
+      "original_b": {
+        "value": 161,
+        "function": "CmdBuildGeothermalUtilityLink",
+        "arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+        "declaration": "src/geothermal_utility_cmd.h",
+        "implementation": "src/geothermal_utility.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+      "implementation": "src/geothermal_utility.cpp"
+    },
+    {
+      "name": "RemoveGeothermalUtilityLink",
+      "merged_value": 162,
+      "original_a": {
+        "value": 162,
+        "function": "CmdRemoveGeothermalUtilityLink",
+        "arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+        "declaration": "src/geothermal_utility_cmd.h",
+        "implementation": "src/geothermal_utility.cpp"
+      },
+      "original_b": {
+        "value": 162,
+        "function": "CmdRemoveGeothermalUtilityLink",
+        "arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+        "declaration": "src/geothermal_utility_cmd.h",
+        "implementation": "src/geothermal_utility.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, UtilityEnergyDomain domain",
+      "implementation": "src/geothermal_utility.cpp"
+    },
+    {
+      "name": "ExtendTBMProject",
+      "merged_value": 163,
+      "original_a": {
+        "value": 163,
+        "function": "CmdExtendTBMProject",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint64_t expected_revision, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "original_b": {
+        "value": 163,
+        "function": "CmdExtendTBMProject",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint64_t expected_revision, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint64_t expected_revision, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+      "implementation": "src/tbm_project.cpp"
+    },
+    {
+      "name": "ConfirmTBMCommission",
+      "merged_value": 164,
+      "original_a": {
+        "value": 164,
+        "function": "CmdConfirmTBMCommission",
+        "arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_commission.cpp"
+      },
+      "original_b": {
+        "value": 164,
+        "function": "CmdConfirmTBMCommission",
+        "arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_commission.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex portal, uint16_t model_id, uint8_t earth_wagons, uint8_t rock_wagons, StationID origin, TileIndex area_start, TileIndex area_end, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+      "implementation": "src/tbm_commission.cpp"
+    },
+    {
+      "name": "SendTBMToHangar",
+      "merged_value": 165,
+      "original_a": {
+        "value": 165,
+        "function": "CmdSendTBMToHangar",
+        "arguments": "DoCommandFlags flags, VehicleID cutter, TileIndex destination, bool service",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_hangar.cpp"
+      },
+      "original_b": {
+        "value": 165,
+        "function": "CmdSendTBMToHangar",
+        "arguments": "DoCommandFlags flags, VehicleID cutter, TileIndex destination, bool service",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_hangar.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID cutter, TileIndex destination, bool service",
+      "implementation": "src/tbm_hangar.cpp"
+    },
+    {
+      "name": "BuildGeothermalRiser",
+      "merged_value": 166,
+      "original_a": {
+        "value": 166,
+        "function": "CmdBuildGeothermalRiser",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex portal, TileIndex port, DiagDirection access, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "original_b": {
+        "value": 166,
+        "function": "CmdBuildGeothermalRiser",
+        "arguments": "DoCommandFlags flags, TileIndex tile, TileIndex portal, TileIndex port, DiagDirection access, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, TileIndex portal, TileIndex port, DiagDirection access, uint32_t seed",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "SetSpaceMission",
+      "merged_value": 167,
+      "original_a": {
+        "value": 167,
+        "function": "CmdSetSpaceMission",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint32_t body",
+        "declaration": "src/space_vehicle_cmd.h",
+        "implementation": "src/space_vehicle.cpp"
+      },
+      "original_b": {
+        "value": 167,
+        "function": "CmdSetSpaceMission",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint32_t body",
+        "declaration": "src/space_vehicle_cmd.h",
+        "implementation": "src/space_vehicle.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, uint32_t body",
+      "implementation": "src/space_vehicle.cpp"
+    },
+    {
+      "name": "BuildLaunchCenter",
+      "merged_value": 168,
+      "original_a": {
+        "value": 168,
+        "function": "CmdBuildLaunchCenter",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t rotation, StationID to_join, bool adjacent",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 168,
+        "function": "CmdBuildLaunchCenter",
+        "arguments": "DoCommandFlags flags, TileIndex tile, uint8_t rotation, StationID to_join, bool adjacent",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, uint8_t rotation, StationID to_join, bool adjacent",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "RemoveLaunchCenter",
+      "merged_value": 169,
+      "original_a": {
+        "value": 169,
+        "function": "CmdRemoveLaunchCenter",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "original_b": {
+        "value": 169,
+        "function": "CmdRemoveLaunchCenter",
+        "arguments": "DoCommandFlags flags, TileIndex tile",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/station_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile",
+      "implementation": "src/station_cmd.cpp"
+    },
+    {
+      "name": "SetLaunchHub",
+      "merged_value": 170,
+      "original_a": {
+        "value": 170,
+        "function": "CmdSetLaunchHub",
+        "arguments": "DoCommandFlags flags, StationID member, StationID center, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_hub.cpp"
+      },
+      "original_b": {
+        "value": 170,
+        "function": "CmdSetLaunchHub",
+        "arguments": "DoCommandFlags flags, StationID member, StationID center, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_hub.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID member, StationID center, uint64_t generation",
+      "implementation": "src/launch_hub.cpp"
+    },
+    {
+      "name": "StartSurfaceHandling",
+      "merged_value": 171,
+      "original_a": {
+        "value": 171,
+        "function": "CmdStartSurfaceHandling",
+        "arguments": "DoCommandFlags flags, StationID member, uint64_t member_generation, StationID center, uint64_t generation, CargoType cargo, uint16_t quantity, bool reverse",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/surface_handling.cpp"
+      },
+      "original_b": {
+        "value": 171,
+        "function": "CmdStartSurfaceHandling",
+        "arguments": "DoCommandFlags flags, StationID member, uint64_t member_generation, StationID center, uint64_t generation, CargoType cargo, uint16_t quantity, bool reverse",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/surface_handling.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID member, uint64_t member_generation, StationID center, uint64_t generation, CargoType cargo, uint16_t quantity, bool reverse",
+      "implementation": "src/surface_handling.cpp"
+    },
+    {
+      "name": "EditSpaceOrder",
+      "merged_value": 172,
+      "original_a": {
+        "value": 172,
+        "function": "CmdEditSpaceOrder",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, SpaceOrderEdit edit, uint8_t index, SpaceOrderAction action, SpaceOrderTargetKind kind, uint32_t target, uint64_t target_generation",
+        "declaration": "src/space_vehicle_cmd.h",
+        "implementation": "src/space_orders.cpp"
+      },
+      "original_b": {
+        "value": 172,
+        "function": "CmdEditSpaceOrder",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, SpaceOrderEdit edit, uint8_t index, SpaceOrderAction action, SpaceOrderTargetKind kind, uint32_t target, uint64_t target_generation",
+        "declaration": "src/space_vehicle_cmd.h",
+        "implementation": "src/space_orders.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, SpaceOrderEdit edit, uint8_t index, SpaceOrderAction action, SpaceOrderTargetKind kind, uint32_t target, uint64_t target_generation",
+      "implementation": "src/space_orders.cpp"
+    },
+    {
+      "name": "AssembleLaunchCraft",
+      "merged_value": 173,
+      "original_a": {
+        "value": 173,
+        "function": "CmdAssembleLaunchCraft",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t generation, uint16_t model",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "original_b": {
+        "value": 173,
+        "function": "CmdAssembleLaunchCraft",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t generation, uint16_t model",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t generation, uint16_t model",
+      "implementation": "src/launch_operations.cpp"
+    },
+    {
+      "name": "PauseLaunchAssembly",
+      "merged_value": 174,
+      "original_a": {
+        "value": 174,
+        "function": "CmdPauseLaunchAssembly",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, bool pause",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "original_b": {
+        "value": 174,
+        "function": "CmdPauseLaunchAssembly",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, bool pause",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, bool pause",
+      "implementation": "src/launch_operations.cpp"
+    },
+    {
+      "name": "RecoverLaunchCraft",
+      "merged_value": 175,
+      "original_a": {
+        "value": 175,
+        "function": "CmdRecoverLaunchCraft",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID vehicle, uint64_t vehicle_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "original_b": {
+        "value": 175,
+        "function": "CmdRecoverLaunchCraft",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID vehicle, uint64_t vehicle_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/launch_operations.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID vehicle, uint64_t vehicle_generation",
+      "implementation": "src/launch_operations.cpp"
+    },
+    {
+      "name": "MoveSpaceSupply",
+      "merged_value": 176,
+      "original_a": {
+        "value": 176,
+        "function": "CmdMoveSpaceSupply",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "original_b": {
+        "value": 176,
+        "function": "CmdMoveSpaceSupply",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool unload",
+      "implementation": "src/space_manifest.cpp"
+    },
+    {
+      "name": "ServiceLaunchProbe",
+      "merged_value": 177,
+      "original_a": {
+        "value": 177,
+        "function": "CmdServiceLaunchProbe",
+        "arguments": "DoCommandFlags flags, VehicleID craft, uint64_t generation, bool cancel",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "original_b": {
+        "value": 177,
+        "function": "CmdServiceLaunchProbe",
+        "arguments": "DoCommandFlags flags, VehicleID craft, uint64_t generation, bool cancel",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID craft, uint64_t generation, bool cancel",
+      "implementation": "src/space_manifest.cpp"
+    },
+    {
+      "name": "CarryLaunchProbe",
+      "merged_value": 178,
+      "original_a": {
+        "value": 178,
+        "function": "CmdCarryLaunchProbe",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t rocket_generation, VehicleID probe, uint64_t probe_generation, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "original_b": {
+        "value": 178,
+        "function": "CmdCarryLaunchProbe",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t rocket_generation, VehicleID probe, uint64_t probe_generation, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t rocket_generation, VehicleID probe, uint64_t probe_generation, bool unload",
+      "implementation": "src/space_manifest.cpp"
+    },
+    {
+      "name": "AssembleLaunchPod",
+      "merged_value": 179,
+      "original_a": {
+        "value": 179,
+        "function": "CmdAssembleLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "original_b": {
+        "value": 179,
+        "function": "CmdAssembleLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t generation",
+      "implementation": "src/space_pod.cpp"
+    },
+    {
+      "name": "MoveLaunchPod",
+      "merged_value": 180,
+      "original_a": {
+        "value": 180,
+        "function": "CmdMoveLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, SpacePodID pod, uint64_t pod_generation, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "original_b": {
+        "value": 180,
+        "function": "CmdMoveLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, SpacePodID pod, uint64_t pod_generation, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, SpacePodID pod, uint64_t pod_generation, bool unload",
+      "implementation": "src/space_pod.cpp"
+    },
+    {
+      "name": "PauseLaunchPod",
+      "merged_value": 181,
+      "original_a": {
+        "value": 181,
+        "function": "CmdPauseLaunchPod",
+        "arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, bool pause",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "original_b": {
+        "value": 181,
+        "function": "CmdPauseLaunchPod",
+        "arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, bool pause",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, bool pause",
+      "implementation": "src/space_pod.cpp"
+    },
+    {
+      "name": "RecoverLaunchPod",
+      "merged_value": 182,
+      "original_a": {
+        "value": 182,
+        "function": "CmdRecoverLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "original_b": {
+        "value": 182,
+        "function": "CmdRecoverLaunchPod",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_pod.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation",
+      "implementation": "src/space_pod.cpp"
+    },
+    {
+      "name": "MoveLaunchFreight",
+      "merged_value": 183,
+      "original_a": {
+        "value": 183,
+        "function": "CmdMoveLaunchFreight",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "original_b": {
+        "value": 183,
+        "function": "CmdMoveLaunchFreight",
+        "arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool unload",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_manifest.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID center, uint64_t center_generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool unload",
+      "implementation": "src/space_manifest.cpp"
+    },
+    {
+      "name": "BeginLaunchFlight",
+      "merged_value": 184,
+      "original_a": {
+        "value": 184,
+        "function": "CmdBeginLaunchFlight",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, SpaceOrderTargetKind kind, uint32_t destination, uint64_t destination_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "original_b": {
+        "value": 184,
+        "function": "CmdBeginLaunchFlight",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, SpaceOrderTargetKind kind, uint32_t destination, uint64_t destination_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, SpaceOrderTargetKind kind, uint32_t destination, uint64_t destination_generation",
+      "implementation": "src/space_transition.cpp"
+    },
+    {
+      "name": "CancelLaunchFlight",
+      "merged_value": 185,
+      "original_a": {
+        "value": 185,
+        "function": "CmdCancelLaunchFlight",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "original_b": {
+        "value": 185,
+        "function": "CmdCancelLaunchFlight",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation",
+      "implementation": "src/space_transition.cpp"
+    },
+    {
+      "name": "DivertLaunchRecovery",
+      "merged_value": 186,
+      "original_a": {
+        "value": 186,
+        "function": "CmdDivertLaunchRecovery",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, StationID center, uint64_t center_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "original_b": {
+        "value": 186,
+        "function": "CmdDivertLaunchRecovery",
+        "arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, StationID center, uint64_t center_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_transition.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID rocket, uint64_t generation, StationID center, uint64_t center_generation",
+      "implementation": "src/space_transition.cpp"
+    },
+    {
+      "name": "ReleaseOrbitalCargo",
+      "merged_value": 187,
+      "original_a": {
+        "value": 187,
+        "function": "CmdReleaseOrbitalCargo",
+        "arguments": "DoCommandFlags flags, VehicleID craft, uint64_t craft_generation, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation, uint16_t quantity",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_descent.cpp"
+      },
+      "original_b": {
+        "value": 187,
+        "function": "CmdReleaseOrbitalCargo",
+        "arguments": "DoCommandFlags flags, VehicleID craft, uint64_t craft_generation, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation, uint16_t quantity",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_descent.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID craft, uint64_t craft_generation, StationID center, uint64_t center_generation, SpacePodID pod, uint64_t pod_generation, uint16_t quantity",
+      "implementation": "src/space_descent.cpp"
+    },
+    {
+      "name": "RetargetSpaceDescent",
+      "merged_value": 188,
+      "original_a": {
+        "value": 188,
+        "function": "CmdRetargetSpaceDescent",
+        "arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, StationID center, uint64_t center_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_descent.cpp"
+      },
+      "original_b": {
+        "value": 188,
+        "function": "CmdRetargetSpaceDescent",
+        "arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, StationID center, uint64_t center_generation",
+        "declaration": "src/launch_center_cmd.h",
+        "implementation": "src/space_descent.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpacePodID pod, uint64_t generation, StationID center, uint64_t center_generation",
+      "implementation": "src/space_descent.cpp"
+    },
+    {
+      "name": "BuildSpaceBlueprint",
+      "merged_value": 189,
+      "original_a": {
+        "value": 189,
+        "function": "CmdBuildSpaceBlueprint",
+        "arguments": "DoCommandFlags flags, TileIndex tile, SpaceBuildKind kind = SpaceBuildKind::Core",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 189,
+        "function": "CmdBuildSpaceBlueprint",
+        "arguments": "DoCommandFlags flags, TileIndex tile, SpaceBuildKind kind = SpaceBuildKind::Core",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, SpaceBuildKind kind = SpaceBuildKind::Core",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "CancelSpaceBlueprint",
+      "merged_value": 190,
+      "original_a": {
+        "value": 190,
+        "function": "CmdCancelSpaceBlueprint",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 190,
+        "function": "CmdCancelSpaceBlueprint",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "CollectSpaceConstructionInputs",
+      "merged_value": 191,
+      "original_a": {
+        "value": 191,
+        "function": "CmdCollectSpaceConstructionInputs",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID probe, uint64_t probe_generation, CargoType cargo, uint16_t quantity",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 191,
+        "function": "CmdCollectSpaceConstructionInputs",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID probe, uint64_t probe_generation, CargoType cargo, uint16_t quantity",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID probe, uint64_t probe_generation, CargoType cargo, uint16_t quantity",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "ActivateOrbitalCore",
+      "merged_value": 192,
+      "original_a": {
+        "value": 192,
+        "function": "CmdActivateOrbitalCore",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 192,
+        "function": "CmdActivateOrbitalCore",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "MoveOrbitalFreight",
+      "merged_value": 193,
+      "original_a": {
+        "value": 193,
+        "function": "CmdMoveOrbitalFreight",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool load",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 193,
+        "function": "CmdMoveOrbitalFreight",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool load",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, CargoType cargo, uint16_t quantity, bool load",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "CommissionOrbitalServices",
+      "merged_value": 194,
+      "original_a": {
+        "value": 194,
+        "function": "CmdCommissionOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 194,
+        "function": "CmdCommissionOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "SetOrbitalPanelPaused",
+      "merged_value": 195,
+      "original_a": {
+        "value": 195,
+        "function": "CmdSetOrbitalPanelPaused",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, bool paused",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 195,
+        "function": "CmdSetOrbitalPanelPaused",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, bool paused",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, bool paused",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "ServiceOrbitalProbe",
+      "merged_value": 196,
+      "original_a": {
+        "value": 196,
+        "function": "CmdServiceOrbitalProbe",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, OrbitalServiceControl control",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 196,
+        "function": "CmdServiceOrbitalProbe",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, OrbitalServiceControl control",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, OrbitalServiceControl control",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "MoveOrbitalSupply",
+      "merged_value": 197,
+      "original_a": {
+        "value": 197,
+        "function": "CmdMoveOrbitalSupply",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool load",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 197,
+        "function": "CmdMoveOrbitalSupply",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool load",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, VehicleID craft, uint64_t craft_generation, uint8_t supply, uint16_t quantity, bool load",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "ReserveOrbitalModuleInputs",
+      "merged_value": 198,
+      "original_a": {
+        "value": 198,
+        "function": "CmdReserveOrbitalModuleInputs",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID core, uint64_t core_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_station.cpp"
+      },
+      "original_b": {
+        "value": 198,
+        "function": "CmdReserveOrbitalModuleInputs",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID core, uint64_t core_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_station.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID core, uint64_t core_generation",
+      "implementation": "src/orbital_station.cpp"
+    },
+    {
+      "name": "ActivateOrbitalModule",
+      "merged_value": 199,
+      "original_a": {
+        "value": 199,
+        "function": "CmdActivateOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 199,
+        "function": "CmdActivateOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "ConnectOrbitalServices",
+      "merged_value": 200,
+      "original_a": {
+        "value": 200,
+        "function": "CmdConnectOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 200,
+        "function": "CmdConnectOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "DisconnectOrbitalServices",
+      "merged_value": 201,
+      "original_a": {
+        "value": 201,
+        "function": "CmdDisconnectOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "original_b": {
+        "value": 201,
+        "function": "CmdDisconnectOrbitalServices",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_service.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/orbital_service.cpp"
+    },
+    {
+      "name": "RemoveOrbitalModule",
+      "merged_value": 202,
+      "original_a": {
+        "value": 202,
+        "function": "CmdRemoveOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 202,
+        "function": "CmdRemoveOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "EvacuateOrbitalModule",
+      "merged_value": 203,
+      "original_a": {
+        "value": 203,
+        "function": "CmdEvacuateOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "original_b": {
+        "value": 203,
+        "function": "CmdEvacuateOrbitalModule",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_structure.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation",
+      "implementation": "src/space_structure.cpp"
+    },
+    {
+      "name": "QueueOrbitalManufacture",
+      "merged_value": 204,
+      "original_a": {
+        "value": 204,
+        "function": "CmdQueueOrbitalManufacture",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation, uint16_t model",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_manufacturing.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID source, uint64_t source_generation, uint16_t model",
+      "implementation": "src/orbital_manufacturing.cpp"
+    },
+    {
+      "name": "CancelOrbitalManufacture",
+      "merged_value": 205,
+      "original_a": {
+        "value": 205,
+        "function": "CmdCancelOrbitalManufacture",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_manufacturing.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, SpaceStructureID destination, uint64_t destination_generation",
+      "implementation": "src/orbital_manufacturing.cpp"
+    },
+    {
+      "name": "CancelEarthSpaceReplacement",
+      "merged_value": 206,
+      "original_a": {
+        "value": 206,
+        "function": "CmdCancelEarthSpaceReplacement",
+        "arguments": "DoCommandFlags flags, VehicleID product, uint64_t generation",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/space_replacement.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, VehicleID product, uint64_t generation",
+      "implementation": "src/space_replacement.cpp"
+    },
+    {
+      "name": "ControlOrbitalRecipe",
+      "merged_value": 207,
+      "original_a": {
+        "value": 207,
+        "function": "CmdControlOrbitalRecipe",
+        "arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, uint32_t recipe_value, uint8_t control_value",
+        "declaration": "src/space_structure_cmd.h",
+        "implementation": "src/orbital_recipe_runtime.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, SpaceStructureID site, uint64_t generation, uint32_t recipe_value, uint8_t control_value",
+      "implementation": "src/orbital_recipe_runtime.cpp"
+    },
+    {
+      "name": "SetSpaceMissionChecked",
+      "merged_value": 208,
+      "original_a": {
+        "value": 208,
+        "function": "CmdSetSpaceMissionChecked",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, uint32_t body",
+        "declaration": "src/space_vehicle_cmd.h",
+        "implementation": "src/space_vehicle.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, uint64_t generation, uint32_t body",
+      "implementation": "src/space_vehicle.cpp"
+    },
+    {
+      "name": "PlaceSurfaceSupplyOrder",
+      "merged_value": 209,
+      "original_a": {
+        "value": 209,
+        "function": "CmdPlaceSurfaceSupplyOrder",
+        "arguments": "DoCommandFlags flags, StationID origin, uint32_t label_value, uint16_t quantity, SurfaceSupplyOrderID intent",
+        "declaration": "src/surface_supply_cmd.h",
+        "implementation": "src/surface_supply_order_runtime.cpp"
+      },
+      "original_b": {
+        "value": 208,
+        "function": "CmdOrderSurfaceSupply",
+        "arguments": "DoCommandFlags flags, StationID station, CargoLabel label, uint16_t quantity, SurfaceSupplyOrderID expected_order",
+        "declaration": "src/surface_supply_cmd.h",
+        "implementation": "src/surface_supply_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, StationID origin, uint32_t label_value, uint16_t quantity, SurfaceSupplyOrderID intent",
+      "implementation": "src/surface_supply_order_runtime.cpp"
+    },
+    {
+      "name": "CancelSurfaceSupplyOrder",
+      "merged_value": 210,
+      "original_a": {
+        "value": 210,
+        "function": "CmdCancelSurfaceSupplyOrder",
+        "arguments": "DoCommandFlags flags, SurfaceSupplyOrderID intent",
+        "declaration": "src/surface_supply_cmd.h",
+        "implementation": "src/surface_supply_order_runtime.cpp"
+      },
+      "original_b": null,
+      "merged_arguments": "DoCommandFlags flags, SurfaceSupplyOrderID intent",
+      "implementation": "src/surface_supply_order_runtime.cpp"
+    },
+    {
+      "name": "ChangeTBMWork",
+      "merged_value": 211,
+      "original_a": null,
+      "original_b": {
+        "value": 204,
+        "function": "CmdChangeTBMWork",
+        "arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint32_t expected_cursor, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+        "declaration": "src/tbm_cmd.h",
+        "implementation": "src/tbm_project.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint32_t expected_cursor, uint64_t expected_fingerprint, ExcavationPlanIntent intent",
+      "implementation": "src/tbm_project.cpp"
+    },
+    {
+      "name": "ConnectTubePower",
+      "merged_value": 212,
+      "original_a": null,
+      "original_b": {
+        "value": 205,
+        "function": "CmdConnectTubePower",
+        "arguments": "DoCommandFlags flags, TileIndex portal, TileIndex interchange, const TubePowerCommandPath &path",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex portal, TileIndex interchange, const TubePowerCommandPath &path",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "CloseTubePower",
+      "merged_value": 213,
+      "original_a": null,
+      "original_b": {
+        "value": 206,
+        "function": "CmdCloseTubePower",
+        "arguments": "DoCommandFlags flags, UtilityProducerID source",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, UtilityProducerID source",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "SetTubeVehiclePower",
+      "merged_value": 214,
+      "original_a": null,
+      "original_b": {
+        "value": 207,
+        "function": "CmdSetTubeVehiclePower",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, UtilityProducerID source, bool reconnect",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, UtilityProducerID source, bool reconnect",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "BuildGeothermalGenerator",
+      "merged_value": 215,
+      "original_a": null,
+      "original_b": {
+        "value": 210,
+        "function": "CmdBuildGeothermalGenerator",
+        "arguments": "DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed",
+        "declaration": "src/industry_cmd.h",
+        "implementation": "src/industry_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed",
+      "implementation": "src/industry_cmd.cpp"
+    },
+    {
+      "name": "PlanGeothermalSite",
+      "merged_value": 216,
+      "original_a": null,
+      "original_b": {
+        "value": 211,
+        "function": "CmdPlanGeothermalSite",
+        "arguments": "DoCommandFlags flags, TileIndex tile, GeothermalVentID vent, MultiLayerGeothermalConstructionKind kind, TileIndex endpoint, DiagDirection access",
+        "declaration": "src/geothermal_site_cmd.h",
+        "implementation": "src/geothermal_site_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TileIndex tile, GeothermalVentID vent, MultiLayerGeothermalConstructionKind kind, TileIndex endpoint, DiagDirection access",
+      "implementation": "src/geothermal_site_cmd.cpp"
+    },
+    {
+      "name": "CancelGeothermalSite",
+      "merged_value": 217,
+      "original_a": null,
+      "original_b": {
+        "value": 212,
+        "function": "CmdCancelGeothermalSite",
+        "arguments": "DoCommandFlags flags, GeothermalSiteID site",
+        "declaration": "src/geothermal_site_cmd.h",
+        "implementation": "src/geothermal_site_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, GeothermalSiteID site",
+      "implementation": "src/geothermal_site_cmd.cpp"
+    },
+    {
+      "name": "ConnectGeothermalTownService",
+      "merged_value": 218,
+      "original_a": null,
+      "original_b": {
+        "value": 213,
+        "function": "CmdConnectGeothermalTownService",
+        "arguments": "DoCommandFlags flags, IndustryID generator, IndustryID first_riser, IndustryID second_riser, StationID terminal, TownID town",
+        "declaration": "src/geothermal_service_cmd.h",
+        "implementation": "src/geothermal_service_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID generator, IndustryID first_riser, IndustryID second_riser, StationID terminal, TownID town",
+      "implementation": "src/geothermal_service_cmd.cpp"
+    },
+    {
+      "name": "ConnectTubeGeothermalPower",
+      "merged_value": 219,
+      "original_a": null,
+      "original_b": {
+        "value": 214,
+        "function": "CmdConnectTubeGeothermalPower",
+        "arguments": "DoCommandFlags flags, IndustryID generator, TileIndex inlet, UtilityProducerID expected_output",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, IndustryID generator, TileIndex inlet, UtilityProducerID expected_output",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "CloseTubeGeothermalPower",
+      "merged_value": 220,
+      "original_a": null,
+      "original_b": {
+        "value": 215,
+        "function": "CmdCloseTubeGeothermalPower",
+        "arguments": "DoCommandFlags flags, TubeGeothermalSourceID source",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, TubeGeothermalSourceID source",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "SetTubeVehicleGeothermalPower",
+      "merged_value": 221,
+      "original_a": null,
+      "original_b": {
+        "value": 216,
+        "function": "CmdSetTubeVehicleGeothermalPower",
+        "arguments": "DoCommandFlags flags, VehicleID vehicle, TubeGeothermalSourceID source, bool reconnect",
+        "declaration": "src/transport_tube_cmd.h",
+        "implementation": "src/transport_tube_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, VehicleID vehicle, TubeGeothermalSourceID source, bool reconnect",
+      "implementation": "src/transport_tube_cmd.cpp"
+    },
+    {
+      "name": "CancelLegacySurfaceSupplyOrder",
+      "merged_value": 222,
+      "original_a": null,
+      "original_b": {
+        "value": 209,
+        "function": "CmdCancelSurfaceSupply",
+        "arguments": "DoCommandFlags flags, SurfaceSupplyOrderID order, uint16_t expected_quantity",
+        "declaration": "src/surface_supply_cmd.h",
+        "implementation": "src/surface_supply_cmd.cpp"
+      },
+      "merged_arguments": "DoCommandFlags flags, SurfaceSupplyOrderID intent, uint16_t expected_quantity",
+      "implementation": "src/surface_supply_order_runtime.cpp"
+    }
+  ]
+}

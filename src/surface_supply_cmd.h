@@ -27,7 +27,17 @@ CommandCost CmdPlaceSurfaceSupplyOrder(DoCommandFlags flags, StationID origin, u
  */
 CommandCost CmdCancelSurfaceSupplyOrder(DoCommandFlags flags, SurfaceSupplyOrderID intent);
 
+/** Cancel only the exact remaining never-shipped original legacy source stock.
+ * @param flags Native estimate/execute policy; both phases recapture original rights and physical custody.
+ * @param intent Exact widened original legacy identity; native receipts cannot acquire these rights.
+ * @param expected_quantity Whole eligible count seen by the requester; zero permits only a legitimate no-credit closure.
+ * @return Frozen negative Other expense for the original command kernel, or unchanged refusal for a stale/foreign/closed claim.
+ * Execution removes only admitted actual source packets before closing history; it never directly credits a wallet.
+ */
+CommandCost CmdCancelLegacySurfaceSupplyOrder(DoCommandFlags flags, SurfaceSupplyOrderID intent, uint16_t expected_quantity);
+
 DEF_CMD_TRAIT(Commands::PlaceSurfaceSupplyOrder, CmdPlaceSurfaceSupplyOrder, {}, CommandType::OtherManagement)
 DEF_CMD_TRAIT(Commands::CancelSurfaceSupplyOrder, CmdCancelSurfaceSupplyOrder, {}, CommandType::OtherManagement)
+DEF_CMD_TRAIT(Commands::CancelLegacySurfaceSupplyOrder, CmdCancelLegacySurfaceSupplyOrder, {}, CommandType::OtherManagement)
 
 #endif /* SURFACE_SUPPLY_CMD_H */

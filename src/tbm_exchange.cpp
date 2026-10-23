@@ -32,6 +32,8 @@
 #include "core/math_func.hpp"
 #include "core/backup_type.hpp"
 #include "spoil_receiver.h"
+#include "window_func.h"
+#include "vehicle_gui.h"
 
 #include "table/strings.h"
 
@@ -609,7 +611,407 @@ TBMExchangeError CheckTBMOriginAdmission(const TBMProject &project)
 	return TBMExchangeError::None;
 }
 
+/**
+ * @param project Project whose stand is read.
+ * @param hauler Hauler front engine.
+ * @return Whether the hauler's moving front stands on the project's face stand, heading along it towards the cutter.
+ */
+static bool IsTBMHaulerFacingStand(const TBMProject &project, const Train &hauler)
+{
+	const Train *moving = hauler.GetMovingFront();
+	if (!IsPlainRailTile(moving->tile)) return false; // Cheap refusal for every train away from support.
+	const auto stand = FindTBMFaceStand(project);
+	return stand.has_value() && moving->tile == stand->tile && GetTBMFaceStandTrackdirs(*stand).Test(moving->GetVehicleTrackdir());
+}
+
+/** @copydoc DescribeTBMFaceTransfer */
+TBMExchangeProposal DescribeTBMFaceTransfer(const TBMExchangeRequest &request)
+{
+	TBMExchangeProposal proposal;
+	/**
+	 * Finish a refusal; the partial lists are dropped so a refusal never looks like a plan.
+	 * @param error First failed rule.
+	 * @return The refused proposal.
+	 */
+	const auto refuse = [&proposal](TBMExchangeError error) {
+		TBMExchangeProposal refused;
+		refused.error = error;
+		refused.bay = proposal.bay;
+		refused.cutter = proposal.cutter;
+		refused.hauler = proposal.hauler;
+		return refused;
+	};
+	/* Identities, as for the bay exchange. */
+	const TBMProject *project = GetTBMProject(request.project);
+	// Only the actor's own live project, still boring or returning, can take a transfer.
+	if (project == nullptr || project->company != _current_company || IsTBMProjectFinished(project->phase)) return refuse(TBMExchangeError::InvalidProject);
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(request.hauler);
+	// Only a hauler assigned to this very project serves its face.
+	if (assignment == nullptr || assignment->project != request.project) return refuse(TBMExchangeError::NotAssigned);
+	const Train *cutter = Train::GetIfValid(project->cutter);
+	const Train *hauler = Train::GetIfValid(request.hauler);
+	if (cutter == nullptr) return refuse(TBMExchangeError::InvalidProject);
+	// The hauler is a live train of the project's company, addressed by its front engine.
+	if (hauler == nullptr || !hauler->IsFrontEngine() || hauler->owner != project->company) return refuse(TBMExchangeError::InvalidHauler);
+	proposal.cutter = cutter->index;
+	proposal.hauler = hauler->index;
+
+	/* The meeting: the face, after the dwell, with both trains standing and the hauler on the stand. */
+	// The cutter meets at its face (rule F1) and waits there with spoil that is due to leave.
+	if (GetTBMMeetingKind(*project) != TBMMeetingKind::Face || !IsTBMReadyForFaceTransfer(*project)) return refuse(TBMExchangeError::NotAtBay);
+	if (project->phase_ticks < TBM_FACE_TRANSFER_TICKS) return refuse(TBMExchangeError::NotAtBay);
+	const auto stand = FindTBMFaceStand(*project);
+	if (stand.has_value()) proposal.bay = stand->tile;
+	// Packets move only between intact stationary trains, the hauler's moving front on the stand heading towards the cutter.
+	if (cutter->vehstatus.Test(VehState::Crashed) || hauler->vehstatus.Test(VehState::Crashed) ||
+		cutter->cur_speed != 0 || hauler->cur_speed != 0 || !IsTBMHaulerFacingStand(*project, *hauler)) return refuse(TBMExchangeError::NotAtBay);
+	const auto layout = InspectTBMConsist(*cutter, *project);
+	if (layout.error != TBMBlockedReason::None) return refuse(TBMExchangeError::InvalidConsist);
+
+	/* Source: every spoil unit of the cutter, each part keeping all of its cargo. */
+	size_t parts = 0;
+	for (const auto &unit : layout.exchangeable_units) {
+		Train *head = Train::Get(unit.vehicle);
+		const Train *last = head->GetLastEnginePart();
+		uint64_t carried = 0;
+		for (const Train *part = head; part != nullptr; part = part->Next()) {
+			// Cargo claimed for loading, transfer or delivery belongs to a station action and cannot change trains.
+			if (part->cargo.ActionCount(VehicleCargoList::MoveToAction::Keep) != part->cargo.TotalCount()) return refuse(TBMExchangeError::UnstableCargo);
+			carried += part->cargo.TotalCount();
+			++parts;
+			if (part == last) break;
+		}
+		proposal.loaded_units.push_back(unit.vehicle);
+		(unit.role == TBMConsistRole::EarthWagon ? proposal.earth_t : proposal.rock_t) += carried;
+	}
+	if (proposal.earth_t + proposal.rock_t == 0) return refuse(TBMExchangeError::NoSpoil);
+
+	/* Destination: exactly the wagons of the hauler's own set, each still a whole empty spoil unit of this hauler. */
+	const TBMWagonSet *set = FindTBMWagonSet(assignment->set);
+	// A hauler without its own hoppers has nowhere to take the spoil.
+	if (set == nullptr || set->wagons.empty()) return refuse(TBMExchangeError::WrongWagons);
+	for (VehicleID id : set->wagons) {
+		Train *unit = Train::GetIfValid(id);
+		uint64_t capacity;
+		// A set wagon that left this hauler, or holds cargo already, breaks the set; it is not silently replaced.
+		if (unit == nullptr || unit->First() != hauler || !IsEmptyTBMSpoilUnit(unit, capacity)) return refuse(TBMExchangeError::WrongWagons);
+		(GetTBMSpoilRole(*unit) == TBMConsistRole::EarthWagon ? proposal.empty_earth_capacity_t : proposal.empty_rock_capacity_t) += capacity;
+		proposal.empty_units.push_back(id);
+		// Include every articulated destination part in the conservative split
+		// allowance; unit metadata alone cannot reserve physical packet room.
+		for (const Train *part = unit; part != nullptr; part = part->Next()) {
+			++parts;
+			if (part == unit->GetLastEnginePart()) break;
+		}
+	}
+	// Each spoil goes only into its own kind of hopper, and the whole load must fit: nothing is left behind.
+	if (proposal.empty_earth_capacity_t < proposal.earth_t || proposal.empty_rock_capacity_t < proposal.rock_t) return refuse(TBMExchangeError::InsufficientEmpties);
+	// Each shift between one source part and one destination part may split one packet; there are fewer shifts than parts.
+	if (!CargoPacket::CanAllocateItem(parts)) return refuse(TBMExchangeError::Limit);
+
+	/* No part changes train: the proposed chains are the original ones. */
+	for (const Train *part = cutter; part != nullptr; part = part->Next()) proposal.original_cutter.push_back(part->index);
+	for (const Train *part = hauler; part != nullptr; part = part->Next()) proposal.original_hauler.push_back(part->index);
+	proposal.proposed_cutter = proposal.original_cutter;
+	proposal.proposed_hauler = proposal.original_hauler;
+	proposal.error = TBMExchangeError::None;
+	return proposal;
+}
+
+/** @copydoc ValidateTBMFaceTransfer */
+TBMExchangeProposal ValidateTBMFaceTransfer(const TBMExchangeRequest &request)
+{
+	return DescribeTBMFaceTransfer(request);
+}
+
+/**
+ * Refresh a train's cached mass and acceleration and its views after spoil moved on or off it.
+ * @param train Front engine whose cargo changed.
+ */
+static void RefreshTBMTrainCargo(Train &train)
+{
+	// The spoil is physical train mass: both caches follow the packets, as after a cut, then the views.
+	train.CargoChanged();
+	train.UpdateAcceleration();
+	SetWindowDirty(GetWindowClassForVehicleType(VehicleType::Train), train.owner);
+	SetWindowDirty(WindowClass::VehicleDetails, train.index);
+	train.MarkDirty();
+}
+
+/** @copydoc ExecuteTBMFaceTransfer */
+TBMExchangeProposal ExecuteTBMFaceTransfer(const TBMExchangeRequest &request)
+{
+	auto proposal = ValidateTBMFaceTransfer(request);
+	if (proposal.error != TBMExchangeError::None) return proposal;
+	TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(request.hauler);
+	TBMWagonSet *set = FindTBMWagonSet(assignment->set);
+	Train *cutter = Train::Get(proposal.cutter);
+	Train *hauler = Train::Get(proposal.hauler);
+
+	// Allocate complete destination vectors before the first physical mutation.
+	// The hauler keeps its own hoppers in stable set/part order; no wagon relinks.
+	std::vector<Train *> earth_dest, rock_dest;
+	for (VehicleID id : set->wagons) {
+		Train *unit = Train::Get(id);
+		auto &dest = GetTBMSpoilRole(*unit) == TBMConsistRole::EarthWagon ? earth_dest : rock_dest;
+		for (Train *part = unit; part != nullptr; part = part->Next()) {
+			if (part->cargo_cap != 0) dest.push_back(part);
+			if (part == unit->GetLastEnginePart()) break;
+		}
+	}
+	/* Source parts: the cutter's spoil units. Each part's packets fill the next hopper with room, in order. */
+	size_t next_earth = 0, next_rock = 0;
+	for (VehicleID id : proposal.loaded_units) {
+		Train *head = Train::Get(id);
+		const bool earth = GetTBMSpoilRole(*head) == TBMConsistRole::EarthWagon;
+		auto &dest = earth ? earth_dest : rock_dest;
+		size_t &next = earth ? next_earth : next_rock;
+		for (Train *source = head; source != nullptr; source = source->Next()) {
+			// Move this part's packets until it is empty; the description proved the hoppers hold them all.
+			while (source->cargo.TotalCount() != 0) {
+				// Skip the hoppers this spoil has already filled.
+				while (next < dest.size() && dest[next]->cargo.TotalCount() >= dest[next]->cargo_cap) ++next;
+				assert(next < dest.size());
+				if (next >= dest.size()) NOT_REACHED(); // An internal preflight violation must never publish a partial transfer as complete.
+				const uint room = dest[next]->cargo_cap - dest[next]->cargo.TotalCount();
+				const uint before = source->cargo.TotalCount();
+				const uint amount = std::min(room, before);
+				const uint moved = source->cargo.Shift(amount, &dest[next]->cargo);
+				assert(moved == amount && source->cargo.TotalCount() == before - amount);
+				(void)moved; // The admitted pool bound forbids native whole-packet fallback.
+			}
+			if (source == head->GetLastEnginePart()) break;
+		}
+	}
+	RefreshTBMTrainCargo(*cutter);
+	RefreshTBMTrainCargo(*hauler);
+
+	/* Bookkeeping, as after a bay exchange but without moving wagons: the hauler takes its own set away loaded. */
+	set->state = TBMWagonSetState::Loaded;
+	set->visited_origin = false;
+	++set->revision;
+	assignment->phase = TBMHaulerPhase::CollectLoaded;
+	assignment->wait = TBMHaulerWait::None;
+	assignment->phase_ticks = 0;
+	++assignment->exchanges;
+	++assignment->revision;
+	return proposal;
+}
+
+/** @copydoc GetTBMHaulerRoomCells */
+uint GetTBMHaulerRoomCells(TBMProjectID project)
+{
+	uint cells = 0;
+	// Every current assignment contributes its actual complete consist length;
+	// absent trains cannot lend clearance and no derived length is persisted.
+	for (const auto &assignment : _tbm_exchange_assignments) {
+		if (assignment.project != project) continue;
+		if (const Train *hauler = Train::GetIfValid(assignment.hauler); hauler != nullptr) cells = std::max<uint>(cells, CeilDiv(hauler->gcache.cached_total_length, TILE_SIZE));
+	}
+	return cells;
+}
+
+/**
+ * @param project Project whose pair is read.
+ * @param corridor Its sorted corridor tiles (GetTBMWorkCorridor).
+ * @param train Front engine of a train.
+ * @return Whether a part of the train runs on the corridor or on either end of the pair. A part stored in a magazine
+ *         or depot there, as a hauler queued at its bay is, is off the running line and does not count.
+ */
+static bool IsTrainInTBMCorridor(const TBMProject &project, const std::vector<TileIndex> &corridor, const Train &train)
+{
+	const TileIndex key = project.portal;
+	const TileIndex housing = IsValidTile(key) && IsLayerPortalTile(key) ? GetLayerPortalPairTile(key) : INVALID_TILE;
+	// A single running part holds the corridor until the complete hauler
+	// clears it; stored depot/magazine parts remain off the running line.
+	// A single stored/running follower changes the whole chain's departure contract.
+	for (const Train *part = &train; part != nullptr; part = part->Next()) {
+		if (part->track == Track::Depot) continue;
+		// The pair's two ends join the corridor to the Surface: a hauler passing through the shaft is still inside.
+		if ((key != INVALID_TILE && part->tile == key) || (housing != INVALID_TILE && part->tile == housing) || std::ranges::binary_search(corridor, part->tile)) return true;
+	}
+	return false;
+}
+
+/** @copydoc IsTBMHaulerInCorridor */
+bool IsTBMHaulerInCorridor(const TBMProject &project, VehicleID hauler)
+{
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(hauler);
+	const Train *front = Train::GetIfValid(hauler);
+	// Only this exact project assignment and a surviving native front may
+	// hold its work corridor; a matching tile alone grants no participation.
+	if (assignment == nullptr || assignment->project != project.id || front == nullptr) return false;
+	return IsTrainInTBMCorridor(project, GetTBMWorkCorridor(project), *front);
+}
+
+/** @copydoc FindTBMHaulerInCorridor */
+VehicleID FindTBMHaulerInCorridor(const TBMProject &project)
+{
+	VehicleID found = VehicleID::Invalid();
+	std::vector<TileIndex> corridor;
+	// The corridor is read once for all haulers; most projects have one or two.
+	for (const auto &assignment : _tbm_exchange_assignments) {
+		if (assignment.project != project.id) continue;
+		const Train *front = Train::GetIfValid(assignment.hauler);
+		// Missing trains confer no hold; a higher identity cannot replace an
+		// already found lower occupant, keeping observation order deterministic.
+		if (front == nullptr || (found != VehicleID::Invalid() && found < front->index)) continue;
+		if (corridor.empty()) corridor = GetTBMWorkCorridor(project);
+		if (IsTrainInTBMCorridor(project, corridor, *front)) found = front->index;
+	}
+	return found;
+}
+
+/**
+ * @param project Project whose pair and corridor are read.
+ * @param train Front engine of a hauler.
+ * @return Whether a part of the train runs beyond the key: on the pair's housing or the corridor. Parts on the key
+ *         itself, moving or stored, are where queuing haulers stand; parts stored elsewhere are off the running line.
+ */
+static bool IsTBMHaulerBeyondKey(const TBMProject &project, const Train &train)
+{
+	// A missing or replaced source cannot identify a safe exit corridor.
+	if (!IsValidTile(project.portal) || !IsLayerPortalTile(project.portal)) return false;
+	const TileIndex housing = GetLayerPortalPairTile(project.portal);
+	const auto corridor = GetTBMWorkCorridor(project);
+	// A single running part beyond the key still needs outbound clearance;
+	// queued/stored key parts alone do not authorize a new shaft entry.
+	for (const Train *part = &train; part != nullptr; part = part->Next()) {
+		// Stored bodies and the queuing key remain outside the running interior.
+		if (part->track == Track::Depot || part->tile == project.portal) continue;
+		if (part->tile == housing || std::ranges::binary_search(corridor, part->tile)) return true;
+	}
+	return false;
+}
+
+/**
+ * @param assignment Assignment of a hauler.
+ * @param job Its project's live job.
+ * @return Whether the hauler could serve the face now (rule F5): it returns empties or waits for an exchange without a
+ *         hold, and its own set is wholly aboard, empty and covers the job's frozen pass terms for each spoil, so it can
+ *         always take the cutter's whole load.
+ */
+static bool IsTBMFaceCandidate(const TBMExchangeAssignment &assignment, const ExcavationJob &job)
+{
+	// Only a current empty return or exchange wait can acquire the face turn;
+	// a loaded/origin-bound leg must finish its existing delivery obligation.
+	if (assignment.phase != TBMHaulerPhase::ReturnEmpties && assignment.phase != TBMHaulerPhase::AwaitExchange) return false;
+	// A hold other than another hauler's turn at the bay (stopped, crashed, lost, short of empties) gives up the turn.
+	if (assignment.wait != TBMHaulerWait::None && assignment.wait != TBMHaulerWait::OccupiedBay) return false;
+	const Train *hauler = Train::GetIfValid(assignment.hauler);
+	const TBMWagonSet *set = FindTBMWagonSet(assignment.set);
+	// A live own-company intact hauler, actual set and frozen pass terms are
+	// all required; missing/foreign facts cannot lend another train capacity.
+	if (hauler == nullptr || hauler->owner != job.company || hauler->vehstatus.Test(VehState::Crashed) || set == nullptr || !job.pass_terms.has_value()) return false;
+	uint64_t earth = 0, rock = 0;
+	// Each set wagon must still be an empty spoil unit of this hauler; its parts' capacity counts for its spoil.
+	for (VehicleID id : set->wagons) {
+		const Train *unit = Train::GetIfValid(id);
+		// A detached or absent set member cannot count as an empty hopper aboard
+		// this candidate, even if the old set still names its identity.
+		if (unit == nullptr || unit->First() != hauler) return false;
+		const TBMConsistRole role = GetTBMSpoilRole(*unit);
+		if (role == TBMConsistRole::Invalid) return false;
+		for (const Train *part = unit; part != nullptr; part = part->Next()) {
+			if (part->cargo.TotalCount() != 0) return false;
+			(role == TBMConsistRole::EarthWagon ? earth : rock) += part->cargo_cap;
+			if (!part->HasArticulatedPart()) break; // The unit ends with its last articulated part.
+		}
+	}
+	return earth >= job.pass_terms->earth_capacity_t && rock >= job.pass_terms->rock_capacity_t;
+}
+
+/** @copydoc IsTBMFaceTurnHolder */
+bool IsTBMFaceTurnHolder(const TBMExchangeAssignment &assignment)
+{
+	const TBMProject *project = GetTBMProject(assignment.project);
+	const ExcavationJob *job = project == nullptr ? nullptr : GetLiveTBMJob(*project);
+	if (job == nullptr) return false;
+	// The store is in identity order, so the first eligible hauler of the project has the lowest assignment ID.
+	/** @param candidate Actual retained assignment. @return Same-project whole-empty eligibility, without reserving a turn. */
+	const auto eligible = [&assignment, job](const TBMExchangeAssignment &candidate) {
+		return candidate.project == assignment.project && IsTBMFaceCandidate(candidate, *job);
+	};
+	const auto holder = std::ranges::find_if(_tbm_exchange_assignments, eligible);
+	// No eligible assignment or a different earlier assignment leaves this
+	// caller without a turn; observation never reorders the native store.
+	if (holder == _tbm_exchange_assignments.end() || holder->id != assignment.id) return false;
+	// One hauler in the corridor at a time: another of the project still inside, such as a loaded one on its way out,
+	// keeps the turn closed, or the two would meet head on.
+	std::vector<TileIndex> corridor;
+	for (const auto &other : _tbm_exchange_assignments) {
+		// Only another hauler of this same project competes for its single
+		// corridor; the candidate itself is allowed to finish its own visit.
+		if (other.project != assignment.project || other.id == assignment.id) continue;
+		const Train *front = Train::GetIfValid(other.hauler);
+		if (front == nullptr) continue;
+		if (corridor.empty()) corridor = GetTBMWorkCorridor(*project);
+		if (IsTrainInTBMCorridor(*project, corridor, *front)) return false;
+	}
+	return true;
+}
+
+/** @copydoc IsTBMHaulerAdmittedThroughPortal */
+bool IsTBMHaulerAdmittedThroughPortal(const Train &front, TileIndex tile)
+{
+	const Train *head = front.First();
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(head->index);
+	const TBMProject *project = assignment == nullptr ? nullptr : GetTBMProject(assignment->project);
+	// Only an actual own-company assignment at a real portal can ask for
+	// through passage; ordinary/foreign trains gain no project authority.
+	if (project == nullptr || head->owner != project->company || !IsValidTile(tile) || !IsLayerPortalTile(tile)) return false;
+	// Only the project's own pair, either end; a hauler never passes another project's pair.
+	const auto key = GetLayerPortalPairKey(tile);
+	if (!key.has_value() || *key != project->portal) return false;
+	// On its way out: a part already beyond the key, on the housing or the corridor, always gets back to the Surface,
+	// even once the project has finished.
+	if (IsTBMHaulerBeyondKey(*project, *head)) return true;
+	// On its way in: only the face turn holder, while the cutter works or waits at its face with a stand behind it.
+	return GetTBMMeetingKind(*project) == TBMMeetingKind::Face && IsTBMFaceTurnHolder(*assignment);
+}
+
+/** @copydoc IsTBMHaulerFaceStand */
+bool IsTBMHaulerFaceStand(const Train &front, TileIndex tile, Trackdir trackdir)
+{
+	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
+	// Cheap refusals first: path searches ask this for many candidate tiles of every train.
+	if (assignment == nullptr || !IsValidTile(tile) || !IsPlainRailTile(tile)) return false;
+	const TBMProject *project = GetTBMProject(assignment->project);
+	if (project == nullptr) return false;
+	const auto stand = FindTBMFaceStand(*project);
+	// The stand counts on any of its pieces leaving towards the cutter, as the hold reads it.
+	if (!stand.has_value() || stand->tile != tile || !GetTBMFaceStandTrackdirs(*stand).Test(trackdir)) return false;
+	return GetTBMMeetingKind(*project) == TBMMeetingKind::Face && IsTBMFaceTurnHolder(*assignment);
+}
+
+/** Inspect actual storage before a physical reversal.
+ * @param train Actual front engine.
+ * @return Whether any follower remains in a native depot or magazine.
+ */
+static bool HasTBMStoredPart(const Train &train)
+{
+	// A single stored/running follower changes the whole chain's departure contract.
+	for (const Train *part = &train; part != nullptr; part = part->Next()) {
+		if (part->track == Track::Depot) return true;
+	}
+	return false;
+}
+
+/** Observe whether a saved lost-route flag describes any currently running part.
+ * @param train Actual front engine.
+ * @return Whether the chain has a part outside native storage.
+ */
+static bool HasTBMMovingPart(const Train &train)
+{
+	// A single stored/running follower changes the whole chain's departure contract.
+	for (const Train *part = &train; part != nullptr; part = part->Next()) {
+		if (part->track != Track::Depot) return true;
+	}
+	return false;
+}
+
 /** @copydoc ObserveTBMHaulerInputs */
+
 TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment)
 {
 	TBMHaulerInputs inputs;
@@ -625,14 +1027,38 @@ TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment)
 	if (project != nullptr) {
 		inputs.project_live = true;
 		inputs.origin_live = IsTBMOriginStation(*project);
-		inputs.cutter_waiting = IsTBMWaitingForExchange(project->phase);
+		// Rule F4: the face turn holder meets the cutter at its stand, every other hauler at the bay (r2df2 task 4.2).
+		const bool face = GetTBMMeetingKind(*project) == TBMMeetingKind::Face && IsTBMFaceTurnHolder(assignment);
+		inputs.cutter_waiting = IsTBMWaitingForExchange(project->phase) || IsTBMReadyForFaceTransfer(*project);
 		inputs.exchange_finished = IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase);
-		const auto bay = GetTBMExchangeBay(*project);
-		inputs.at_bay = bay.tile == assignment.bay && CheckTBMExchangeParticipant(*hauler, bay, project->company) == TBMExchangeError::None;
+		if (face) {
+			inputs.at_bay = IsTBMHaulerFacingStand(*project, *hauler); // IsTBMHaulerHeld stops it there.
+		} else {
+			const auto bay = GetTBMExchangeBay(*project);
+			inputs.at_bay = bay.tile == assignment.bay && CheckTBMExchangeParticipant(*hauler, bay, project->company) == TBMExchangeError::None;
+		}
+		// Rule F6: a hauler inside leaves the corridor when it may not serve the face, or when the cutter was sent back
+		// with nothing aboard to collect.
+		inputs.inside = IsTBMHaulerBeyondKey(*project, *hauler);
+		if (inputs.inside && (!face || (IsTBMReturning(project->phase) && !IsTBMExchangeDue(*project)))) inputs.exchange_finished = true;
 		// The origin visit is the head standing on a tile of the project's own origin station.
 		inputs.at_origin = IsTileType(hauler->tile, TileType::Station) && GetStationIndex(hauler->tile) == project->origin;
 	}
 	inputs.lost = hauler->vehicle_flags.Test(VehicleFlag::PathfinderLost);
+	// r2mlvs3mp task 10R.2: an empty hauler bound for its Source bay finds no path while another train still moves on
+	// the bay's housing, because GetLayerPortalAdmittedTrackdirs hides a busy magazine. During the first cut that train
+	// is the project's own cutter, whose tail stands on the key. That is a queue at the bay, not a broken line:
+	// reporting BlockedLine would raise LogisticsStall and hold the very cut that frees the housing. The pathfinder
+	// clears its lost flag once the housing is free again; a hauler lost for any other reason still reports it.
+	if (inputs.lost && project != nullptr && assignment.phase == TBMHaulerPhase::ReturnEmpties &&
+			IsLayerPortalTile(assignment.bay) && IsLayerPortalMagazineBusy(assignment.bay, *hauler)) {
+		inputs.lost = false;
+	}
+	// A hauler standing wholly inside a magazine or depot has no route to be lost on: its flag dates from before it
+	// arrived, and only its next path search, once it moves, sets or clears it. Read stale, the flag would report
+	// BlockedLine to a face turn holder still in its bay, which gives up the turn, reads as at the bay again and so
+	// flips back every tick without ever leaving (r2mlvs3mp task 10R.2).
+	if (inputs.lost && !HasTBMMovingPart(*hauler)) inputs.lost = false;
 	if (const TBMWagonSet *set = FindTBMWagonSet(assignment.set); set != nullptr) {
 		// The set is checked wagon by wagon against the actual chain, never trusted from the previous phase.
 		for (VehicleID id : set->wagons) {
@@ -682,7 +1108,11 @@ TBMHaulerStep StepTBMHaulerPhase(const TBMExchangeAssignment &assignment, const 
 	if (step.wait != TBMHaulerWait::None) return step;
 	switch (assignment.phase) {
 		case TBMHaulerPhase::ReturnEmpties:
-			if (inputs.at_bay && inputs.set_empty) step.phase = inputs.exchange_finished ? TBMHaulerPhase::VisitOrigin : TBMHaulerPhase::AwaitExchange;
+			if (inputs.at_bay && inputs.set_empty) {
+				step.phase = inputs.exchange_finished ? TBMHaulerPhase::VisitOrigin : TBMHaulerPhase::AwaitExchange;
+			} else if (inputs.inside && inputs.exchange_finished) {
+				step.phase = TBMHaulerPhase::VisitOrigin; // Rule F6: inside, but no longer serving the face; it backs out.
+			}
 			break;
 		case TBMHaulerPhase::AwaitExchange:
 			if (inputs.exchange_finished) {
@@ -715,6 +1145,22 @@ TBMHaulerStep StepTBMHaulerPhase(const TBMExchangeAssignment &assignment, const 
 	return step;
 }
 
+/**
+ * Rule F6 (r2df2 task 4.4): a hauler leaving the face turns round on the stand, where its hold stopped it facing the
+ * cutter, and backs out the way it came. Turned, it no longer faces the stand, so this happens once per visit; a part
+ * still stored in the magazine could not follow a reversal, so a hauler only turns once wholly out.
+ * @param assignment Assignment after this tick's step or transfer.
+ */
+static void TurnTBMHaulerAtStand(const TBMExchangeAssignment &assignment)
+{
+	const bool leaving = assignment.phase == TBMHaulerPhase::CollectLoaded || assignment.phase == TBMHaulerPhase::VisitOrigin || assignment.phase == TBMHaulerPhase::DisposeOrTransfer;
+	if (!leaving) return;
+	Train *hauler = Train::GetIfValid(assignment.hauler);
+	if (hauler == nullptr || HasTBMStoredPart(*hauler)) return;
+	if (const TBMProject *project = GetTBMProject(assignment.project); project != nullptr && IsTBMHaulerFacingStand(*project, *hauler)) BackUpTBMHauler(*hauler);
+}
+
+/** @copydoc AdvanceTBMHauler */
 TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id)
 {
 	TBMExchangeAssignment *assignment = FindTBMExchangeAssignment(id);
@@ -722,11 +1168,16 @@ TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id)
 	const auto inputs = ObserveTBMHaulerInputs(*assignment);
 	auto step = StepTBMHaulerPhase(*assignment, inputs);
 	if (step.exchange) {
-		const CompanyID owner = GetTBMProject(assignment->project)->company;
-		Backup<CompanyID> actor(_current_company, owner); // The exchange acts for the company that owns both trains.
-		const auto proposal = ExecuteTBMWagonExchange({assignment->project, assignment->hauler});
+		const TBMProject *project = GetTBMProject(assignment->project);
+		Backup<CompanyID> actor(_current_company, project->company); // The exchange acts for the company that owns both trains.
+		// Rule F3 (r2df2 task 6.4): a cutter ready at its face hands its spoil over there; any other cutter waits in its bay.
+		const TBMExchangeRequest request{assignment->project, assignment->hauler};
+		const auto proposal = IsTBMReadyForFaceTransfer(*project) ? ExecuteTBMFaceTransfer(request) : ExecuteTBMWagonExchange(request);
 		actor.Restore();
-		if (proposal.error == TBMExchangeError::None) return TBMExchangeError::None; // The commit moved the cycle on.
+		if (proposal.error == TBMExchangeError::None) {
+			TurnTBMHaulerAtStand(*assignment); // The commit moved the cycle on; at the face the loaded hauler turns at once.
+			return TBMExchangeError::None;
+		}
 		// A refusal holds the hauler with its precise reason; any other refusal is the cutter not being ready yet.
 		if (proposal.error == TBMExchangeError::InsufficientEmpties) step.wait = TBMHaulerWait::NoEmpties;
 		if (proposal.error == TBMExchangeError::OccupiedBay) step.wait = TBMHaulerWait::OccupiedBay;
@@ -748,6 +1199,10 @@ TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id)
 	assignment->phase_ticks = phase_changed ? 0 : std::min<uint64_t>(assignment->phase_ticks + 1, UINT64_MAX - 1);
 	assignment->phase = step.phase;
 	assignment->wait = step.wait;
+	TurnTBMHaulerAtStand(*assignment);
+	if (inputs.lost) {
+		if (Train *hauler = Train::GetIfValid(assignment->hauler); hauler != nullptr) ChooseTBMHaulerRouteDirection(*hauler);
+	} // A closed directed chamber loop has no line end; native two-end routing can recover the existing work/ordinary destination without changing cargo or work.
 	return TBMExchangeError::None;
 }
 
@@ -755,11 +1210,13 @@ TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id)
 bool IsTBMHaulerHeld(const Train &front)
 {
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
-	if (assignment != nullptr) {
-		const auto *project = GetTBMProject(assignment->project);
-		if (project != nullptr && (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase))) return false; // The origin order clears the real bay after work stops needing empties.
-	}
-	return assignment != nullptr && assignment->phase == TBMHaulerPhase::AwaitExchange && assignment->wait != TBMHaulerWait::LostProject;
+	if (assignment == nullptr) return false;
+	const auto *project = GetTBMProject(assignment->project);
+	if (project != nullptr && (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase))) return false; // The origin order clears the real bay after work stops needing empties.
+	// A hauler reaching the stand heading towards the cutter stops there, one clear cell behind it, whatever its phase:
+	// the turn holder waits for the transfer, any other hauler turns round there (rules F4 and F6).
+	if (project != nullptr && IsTBMHaulerFacingStand(*project, front)) return true;
+	return assignment->phase == TBMHaulerPhase::AwaitExchange && assignment->wait != TBMHaulerWait::LostProject;
 }
 
 /** @copydoc IsTBMHaulerAdmittedAtBay */
@@ -772,12 +1229,17 @@ bool IsTBMHaulerAdmittedAtBay(const Train &front, TileIndex tile)
 	if (project == nullptr || front.owner != project->company) return false;
 	const TBMExchangeBay bay = ResolveTBMExchangeBay(*project, tile);
 	if (bay.error != TBMExchangeError::None || bay.kind != TBMExchangeBayKind::Source) return false;
-	if (!IsTBMProjectFinished(project->phase) && !IsTBMStored(project->phase)) return true;
-	// A finished project has no exchange left: the hauler may only finish leaving, never come back for one.
+	// A hauler with a part on the key may always finish leaving the bay it stands in, or finish entering it.
 	for (const Train *part = front.First(); part != nullptr; part = part->Next()) {
 		if (part->tile == tile) return true;
 	}
-	return false;
+	// A finished project has no exchange left: the hauler is never drawn back in for one.
+	if (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase)) return false;
+	// r2mlvs5 task 13D.2: through the door, only a hauler bound for its bay or waiting there is admitted. A loaded
+	// hauler on its way to the origin has no business in the bay. Admitted, it saw a track into the magazine rather
+	// than a line end at the door, so path reservation found no safe waiting position between the origin platform and
+	// the cutter, and a hauler turning back at the origin could never reserve its way out of its depot.
+	return assignment->phase == TBMHaulerPhase::ReturnEmpties || assignment->phase == TBMHaulerPhase::AwaitExchange;
 }
 
 /** @copydoc MayTBMTrainLeaveMagazine */
@@ -790,35 +1252,51 @@ bool MayTBMTrainLeaveMagazine(const Train &front)
 	}
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
 	if (assignment == nullptr) return false;
+	// The face turn holder queued here leaves towards the face; the exit rule sends it through the shaft (r2df2 task 3.4).
+	if (IsTBMHaulerAdmittedThroughPortal(front, front.tile)) return true;
 	// A finished project has no exchange to wait for, so its hauler leaves whatever its phase.
 	if (const TBMProject *project = GetTBMProject(assignment->project); project != nullptr && (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase))) return true;
 	// A hauler waits in the bay while it returns empties or awaits its exchange; afterwards it takes the load out.
 	return assignment->phase != TBMHaulerPhase::ReturnEmpties && assignment->phase != TBMHaulerPhase::AwaitExchange;
 }
 
+/** @copydoc IsTBMWaitingAtLineEnd */
 bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next)
 {
 	if (GetTBMProjectForCutter(front.index) != nullptr) return true;
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.index);
-	return assignment != nullptr && assignment->bay == next && IsTBMHaulerAdmittedAtBay(front, next);
+	if (assignment == nullptr) return false;
+	const auto goal = GetTBMHaulerSteeringTarget(front);
+	// Only an actual managed bay destination suppresses ordinary line-end
+	// reversal. A loaded leg or a parked/finished project's empty hauler follows
+	// its Surface order, even while a part still traverses the old Source key.
+	return goal.has_value() && goal->tile == next && assignment->bay == next && IsTBMHaulerAdmittedAtBay(front, next);
 }
 
 /** @copydoc GetTBMHaulerSteeringTarget */
-TileIndex GetTBMHaulerSteeringTarget(const Train &front)
+std::optional<TBMHaulerSteeringTarget> GetTBMHaulerSteeringTarget(const Train &front)
 {
 	const TBMExchangeAssignment *assignment = FindTBMExchangeAssignmentForHauler(front.First()->index);
 	// Only the empty return is steered; every other phase follows the player's orders, the origin visit included.
-	if (assignment == nullptr || assignment->phase != TBMHaulerPhase::ReturnEmpties) return INVALID_TILE; // Only a real assigned empty-return obligation can override the ordinary origin order.
+	if (assignment == nullptr || assignment->phase != TBMHaulerPhase::ReturnEmpties) return std::nullopt; // Only a real assigned empty-return obligation can override the ordinary origin order.
 	const auto *project = GetTBMProject(assignment->project);
-	if (project == nullptr) return INVALID_TILE;
-	const auto bay = GetTBMExchangeBay(*project);
-	if (bay.error != TBMExchangeError::None) return INVALID_TILE;
-	if (bay.kind == TBMExchangeBayKind::Source) {
-		if (!IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return INVALID_TILE;
-	} else if (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase)) {
-		return INVALID_TILE; // A final delivered load ends the depot obligation; ordinary orders take the hauler onward.
+	if (project == nullptr) return std::nullopt;
+	// Once work parks or finishes, its empty hauler follows its ordinary origin
+	// order. An actual part still on the Source key may finish that physical
+	// traversal, but cannot revive the now-ended bay destination (Plan18 8FA).
+	if (IsTBMProjectFinished(project->phase) || IsTBMStored(project->phase)) return std::nullopt;
+	// The face turn holder drives through the pair to the stand behind the cutter, arriving towards it (r2df2 task 4.1).
+	if (GetTBMMeetingKind(*project) == TBMMeetingKind::Face && IsTBMFaceTurnHolder(*assignment)) {
+		if (const auto stand = FindTBMFaceStand(*project); stand.has_value()) return TBMHaulerSteeringTarget{stand->tile, GetTBMFaceStandTrackdirs(*stand)};
 	}
-	return assignment->bay;
+	const auto bay = GetTBMExchangeBay(*project);
+	if (bay.error != TBMExchangeError::None) return std::nullopt;
+	if (bay.kind == TBMExchangeBayKind::Source) {
+		if (!IsTBMHaulerAdmittedAtBay(front, assignment->bay)) return std::nullopt;
+	}
+	// Every other hauler queues at the bay, entering through its door.
+	const DiagDirection door = bay.kind == TBMExchangeBayKind::Source ? GetLayerPortalDoorDirection(assignment->bay) : GetRailDepotDirection(assignment->bay);
+	return TBMHaulerSteeringTarget{assignment->bay, TrackdirToTrackdirBits(DiagDirToDiagTrackdir(ReverseDiagDir(door)))};
 }
 
 TBMLogisticsWait GetTBMLogisticsWait(const TBMProject &project)

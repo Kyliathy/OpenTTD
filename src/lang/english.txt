@@ -5415,6 +5415,7 @@ STR_ERROR_TBM_HANGAR_UNAVAILABLE                               :Choose an owned 
 STR_ERROR_TBM_HANGAR_OCCUPIED                                  :The hangar is occupied; clear the other train or choose another hangar
 STR_ERROR_TBM_HANGAR_MISSING                                   :The selected hangar is unavailable; choose another hangar
 STR_ERROR_TBM_EXIT_UNFINISHED                                  :Complete the planned cuts before building this exit
+STR_ERROR_TBM_EXIT_HAULER                                      :Wait for the hauler to leave the tunnel first
 STR_ERROR_TBM_EXIT_STAGE                                       :Return the TBM a few tiles, then stop the whole train clear of the exit and its approach
 STR_ERROR_TBM_EXIT_GEOMETRY                                    :Place the exit at the end of the completed tunnel, with its mouth facing the approach
 STR_BUILD_RAIL_LAYER_PORTAL_HINT                               :{BLACK}Point at a portal site to see both endpoints, approaches and the full price
@@ -6768,3 +6769,39 @@ STR_SPACE_PROCESS_WORK                                         :Processing work 
 STR_SPACE_PROCESS_POWER                                        :Waiting for the connected panel and useful electricity.
 STR_SPACE_PROCESS_ALLOCATION                                   :Waiting for room to create the complete output batch.
 STR_SPACE_PROCESS_LIMIT                                        :Processing has reached its current capacity.
+
+# Canonical station supply controls: docs/zz-reach2/architecture/gui/archi-gui.md; m2o23-1 Groups14B-14C.
+STR_ERROR_SURFACE_SUPPLY_REFUSED                             :{WHITE}This complete supply request is unavailable; check the source, quantity, allowance and funds
+STR_ERROR_SURFACE_SUPPLY_DATE                                :{WHITE}These imported construction supplies are not available yet
+STR_ERROR_SURFACE_SUPPLY_FUNDS                               :{WHITE}Not enough money for the complete construction supply order
+STR_ERROR_SURFACE_SUPPLY_CAP                                 :{WHITE}Company construction supply limit reached for this economy day
+STR_ERROR_SURFACE_SUPPLY_STOCK                               :{WHITE}Not enough station space for the complete construction supply order
+STR_ERROR_SURFACE_SUPPLY_STALE                               :{WHITE}Construction supply action changed or was already completed; request a new quote
+STR_ERROR_SURFACE_SUPPLY_REFUND_LIMIT                        :{WHITE}Cannot refund these supplies while the company balance is at its limit
+STR_SURFACE_SUPPLIES                                         :Construction supplies
+STR_SURFACE_SUPPLY_TOOLTIP                                   :Buy construction materials here and transport them in real vehicles. Refunds end at station delivery. Bought supplies earn no freight income.
+STR_SURFACE_SUPPLY_BUY                                       :Buy supplies
+STR_SURFACE_SUPPLY_SELECT_ORDER                              :Choose paid order
+STR_SURFACE_SUPPLY_CANCEL                                    :Cancel pending order
+STR_SURFACE_SUPPLY_QUANTITY_QUERY                            :Supply quantity (whole units)
+STR_SURFACE_SUPPLY_BAD_QUANTITY                              :{BLACK}Enter a whole quantity from 1 to 65,535
+STR_SURFACE_SUPPLY_QUANTITY                                  :Quantity: {NUM}
+STR_SURFACE_SUPPLY_CHOICE                                    :{RAW_STRING} (from {NUM})
+STR_SURFACE_SUPPLY_TERMS                                     :{BLACK}From {NUM}; current unit price: {CURRENCY_LONG}
+STR_SURFACE_SUPPLY_LIMIT                                     :{BLACK}Company allowance left today: {NUM} of {NUM}
+STR_SURFACE_SUPPLY_TOTAL                                     :{BLACK}Complete order price: {CURRENCY_LONG}
+STR_SURFACE_SUPPLY_ORDER_CHOICE                              :Order #{NUM}: {RAW_STRING}, {NUM} units
+STR_SURFACE_SUPPLY_ORDER_NUMBER                              :Order #{NUM}: {RAW_STRING}
+STR_SURFACE_SUPPLY_HISTORY                                   :{BLACK}Paid {NUM}; sent {NUM}; refunded {NUM}; {RAW_STRING}
+STR_SURFACE_SUPPLY_CLOSED                                    :closed
+STR_SURFACE_SUPPLY_OPEN                                      :open
+STR_SURFACE_SUPPLY_NONPAYING                                 :{BLACK}Bought supplies earn no freight income
+STR_SURFACE_SUPPLY_REFUND                                    :Cancel order: refund {NUM} units / {CURRENCY_LONG}
+STR_ERROR_SURFACE_SUPPLY_ACTION                              :{WHITE}Cannot change construction supplies
+STR_SURFACE_SUPPLY_NATIVE_HISTORY                            :{BLACK}Paid {NUM}; {RAW_STRING}. Refunds end at station delivery.
+STR_SURFACE_SUPPLY_PENDING                                   :pending delivery
+STR_SURFACE_SUPPLY_FULFILLED                                 :delivered
+STR_SURFACE_SUPPLY_CANCELLED                                 :cancelled
+STR_SURFACE_SUPPLY_LOST                                      :owner lost
+STR_SURFACE_SUPPLY_LEGACY_REFUND                             :Close original order: refund {NUM} units / {CURRENCY_LONG}
+STR_SURFACE_SUPPLY_LEGACY_CANCEL                             :Close original order

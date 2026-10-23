@@ -214,6 +214,14 @@ const TBMExchangeAssignment *GetTBMExchangeAssignmentForHauler(VehicleID hauler)
  */
 const TBMExchangeAssignment *GetTBMExchangeAssignmentAtBay(TileIndex bay);
 
+/** Whole-cell clearance required by the longest actual assigned hauler.
+ * @param project Original project whose current assignments and native train-length caches are read.
+ * @return Ceiling of the longest existing assigned consist length divided by TILE_SIZE, or zero with no live hauler.
+ * This is derived admission evidence, not another saved meeting position or cached capacity owner.
+ */
+uint GetTBMHaulerRoomCells(TBMProjectID project);
+
+
 /**
  * The bay's turn: the earliest assignment of this bay whose hauler is admitted there and does not carry a Loaded set.
  * @param bay Rearrangement tile.
@@ -255,11 +263,11 @@ struct TBMExchangeRequest {
 struct TBMExchangeProposal {
 	TBMExchangeError error = TBMExchangeError::InvalidProject; ///< None when the exchange may be committed.
 	StringID message = INVALID_STRING_ID; ///< Shared attachment refusal text, for Coupling.
-	TileIndex bay = INVALID_TILE; ///< Rearrangement tile of both trains.
+	TileIndex bay = INVALID_TILE; ///< Native rearrangement tile for a bay exchange, or derived stand for a face packet transfer.
 	VehicleID cutter = VehicleID::Invalid(); ///< Cutter front engine; it stays the cutter consist's head.
 	VehicleID hauler = VehicleID::Invalid(); ///< Hauler front engine; it stays the hauler's head.
-	std::vector<VehicleID> loaded_units; ///< Loaded unit heads, cutter to hauler, in cutter chain order.
-	std::vector<VehicleID> empty_units; ///< Empty unit heads of the hauler's set, hauler to cutter, Earth then Rock.
+	std::vector<VehicleID> loaded_units; ///< Source unit heads in cutter order; only bay exchange relinks them, while face transfer moves their packets.
+	std::vector<VehicleID> empty_units; ///< Hauler-set units: bay exchange gives them to the cutter; face transfer leaves them attached and fills their own matching hoppers.
 	std::vector<VehicleID> original_cutter; ///< Every part of the cutter consist before.
 	std::vector<VehicleID> original_hauler; ///< Every part of the hauler before.
 	std::vector<VehicleID> proposed_cutter; ///< Every part of the cutter consist after.
@@ -299,6 +307,82 @@ TBMExchangeProposal ValidateTBMWagonExchange(const TBMExchangeRequest &request);
 TBMExchangeProposal ExecuteTBMWagonExchange(const TBMExchangeRequest &request);
 
 /**
+ * Whether this hauler holds its project's face turn (rule F5, r2df2 task 3.2): of the project's haulers that return
+ * empties or wait for an exchange without a hold, carrying their own set wholly aboard, empty and covering the job's
+ * frozen pass terms for each spoil, it has the lowest assignment ID; and no other hauler of the project is in the
+ * corridor. Only the turn holder is admitted inbound through the pair.
+ * @param assignment Assignment of the hauler.
+ * @return Whether it holds the turn.
+ */
+bool IsTBMFaceTurnHolder(const TBMExchangeAssignment &assignment);
+
+/**
+ * Whether an assigned hauler may pass through its own project's Commissioning pair, either end, instead of only
+ * queuing in the key's magazine (r2df2 task 3.2). On its way out it may whenever a part of it is already beyond the
+ * key, on the housing or the corridor; on its way in only as the face turn holder while the meeting point is the Face.
+ * @param front Any part of the train.
+ * @param tile An end of a portal pair.
+ * @return Whether the train passes this pair; other projects' pairs, cutters and ordinary trains never do.
+ */
+bool IsTBMHaulerAdmittedThroughPortal(const Train &front, TileIndex tile);
+
+/**
+ * Whether a tile and trackdir are the face stand of this train as its project's turn holder, where its own hold stops
+ * it, so a reserved path may end there (r2df2 task 3.5).
+ * @param front Train to check.
+ * @param tile Candidate waiting tile.
+ * @param trackdir Candidate waiting trackdir.
+ * @return Whether they are the stand of the face turn holder.
+ */
+bool IsTBMHaulerFaceStand(const Train &front, TileIndex tile, Trackdir trackdir);
+
+/**
+ * Dwell of a face transfer: the cutter's project phase timer must reach one game day (Ticks::DAY_TICKS) before the
+ * spoil moves, so the meeting is seen, deterministically and on the saved timer (r2df2 task 1.4).
+ */
+static constexpr uint64_t TBM_FACE_TRANSFER_TICKS = 74;
+
+/**
+ * Describe a face transfer from the actual chains (rule F3, r2df2 task 5.2), changing nothing. The rules, in this order,
+ * so refusals are stable:
+ * - the project lives, is the actor's and is unfinished (InvalidProject); the hauler is assigned to it (NotAssigned);
+ *   both trains are live (InvalidProject, InvalidHauler);
+ * - the meeting point is the Face and the cutter is ready for the transfer, IsTBMReadyForFaceTransfer (NotAtBay);
+ * - the project's phase timer has reached TBM_FACE_TRANSFER_TICKS (NotAtBay);
+ * - neither train is crashed; both are stationary, with the hauler moving front on the stand facing the cutter (NotAtBay);
+ * - every part of the cutter's spoil units keeps all of its cargo (UnstableCargo);
+ * - the cutter carries spoil (NoSpoil);
+ * - every wagon of the hauler's own set is an empty spoil unit of the hauler (WrongWagons);
+ * - for each spoil the set's capacity covers the cutter's whole load (InsufficientEmpties);
+ * - the packet pool has room for every split the transfer may need (Limit).
+ * No part changes train, so the proposed chains are the original chains.
+ * @param request Project and hauler.
+ * @return The proposal, or the first refusal.
+ */
+TBMExchangeProposal DescribeTBMFaceTransfer(const TBMExchangeRequest &request);
+
+/**
+ * Validate a face transfer (r2df2 task 5.3). Nothing is relinked, so the description is the whole check.
+ * @param request Project and hauler.
+ * @return The proposal, or the first refusal; nothing changes.
+ */
+TBMExchangeProposal ValidateTBMFaceTransfer(const TBMExchangeRequest &request);
+
+/**
+ * Commit a face transfer (rule F3, r2df2 task 5.3): whole Keep packets move from the cutter's spoil wagons into the
+ * hauler's own set wagons with VehicleCargoList::Shift, Earth to Earth and Rock to Rock, keeping their source and
+ * loading tile; no money changes. The hauler's set becomes Loaded with no origin visit yet, and its assignment
+ * CollectLoaded with one more exchange. The cutter's units keep their set, or none.
+ * @param request Project and hauler.
+ * @return The committed proposal, or the refusal with nothing changed.
+ */
+TBMExchangeProposal ExecuteTBMFaceTransfer(const TBMExchangeRequest &request);
+
+
+
+
+
+/**
  * Origin and route admission for loaded spoil (Plan 5 Group 4.2): the project's origin is a company-owned Surface
  * railway station, and the station accepts both Earth and Rock, which only real receivers in its catchment give.
  * @param project Live project.
@@ -312,14 +396,15 @@ struct TBMHaulerInputs {
 	bool origin_live = false; ///< The project's origin is the company's Surface railway station.
 	bool crashed = false; ///< The hauler is crashed.
 	bool stopped = false; ///< The player's stop flag is set.
-	bool at_bay = false; ///< The hauler is admitted at its bay.
+	bool at_bay = false; ///< Actual admitted bay or the face turn holder on its exact directed stand.
 	bool at_origin = false; ///< The hauler's head stands on a tile of the project's origin station.
 	bool set_aboard = true; ///< Every wagon of the carried set is a unit of the hauler.
 	bool set_empty = true; ///< No wagon of the carried set holds or expects cargo.
-	bool cutter_waiting = false; ///< The project's cutter waits for empties (WaitForEmpties).
+	bool cutter_waiting = false; ///< The cutter waits at its bay or has a complete due face transfer.
 	bool exchange_finished = false; ///< Parked or finished work needs no further empties; actual haulers leave its bay for the origin.
 	bool lost = false; ///< The hauler's pathfinder is lost.
 	bool receiver_room = true; ///< At the origin, some receiver there has room for spoil the set carries.
+	bool inside = false; ///< A running part is beyond the Source key and must clear the corridor before cutter return.
 };
 
 /** Result of one pure hauler step. */
@@ -339,7 +424,7 @@ TBMHaulerInputs ObserveTBMHaulerInputs(const TBMExchangeAssignment &assignment);
 /**
  * Decide one hauler step without changing anything. Holds come first (lost project or origin, crash, missing set
  * wagons, the player's stop away from the bay, a lost route away from the bay). Edges: ReturnEmpties to AwaitExchange
- * once wholly at the bay with the set empty; AwaitExchange asks for the exchange while the cutter waits; CollectLoaded
+ * once at the admitted bay/face meeting with the set empty; AwaitExchange asks for the exchange while the cutter waits; CollectLoaded
  * to VisitOrigin once it has left the bay; VisitOrigin to DisposeOrTransfer at the origin, recording the visit;
  * DisposeOrTransfer to ReturnEmpties once the set is empty, holding SaturatedReceiver at the origin while no receiver
  * there has room.
@@ -351,15 +436,15 @@ TBMHaulerStep StepTBMHaulerPhase(const TBMExchangeAssignment &assignment, const 
 
 /**
  * One simulation step of a hauler's cycle (once per hauler tick, from Train::Tick): observe, step, and perform the
- * exchange when the step asks for it and the bay gives this hauler its turn.
+ * complete face transfer or native bay exchange when the step asks and the canonical meeting grants its turn.
  * @param id Assignment to advance.
  * @return None, or NotAssigned for an unknown assignment.
  */
 TBMExchangeError AdvanceTBMHauler(TBMExchangeAssignmentID id);
 
 /**
- * Whether ordinary movement must hold this train: an assigned hauler waiting wholly at its bay (AwaitExchange)
- * stays there until the exchange or a release, whatever its orders say.
+ * Whether ordinary movement must hold this train: an assigned hauler facing its stand or awaiting exchange
+ * stays there until transfer, turn-around or release. Stored/finished work leaves ordinary orders in charge.
  * @param front Front engine.
  * @return Whether ordinary movement must hold it.
  */
@@ -367,9 +452,9 @@ bool IsTBMHaulerHeld(const Train &front);
 
 /**
  * Whether an assigned hauler may use the magazine of its Source bay at a portal key (R2MLVS3MP-M decision 3).
- * While its project is unfinished it is admitted in every phase, so it can always leave the bay it stands in. Once
- * the project is finished it is admitted only while a part of it still stands on the key, so it can take the last
- * load out but is never drawn back in. It never reaches the rock end.
+ * A part already on the Source key may finish its physical traversal. Otherwise only an unfinished,
+ * unstored project's ReturnEmpties or AwaitExchange leg may enter the bay; loaded origin travel cannot
+ * mistake the magazine for a through route. Face passage is separately owned by IsTBMHaulerAdmittedThroughPortal.
  * @param front Front engine of the train.
  * @param tile Portal key.
  * @return True when the train's assignment names this tile as its project's Source bay, under the rule above.
@@ -395,14 +480,20 @@ bool MayTBMTrainLeaveMagazine(const Train &front);
  */
 bool IsTBMWaitingAtLineEnd(const Train &front, TileIndex next);
 
+/** Derived native destination and allowed arrival directions; never saved or written into player orders. */
+struct TBMHaulerSteeringTarget {
+	TileIndex tile; ///< Actual validated face stand or the assigned bay.
+	TrackdirBits trackdirs; ///< Exact native pieces facing the cutter or entering the bay door.
+};
+
 /**
- * Where the pathfinder steers an assigned hauler instead of its current order (R2MLVS3MP-M decision 6). While it
- * returns empties its destination is its validated Source magazine or native underground depot, entered through the door; its orders are never written, so one
- * order to the origin carries the whole loop.
- * @param front Front engine.
- * @return The admitted Source bay or unfinished project's validated real depot during empty return, otherwise INVALID_TILE.
+ * Observe the empty return destination without changing the ordinary origin order.
+ * The eligible face turn uses its stand; other empty returns queue at their validated bay.
+ * Loaded, stored and finished work follows player orders, even while a tail clears the old Source key.
+ * @param front Actual front engine; assignment lookup uses the complete native chain.
+ * @return Directed managed destination, or no override for ordinary travel.
  */
-TileIndex GetTBMHaulerSteeringTarget(const Train &front);
+std::optional<TBMHaulerSteeringTarget> GetTBMHaulerSteeringTarget(const Train &front);
 
 /** Why a project's spoil logistics wait (Plan 5 Group 9.3); a derived view, never saved. */
 enum class TBMLogisticsWait : uint8_t {

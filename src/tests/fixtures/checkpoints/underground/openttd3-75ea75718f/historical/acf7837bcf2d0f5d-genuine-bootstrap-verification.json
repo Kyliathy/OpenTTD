@@ -1,0 +1,212 @@
+{
+  "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DEC;master11.4;existing public runner genuine acceptance",
+  "classification": "normal_start_public_acceptance",
+  "bootstrap_claim": true,
+  "controller": {
+    "path": "src/tests/multilayer/normal_ground_acceptance_report.py",
+    "bytes": 12240,
+    "sha256": "3476fdc6f10166d7e0f365e06f22d74665370d4ed021980a7e4a4e52fc629311"
+  },
+  "proof": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/normal-start-complete-prerequisites.json",
+    "sha256": "f4a20cd530257ae7fe56d7496409d2971736f3140644692b754bdb28e4ef11f4",
+    "bytes": 845335
+  },
+  "art_publication": {
+    "path": "logs/graphics/selected-bootstrap/20261019-native-01/publication-verification.json",
+    "bytes": 5842,
+    "sha256": "ea157f9f4cfcbd1f1efb692c63e849a4a8694adeb2695a012f996d4e6e0db7dd"
+  },
+  "records": [
+    {
+      "configuration": "Debug",
+      "scenario_id": "S1",
+      "report": {
+        "path": "mlm/reviews/acceptance/native-ground/20261019-213530-ae342f3bbe/reports/normal-bootstrap-s1-Debug.json",
+        "bytes": 1112381,
+        "sha256": "cd04d353bbfb70f3c5bfe679e1bbcef5e1cb8444920a9d3f430b90bd5b9613af"
+      },
+      "native_report": {
+        "bytes": 171236,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213543-895ba69a37/reports/normal-files-Debug-Debug-final-useful.json",
+        "sha256": "22731ddb16012030020a2a801cc11e4bd6e943c97df0fe9287f914581186bc08"
+      },
+      "digest": {
+        "comparison": "complete_native_world_and_clock_equality",
+        "owner_count": 126,
+        "sha256": "f5558db4e58a069fc269b8b403c9e156e461bf825ed468c8de30266ad031ffe4"
+      },
+      "inspection": {
+        "bytes": 44968,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213543-895ba69a37/saves/debug-debug-final-useful-inspect-read.sav",
+        "sha256": "ac87615c59e18bbd202f6edb8d4d735cb940db1ab4d54e1f9be6445a70b6fdc2"
+      },
+      "next": {
+        "bytes": 44960,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213543-895ba69a37/saves/debug-debug-final-useful-baseline-next.sav",
+        "sha256": "f13a0743195a688c03d46300bc7df99e399821ef86c0fea582028dbf7aad687b"
+      }
+    },
+    {
+      "configuration": "Debug",
+      "scenario_id": "S2",
+      "report": {
+        "path": "mlm/reviews/acceptance/native-ground/20261019-213709-e081d833a5/reports/normal-bootstrap-s2-Debug.json",
+        "bytes": 1112398,
+        "sha256": "10309ce4aa2013010b9cc0d554b024235073b24907c04befea2e1a8d6890465e"
+      },
+      "native_report": {
+        "bytes": 171236,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213721-6aeb77ce6f/reports/normal-files-Debug-Debug-final-useful.json",
+        "sha256": "a8389fc8112641c5b41fe74d17f2e5941873a5205bb366b1d39a4a7f6e08a624"
+      },
+      "digest": {
+        "comparison": "complete_native_world_and_clock_equality",
+        "owner_count": 126,
+        "sha256": "f5558db4e58a069fc269b8b403c9e156e461bf825ed468c8de30266ad031ffe4"
+      },
+      "inspection": {
+        "bytes": 44968,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213721-6aeb77ce6f/saves/debug-debug-final-useful-inspect-read.sav",
+        "sha256": "ac87615c59e18bbd202f6edb8d4d735cb940db1ab4d54e1f9be6445a70b6fdc2"
+      },
+      "next": {
+        "bytes": 44960,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213721-6aeb77ce6f/saves/debug-debug-final-useful-baseline-next.sav",
+        "sha256": "f13a0743195a688c03d46300bc7df99e399821ef86c0fea582028dbf7aad687b"
+      }
+    },
+    {
+      "configuration": "RelWithDebInfo",
+      "scenario_id": "S1",
+      "report": {
+        "path": "mlm/reviews/acceptance/native-ground/20261019-213924-200bb4083c/reports/normal-bootstrap-s1-RelWithDebInfo.json",
+        "bytes": 1133669,
+        "sha256": "155f8d0ec0570dde206f32056d7a1f7a211cde740bba0a0e8eb4b7b962a90c12"
+      },
+      "native_report": {
+        "bytes": 171748,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213936-49175e60f7/reports/normal-files-RelWithDebInfo-RelWithDebInfo-final-useful.json",
+        "sha256": "461ba89aced651d9809f6c4f10bacfc868377a416bf648dbfdb7a28229184f41"
+      },
+      "digest": {
+        "comparison": "complete_native_world_and_clock_equality",
+        "owner_count": 126,
+        "sha256": "0169dd670682be8d29958c65e3ad8c63a3f817ee7622dd2611f7025651b2dca7"
+      },
+      "inspection": {
+        "bytes": 45440,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213936-49175e60f7/saves/relwithdebinfo-relwithdebinfo-final-useful-inspect-read.sav",
+        "sha256": "ddbcc7dfaa7e66d4e7d99ff3bbe362d5ab41bcf7be16a2f809fa3b49780c5d33"
+      },
+      "next": {
+        "bytes": 45444,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-213936-49175e60f7/saves/relwithdebinfo-relwithdebinfo-final-useful-baseline-next.sav",
+        "sha256": "49e984bac19fba36a32aa877cb67ef2362cee6848fbd01a9c5d4dd0425fb8d83"
+      }
+    },
+    {
+      "configuration": "RelWithDebInfo",
+      "scenario_id": "S2",
+      "report": {
+        "path": "mlm/reviews/acceptance/native-ground/20261019-214007-0c19484825/reports/normal-bootstrap-s2-RelWithDebInfo.json",
+        "bytes": 1133685,
+        "sha256": "188eb02da98091abd8b5feb8be09f204301127b1140b2ceab3d57bcedfef5290"
+      },
+      "native_report": {
+        "bytes": 171748,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-214019-3245195b24/reports/normal-files-RelWithDebInfo-RelWithDebInfo-final-useful.json",
+        "sha256": "488c4195acf1574ba3a2edbff47b52643f2177c6c70b2a20653f9804529a2c29"
+      },
+      "digest": {
+        "comparison": "complete_native_world_and_clock_equality",
+        "owner_count": 126,
+        "sha256": "0169dd670682be8d29958c65e3ad8c63a3f817ee7622dd2611f7025651b2dca7"
+      },
+      "inspection": {
+        "bytes": 45440,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-214019-3245195b24/saves/relwithdebinfo-relwithdebinfo-final-useful-inspect-read.sav",
+        "sha256": "ddbcc7dfaa7e66d4e7d99ff3bbe362d5ab41bcf7be16a2f809fa3b49780c5d33"
+      },
+      "next": {
+        "bytes": 45444,
+        "path": "mlm/reviews/acceptance/normal-ground-files/20261019-214019-3245195b24/saves/relwithdebinfo-relwithdebinfo-final-useful-baseline-next.sav",
+        "sha256": "49e984bac19fba36a32aa877cb67ef2362cee6848fbd01a9c5d4dd0425fb8d83"
+      }
+    }
+  ],
+  "current_native_cases": 16,
+  "current_native_assertions": 388,
+  "current_complete126_chunk_pairs": 56,
+  "scenario_pairs": [
+    {
+      "configuration": "Debug",
+      "phase": "inspection",
+      "comparison": {
+        "sha256": "f5558db4e58a069fc269b8b403c9e156e461bf825ed468c8de30266ad031ffe4",
+        "owner_count": 126,
+        "comparison": "complete_native_world_and_clock_equality"
+      }
+    },
+    {
+      "configuration": "Debug",
+      "phase": "next",
+      "comparison": {
+        "sha256": "880e1ae5fd7b499eb21268b13224715621a68e3dd30dd94163ef0377bb75b86c",
+        "owner_count": 126,
+        "comparison": "complete_native_world_and_clock_equality"
+      }
+    },
+    {
+      "configuration": "RelWithDebInfo",
+      "phase": "inspection",
+      "comparison": {
+        "sha256": "0169dd670682be8d29958c65e3ad8c63a3f817ee7622dd2611f7025651b2dca7",
+        "owner_count": 126,
+        "comparison": "complete_native_world_and_clock_equality"
+      }
+    },
+    {
+      "configuration": "RelWithDebInfo",
+      "phase": "next",
+      "comparison": {
+        "sha256": "eda5eaefce0f0fcf810408c7623539aa5ff686eda23c511d27126b0eb9a10620",
+        "owner_count": 126,
+        "comparison": "complete_native_world_and_clock_equality"
+      }
+    }
+  ],
+  "ignored_chunks": [],
+  "focused_checks": [
+    {
+      "script": {
+        "path": "src/tests/multilayer/normal_ground_bootstrap_checks.py",
+        "bytes": 5699,
+        "sha256": "530cba4b9311f30438d1f682f414a5f60fcbb046ad32f6163e2c836abb364be2"
+      },
+      "log": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/genuine-bootstrap-final-checks.log",
+        "bytes": 848,
+        "sha256": "fac63f09426c508440f773ac9c8635a1953f0ce8677744129266d34aa8acfe93"
+      },
+      "tests": 7
+    },
+    {
+      "script": {
+        "path": "src/tests/multilayer_acceptance.py",
+        "bytes": 4163,
+        "sha256": "d3af89d3e79254e0546ecd69b3d9dd377535c94efdc2a9e64d73813b32b7e362"
+      },
+      "log": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/existing-runner-final-checks.log",
+        "bytes": 842,
+        "sha256": "bd1987106f561648ee28804d975ffb07f251d3bbce1c9ced18b535feda3dc2dd"
+      },
+      "tests": 6
+    }
+  ],
+  "historical_mainline_native_cases": 84,
+  "historical_mainline_native_assertions": 852729,
+  "scope": "genuine normal-start ground clearing,recurring disposal,irregular paid useful tube conversion,original native files/refusal/recovery",
+  "remaining": "master11.6 representative performance;human art/demo acceptance;whole unrelated orbital scopes remain pending"
+}

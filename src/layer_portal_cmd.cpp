@@ -26,6 +26,7 @@
 #include "road_internal.h"
 #include "rail.h"
 #include "signal_func.h"
+#include "pbs.h"
 #include "vehicle_func.h"
 #include "roadveh.h"
 #include "train.h"
@@ -243,8 +244,9 @@ static void TileLoop_LayerPortal(TileIndex)
 /** @copydoc GetTileTrackStatusProc */
 static TrackStatus GetTileTrackStatus_LayerPortal(TileIndex tile, TransportType mode, RoadTramType sub_mode, DiagDirection side)
 {
-	if (CheckLayerPortalAvailability(tile) != LayerPortalWorkError::None) return {}; // Even a saved Connected Deep pair remains unavailable before the shared technology date.
-	if (GetLayerPortalWorkState(tile) != LayerPortalWorkState::Connected) return {}; // A saved shaft can remain physically paired while ordinary paths/signals see no open network edge.
+	// A saved shaft can remain physically paired while ordinary paths see no open network edge; signal blocks end at
+	// the same ends (ExploreSegment), so the two never disagree about where the network stops.
+	if (!IsLayerPortalOpenToNetwork(tile)) return {};
 	TransportType transport = GetLayerPortalTransportType(tile);
 	if (transport != mode) return {};
 	//A road end answers only the road kind it carries. Elevators carry road and never tram, so a tram query finds nothing.
@@ -424,8 +426,18 @@ static std::optional<VehicleEnterTileStates> RunLayerPortalMagazine(Train *part,
 		const auto ordered = GetTBMOrderedHangar(*consist);
 		if (!IsTBMStagingHangarOrder(*consist) && ordered.error == TBMHangarError::None && ordered.tile == tile) {
 			VehicleEnterDepot(consist); // Only the final actual part admits native service/halt completion at the selected hangar.
-		} else if (GetTBMProjectForCutter(consist->index) != nullptr) {
-			VehicleServiceInDepot(consist);
+		} else {
+			if (GetTBMProjectForCutter(consist->index) != nullptr) VehicleServiceInDepot(consist);
+			// r2df task 6.4: a stored train holds no track, so the reservation that brought it onto the key is freed, as
+			// VehicleEnterDepot does for the hangar branch above. Both conditions matter: only a reserved key has
+			// anything to free, and a reservation is kept while another train still moves on the housing and may own it.
+			if (HasLayerPortalReservation(tile) && !IsLayerPortalMagazineBusy(tile, *consist)) {
+				UnreserveRailTrack(tile, DiagDirToDiagTrack(GetLayerPortalShaftDirection(tile)));
+				if (_settings_client.gui.show_track_reservation) MarkTileDirtyByTile(tile);
+			}
+			// r2df task 6.3: the whole train now stands aside, so the block in front of the door is free again, as when a
+			// train enters a depot (VehicleEnterDepot does the same for the hangar branch above).
+			UpdateLayerPortalSignals(tile, consist->owner);
 		}
 	}
 	return VehicleEnterTileState::EnteredWormhole;
@@ -438,9 +450,10 @@ static VehicleEnterTileStates VehicleEnterTile_LayerPortal(Vehicle *v, TileIndex
 	if (GetLayerPortalWorkState(tile) != LayerPortalWorkState::Connected) {
 		const auto *work = GetLayerPortalWorkRecord(tile);
 		// Actual movement rechecks the entering part/project; cached paths, force-proceed and unrelated followers cannot bypass sealed authority.
-		// Besides the cutter's parts, an assigned hauler of the project's Source bay may use the key (R2MLVS3MP-M).
+		// Assigned haulers queue at their own Source key; only their live face turn or actual outbound corridor presence admits both ends.
 		const bool admitted = (work != nullptr && CheckLayerPortalWorkAccess(tile, v->index, work->project) == LayerPortalWorkError::None) ||
-			(v->type == VehicleType::Train && (IsTBMHaulerAdmittedAtBay(*Train::From(v)->First(), tile) || CanTBMUseHangarPortal(*Train::From(v)->First(), tile)));
+			(v->type == VehicleType::Train && (IsTBMHaulerAdmittedAtBay(*Train::From(v)->First(), tile) || CanTBMUseHangarPortal(*Train::From(v)->First(), tile) ||
+				IsTBMHaulerAdmittedThroughPortal(*Train::From(v), tile)));
 		if (!admitted) return VehicleEnterTileState::CannotEnter;
 	}
 	TransportType transport = GetLayerPortalTransportType(tile);

@@ -1,0 +1,528 @@
+{
+  "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md84C-84D; selected native gallery,retained dated43-family prefix,immutable prepublication boundaries;human approval deferred",
+  "schema_version": 1,
+  "provenance": "native_run",
+  "run_id": "20261016-123613-d0aecf60e9",
+  "configuration": "both",
+  "reports": {
+    "terrain": {
+      "path": "mlm/reviews/geology/terrain-hardness/20261016-123613-d0aecf60e9-terrain-64decde6/reports/m1-terrain-runtime.json",
+      "sha256": "e883aa30f8f44b2a989b9671fce4c245d28c264fcd991ad66b978ce5f7701974"
+    },
+    "control": {
+      "path": "mlm/reviews/construction/layer-controls/20261016-123613-d0aecf60e9-control-865cf760/reports/m1-control-runtime.json",
+      "sha256": "7a1919badb8ef4fe983789f0310bcd0ec15cacc8564b9e02f65412288db0cb1a"
+    },
+    "loop-deep": {
+      "path": "mlm/reviews/tbm/spoil-loop-deep/20261016-123613-d0aecf60e9-loop-deep-7a190e05/reports/m1-loop-deep-1-runtime.json",
+      "sha256": "f1a927d4696f4bfb977e220b39e939c84d0016d8672793c0afcd97b05df34914"
+    },
+    "loop-underground": {
+      "path": "mlm/reviews/tbm/spoil-loop-underground/20261016-123613-d0aecf60e9-loop-underground-aa116ceb/reports/m1-loop-underground-1-runtime.json",
+      "sha256": "2e3fbcd54fb61eb7314dde95c02174005e01de9e709a684c4114e71c12fae7be"
+    },
+    "facility": {
+      "path": "mlm/reviews/facilities/service-depots/20261016-123613-d0aecf60e9-facility-11d429d9/reports/m1-facility-runtime.json",
+      "sha256": "9603d79010d740a6c461451339153b09d1e8d4716e08d7772760bc4a23b00507"
+    },
+    "geology": {
+      "path": "mlm/reviews/geology/terrain-hardness/20261016-123613-d0aecf60e9-geology-db5fefa4/reports/geology-runtime.json",
+      "sha256": "77bd46e13ed0d069d4237b1e7c9398d6370ce1c8a7c71007aa25d05657a49105"
+    },
+    "collector": {
+      "path": "mlm/reviews/geothermal/collector-art/20261016-123613-d0aecf60e9-collector-c22f58ca/reports/native-RelWithDebInfo.json",
+      "sha256": "5c25643703f03e11598c765a9844f2021da78b9c241633ed4ef78545b43bf752"
+    },
+    "tube-guideway-acceptance": {
+      "path": "logs/tubes/guideway-art/20261017-native-01/verification.json",
+      "bytes": 150452,
+      "sha256": "7190d9b75609baf246a4e1fcdd884bd7d1891f94d51d009c4e6c15ba7ff795b4"
+    },
+    "tube-capsule-acceptance": {
+      "path": "logs/tubes/capsule-art/20261018-native-01/verification.json",
+      "bytes": 99324,
+      "sha256": "3dad04d7e83e6473817826d976dd6cbf1fc80bde5b011e0c16cff4e375988e7a"
+    },
+    "tube-facility-acceptance": {
+      "path": "logs/tubes/facility-art/20261018-native-01/verification.json",
+      "bytes": 310245,
+      "sha256": "925fc4aaa42deba9d7302cd8b7b904b6ca55def061bd860028058415307b1f3a"
+    },
+    "tube-conduit-acceptance": {
+      "path": "logs/tubes/conduit-art/20261018-native-01/verification.json",
+      "bytes": 274550,
+      "sha256": "37713fbfe6933b8780dc7de56e3804cb7901e1911a39d6e20a83b60c48836735"
+    },
+    "machinery-acceptance": {
+      "path": "logs/graphics/geothermal-machinery/20261018-native-01/machinery-verification.json",
+      "bytes": 2515080,
+      "sha256": "41683b3bc14d7b209f274f8fb3bc8311bd80bb18b5fae9953eae7a5c61ec2672"
+    },
+    "natural-vent-acceptance": {
+      "path": "logs/geothermal/first-plant/20261017-native-01/window-raster-verification.json",
+      "bytes": 40830,
+      "sha256": "5e3f1be131bba30f12c9fc9ae0a74d0b07361023b84ee1fdd886cc87dca2187f"
+    },
+    "geothermal-conduit-acceptance": {
+      "path": "logs/graphics/geothermal-conduits/20261018-native-01/verification.json",
+      "bytes": 2543291,
+      "sha256": "9b418646f7769d420f0cf2831b150467f0e9e45394a7c1cbc25e7bd0e9c9d9be"
+    },
+    "selected-controls-acceptance": {
+      "path": "logs/graphics/selected-control-icons/20261018-native-01/verification.json",
+      "bytes": 370617,
+      "sha256": "d1eef8f718dbcf093d70ea8b816d2029e2b783f228560a366b75ac37ce3bb34e"
+    },
+    "selected-purchase": {
+      "path": "logs/graphics/selected-guidance/20261019-native-01/purchase-verification.json",
+      "bytes": 358470,
+      "sha256": "e2f5241947d7120015c0f7999bd3f63cc08090d58059182944a1b9e92023e948"
+    },
+    "selected-structures": {
+      "path": "logs/graphics/selected-tube-gallery/20261018-native-01/structures-verification.json",
+      "bytes": 513296,
+      "sha256": "0ca740b9ee18fed4e8505986a8cfe17be3f66d055bd7d7c41a24471742b73152"
+    },
+    "selected-movement": {
+      "path": "logs/graphics/selected-tube-gallery/20261018-native-01/movement-verification.json",
+      "bytes": 3082128,
+      "sha256": "636ce65f13b5695e910f145c54b051b7ab2a5105139542ffca6aa1c5909ba694"
+    },
+    "selected-geothermal": {
+      "path": "logs/graphics/selected-guidance/20261019-native-01/geothermal-verification.json",
+      "bytes": 4987287,
+      "sha256": "70c3b1021e93e21edce314aa4bd36e7b904fe5a94cd733ad947e6f1ab28c9796"
+    }
+  },
+  "logs": {
+    "terrain-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "control-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "vehicle-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "facility-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "geology-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "sound-selection": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "collector-checks": {
+      "path": "logs/multilayer-art/native-proof/20261016-123613-d0aecf60e9/focused.log",
+      "sha256": "845608057d51ffc144ae92053bf644e593866a42538ecc373a2594397e37cc78"
+    },
+    "terrain-capture": {
+      "path": "logs/geology/terrain-hardness/20261016-123613-d0aecf60e9-terrain-64decde6/r2mlvs13-bh-native-terrain-capture.log",
+      "sha256": "4a08e921e2e5d58ae40ae7e4dfe1051cb9fba3965ffc117ca00b2ba9bf47b82f"
+    },
+    "control-capture": {
+      "path": "logs/construction/layer-controls/20261016-123613-d0aecf60e9-control-865cf760/r2mlvs13-cl-native-control-capture.log",
+      "sha256": "7b426db5dd9b8c61d4987a3bea0a1e2271603ef712e27c8f6d97a772932de296"
+    },
+    "loop-deep-capture": {
+      "path": "logs/tbm/spoil-loop-deep/20261016-123613-d0aecf60e9-loop-deep-7a190e05/r2mlvs13-cx-native-loop-deep-1.log",
+      "sha256": "e4ce34079b6f19ecbf10f8e8aba99d6811efe588a76c2e383a4c9d2758185d33"
+    },
+    "loop-underground-capture": {
+      "path": "logs/tbm/spoil-loop-underground/20261016-123613-d0aecf60e9-loop-underground-aa116ceb/r2mlvs13-cx-native-loop-underground-1.log",
+      "sha256": "6a7c5e7da3f7c3e676369e0f120456700db93faa8024deea24bf4e717bee29c2"
+    },
+    "facility-capture": {
+      "path": "logs/facilities/service-depots/20261016-123613-d0aecf60e9-facility-11d429d9/r2mlvs3mp-t-road-service-capture.log",
+      "sha256": "e2439b4a6b8fb21199f6b54b2885f7a3ea6921c3482104d1edd69430a8a56465"
+    },
+    "geology-capture": {
+      "path": "logs/geology/terrain-hardness/20261016-123613-d0aecf60e9-geology-db5fefa4/r2tbmf-z-native-1.log",
+      "sha256": "4e5575f2551c19635aad7fc492b28e6174cdf04f3cebebc8e7bf5e82d6ccf43a"
+    },
+    "collector-capture": {
+      "path": "logs/geothermal/collector-art/20261016-123613-d0aecf60e9-collector-c22f58ca/native-RelWithDebInfo.log",
+      "sha256": "6fee6b0767878986b75d3908aba3669a9f685ab92d91662cc42ae2aa86d0afda"
+    },
+    "packed-loader": {
+      "path": "logs/multilayer-art/packed-build/20261016-123226-dfd924a982/selected-ground-pack-generator-free-load-RelWithDebInfo.log",
+      "sha256": "0e300ac5e9732c3d97fa498c77add983a900f6524be134bfff6912e3bb5ebe14"
+    },
+    "tube-guideway-debug": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-0.log",
+      "bytes": 199,
+      "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+    },
+    "tube-body-debug": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-1.log",
+      "bytes": 194,
+      "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+    },
+    "tube-purchase-debug": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-2.log",
+      "bytes": 196,
+      "sha256": "74995b4c77e36688a7b6aa9f43616fd00e8bd22eb473de44b371b89f3dd20244"
+    },
+    "tube-facility-debug": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-3.log",
+      "bytes": 197,
+      "sha256": "0fcd2a923a01c8555514ed6eec9509eb759b64aec79cff70d1f7c831458f874f"
+    },
+    "tube-conduit-debug": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-4.log",
+      "bytes": 195,
+      "sha256": "b93a8e85c4f1e76882c73d9903a8e90e9481b181e9457f914c8bddfb11efc578"
+    },
+    "tube-guideway-optimized": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-0.log",
+      "bytes": 199,
+      "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+    },
+    "tube-body-optimized": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-1.log",
+      "bytes": 194,
+      "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+    },
+    "tube-purchase-optimized": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-2.log",
+      "bytes": 196,
+      "sha256": "74995b4c77e36688a7b6aa9f43616fd00e8bd22eb473de44b371b89f3dd20244"
+    },
+    "tube-facility-optimized": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-3.log",
+      "bytes": 197,
+      "sha256": "0fcd2a923a01c8555514ed6eec9509eb759b64aec79cff70d1f7c831458f874f"
+    },
+    "tube-conduit-optimized": {
+      "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-4.log",
+      "bytes": 195,
+      "sha256": "b93a8e85c4f1e76882c73d9903a8e90e9481b181e9457f914c8bddfb11efc578"
+    },
+    "machinery-debug": {
+      "path": "logs/graphics/geothermal-machinery/20261018-161334-bf45aca4f7/machinery-0.log",
+      "bytes": 211,
+      "sha256": "035390a97b9e627f61dc0cda865df719c2a4bc864e4ee43c830fd077a67de033"
+    },
+    "machinery-optimized": {
+      "path": "logs/graphics/geothermal-machinery/20261018-161623-41477b6826/machinery-0.log",
+      "bytes": 211,
+      "sha256": "035390a97b9e627f61dc0cda865df719c2a4bc864e4ee43c830fd077a67de033"
+    },
+    "geothermal-conduit-debug": {
+      "path": "logs/graphics/geothermal-conduits/20261018-172209-60092dd9cb/conduits-0.log",
+      "bytes": 201,
+      "sha256": "17cb52c5b0d4f655fea2f092dea9175cd1618974d857193672023bdf3fddaab9"
+    },
+    "geothermal-conduit-optimized": {
+      "path": "logs/graphics/geothermal-conduits/20261018-172157-3400e163be/conduits-0.log",
+      "bytes": 201,
+      "sha256": "17cb52c5b0d4f655fea2f092dea9175cd1618974d857193672023bdf3fddaab9"
+    },
+    "selected-controls-debug": {
+      "path": "logs/graphics/selected-control-icons/20261018-181403-b4b96db717/controls-1.log",
+      "bytes": 200,
+      "sha256": "38d5a7ba358ba8401fdf370c61ec8d5177c790354b235d09908540841afc3d0d"
+    },
+    "selected-controls-optimized": {
+      "path": "logs/graphics/selected-control-icons/20261018-182711-9ecfa35107/controls-1.log",
+      "bytes": 200,
+      "sha256": "38d5a7ba358ba8401fdf370c61ec8d5177c790354b235d09908540841afc3d0d"
+    },
+    "natural-vent-debug": {
+      "path": "logs/geothermal/window-raster/20261018-181420-078161c7a8/Debug-magma-loop.log",
+      "bytes": 10371,
+      "sha256": "dca142c9ec143016f902721a622857b496bdef571d1c4742fc56dfa363467a03"
+    },
+    "natural-vent-optimized": {
+      "path": "logs/geothermal/window-raster/20261018-182728-57b6e1121a/RelWithDebInfo-magma-loop.log",
+      "bytes": 10371,
+      "sha256": "566a9942a7ae0637a721536677aa3891facc6e84364a381bd62ae1ada04dc417"
+    }
+  },
+  "outputs": {
+    "packed": "logs/proofs/mlm/native-art/derived/packed-manifest.json",
+    "runtime": "logs/proofs/mlm/native-art/selected-gallery-20261019/runtime-manifest.json",
+    "sound": "logs/proofs/mlm/native-art/selected-pack-runtime-20261016/sound-runtime.json",
+    "gallery": "logs/proofs/mlm/native-art/selected-gallery-20261019/gallery/m1-runtime-gallery.json"
+  },
+  "base_evidence": {
+    "path": "logs/proofs/mlm/native-art/selected-gallery-20261018/evidence.json",
+    "bytes": 23974,
+    "sha256": "d34c3da2b4a633603e5b37bfcbd18bdafa1e14c7c4d8b6b33bf023c63d841f4e"
+  },
+  "selected_native_producers": {
+    "Debug": {
+      "report": {
+        "path": "mlm/reviews/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/reports/selected-runtime-audit-Debug.json",
+        "bytes": 3650,
+        "sha256": "b3091d0a931a7dcddcbb772dd3f428a7944dcc65c939d3df7bdd35389e4d7ea8"
+      },
+      "native": {
+        "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md84B.1; existing actual native producer audit, not missing-art activation",
+        "configuration": "Debug",
+        "native": [
+          {
+            "case": "[tube-guideway-art-geometry]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-0.log",
+              "bytes": 199,
+              "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+            },
+            "assertions": 2694,
+            "cases": 1
+          },
+          {
+            "case": "[tube-capsule-art-body]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-1.log",
+              "bytes": 194,
+              "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+            },
+            "assertions": 4498,
+            "cases": 1
+          },
+          {
+            "case": "[tube-capsule-art-purchase]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-2.log",
+              "bytes": 196,
+              "sha256": "74995b4c77e36688a7b6aa9f43616fd00e8bd22eb473de44b371b89f3dd20244"
+            },
+            "assertions": 80,
+            "cases": 1
+          },
+          {
+            "case": "[tube-facility-art-service]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-3.log",
+              "bytes": 197,
+              "sha256": "0fcd2a923a01c8555514ed6eec9509eb759b64aec79cff70d1f7c831458f874f"
+            },
+            "assertions": 189,
+            "cases": 1
+          },
+          {
+            "case": "[tube-conduit-art-native]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-4.log",
+              "bytes": 195,
+              "sha256": "b93a8e85c4f1e76882c73d9903a8e90e9481b181e9457f914c8bddfb11efc578"
+            },
+            "assertions": 205,
+            "cases": 1
+          },
+          {
+            "case": "[geothermal-control-inspection]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-5.log",
+              "bytes": 201,
+              "sha256": "178741ff0ea4545ffcaca511766de30c181e77383cf280a64c206c8aec8e7508"
+            },
+            "assertions": 336,
+            "cases": 1
+          },
+          {
+            "case": "[geothermal-generator-ports]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-6.log",
+              "bytes": 198,
+              "sha256": "75fdec96a67ecb59f14156e427ae7bf5f22953b8d6e4d8c4d15ac3bd15339caf"
+            },
+            "assertions": 164,
+            "cases": 1
+          },
+          {
+            "case": "[m1-sprite-selection]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184726-b691e7ce54/producer-7.log",
+              "bytes": 194,
+              "sha256": "62f98d1eafded6801c09f245815f11237e88376cb65f70bd618beaff61c35b57"
+            },
+            "assertions": 71548,
+            "cases": 2
+          }
+        ],
+        "controller": {
+          "path": "src/tests/multilayer/selected_runtime_audit.py",
+          "bytes": 12494,
+          "sha256": "9e42f5207917bad947e1aa60bacdd22b78509503630e18893154e47e7c6d9263"
+        },
+        "binary": {
+          "path": "build/Debug/openttd_test.exe",
+          "bytes": 77604352,
+          "sha256": "f891295d1c0cc71c5fe49cff0a836235b42b7b4b215fbd6586bec03b3ac82209"
+        },
+        "public": {
+          "path": "media/multilayer/contracts/multilayer_sprite_manifest.json",
+          "bytes": 445324,
+          "sha256": "d802ff85788b9b2218b8888c18b6e4d0847b985fc8250e1dbafca224f00bf5e3"
+        },
+        "scope": {
+          "path": "media/multilayer/m1-pack-scope.json",
+          "bytes": 11369,
+          "sha256": "39692446a987faedb62737c623dc06ccc93ff801ce39804c704a66106418c8bd"
+        }
+      },
+      "counts": {
+        "cases": 9,
+        "assertions": 79714
+      }
+    },
+    "RelWithDebInfo": {
+      "report": {
+        "path": "mlm/reviews/graphics/selected-runtime-audit/20261018-184735-951463f15a/reports/selected-runtime-audit-RelWithDebInfo.json",
+        "bytes": 3668,
+        "sha256": "c88a1e087db9a1e4917974dcca11ab665703745581cdb5fb836837e84546ef64"
+      },
+      "native": {
+        "_documentation": "r2mlvs14-remaining-assets-and-runtime-integration.md84B.1; existing actual native producer audit, not missing-art activation",
+        "configuration": "RelWithDebInfo",
+        "native": [
+          {
+            "case": "[tube-guideway-art-geometry]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-0.log",
+              "bytes": 199,
+              "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+            },
+            "assertions": 2694,
+            "cases": 1
+          },
+          {
+            "case": "[tube-capsule-art-body]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-1.log",
+              "bytes": 194,
+              "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+            },
+            "assertions": 4498,
+            "cases": 1
+          },
+          {
+            "case": "[tube-capsule-art-purchase]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-2.log",
+              "bytes": 196,
+              "sha256": "74995b4c77e36688a7b6aa9f43616fd00e8bd22eb473de44b371b89f3dd20244"
+            },
+            "assertions": 80,
+            "cases": 1
+          },
+          {
+            "case": "[tube-facility-art-service]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-3.log",
+              "bytes": 197,
+              "sha256": "0fcd2a923a01c8555514ed6eec9509eb759b64aec79cff70d1f7c831458f874f"
+            },
+            "assertions": 189,
+            "cases": 1
+          },
+          {
+            "case": "[tube-conduit-art-native]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-4.log",
+              "bytes": 195,
+              "sha256": "b93a8e85c4f1e76882c73d9903a8e90e9481b181e9457f914c8bddfb11efc578"
+            },
+            "assertions": 205,
+            "cases": 1
+          },
+          {
+            "case": "[geothermal-control-inspection]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-5.log",
+              "bytes": 201,
+              "sha256": "178741ff0ea4545ffcaca511766de30c181e77383cf280a64c206c8aec8e7508"
+            },
+            "assertions": 336,
+            "cases": 1
+          },
+          {
+            "case": "[geothermal-generator-ports]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-6.log",
+              "bytes": 198,
+              "sha256": "75fdec96a67ecb59f14156e427ae7bf5f22953b8d6e4d8c4d15ac3bd15339caf"
+            },
+            "assertions": 164,
+            "cases": 1
+          },
+          {
+            "case": "[m1-sprite-selection]",
+            "log": {
+              "path": "logs/graphics/selected-runtime-audit/20261018-184735-951463f15a/producer-7.log",
+              "bytes": 194,
+              "sha256": "62f98d1eafded6801c09f245815f11237e88376cb65f70bd618beaff61c35b57"
+            },
+            "assertions": 71548,
+            "cases": 2
+          }
+        ],
+        "controller": {
+          "path": "src/tests/multilayer/selected_runtime_audit.py",
+          "bytes": 12494,
+          "sha256": "9e42f5207917bad947e1aa60bacdd22b78509503630e18893154e47e7c6d9263"
+        },
+        "binary": {
+          "path": "build/RelWithDebInfo/openttd_test.exe",
+          "bytes": 36475904,
+          "sha256": "54a1c95cd4fcc6e6eab75d8cfa23f9bba2ef6bce137e8b6487d4102961bab5e6"
+        },
+        "public": {
+          "path": "media/multilayer/contracts/multilayer_sprite_manifest.json",
+          "bytes": 445324,
+          "sha256": "d802ff85788b9b2218b8888c18b6e4d0847b985fc8250e1dbafca224f00bf5e3"
+        },
+        "scope": {
+          "path": "media/multilayer/m1-pack-scope.json",
+          "bytes": 11369,
+          "sha256": "39692446a987faedb62737c623dc06ccc93ff801ce39804c704a66106418c8bd"
+        }
+      },
+      "counts": {
+        "cases": 9,
+        "assertions": 79714
+      }
+    }
+  },
+  "retained_published_runtime": {
+    "path": "logs/proofs/mlm/native-art/selected-pack-runtime-20261016/runtime-manifest.json",
+    "bytes": 43655,
+    "sha256": "6dd31ff0c761129f73e93f3ce6287ddfe133a46853b84df523c80e55a1c0d710"
+  },
+  "retained_published_gallery": {
+    "path": "logs/proofs/mlm/native-art/selected-pack-runtime-20261016/gallery/m1-runtime-gallery.json",
+    "bytes": 148306,
+    "sha256": "637735ff7b1ac93ed6b860639925a396c1896c2a19fa5d45daf2391b24acba9e"
+  },
+  "selected_gallery_boundary": {
+    "public": {
+      "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/public-before-delivery.json",
+      "bytes": 469677,
+      "sha256": "73e2fb02bfc68057f2c903674ad4e138d3d36af2bff4ff08833a963b0d077fa0"
+    },
+    "packed": {
+      "path": "logs/proofs/mlm/native-art/selected-gallery-20261019/packed-before-delivery.json",
+      "bytes": 11049132,
+      "sha256": "1fba4a2ea2db2cf1a5ce18c48995ea44ae82958d60597b006cb266fbc8bbd2b5"
+    },
+    "scope": {
+      "path": "media/multilayer/m1-pack-scope.json",
+      "bytes": 11369,
+      "sha256": "39692446a987faedb62737c623dc06ccc93ff801ce39804c704a66106418c8bd"
+    },
+    "previous_selection": {
+      "path": "logs/proofs/mlm/native-art/selected-gallery-20261018/evidence.json",
+      "bytes": 23974,
+      "sha256": "d34c3da2b4a633603e5b37bfcbd18bdafa1e14c7c4d8b6b33bf023c63d841f4e"
+    }
+  }
+}

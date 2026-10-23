@@ -52,6 +52,81 @@ source epoch and required semantic input has a verified durable owner.
 | Declared `build/` products | Configured native/dependency builds and current executable images. | Rebuild from source/profile; preserve meaningful configuration and saves first. |
 | `docs/zz-reach2/` | Architecture, plans and handovers. | Documentation; assisting R2FC-3 Markdown stays beside its plan. |
 
+### Parallel-repository originals
+
+[M2O23-1](../upgrades/2026-10/m2o23-1-come-space.md) brings the pinned
+OpenTTD3 lineage into these existing owners. Group 2 has delivered exact input
+retention; gameplay, renderer integration and new native qualification remain
+separate pending work. [donor-import.json](../../../src/tests/fixtures/cleanup/donor-import.json)
+records original aliases, hashes, roles and dated dependency facts. It is a
+preservation record, not a replacement asset catalogue or runtime supplier.
+
+| Donor input | Retained destination and authority |
+| --- | --- |
+| Authored/selected art, palette and geometry/source contracts | Reuse exact existing media; competing bytes are preserved under `media/multilayer/source/legacy/openttd3-75ea75718f/` until the existing family owner explicitly selects them. Canonical `media/multilayer/contracts/`, packing scopes and shipping assets retain their authority. |
+| Independent fixture expectations | Reuse the exact purpose-owned fixture, or retain the donor original under `src/tests/fixtures/legacy/openttd3-75ea75718f/`. A current renderer's output cannot become its own expected baseline. |
+| Saves/scenarios | Reuse exact existing curated inputs; other originals belong in `savegames/retained/openttd3-75ea75718f/`, with every original name recorded. This is never a general report, image or source archive. |
+| Runtime configuration originals | `src/tests/fixtures/config/multilayer/retained/openttd3-75ea75718f/` or an exact existing config owner. Recreate process-local copies under `mlm/runtime/`; do not import a machine CMake cache. |
+| Unique source versions | Existing `src/tests/fixtures/cleanup/source-epochs/`, with `openttd3-75ea75718f/` for new identities. Retained source bytes keep their original headers; the containing contract supplies import provenance. |
+| Selected historical receipts and named art ancestry | `src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/`; these dated facts neither replace A's provisional Tube checkpoint nor certify a current executable. |
+
+Native input aliases remain in
+[multilayer-inputs.json](../../../src/tests/fixtures/multilayer-inputs.json).
+The `donor/openttd3-75ea75718f/` namespace prevents a same-spelled donor file from
+rebinding A's existing key. For example, A's connected-world original is version
+384, while B's same relative path contains version424; both exact files survive.
+The public `resolve_input_path` enforces the selected alias hash without reading
+B. Media retains its own source/packing boundary and is not added to this native
+save resolver.
+
+[verify_donor_inputs.py](../../../src/tests/multilayer/verify_donor_inputs.py)
+verifies retained payloads and aliases in bounded `saves`, `sources`, `assets`
+and `history` scopes. Its `donor-underground-inputs` declaration lives in the
+sole [review-producers.json](../../../mlm/review-producers.json) catalogue and
+is disabled until Group 58 supplies its stage adapter. Direct input verification
+is delivered; neither that declaration nor this architecture claims completion
+of the later integration.
+
+### Graphics candidates, expectations and publication
+
+The import uses the existing graphics flow below. Groups 48-62 will adapt donor
+families and native consumers to it; those adapters are still planned.
+
+```mermaid
+flowchart LR
+    Original["Retained authored pixels and contracts"] --> Candidate["Pure source conversion and packing candidates"]
+    Fixture["Independent original expectations"] --> Expected["Run-local expected payload"]
+    Candidate --> Native["Native loader with explicit candidate bundle"]
+    Expected --> Native
+    Native --> Observe["Exact loaded identity and native observation"]
+    Observe --> Publish["Explicit reviewed publication"]
+    Publish --> Shipping["Canonical shipping media"]
+```
+
+`pack_m1_art.derive` and `pack_ground_art.derive` prepare selected candidates;
+routine recipes must not call `pack_m1_art.publish`. The latter is an explicit
+canonical packing-input writer, not proof that a GRF was loaded. The selected
+publisher must keep PNG/NFO/GRF/hash and manifest companions consistent.
+`sprite_expected_payload` owns the separate independent expected-payload role;
+`bind_expected_payload` / `observe_expected_payload` in
+[sprite_native_inputs.py](../../../src/tests/multilayer/support/sprite_native_inputs.py)
+bind that expectation to one native configuration. An expected-payload hash is
+not the identity of the candidate GRF actually loaded. The planned native
+candidate binding must record both identities before Group 62 publication.
+`sprite_native_loader.execute_stage` / `collect_stage` own native execution and
+collection; `EvidenceSet.selected` / `validate_capture` preserve exact selected
+capture provenance.
+
+Selected generated images, candidate data, reports, required native transcripts
+and scratch belong in `mlm/reviews/<feature>/<scenario>/<run-id>/{images,data,reports,evidence,scratch}/`.
+Runtime homes remain isolated under `mlm/runtime/<profile>/<run-id>/<process>/`.
+Only optional diagnostics belong in `logs/`; temporary verification workspaces
+and reports belong in `test-cache/`. No approval, original source, unique save or
+required proof may depend solely on a log. New merged evidence is generated from
+declared retained inputs, never by restoring a historical EXE or reclassifying
+an old receipt. Group 71 must replace planned adapter status with actual delivery
+paths and results.
+
 Incremental export is delivered by
 [save_retention.py](../../../src/tests/multilayer/support/save_retention.py).
 `plan_save_exports(root, scopes)` reads only; `apply_save_exports(plan, root)`

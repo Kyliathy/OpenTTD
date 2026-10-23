@@ -1,0 +1,158 @@
+/*
+ * This file is part of OpenTTD.
+ * OpenTTD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2.
+ * OpenTTD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
+ */
+
+/**
+ * @file test_main.cpp Entry point for all the unit tests.
+ * With MSVC a failed assertion prints the call stack and ends the run without a modal dialog, so an unattended
+ * focused burst never waits for a click. The process-local fatal reporter prints native FatalErrorI text and aborts
+ * without opening a Windows error box; test fixtures retain their existing video and drawing setup.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Global Mandatory Reading (bounded test runs)
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, actual window failure diagnosis
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, actual viewport event diagnosis
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group12D, actual freight arithmetic-fault diagnosis
+ */
+
+#include "../stdafx.h"
+
+#define CATCH_CONFIG_MAIN
+#define DO_NOT_USE_WMAIN
+#include "../3rdparty/catch2/catch.hpp"
+
+#ifdef _MSC_VER
+#include "../error_func.h"
+#include <windows.h>
+#include <dbghelp.h>
+#include <crtdbg.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#pragma comment(lib, "dbghelp.lib")
+
+/**
+ * Print the call stack to stderr when a failed assertion aborts the run; the abort then ends the process.
+ * @param signal The abort signal.
+ */
+static void PrintAbortStack(int)
+{
+	void *frames[48];
+	const USHORT count = CaptureStackBackTrace(0, 48, frames, nullptr);
+	HANDLE process = GetCurrentProcess();
+	SymSetOptions(SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+	SymInitialize(process, nullptr, TRUE);
+	alignas(SYMBOL_INFO) char buffer[sizeof(SYMBOL_INFO) + 256];
+	SYMBOL_INFO *symbol = reinterpret_cast<SYMBOL_INFO *>(buffer);
+	// Each frame shows its function and, where the debug symbols have it, its source line.
+	for (USHORT i = 0; i < count; ++i) {
+		symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+		symbol->MaxNameLen = 255;
+		const DWORD64 address = reinterpret_cast<DWORD64>(frames[i]);
+		IMAGEHLP_LINE64 line{};
+		line.SizeOfStruct = sizeof(line);
+		DWORD displacement = 0;
+		const bool named = SymFromAddr(process, address, nullptr, symbol) != FALSE;
+		const bool lined = SymGetLineFromAddr64(process, address, &displacement, &line) != FALSE;
+		fprintf(stderr, "  #%u %s %s:%lu\n", i, named ? symbol->Name : "?", lined ? line.FileName : "?", lined ? line.LineNumber : 0UL);
+	}
+	fflush(stderr);
+}
+
+/**
+ * Record assertions from MSVC's checked STL before its fail-fast bypasses signal/exception handlers.
+ * @param report_type CRT report category; only assertions need a native stack.
+ * @param message CRT-owned diagnostic text, emitted by its normal stderr report.
+ * @param result CRT-owned action result; unchanged so the original assertion still terminates the run.
+ * @return False to preserve the CRT's normal reporting and failure behavior.
+ */
+static int PrintCheckedLibraryStack(int report_type, [[maybe_unused]] char *message, [[maybe_unused]] int *result)
+{
+	if (report_type == _CRT_ASSERT) PrintAbortStack(0);
+	return FALSE;
+}
+
+/**
+ * Print the native fault's saved execution context instead of the exception handler's own stack.
+ * @param exception Actual Windows fault record and register context.
+ */
+static void PrintExceptionStack(EXCEPTION_POINTERS *exception)
+{
+#ifdef _M_X64
+	HANDLE process = GetCurrentProcess();
+	SymSetOptions(SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+	SymInitialize(process, nullptr, TRUE);
+	CONTEXT context = *exception->ContextRecord;
+	STACKFRAME64 frame{};
+	frame.AddrPC = {context.Rip, 0, AddrModeFlat};
+	frame.AddrFrame = {context.Rbp, 0, AddrModeFlat};
+	frame.AddrStack = {context.Rsp, 0, AddrModeFlat};
+	alignas(SYMBOL_INFO) char buffer[sizeof(SYMBOL_INFO) + 256];
+	SYMBOL_INFO *symbol = reinterpret_cast<SYMBOL_INFO *>(buffer);
+	// Walk only the saved fault stack, bounded to avoid an unattended diagnostic hanging on corrupt frames.
+	for (uint i = 0; i < 48; ++i) {
+		symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+		symbol->MaxNameLen = 255;
+		IMAGEHLP_LINE64 line{};
+		line.SizeOfStruct = sizeof(line);
+		DWORD displacement = 0;
+		const bool named = SymFromAddr(process, frame.AddrPC.Offset, nullptr, symbol) != FALSE;
+		const bool lined = SymGetLineFromAddr64(process, frame.AddrPC.Offset, &displacement, &line) != FALSE;
+		fprintf(stderr, "  fault #%u %s %s:%lu [0x%llx]\n", i, named ? symbol->Name : "?", lined ? line.FileName : "?", lined ? line.LineNumber : 0UL, frame.AddrPC.Offset);
+		if (!StackWalk64(IMAGE_FILE_MACHINE_AMD64, process, GetCurrentThread(), &frame, &context, nullptr, SymFunctionTableAccess64, SymGetModuleBase64, nullptr)) break;
+	}
+	fflush(stderr);
+#else
+	PrintAbortStack(0);
+#endif
+}
+
+/**
+ * Print an actual access/arithmetic-fault stack before Catch's fatal-condition handler unwinds it.
+ * @param exception Windows exception context; ordinary C++ exceptions remain with their existing handlers.
+ * @return Continue normal exception handling after recording the fault; never turn a crash into a passing test.
+ */
+static LONG WINAPI PrintNativeFaultStack(EXCEPTION_POINTERS *exception)
+{
+	const DWORD code = exception->ExceptionRecord->ExceptionCode;
+	// These fatal native faults lose their original frame when Catch reports
+	// them. Preserve that diagnostic while retaining the normal failing exit;
+	// ordinary C++ exceptions continue through their existing handlers untouched.
+	if (code == EXCEPTION_ACCESS_VIOLATION || code == EXCEPTION_INT_DIVIDE_BY_ZERO || code == EXCEPTION_FLT_DIVIDE_BY_ZERO) PrintExceptionStack(exception);
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+/**
+ * Print an actual native fatal error and keep its normal failure exit without waiting for a Windows dialog.
+ * @param message Fatal text already retained by the native crash-log owner.
+ */
+[[noreturn]] static void PrintFatalTestError(const std::string &message)
+{
+	fprintf(stderr, "Fatal test error: %s\n", message.c_str());
+	fflush(stderr);
+	abort(); // The existing SIGABRT handler records the native stack; this cannot become a passing test.
+}
+
+/**
+ * Send failed assertions and aborts to stderr instead of the Abort/Retry/Ignore box, as the null video driver does
+ * for the game, and print the stack on abort.
+ * @return Always true; only the settings matter.
+ */
+static bool QuietTestAssertions()
+{
+	_set_error_mode(_OUT_TO_STDERR);
+	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+	_CrtSetReportHook(PrintCheckedLibraryStack);
+	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+	signal(SIGABRT, PrintAbortStack);
+	AddVectoredExceptionHandler(1, PrintNativeFaultStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.
+	SetFatalErrorReporter(PrintFatalTestError);
+	return true;
+}
+
+static const bool _quiet_test_assertions = QuietTestAssertions(); ///< Set before any test runs.
+#endif /* _MSC_VER */

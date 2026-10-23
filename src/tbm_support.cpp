@@ -12,6 +12,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8, 9 and 14
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B (canonical cutter steering)
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group9 (paid terminal exit handover)
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Group20B (derived whole-body face clearance)
  */
 
 #include "stdafx.h"
@@ -32,6 +33,8 @@
 #include "viewport_func.h"
 #include "track_func.h"
 #include "pathfinder/yapf/yapf_cache.h"
+#include "pathfinder/follow_track.hpp"
+#include <set>
 #include "vehicle_func.h"
 
 #include "table/strings.h"
@@ -218,6 +221,270 @@ std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &f
 	return std::nullopt;
 }
 
+/**
+ * Trackdir of the piece laid on one cell of a work path, in the path's forward direction (r2df2 task 2.2). The piece
+ * joins the edge towards the previous cell to the edge towards the next one; at the path's end it runs straight on.
+ * Only a piece actually laid on the tile counts: a reused chamber has other junction branches leading elsewhere.
+ * @param path Work path from the housing onward.
+ * @param index Index of the cell in the path; the housing (0) has no such piece.
+ * @return The forward trackdir of the laid piece, or Trackdir::Invalid when the tile does not carry it.
+ */
+static Trackdir GetTBMPathPieceTrackdir(const std::vector<TileIndex> &path, size_t index)
+{
+	// Housing and out-of-range positions have no ordinary paid path piece
+	// that could authorize a stand or its forward arrival direction.
+	if (index == 0 || index >= path.size()) return Trackdir::Invalid;
+	const TileIndex tile = path[index];
+	const DiagDirection entry = DiagdirBetweenTiles(tile, path[index - 1]);
+	const DiagDirection exit = index + 1 < path.size() ? DiagdirBetweenTiles(tile, path[index + 1]) : ReverseDiagDir(entry);
+	// Broken neighbour geometry cannot supply a physical stand direction.
+	if (entry == DiagDirection::Invalid || exit == DiagDirection::Invalid) return Trackdir::Invalid;
+	const TrackdirBits actual = GetTileTrackStatus(tile, TransportType::Rail, RoadTramType::Invalid).trackdirs;
+	// Of the trackdirs a train entering from the previous cell can take, the laid one that leaves towards the next cell.
+	for (Trackdir trackdir : DiagdirReachesTrackdirs(ReverseDiagDir(entry))) {
+		if (TrackdirToExitdir(trackdir) == exit && actual.Test(trackdir)) return trackdir;
+	}
+	return Trackdir::Invalid;
+}
+
+/** Where a cutter consist stands on the work path behind its face (r2df2 Group 2). */
+struct TBMConsistOnPath {
+	std::vector<TileIndex> path; ///< Work path from the housing through the last completed cutter position.
+	size_t front = 0; ///< Path index of the front engine's tile.
+	size_t tail = 0; ///< Smallest path index of any part's tile: the rearmost part.
+	size_t before = 0; ///< Path index of the approach before the last completed cut; 0, the housing, for the first cut.
+};
+
+/**
+ * Place every part of a cutter consist on the tail of its work path.
+ * @param front Live cutter front engine.
+ * @param job Its live job.
+ * @return The placement, or nothing before the first cut, for a broken path, or when a part stands off the last path
+ *         cells (in the housing's shaft, on another layer, or further back on its way).
+ */
+static std::optional<TBMConsistOnPath> LocateTBMConsistOnPath(const Train &front, const ExcavationJob &job)
+{
+	// No completed cut or an invalid cursor has no paid face to locate.
+	if (job.cursor == 0 || job.cursor > job.route.size()) return std::nullopt;
+	TBMConsistOnPath located;
+	std::vector<size_t> ends;
+	located.path = GetTBMWorkRailPath(job, job.cursor, ends);
+	if (ends.size() != job.cursor) return std::nullopt;
+	located.before = job.cursor >= 2 ? ends[job.cursor - 2] : 0;
+	size_t parts = 0;
+	for (const Train *part = &front; part != nullptr; part = part->Next()) ++parts;
+	// N parts cover at most N cells, and the front may still be one diagonal cut (two cells) short of the end, so only
+	// the last N + 2 cells are searched: no scan of the whole route on every tick (I-9).
+	const auto window = located.path.end() - std::min(located.path.size(), parts + 2);
+	located.tail = located.path.size();
+	// Every part must stand on that tail; one still in the shaft or travelling elsewhere means the consist is not there.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		const auto it = std::find(window, located.path.end(), part->tile);
+		if (it == located.path.end()) return std::nullopt;
+		const size_t index = static_cast<size_t>(it - located.path.begin());
+		if (part == &front) located.front = index;
+		located.tail = std::min(located.tail, index);
+	}
+	return located;
+}
+
+/**
+ * Preserve one physically clear tile around the complete running cutter.
+ * @param cutter Original live machinery and its actual trailing parts.
+ * @param tile Candidate hauler support cell on an explicit map layer.
+ * @return Whether the whole cell stays outside the cutter and its safety gap;
+ *         a chamber shortcut or folded work path cannot reduce that gap.
+ */
+static bool IsTBMHaulerCellClear(const Train &cutter, TileIndex tile)
+{
+	// Every bounded actual part protects its own cell and immediate neighbours.
+	// Path indices alone do not measure physical clearance in a folded chamber.
+	for (const Train *part = &cutter; part != nullptr; part = part->Next()) {
+		if (part->track == Track::Depot) continue;
+		// Only machinery on the same actual plane can obstruct this cell;
+		// nearby coordinates across a shaft never imply physical occupancy.
+		if (GetTileLayer(part->tile) == GetTileLayer(tile) &&
+				std::abs(static_cast<int>(TileX(part->tile)) - static_cast<int>(TileX(tile))) <= 1 &&
+				std::abs(static_cast<int>(TilePlaneY(part->tile)) - static_cast<int>(TilePlaneY(tile))) <= 1) return false;
+	}
+	return true;
+}
+
+/**
+ * @param support Support record on a tile.
+ * @return Whether the project that laid it no longer works: it was retired, or it finished and awaits release.
+ */
+static bool IsTBMSupportReleased(const TBMSupportTile &support)
+{
+	const TBMProject *layer = GetTBMProject(support.project);
+	return layer == nullptr || IsTBMProjectFinished(layer->phase);
+}
+
+/**
+ * Find an actual directed approach around a folded cutter, without selecting a hauler or changing its destination.
+ * @tparam Follower Native railway follower with the current90-degree-turn policy.
+ * @param project Original live project whose paid corridor bounds the search.
+ * @param cutter Actual body whose clearance must remain protected.
+ * @param path Canonical paid work history; its first running cell supplies the real shaft approach.
+ * @param stand Actual clear stand and its direction towards the cutter.
+ * @return Whether native directed rail pieces reach the stand without crossing its body clearance.
+ */
+template <typename Follower>
+static bool HasTBMFaceApproach(const TBMProject &project, const Train &cutter, const std::vector<TileIndex> &path, const TBMFaceStand &stand)
+{
+	const auto corridor = GetTBMWorkCorridor(project);
+	/** @param tile Native candidate cell. @return Whether it is paid owned rail of the allowed class with the cutter's physical clearance. */
+	const auto allowed = [&](TileIndex tile) {
+		// Only the original paid corridor can supply an approach. Public rails
+		// elsewhere and another live project's support cannot make a face viable.
+		if (!IsPlainRailTile(tile) || GetTileOwner(tile) != project.company || !std::ranges::binary_search(corridor, tile) ||
+				!IsTBMHaulerCellClear(cutter, tile)) return false;
+		const auto *support = GetTBMSupportTile(tile);
+		return support == nullptr || (support->owner == project.company && support->allowed.Test(TBMSupportClass::Hauler) &&
+				(support->project == project.id || IsTBMSupportReleased(*support)));
+	};
+	const auto start = path[1];
+	if (!allowed(start)) return false;
+	const auto outward = DiagdirBetweenTiles(path.front(), start);
+	if (outward == DiagDirection::Invalid) return false;
+	const auto starts = GetTileTrackStatus(start, TransportType::Rail, RoadTramType::Invalid).trackdirs & DiagdirReachesTrackdirs(outward);
+	const auto goals = GetTBMFaceStandTrackdirs(stand);
+	std::vector<std::pair<TileIndex, Trackdir>> pending;
+	for (Trackdir direction : starts) pending.emplace_back(start, direction);
+	std::set<std::pair<TileIndex, Trackdir>> visited;
+	// Search only actual paid directed rail states, at most12 per corridor
+	// cell. A revisited canonical loop need not be followed through the body
+	// when its existing native junction offers another genuinely clear branch.
+	for (size_t index = 0; index < pending.size(); ++index) {
+		const auto [tile, direction] = pending[index];
+		if (!visited.emplace(tile, direction).second) continue;
+		if (tile == stand.tile && goals.Test(direction)) return true; // The exact arrival towards the cutter matters; reaching another piece of the same junction cannot stop at its stand.
+		// Start after the closed housing and use the owner's native follower:
+		// this geometry query precedes turn-holder selection and must not ask
+		// a portal admission rule that itself depends on the meeting answer.
+		Follower follower(project.company, cutter.compatible_railtypes);
+		if (!follower.Follow(tile, direction)) continue;
+		if (!allowed(follower.new_tile)) continue;
+		for (Trackdir next : follower.new_td_bits) pending.emplace_back(follower.new_tile, next);
+	}
+	return false;
+}
+
+
+/**
+ * @param cutter Actual cutter whose whole physical body protects the stand's clearance.
+ * @param located Consist placement on its work path.
+ * @param job Its live job.
+ * @return The stand two cells behind the rearmost part, or nothing (see FindTBMFaceStand).
+ */
+static std::optional<TBMFaceStand> GetTBMFaceStandBehind(const Train &cutter, const TBMConsistOnPath &located, const ExcavationJob &job)
+{
+	// path[0] is the housing: the stand needs a cell after it, and one clear cell before the rearmost part.
+	if (located.tail < 3) return std::nullopt;
+	const size_t stand = located.tail - 2;
+	const TileIndex tile = located.path[stand];
+	// A path-index gap in a turning chamber may still touch another part of
+	// the cutter. A face stand must retain its actual physical safety cell.
+	if (!IsPlainRailTile(tile) || !IsTBMHaulerCellClear(cutter, tile)) return std::nullopt;
+	const Trackdir trackdir = GetTBMPathPieceTrackdir(located.path, stand);
+	if (trackdir == Trackdir::Invalid) return std::nullopt;
+	// A safe endpoint can still be isolated behind a folded cutter body.
+	// A clear canonical prefix is the cheap usual case. If an earlier loop
+	// crosses the body now, native paid junctions may still offer another clear
+	// directed approach; only an actually unreachable stand falls back to Bay.
+	bool clear = true;
+	for (size_t index = 1; index <= stand; ++index) {
+		if (!IsTBMHaulerCellClear(cutter, located.path[index])) { clear = false; break; }
+	}
+	if (!clear) {
+		const auto *project = GetTBMProjectForCutter(cutter.index);
+		if (project == nullptr) return std::nullopt;
+		const TBMFaceStand candidate{tile, trackdir};
+		const bool reachable = _settings_game.pf.forbid_90_deg ? HasTBMFaceApproach<CFollowTrackRailNo90>(*project, cutter, located.path, candidate) :
+			HasTBMFaceApproach<CFollowTrackRail>(*project, cutter, located.path, candidate);
+		if (!reachable) return std::nullopt;
+	}
+	// The next cut's sweep must stay free of other trains, or that cut would wait for an obstruction.
+	if (job.cursor < job.route.size()) {
+		const auto &swept = job.route[job.cursor].swept_tiles;
+		if (std::ranges::find(swept, tile) != swept.end()) return std::nullopt;
+	}
+	return TBMFaceStand{tile, trackdir};
+}
+
+/** @copydoc GetTBMFaceStandTrackdirs */
+TrackdirBits GetTBMFaceStandTrackdirs(const TBMFaceStand &stand)
+{
+	TrackdirBits result{};
+	const DiagDirection exit = TrackdirToExitdir(stand.trackdir);
+	// Every laid piece that leaves the stand tile towards the clear cell and the cutter counts, whichever way it came in.
+	for (Trackdir trackdir : GetTileTrackStatus(stand.tile, TransportType::Rail, RoadTramType::Invalid).trackdirs) {
+		if (TrackdirToExitdir(trackdir) == exit) result.Set(trackdir);
+	}
+	return result;
+}
+
+/** @copydoc FindTBMFaceStand */
+std::optional<TBMFaceStand> FindTBMFaceStand(const TBMProject &project)
+{
+	const Train *front = GetLiveTBMCutter(project);
+	const ExcavationJob *job = GetLiveTBMJob(project);
+	// Both independent original references must survive before any physical
+	// pose can provide a face stand; neither reference repairs the other.
+	if (front == nullptr || job == nullptr) return std::nullopt;
+	const auto located = LocateTBMConsistOnPath(*front, *job);
+	if (!located.has_value()) return std::nullopt;
+	return GetTBMFaceStandBehind(*front, *located, *job);
+}
+
+/** @copydoc GetTBMMeetingKind */
+TBMMeetingKind GetTBMMeetingKind(const TBMProject &project)
+{
+	const bool working = project.phase == TBMPhase::Bore || project.phase == TBMPhase::AdvanceSupport || IsTBMAwaitingFaceTransfer(project.phase);
+	// Only active face work or a physical return may select a new face meeting.
+	if (!working && !IsTBMReturning(project.phase)) return TBMMeetingKind::Bay;
+	// Reuse the original full reference owner: an orphan origin, broken portal,
+	// wrong consist or invalid bay must not invite a hauler via a safe-looking pose.
+	if (FindTBMProjectReferenceLoss(project) != TBMBlockedReason::None) return TBMMeetingKind::Bay;
+	// After its actual spoil has left, a returning cutter needs no new face
+	// visit. Calling each empty hauler back inside would renew the F7 hold and
+	// prevent the completed machine from ever withdrawing to its real bay.
+	if (!working && !IsTBMExchangeDue(project)) return TBMMeetingKind::Bay;
+	// r2mlvs3mp task 10R.2: only a Source bay serves the face. A hauler waiting in an underground depot bay leaves it by
+	// the native depot rule, which keeps it inside while another train occupies the depot's signal block; the waiting
+	// cutter stands in that same unsignalled chamber block, so each would wait for the other. Such a project meets its
+	// hauler at that nearby depot, as it did before r2df2.
+	if (const auto bay = GetTBMExchangeBay(project); bay.error == TBMExchangeError::None && bay.kind != TBMExchangeBayKind::Source) return TBMMeetingKind::Bay;
+	const Train *front = GetLiveTBMCutter(project);
+	const ExcavationJob *job = GetLiveTBMJob(project);
+	if (front == nullptr || job == nullptr) return TBMMeetingKind::Bay;
+	const auto located = LocateTBMConsistOnPath(*front, *job);
+	if (!located.has_value()) return TBMMeetingKind::Bay;
+	// A working cutter may still be rolling onto the support of the cut it just made, anywhere from the approach of the
+	// cut before; a cutter sent back counts only while its front is still on the face, so no hauler follows it in. A
+	// return requested during the face wait, which usually stands one cut short of the face, still meets the hauler
+	// already in the corridor there: rule F7 holds it still until that hauler has left (r2df2 Group 7). No new hauler is
+	// invited, because the meeting point is the bay until one is inside.
+	const size_t face = located->path.size() - 1;
+	const bool held_for_hauler = !working && located->front >= located->before && FindTBMHaulerInCorridor(project) != VehicleID::Invalid();
+	const bool at_face = working ? located->front >= located->before : (located->front == face || held_for_hauler);
+	if (!at_face) return TBMMeetingKind::Bay;
+	// Every assigned hauler must fit wholly between the housing and the stand, with a cell to spare for corner pieces, so
+	// none stops with a part still in the pair's magazine, where it could not turn round (r2df2 Group 4): with its front
+	// on the stand (tail - 2), a hauler of L cells ends L - 1 cells further back, which must not be beyond the housing.
+	if (located->tail < GetTBMHaulerRoomCells(project.id) + 2) return TBMMeetingKind::Bay;
+	return GetTBMFaceStandBehind(*front, *located, *job).has_value() ? TBMMeetingKind::Face : TBMMeetingKind::Bay;
+}
+
+/** @copydoc IsTBMReadyForFaceTransfer */
+bool IsTBMReadyForFaceTransfer(const TBMProject &project)
+{
+	// Actual cutting/travel/storage cannot start the transfer transaction;
+	// only the explicit wait or a loaded return can offer physical spoil.
+	if (!IsTBMAwaitingFaceTransfer(project.phase) && !IsTBMReturning(project.phase)) return false;
+	return GetTBMMeetingKind(project) == TBMMeetingKind::Face && IsTBMExchangeDue(project);
+}
+
 /** @copydoc GetTBMTravelHoldReason */
 TBMBlockedReason GetTBMTravelHoldReason(const Train &front)
 {
@@ -238,6 +505,16 @@ TBMBlockedReason GetTBMTravelHoldReason(const Train &front)
 	}
 	const auto loss = FindTBMProjectReferenceLoss(*project);
 	if (loss != TBMBlockedReason::None) return loss;
+	// Rule F7 (r2df2 task 4.5): a cutter sent back never moves while a hauler of its project is in its corridor.
+	if (IsTBMReturning(project->phase) && FindTBMHaulerInCorridor(*project) != VehicleID::Invalid()) return TBMBlockedReason::Obstruction;
+	// Plan18 8FA: once the face transfer is complete, keep the cutter's whole
+	// body still until the departing hauler clears its corridor. In a folded
+	// chamber, advancing while the load exits can close its only physical path
+	// back to Surface even though the stand itself was clear at the transfer.
+	if (const auto *assignment = GetTBMExchangeAssignmentForHauler(FindTBMHaulerInCorridor(*project)); assignment != nullptr) {
+		if (assignment->phase == TBMHaulerPhase::CollectLoaded || assignment->phase == TBMHaulerPhase::VisitOrigin ||
+				assignment->phase == TBMHaulerPhase::DisposeOrTransfer) return TBMBlockedReason::Obstruction;
+	}
 	// Work and magazine waits already have physical holds. Only real project
 	// travel needs a destination; an absent one may never invoke ordinary wandering.
 	if (project->phase != TBMPhase::TravelToFace && project->phase != TBMPhase::AdvanceSupport && !IsTBMReturning(project->phase)) return TBMBlockedReason::None;
@@ -427,6 +704,8 @@ CommandCost CheckTBMExitHandover(TileIndex tile, DiagDirection shaft, RailType r
 	const auto *project = GetTBMProject(support->project);
 	const auto *job = project == nullptr ? nullptr : GetExcavationJob(project->job);
 	if (job == nullptr || project->company != _current_company || job->state != ExcavationJobState::Completed || job->cursor != job->route.size()) return CommandCost(STR_ERROR_TBM_EXIT_UNFINISHED);
+	// A running hauler must leave before the terminal support changes into an exit.
+	if (FindTBMHaulerInCorridor(*project) != VehicleID::Invalid()) return CommandCost(STR_ERROR_TBM_EXIT_HAULER);
 	std::vector<size_t> ends;
 	const auto path = GetTBMWorkRailPath(*job, job->route.size(), ends);
 	const auto door_step = TileIndexDiffCByDiagDir(ReverseDiagDir(shaft));
@@ -500,7 +779,11 @@ std::optional<TBMSupportClass> GetTBMSupportClass(const Train &part)
 {
 	const Train *front = part.First();
 	const TBMProject *project = front == nullptr ? nullptr : GetTBMProjectForCutter(front->index);
-	if (project == nullptr) return std::nullopt; // Plan 5 haulers will declare the Hauler class here.
+	if (project == nullptr) {
+		// Every part of an assigned hauler runs as the Hauler class (r2df2 task 3.1); any other train has no class.
+		if (front != nullptr && GetTBMExchangeAssignmentForHauler(front->index) != nullptr) return TBMSupportClass::Hauler;
+		return std::nullopt;
+	}
 	// The machinery runs as the cutter; the dedicated wagons it pulls keep their own class for later haulage.
 	switch (GetTBMConsistRole(*project, part)) {
 		case TBMConsistRole::Cutter:
@@ -524,7 +807,21 @@ bool MayTBMSupportCarry(const Train &part, TileIndex tile)
 	const auto *support = GetTBMSupportTile(tile);
 	if (support == nullptr) return true;
 	const auto vehicle_class = GetTBMSupportClass(part);
-	return part.owner == support->owner && vehicle_class.has_value() && support->allowed.Test(*vehicle_class);
+	// Company, physical class and the registered permission must all agree; assignment alone never opens private support.
+	if (part.owner != support->owner || !vehicle_class.has_value() || !support->allowed.Test(*vehicle_class)) return false;
+	if (*vehicle_class != TBMSupportClass::Hauler) return true;
+	// A hauler serves one project: its support, or released support that route reuses, as its cutter does. Another
+	// live project's corridor stays closed to it (r2df2 task 3.1).
+	const auto *assignment = GetTBMExchangeAssignmentForHauler(part.First()->index);
+	if (assignment == nullptr || (assignment->project != support->project && !IsTBMSupportReleased(*support))) return false;
+	const auto *project = GetTBMProject(assignment->project);
+	if (project == nullptr) return false;
+	// Plan18 8FA: chamber junctions can offer a shorter route to the stand
+	// across the cutter's occupied body. Both path discovery and native front
+	// admission use this same support rule, so an assigned hauler must route
+	// around actual machinery instead of treating its own project as empty rail.
+	const auto *cutter = Train::GetIfValid(project->cutter);
+	return cutter != nullptr && IsTBMHaulerCellClear(*cutter, tile);
 }
 
 /**

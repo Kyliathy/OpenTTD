@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3. Explicit native Storage/Power activation: r2mlvs11-orbital-stations-and-manufacturing.md Group4. Shared native approach reservation producer: r2mlvs8-space-world-and-construction.md Group11; r2mlvs11 Group4B prerequisite. Direct module flight/packet refusal/retired destination observers: r2mlvs9-launch-centers-and-rockets.md Groups11/11C. Native circular cargo return/descent acceptance: r2mlvs9-launch-centers-and-rockets.md Groups12-14. Bounded recipe declarations: r2fc-file-cleanup3.md Group6; disabled pending leaves are not executable or proof of regeneration.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3. Explicit native Storage/Power activation: r2mlvs11-orbital-stations-and-manufacturing.md Group4. Shared native approach reservation producer: r2mlvs8-space-world-and-construction.md Group11; r2mlvs11 Group4B prerequisite. Direct module flight/packet refusal/retired destination observers: r2mlvs9-launch-centers-and-rockets.md Groups11/11C. Native circular cargo return/descent acceptance: r2mlvs9-launch-centers-and-rockets.md Groups12-14. Bounded recipe declarations: r2fc-file-cleanup3.md Group6; disabled pending leaves are not executable or proof of regeneration. Donor-input preservation and the pending selected-graph adapter are owned by m2o23-1-come-space.md Groups 2/58.",
   "schema_version": 2,
   "review_root": "mlm/reviews",
   "runtime_root": "mlm/runtime",
@@ -51957,6 +51957,53 @@
         "src/tests/multilayer/support/runner.py",
         "mlm/tools/run/run_dedicated.sh"
       ]
+    },
+    {
+      "id": "donor-underground-inputs",
+      "producer": "src/tests/multilayer/verify_donor_inputs.py",
+      "feature": "integration",
+      "scenario": "donor-inputs",
+      "target": null,
+      "test_tags": [],
+      "tag_sources": [],
+      "execution": "read_only",
+      "enabled": false,
+      "pending_groups": [
+        58
+      ],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": false,
+      "configuration_reuse": "forbid",
+      "comparison": "historical_metadata",
+      "tools": [
+        "python"
+      ],
+      "retained_inputs": [
+        {
+          "role": "donor-input-contract",
+          "path": "src/tests/fixtures/cleanup/donor-import.json"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/donor-inputs.json"
+        }
+      ],
+      "original_parameters": {
+        "symbol": "verify_retained_inputs",
+        "scope": "all",
+        "integration_plan": "m2o23-1-come-space.md",
+        "adapter_required": true
+      },
+      "native_timeout_seconds": null
     }
   ]
 }

@@ -444,8 +444,9 @@ enum class Commands : uint8_t {
 	CancelEarthSpaceReplacement, ///< Plan11 Group8BC: detach the old-hull intent from an existing paid Earth assembly body, preserving both hulls and spent materials/work/capital.
 	ControlOrbitalRecipe, ///< Plan11 Group10C: explicitly select/start, pause, resume or cancel the actual module's bounded processing work.
 	SetSpaceMissionChecked, ///< Plan10 Group20: assign/recall only the original hull generation; legacy command IDs/layout remain unchanged.
-	PlaceSurfaceSupplyOrder, ///< Plan6 Groups13CCC/13CCD: dormant monotonic paid Surface intent ABI; producer currently refuses without mutation.
-	CancelSurfaceSupplyOrder, ///< Plan6 Groups13CCC/13CCD: dormant unshipped-only cancellation ABI; producer currently refuses without mutation.
+	PlaceSurfaceSupplyOrder, ///< Canonical monotonic paid Surface intent; original A209 tuple remains unchanged.
+	CancelSurfaceSupplyOrder, ///< Native Pending-only cancellation; original A210 tuple remains unchanged.
+	CancelLegacySurfaceSupplyOrder, ///< M2O23 revision2 append211: exact legacy source count, settled only by the original command kernel.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

@@ -464,5 +464,6 @@ bool IsTBMHoldingTrain(const Train &front)
 	if (project == nullptr) return false;
 	if (GetTBMTravelHoldReason(front) != TBMBlockedReason::None) return true;
 	if (front.current_order.IsType(OT_GOTO_DEPOT) && !IsTBMStagingHangarOrder(front)) return false;
-	return project->phase == TBMPhase::Bore || IsTBMWaitingForExchange(project->phase) || IsTBMStored(project->phase);
+	// The cutter stands still while it cuts, while it waits for a hauler at its face or in its bay, and while stored.
+	return project->phase == TBMPhase::Bore || IsTBMAwaitingFaceTransfer(project->phase) || IsTBMWaitingForExchange(project->phase) || IsTBMStored(project->phase);
 }

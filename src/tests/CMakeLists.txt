@@ -11,6 +11,8 @@
 # Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
 # Native Surface processor geometry/state: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
 add_test_files(
+    # Detached original-version/capability refusals: archi-savegame.md; m2o23-1-come-space.md Groups5/9B.
+    save_lineage_policy.cpp
     # Shared artifact ownership: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
     test_artifact_paths.h
     test_artifact_paths.cpp
@@ -283,6 +285,20 @@ add_test_files(
     tbm_corridor.cpp
     tbm_reuse.cpp
     tbm_exchange_fixture.h
+    tbm_merge_observation.cpp
+    tbm_face_fixture.h
+    tbm_face_stand.cpp
+    tbm_face_meeting.cpp
+    tbm_face_deep.cpp
+    tbm_face_preflight.cpp
+    tbm_face_transfer.cpp
+    tbm_face_turn.cpp
+    tbm_face_steering.cpp
+    tbm_face_access.cpp
+    tbm_face_cycle.cpp
+    # Native installed phase activation: archi-map-layers.md; m2o23-2-come-space.md Group23.
+    tbm_face_controller.cpp
+    portal_signal_boundary.cpp
     tbm_exchange_bay.cpp
     tbm_exchange_proposal.cpp
     tbm_exchange_commit.cpp
@@ -352,6 +368,24 @@ add_test_files(
     surface_supply_custody.cpp
     # Detached bounded order/receipt validation: r2mlvs6-mines-and-resource-chains.md Group13CCB.
     surface_supply_order.cpp
+    # Canonical native/legacy metadata: archi-map-layers.md; m2o23-1-come-space.md Group10.
+    surface_supply_record_fixture.h
+    surface_supply_receipts.cpp
+    surface_supply_conversion.cpp
+    surface_supply_packet_evidence.cpp
+    surface_supply_departure.cpp
+    surface_supply_refund_stock.cpp
+    native_cargo_custody_fixture.h
+    cargo_custody.cpp
+    surface_supply_custody_policy.cpp
+    surface_supply_legacy_fixture.h
+    surface_supply_adoption.cpp
+    surface_supply_space_custody.cpp
+    surface_supply_window.cpp
+    surface_supply_refund.cpp
+    surface_supply_legacy_lifecycle.cpp
+    cargo_partial_transfer.cpp
+    surface_supply_cross_owner.cpp
     # Shared actual command-created component station: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_fixture.h
     # Actual native restore/codec/copy references, no procurement: r2mlvs6-mines-and-resource-chains.md Group13CCC.

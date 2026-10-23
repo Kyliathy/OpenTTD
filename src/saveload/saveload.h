@@ -11,6 +11,7 @@
 #define SAVELOAD_H
 
 #include "saveload_type.h"
+#include "save_lineage.h" // m2o23-1-come-space.md: detached compatibility boundary; current loading/writing remains unchanged until integration.
 #include "../core/label_type.hpp"
 #include "../autoreplace_base.h"
 #include "../cargopacket.h"

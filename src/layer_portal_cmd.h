@@ -67,6 +67,14 @@ LayerPortalWorkState GetLayerPortalWorkState(TileIndex tile);
 LayerPortalWorkError CheckLayerPortalAvailability(TileIndex tile);
 
 /**
+ * Does an endpoint join its pair to the ordinary network, so that paths and signal blocks pass through the shaft?
+ * Routing (the track status) and signal blocks share this one answer (r2df task 6.2).
+ * @param tile Either actual endpoint.
+ * @return True for a date-available Connected pair; false while it is Sealed or Commissioning, locked or broken.
+ */
+bool IsLayerPortalOpenToNetwork(TileIndex tile);
+
+/**
  * Revalidate restricted work admission against the actual saved pair, job and vehicle.
  * @param tile Actual endpoint being entered.
  * @param actor Actual entering vehicle; a follower cannot inherit company-wide permission.
@@ -81,8 +89,9 @@ LayerPortalWorkError CheckLayerPortalWorkAccess(TileIndex tile, VehicleID actor,
  * (R2MLVS3MP-M decision 2). The rock end is a passage, never a magazine.
  * @param tile Rail portal end.
  * @param front Front engine of the train.
- * @return The shaft for work departure or complete backing withdrawal, the outer door for an admitted hauler or
- *         forward departure of a stored servicing cutter, or Invalid for a servicing cutter's ordinary passage.
+ * @return The shaft for work/face departure or complete backing withdrawal, the outer door for a queued bay
+ *         return or stored servicing cutter, or Invalid for through passage. Partial ingress/departure retains
+ *         the complete chain's chosen physical orientation before a changed meeting can select another exit.
  */
 DiagDirection GetLayerPortalMagazineExit(TileIndex tile, const Train &front);
 
@@ -97,8 +106,9 @@ bool IsLayerPortalMagazineBusy(TileIndex tile, const Train &front);
 
 /**
  * Track that a Commissioning pair shows to one admitted train; ordinary routing sees none there (R2MLVS3MP-M
- * decision 3). The project's cutter consist is admitted at both ends, an assigned hauler of its Source bay only at
- * the key through its door. A busy magazine takes no train in from outside until it is clear.
+ * decision 3). The project's cutter consist is admitted at both ends. Assigned haulers queue through their Source
+ * door; the face turn holder and a hauler already withdrawing through its own pair may pass both ends.
+ * A busy magazine takes no train in from outside until every other running part clears.
  * @param tile Rail portal end being entered or looked at.
  * @param front Front engine of the train.
  * @param side Edge the train enters through on the end's own layer, or DiagDirection::Invalid for a shaft step.

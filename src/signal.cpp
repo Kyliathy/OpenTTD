@@ -12,6 +12,7 @@
 #include "station_map.h"
 #include "tunnelbridge_map.h"
 #include "layer_portal_map.h"
+#include "layer_portal_cmd.h"
 #include "vehicle_func.h"
 #include "viewport_func.h"
 #include "train.h"
@@ -405,8 +406,16 @@ static SigFlags ExploreSegment(Owner owner)
 				if (GetLayerPortalTransportType(tile) != TransportType::Rail) continue;
 				//FD-5: the door is the only side an end shares with its own layer. The shaft side leads nowhere on this layer.
 				if (enterdir != GetLayerPortalDoorDirection(tile)) continue;
+				//r2df task 6.2: a pair that is not open to the network (Sealed, Commissioning, locked Deep or broken)
+				//ends the block at this end, as the track status hides its shaft from paths. A train moving on this end
+				//still occupies the block; parts standing aside in a magazine do not, like trains inside a depot. Trains
+				//on the far layer belong to that layer's own block, so a corridor train cannot hold a Surface depot.
+				if (!IsLayerPortalOpenToNetwork(tile)) {
+					if (!flags.Test(SigFlag::Train) && HasVehicleOnTile(tile, IsTrainAndNotInDepot)) flags.Set(SigFlag::Train);
+					continue;
+				}
 				TileIndex pair = GetLayerPortalPairTile(tile);
-				//A train on either end occupies the block. The ends are only searched until a train is found.
+				//A Connected pair is one block: a train on either end occupies it. The ends are only searched until a train is found.
 				if (!flags.Test(SigFlag::Train) && (HasVehicleOnTile(tile, IsTrainAndNotInDepot) || HasVehicleOnTile(pair, IsTrainAndNotInDepot))) flags.Set(SigFlag::Train);
 				//Cross the pair as one straight piece and leave by the pair's door.
 				oldtile = pair;
@@ -610,6 +619,13 @@ void UpdateSignalsInBuffer()
 		UpdateSignalsInBuffer(_last_owner);
 		_last_owner = INVALID_OWNER; // invalidate
 	}
+}
+
+/** @copydoc UpdateLayerPortalSignals */
+void UpdateLayerPortalSignals(TileIndex tile, Owner owner)
+{
+	UpdateSignalsInBuffer();
+	UpdateSignalsOnSegment(tile, DiagDirection::Invalid, owner);
 }
 
 

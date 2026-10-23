@@ -2460,6 +2460,25 @@ void BackUpTBMConsist(Train &front)
 	ReverseTrainDirection(&front);
 }
 
+/** @copydoc BackUpTBMHauler */
+void BackUpTBMHauler(Train &front)
+{
+	// Native pending reversal and complete storage retain authority; no repeated turnaround is scheduled.
+	if (!front.IsFrontEngine() || front.flags.Test(VehicleRailFlag::Reversing) || IsWholeTrainInsideDepot(&front)) return;
+	// Even one stored follower cannot follow a physical turnaround. The public
+	// native helper enforces this too, independently of its cycle caller.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part->track == Track::Depot) return;
+	}
+	FreeTrainTrackReservation(&front);
+	// A moving hauler reverses once it has stopped, as the reverse command does with realistic acceleration.
+	if (front.cur_speed != 0) {
+		front.flags.Set(VehicleRailFlag::Reversing);
+		return;
+	}
+	ReverseTrainDirection(&front);
+}
+
 /** @copydoc ChooseTBMReturnDirection */
 void ChooseTBMReturnDirection(Train &front)
 {
@@ -2470,6 +2489,31 @@ void ChooseTBMReturnDirection(Train &front)
 	FreeTrainTrackReservation(&front);
 	if (front.cur_speed != 0) front.flags.Set(VehicleRailFlag::Reversing);
 	else ReverseTrainDirection(&front);
+}
+
+/** @copydoc ChooseTBMHaulerRouteDirection */
+void ChooseTBMHaulerRouteDirection(Train &front)
+{
+	// A player's stop, crash, depot storage or pending turnaround retains its
+	// native authority. Only a genuinely lost running hauler needs recovery.
+	if (!front.IsFrontEngine() || front.flags.Test(VehicleRailFlag::Reversing) ||
+			front.vehstatus.Any({VehState::Stopped, VehState::Crashed}) || !front.vehicle_flags.Test(VehicleFlag::PathfinderLost) ||
+			IsWholeTrainInsideDepot(&front)) return;
+	const auto *assignment = GetTBMExchangeAssignmentForHauler(front.index);
+	if (assignment == nullptr) return;
+	const auto *project = GetTBMProject(assignment->project);
+	// Ordinary Surface travel stays with its existing controller. Either the
+	// outbound origin leg or inward empty steering can be trapped in a directed
+	// loop after chamber junctions change, without meeting a line end to turn at.
+	const bool travelling = assignment->phase == TBMHaulerPhase::VisitOrigin || assignment->phase == TBMHaulerPhase::ReturnEmpties;
+	if (project == nullptr || !travelling ||
+			!IsTBMHaulerInCorridor(*project, front.index) || !YapfTrainCheckReverse(&front)) return;
+	// A magazine transition must finish in its admitted direction before a
+	// real turnaround is possible; every actual part must be on running rail.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (part->track == Track::Depot) return;
+	}
+	BackUpTBMHauler(front);
 }
 
 /**
@@ -2719,6 +2763,19 @@ static bool CheckTrainStayInMagazine(Train *v)
 	}
 	// One train moves on the housing at a time; the others wait in the depot state.
 	if (IsLayerPortalMagazineBusy(v->tile, *v)) return true;
+	// r2mlvs3mp task 10R.2: a train leaving through the door joins this layer's line as a train leaving a depot does,
+	// so it waits while the block in front of the door holds another moving train. Otherwise a queued hauler could
+	// leave onto a single track that another hauler is still driving along towards this magazine, and the two would
+	// meet head on. A magazine has no depot reservation for path signals, so this occupancy test applies whatever the
+	// reservation setting. Trains stored in the magazine do not count, and an exit through the shaft towards the work
+	// never enters that block.
+	if (exit == GetLayerPortalDoorDirection(v->tile)) {
+		UpdateSignalsInBuffer(); // The segment query needs an empty signal queue.
+		if (UpdateSignalsOnSegment(v->tile, DiagDirection::Invalid, v->owner) == SigSegState::Full) {
+			SetWindowClassesDirty(WindowClass::TrainList);
+			return true;
+		}
+	}
 
 	// Lay the train out at the inner point of its exit side, facing out, so its parts leave in chain order.
 	const int x = TileX(v->tile) * TILE_SIZE + _vehicle_initial_x_fract[exit];
@@ -2732,6 +2789,10 @@ static bool CheckTrainStayInMagazine(Train *v)
 		u->UpdatePosition();
 	}
 	v->track = AxisToTrack(DiagDirToAxis(exit));
+	// r2mlvs3mp task 10R.2: a stored train has not searched a path since it arrived, so a lost flag from before then is
+	// stale. Its next path search sets the flag again if it really has no route; read stale, the flag would hold a TBM
+	// hauler as BlockedLine the moment it leaves, before it could look for its way to the face.
+	v->vehicle_flags.Reset(VehicleFlag::PathfinderLost);
 	// FD-3: the point decides visibility; the parts still inside stay hidden until they are released.
 	v->vehstatus.Set(VehState::Hidden, IsHiddenInLayerPortal(GetLayerPortalShaftDirection(v->tile), x, y));
 	v->cur_speed = 0;
@@ -2739,6 +2800,8 @@ static bool CheckTrainStayInMagazine(Train *v)
 	SetWindowClassesDirty(WindowClass::TrainList);
 	v->UpdateViewport(true, true);
 	v->UpdatePosition();
+	// r2df task 6.3: the train now moves on the housing, inside the block in front of the door, as a train leaving a depot.
+	UpdateLayerPortalSignals(v->tile, v->owner);
 	v->UpdateAcceleration();
 	return false;
 }
@@ -2762,6 +2825,15 @@ static bool CheckTrainStayInDepot(Train *v)
 	if (v->gcache.cached_power == 0) {
 		v->vehstatus.Set(VehState::Stopped);
 		SetWindowDirty(WindowClass::VehicleDepot, v->tile);
+		return true;
+	}
+
+	// r2mlvs5 task 13D.2: a cutter standing wholly in its own project's depot exchange bay leaves it only as the
+	// controller sends it out, exactly as from a Source magazine: to its face, along its orders or to a hangar. No
+	// phase holds a finished project's machine any more, so it would otherwise drive off with no orders and run lost
+	// on the line, where it can occupy the block in front of another depot.
+	if (const TBMProject *project = GetTBMProjectForCutter(v->index); project != nullptr && project->exchange_bay == v->tile && !MayTBMTrainLeaveMagazine(*v)) {
+		SetWindowClassesDirty(WindowClass::TrainList);
 		return true;
 	}
 
@@ -3811,6 +3883,7 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 	for (prev = v->GetMovingPrev(); v != nomove; prev = v, v = v->GetMovingNext()) {
 		DiagDirection enterdir = DiagDirection::Begin;
 		bool update_signals_crossing = false; // will we update signals or crossing state?
+		bool closed_shaft_step = false; // does this part go up or down the shaft of a pair that ends the blocks at its ends?
 
 		GetNewVehiclePosResult gp = GetNewVehiclePos(v);
 		if (v->track != Track::Wormhole) {
@@ -3843,6 +3916,7 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 				DiagDirection moving = DirToDiagDir(v->GetMovingDirection());
 				bool shaft_step = IsLayerPortalShaftExit(gp.old_tile, moving);
 				if (shaft_step) {
+					closed_shaft_step = !IsLayerPortalOpenToNetwork(gp.old_tile);
 					TranslateIntoLayerPortalPair(gp.old_tile, gp.x, gp.y);
 					gp.new_tile = GetLayerPortalNextTile(gp.old_tile, moving);
 					enterdir = moving;
@@ -4124,6 +4198,14 @@ bool TrainController(Train *v, Vehicle *nomove, bool reverse)
 			if (v->GetMovingNext() == nullptr) {
 				TrainMovedChangeSignals(gp.old_tile, ReverseDiagDir(enterdir));
 				if (IsLevelCrossingTile(gp.old_tile)) UpdateLevelCrossing(gp.old_tile);
+			}
+
+			// r2df task 6.3: a pair that is not open to the network ends a block at each of its ends, so a train going
+			// down or up its shaft leaves one block and enters another without passing a signal, as at a depot. The
+			// moving front fills the block it enters; the last part frees the block it leaves. A one-part train does both.
+			if (closed_shaft_step) {
+				if (v->IsMovingFront()) UpdateLayerPortalSignals(gp.new_tile, first->owner);
+				if (v->GetMovingNext() == nullptr) UpdateLayerPortalSignals(gp.old_tile, first->owner);
 			}
 		}
 

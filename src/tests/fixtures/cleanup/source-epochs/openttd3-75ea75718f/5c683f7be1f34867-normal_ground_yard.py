@@ -1,0 +1,127 @@
+"""Pay for real Surface logistics from the exact normally earned capital.
+
+@file normal_ground_yard.py
+@see r2mlvs16-integrated-acceptance-and-balance.md Group6CC.
+@see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+Native public commands own clearing,receivers,rail,station,depot and sealed housing.
+"""
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import uuid
+from datetime import datetime, timezone
+
+sys.dont_write_bytecode = True
+from ground_network import ROOT
+from runner import create_run_context, start_native
+from construction_provider_return import identity
+from normal_ground_freight import fields
+from normal_ground_start_report import native_world
+from save_tables import saved_table
+
+FINANCE = "logs/acceptance/bootstrap/20261019-native-01/financing-verification.json"
+FINANCE_SHA = "a090e3a26566eeb305108aa551b6eac41b71f26efeef8fe73ec1c9844293e932"
+
+
+def run_one(configuration):
+    """Load the sealed funded original and buy every actual Surface predecessor without opening rock."""
+    handoff = ROOT / FINANCE
+    assert identity(handoff)["sha256"] == FINANCE_SHA
+    basis = json.loads(handoff.read_text(encoding="utf-8"))
+    flow = basis["records"][configuration]
+    source_ref = flow["final_input"]
+    original_ref = flow["records"][0]["actual"]["original_input"]
+    source = ROOT / source_ref["path"]
+    assert identity(source) == source_ref
+    quote = basis["quotes"][configuration]["actual"]
+    assert quote["actual_input"] == source_ref
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S-") + uuid.uuid4().hex[:10]
+    context = create_run_context("acceptance", "normal-ground-yard", run_id=run_id)
+    print(json.dumps({"phase": "preparing_runtime", "run_id": run_id}), flush=True)
+    context.prepare_runtime()
+    outputs = [context.saves / name for name in ("yard-paid.sav", "yard-paid-repeat.sav")]
+    assert all(not target.exists() and target.resolve() != source.resolve() for target in outputs)
+    context.config_path.write_bytes((ROOT / quote["config"]["path"]).read_bytes())
+    startup = context.runtime_dir / "scripts/game_start.scr"
+    startup.write_text("# Owner: r2mlvs16-integrated-acceptance-and-balance.md6CC; archi-map-layers.md.\nnormal_ground_yard\n", encoding="utf-8")
+    executable = ROOT / f"build/{configuration}/openttd_test.exe"
+    binary = identity(executable)
+    environment = dict(os.environ, OTTD_NORMAL_GROUND_INPUT=str(source),
+                       OTTD_NORMAL_GROUND_ENTRANCE=str(quote["readiness"]["portal"]))
+    launch = subprocess.STARTUPINFO()
+    launch.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    launch.wShowWindow = subprocess.SW_HIDE
+    log = context.logs / f"yard-{configuration}.log"
+    child = None
+    try:
+        with log.open("wb") as sink:
+            child = start_native(context, [executable, "[.normal-ground-yard]"], cwd=ROOT / "build", env=environment,
+                                 stdout=sink, stderr=subprocess.STDOUT, creationflags=subprocess.CREATE_NO_WINDOW,
+                                 startupinfo=launch)
+            print(json.dumps({"phase": "native_started", "run_id": run_id, "pid": child.pid}), flush=True)
+            assert child.wait(timeout=110) == 0, log
+    finally:
+        if child is not None and child.poll() is None:
+            child.terminate()
+            try:
+                child.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                child.kill()
+                child.wait(timeout=5)
+        assert identity(source) == source_ref
+        assert identity(executable) == binary
+    text = log.read_text(encoding="utf-8", errors="replace")
+    counts = re.search(r"All tests passed \((\d+) assertions? in (\d+) test cases?\)", text)
+    assert counts and int(counts[1]) > 0 and int(counts[2]) == 1, log
+    yard = fields(text, "NORMAL_GROUND_YARD")
+    assert yard["portal"] == quote["readiness"]["portal"]
+    assert yard["opening_cash"] == flow["closing"]["cash"]
+    assert yard["tick"] == flow["closing"]["tick"]
+    assert yard["loan"] == flow["closing"]["loan"] == 300000
+    invoices = [{key: value if key == "action" else int(value) for key, value in
+                 (item.split("=", 1) for item in row.split())}
+                for row in re.findall(r"NORMAL_FREIGHT_INVOICE ([^\r\n]+)", text)]
+    for action, count in (("earth_receiver", 1), ("rock_receiver", 1), ("yard_station", 1), ("yard_depot", 1), ("yard_rail", 6), ("portal", 1)):
+        assert sum(row["action"] == action for row in invoices) == count
+    cash = yard["opening_cash"]
+    for row in invoices:
+        cash -= row["cost"]
+        assert row["cash"] == cash
+    assert cash == yard["cash"] > 0
+    saves = {name: context.saves / basename for name, basename in (("paid", "yard-paid.sav"), ("repeat", "yard-paid-repeat.sav"))}
+    assert native_world(saves["paid"]) == native_world(saves["repeat"])
+    assert saved_table(saves["paid"], b"DATE")[0]["id"] == saved_table(source, b"DATE")[0]["id"]
+    player = saved_table(saves["paid"], b"PLYR")[0]
+    assert player["money"] == yard["cash"] and player["current_loan"] == 300000
+    report = {"_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CC;actual normally earned funds pay every Surface yard predecessor;rock stays solid",
+              "configuration": configuration, "classification": "normal_start_paid_surface_yard", "bootstrap_claim": False,
+              "controller": identity(__file__), "binary": binary, "financing_handoff": identity(handoff),
+              "original_input": original_ref, "actual_input": source_ref, "config": identity(context.config_path),
+              "startup": identity(startup), "yard": yard, "invoices": invoices,
+              "capital_paid": sum(row["cost"] for row in invoices),
+              "saves": {name: identity(path) for name, path in saves.items()}, "pure_chunks_equal": 126,
+              "native": {"log": identity(log), "assertions": int(counts[1]), "cases": 1}, "children_reaped": child.poll() is not None,
+              "sources": [identity(ROOT / name) for name in ("src/tests/normal_ground_yard_fixture.h", "src/tests/normal_ground_freight_fixture.h",
+                          "src/tests/tbm_reuse.cpp", "src/landscape.cpp", "src/layer_portal_cmd.cpp", "src/industry_cmd.cpp",
+                          "src/station_cmd.cpp", "src/spoil_receiver.cpp")],
+              "remaining": "6CD actual hauler/commissioning/earned Underground access;6D normal-start general clearing and recurring spoil haulage."}
+    target = context.output("reports", f"normal-yard-{configuration}.json")
+    target.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"report": identity(target), "yard": yard, "capital_paid": report["capital_paid"]}), flush=True)
+    return target
+
+
+def main():
+    """Run one bounded actual funded-world Surface construction case."""
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--config", choices=("Debug", "RelWithDebInfo"), required=True)
+    args = parser.parse_args()
+    run_one(args.config)
+
+
+if __name__ == "__main__":
+    main()

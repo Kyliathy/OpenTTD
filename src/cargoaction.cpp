@@ -130,8 +130,19 @@ bool CargoDelivery::operator()(CargoPacket *cp)
  */
 bool CargoLoad::operator()(CargoPacket *cp)
 {
+	// Reject missing/exhausted legacy history before Preprocess can split a
+	// packet or spend the action budget. No refused fragment changes custody.
+	if (!cp->CanMarkCompanySupplyShipped(static_cast<uint16_t>(std::min<uint>(this->max_move, cp->Count())))) {
+		this->max_move = 0; return false;
+	}
 	CargoPacket *cp_new = this->Preprocess(cp);
 	if (cp_new == nullptr) return false;
+	if (!cp_new->MarkCompanySupplyShipped()) {
+		// A defensive refusal has not changed history or caches; reunite an
+		// uncommitted split before stopping, rather than moving unrecorded stock.
+		if (cp_new != cp) cp->Merge(cp_new);
+		this->max_move = 0; return false;
+	}
 	cp_new->UpdateLoadingTile(this->current_tile);
 	this->source->RemoveFromCache(cp_new, cp_new->Count());
 	this->destination->Append(cp_new, VehicleCargoList::MoveToAction::Keep);
@@ -145,8 +156,19 @@ bool CargoLoad::operator()(CargoPacket *cp)
  */
 bool CargoReservation::operator()(CargoPacket *cp)
 {
+	// Reservation already removes source custody and therefore ends refund
+	// rights. Admit the selected amount before any split or reserved-count change.
+	if (!cp->CanMarkCompanySupplyShipped(static_cast<uint16_t>(std::min<uint>(this->max_move, cp->Count())))) {
+		this->max_move = 0; return false;
+	}
 	CargoPacket *cp_new = this->Preprocess(cp);
 	if (cp_new == nullptr) return false;
+	if (!cp_new->MarkCompanySupplyShipped()) {
+		// Preserve the original whole fragment and caches on an unexpected
+		// post-split refusal; no legacy flag/counter was changed by that refusal.
+		if (cp_new != cp) cp->Merge(cp_new);
+		this->max_move = 0; return false;
+	}
 	cp_new->UpdateLoadingTile(this->current_tile);
 	this->source->reserved_count += cp_new->Count();
 	this->source->RemoveFromCache(cp_new, cp_new->Count());

@@ -1,0 +1,556 @@
+# Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Passive generator/site source boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
+# Actual collector rendering: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C.
+# Native tube component edits: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group14C.
+# Native tube company custody: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group14D.
+# Native competing/shortage checkpoints: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group14EB.
+# Native tube refusal boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group15A.
+# Autonomous native useful routes: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group15BB.
+# Orbital Core activation and sole packet stock: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1.
+# Contained Core service and shared electrical settlement: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1B.
+# Conventional station source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group24B.
+# Native Surface processor geometry/state: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group39B.
+add_test_files(
+    # Shared artifact ownership: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md Group 3.
+    test_artifact_paths.h
+    test_artifact_paths.cpp
+    artifact_paths.cpp
+    space_preview.cpp
+    # Immutable class/size definitions and inclusive sampling: r2mlvs10-asteroids-and-mining-probes.md Group1.
+    asteroid_catalogue.cpp
+    # Bounded real-site starter selection and frozen inputs: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    asteroid_generation.cpp
+    asteroid_generation_native.cpp
+    # Integer trajectory, envelope and numerical budget fixtures: r2mlvs10-asteroids-and-mining-probes.md Group3.
+    asteroid_motion.cpp
+    asteroid_motion_native.cpp
+    # Persistent depletion/invalid-target boundaries: r2mlvs10-asteroids-and-mining-probes.md Group5.
+    asteroid_depletion.cpp
+    asteroid_depletion_native.cpp
+    # Shared body-strip/static-footprint separation: r2mlvs10-asteroids-and-mining-probes.md Group6.
+    asteroid_band.cpp
+    space_mining.cpp
+    space_content.cpp
+    space_orders.cpp
+    # Shared deterministic approach and queued-save contracts: r2mlvs8 Group11 / r2mlvs11 Group4B.
+    space_approach.cpp
+    space_survey.cpp
+    space_resupply.cpp
+    # Direct native module flight and exact same-rocket recovery: r2mlvs9 Group11.
+    orbital_freight.cpp
+    orbital_freight_native.cpp
+    # Whole-label/fragment and physical custody refusal: r2mlvs9 Group11C.
+    orbital_freight_bounds.cpp
+    orbital_freight_failure.cpp
+    space_construction.cpp
+    orbital_core.cpp
+    orbital_service.cpp
+    orbital_module_reservation.cpp
+    orbital_module_assembly.cpp
+    # Bounded activation, native paid Storage freight and original Power panels: Plan11 Group4.
+    orbital_module_activation.cpp
+    # Explicit source-connected two-berth Dock owner: r2mlvs11 Group4C.
+    orbital_dock.cpp
+    orbital_dock_native.cpp
+    orbital_utility_retirement.cpp
+    # Safe empty removal and retained spent receipts: r2mlvs11 Group5.
+    orbital_removal.cpp
+    orbital_removal_native.cpp
+    # All-label packet evacuation and cancellation: r2mlvs11 Group5B.
+    orbital_evacuation.cpp
+    orbital_evacuation_native.cpp
+    # Real takeover/reuse and paid replacement-Core dependency removal: r2mlvs11 Group5C.
+    orbital_module_lifecycle.cpp
+    # Public launch owner/signature handoff: r2mlvs9-launch-centers-and-rockets.md Group7.
+    launch_contract.cpp
+    # Revised reusable-hull and first-Core numerical fixtures: Plan9 Group9.
+    launch_economics.cpp
+    launch_production.cpp
+    space_logistics.cpp
+    launch_flight.cpp
+    space_descent.cpp
+    # Actual current-position release/foreign overlap and native reservation quotes: r2mlvs9 Group12.
+    orbital_release_admission.cpp
+    descent_custody.cpp
+    descent_custody_native.cpp
+    cargo_return_native.cpp
+    space_company_custody_native.cpp
+    launch_failure_phase_native.cpp
+    launch_retirement_native.cpp
+    paid_probe_phase_native.cpp
+    surface_space_loop_native.cpp
+    # Exact circles/clipped targets and actual moving release commands: r2mlvs9-launch-centers-and-rockets.md Group18.
+    orbital_release_geometry.cpp
+    # Actual multi-cargo recovery and separate boundary collection: r2mlvs9-launch-centers-and-rockets.md Group19.
+    surface_collection_native.cpp
+    surface_collection_boundaries.cpp
+    # Native packet/provenance/fee conservation through repeated hub circulation: r2mlvs9-launch-centers-and-rockets.md Group20.
+    hub_circulation_native.cpp
+    launch_center.cpp
+    # Actual command's company-independent terrain predicate: r2mlvs10-asteroids-and-mining-probes.md Group2.
+    launch_site.cpp
+    alternating_iterator.cpp
+    bitmath_func.cpp
+    console.cpp
+    enum_over_optimisation.cpp
+    excavation_storage.cpp
+    excavation_contract.cpp
+    excavation_guard.cpp
+    excavation_clearing.cpp
+    excavation_jobs.cpp
+    excavation_cut.cpp
+    excavation_outline.cpp
+    excavation_route.cpp
+    excavation_pass.cpp
+    excavation_starter.cpp
+    excavation_budget.cpp
+    excavation_fixture.h
+    solid_starter_fixture.h
+    tbm_model.cpp
+    tbm_engine.cpp
+    tbm_fixture.h
+    tbm_acquisition.cpp
+    tbm_project.cpp
+    tbm_area.cpp
+    tbm_replanning.cpp
+    tbm_planning_commands.cpp
+    tbm_planning_seed.cpp
+    tbm_planning_refusals.cpp
+    tbm_commission.cpp
+    tbm_commission_fixture.h
+    tbm_economics.cpp
+    tbm_logistics_save.cpp
+    tbm_logistics_runtime.cpp
+    # Native GUI input and movement baseline: r2tbmf-tbm-fixes.md Group1.
+    tbm_feedback_runtime.cpp
+    # Native reproduction of the 2026-10-15 demo reports: docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 1.
+    demo_feedback_runtime.cpp
+    native_input_fixture.h
+    # Small map legend, height colours and layer following: r2df-demo-fixes-interface-movement-and-planning.md Group 2.
+    smallmap_layer.cpp
+    # Toolbar hotkey toggle and the Escape close rule: r2df-demo-fixes-interface-movement-and-planning.md Group 3.
+    window_hotkey_toggle.cpp
+    # TBM wait line, carried cargo, release prefix, New area on a busy portal and refused quotes: r2df-demo-fixes-interface-movement-and-planning.md Group 4.
+    tbm_status_presentation.cpp
+    tbm_motion_reload.cpp
+    tbm_pacing.cpp
+    tbm_advice.cpp
+    tbm_parking.cpp
+    tbm_release.cpp
+    tbm_hangar.cpp
+    tbm_exit.cpp
+    tbm_feedback_haul_fixture.h
+    native_art_loop_fixture.h
+    native_sound_runtime_fixture.h
+    # Actual M1 base-set loading: r2mlvs13-graphics-and-asset-pipeline.md Groups79B/80B.
+    multilayer_packed_load.cpp
+    multilayer_sprite_selection.cpp
+    multilayer_terrain_portal.cpp
+    multilayer_terrain_runtime.cpp
+    multilayer_train_art.cpp
+    multilayer_facility_selection.cpp
+    multilayer_collector_selection.cpp
+    multilayer_collector_runtime.cpp
+    multilayer_control_selection.cpp
+    # Actual selected native widget/status icons: r2mlvs14-remaining-assets-and-runtime-integration.md Group84BD.
+    selected_control_icons.cpp
+    selected_control_view_fixture.h
+    selected_purchase_view_fixture.h # Plan14-84CB actual read-only native purchase previews.
+    multilayer_control_runtime.cpp
+    multilayer_facility_runtime.cpp
+    multilayer_sound_selection.cpp
+    tbm_logistics_stalls.cpp
+    tbm_logistics_queue.cpp
+    tbm_logistics_crash.cpp
+    logistics_crash_fixture.h
+    tbm_depot_workflow.cpp
+    tbm_depot_trace.cpp
+    tbm_depot_save.cpp
+    tbm_depot_stalls.cpp
+    tbm_depot_queue.cpp
+    tbm_depot_crash.cpp
+    depot_file_fixture.h
+    underground_depot_fixture.h
+    tbm_conservation.cpp
+    tbm_phase.cpp
+    tbm_consumer.cpp
+    portal_tbm_access.cpp
+    tbm_work.cpp
+    tbm_support.cpp
+    tbm_route.cpp
+    tbm_coverage.cpp
+    tbm_cost.cpp
+    tbm_corridor.cpp
+    tbm_reuse.cpp
+    normal_ground_modal.cpp
+    # Actual normal-start working/loaded originals and complete native readers: Plan16 Group6DD.
+    normal_ground_files.cpp
+    normal_ground_refusal.cpp
+    tbm_exchange_fixture.h
+    tbm_exchange_bay.cpp
+    tbm_exchange_proposal.cpp
+    tbm_exchange_commit.cpp
+    tbm_exchange_origin.cpp
+    tbm_exchange_consumer.cpp
+    tbm_hauler_cycle.cpp
+    tbm_wagon_sets.cpp
+    spoil_receiver_fixture.h
+    spoil_receiver_definition.cpp
+    spoil_receiver_intake.cpp
+    spoil_receiver_leg.cpp
+    spoil_receiver_load.cpp
+    spoil_receiver_delivery.cpp
+    spoil_receiver_stall.cpp
+    spoil_receiver_accounting.cpp
+    tbm_exchange_load.cpp
+    tbm_exchange_lifecycle.cpp
+    tbm_exchange_acceptance.cpp
+    tbm_recovery.cpp
+    movement_fixture.h
+    tbm_movement.cpp
+    portal_movement.cpp
+    portal_signal_boundary.cpp
+    cargo_partial_transfer.cpp
+    tbm_obstruction.cpp
+    excavation_approach.cpp
+    tbm_change_work.cpp
+    tbm_face_meeting.cpp
+    tbm_face_access.cpp
+    tbm_face_steering.cpp
+    tbm_face_transfer.cpp
+    tbm_face_transfer_pool.cpp
+    tbm_face_controller.cpp
+    # Isolated long actual loop and bounded stall diagnostics: Plan18 Group8FA.
+    tbm_face_controller_loop.cpp
+    tbm_face_controller_layers.cpp
+    tbm_face_lifecycle.cpp
+    tbm_face_loop_watch.h
+    tbm_face_native.h
+    tbm_face_exchange_save.cpp
+    tbm_source_loop_fixture.h
+    tbm_reserved_loop.cpp
+    tbm_face_fixture.h
+    portal_recovery.cpp
+    geology_deposits.cpp
+    geology_generation.cpp
+    geology_hardness.cpp
+    tbm_geology.cpp
+    geology_state.cpp
+    geothermal_geology.cpp
+    flatset_type.cpp
+    history_func.cpp
+    landscape_partial_pixel_z.cpp
+    map_layer.cpp
+    multilayer_content.cpp
+    multilayer_content_identity.cpp
+    multilayer_recipe.cpp
+    layer_industry_admission.cpp
+    layer_industry_contract.cpp
+    layer_mine_production.cpp
+    layer_mine_definition.cpp
+    processor_fixture.h
+    layer_processor.cpp
+    layer_processor_definition.cpp
+    layer_processor_presentation.cpp
+    layer_processor_delivery.cpp
+    # Paid seed quotes, company-wide caps and native non-paying packet custody: r2mlvs6 Group13CB.
+    surface_supply.cpp
+    surface_supply_lifecycle.cpp
+    surface_supply_load.cpp
+    # Driven native construction freight: r2mlvs6-mines-and-resource-chains.md Group13CD.
+    construction_supply_fixture.h
+    surface_supply_construction.cpp
+    surface_supply_construction_load.cpp
+    surface_supply_controls.cpp
+    surface_supply_controls_native.cpp
+    processor_spoil_delivery.cpp
+    layer_baseline_receiver.cpp
+    layer_freight_accounting.cpp
+    layer_surface_manufacturing.cpp
+    layer_mine_presentation.cpp
+    layer_mine_load.cpp
+    layer_save_fixture.h
+    layer_processor_load.cpp
+    layer_industry_lifecycle.cpp
+    layer_window_fixture.h
+    layer_industry_window.cpp
+    layer_mine_dispatch.cpp
+    layer_mine_dispatch_pool.cpp
+    layer_recipe_batch.cpp
+    mine_fixture.h
+    mine_production_fixture.h
+    multilayer_bootstrap.cpp
+    multilayer_utility.cpp
+    # Canonical tube registry boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md
+    transport_tube_registry.cpp
+    transport_tube_prototype.cpp
+    # Physical source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10B.
+    transport_tube_model.cpp
+    # Actual five-model native physics/refits/packed-art boundary: r2mlvs17 Group10.
+    transport_tube_definitions.cpp
+    # Actual date/depot/clone/refit/renewal custody parity: r2mlvs17 Group11.
+    transport_tube_admission.cpp
+    # Normal registry and synchronized paid service: r2mlvs17 Group12B.
+    transport_tube_commands.cpp
+    # Existing underground tube controls, actual actions and passive views: r2mlvs17 Group12C.
+    transport_tube_controls.cpp
+    transport_tube_fixture.h
+    transport_tube_construction.cpp
+    transport_tube_refusal.cpp
+    transport_tube_useful_routes.cpp
+    tube_useful_tick_fixture.h
+    transport_tube_useful_load.cpp
+    # Actual1975 source gate before Crate routing: r2mlvs17-underground-transport-tubes.md15CB.
+    tube_goods_source_fixture.h
+    tube_goods_source.cpp
+    # Original1975 Goods conventional/tube/conventional route: r2mlvs17-underground-transport-tubes.md15CBB.
+    transport_tube_crate_routes.cpp
+    # Borrowed original Crate native owners for writer/ordinary-reader parity: r2mlvs17-underground-transport-tubes.md15CC.
+    crate_useful_world_fixture.h
+    transport_tube_crate_load.cpp
+    # Actual1980 liquid-source/native original-carrier prerequisite: r2mlvs17-underground-transport-tubes.md15DB.
+    tube_cistern_source.cpp
+    # Original native precursor world/floor/orders: r2mlvs17-underground-transport-tubes.md15DBB.
+    tube_cistern_source_fixture.h
+      # Exact original stock loading, physical input delivery and real CHEM output: r2mlvs17-underground-transport-tubes.md15DBC.
+      cistern_source_world_fixture.h
+      tube_cistern_haul.cpp
+      # Actual paid native Cistern modal construction/PCHM intake: r2mlvs17-underground-transport-tubes.md15DCB.
+      cistern_useful_route_fixture.h
+      # Original useful-world observations and pure native file boundaries: r2mlvs17-underground-transport-tubes.md15DDB.
+      cistern_useful_world_snapshot.h
+      # Actual loaded moving Cistern native pixels/picking: r2mlvs17-underground-transport-tubes.md15DDE.
+      cistern_useful_raster_fixture.h
+      # Original1985 sealed carrier/finite Deep RARE source: r2mlvs17-underground-transport-tubes.md15EB.
+      tube_shield_source.cpp
+      # Shared empty author and actual2005 Forge prerequisites: r2mlvs17-underground-transport-tubes.md15FBA.
+      tube_source_template_fixture.h
+      tube_forge_source.cpp
+      # Original-world paid conventional CORE/Coal routes: r2mlvs17-underground-transport-tubes.md15FCB.
+      forge_raw_route_fixture.h
+      tube_forge_raw_route.cpp
+      # Original physical refinery inputs/manufacture: r2mlvs17-underground-transport-tubes.md Group15FCC.
+      forge_raw_delivery_fixture.h
+      tube_forge_raw_delivery.cpp
+      # Original paid Forge modal fleet/service: r2mlvs17-underground-transport-tubes.md Group15FDB.
+      forge_useful_route_fixture.h
+      forge_useful_world_snapshot.h
+      forge_useful_raster_fixture.h
+      tube_forge_route.cpp
+      # Exact original Shield source borrowing/canonical native observations: r2mlvs17-underground-transport-tubes.md15EBB.
+      shield_source_world_fixture.h
+      # Original-world paid Shield/conventional modal preparation: r2mlvs17-underground-transport-tubes.md15ECB.
+      shield_useful_route_fixture.h
+      tube_shield_route.cpp
+      tube_cistern_route.cpp
+      # Actual startup/saved native capsule launch dates: r2mlvs17-underground-transport-tubes.md15DCBA.
+      transport_tube_calendar.cpp
+    transport_tube_reservations.cpp
+    # Native junction source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47D
+    transport_tube_art_geometry.cpp
+    # Actual packed native guideway selection: r2mlvs17-underground-transport-tubes.md Group13B.
+    transport_tube_sprite.cpp
+    transport_tube_conduit_sprite.cpp
+    transport_tube_conduit_sprite_load.cpp
+    transport_tube_travel_sprite_load.cpp
+    transport_tube_sprite_load.cpp
+    # Actual five-model packet/service/source presentation: r2mlvs17 Group13CB.
+    transport_tube_vehicle_sprite.cpp
+    # Actual facility geometry, service, stock and display animation: r2mlvs17 Group13CC.
+    transport_tube_facility_sprite.cpp
+    transport_tube_facility_sprite_load.cpp
+    transport_tube_power_fixture.h
+    transport_tube_power.cpp
+    # Original geothermal source ownership: r2mlvs17-underground-transport-tubes.md Group6BBB.
+    transport_tube_geothermal.cpp
+    # Original geothermal source native433 transport: r2mlvs17 Group6BBC.
+    transport_tube_geothermal_load.cpp
+    # Actual original provider/native capsule binding: r2mlvs17 Group6BCC.
+    transport_tube_geothermal_binding.cpp
+    transport_tube_geothermal_binding_load.cpp
+    # Actual aggregate geothermal grants and native work: r2mlvs17 Group6BCD.
+    geothermal_tube_work_fixture.h
+    transport_tube_geothermal_work.cpp
+    transport_tube_geothermal_work_loss.cpp
+    # Explicit provider switching and conserved source history: r2mlvs17 task6BC.2.
+    transport_tube_geothermal_switch.cpp
+    # Synchronized original geothermal source admission: r2mlvs17 Group6BDB.
+    geothermal_tube_switch_fixture.h
+    transport_tube_geothermal_commands.cpp
+    # Native original-source placement/selection and pure live guidance: r2mlvs17 Group6BDC.
+    transport_tube_geothermal_controls.cpp
+    # Actual ordinary native work/switch checkpoints and next-step acceptance: r2mlvs17 Group6BDDB.
+    transport_tube_geothermal_work_load.cpp
+    geothermal_tube_power_fixture.h
+    transport_tube_power_load.cpp
+    transport_tube_meter.cpp
+    transport_tube_meter_fixture.h
+    transport_tube_recovery.cpp
+    transport_tube_component_edits.cpp
+    transport_tube_company_lifecycle.cpp
+    transport_tube_queue_load.cpp
+    transport_tube_readiness.cpp
+    # Native interchange source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group48D.
+    transport_tube_interchange_geometry.cpp
+    # Native finite-packet modal interchange: r2mlvs17 Group9.
+    transport_tube_interchange.cpp
+    # Actual cold site admission: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
+    geothermal_site.cpp
+    geothermal_site_load.cpp
+    geothermal_definitions.cpp
+    geothermal_generator_geometry.cpp
+    geothermal_collector_fixture.h
+    geothermal_collector.cpp
+    # Actual native1980 powerhouse construction: r2mlvs18-geothermal-energy-and-industry.md Group8C.
+    geothermal_generator_fixture.h
+    geothermal_generator.cpp
+    geothermal_generator_delivery.cpp
+    geothermal_generator_load.cpp
+    geothermal_generator_lifecycle.cpp
+    # Actual native operating participants/common driver: r2mlvs18 Group8DC.
+    geothermal_generator_operating_fixture.h
+    geothermal_generator_operating.cpp
+    geothermal_generator_operating_load.cpp
+    # Native common-driver contention/view acceptance: r2mlvs18 Group8DD.
+    geothermal_heat_participant_fixture.h
+    geothermal_generator_acceptance.cpp
+    # Dated native2000 machinery and shared two-model accounting: r2mlvs18-geothermal-energy-and-industry.md Group8E.
+    geothermal_generator_magma.cpp
+    geothermal_generator_sprite.cpp
+    # Original solid first-plant world and paid native excavation: r2mlvs18-geothermal-energy-and-industry.md Group8FA.
+    geothermal_first_plant_fixture.h
+    geothermal_first_plant.cpp
+    geothermal_first_plant_lifecycle.cpp
+    geothermal_first_plant_rebuild.cpp
+    plant_rebuild_material_fixture.h
+    geothermal_first_plant_restock.cpp
+    plant_rebuild_delivery_fixture.h
+    geothermal_first_plant_replacement_delivery.cpp
+    plant_rebuild_service_fixture.h
+    geothermal_first_plant_rebuilt_service.cpp
+    geothermal_plant_lifecycle_files.cpp
+    geothermal_first_plant_load.cpp
+    geothermal_first_plant_release.cpp
+    geothermal_first_plant_construction.cpp
+    geothermal_first_plant_delivery.cpp
+    geothermal_first_plant_utilities.cpp
+    geothermal_first_plant_generation.cpp
+    # Actual same-world paid2000 comparison: r2mlvs18-geothermal-energy-and-industry.md Groups8FCA-8FCB.
+    geothermal_first_plant_magma.cpp
+    # Dedicated/generic selected entry-point guards: r2mlvs18-geothermal-energy-and-industry.md Group13B.
+    geothermal_entry_points.cpp
+    # Synchronized planning and read-only controls: r2mlvs18-geothermal-energy-and-industry.md Group15B.
+    geothermal_controls.cpp
+    # Complete native town connection: r2mlvs18-geothermal-energy-and-industry.md Group15BBB.
+    geothermal_town_service.cpp
+    # Original owned-town repair/source replacement: r2mlvs18-geothermal-energy-and-industry.md Group15BBC.
+    geothermal_town_recovery.cpp
+    # Actual site planning/funding widget callbacks: r2mlvs18-geothermal-energy-and-industry.md Group15CB.
+    geothermal_window_sites.cpp
+    geothermal_window_utilities.cpp
+    geothermal_window_export.cpp
+    geothermal_window_information.cpp
+    geothermal_window_raster.cpp
+    geothermal_machinery_view_fixture.h
+    geothermal_conduit_view_fixture.h
+    # Actual command/work/operation/live-window calendar and policy matrix: r2mlvs18-geothermal-energy-and-industry.md Group15D.
+    geothermal_calendar.cpp
+    geothermal_heat.cpp
+    geothermal_allocation.cpp
+    geothermal_allocation_load.cpp
+    geothermal_topology.cpp
+    geothermal_heat_load.cpp
+    geothermal_utility.cpp
+    geothermal_conduit_sprite.cpp
+    geothermal_electrical.cpp
+    geothermal_power_export.cpp
+    utility_power_lineage.cpp
+    utility_power_transfer.cpp
+    # Native local electrical feed: r2mlvs12-solar-farms-mirrors-and-eti.md Group9C.
+    utility_power_local_feed.cpp
+    utility_power_local_feed_fixture.h
+    utility_power_local_feed_load.cpp
+    # Atomic real recipient/feed admission: r2mlvs17 Group6BCB.
+    utility_power_local_feed_registration.cpp
+    utility_power_path_load.cpp
+    geothermal_electrical_fixture.h
+    # Complete native portal-riser admission: r2mlvs18-geothermal-energy-and-industry.md Group5B.
+    geothermal_riser.cpp
+    geothermal_riser_definition.cpp
+    geothermal_riser_fixture.h
+    geothermal_riser_construction.cpp
+    geothermal_riser_sprite.cpp
+    geothermal_riser_lifecycle.cpp
+    geothermal_riser_delivery.cpp
+    geothermal_riser_save.cpp
+    geothermal_riser_link.cpp
+    geothermal_riser_load.cpp
+    geothermal_utility_load.cpp
+    geothermal_collector_load.cpp
+    # Declared connected ground fixture: r2mlvs16-integrated-acceptance-and-balance.md Group2.
+    acceptance_ground_fixture.cpp
+    # Shared thermal/electrical native owner: r2mlvs18-geothermal-energy-and-industry.md Group2B.
+    utility_heat.cpp
+    utility_heat_load.cpp
+    utility_power.cpp
+    utility_power_company.cpp
+    utility_power_performance.cpp
+    utility_power_load.cpp
+    utility_power_mutation.cpp
+    utility_power_transfer_load.cpp
+    utility_heat_conversion.cpp
+    utility_heat_conversion_fixture.h
+    utility_heat_conversion_load.cpp
+    utility_power_effects.cpp
+    utility_power_effect_load.cpp
+    solar_power_contract.cpp
+    multilayer_state.cpp
+    portal_profile.cpp
+    portal_build.cpp
+    portal_date.cpp
+    portal_fleet_date.cpp
+    portal_occupied_save.cpp
+    multilayer_art_geometry.cpp
+    portal_lifecycle.cpp
+    portal_work_state.cpp
+    portal_window.cpp
+    underground_window.cpp
+    underground_job_presentation.cpp
+    tbm_presentation.cpp
+    underground_quote.cpp
+    underground_area.cpp
+    underground_workflow_fixture.h
+    underground_view_fixture.h
+    underground_workflow.cpp
+    underground_filter.cpp
+    underground_facility.cpp
+    conventional_station_art.cpp
+    # Actual bay/through command and drawing proof: r2mlvs14-remaining-assets-and-runtime-integration.md Group25B.
+    conventional_terminal_art.cpp
+    underground_engine.cpp
+    underground_fleet.cpp
+    underground_loading.cpp
+    underground_project_label.cpp
+    underground_admission.cpp
+    underground_airport.cpp
+    underground_command_boundary.cpp
+    underground_save.cpp
+    underground_facility_fixture.h
+    underground_fleet_fixture.h
+    portal_bootstrap.cpp
+    math_func.cpp
+    mock_environment.h
+    mock_fontcache.h
+    mock_spritecache.cpp
+    mock_spritecache.h
+    string_builder.cpp
+    string_consumer.cpp
+    string_inplace.cpp
+    string_func.cpp
+    test_main.cpp
+    test_network_crypto.cpp
+    test_script_admin.cpp
+    test_window_desc.cpp
+    tilearea.cpp
+    utf8.cpp
+)

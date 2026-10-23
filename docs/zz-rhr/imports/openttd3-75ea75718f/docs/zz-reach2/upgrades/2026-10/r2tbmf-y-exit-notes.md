@@ -1,0 +1,65 @@
+> **Historical donor snapshot — not an execution plan.** OpenTTD3 `75ea75718f`, imported2026-10-23.
+> Original: `docs/zz-reach2/upgrades/2026-10/r2tbmf-y-exit-notes.md`; exact source SHA256 `3a9ded1ea18d8afbed16be06528de9d86d7779231df4b8da259e9a4bac14077e`.
+> Current integration: [M2O23-1](../../../../../../../zz-reach2/upgrades/2026-10/m2o23-1-come-space.md); storage and evidence roles: [archi-historical-debug.md](../../../../../../../zz-reach2/architecture/archi-historical-debug.md). Original completion claims, instructions and human-review limits below remain dated; they grant no new execution, spending, publication or deletion authority.
+
+# R2TBMF Y - Paid far-exit handover and native acceptance
+
+Status: Group9 closed,2026-10-09. Native reciprocal input, paid local handover, fifty-cell public traffic and actual file continuations are verified below. Group10 geology is current; Group11 final integrated/player acceptance remains pending. No Git writes are authorized.
+
+The existing BuildLayerPortal command now quotes a bounded terminal-support handover. The accepted geological route must be complete, the terminal straight piece and its full cutter pocket already paid/open, and the entire stopped actual TBM must have backed clear onto the retained approach. Both reciprocal construction directions use the same admission. The transaction charges support conversion/removal plus ordinary portal costs, publishes both endpoints through the existing pair owner, then removes only the replaced support row. It introduces no persistent fields, private destination or second machine. Middle-route and unfinished-route handovers remain refused.
+
+The rail picker derives a live command quote and both endpoints/approaches, with ownership, layer destination, price and actionable refusal. Group8 native hangar orders and real original-origin spoil settlement then bring the same machine to B. Construction at B no longer requires returning/retiring at A first; final loaded spoil can still require the ordinary original-origin exchange before parking.
+
+Owners changed: `tbm_support.cpp`/`tbm.h`, `layer_portal_cmd.cpp`, `rail_gui.cpp`, rail widgets and English strings. New `tests/tbm_exit.cpp` runs paid fifty-cell straight excavation, local backing/staging, estimates/refusals, real script and command construction, B commissioning/parking, support release, paid junction addition and normal freight in both directions. `tests/tbm_exit_replay.h`, invoked by the existing native logistics runtime, loads those actual intermediate files and exercises normal toolbar/picker/world input or loaded onward movement. No physical pose or geological completion is synthesized.
+
+Validation policy follows the user's larger-step request: complete these related source/test edits first; one game/test build with one MSBuild project and two compiler workers; then combined focused cases and serial native-file scenarios. No repeated historical suites and no native runtime alongside compilation. Fix actual collected failures together before another build.
+
+The initial verification checklist is satisfied by the closure evidence. Reuse these retained files and results; do not repeat the whole suite when starting geological variation.
+
+## First batch results and bounded corrections
+
+`logs/r2tbmf-y-exit-build.log` builds the game; two missing test includes are corrected by `r2tbmf-y-exit-test-build.log`. The combined focused run passes12 existing support/portal/date/script cases and fails only the new journey. Its omitted native origin order was a test setup error; adding the same order used by the established workflow reaches all50 real cuts and local staging. The new test's foreign-company capacity precheck and restoration of the native actor after ScriptCompanyMode also needed correction. These are not production workarounds. Historical failed inputs remain intact.
+
+Actual source `src/tests/fixtures/haulage/tbm-exit-journey-1-exit-underground-local-stage.sav` contains the same cutter5/job0 after50 paid cuts, stopped locally before B. `logs/r2tbmf-y-built-1.log` builds/commissions B from that full native load and parks the original cutter at Surface tile3853 after8,813 frames. Built, withdrawing, moving and parked files replay in `r2tbmf-y-commissioned-1.log`, `r2tbmf-y-withdrawing-1.log`, `r2tbmf-y-moving-1.log` and `r2tbmf-y-parked-1.log`; moving arrival takes397 frames. Native previews leave work/controllers unchanged. All these five real-file continuations pass against the same build, with no source changes between runs.
+
+`r2tbmf-y-underground-2.log` and `r2tbmf-y-surface-2.log` prove real toolbar/picker/world placement and chosen-hangar input from both layers, followed by the same8,813-frame arrival. The input observer first needed to drag the picker aside through actual mouse input so the centre map tile was visible. Captures then exposed an actual quote formatting defect: `{STRING}` cannot accept the formatted price/refusal. The correction uses the native `{RAW_STRING}` format with its single string parameter; a GUI assertion now covers the exact displayed row. Those visual checks pass in the final native runs below.
+
+The public-traffic fixture's proposed Surface station at row62 correctly refuses because its required far approach would hit the map edge. The revised test pays for a conventional Surface curve outside B and puts the station along that row with both approaches inside the map; the50-cell tunnel is unchanged. The final production build batches this fixture correction with the language-format correction; only the failed journey and both affected GUI cases are rerun. Already-passed support/date and native movement reloads are not repeated.
+
+## Player sequence
+
+1. Complete the accepted tunnel cuts. Let the TBM back a few cells along its existing support, then stop it with the ordinary vehicle control. Its entire train must clear the final tile and the preceding approach tile.
+2. Open the rail portal tool on Underground and select Surface, or place the reciprocal portal from Surface. Point the underground mouth back toward the tunnel. The quote identifies both layers, the company, the two endpoints/approaches and the complete portal/support-handover charge; a wrong orientation or train still in the way gives a refusal.
+3. Build B and fund any ordinary Surface approach track needed outside its mouth. Connect B using its existing portal control. The tunnel floor and underground approach are already paid by the completed excavation; this step buys no new cutter and clears no rock.
+4. Select B through the project's or vehicle's compatible-hangar menu. The original loaded machine uses its existing haulage/exchange owner to settle spoil, then physically travels to B. Building B itself does not require an earlier return to A.
+5. Once the whole machine is parked and haulage has settled, finish/release the project, pay for conversion of the remaining temporary support and connect A. Normal freight orders can then use the connection in both directions while the TBM stays stored at B.
+
+This sequence is bounded to the completed terminal of an accepted tunnel. A middle-of-route junction, incomplete future cuts or a footprint under any train does not inherit permission to remove protected support.
+
+## Group9 closure
+
+All five tasks close on2026-10-09. The final ordinary-traffic test needed the same post-command `UpdateSignalsInBuffer` step used by the native game before vehicle dispatch; its earlier manual-loop omission caused a test assertion after release. The correction changes only the test observer. Both complete journeys then pass with the original cutter5/job0,50 completed cuts, paid support/portal/track invoices, actual spoil settlement and freight through A/B in both directions after60,239 native frames. The original cutter stays wholly stored at B throughout public traffic.
+
+| Evidence | Verified result |
+| --- | --- |
+| [Combined focused batch] (historical reference: `../../../../logs/r2tbmf-y-focused-1.log`) | All12 existing support/bootstrap/date/script cases pass. Only the new journey needed the setup corrections recorded above; these passing cases were not rerun. |
+| [Final complete journeys] (historical reference: `../../../../logs/r2tbmf-y-journey-5.log`) |114,328 assertions; Underground command and Surface script execution both finish the50-cell journey. Quotes and invalid orientation, occupied endpoint/approach, conflicting far footprint, genuine rival owner and no-cash execution retain the protected state. Both normal freight directions and a paid junction addition succeed after release. |
+| [Underground input] (historical reference: `../../../../logs/r2tbmf-y-underground-4.log`), [Surface input] (historical reference: `../../../../logs/r2tbmf-y-surface-4.log`) |70,705 assertions across both real toolbar/picker/world and hangar-menu journeys. Actual quote/refusal text passes; each parks the same machine after8,813 game-loop frames. |
+| [Local-stage load/build] (historical reference: `../../../../logs/r2tbmf-y-built-1.log`), [built-pair load] (historical reference: `../../../../logs/r2tbmf-y-commissioned-1.log`), [commissioned load] (historical reference: `../../../../logs/r2tbmf-y-commissioned-2.log`), [withdrawal load] (historical reference: `../../../../logs/r2tbmf-y-withdrawing-1.log`) | Actual complete files preserve paid geometry, receipts, vehicles, native orders and both pair owners. Each continuation reaches B in8,813 frames; previews leave work/controllers unchanged. |
+| [Moving load] (historical reference: `../../../../logs/r2tbmf-y-moving-1.log`), [parked load] (historical reference: `../../../../logs/r2tbmf-y-parked-1.log`) | Actual moving continuation reaches the same whole parked state in397 frames; already parked state survives the real loader. |
+| [Final public-file load] (historical reference: `../../../../logs/r2tbmf-y-traffic-load-1.log`) | Released public checkpoint loads with two usable rail pairs and zero invalid pairs. |
+
+Reviewed native captures: [Underground price](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-hangar-exit-underground-quote.png), [Surface price](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-hangar-exit-surface-quote.png), [Underground refusal](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-hangar-exit-underground-refused.png), [Surface refusal](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-hangar-exit-surface-refused.png), [local tunnel footprint](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-exit-underground-footprint.png) and [Surface footprint](../../../../../../../../../OpenTTD3/docs/zz-reach2/upgrades/2026-10/assets/reviews/tbm-exit-surface-footprint.png). The displayed paired build/support charge in this fixture is1,850 base-currency pounds; Surface approach/station/junction construction has its own normal invoices.
+
+Final journey files are `src/tests/fixtures/haulage/tbm-exit-journey-5-exit-{underground,surface}-{accepted,local-stage,built,commissioned,withdrawing,parked,released,traffic}.sav`. The [Underground-origin public checkpoint](../../../../../../../../savegames/retained/mlm/reviews/tbm/far-exit/import-20261009/saves/tbm-exit-journey-5-exit-underground-traffic.sav) is additionally verified by the actual loader. The earlier `tbm-exit-built-1-exit-*.sav` files retain moving/commissioning acceptance inputs; original demo/config/startup bytes are preserved by the runner. The pure focused generator and native replay run serially; no native test overlaps compilation.
+
+Build provenance: [final production/language build] (historical reference: `../../../../logs/r2tbmf-y-final-build.log`) and [last test-only correction] (historical reference: `../../../../logs/r2tbmf-y-traffic-test-build.log`), RelWithDebInfo, one MSBuild project/two compiler workers. The group needed the initial build and another shared-language-header build for the formatting correction; intervening test corrections rebuilt only affected translation units. The repeated compile work is recorded explicitly, not represented as one flawless build.
+
+| Actual artifact | SHA256 |
+| --- | --- |
+| `build/RelWithDebInfo/openttd.exe` | `964AC6C4B892421892112651418DC07E7CA91446E41893D965189F9F55239D22` |
+| `build/RelWithDebInfo/openttd_test.exe` | `E44BE2FF35345167173FB01AB9EE4C3345FC803F4D09DD71562182D79AD63DC9` |
+| `build/lang/english.lng` | `ED819084FAB14E8A7DA5DFC400E59EFFEDF799FB218C097574A36A1F0962B866` |
+| `build/native-art.cfg` | `396092066483E9EDDF9713618CEB44EB391D124677C0BE5A4BF14D417A809862` |
+
+The configured native asset/profile setup is unchanged from W/X; no new art or save fields were introduced here. Group10 authoritative geology/art and Group11 final integrated Debug/optimized review plus user feedback remain pending. The master stays paused and no commit was attempted under the current Git-write prohibition.

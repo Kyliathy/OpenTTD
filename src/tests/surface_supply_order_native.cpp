@@ -107,12 +107,12 @@ static SurfaceSupplyOrderTransport SurfaceSupplyFileDeclarations(const Station &
 	for (size_t index = 0; index < labels.size(); ++index) {
 		const SurfaceSupplyOrderRequest request{origin.index, _current_company, labels[index], quantities[index]};
 		const auto view = CaptureSurfaceSupplyOrderView(request, 0); const auto quote = PrepareSurfaceSupplyOrder(request, view); REQUIRE(quote.error == SurfaceSupplyOrderError::None);
-		SurfaceSupplyOrderRecord record; record.id = index + 1; record.purchaser = record.owner = _current_company; record.origin = origin.index;
-		record.origin_x = static_cast<uint16_t>(TileX(origin.xy)); record.origin_y = static_cast<uint16_t>(TilePlaneY(origin.xy));
-		record.label = labels[index]; record.quantity = quantities[index]; record.cost = quote.cost; record.inflation_prices = view.inflation_prices;
-		record.purchase_year = view.year; record.purchase_day = transport.saved_day; record.packet_buyer = _current_company.base(); record.state = static_cast<SurfaceSupplyOrderState>(index);
-		if (record.state == SurfaceSupplyOrderState::Fulfilled) record.issued_packet = CargoPacketID{17};
-		if (record.state == SurfaceSupplyOrderState::Lost) { record.owner = CompanyID::Invalid(); record.packet_buyer = Source::Invalid; }
+		SurfaceSupplyOrderRecord record; record.id = index + 1; record.Native()->purchaser = record.owner = _current_company; record.origin = origin.index;
+		record.Native()->origin_x = static_cast<uint16_t>(TileX(origin.xy)); record.Native()->origin_y = static_cast<uint16_t>(TilePlaneY(origin.xy));
+		record.label = labels[index]; record.quantity = quantities[index]; record.Native()->cost = quote.cost; record.Native()->inflation_prices = view.inflation_prices;
+		record.Native()->purchase_year = view.year; record.purchase_day = transport.saved_day; record.Native()->packet_buyer = _current_company.base(); record.Native()->state = static_cast<SurfaceSupplyOrderState>(index);
+		if (record.Native()->state == SurfaceSupplyOrderState::Fulfilled) record.Native()->issued_packet = CargoPacketID{17};
+		if (record.Native()->state == SurfaceSupplyOrderState::Lost) { record.owner = CompanyID::Invalid(); record.Native()->packet_buyer = Source::Invalid; }
 		transport.snapshot.records.push_back(record);
 	}
 	return transport;
@@ -130,7 +130,7 @@ static uint32_t CountBoughtSurfaceSupplyFile(const SurfaceSupplyOrderRecord &ord
 	// Native split/merge may retire issued IDs; traverse original custody and require retained non-paying source/buyer/zero-credit rather than recreating packets from history.
 	for (StationCargoList::ConstIterator it(packets->begin()); it != packets->end(); ++it) {
 		if (!(*it)->GetSource().IsCompanySupply()) continue;
-		CHECK((*it)->GetSource().id == order.packet_buyer); CHECK((*it)->GetFeederShare() == 0); CHECK((*it)->GetFirstStation() == order.origin); count += (*it)->Count();
+		CHECK((*it)->GetSource().id == order.Native()->packet_buyer); CHECK((*it)->GetFeederShare() == 0); CHECK((*it)->GetFirstStation() == order.origin); count += (*it)->Count();
 	}
 	return count;
 }
@@ -156,7 +156,7 @@ static void ObservePaidSurfaceSupplyFile(std::string_view phase, const TestArtif
 		for (size_t index = 0; index < labels.size(); ++index) {
 			const auto stock = origin.goods[GetCargoTypeByLabel(labels[index])].TotalCount();
 			const auto result = PurchaseSurfaceSupplyFile(origin.index, labels[index], quantities[index], index + 1); REQUIRE(result.Succeeded()); charged += result.GetCost();
-			CHECK(GetSurfaceSupplyOrder(index + 1)->state == SurfaceSupplyOrderState::Pending); CHECK(origin.goods[GetCargoTypeByLabel(labels[index])].TotalCount() == stock);
+			CHECK(GetSurfaceSupplyOrder(index + 1)->Native()->state == SurfaceSupplyOrderState::Pending); CHECK(origin.goods[GetCargoTypeByLabel(labels[index])].TotalCount() == stock);
 		}
 		CHECK(company->money == baseline - charged); CHECK(company->yearly_expenses[0][ExpensesType::Property] == baseline_expense + charged); CHECK(CargoPacket::GetNumItems() == packets);
 		CHECK(_random.state[0] == random.state[0]); CHECK(_random.state[1] == random.state[1]); SaveSurfaceSupplyFile(paths.saves / "surface-supply-paid-pending-440.sav");
@@ -172,9 +172,9 @@ static void ObservePaidSurfaceSupplyFile(std::string_view phase, const TestArtif
 		}
 		CHECK(company->money == before);
 		if (phase == "paid-restore") {
-			const auto record = *GetSurfaceSupplyOrder(4); REQUIRE(record.state == SurfaceSupplyOrderState::Pending);
+			const auto record = *GetSurfaceSupplyOrder(4); REQUIRE(record.Native()->state == SurfaceSupplyOrderState::Pending);
 			const auto result = Command<Commands::CancelSurfaceSupplyOrder>::Unsafe<CommandCallback>(INVALID_STRING_ID, nullptr, false, false, INVALID_TILE, std::make_tuple(SurfaceSupplyOrderID{4}));
-			REQUIRE(result.Succeeded()); refunded = record.cost; CHECK(result.GetCost() == -refunded); CHECK(company->money == before + refunded);
+			REQUIRE(result.Succeeded()); refunded = record.Native()->cost; CHECK(result.GetCost() == -refunded); CHECK(company->money == before + refunded);
 			SaveSurfaceSupplyFile(paths.saves / "surface-supply-paid-cancelled-440.sav");
 			std::array<uint32_t, 4> stocks{};
 			// Capture only actual native station counts as read-only deltas, never a parallel inventory. The cancelled purchase must not participate in the following real station arrival.
@@ -183,7 +183,7 @@ static void ObservePaidSurfaceSupplyFile(std::string_view phase, const TestArtif
 			// Three original whole deliveries become irreversible receipts once; the fourth stays cancelled and owns no usable packet. The real native station owner remains all physical stock.
 			for (size_t index = 0; index < labels.size(); ++index) {
 				const auto *order = GetSurfaceSupplyOrder(index + 1); const auto stock = Station::Get(order->origin)->goods[GetCargoTypeByLabel(labels[index])].TotalCount();
-				CHECK(stock == stocks[index] + (index < 3 ? quantities[index] : 0)); CHECK(order->state == (index < 3 ? SurfaceSupplyOrderState::Fulfilled : SurfaceSupplyOrderState::Cancelled));
+				CHECK(stock == stocks[index] + (index < 3 ? quantities[index] : 0)); CHECK(order->Native()->state == (index < 3 ? SurfaceSupplyOrderState::Fulfilled : SurfaceSupplyOrderState::Cancelled));
 				CHECK(CountBoughtSurfaceSupplyFile(*order) == (index < 3 ? quantities[index] : 0));
 				CHECK(CmdCancelSurfaceSupplyOrder({}, index + 1).Failed());
 			}
@@ -194,7 +194,7 @@ static void ObservePaidSurfaceSupplyFile(std::string_view phase, const TestArtif
 			for (SurfaceSupplyOrderID id = 1; id <= 4; ++id) CHECK(CmdCancelSurfaceSupplyOrder({}, id).Failed());
 			// Ordinary full native restoration retains each actually bought packet's non-paying purpose and exact original units; metadata alone cannot satisfy this physical assertion.
 			for (size_t index = 0; index < labels.size(); ++index) CHECK(CountBoughtSurfaceSupplyFile(*GetSurfaceSupplyOrder(index + 1)) == (index < 3 ? quantities[index] : 0));
-			CHECK(GetSurfaceSupplyOrder(4)->state == SurfaceSupplyOrderState::Cancelled); CHECK(company->money == before);
+			CHECK(GetSurfaceSupplyOrder(4)->Native()->state == SurfaceSupplyOrderState::Cancelled); CHECK(company->money == before);
 			SaveSurfaceSupplyFile(paths.saves / "surface-supply-paid-resave-440.sav");
 		}
 		CHECK(company->yearly_expenses[0][ExpensesType::Property] == expense - refunded);
@@ -253,7 +253,7 @@ TEST_CASE("Native Surface order files preserve metadata and actual paid continua
 			} else {
 				REQUIRE(phase == "inspect"); REQUIRE(GetNextSurfaceSupplyOrderID() == 5); const auto snapshot = CaptureSurfaceSupplyOrders(); REQUIRE(snapshot.records.size() == 4);
 				// Every native state survives exact original restoration. These data were declared solely to test persistence and can never be counted as actually purchased supplies.
-				for (size_t index = 0; index < snapshot.records.size(); ++index) CHECK(snapshot.records[index].state == static_cast<SurfaceSupplyOrderState>(index));
+				for (size_t index = 0; index < snapshot.records.size(); ++index) CHECK(snapshot.records[index].Native()->state == static_cast<SurfaceSupplyOrderState>(index));
 				REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 				CHECK(_load_check_data.surface_supply_orders_present); CHECK(_load_check_data.surface_supply_orders.snapshot.records.size() == 4);
 				save("surface-supply-order-resave-440.sav");
