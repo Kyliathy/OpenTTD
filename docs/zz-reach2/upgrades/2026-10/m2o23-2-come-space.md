@@ -53,7 +53,7 @@ The user requested this four-plan partition on2026-10-23 after completion of22D.
 | Plan | Owned groups | Current state |
 | --- | --- | --- |
 | [M2O23-1](m2o23-1-come-space.md) | 1-22D, including completed suffix batches | Complete:40 groups,160/160 tasks. |
-| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Open:14 groups,0/60 tasks. |
+| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Open:18 groups,0/61 tasks (Group23 split into23-23E). |
 | [M2O23-3](m2o23-3-come-space.md) | 37-53 | Open:17 groups,0/74 tasks. |
 | [M2O23-4](m2o23-4-come-space.md) | 54-72 | Open:19 groups,0/82 tasks. |
 
@@ -61,7 +61,7 @@ The former second plan was renamed by the user to M2O23-3 before this partition;
 
 ## Continuation boundary and prerequisite handoff
 
-This file owns the60 open tasks in Groups23-36 moved from [completed Plan1](m2o23-1-come-space.md). Continue at23.1 after a user-directed resume. [The22D handover](m2o23-1-come-space-i-handover.md) identifies tested movement/hold/transfer contracts and fixture traps. Group23 should be refined into smaller sequential HARD-or-lower suffix batches before implementation; that refinement remains open and performs no implementation task.
+This file owns the61 tasks (including the explicit23B driven-acceptance split) in Groups23-36 moved from [completed Plan1](m2o23-1-come-space.md). Continue at23.1 after a user-directed resume. [The22D handover](m2o23-1-come-space-i-handover.md) identifies tested movement/hold/transfer contracts and fixture traps. Group23 is refined into sequential23,23B,23C,23D and23E batches: phase activation, driven acceptance, replanning, lifecycle settlement and regressions. The split preserves every original obligation and performs no implementation task.
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
@@ -73,7 +73,7 @@ The new phase remains uninstalled at entry. Completed loaded-return components a
 
 **A** is `D:/Codez/Sandbox/OpenTTD`, the destination; **B** is `D:/Codez/Sandbox/OpenTTD3`, the read-only donor. Unlabelled paths mean A. Pinned A HEAD is `cfeff84db52f8a3753a43c2a770a6363c62b2c67`; B HEAD is `75ea75718fa7d14632bf795105721df1e390f753`; common ancestor is `9a47768ae3e4455661264f2c49febde972538e49`. Verify pins before consuming donor links. Existing working changes are the implementation, not disposable state. [The original chronology](m2o23-1-come-space.md#investigated-snapshot-and-chronology) and [execution record](m2o23-1-come-space-a-execution.md) retain historical evidence; consult exact entries only on observed drift.
 
-No Git writes, staging, checkout, reset or recursive filesystem deletion is authorized. Preserve both repositories, `OpenTTD-baseline/` and `!kit`; no individual deletion is needed. Work sequentially without subagents. Gameplay execution remains paused after22D; the present request authorizes this document partition. Resume implementation only when the user directs it.
+No Git writes, staging, checkout, reset or recursive filesystem deletion is authorized. Preserve both repositories, `OpenTTD-baseline/` and `!kit`; no individual deletion is needed. Work sequentially without subagents. The user directed implementation of this plan on2026-10-23. Synthetic focused native execution is authorized; closed original Space gameplay/cash boundaries remain unchanged.
 
 New supply purchases use A's Pending-only refund rule; station delivery ends refund rights. Migrated B stock retains only its original finite unshipped entitlement in the same canonical receipt owner. Protect closed Space cash/tick boundaries and the actual chosen continuation; historical art/demo status and component cases are not current runtime approval.
 
@@ -95,7 +95,7 @@ The original comparison remains in [Plan1](m2o23-1-come-space.md#conflict-decisi
 
 ## Implementation tasks
 
-All14 difficulty batches and60 tasks below remain unchecked.
+The refined plan has18 difficulty batches and61 tasks. Checkboxes and the execution record track current evidence.
 
 Code sketches are conceptual unless labelled as existing exports. Proposed helpers belong to the named existing owner. Verify prior exports before dependent work; an absent prerequisite stops only its dependent tasks, with safe independent work and forbidden shortcuts stated by the Area entry gate. Mandatory reading is non-transitive; do not preload future Areas. Native checks genuinely deferred until the merged target is buildable must be recorded and closed in [Plan4 Group60](m2o23-4-come-space.md#group-60---run-focused-domain-decoder-and-ordinary-world-checks). Existing focused native passes remain evidence and must not be relabelled as deferred.
 
