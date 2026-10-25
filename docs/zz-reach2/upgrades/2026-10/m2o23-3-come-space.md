@@ -51,9 +51,11 @@ The user requested this four-plan partition on2026-10-23 after completion of22D.
 | Plan | Owned groups | Current state |
 | --- | --- | --- |
 | [M2O23-1](m2o23-1-come-space.md) | 1-22D, including completed suffix batches | Complete:40 groups,160/160 tasks. |
-| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Open:14 groups,0/60 tasks. |
-| [M2O23-3](m2o23-3-come-space.md) | 37-53 | Open:17 groups,0/74 tasks. |
-| [M2O23-4](m2o23-4-come-space.md) | 54-72 | Open:19 groups,0/82 tasks. |
+| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Complete:27 groups,65/65 tasks. |
+| [M2O23-3](m2o23-3-come-space.md) | 37-53 | Complete:19 groups,74/74 tasks. |
+| [M2O23-4](m2o23-4-come-space.md) | 54-72, including61B/65B | Complete:21 groups,82/82 tasks. |
+
+**Four-plan closure,2026-10-25:** all107groups/381tasks are complete. The [final integration handoff](m2o23-4-come-space-b-integration-handoff.md) records current qualification, preservation and separate human/Spacefeature scope.
 
 The former second plan was renamed by the user to M2O23-3 before this partition; its Groups54-72 now continue in M2O23-4. Finish each plan's owned groups and public handoff before its successor. Completion of Plan1 is the completed foundation checkpoint; the full merge requires Plans2-4 and the final Completion Conditions in Plan4. Splitting documentation performs no gameplay task and authorizes no additional saved-world ticks or spending.
 
@@ -69,9 +71,9 @@ Complete53's candidate/independent-expectation handoff before [Plan4 Group54](m2
 
 ## Execution boundaries
 
-**A** is `D:/Codez/Sandbox/OpenTTD`, the destination; **B** is `D:/Codez/Sandbox/OpenTTD3`, the read-only donor. Unlabelled paths mean A. Pinned A HEAD is `cfeff84db52f8a3753a43c2a770a6363c62b2c67`; B HEAD is `75ea75718fa7d14632bf795105721df1e390f753`; common ancestor is `9a47768ae3e4455661264f2c49febde972538e49`. Verify pins before consuming donor links. Existing working changes are the implementation, not disposable state. [The original chronology](m2o23-1-come-space.md#investigated-snapshot-and-chronology) and [execution record](m2o23-1-come-space-a-execution.md) retain historical evidence; consult exact entries only on observed drift.
+**A** is `D:/Codez/Sandbox/OpenTTD`, the destination; **B** is `D:/Codez/Sandbox/OpenTTD3`, the read-only donor. Unlabelled paths mean A. Historical A baseline is `cfeff84db52f8a3753a43c2a770a6363c62b2c67`; current A HEAD verified on2026-10-24 is `d0da7e9d76bbb288ee5e8722730836cc9a2229d5`; B HEAD is `75ea75718fa7d14632bf795105721df1e390f753`; common ancestor is `9a47768ae3e4455661264f2c49febde972538e49`. Verify pins before consuming donor links. Existing working changes are the implementation, not disposable state. [The original chronology](m2o23-1-come-space.md#investigated-snapshot-and-chronology) and [execution record](m2o23-1-come-space-a-execution.md) retain historical evidence; consult exact entries only on observed drift.
 
-No Git writes, staging, checkout, reset or recursive filesystem deletion is authorized. Preserve both repositories, `OpenTTD-baseline/` and `!kit`; no individual deletion is needed. Work sequentially without subagents. Gameplay execution remains paused after22D; the present request authorizes this document partition. Resume implementation only when the user directs it.
+No Git writes, staging, checkout, reset or recursive filesystem deletion is authorized. Preserve both repositories, `OpenTTD-baseline/` and `!kit`; no individual deletion is needed. Work sequentially without subagents. The document partition was the earlier22D boundary. The user subsequently authorized implementation through every remaining merge plan and explicitly revoked the temporary model-switch pause. Continue the sequential implementation and its bounded checks; protected saved-world cash/tick policies still apply.
 
 New supply purchases use A's Pending-only refund rule; station delivery ends refund rights. Migrated B stock retains only its original finite unshipped entitlement in the same canonical receipt owner. Protect closed Space cash/tick boundaries and the actual chosen continuation; historical art/demo status and component cases are not current runtime approval.
 
@@ -95,7 +97,7 @@ The original comparison remains in [Plan1](m2o23-1-come-space.md#conflict-decisi
 
 ## Implementation tasks
 
-All17 difficulty batches and74 tasks below remain unchecked.
+Groups37-53are complete (74/74tasks). Continue with Plan4 Group54 and its mandatory reading. The checkboxes and current execution record are authoritative.
 
 Code sketches are conceptual unless labelled as existing exports. Proposed helpers belong to the named existing owner. Verify prior exports before dependent work; an absent prerequisite stops only its dependent tasks, with safe independent work and forbidden shortcuts stated by the Area entry gate. Mandatory reading is non-transitive; do not preload future Areas. Native checks genuinely deferred until the merged target is buildable must be recorded and closed in [Plan4 Group60](m2o23-4-come-space.md#group-60---run-focused-domain-decoder-and-ordinary-world-checks). Existing focused native passes remain evidence and must not be relabelled as deferred.
 
@@ -120,11 +122,11 @@ Entry gate: Groups 7/9 must provide the merged command traits and argument codec
 Required prior output: Groups 14, 15 and 36 provide the simulation behavior exposed by controls.
 
 {{MEDIUM}}
-- [ ] 37.1 Wire donor tube construction and both provider controls through merged command traits; recapture stale source/plant selections at execution.
-- [ ] 37.2 Wire geothermal cold-site/generator/riser/town actions through the paid physical owner; no rendering or inspection callback mutates simulation.
-- [ ] 37.3 Verify the existing Groups14B/14C/15.6 supply controller still distinguishes Pending-only native cancellation from eligible migrated legacy stock after the remaining controls are integrated. Reuse its exact-ID menu and Group15 canonical refund entry; do not rebuild the station supply UI or call the donor self-debit API.
-- [ ] 37.4 Reconcile station/depot/build windows, widgets, strings and refresh notifications with A's launch/Space windows; register each command once in local/network dispatch.
-- [ ] 37.5 Add focused argument-codec/estimate-purity/control-state cases; actual pixel review remains in the art acceptance batches.
+- [X] 37.1 Wire donor tube construction and both provider controls through merged command traits; recapture stale source/plant selections at execution.
+- [X] 37.2 Wire geothermal cold-site/generator/riser/town actions through the paid physical owner; no rendering or inspection callback mutates simulation.
+- [X] 37.3 Verify the existing Groups14B/14C/15.6 supply controller still distinguishes Pending-only native cancellation from eligible migrated legacy stock after the remaining controls are integrated. Reuse its exact-ID menu and Group15 canonical refund entry; do not rebuild the station supply UI or call the donor self-debit API.
+- [X] 37.4 Reconcile station/depot/build windows, widgets, strings and refresh notifications with A's launch/Space windows; register each command once in local/network dispatch.
+- [X] 37.5 Add focused argument-codec/estimate-purity/control-state cases; actual pixel review remains in the art acceptance batches.
 
 ### Area Mandatory Reading - Preflight framing and load-entry integration
 
@@ -136,10 +138,12 @@ Entry gate: Group 5 must provide pure `ClassifySaveDialect`/`HasSaveCapability` 
 | --- | --- | --- |
 | [Read/filter boundary](../../../../src/saveload/saveload_filter.h) | 14-44 | `LoadFilter::Read/Reset` is the raw-reader contract. Recreate decompression and ReadBuffer state after reset; resetting a chained raw reader alone does not reset codec buffers. |
 | [Real raw readers](../../../../src/saveload/saveload.cpp) | 2495-2530 | `FileReader` provides the source-file reset; retain that raw reader before wrapping it in a codec. |
-| [Network raw reader](../../../../src/network/network_client.cpp) | 43-85 | `PacketReader::Reset` rewinds the already received map buffer. Network loading must pass the same preflight boundary without requiring a filesystem path. |
+| [Network raw reader](../../../../src/network/core/packet_reader.h) | `PacketReader` live definition | `PacketReader::Reset` rewinds the already received map buffer. Network loading must pass the same preflight boundary without requiring a filesystem path. |
 | [Chunk skipping and framing](../../../../src/saveload/saveload.cpp) | 2271-2391; 2457-2478 | `ChunkHandler::LoadCheck`, `SlLoadChunk`, `SlLoadCheckChunk` and chunk loops define RIFF/table/array framing. Reuse/factor byte rules into an inspector rather than calling stateful handlers. |
 | [Load entry and error semantics](../../../../src/saveload/saveload.cpp) | 3293-3451; 3458-3467 | `DoLoad` and `LoadWithFilter` determine the before-InitializeGame insertion point and existing full-load failure behavior. Classification refusal is pre-mutation; arbitrary later full-load failure is not promised to roll back the whole game. |
 | [Live pure lineage boundary](../../../../src/saveload/saveload.h) | Live definitions; no fixed range | Group 5 must introduce `SaveWireFacts`, `SaveDialect`, `ClassifySaveDialect` and `HasSaveCapability`. Verify these exact detached exports before implementing scanning; they cannot consult the live world. |
+
+Context has compacted 1 times while executing this group.
 
 ### Group 38 - Implement a bounded nonmutating envelope inspector
 
@@ -148,10 +152,12 @@ Entry gate: Group 5 must provide pure `ClassifySaveDialect`/`HasSaveCapability` 
 Required prior output: Group 5 supplies detached fact types; Group 4 names the exact evidence needed.
 
 {{HARD}}
-- [ ] 38.1 Implement the proposed `InspectSaveWireFacts` over a detached reader/context using factored existing RIFF/array/table framing. Collect only classifier-required IDs, kinds, columns/marker and source identity.
-- [ ] 38.2 Skip unneeded payloads without allocating gameplay pools; bound counts, lengths, nested headers and arithmetic before allocation or skip. Reject duplicates, truncation and contradictory marker evidence.
-- [ ] 38.3 Keep the original raw reader available and reconstruct codec/ReadBuffer state for replay; cover file-backed and already-buffered network readers separately.
-- [ ] 38.4 Add byte-level cases for RIFF/table/sparse-array framing, compression variants, repeated IDs and malformed headers. Assert no command, InitializeGame or native chunk handler is called.
+- [X] 38.1 Implement the proposed `InspectSaveWireFacts` over a detached reader/context using factored existing RIFF/array/table framing. Collect only classifier-required IDs, kinds, columns/marker and source identity.
+- [X] 38.2 Skip unneeded payloads without allocating gameplay pools; bound counts, lengths, nested headers and arithmetic before allocation or skip. Reject duplicates, truncation and contradictory marker evidence.
+- [X] 38.3 Keep the original raw reader available and reconstruct codec/ReadBuffer state for replay; cover file-backed and already-buffered network readers separately.
+- [X] 38.4 Add byte-level cases for RIFF/table/sparse-array framing, compression variants, repeated IDs and malformed headers. Assert no command, InitializeGame or native chunk handler is called.
+
+Group38 result: `InspectSaveWireFacts` now owns detached bounded scanning and exact whole-original SHA256, with shared native gamma/RIFF/row/table-type framing and explicit nonmutating codec failures. All27 retained A/B originals preserve their catalogue identities and classify with exact bound hints where needed; all6 deliberately incomplete originals refuse. Real file and native PacketReader replay covers OTTN/OTTD/OTTZ/OTTX, damaged/truncated trailers, changed raw sources, nested/sparse/empty-CAPA framing and explicit resource ceilings. The selected build and12 focused cases/734 assertions pass in under one second of test-body time; see [execution evidence](m2o23-3-come-space-a-execution.md#group38---detached-original-byte-inspection). Native load-entry integration and merged writer validation remain Groups39/44.
 
 ### Group 39 - Insert lineage preflight before world initialization
 
@@ -170,11 +176,13 @@ BindCapabilitiesForThisLoad(caps);
 ```
 
 {{HARD}}
-- [ ] 39.1 Wire inspector/classifier into `DoLoad` after readable format/version determination but before `ResetSaveloadData`/`InitializeGame`. Accept a verified origin override only when bound to the same exact original digest.
-- [ ] 39.2 Rewind the raw input and recreate the decompressor/buffer before normal dispatch; bind the chosen capabilities to this load attempt, not a process-global sticky selection.
-- [ ] 39.3 Pass the same result into copied LoadCheck and `LoadWithFilter`/network paths. Verify replayed format evidence still agrees and report a changed/malformed input through existing load-error handling.
-- [ ] 39.4 Clear per-attempt lineage on success/refusal/error and test two successive loads of different branches plus an ambiguous refusal while a live world remains intact.
-- [ ] 39.5 Document the precise guarantee: preflight lineage rejection and copied preview are nonmutating; after normal full load starts, retain existing OpenTTD failure/reinitialization semantics rather than claiming a new whole-world rollback transaction.
+- [X] 39.1 Wire inspector/classifier into `DoLoad` after readable format/version determination but before `ResetSaveloadData`/`InitializeGame`. Accept a verified origin override only when bound to the same exact original digest.
+- [X] 39.2 Rewind the raw input and recreate the decompressor/buffer before normal dispatch; bind the chosen capabilities to this load attempt, not a process-global sticky selection.
+- [X] 39.3 Pass the same result into copied LoadCheck and `LoadWithFilter`/network paths. Verify replayed format evidence still agrees and report a changed/malformed input through existing load-error handling.
+- [X] 39.4 Clear per-attempt lineage on success/refusal/error and test two successive loads of different branches plus an ambiguous refusal while a live world remains intact.
+- [X] 39.5 Document the precise guarantee: preflight lineage rejection and copied preview are nonmutating; after normal full load starts, retain existing OpenTTD failure/reinitialization semantics rather than claiming a new whole-world rollback transaction.
+
+Group39 result: native disk/full/copied/network entry now inspects and classifies before world initialization, recreates codec/ReadBuffer state, verifies the original replay envelope and scopes accepted lineage through afterload. Exact-bound hints admit real A425/B425 copied file/network loads; real A440 needs no hint. Ambiguous/corrupt/changed replay and read-file-open refusals preserve the real open world and return Error. Ancient headerless LZO remains explicit native compatibility, with original version0. Current focused38/39 proof is15cases/2704assertions under two seconds; [execution evidence](m2o23-3-come-space-a-execution.md#group39---verified-native-entry-and-attempt-lifetime) records the boundary. After ordinary full initialization begins, native ReInit/error semantics remain; no whole-world rollback is promised.
 
 ### Group 40 - Route version-sensitive gates through explicit capabilities
 
@@ -183,14 +191,16 @@ BindCapabilitiesForThisLoad(caps);
 Required prior output: Group 39 binds a non-sticky load capability context before dispatch.
 
 {{HARD}}
-- [ ] 40.1 Expose the proposed `GetLoadCapabilities()` accessor through the existing saveload public boundary for full/copy handlers; keep original file version available for unaffected pre-fork formats.
-- [ ] 40.2 Audit explicit `IsSavegameVersionBefore` uses and `SaveLoad::Variable` version_from/version_to descriptors. A capability fix only in if-statements is insufficient if the table descriptor still omits or misreads a field.
-- [ ] 40.3 Split the audit into TBMP/CAPA/supply, geothermal/utility/tube, and later A Space families; record every changed gate and its old/new meaning.
-- [ ] 40.4 Add boundary tests showing the same numeric 425-434 chooses different legal fields by lineage, plus unaffected 424 and A 435-440 behavior. Unknown capabilities refuse; they never enable defaults.
+- [X] 40.1 Expose the proposed `GetLoadCapabilities()` accessor through the existing saveload public boundary for full/copy handlers; keep original file version available for unaffected pre-fork formats.
+- [X] 40.2 Audit explicit `IsSavegameVersionBefore` uses and `SaveLoad::Variable` version_from/version_to descriptors. A capability fix only in if-statements is insufficient if the table descriptor still omits or misreads a field.
+- [X] 40.3 Split the audit into TBMP/CAPA/supply, geothermal/utility/tube, and later A Space families; record every changed gate and its old/new meaning.
+- [X] 40.4 Add boundary tests showing the same numeric 425-434 chooses different legal fields by lineage, plus unaffected 424 and A 435-440 behavior. Unknown capabilities refuse; they never enable defaults.
+
+Group40 result: original A enum boundaries now route through explicit capabilities only inside an accepted load. The actual candidate descriptor predicate checks both interval ends and optional WithCapability requirements; the separate current-writer predicate remains unchanged. Native TBMP and Magma cold-site scalar ceilings respect their B-only capabilities. [Three-part audit/handoff](m2o23-3-come-space-b-capability-audit.md) records every A gate and the exact B descriptor requirements for41/43. Four focused cases/12048assertions pass, observing real native scalar/descriptor decisions for all27 retained originals, including the explicit A439gap. Writer activation remains44; not-yet-imported B owner families are not claimed loadable by this gate proof.
 
 ### Area Mandatory Reading - Legacy wire adapters and the merged writer
 
-_Applies to Groups 41-44._
+_Applies to Groups 41-44, including41B/41C; the narrower blocks below govern each suffix group._
 
 Entry gate: Groups 39-40 must provide bound per-load capabilities, and the supply/utility/tube owner groups must be implemented. Verify live exports and detached fixtures. Stop publication if any owner or decoder prerequisite is missing; pure malformed-wire tests may continue. No current-world station fallback, duplicate SSOR handler, second energy store or in-place rewrite of an original save is allowed.
 
@@ -205,6 +215,8 @@ Entry gate: Groups 39-40 must provide bound per-load capabilities, and the suppl
 | [Save emission order](../../../../src/saveload/saveload.cpp) | 2434-2442 | `SlSaveChunks` invokes the single chunk list. The merged marker must have one reserved ID and deliberate early emission; do not accidentally register it twice. |
 | [Live bound load capability API](../../../../src/saveload/saveload.h) | Live definitions; no fixed range | Groups 39-40 produce per-attempt `GetLoadCapabilities()` and `HasSaveCapability` access. Each handler consumes the selected original dialect; original file version is never globally renumbered. |
 
+Context has compacted 1 times while executing this group.
+
 ### Group 41 - Implement both legacy supply transports and custody joins
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
@@ -212,10 +224,117 @@ Entry gate: Groups 39-40 must provide bound per-load capabilities, and the suppl
 Required prior output: Group 40 selects the format; Groups 11 and 13 supply conversion and complete custody.
 
 {{HARD}}
-- [ ] 41.1 Use one SSOR dispatch handler selected by actual wire kind plus admitted dialect: A fixed14-byte header/53-byte record RIFF versus B SSOH+SSOR TABLE. Validate mismatches instead of coercing type.
-- [ ] 41.2 Decode original bytes with their original bounds/endianness and invoke Group 11's detached adapters. Require same-file DATE/MAPS/company/station context; closed/lost B sentinels must remain representable.
-- [ ] 41.3 Decode CAPA source purpose and optional legacy order/shipped fields consistently with the order dialect; validate actual container ownership through the shared full/copy join. B originally creates linked paid packets as `Source{Invalid, Industry}`: after validating original fields/link and same-file legacy receipt, normalize that proven paid purpose to `Source{Invalid, CompanySupply}`, then retain the exact widened order and shipped flag. Do not upgrade ordinary same-label packets or invent an original buyer from today's receipt owner. Preserve A's existing linked/unlinked CompanySupply meanings and reject contradictory purpose evidence.
-- [ ] 41.4 Add missing-header/table, duplicate-column/row, wrong count, price overflow, invalid packet link and original440 round-trip cases. Staging success alone does not publish refund rights.
+- [X] 41.1 Use one SSOR dispatch handler selected by actual wire kind plus admitted dialect: A fixed14-byte header/53-byte record RIFF versus B SSOH+SSOR TABLE. Validate mismatches instead of coercing type.
+- [X] 41.2 Decode original bytes with their original bounds/endianness and invoke Group 11's detached adapters. Require same-file DATE/MAPS/company/station context; closed/lost B sentinels must remain representable.
+
+Verified with `[save-supply-wire-integration],[save-lineage-preflight]`:4cases,
+2682assertions, under1second of case time. Rebuild log and exact report are
+`test-cache/merge-supply/group41-wire-retry-build.log` and
+`test-cache/merge-supply/group41-wire-verified.txt`. The genuine B426copy reaches
+detached conversion but intentionally refuses absent original packet-field proof;
+complete full/copied custody remains41B. A440copied load and unchanged live
+cash/capsule/book remain verified. No B native-load completion is claimed here.
+
+Group41 was split before implementation into wire/conversion41, custody41B and
+focused final transport qualification41C. Original task IDs41.1-41.4 and all four
+completion conditions are preserved. Complete them in that order; staging does
+not publish rights before the shared full/copy custody join.
+
+### Area Mandatory Reading - Supply packet purpose and complete custody
+
+_Applies to Group41B only._
+
+Read this narrower area after every compaction while41B is current. Do not preload
+later geothermal or Space plans. Completed41supplies exact legacy A/B metadata
+transport and same-file context; it is not packet/refund authority. Retain the
+full-file original digest and chosen dialect; no ordinary same-label packet may
+be upgraded to bought supply.
+
+| File | Exact symbols / section | Why needed |
+| --- | --- | --- |
+| [Packet transport](../../../../src/saveload/cargopacket_sl.cpp) | GetCargoPacketDesc, CheckCargoPacketSourceFields, CAPAChunkHandler::Load/LoadCheck | Read original typed order/shipped fields, preserve A linked/unlinked purposes and B's invalid-Industry source until its receipt/custody proof. |
+| [Canonical receipt/custody contract](../../../../src/surface_supply_order.h) | SurfaceSupplyRecordContext, SurfaceSupplyPacketFacts, SurfaceSupplyCustodyCheck | Reuse the one complete identity/label/container/finite-history join; allocation alone never establishes custody. |
+| [Original native enumeration](../../../../src/cargo_custody.h) | VisitNativeCargoPackets declaration and its implementation | Include every original physical container, including jobs/compartments, without a second packet owner. |
+| [Existing full adoption](../../../../src/surface_supply_order_runtime.cpp) | NativeSurfaceSupplyPacketFacts, ValidateNativeSurfaceSupplySnapshot, AcceptLoadedSurfaceSupplyOrders | Validate all raw facts before normalization/publication; do not partially install rights or infer a buyer. |
+| [Same-file copied evidence](../../../../src/fios.h) | NativeCargoPacketPreview and LoadCheckData native station/vehicle/cargo rows | Add required detached metadata to actual readers, never borrow active CargoSpec, company, geometry or station facts. |
+| [Copied owner join](../../../../src/saveload/space_cargo_preview.cpp) | ValidateSpaceCargoPreviewOwners | Preserve global exclusivity across ordinary and Space containers; label/station evidence still must come from this file. |
+| [Legacy definition projection](../../../../src/multilayer_content.cpp), [original package producer](../../../../media/multilayer/build_content.py), [native baseline labels](../../../../src/cargotype.cpp) | GetLegacyMultiLayerCargoLabels; build_package/build_manifest; GetDefaultCargoLabel | Original B has no CDIM/CARG mapping chunk. Its saved profile/climate/exact NGRF identity must select the unchanged native baseline and the same producer's Action0 slot projection; never consult the open world's CargoSpec or infer a label from a receipt. Modern CDIM remains authoritative where present. |
+| [B original creation](../../../../../OpenTTD3/src/surface_supply.cpp) | PlaceSurfaceSupplyOrder original132-158 | Original linked bought packets use invalid-Industry, not A's CompanySupply tag; the donor self-debit producer is provenance only. |
+
+### Group 41B - Join legacy packet purpose to complete full and copied custody
+
+Required prior output:41wire/conversion is complete, and Groups13/15supply the
+canonical receipt/custody owner. The source's actual CAPA fields and complete
+same-file container labels/stations are required before publication.
+
+- [X] 41.3 Decode CAPA source purpose and optional legacy order/shipped fields consistently with the order dialect; validate actual container ownership through the shared full/copy join. B originally creates linked paid packets as `Source{Invalid, Industry}`: after validating original fields/link and same-file legacy receipt, normalize that proven paid purpose to `Source{Invalid, CompanySupply}`, then retain the exact widened order and shipped flag. Do not upgrade ordinary same-label packets or invent an original buyer from today's receipt owner. Preserve A's existing linked/unlinked CompanySupply meanings and reject contradictory purpose evidence.
+
+Verified26cases/3963assertions in three focused invocations:4wire/preflight cases
+(2717assertions),21conversion/adoption/custody/Space-owner cases(1196assertions),
+and one genuine B426full native/copy comparison(50assertions). Exact reports are
+`test-cache/merge-supply/group41b-custody-verified.txt`,
+`group41b-supply-components-verified.txt` and`group41b-native-b426-report.json`.
+Rebuild the native comparison with`python -B src/tests/merge_supply_native_checks.py
+--configuration Debug`; its isolated runner homes/receipts remain under
+`mlm/runtime` and`mlm/reviews/space/merge-supply-legacy-b`. Source original digest,
+wallets, quantities, receipt IDs and irreversible departure facts remain original;
+no resave or gameplay continuation is claimed by this read-only load check.
+
+### Area Mandatory Reading - Focused supply transport qualification
+
+_Applies to Group41C only._
+
+Read only the completed41/41Bexports and current focused tests after a compaction;
+full-reader family prerequisites remain43/44and broader native matrix47/63.
+
+| File | Exact symbols / section | Why needed |
+| --- | --- | --- |
+| [Single supply dispatcher](../../../../src/saveload/surface_supply_order_sl.cpp) | SSOH/SSOR readers and copied validator after41 | Corrupt framing/presence/type/count must refuse the actual selected transport. |
+| [Detached converters](../../../../src/surface_supply_order_wire.cpp) | DecodeSurfaceSupplyOrders, ConvertLegacyASupply, ConvertLegacyBSupply | Use independent malformed scalar/price/sentinel cases without inventing refunded stock or a buyer. |
+| [Full adoption](../../../../src/surface_supply_order_runtime.cpp) | Actual staged receipt/custody publication and packet normalization after41B | Prove failure grants no refund rights and no partial metadata/physical mutation. |
+| [Original catalogue](../../../../src/tests/fixtures/saveload/lineage-originals.json) | A440, B426+ and negative examples | Original bytes/digests provide independent compatibility input; do not downgrade headers or refresh expectations from the changed writer. |
+| [Retained native A440 inputs](../../../../src/tests/fixtures/multilayer-inputs.json) | `surface-supply-order-file/20261018-080131-eb756f19e1/.../surface-supply-paid-fulfilled-440.sav`; `20261018-065053-a5c60ed6e5/.../surface-supply-order-fixture-440.sav` | These exact manifest-bound native originals have real configured cargo weights. The lineage catalogue's declared-input A440sample has artificial zero weights and supplies copied wire evidence only; native CDIM validation must continue rejecting it. |
+| [Current native preflight tests](../../../../src/tests/save_lineage_preflight.cpp) | Existing original locator and copied file/network setup | Reuse genuine raw readers and scoped classification; keep focused invocations under the110second guard. |
+
+### Group 41C - Qualify legacy supply framing, custody refusal and A440 round trip
+
+Required prior output:41wire and41Bcomplete custody joins are implemented.
+
+- [X] 41.4 Add missing-header/table, duplicate-column/row, wrong count, price overflow, invalid packet link and original440 round-trip cases. Staging success alone does not publish refund rights.
+
+Verified6focused cases/145762assertions: sixteen actual B426wire mutations,
+two genuine A440full-load/save/copied/full-reload roundtrips, one late full
+B426invalid-link refusal and the unchanged valid B426anchor. Reports live in
+`test-cache/merge-supply/group41c-wire-refusal-verified.txt`,
+`group41c-native-a440-{paid,states}-report.json`,
+`group41c-native-b426-invalid-link-report.json` and
+`group41b-native-b426-report.json`. The native A440roundtrips also compare exact
+original SSORbytes through the independent retained-save parser. Rebuild the
+wire selection`[save-supply-wire-refusal],[save-supply-wire-integration]` first;
+it recreates`test-cache/merge-supply/group41c-b426-invalid-link.sav`.
+Then run`python -B src/tests/merge_supply_native_checks.py --origin B --invalid-link`
+or`--origin A --a-fixture paid`/`states` with the selected build configuration.
+No malformed fixture gains installed rights or partial packet-purpose conversion.
+
+### Area Mandatory Reading - Original A Space semantics and shared donor content
+
+_Applies to Group42 only._
+
+Read the named gate/validation sites relevant to the current subtask, not entire
+Space implementations. Groups40/41already provide actual bound capability
+decisions and B426supply admission. Original B427-434native machinery remains43;
+an early boundary observation cannot be reported as a complete native load.
+
+| File | Exact section / symbols | Current purpose |
+| --- | --- | --- |
+| [Capability audit](m2o23-3-come-space-b-capability-audit.md) | Later A Space families | Enumerate the unchanged A425-440 meanings and affected readers; Group40's first-read probe is gate evidence only. |
+| [Bound native gates](../../../../src/saveload/saveload.cpp), [pure capability table](../../../../src/saveload/save_lineage.cpp) | DestinationVersionCapability, IsSavegameVersionBefore/BeforeOrAt, HasSaveCapability | Preserve original numeric source identity while A enum names select explicit capabilities. |
+| [Structure transport](../../../../src/saveload/space_structure_sl.cpp), [production transport](../../../../src/saveload/space_production_sl.cpp), [replacement payload](../../../../src/saveload/space_replacement_sl.h) | A425-429 and431-437 gate sites; Read/LoadCheck and original retired/provenance joins | Preserve original assembly/manufacturing/clone/replacement and paid service history; B retains the shared pre425 prefix. |
+| [Manifest transport](../../../../src/saveload/space_manifest_sl.cpp), [transition transport](../../../../src/saveload/space_transition_sl.cpp), [order transport](../../../../src/saveload/space_order_sl.cpp) | A430-435 gate sites and copied validators | Ordered/heavy additions must remain absent in B without erasing shared original craft/compartments. |
+| [Descent transport](../../../../src/saveload/space_descent_sl.cpp), [pod transport](../../../../src/saveload/space_pod_sl.cpp) | A431/434 gate sites and same-file original source/role/mass joins | No invented sender, source packet or physical weight from the open world. |
+| [Content/dimensions](../../../../src/saveload/multilayer_sl.cpp), [recipes](../../../../src/saveload/orbital_recipe_sl.cpp) | SDEF/CDIM Read, AcceptLoadedSpaceCargoDimensions; SPRC Read/LoadCheck and validation | Preserve original content2/3, exact configured definitions and retired processing receipts. |
+| [Original qualification inputs](../../../../src/tests/fixtures/saveload/lineage-originals.json), [native A440aliases](../../../../src/tests/fixtures/multilayer-inputs.json), [native boundary tests](../../../../src/tests/save_lineage_preflight.cpp) | Selected A manufacturing/heavy/recipe and B shared Space originals; Group41C A440native aliases | Catalogue identity is framing evidence, not full content qualification. The declared-input A440sample has artificial zero weights; use the two unchanged native aliases for full-load proof and keep genuine A439absence explicit. |
+| [Native original observer](../../../../src/tests/space_lineage_native.cpp), [focused native producer](../../../../src/tests/space_lineage_native_checks.py) | CheckOriginalSpaceReceipts; OriginalSpaceOriginHint; exact original source selection | The retained donor basename `space-mining-continued-405.sav` actually has a B426header and three Space craft; select its exact manifest identity, not its filename. Ambiguous A originals use a per-call digest hint through the native API after an identifiable startup world; the CLI alone supplies no such hint. |
 
 ### Group 42 - Preserve A's later Space semantics under legacy-B loads
 
@@ -224,10 +343,48 @@ Required prior output: Group 40 selects the format; Groups 11 and 13 supply conv
 Required prior output: Groups 39-40 supply per-lineage feature decisions; A Space owners remain intact.
 
 {{HARD}}
-- [ ] 42.1 Audit A's425-440 orbital assembly/manufacturing/clone/replacement, ordered-action, heavy-miner, cargo-dimension and recipe readers against the capability table.
-- [ ] 42.2 Prevent a B 425-434 file from enabling an identically numbered A feature, while preserving legitimate shared pre-fork Space objects already present in B.
-- [ ] 42.3 Retain A's full/copy cargo-dimension, original-source and retired craft/service receipt checks; no missing new Space field may be manufactured from the running world's content.
-- [ ] 42.4 Add representative A manufacturing/heavy/recipe originals and B worlds with shared Space content to the boundary reader matrix.
+- [X] 42.1 Audit A's425-440 orbital assembly/manufacturing/clone/replacement, ordered-action, heavy-miner, cargo-dimension and recipe readers against the capability table.
+- [X] 42.2 Prevent a B 425-434 file from enabling an identically numbered A feature, while preserving legitimate shared pre-fork Space objects already present in B.
+- [X] 42.3 Retain A's full/copy cargo-dimension, original-source and retired craft/service receipt checks; no missing new Space field may be manufactured from the running world's content.
+- [X] 42.4 Add representative A manufacturing/heavy/recipe originals and B worlds with shared Space content to the boundary reader matrix.
+
+Verified10focused cases/45651assertions. Three copied-reader cases cover nine
+genuine A426-438epochs, B425/426content2 and missing/foreign SPRC/CDIM refusals
+(`test-cache/merge-supply/group42-space-readers-verified.txt`). Seven actual
+native application runs cover A426/427manufacturing, A428clone, A429replacement,
+A436heavy service, A438retired recipe history and a B426world retaining THREE
+actual Space craft. Their complete native receipts/work/material/reference/history
+comparisons bind same-file copied evidence; exact reports are
+`test-cache/merge-supply/group42-native-{epoch}-report.json`.
+Rebuild with`python -B src/tests/space_lineage_native_checks.py --epoch
+426|427|428|429|436|438|donor-space426 --configuration Debug`, one epoch per run.
+The last name is explicit routing: its retained basename says405but actual
+header is426. Ambiguous A inputs use scoped exact-digest native API hints;
+classification and existing semantic checks remain strict. B427-434native
+machinery qualification remains43; Group40's all-original gate matrix supplies
+the independent numeric-collision boundary, not a claim those handlers exist.
+
+### Area Mandatory Reading - Donor native machinery transport
+
+_Applies to Group43 only._
+
+Read exact original transport bounds/fields and the corresponding canonical owner
+exports needed by the current adapter. Completed41/42supply and Space qualification
+must remain intact; do not preload their implementation again. New family reading
+does not activate the merged writer, which remains44.
+
+| File | Exact sections / symbols | Why needed |
+| --- | --- | --- |
+| [Capability handoff](m2o23-3-come-space-b-capability-audit.md) | Geothermal, utility and Tube | Exact B427-434capability thresholds, schema transitions and original scalar names/types. |
+| [Original generator transport](../../../../../OpenTTD3/src/saveload/geothermal_generator_sl.cpp), [canonical generator owner](../../../../src/geothermal_generator.h) | GPGH/GPGD; capture/staging/admission exports | Retain original machinery/site/industry/utility identities and operating history; current owners already exist. |
+| [Original conversion transport](../../../../../OpenTTD3/src/saveload/utility_conversion_sl.cpp), [canonical utility owner](../../../../src/utility_power.h) | UCVH/UCVD; conversion capture/staging/admission exports | Reuse original conversion metadata and carry without creating another energy store. |
+| [Original geothermal Tube transport](../../../../../OpenTTD3/src/saveload/transport_tube_geothermal_sl.cpp), [canonical forwarding owner](../../../../src/transport_tube_geothermal.h) | TGSH/TGSD; source capture/staging/admission exports | Original source/root/provider identities and dispatch history must bind the sole current forwarding owner. |
+| [Native utility transport](../../../../src/saveload/utility_power_sl.cpp), [native Tube binding transport](../../../../src/saveload/transport_tube_vehicle_sl.cpp) | UtilityWireRow; TUVD descriptors and legacy defaults; corresponding original donor extensions | Common fields remain original A/shared types. B town/generator/source/binding additions use explicit capabilities, never colliding A enum values. |
+| [Native metadata](../../../../src/multilayer_state.h), [metadata admission](../../../../src/multilayer_state.cpp), [native metadata reader](../../../../src/saveload/multilayer_sl.cpp) | Existing bits23-26, ValidateMultiLayerStateReferences, ReadMetadata | Constants are already reserved. Supply bit23is read after41; add24-26only together with their actual reader/owner joins. Writer emission stays44. |
+| [Native registry/build](../../../../src/saveload/saveload.cpp), [handler source list](../../../../src/saveload/CMakeLists.txt) | ChunkHandlers registration and feature source membership | One handler per reserved original ID, with deliberate read-only registration until merged publication. |
+| [Original B inputs](../../../../src/tests/fixtures/saveload/lineage-originals.json) | Exact B427-434and negative originals | Use original headers, identities and independent scalar evidence; full/copy presence and reference errors cannot default to free machinery or grants. |
+
+Context has compacted 1 times while executing this group.
 
 ### Group 43 - Integrate donor geothermal, conversion and tube save families
 
@@ -236,10 +393,34 @@ Required prior output: Groups 39-40 supply per-lineage feature decisions; A Spac
 Required prior output: Groups 26-36 provide the actual owners and Group 40 provides correct legacy interpretation.
 
 {{HARD}}
-- [ ] 43.1 Port GPGH/GPGD, UCVH/UCVD and TGSH/TGSD plus existing utility/tube binding extensions through their allocated capability gates and one chunk registration per ID.
-- [ ] 43.2 Preserve original producer/consumer/site/provider identities, conversion numerator/carry and once-only service/dispatch history. Genuine older absence may initialize only the specified empty/default form.
-- [ ] 43.3 Require complete required-family presence and validate cross-references after candidate rows are decoded; missing new families remain errors rather than free machinery or grants.
-- [ ] 43.4 Add original427-434 boundary cases, legacy external-only tube defaults, duplicate family and mismatched plant/root/source cases in full and copied readers.
+- [X] 43.1 Port GPGH/GPGD, UCVH/UCVD and TGSH/TGSD plus existing utility/tube binding extensions through their allocated capability gates and one chunk registration per ID.
+- [X] 43.2 Preserve original producer/consumer/site/provider identities, conversion numerator/carry and once-only service/dispatch history. Genuine older absence may initialize only the specified empty/default form.
+- [X] 43.3 Require complete required-family presence and validate cross-references after candidate rows are decoded; missing new families remain errors rather than free machinery or grants.
+- [X] 43.4 Add original427-434 boundary cases, legacy external-only tube defaults, duplicate family and mismatched plant/root/source cases in full and copied readers.
+
+Group43 result: one read-only native handler per GPGH/GPGD, UCVH/UCVD and TGSH/TGSD, plus capability-gated utility/tube extensions. Candidate geometry uses the native controller; conversion joins the existing utility candidate. Final afterload resolves circular plant/feed references before provider/capsule adoption. Two copied cases/207630assertions and15native cases/2010assertions pass;23malformed candidates refuse both readers with valid reload recovery. Native proof preserves a genuine townless428editor boundary, the later shipped-slot433original and the earlier compact-slot433prototype's expected physical refusal. [Execution evidence](m2o23-3-come-space-a-execution.md#group43-completion) records identities and rebuild commands. Merged writer activation remains44.
+
+### Area Mandatory Reading - Explicit merged writer publication
+
+_Applies to Group44 only._
+
+Groups41-43have implemented native readers. Read the actual reserved marker,
+canonical supply fields and newly imported owner transports; earlier40gate-only
+handoff claims and the first433compact-slot prototype are not native qualification.
+Keep original A440fixed SSORframing separate from the new tagged wire.
+
+| File | Exact sections / symbols | Why needed |
+| --- | --- | --- |
+| [Native save architecture](../../architecture/savegame/archi-savegame.md) | Detached parallel-history inspection; supply and Group43adapter paragraphs | Accepted legacy contexts, sole owners and original physical-refusal limits remain intact when writing new files. |
+| [Lineage contract](../../../../src/saveload/save_lineage.h), [lineage admission](../../../../src/saveload/save_lineage.cpp), [detached envelope](../../../../src/saveload/save_envelope.cpp) | MERGED_SAVE_LINEAGE_VERSION/MAGIC/SCHEMA; MLLN branch; merged family constraints and exact MLLN/SSORfacts | Reuse allocated441and8-byte MLLN, never another marker or version registry. Full/copy classification must accept only the explicit complete contract. |
+| [Native save core](../../../../src/saveload/saveload.cpp), [descriptors](../../../../src/saveload/saveload.h) | Current-writer version/capability path; SlSaveChunk; SlIsObjectValidInSavegame; ChunkHandlers | New writer capabilities must apply outside accepted legacy loads, while original bound capabilities remain immutable through parsing/afterload. Register MLLNonce. |
+| [Canonical supply wire](../../../../src/surface_supply_order_wire.h), [conversion](../../../../src/surface_supply_order_wire.cpp), [native supply adapter](../../../../src/saveload/surface_supply_order_sl.cpp) | Canonical receipt origin/era, counts/fields, SSORdispatcher and current A440save path | Tagged merged receipts retain original semantics without changing A440lengths or inventing paid history. |
+| [Packet transport](../../../../src/saveload/cargopacket_sl.cpp), [sole supply owner](../../../../src/surface_supply_order_runtime.cpp) | Original B U32CAPAextensions ending before441; canonical purpose/order links and whole custody/adoption | Merged output must preserve the canonical U64link and typed receipt, without duplicating quantities or losing unavailable original buyer identity. |
+| [Metadata](../../../../src/multilayer_state.cpp), [metadata reader](../../../../src/saveload/multilayer_sl.cpp) | CaptureMultiLayerStateSchema and ReadMetadata bits23-26 | Emit only actual canonical history; no second legacy book or energy registry. Keep explicit capabilities on original reads. |
+| [Group43native adapters](../../../../src/saveload/geothermal_generator_sl.cpp), [conversion](../../../../src/saveload/utility_conversion_sl.cpp), [Tube sources](../../../../src/saveload/transport_tube_geothermal_sl.cpp) | Read-only registrations and existing Save methods; original utility/tube descriptor extensions | Enable their single canonical writer only with merged publication; previous A440must not acquire donor layouts. |
+| [Supply native producer](../../../../src/tests/merge_supply_native_checks.py), [native observer](../../../../src/tests/surface_supply_order_native.cpp), [machinery producer](../../../../src/tests/machinery_lineage_native_checks.py), [current evidence](m2o23-3-come-space-a-execution.md) |41Cfixed-A440roundtrip assumption;43bounded original identities and rebuild commands | Update the old fixed-wire comparison deliberately for441. Bind new successor and migration receipts to unchanged originals/current executable; caches remain disposable. |
+
+Context has compacted 1 times while executing this group.
 
 ### Group 44 - Publish one explicit merged format and round-trip contract
 
@@ -259,11 +440,13 @@ flowchart LR
 ```
 
 {{HARD}}
-- [ ] 44.1 Emit the allocated merged lineage/capability marker and new version, preserving pre-fork and original A/B readers. Keep source era information on legacy receipts where it affects semantics.
-- [ ] 44.2 Specify and implement the merged tagged supply wire separately from A version 440's fixed transport. Bound counts and fields before allocation; new fields must not silently extend old byte lengths.
-- [ ] 44.3 Save only canonical owner state, never duplicate legacy stores or a second copy of packet/energy quantities. Keep new saved discriminants and feature flags append-only.
-- [ ] 44.4 Load original inputs into working copies and write new merged successors with migration receipts; originals remain byte-identical.
-- [ ] 44.5 Add merged save→full load→save and copied-preview comparisons plus wrong-marker/version/capability rejection. Do not claim old executables can read new files.
+- [X] 44.1 Emit the allocated merged lineage/capability marker and new version, preserving pre-fork and original A/B readers. Keep source era information on legacy receipts where it affects semantics.
+- [X] 44.2 Specify and implement the merged tagged supply wire separately from A version 440's fixed transport. Bound counts and fields before allocation; new fields must not silently extend old byte lengths.
+- [X] 44.3 Save only canonical owner state, never duplicate legacy stores or a second copy of packet/energy quantities. Keep new saved discriminants and feature flags append-only.
+- [X] 44.4 Load original inputs into working copies and write new merged successors with migration receipts; originals remain byte-identical.
+- [X] 44.5 Add merged save→full load→save and copied-preview comparisons plus wrong-marker/version/capability rejection. Do not claim old executables can read new files.
+
+Group44 result: explicit441/MLLNschema1and separate tagged SSM1transport preserve Native and LegacyBevidence with canonical U64packet links. Nineteen focused cases/9010assertions pass, including10native successor/full reload/second-save cases and20both-reader malformed-file refusals. Migration receipts bind unchanged originals, current executables and new outputs. Unfinished generator history uses retained rows independently of operating eligibility. [Execution evidence](m2o23-3-come-space-a-execution.md#group44-completion) records rebuilds and exact boundaries.
 
 ### Area Mandatory Reading - Candidate acceptance, reset and deterministic recovery
 
@@ -276,6 +459,8 @@ Entry gate: Groups 41-44 must decode all component families and Group 36 must ex
 | [Candidate schema acceptance](../../../../src/multilayer_state.h) | 99-117; 161-173 | Staging/acceptance APIs and `ComputeMultiLayerStateDigest` separate candidate checks from installed state. Extend the existing canonical record schema, not a merge-specific parallel hash. |
 | [Current order staging](../../../../src/surface_supply_order_runtime.h) | 99-127 | Load staging, same-file map/date observation and `AcceptLoadedSurfaceSupplyOrders` constrain order publication after all dependencies are known. |
 | [Live capsule state](../../../../src/transport_tube.h) | Live definitions; no fixed range | Groups 33-36 must expose `CaptureTubePowerVehicles`, `AcceptLoadedTubePowerVehicles` and `ComputeTubePowerVehicleDigest` with both providers. Verify actual A definitions. |
+| [Candidate lifecycle ownership](m2o23-3-come-space-c-candidate-lifecycle.md) | Dependency order and Reset boundaries; Group45proof when available | Actual unpublished/full/copy owners, circular utility joins and ordinary ReInit semantics. Keep test observation separate from the complete-family diagnostic schema owned by46. |
+| [Canonical state/family contract](m2o23-3-come-space-d-canonical-state.md) | Group46only: Existing canonical owners; Explicit merged transport set; Permitted original-to-merged structural transformations; First-tick qualification for46.3 | Current missing-root integration, independently original-derived complete family names/kinds and exact initialization differences to resolve; do not infer expectations from a new actual save or drop an owner. |
 
 ### Group 45 - Reconcile staging reset and dependency acceptance order
 
@@ -284,10 +469,14 @@ Entry gate: Groups 41-44 must decode all component families and Group 36 must ex
 Required prior output: Groups 39-44 supply all adapters and the merged writer.
 
 {{HARD}}
-- [ ] 45.1 List each new candidate owner and its dependencies; order validation of schema/map/company/station/engine/industry/packet/utility references before the dependent owner grants rights.
-- [ ] 45.2 Reconcile new-world reset, copied-preview cleanup and failed-attempt clearing. Keep candidate lineage/book/utility fields out of the live world during LoadCheck.
-- [ ] 45.3 Ensure incomplete or duplicated staged families cannot leave a valid-looking supply refund or power binding. Preserve existing full-load error/reinitialization behavior after initialization.
-- [ ] 45.4 Add repeated-preview, cross-lineage consecutive-load and failed-then-valid cases with exact checks on live RNG, cargo, accounts and camera state.
+- [X] 45.1 List each new candidate owner and its dependencies; order validation of schema/map/company/station/engine/industry/packet/utility references before the dependent owner grants rights.
+- [X] 45.2 Reconcile new-world reset, copied-preview cleanup and failed-attempt clearing. Keep candidate lineage/book/utility fields out of the live world during LoadCheck.
+- [X] 45.3 Ensure incomplete or duplicated staged families cannot leave a valid-looking supply refund or power binding. Preserve existing full-load error/reinitialization behavior after initialization.
+- [X] 45.4 Add repeated-preview, cross-lineage consecutive-load and failed-then-valid cases with exact checks on live RNG, cargo, accounts and camera state.
+
+Group45 result: [dependency/reset ownership](m2o23-3-come-space-c-candidate-lifecycle.md) records every native join. Failed copied candidates now clear partial/previous-file rows while retaining diagnostics; native Null cleanup revokes partly adopted supply, generator and both Tube provider rights. Two focused cases/25192assertions cover alternating original A/B/merged full loads, repeated copied selections, unreadable and late-semantic refusals and explicit valid recovery. Real RNG, packet fragments, financial accounts and native camera remain unchanged during preview. Ordinary full-load ReInit semantics are preserved.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 46 - Complete canonical state coverage and first-tick checks
 
@@ -296,10 +485,12 @@ Required prior output: Groups 39-44 supply all adapters and the merged writer.
 Required prior output: Group 45 provides clean whole-candidate acceptance; Group 36 supplies deterministic owner fields.
 
 {{HARD}}
-- [ ] 46.1 Extend existing canonical records/digests for tagged supply receipts, packet provenance, generator conversion and provider bindings while retaining A's manufacturing/recipe fields.
-- [ ] 46.2 Define the merged complete-family set explicitly. Keep A's 121/B's 126 counts as historical facts, not success thresholds for merged readers. Specify each permitted structural normalization (new format metadata or deterministic native-definition append) from original IDs and frozen catalogue facts; never derive expected changes from the new actual save or exclude a whole owner.
-- [ ] 46.3 Add save/reload/first-resumed-tick cases for face/bay phases, legacy partial dispatch, conversion carry and queued provider waits beside Space orders/manufacturing.
-- [ ] 46.4 Validate company/station/industry/portal loss and pool-slot reuse through original references; no retired identity may attach to a new unrelated owner.
+- [X] 46.1 Extend existing canonical records/digests for tagged supply receipts, packet provenance, generator conversion and provider bindings while retaining A's manufacturing/recipe fields.
+- [X] 46.2 Define the merged complete-family set explicitly. Keep A's 121/B's 126 counts as historical facts, not success thresholds for merged readers. Specify each permitted structural normalization (new format metadata or deterministic native-definition append) from original IDs and frozen catalogue facts; never derive expected changes from the new actual save or exclude a whole owner.
+- [X] 46.3 Add save/reload/first-resumed-tick cases for face/bay phases, legacy partial dispatch, conversion carry and queued provider waits beside Space orders/manufacturing.
+- [X] 46.4 Validate company/station/industry/portal loss and pool-slot reuse through original references; no retired identity may attach to a new unrelated owner.
+
+Group46 result: [canonical state and focused evidence](m2o23-3-come-space-d-canonical-state.md) defines the independently derived128-family contract. Ten native original-versus-reload first-tick cases pass2211assertions with every saved owner byte equal; fifteen focused identity-loss/reuse cases pass3041assertions. Original paid receipts, packets, accounts, provider grants and Space manufacturing remain conserved. The queued original also recovered the missing native Railway animation callback; full sprite binding remains Group51. No protected Space continuation window was opened.
 
 ### Group 47 - Verify command ABI and incompatible-peer refusal
 
@@ -308,10 +499,12 @@ Required prior output: Group 45 provides clean whole-candidate acceptance; Group
 Required prior output: Groups 7 and 44 define the merged ABI/format; Group 46 defines complete state comparisons.
 
 {{MEDIUM}}
-- [ ] 47.1 Verify every merged command trait's serialized arguments against the Group7 map as revised by14D and `merge-command-identity-sequential.json`, including uint64 supply intents and donor cargo-label codecs. Verify the retained original oracle digest and unchanged A/B source facts independently; do not use its superseded unpublished tail values as live expectations.
-- [ ] 47.2 Make engine/content/version identity checks reject incompatible original A/B peers before mixed command execution; do not promise numeric command-log compatibility without explicit mapping.
-- [ ] 47.3 Add codec round trips, stale identity/refusal and post-load estimate-purity cases. Actual peer joining remains a separately staged acceptance batch.
-- [ ] 47.4 Document exactly which current exported APIs are ready for native migration/peer testing and which historical replay formats intentionally refuse.
+- [X] 47.1 Verify every merged command trait's serialized arguments against the Group7 map as revised by14D and `merge-command-identity-sequential.json`, including uint64 supply intents and donor cargo-label codecs. Verify the retained original oracle digest and unchanged A/B source facts independently; do not use its superseded unpublished tail values as live expectations.
+- [X] 47.2 Make engine/content/version identity checks reject incompatible original A/B peers before mixed command execution; do not promise numeric command-log compatibility without explicit mapping.
+- [X] 47.3 Add codec round trips, stale identity/refusal and post-load estimate-purity cases. Actual peer joining remains a separately staged acceptance batch.
+- [X] 47.4 Document exactly which current exported APIs are ready for native migration/peer testing and which historical replay formats intentionally refuse.
+
+Group47 result: [command and peer compatibility](m2o23-3-come-space-e-command-compatibility.md) records all223 current traits, retained oracle hash and unchanged original A211/B217 declarations. The bounded native revision now includes an owner-derived merged save/command/package suffix, refusing original or stale peers before authentication and mixed command delivery. Ten focused native cases pass732assertions, including successful/stale command estimates after actual441reload with full live state unchanged. Complete128-family bytes still compare exactly. Live peer joining remains Plan4; no historical numeric-log replay adapter is exported.
 
 ### Area Mandatory Reading - Authored art and logical family reconciliation
 
@@ -326,6 +519,7 @@ Entry gate: Groups 2, 3 and 8 must preserve original selected pixels and assign 
 | [Required original/generated separation](../../../../docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md) | 85-103; 230-237 | `End-state storage contract` and Group 4's source/derived/proof-cycle rules distinguish authored originals, candidate products, independent expectations and publication. This is the required placement boundary for donor art. |
 | [Preserved range validation](../../../../media/multilayer/pack_m1_art.py) | 66-157 | `selected_ranges` freezes published family extent, native offset, route and omitted-but-published slots. A different pose matrix cannot overwrite a preserved family silently. |
 | [Donor physical anchors](../../../../../OpenTTD3/media/multilayer/pack_m1_art.py) | 84-99; 136-235 | `physical_anchor` and `selected_ranges` retain signed physical anchor/part semantics and donor append layout. Carry geometry, not numeric donor offsets. |
+| [Current family reconciliation](m2o23-3-come-space-f-family-reconciliation.md) | Group48 disposition; Processor source choices and current retention; Group49 range gate | Exact original-derived source/geometry audit and current A retention. The user explicitly chose A for both processor families; unchanged512-pose ranges remain valid. Source choice does not certify packed/native delivery. |
 
 ### Group 48 - Resolve duplicate families by complete pose and geometry facts
 
@@ -334,10 +528,12 @@ Entry gate: Groups 2, 3 and 8 must preserve original selected pixels and assign 
 Required prior output: Group 8 has the reviewed family disposition and Group 2 preserved each original.
 
 {{HARD}}
-- [ ] 48.1 For each accepted family compare required pose keys, source images, crop/anchor, palette/company indices, absent parts and actual renderer. Produce a bounded per-family discrepancy record.
-- [ ] 48.2 Reuse an A family only when B's required pose/geometry contract is representable without changing its preserved extent. Apply compatible donor corrections through the existing source owner.
-- [ ] 48.3 For donor-only or incompatible expanded coverage, assign an explicit new append family/variant through the existing manifest with one selected runtime consumer; retain the original family/range as required history/compatibility.
-- [ ] 48.4 Escalate unresolved visual/geometry intent with exact differing images/pose keys. Do not silently choose the larger atlas, widen masks or make preview art count as delivered runtime art.
+- [X] 48.1 For each accepted family compare required pose keys, source images, crop/anchor, palette/company indices, absent parts and actual renderer. Produce a bounded per-family discrepancy record.
+- [X] 48.2 Reuse an A family only when B's required pose/geometry contract is representable without changing its preserved extent. Apply compatible donor corrections through the existing source owner.
+- [X] 48.3 For donor-only or incompatible expanded coverage, assign an explicit new append family/variant through the existing manifest with one selected runtime consumer; retain the original family/range as required history/compatibility.
+- [X] 48.4 Escalate unresolved visual/geometry intent with exact differing images/pose keys. Do not silently choose the larger atlas, widen masks or make preview art count as delivered runtime art.
+
+Group48 result: [bounded family reconciliation](m2o23-3-come-space-f-family-reconciliation.md) verifies148 original-derived families and all current source/pose/binding facts unchanged. Signed native anchors, relative children, absent parts and selected generation-record sections are now explicit in the existing read-only audit. No donor-only/expanded family requires new allocation. Current A pixels remain selected. The user reviewed exact original examples and chose **Keep A for both** processor families on2026-10-24. Both preserve their512-pose ranges. This selects the existing source artwork; packing/native delivery and canonical publication remain later gates.
 
 ### Group 49 - Allocate one nonoverlapping merged sprite layout
 
@@ -359,11 +555,13 @@ for family in ordered_donor_only_families:
 ```
 
 {{HARD}}
-- [ ] 49.1 Derive the protected occupied set from existing public packing scopes/manifests and generated range contracts, including unselected published families and the original preview gap.
-- [ ] 49.2 Append accepted donor-only families in deterministic declared order after the protected A space; use their complete required pose count and enforce native uint16/Action5 limits.
-- [ ] 49.3 Write final family route/native_offset/count values through the existing manifest/scope owner; avoid a second runtime remap catalogue. Keep historic B offsets only in migration/provenance records.
-- [ ] 49.4 Generate and review C++ range/header candidates. Apply required generated source-header changes as explicit implementation edits; routine derive/test recipes still must not publish canonical media.
-- [ ] 49.5 Test overlap, omitted preserved family, changed extent, signed-anchor preservation, stable repeated order and limit exhaustion before any GRF publication.
+- [X] 49.1 Derive the protected occupied set from existing public packing scopes/manifests and generated range contracts, including unselected published families and the original preview gap.
+- [X] 49.2 Append accepted donor-only families in deterministic declared order after the protected A space; use their complete required pose count and enforce native uint16/Action5 limits.
+- [X] 49.3 Write final family route/native_offset/count values through the existing manifest/scope owner; avoid a second runtime remap catalogue. Keep historic B offsets only in migration/provenance records.
+- [X] 49.4 Generate and review C++ range/header candidates. Apply required generated source-header changes as explicit implementation edits; routine derive/test recipes still must not publish canonical media.
+- [X] 49.5 Test overlap, omitted preserved family, changed extent, signed-anchor preservation, stable repeated order and limit exhaustion before any GRF publication.
+
+Group49 result: all current native slots[0,22045), including unselected core holes and the eleven-sprite preview gap, remain occupied. Group48 requires zero new families, so existing manifest routes/offsets/counts remain final. All five header candidates reproduce the existing generated source text; no source-header edit or canonical publication is needed. Nine focused pure checks pass. A new guard in the existing M1 selector refuses fresh allocation into its prefix after later scopes have shipped. [The range evidence](m2o23-3-come-space-f-family-reconciliation.md#group49-verification) records rebuild commands and cache outputs.
 
 ### Area Mandatory Reading - Native renderer binding
 
@@ -377,6 +575,7 @@ Entry gate: Groups 48-49 must provide one accepted family/range map and generate
 | [A ground packing geometry](../../../../media/multilayer/pack_ground_art.py) | 116-203 | `derive` consumes explicit current source reports and independent facts, preserving actual geometry and candidate-only outputs. New renderer bindings must use those same source facts. |
 | [Donor native binding checks](../../../../../OpenTTD3/media/multilayer/activate_m1_art.py) | 206-229 | `validate_native_binding` checks actual selected native consumer/source relationships. Port the guarantee without historical log-path dependence. |
 | [Live generated family contract](../../../../src/table/multilayer_sprite_assets.h) | Live definitions; no fixed range | Group 49 produces the reconciled `MultiLayerSpriteAsset`, `_multilayer_m1_sprite_ranges` and related generated bounds. These compiled mappings, with the other existing family headers, are authoritative for selectors; a donor numeric offset is not. |
+| [Current native renderer ownership](m2o23-3-come-space-g-native-renderers.md) | Shared conventional consumers retained by50; Current source callback proof | Existing A native dispatch and actual callback-body guarantee, without historical log evidence. Group51 must extend these paths and reuse46's Tube facility animation/physical terminal owner. |
 
 ### Group 50 - Reconcile shared ground, station and vehicle drawing
 
@@ -385,10 +584,14 @@ Entry gate: Groups 48-49 must provide one accepted family/range map and generate
 Required prior output: Group 49 supplies the merged generated source layout.
 
 {{HARD}}
-- [ ] 50.1 Select one native draw path per conventional ground family; retain A's qualified mine/processor/station/road/train consumers and integrate only the needed donor geometry/state fixes.
-- [ ] 50.2 Reconcile station, vehicle, Industry and viewport hooks so depth/occlusion, back/front parts and physical click bounds agree with the actual owner.
-- [ ] 50.3 Retain A Space/orbital/launch visibility and selection paths; no broad replacement of shared `multilayer_sprite`, `station_cmd` or `vehicle.cpp`.
-- [ ] 50.4 Add per-consumer sprite-selection/geometry cases covering foreground vehicles, hidden parts and camera-layer changes.
+- [X] 50.1 Select one native draw path per conventional ground family; retain A's qualified mine/processor/station/road/train consumers and integrate only the needed donor geometry/state fixes.
+- [X] 50.2 Reconcile station, vehicle, Industry and viewport hooks so depth/occlusion, back/front parts and physical click bounds agree with the actual owner.
+- [X] 50.3 Retain A Space/orbital/launch visibility and selection paths; no broad replacement of shared `multilayer_sprite`, `station_cmd` or `vehicle.cpp`.
+- [X] 50.4 Add per-consumer sprite-selection/geometry cases covering foreground vehicles, hidden parts and camera-layer changes.
+
+Group50 result: [native renderer ownership](m2o23-3-come-space-g-native-renderers.md) retains all A conventional and Space paths. Actual-body checks connect all21conventional families through existing dispatch and typed selectors without old log evidence. Five new actual main/extra-camera and visibility cases plus32existing conventional and4Space representative cases pass41cases/194896assertions. Physical parent/child geometry, packet/account/RNG/work owners remain unchanged. Actual raster/route acceptance remains Plan4; incoming Tube/geothermal branches are51.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 51 - Bind imported tube and geothermal consumers
 
@@ -397,10 +600,12 @@ Required prior output: Group 49 supplies the merged generated source layout.
 Required prior output: Groups 50 and 49 established shared hooks and final range definitions.
 
 {{HARD}}
-- [ ] 51.1 Port tube conduit/facility/capsule and geothermal/riser native renderers to accepted families/ranges; use actual construction, working, service and unavailable states.
-- [ ] 51.2 Reconcile `SPR_SPACE_PREVIEW_ASTEROID/PROBE`, final `MAP_LAYER_SPRITE_COUNT`, NewGRF loading bounds and all enum consumers with the final range map.
-- [ ] 51.3 Check each active logical family has one native consumer and each consumer has complete admitted pose/part coverage; keep future/unqualified families explicit.
-- [ ] 51.4 Add selection tests for all five models, provider changes, collector/generator construction and riser state while preserving Space representatives.
+- [X] 51.1 Port tube conduit/facility/capsule and geothermal/riser native renderers to accepted families/ranges; use actual construction, working, service and unavailable states.
+- [X] 51.2 Reconcile `SPR_SPACE_PREVIEW_ASTEROID/PROBE`, final `MAP_LAYER_SPRITE_COUNT`, NewGRF loading bounds and all enum consumers with the final range map.
+- [X] 51.3 Check each active logical family has one native consumer and each consumer has complete admitted pose/part coverage; keep future/unqualified families explicit.
+- [X] 51.4 Add selection tests for all five models, provider changes, collector/generator construction and riser state while preserving Space representatives.
+
+Group51 result: [native renderer qualification](m2o23-3-come-space-g-native-renderers.md#group51-completion) connects all26imported families through actual typed Ground consumers while retaining all21conventional paths. Thirty-one focused native cases pass65924assertions, including all63guideway layouts, five capsule models, both provider switches, actual paid generator/riser/collector states, native control/vent cursor lifetime and retained Ground/Space representatives. Final22045bound, original preview IDs and NewGRF admission remain unchanged. No canonical art or protected continuation save/window changed.
 
 ### Area Mandatory Reading - Pure asset generation and independent expected payloads
 
@@ -430,11 +635,13 @@ assert canonical_source_hashes() == before
 ```
 
 {{MEDIUM}}
-- [ ] 52.1 Port donor conversion helpers and preserved authoring contracts into existing media tooling. Extend the original selected recipes rather than introducing a private pipeline.
-- [ ] 52.2 Run `derive`/existing cache-only or publish_source=False boundaries with explicit current source reports and RunContext outputs; produce candidate PNG/NFO/header/GRF/hash artifacts under the run's data/images/reports owners.
-- [ ] 52.3 Assert authored originals, canonical media/public manifests and existing shipping GRF remain byte-identical during routine generation; generated C++ implementation header edits belong to Group 49.
-- [ ] 52.4 Check deterministic repeated candidate output and missing/foreign source, encoder, geometry, palette and absent-part refusals.
-- [ ] 52.5 Record candidate source/layout/tool identities and keep optional diagnostics separate from required transcripts/evidence.
+- [X] 52.1 Port donor conversion helpers and preserved authoring contracts into existing media tooling. Extend the original selected recipes rather than introducing a private pipeline.
+- [X] 52.2 Run `derive`/existing cache-only or publish_source=False boundaries with explicit current source reports and RunContext outputs; produce candidate PNG/NFO/header/GRF/hash artifacts under the run's data/images/reports owners.
+- [X] 52.3 Assert authored originals, canonical media/public manifests and existing shipping GRF remain byte-identical during routine generation; generated C++ implementation header edits belong to Group 49.
+- [X] 52.4 Check deterministic repeated candidate output and missing/foreign source, encoder, geometry, palette and absent-part refusals.
+- [X] 52.5 Record candidate source/layout/tool identities and keep optional diagnostics separate from required transcripts/evidence.
+
+Group52 result: [candidate generation and rebuild handoff](m2o23-3-come-space-h-candidate-generation.md#group52-completion) verifies all71registered source/packing/join nodes and17focused Python cases. Five current selected packers reproduce21941source poses and exact original PNG/NFO/header bytes. Two isolated encodes through the existing CMake owner produce identical full GRF/hash pairs, matching shipping bytes while leaving canonical media/public status unchanged. Missing original host tools correctly refused; pinned official tools are reproducibly prepared in test-cache and the unchanged graph resumed without regenerating verified suppliers. No native world or publication was opened.
 
 ### Group 53 - Prepare independent pixel and geometry expectations
 
@@ -443,11 +650,13 @@ assert canonical_source_hashes() == before
 Required prior output: Group 52 supplies current candidate products and retained original-source identities.
 
 {{MEDIUM}}
-- [ ] 53.1 Adapt source-based M1/Space/orbital/launch/Ground expectation producers to the selected candidate/source inputs and explicit generated payload destinations.
-- [ ] 53.2 Keep expectations derived from independent originals/contracts, not the actual native decoder output. Preserve approved pixel truth while documenting intentional numeric relocation.
-- [ ] 53.3 Bind expected payload family/configuration/hash via existing `sprite_native_inputs` and record required native terminal/source-policy evidence separately from optional logs.
-- [ ] 53.4 Extend recipe dependencies so selecting one native decoder leaf prepares only its necessary source/packing/expectation leaves; missing prerequisites name the exact supplier.
-- [ ] 53.5 Add wrong-family/config/run, changed source/payload and missing required-evidence refusal cases without canonical publication.
+- [X] 53.1 Adapt source-based M1/Space/orbital/launch/Ground expectation producers to the selected candidate/source inputs and explicit generated payload destinations.
+- [X] 53.2 Keep expectations derived from independent originals/contracts, not the actual native decoder output. Preserve approved pixel truth while documenting intentional numeric relocation.
+- [X] 53.3 Bind expected payload family/configuration/hash via existing `sprite_native_inputs` and record required native terminal/source-policy evidence separately from optional logs.
+- [X] 53.4 Extend recipe dependencies so selecting one native decoder leaf prepares only its necessary source/packing/expectation leaves; missing prerequisites name the exact supplier.
+- [X] 53.5 Add wrong-family/config/run, changed source/payload and missing required-evidence refusal cases without canonical publication.
+
+Group53 result: [independent expectation and Plan4 handoff](m2o23-3-come-space-h-candidate-generation.md#group53-completion) reproduces all five frozen original payload hashes and prepares ten separate Debug/optimized input bindings. Twenty-eight focused cases pass, including actual C++ input-owner guards, source/byte/provenance/configuration/refusal checks and minimal decoder-leaf dependency sets. Source policy and required source evidence remain distinct from optional diagnostics and the actual candidate GRF. No native decoder/world or canonical publisher ran. Plan3is complete; continue Plan4Group54 through72without a pause.
 
 ## Consult on Demand
 

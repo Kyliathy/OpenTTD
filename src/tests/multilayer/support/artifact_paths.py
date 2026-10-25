@@ -310,6 +310,60 @@ class RunContext:
                     shutil.copyfile(languages / name, pack)
         return target
 
+    def prepare_candidate_baseset(self, candidate, checksum, configuration):
+        """Install exact selected candidate bytes only inside this isolated process home.
+
+        @param self Explicit existing runtime/review owner for the native consumer.
+        @param candidate Actual generated GRF path/hash from the checked selected source result.
+        @param checksum Matching generated GRFID checksum companion path/hash.
+        @param configuration Independently selected Debug/RelWithDebInfo consumer.
+        @return Generated binding-manifest path; preparation alone never grants actual loading or pixels.
+        """
+        if configuration not in ("Debug", "RelWithDebInfo"):
+            raise ValueError("candidate baseset needs an explicit native configuration")
+        sources = []
+        # The candidate and checksum are one supplying product in this exact
+        # source run. Familiar canonical/build filenames cannot supply either role.
+        for reference, basename in ((candidate, "openttd.grf"), (checksum, "openttd.grf.hash")):
+            path = contained(self.root / reference["path"], self.root / "mlm/reviews")
+            parts = path.relative_to(self.root / "mlm/reviews").parts
+            if (len(parts) != 5 or parts[2] != self.run_id or parts[3] != "data" or path.name != basename
+                    or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != reference["sha256"]):
+                raise ValueError("candidate baseset source/run/hash role disagrees")
+            sources.append(path)
+        # A separately selected hash file cannot certify another candidate's
+        # product. Validate both complete inputs before creating runtime copies.
+        if sources[0].parent != sources[1].parent or not re.fullmatch(r"[0-9a-f]{32}\s*", sources[1].read_text(encoding="ascii")):
+            raise ValueError("candidate checksum companion is absent, foreign or malformed")
+        binding = self.output("data", "candidate-runtime-" + identifier(self.process) + ".json")
+        if binding.exists():
+            raise ValueError("candidate process binding already exists; select a fresh process")
+        self.prepare_runtime()
+        baseset = contained(self.runtime_dir / "baseset", self.runtime_dir)
+        companions = [contained(baseset / name, baseset) for name in
+                      ("orig_dos.obg", "trg1.grf", "trgc.grf", "trgh.grf", "trgi.grf", "trgt.grf")]
+        if not all(path.is_file() for path in companions):
+            raise ValueError("candidate runtime is missing required original baseset descriptor/files")
+        installed = []
+        # Only this fresh process's copied extra GRF and checksum are replaced.
+        # Source media, build distribution, original base graphics and peers stay
+        # untouched; each native run subsequently observes its actual opened bytes.
+        for source in sources:
+            destination = contained(baseset / source.name, baseset)
+            payload = source.read_bytes()
+            destination.write_bytes(payload)
+            installed.append(dict(path=destination.relative_to(self.root).as_posix(), sha256=hashlib.sha256(payload).hexdigest()))
+        document = dict(_documentation="@see r2fc-file-cleanup3.md; contained candidate preparation, no native loading/publication claim.",
+                        schema_version=1, kind="candidate_baseset_binding", run_id=self.run_id, configuration=configuration,
+                        process=self.process, runtime=self.runtime_dir.relative_to(self.root).as_posix(),
+                        candidate_source=candidate, checksum_source=checksum, runtime_grf=installed[0], runtime_checksum=installed[1],
+                        native_observation=self.output("reports", "candidate-loaded-" + self.process + ".json").relative_to(self.root).as_posix(),
+                        companions=[dict(path=path.relative_to(self.root).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest()) for path in companions],
+                        native_loading_verified=False, publishes_source=False)
+        with binding.open("x", encoding="utf-8") as sink:
+            sink.write(json.dumps(document, indent=2) + "\n")
+        return binding
+
     def write_report(self, name, producer, artifacts, inputs=(), configuration="unknown", native_writer=None):
         """Bind output evidence to its declared producer and exact file identities.
 

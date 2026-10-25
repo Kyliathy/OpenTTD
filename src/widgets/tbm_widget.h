@@ -25,6 +25,7 @@ enum TBMProjectsWidgets : WidgetID {
 	WID_TP_RELEASE, ///< Finish/cancel and release only after complete physical withdrawal and real haulage settlement.
 	WID_TP_RELEASE_REASON, ///< Actual release prerequisite and blocking train, derived from the owning preflight.
 	WID_TP_HANGAR, ///< Choose another real compatible destination through ordinary native depot orders.
+	WID_TP_CHANGE, ///< Replace only unfinished work through the existing synchronized command; no planning pause.
 };
 
 #endif /* WIDGETS_TBM_WIDGET_H */

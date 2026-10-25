@@ -135,7 +135,9 @@ struct TUPHChunkHandler final : ChunkHandler {
 	/** Stage only complete structural authority; actual portal and electrical references resolve in AfterLoadGame. */
 	void FixPointers() const override
 	{
-		if (!SlIsFixingPointers()) return;
+		// Failed full reconstruction revokes partly published inlets, bindings
+		// and their pending families; no old paid service survives a replaced world.
+		if (!SlIsFixingPointers()) { ResetTubePowerState(); return; }
 		if (CheckTubePowerFamily(false)) StageLoadedTubePowerConnections(_tube_power_rows);
 	}
 };

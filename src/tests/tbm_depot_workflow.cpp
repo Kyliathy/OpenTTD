@@ -5,6 +5,7 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md paid recurring logistics.
  * @file tbm_depot_workflow.cpp Paid native clearing and real recurring underground-depot logistics.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
@@ -49,6 +50,13 @@ TEST_CASE("Recommissioned trains physically exchange at the actual underground d
 			GetTBMExchangeAssignmentForHauler(workflow.world.hauler->index)->phase == TBMHaulerPhase::ReturnEmpties;
 	};
 	workflow.DriveUntil(delivered);
+	// Finished native machinery must remain wholly in its exchange depot beyond repeated37-tick departure retries.
+	for (uint frame = 0; frame < 500; ++frame) workflow.world.Tick();
+	// A hidden head cannot certify storage while a tail still blocks ordinary haulage.
+	for (const Train *part = Train::Get(workflow.first.cutter); part != nullptr; part = part->Next()) {
+		CHECK(part->track == Track::Depot);
+		CHECK(part->tile == workflow.depot);
+	}
 	const auto *job = GetExcavationJob(GetTBMProject(project)->job);
 	REQUIRE(job != nullptr);
 	CHECK(job->cursor == job->route.size());
@@ -96,6 +104,7 @@ TEST_CASE("A withdrawn native machine recommissions unchanged for an actual depo
 	LoadGeneratedWindowTestLanguage();
 	UndergroundDepotWorkflow workflow;
 	workflow.Prepare();
+	workflow.FundFurtherRoute(); // Native commands fund the exact missing pieces before a complete acquisition quote.
 	const auto consist = GetDefaultTBMConsist(MapLayer::Underground);
 	const TileIndex end = TileAddWrap(workflow.world.site, 2, 18);
 	const Money money = Company::Get(_current_company)->money;
@@ -171,6 +180,7 @@ TEST_CASE("A retired TBM quote cannot silently buy a replacement after sale", "[
 	LoadGeneratedWindowTestLanguage();
 	UndergroundDepotWorkflow workflow;
 	workflow.Prepare();
+	workflow.FundFurtherRoute(); // Native commands fund the exact missing pieces before a complete acquisition quote.
 	const auto consist = GetDefaultTBMConsist(MapLayer::Underground);
 	const TileIndex end = TileAddWrap(workflow.world.site, 2, 18);
 	const auto quote = PreviewTBMCommissionArea(_current_company, workflow.world.portal, workflow.first.model_id,

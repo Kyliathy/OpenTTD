@@ -17,6 +17,7 @@
 #include "space_cargo_preview.h"
 #include "../cargotype.h"
 #include "../fios.h"
+#include "../surface_supply_order_runtime.h"
 
 #include "../safeguards.h"
 
@@ -126,6 +127,14 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0) SlErrorCorrupt("Unexpected native heat domain in old save version"); // Genuine earlier electrical worlds receive no implicit thermal identities, roles or grants.
 		if (IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks) && (schema.feature_flags & MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS) != 0) SlErrorCorrupt("Unexpected local utility paths in old save version"); // Older electrical routes cannot impersonate installed Deep heat cells.
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatRoutes) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0) SlErrorCorrupt("Unexpected geothermal heat routes in old save version"); // Legacy absence creates neither physical ports nor a reconstructed grant path.
+		// Original B supply history has an independent capability and complete
+		// header/TABLE family; A's colliding numeric versions cannot claim that bit.
+		if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0 && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) SlErrorCorrupt("Unexpected legacy supply metadata for original lineage");
+		// Original donor machinery bits require their actual lineage capabilities;
+		// colliding A versions cannot acquire generators, conversion or inlet rights.
+		if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS) != 0 && !SlHasSaveCapability(SaveCapability::GeothermalGenerators)) SlErrorCorrupt("Unexpected original generator metadata");
+		if ((schema.feature_flags & MULTILAYER_FEATURE_HEAT_CONVERSIONS) != 0 && !SlHasSaveCapability(SaveCapability::UtilityHeatConversion)) SlErrorCorrupt("Unexpected original conversion metadata");
+		if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_GEOTHERMAL) != 0 && !SlHasSaveCapability(SaveCapability::TubeGeothermalSources)) SlErrorCorrupt("Unexpected original geothermal tube metadata");
 		if (ValidateMultiLayerStateReferences(schema) != MultiLayerStateError::None) SlErrorCorrupt("Unsupported or invalid multilayer metadata");
 		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidField) && (schema.feature_flags & MULTILAYER_FEATURE_ASTEROIDS) != 0) SlErrorCorrupt("Unexpected asteroid feature in old save version");
 		if (IsSavegameVersionBefore(SaveLoadVersion::LaunchCenters) && (schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_CENTERS) != 0) SlErrorCorrupt("Unexpected launch-center feature in old save version");
@@ -136,7 +145,14 @@ struct MLMDChunkHandler : ChunkHandler {
 	/** Stage parsed load transport; activated cargo/package validation happens before gameplay in AfterLoadGame. */
 	void Load() const override
 	{
-		StageLoadedMultiLayerStateSchema(this->ReadMetadata());
+		const auto schema = this->ReadMetadata();
+		const auto source = GetLoadCapabilities();
+		// Original B's paid-history declaration joins its own complete book,
+		// including empty/closed history, before any canonical right is adopted.
+		if (source && source->dialect == SaveDialect::DonorB && SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) {
+			if (!ObserveLoadedLegacyBSupplyHistory((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0)) SlErrorCorrupt("Repeated native legacy supply metadata");
+		}
+		StageLoadedMultiLayerStateSchema(schema);
 	}
 
 	/** Recheck metadata after ordinary pointer fixups, without inventing or repairing future feature references. */

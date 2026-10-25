@@ -11,7 +11,25 @@
 #define SAVELOAD_H
 
 #include "saveload_type.h"
-#include "save_lineage.h" // m2o23-1-come-space.md: detached compatibility boundary; current loading/writing remains unchanged until integration.
+#include "save_lineage.h" // archi-savegame.md: detached policy and per-attempt native load binding; writer activation remains separate.
+
+/** Read the accepted lineage of this native load/check attempt only.
+ * @return Original dialect/version during chunk parsing and afterload validation, or no value outside that attempt, including every refusal/error exit.
+ * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ */
+std::optional<SaveLineageResult> GetLoadCapabilities();
+
+/** Query a branch-specific serialization feature in the bound load or current writer.
+ * @param capability Exact A/B feature; unknown future values refuse.
+ * @return Accepted original support during loading, otherwise support in the current writer contract. This grants no gameplay rights.
+ */
+bool SlHasSaveCapability(SaveCapability capability);
+
+/** Query the same complete descriptor gate used by native table reading and writing.
+ * @param sld Original descriptor, including its version interval and optional exact branch capability.
+ * @return Whether that field belongs to this load/writer; omitted features never receive another branch's defaults.
+ */
+bool SlIsObjectValidInSavegame(const struct SaveLoad &sld);
 #include "../core/label_type.hpp"
 #include "../autoreplace_base.h"
 #include "../cargopacket.h"
@@ -502,6 +520,7 @@ enum class SaveLoadVersion : uint16_t {
 	OrbitalRecipeProcessing, ///< Saveload version: 438\n Native module recipe/work/material/residue metadata and bounded retired history join original SPST stocks and utility authority. See r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 	CompanySupplyPackets, ///< Saveload version: 439\n Appended non-paying CompanySupply source meaning in original CAPA packets; r2mlvs6-mines-and-resource-chains.md Group13CB. No order/quota inventory is introduced.
 	SurfaceSupplyOrders, ///< Saveload version: 440\n Sole bounded paid-order commitment/history family with same-file economy-day/company/Surface-station admission; r2mlvs6-mines-and-resource-chains.md Group13CCC. Native packets remain the physical stock owner.
+	MergedLineage = MERGED_SAVE_LINEAGE_VERSION, ///< Saveload version: 441. Explicit MLLN and complete tagged canonical supply/machinery contract; archi-savegame.md and m2o23-3 Group44.
 	MaxVersion, ///< Highest possible saveload version.
 };
 
@@ -858,6 +877,18 @@ struct SaveLoad {
 	AddressFunction<> address_func = nullptr; ///< Callback function the get the actual variable address in memory.
 	size_t extra_data = 0; ///< Extra data for the callback proc.
 	std::shared_ptr<SaveLoadHandler> handler{}; ///< Custom handler for Save/Load procs.
+	std::optional<SaveCapability> required_capability; ///< Exact optional branch feature, independent of overlapping numeric version intervals.
+
+	/** Attach an explicit branch feature to a native descriptor without changing its old wire bounds.
+	 * @param capability Required original A/B feature; unknown values remain a refusing requirement.
+	 * @return A descriptor carrying the same address/type/interval plus the exact capability requirement.
+	 */
+	SaveLoad WithCapability(SaveCapability capability) const
+	{
+		auto result = *this;
+		result.required_capability = capability;
+		return result;
+	}
 
 	/**
 	 * Check whether the given file type is stored as a simple number.
@@ -1294,37 +1325,30 @@ constexpr size_t SlVarSize(VarMemType type)
 #define SLC_NULL(length, from, to) {{}, length, from, to}
 
 /**
- * Checks whether the savegame is below \a major.\a minor.
- * @param major Major number of the version to check against.
+ * Check whether a candidate predates a shared numeric boundary or a destination-A feature.
+ * Bound A425-440 names use explicit capabilities, so a B file never gains A's
+ * layout from a colliding number. Shared/minor gates keep original numeric semantics.
+ * @param major Shared version boundary or the original named destination-A feature.
  * @param minor Minor number of the version to check against. If \a minor is 0 or not specified, only the major number is checked.
- * @return Savegame version is earlier than the specified version.
+ * @return The original source predates that shared boundary or lacks that A feature.
  */
-inline bool IsSavegameVersionBefore(SaveLoadVersion major, uint8_t minor = 0)
-{
-	extern SaveLoadVersion _sl_version;
-	extern uint8_t            _sl_minor_version;
-	return _sl_version < major || (minor > 0 && _sl_version == major && _sl_minor_version < minor);
-}
+bool IsSavegameVersionBefore(SaveLoadVersion major, uint8_t minor = 0);
 
 /**
- * Checks whether the savegame is below or at \a major. This should be used to repair data from existing
- * savegames which is no longer corrupted in new savegames, but for which otherwise no savegame
- * bump is required.
- * @param major Major number of the version to check against.
- * @return Savegame version is at most the specified version.
+ * Check the inclusive end of a shared version or destination-A feature interval.
+ * Existing shared repair gates retain native numeric meaning. A post-fork feature
+ * interval ends before the next A feature, preserving B's unchanged Space prefix.
+ * @param major Original shared boundary or destination-A feature interval end.
+ * @return The source belongs to that interval or an earlier source layout.
  */
-inline bool IsSavegameVersionBeforeOrAt(SaveLoadVersion major)
-{
-	extern SaveLoadVersion _sl_version;
-	return _sl_version <= major;
-}
+bool IsSavegameVersionBeforeOrAt(SaveLoadVersion major);
 
 /**
- * Checks if some version from/to combination falls within the range of the
- * active savegame version.
+ * Check a version interval against the current writer, independent of a loaded
+ * candidate. Loading uses SlIsObjectValidInSavegame's complete descriptor gate.
  * @param version_from Inclusive savegame version lower bound.
  * @param version_to Exclusive savegame version upper bound. MaxVersion if no upper bound.
- * @return Active savegame version falls within the given range.
+ * @return Current writer version falls within the range. Candidate load descriptors use SlIsObjectValidInSavegame instead.
  */
 inline bool SlIsObjectCurrentlyValid(SaveLoadVersion version_from, SaveLoadVersion version_to)
 {
@@ -1365,6 +1389,11 @@ size_t SlGetStructListLength(size_t limit);
 
 void SlAutolength(AutolengthProc *proc, int arg);
 size_t SlGetFieldLength();
+
+/** Read the actual wire framing chosen by the current native chunk dispatcher.
+ * @return Original RIFF/array/TABLE kind, independent of the handler's declared writer kind.
+ */
+ChunkType SlGetChunkType();
 /**
  * Distinguish real loaded-reference validation from failure cleanup invoking the same handlers.
  * @return True only during ordinary pointer fixup, false during pointer nulling/load/save/preview.

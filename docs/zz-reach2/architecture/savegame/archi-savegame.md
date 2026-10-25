@@ -1,5 +1,7 @@
 # Savegame subsystem
 
+**Current merged qualification,2026-10-25.** Writer441and its explicit lineage/capability dispatch are delivered. Exact shared403/A438–440/B434originals, merged full/copy/reload/second-save boundaries and128-family comparisons are qualified through the [four-plan handoff](../../upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md). TaggedNative/LegacyBSSORand widenedCAPAretain one supply/custody owner. Real peers and isolated current native/ordinary restores are separate actual observations. Original Space seals remain unchanged; [historical storage/reconstruction](../archi-historical-debug.md) owns their durable/current evidence roles. Dated older-version sections below remain compatibility history rather than a current writer selection.
+
 TBM update,2026-10-09: versions395/396 extend the existing TBMP phase byte for resumable parking and deferred final release. Earlier phase values and394 work-rate migration remain intact; preview/full readers reject phases newer than the file's version. Cancellation now preserves accepted work and claims until physical withdrawal and real cargo settlement. Released machines remain ordinary saved native vehicles after their controller is removed. Actual395 parking and396 pending/released/connected files, including same-machine reuse, are recorded in [R2TBMF P](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-p-parking-notes.md) and [R2TBMF R](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-r-release-notes.md#group7b-closure). Cargo quantities remain whole units.
 
 This is the architecture of OpenTTD's on-disk game format, written for someone who is about to change it. The implementation lives in `src/saveload/`. The 2021 note `docs/savegame_format.md` is the older field guide; where it and the code disagree, this page follows the code and records the disagreement at the end.
@@ -11,6 +13,103 @@ Updated against the current fork on 2026-10-08 through save version 385, includi
 A save is a small uncompressed header, a compressed blob, and inside that blob a sequence of tagged chunks. Multi-byte integers in the OpenTTD blob are big-endian on every host. Each gameplay feature has a `*_sl.cpp` description of its fields. Saves written by an older OpenTTD are read by the same description, gated on `SaveLoadVersion`, and then repaired in memory by `AfterLoadGame`. A save newer than this binary is rejected.
 
 There is a second, separate loader for the original Transport Tycoon games. It is not this container. It is covered below because `SaveOrLoad` still sends those files through `AfterLoadGame`.
+
+## Detached parallel-history inspection
+
+The2026-10 merge adds `src/saveload/save_envelope.h/.cpp` beside the pure
+`save_lineage.h/.cpp` policy. `InspectSaveWireFacts` accepts the original rewindable
+raw LoadFilter, independently bounds raw/decoded work and nested table framing,
+and returns same-file facts plus whole-original SHA256. It neither initializes a
+world nor dispatches gameplay handlers. `save_framing.h` shares native gamma,
+RIFF/row boundaries and table type bits. `core/sha256.hpp` also supplies the existing
+immutable test catalogue adapter. Exact-digest origin hints can resolve compatible
+ambiguous historical transport; filenames and current owners supply no evidence.
+
+Inspection reconstructs native load codecs with an explicit detached error policy;
+ordinary SlError can null native pointers and is never an inspection exception
+helper. The original raw source is retained, rewound and checked for changes across
+identity/scanning; replay needs a new codec and ReadBuffer. Native FileReader and
+`network/core/packet_reader.h` supply the actual file/buffered-network reset paths.
+Merged441 marker validation cannot substitute for the complete canonical supply/cargo transports. Native DoLoad now runs this boundary before stateful format selection or world
+initialization, verifies replayed envelope identity, then recreates codec/ReadBuffer.
+Explicit origin hints belong to one SaveOrLoad/LoadWithFilter call. Scoped accepted
+capabilities survive through afterload and clear on every exit; failed native
+pointer cleanup revokes the original dialect before its synthetic current schema.
+Lineage, input-open and framing refusal return Error without SlError pointer cleanup;
+ordinary later full-load failures retain native ReInit semantics. Copied preview
+and preflight refusal are nonmutating; full loading has no new rollback transaction.
+Ancient headerless LZO remains explicit native version0 compatibility. [Merge Plan3](../../upgrades/2026-10/m2o23-3-come-space.md)
+Group40now maps A425-440enum names to explicit original capabilities for scalar
+gates and both candidate descriptor interval endpoints. SaveLoad.WithCapability
+adds an exact A/B requirement, including empty TABLE headers. Native
+SlIsObjectValidInSavegame owns that admission; SlIsObjectCurrentlyValid remains
+the separate numeric current-writer predicate used by settings/survey. Native
+TBMP AwaitFaceTransfer and Magma cold-site ceilings require their B features.
+The [three-part audit](../../upgrades/2026-10/m2o23-3-come-space-b-capability-audit.md)
+records current routing and exact future B descriptor requirements. Four focused
+native cases/12048assertions verify actual bound scalar/descriptor decisions across
+all27originals. Groups41-44 still own branch-specific native readers and writer
+activation; the gate proof stops before not-yet-imported gameplay chunk handlers. Current focused proof is15cases/2704assertions, including27
+retained originals,6 negative originals and actual successive A425/B425/A440 copied
+native replay, recorded in the [execution notes](../../upgrades/2026-10/m2o23-3-come-space-a-execution.md#group39---verified-native-entry-and-attempt-lifetime).
+
+
+Groups41/41B implement one SSOR dispatcher for original A440RIFF and B426+TABLE,
+plus one read-only SSOH header. Original DATE/MAPS/company/station evidence precedes
+detached conversion and the shared complete custody check. B CAPA retains its
+original U32order and literal departure byte. Its linked invalid-Industry purpose
+is projected read-only during custody, then normalized to CompanySupply with
+unavailable buyer only after the entire native candidate passes. Copied checking
+never mutates packets or borrows the open world's definitions. Pre-CDIM B meanings
+come from the saved profile/climate/exact NGRF identity and a projection emitted by
+the original content package producer; modern configured meanings remain original
+CDIM evidence. The same copied owner traversal includes ordinary freight, station
+queues, Space compartments and contained jobs. Current26cases/3963assertions include
+genuine B426full native loading compared to its independent copied book, packet
+scalars and wallets. Rebuildable focused evidence is documented in Merge Plan3;
+Group44subsequently replaces the current writer with explicit441, retaining those original readers.
+
+Group43adds native read-only GPGH/GPGD, UCVH/UCVD and TGSH/TGSD adapters.
+Original B427-434capabilities also govern utility town/feed and TUVD provider
+columns. Raw fields, complete presence and same-file geometry validate before
+adoption. Conversion metadata joins the existing utility candidate; it never owns
+another energy balance. Initial utility adoption defers only the reverse native
+feed-to-generator reference; final afterload validates it after plant adoption,
+then admits original geothermal sources and capsules before any tick. Metadata
+allows either original provider family and retains retired source history.
+Seventeen focused cases/209640assertions include full reconstruction and23both-reader
+malformed refusals. Original townless428and compact-slot433transport prototypes
+retain their ordinary physical refusal boundaries; their exact roles and the later
+shipped-slot433original are recorded in the [Group43evidence](../../upgrades/2026-10/m2o23-3-come-space-a-execution.md#group43-completion).
+Group44now activates their single canonical writers under explicit441.
+
+The441contract requires one8-byte MLLNRIFF(network-order U32MLN1magic,
+U16schema1,U16writer441), CDIM/SPRCand complete GPG/UCV/TGSfamilies even when
+empty. Original A440SSORand B426SSOH/TABLEare unchanged. New SSORis a separate
+network-order SSM1tagged RIFF:20-byte header(U32magic,U16schema,U64issuer,
+I32economy date,U16count); Native tag1uses54-byte rows and LegacyBtag2uses39.
+Both preserve common original identity/owner/station/label/quantity/economy date.
+Native retains payer, coordinates, charge, inflation, year, buyer, settlement and
+issuance; LegacyBretains only actual tariff/calendar/refund/dispatch/closed facts.
+Bounds precede allocation, tags and literal booleans are closed, and detached
+inspection walks scalars without retaining raw payloads or a record collection.
+CAPA441uses U64order and U8departure; original B U32/Bool ends before441.
+Metadata bits23-26reflect canonical history, including unfinished generator rows
+that do not yet participate in an operating interval. No legacy runtime book,
+packet inventory or energy balance is serialized twice. Full/copy/second-save
+migration proof and20malformed merged refusals are recorded in [Group44evidence](../../upgrades/2026-10/m2o23-3-come-space-a-execution.md#group44-completion).
+This is a new format; original executables are not claimed to read it.
+
+Group45tightens candidate disposal: copied native exceptions and unreadable-file
+refusals clear all partial/preceding preview rows, retaining localized errors and
+parser details. Native Null cleanup revokes partly adopted SSORand generator/
+external-inlet/geothermal-inlet/capsule rights through their existing handlers.
+Successful full loading still accepts each canonical owner in dependency order;
+a later failure returns ordinary ReInit and requires explicit valid reload.
+[Dependency/reset ownership](../../upgrades/2026-10/m2o23-3-come-space-c-candidate-lifecycle.md)
+records the joins, circular utility completion and two focused cases/25192assertions
+covering actual alternating worlds, copied RNG/cargo/accounts/camera isolation and
+late-refusal recovery. There is no arbitrary full-load rollback guarantee.
 
 ## Finite mine and native processor state
 

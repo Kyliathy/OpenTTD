@@ -35,6 +35,28 @@
 #include "../cargopacket.h"
 #include "../direction_func.h"
 
+/**
+ * Scoped choice of the rock that the next TBM acquisition rig declares over its whole rock plane, before it issues the
+ * portal proof (ExcavationFixture::DeclareRockSeam). Without a guard the rig keeps the legacy all-Soft Underground.
+ * Declare it before the rig, for example `const TBMRigRock mixed_rock{GeologyHardness::Mixed};`, so the choice stays
+ * visible at the test that needs a capacity refusal or a mid-route exchange (r2mlvs3mp master task 10R.1).
+ */
+class TBMRigRock {
+	static inline std::optional<GeologyHardness> current; ///< Rock the next rig declares; nothing keeps the legacy plane.
+	std::optional<GeologyHardness> saved; ///< Enclosing choice, restored when this guard ends.
+public:
+	/** @param hardness Rock that every rig built while this guard lives declares. */
+	explicit TBMRigRock(GeologyHardness hardness) : saved(current) { current = hardness; }
+	/** Restore the enclosing choice, so no later test case inherits this one. */
+	~TBMRigRock() { current = saved; }
+	/** @param other Scoped choice that must not be copied or extend its lifetime. */
+	TBMRigRock(const TBMRigRock &other) = delete;
+	/** @param other Scoped choice that cannot replace another guard. @return Assignment is forbidden. */
+	TBMRigRock &operator=(const TBMRigRock &other) = delete;
+	/** @return The rock a rig built now declares, or nothing for the legacy plane. */
+	static std::optional<GeologyHardness> Get() { return current; }
+};
+
 /** Actual native definitions and physical portal owners, isolated without replacing gameplay engine/cargo registries. */
 class TBMEngineFixture {
 	decltype(_engine_mngr.mappings) original_mapping = _engine_mngr.mappings; ///< Preserve the caller's existing real EIDS configuration.
@@ -104,6 +126,8 @@ public:
 		MockEnvironment::Instance(); // Coupling marks the train dirty, which reads vehicle sprite bounds from the sprite cache.
 		for (uint16_t model : {uint16_t{2}, uint16_t{3}}) Engine::Get(GetTBMEngine(model))->company_avail.Set(_current_company);
 		this->base = this->fixture.request.proposal;
+		// Declare the chosen finite rock before proof/route admission so quotes and actual paid cuts read the same setup.
+		if (const auto rock = TBMRigRock::Get(); rock.has_value()) this->fixture.world.DeclareRockSeam(GetTileLayer(this->base.commissioning_anchor), *rock);
 		this->proof = IssueLayerPortalBootstrap(this->fixture.request);
 		REQUIRE(this->proof.error == LayerPortalWorkError::None);
 		this->fixture.request.proposal = this->Proposal(1, 3);

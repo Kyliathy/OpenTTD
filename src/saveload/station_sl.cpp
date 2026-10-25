@@ -588,7 +588,7 @@ public:
  */
 static void CheckSurfaceSupplyStationBaseFields(SaveLoadTable description)
 {
-	if (IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders)) return;
+	if (!SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) return; // Both paid-supply formats require original native station authority; a live owner's coincident ID is never evidence.
 	// Every current station must carry its own owner, position and freight shape. A constructor default cannot lend authority that the copied reader correctly refuses.
 	for (const auto field : {"owner", "xy", "facilities"}) if (std::ranges::find(description, field, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing native supply station authority field");
 }
@@ -748,6 +748,8 @@ struct StationAuthorityPreview {
 	TileIndex tile = INVALID_TILE; ///< Original saved base.xy; preview does not project from the active map.
 	StationFacilities base_facilities{}; ///< Actual saved base facilities; cannot be inferred from a normal-station discriminator alone.
 	std::vector<uint32_t> cargo_packet_refs; ///< Unpublished native ID+1 references across this actual station's goods/next-hop buckets.
+	CargoType current_cargo = INVALID_CARGO; ///< Decoder cursor through this actual saved goods array, never inferred from a receipt.
+	std::vector<NativeCargoOwnerPreview> cargo_owners; ///< Original references and actual goods slots; the outer native index later supplies their queue ID.
 };
 
 /** One detached original next-hop bucket; decoding references creates no CargoPacket or station stock. */
@@ -772,6 +774,9 @@ public:
 			StationCargoBucketPreview bucket; SlObject(&bucket, this->GetLoadDescription());
 			if (bucket.references.size() > CargoPacketID::End().base() - row->cargo_packet_refs.size()) SlErrorCorrupt("Excessive native station cargo preview references");
 			row->cargo_packet_refs.insert(row->cargo_packet_refs.end(), bucket.references.begin(), bucket.references.end());
+			// Preserve the containing saved goods slot for every routing fragment;
+			// aggregate IDs alone cannot prove its physical material or refund queue.
+			for (const auto reference : bucket.references) row->cargo_owners.push_back({reference, row->current_cargo, StationID::Invalid()});
 		}
 	}
 };
@@ -787,7 +792,10 @@ public:
 		if (std::ranges::find(this->GetLoadDescription(), "cargo", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station goods cargo preview");
 		const auto count = SlGetStructListLength(NUM_CARGO);
 		// Empty goods slots still belong to this file's schema; only actual retained packet references enter the global copied ownership join.
-		for (size_t cargo = 0; cargo < count; ++cargo) SlObject(row, this->GetLoadDescription());
+		for (size_t cargo = 0; cargo < count; ++cargo) {
+			row->current_cargo = static_cast<CargoType>(cargo);
+			SlObject(row, this->GetLoadDescription());
+		}
 	}
 };
 
@@ -859,7 +867,7 @@ struct STNNChunkHandler : ChunkHandler {
 			BaseStation *bst = waypoint ? (BaseStation *)Waypoint::CreateAtIndex(StationID(index)) : Station::CreateAtIndex(StationID(index));
 			SlObject(bst, slt);
 			// Current full/copy readers agree on the original object class; a normal-station body cannot turn into a waypoint after receiving refundable supply rights.
-			if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders) && bst->facilities.Test(StationFacility::Waypoint) != waypoint) SlErrorCorrupt("Changed native station discriminator");
+			if ((SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) && bst->facilities.Test(StationFacility::Waypoint) != waypoint) SlErrorCorrupt("Changed native station discriminator");
 		}
 	}
 
@@ -880,7 +888,9 @@ struct STNNChunkHandler : ChunkHandler {
 	 */
 	void LoadCheck(size_t length) const override
 	{
-		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrderedActions)) { ChunkHandler::LoadCheck(length); return; }
+		// Native station authority serves both A's ordered Space actions and B's
+		// original paid-supply receipt join; an absent A feature cannot skip B's facts.
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrderedActions) && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) { ChunkHandler::LoadCheck(length); return; }
 		static const SaveLoad preview[] = {
 			SaveLoad::SaveByte("facilities", SLE_OBJECT_ADDRESS(StationAuthorityPreview, facilities)),
 			SaveLoad::Struct<SlStationAuthorityPreview>("normal"),
@@ -895,7 +905,7 @@ struct STNNChunkHandler : ChunkHandler {
 			StationAuthorityPreview row; row.facilities = static_cast<StationFacilities>(SlReadByte()); SlObject(&row, description);
 			if (row.facilities.Test(StationFacility::Waypoint)) continue;
 			// A normal-station preview must retain the same original class as full reconstruction; a waypoint alias cannot supply a pending freight receiver.
-			if (!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders) && row.base_facilities.Test(StationFacility::Waypoint)) SlErrorCorrupt("Changed copied normal-station discriminator");
+			if ((SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) && row.base_facilities.Test(StationFacility::Waypoint)) SlErrorCorrupt("Changed copied normal-station discriminator");
 			const StationID id{static_cast<uint16_t>(index)};
 			if (!rows.empty() && id <= rows.back().station) SlErrorCorrupt("Repeated native station authority preview identity");
 			rows.push_back({id, row.owner, row.tile, row.base_facilities});
@@ -903,6 +913,12 @@ struct STNNChunkHandler : ChunkHandler {
 			// The whole copied station family may reference at most the actual packet pool bound; metadata never creates stock for missing native owners.
 			if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - cargo.size()) SlErrorCorrupt("Excessive native station-family cargo preview references");
 			cargo.insert(cargo.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+			// Only this actual normal station's original index supplies queue
+			// identity. Waypoints and the active world's matching IDs lend nothing.
+			for (auto &owner : row.cargo_owners) {
+				owner.station = id;
+				_load_check_data.native_cargo_owner_rows.push_back(owner);
+			}
 		}
 		_load_check_data.native_station_cargo_present = true;
 	}

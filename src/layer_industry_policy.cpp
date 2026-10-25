@@ -10,6 +10,7 @@
 #include "multilayer_industry.h"
 #include "geothermal.h"
 #include "geothermal_riser.h"
+#include "geothermal_generator.h"
 #include "geothermal_utility.h"
 #include "industry.h"
 #include "industrytype.h"
@@ -133,6 +134,8 @@ const LayerIndustryCapability *GetLayerIndustryCapability(IndustryType type)
 	// Only native definitions in the pinned package scope gain geology authority; GRF art/substitutes never do.
 	if (!spec->enabled || spec->grf_prop.HasGrfFile() || spec->grf_prop.grfid != LayerIndustryGrfID()) return nullptr;
 	const uint16_t local = spec->grf_prop.local_id;
+	// Each dated generator family resolves its exact native input-only capability.
+	if (local == GEOTHERMAL_POWERHOUSE_LOCAL_ID || local == GEOTHERMAL_MAGMA_LOCAL_ID) return GetGeothermalGeneratorIndustryCapability(type);
 	if (local == GEOTHERMAL_COLLECTOR_LOCAL_ID) return GetGeothermalCollectorIndustryCapability(type);
 	if (local == GEOTHERMAL_RISER_LOCAL_ID) return GetGeothermalRiserIndustryCapability(type); // Exact input-only1980 machinery may use either rock layer, without inheriting vent or production authority.
 	// Supported Surface processing stays explicit even though ordinary external industries also retain Surface permission.
@@ -167,11 +170,13 @@ CommandCost CheckLayerIndustryConstruction(TileIndex tile, IndustryType type)
 	const auto *capability = GetLayerIndustryCapability(type);
 	if (capability == nullptr) {
 		const auto *spec = type < NUM_INDUSTRYTYPES ? GetIndustrySpec(type) : nullptr;
-		// A malformed or wrong-profile native mine/processor must never fall back to legacy Surface construction.
+		// A malformed or wrong-profile native facility must never fall back to
+		// legacy Surface construction, including either dated generator family.
 		if (spec != nullptr && spec->grf_prop.grfid == LayerIndustryGrfID() &&
 				((spec->grf_prop.local_id >= LAYER_MINE_LOCAL_BASE && spec->grf_prop.local_id < LAYER_MINE_LOCAL_BASE + MineCapabilities().size()) ||
 				(spec->grf_prop.local_id >= LAYER_PROCESSOR_LOCAL_BASE && spec->grf_prop.local_id < LAYER_PROCESSOR_LOCAL_BASE + ProcessorCapabilities().size()) ||
-				spec->grf_prop.local_id == GEOTHERMAL_COLLECTOR_LOCAL_ID)) return CMD_ERROR;
+				spec->grf_prop.local_id == GEOTHERMAL_COLLECTOR_LOCAL_ID ||
+				spec->grf_prop.local_id == GEOTHERMAL_POWERHOUSE_LOCAL_ID || spec->grf_prop.local_id == GEOTHERMAL_MAGMA_LOCAL_ID)) return CMD_ERROR;
 		// Unadapted originals/GRFs retain Surface policy on every construction entry path.
 		return layer == MapLayer::Surface ? CommandCost{} : CommandCost{STR_ERROR_NOT_ALLOWED_IN_MAP_LAYER};
 	}

@@ -1,5 +1,7 @@
 # R2MLVS Master Plan - Multilayer Vehicles and Structures
 
+**Current integration,2026-10-25.** [M2O23's four-plan handoff](m2o23-4-come-space-b-integration-handoff.md) records the merged technical boundary, exact original/current qualification and preservation/recovery owners. This completes the requested merge scope while future epic milestones and actual human art/demo feedback retain their own gates. Space dispatch remains the read-only Plan11GZVEEJusefulness task. Older dated dispatch paragraphs below are historical snapshots. [Storage authority](../../architecture/archi-historical-debug.md).
+
 Planning baseline: 2026-10-04. **Status (2026-10-05): M0 contracts are delivered and the M1 excavation loop runs end to end by real movement in tests. No milestone is complete:** M1 still lacks its art, its occupied saves and the recurring underground bay. Execution evidence and completed task checkboxes live in the child plans.
 
 This epic turns the four existing layers into a connected transport economy: excavate access, remove spoil, exploit underground deposits, lift equipment into orbit, mine moving asteroids, and use orbital infrastructure to improve production on Earth. It follows [R2MLM](r2mlm-multi-layered-map.md), the [level 0 architecture](../../architecture/@archi-ttd-level0.md), and the [map-layer architecture](../../architecture/map-layers/archi-map-layers.md).

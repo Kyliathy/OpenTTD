@@ -16,7 +16,10 @@
 #include "tile_type.h"
 #include "window_type.h"
 
-/* set up the cargos to be displayed in the smallmap's route legend */
+/** Main-view layer notification; existing data codes0-2 retain their industry/owner/colour meanings. */
+static constexpr int SMALLMAP_INVALIDATE_MAIN_VIEW_LAYER = 3;
+
+/** Set up the cargoes displayed in the small map's route legend. */
 void BuildLinkStatsLegend();
 
 void BuildIndustriesLegend();

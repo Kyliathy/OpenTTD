@@ -101,6 +101,44 @@ def verify_retained_inputs(root=None, scope="all", document=None):
     return counts
 
 
+def execute_stage(request, root):
+    """Verify retained donor inputs through the existing selected recipe dispatcher.
+
+    @param request Exact existing donor-underground-inputs prepare/verify request and output role.
+    @param root Owning Acheckout; no Bdirectory, old executable or old cache is accessed.
+    @return Actual preservation counts/checks, never current gameplay or art acceptance.
+    """
+    root = repository_root(root)
+    reference = request["inputs"]["donor-input-contract"]
+    source = contained(root / reference["path"], root / "src/tests/fixtures/cleanup")
+    payload = source.read_bytes()
+    if hashlib.sha256(payload).hexdigest() != reference["sha256"]:
+        raise ValueError("donor input recipe preservation contract identity changed")
+    document = json.loads(payload)
+    # A preserved original contract grants read-only verification only. A
+    # changed phase/namespace cannot turn this recipe into a donor importer,
+    # source publisher or paid-world bootstrap.
+    if (request["paid_work_authorized"] is not False or request["publishes_source"] is not False
+            or document.get("kind") != "donor_input_preservation" or document.get("schema_version") != 1
+            or document.get("donor_commit") != "75ea75718fa7d14632bf795105721df1e390f753"):
+        raise ValueError("donor input recipe requires its exact preserved read-only contract")
+    if request["stage"] == "prepare":
+        return dict(checks=["exact retained donor preservation contract supplied; no donor process or cache invoked"])
+    if request["stage"] != "verify":
+        raise ValueError("donor input recipe requires an explicit prepare/verify stage")
+    scope = request["declaration"]["original_parameters"]["scope"]
+    observed = verify_retained_inputs(root, scope=scope, document=document)
+    from artifact_paths import RunContext
+    context = RunContext(root, request["feature"], request["scenario"], request["run_id"])
+    output = contained(root / request["outputs"]["manifest"], context.reports)
+    result = dict(_documentation=__doc__, schema_version=1, kind="retained_donor_input_verification", run_id=context.run_id,
+                  source_contract=reference, observed=observed, historical_receipts_unchanged=True,
+                  current_native_acceptance=False, publishes_source=False)
+    with output.open("x", encoding="utf-8") as sink:
+        sink.write(json.dumps(result, indent=2) + "\n")
+    return dict(checks=["all selected donor payload/alias/hash/owner identities verified without Bdirectories or old caches"], observed=observed)
+
+
 def main():
     """Run one bounded read-only verification and optionally record its result.
 

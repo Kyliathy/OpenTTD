@@ -1,5 +1,5 @@
 {
-  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3. Explicit native Storage/Power activation: r2mlvs11-orbital-stations-and-manufacturing.md Group4. Shared native approach reservation producer: r2mlvs8-space-world-and-construction.md Group11; r2mlvs11 Group4B prerequisite. Direct module flight/packet refusal/retired destination observers: r2mlvs9-launch-centers-and-rockets.md Groups11/11C. Native circular cargo return/descent acceptance: r2mlvs9-launch-centers-and-rockets.md Groups12-14. Bounded recipe declarations: r2fc-file-cleanup3.md Group6; disabled pending leaves are not executable or proof of regeneration. Donor-input preservation and the pending selected-graph adapter are owned by m2o23-1-come-space.md Groups 2/58.",
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md; canonical producer catalogue for development artifacts, not gameplay or sprite identities. Collector art observers: r2mlvs14-remaining-assets-and-runtime-integration.md79C. Native Core activation/stock observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1. Contained native service and shared utility observers: r2mlvs11-orbital-stations-and-manufacturing.md Group1B. Native module stock/reservation observers: r2mlvs11-orbital-stations-and-manufacturing.md Group2. Exact fractional assembly/native tick observers: r2mlvs11-orbital-stations-and-manufacturing.md Group3. Explicit native Storage/Power activation: r2mlvs11-orbital-stations-and-manufacturing.md Group4. Shared native approach reservation producer: r2mlvs8-space-world-and-construction.md Group11; r2mlvs11 Group4B prerequisite. Direct module flight/packet refusal/retired destination observers: r2mlvs9-launch-centers-and-rockets.md Groups11/11C. Native circular cargo return/descent acceptance: r2mlvs9-launch-centers-and-rockets.md Groups12-14. Bounded recipe declarations: r2fc-file-cleanup3.md Group6; disabled pending leaves are not executable or proof of regeneration. Donor-input preservation and the pending selected-graph adapter are owned by m2o23-1-come-space.md Groups 2/58. Plan4 Group55 adds disabled imported normal-start/lifecycle/useful-route/performance providers; exact current APIs and native prerequisites must be supplied by their named groups before activation.",
   "schema_version": 2,
   "review_root": "mlm/reviews",
   "runtime_root": "mlm/runtime",
@@ -5930,6 +5930,10 @@
         {
           "feature": "multilayer-art",
           "scenario": "m1-source-collector"
+        },
+        {
+          "feature": "multilayer-art",
+          "scenario": "merged-art-candidates"
         }
       ],
       "test_tags": [],
@@ -6351,9 +6355,8 @@
           "path": "src/tests/fixtures/cleanup/tool-requirements.json"
         },
         {
-          "role": "checkpoint-contract",
-          "path": "src/tests/fixtures/checkpoints/space/checkpoint.json",
-          "provider_group": 8
+          "role": "selected-foundation",
+          "path": "src/tests/fixtures/checkpoints/space/continuations/5d8ca01b552778970bde977259f25037e935d3c87de779803e221280d398252c/reports/foundation.json"
         }
       ],
       "requires": [],
@@ -6369,17 +6372,18 @@
       ],
       "original_parameters": {
         "configuration": "explicit",
-        "checkpoint": "explicit retained manifest",
+        "checkpoint": "explicit selected current SpaceFoundation",
         "gameplay_ticks": 0,
         "ordinary_producer": "src/tests/multilayer/acceptance/space_checkpoint_static.py",
-        "qualification": "space_checkpoint.qualify_checkpoint",
+        "qualification": "space_checkpoint.qualify_selected_foundation",
         "build_targets": [
           "openttd_surface_capital_test",
           "openttd"
-        ]
+        ],
+        "family_count": 128
       },
       "native_timeout_seconds": 60,
-      "required_interface": "Actual native/static, typed original qualification, explicit continuation selection and validator-bound successor publication exist; current selected builds and zero-tick recipe adapter are implemented; Group15 executes and verifies the actual integration"
+      "required_interface": "Implemented selected SpaceFoundation load/static recovery; zero gameplay ticks."
     },
     {
       "id": "tube-checkpoint",
@@ -49611,6 +49615,16 @@
           "recipe": "m1-expected-payload",
           "role": "manifest",
           "as": "expected-manifest"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "grf",
+          "as": "candidate-grf"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "checksum",
+          "as": "candidate-checksum"
         }
       ],
       "outputs": [
@@ -49639,7 +49653,8 @@
         "src/tests/multilayer/support/sprite_native_loader.py",
         "src/tests/test_artifact_paths.cpp",
         "src/tests/test_artifact_paths.h",
-        "src/tests/test_input_sha256.h"
+        "src/tests/test_input_sha256.h",
+        "src/tests/test_candidate_sprite_input.h"
       ]
     },
     {
@@ -49778,6 +49793,16 @@
           "recipe": "space-expected-payload",
           "role": "manifest",
           "as": "expected-manifest"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "grf",
+          "as": "candidate-grf"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "checksum",
+          "as": "candidate-checksum"
         }
       ],
       "outputs": [
@@ -49802,7 +49827,8 @@
         "src/tests/multilayer/support/sprite_native_loader.py",
         "src/tests/test_artifact_paths.cpp",
         "src/tests/test_artifact_paths.h",
-        "src/tests/test_input_sha256.h"
+        "src/tests/test_input_sha256.h",
+        "src/tests/test_candidate_sprite_input.h"
       ]
     },
     {
@@ -49931,6 +49957,16 @@
           "recipe": "orbital-expected-payload",
           "role": "manifest",
           "as": "expected-manifest"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "grf",
+          "as": "candidate-grf"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "checksum",
+          "as": "candidate-checksum"
         }
       ],
       "outputs": [
@@ -49955,7 +49991,8 @@
         "src/tests/multilayer/support/sprite_native_loader.py",
         "src/tests/test_artifact_paths.cpp",
         "src/tests/test_artifact_paths.h",
-        "src/tests/test_input_sha256.h"
+        "src/tests/test_input_sha256.h",
+        "src/tests/test_candidate_sprite_input.h"
       ]
     },
     {
@@ -50149,6 +50186,16 @@
           "recipe": "launch-expected-payload",
           "role": "manifest",
           "as": "expected-manifest"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "grf",
+          "as": "candidate-grf"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "checksum",
+          "as": "candidate-checksum"
         }
       ],
       "outputs": [
@@ -50173,7 +50220,8 @@
         "src/tests/multilayer/support/sprite_native_loader.py",
         "src/tests/test_artifact_paths.cpp",
         "src/tests/test_artifact_paths.h",
-        "src/tests/test_input_sha256.h"
+        "src/tests/test_input_sha256.h",
+        "src/tests/test_candidate_sprite_input.h"
       ]
     },
     {
@@ -50307,6 +50355,16 @@
           "recipe": "ground-expected-payload",
           "role": "manifest",
           "as": "expected-manifest"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "grf",
+          "as": "candidate-grf"
+        },
+        {
+          "recipe": "merged-art-candidates",
+          "role": "checksum",
+          "as": "candidate-checksum"
         }
       ],
       "outputs": [
@@ -50331,7 +50389,8 @@
         "src/tests/multilayer/support/sprite_native_loader.py",
         "src/tests/test_artifact_paths.cpp",
         "src/tests/test_artifact_paths.h",
-        "src/tests/test_input_sha256.h"
+        "src/tests/test_input_sha256.h",
+        "src/tests/test_candidate_sprite_input.h"
       ]
     },
     {
@@ -51158,6 +51217,11 @@
         {
           "role": "dispatch",
           "path": "media/multilayer/contracts/ground-consumer-dispatch.json"
+        },
+        {
+          "role": "family-ownership",
+          "path": "src/tests/fixtures/graphics/merge-asset-families.json",
+          "sha256": "0ffed19f65958151caed5798ef561ec5dd36a4bc03d815a3c1bd66704472a302"
         }
       ],
       "requires": [
@@ -51194,7 +51258,30 @@
         "src/tests/multilayer/support/runner.py",
         "src/tests/ground_sprite_selection.cpp",
         "src/ground_sprite.h",
-        "src/tests/multilayer/run_ground_consumer_checks.py"
+        "src/tests/multilayer/run_ground_consumer_checks.py",
+        "media/multilayer/activate_m1_art.py",
+        "src/geothermal_conduit_sprite.cpp",
+        "src/geothermal_gui.cpp",
+        "src/geothermal_riser_sprite.cpp",
+        "src/geothermal_sprite.cpp",
+        "src/ground_mine_sprite.cpp",
+        "src/ground_processor_sprite.cpp",
+        "src/ground_road_sprite.cpp",
+        "src/ground_station_sprite.cpp",
+        "src/ground_train_sprite.cpp",
+        "src/industry_cmd.cpp",
+        "src/multilayer_sprite.cpp",
+        "src/rail_cmd.cpp",
+        "src/roadveh_cmd.cpp",
+        "src/station_cmd.cpp",
+        "src/tests/merge_renderer_binding_checks.py",
+        "src/train_cmd.cpp",
+        "src/transport_tube_conduit_sprite.cpp",
+        "src/transport_tube_facility_sprite.cpp",
+        "src/transport_tube_sprite.cpp",
+        "src/transport_tube_vehicle_sprite.cpp",
+        "src/underground_gui.cpp",
+        "src/viewport.cpp"
       ]
     },
     {
@@ -51967,10 +52054,8 @@
       "test_tags": [],
       "tag_sources": [],
       "execution": "read_only",
-      "enabled": false,
-      "pending_groups": [
-        58
-      ],
+      "enabled": true,
+      "pending_groups": [],
       "publishes_source": false,
       "stages": [
         "inspect",
@@ -52001,7 +52086,769 @@
         "symbol": "verify_retained_inputs",
         "scope": "all",
         "integration_plan": "m2o23-1-come-space.md",
-        "adapter_required": true
+        "adapter_required": false
+      },
+      "native_timeout_seconds": null
+    },
+    {
+      "id": "merged-art-candidates",
+      "producer": "media/multilayer/regenerate_art_sources.py",
+      "feature": "multilayer-art",
+      "scenario": "merged-art-candidates",
+      "target": null,
+      "test_tags": [],
+      "tag_sources": [],
+      "execution": "pure_conversion",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": false,
+      "configuration_reuse": "source_bytes_only",
+      "comparison": "independent_source_bytes",
+      "tools": [
+        "python",
+        "pillow",
+        "cmake",
+        "grfcodec",
+        "nforenum",
+        "grfid"
+      ],
+      "retained_inputs": [
+        {
+          "role": "original-0",
+          "path": "media/baseset/openttd/2ccmap.nfo"
+        },
+        {
+          "role": "original-1",
+          "path": "media/baseset/openttd/airport_preview.nfo"
+        },
+        {
+          "role": "original-2",
+          "path": "media/baseset/openttd/airport_preview.png"
+        },
+        {
+          "role": "original-3",
+          "path": "media/baseset/openttd/airports.nfo"
+        },
+        {
+          "role": "original-4",
+          "path": "media/baseset/openttd/airports.png"
+        },
+        {
+          "role": "original-5",
+          "path": "media/baseset/openttd/aqueduct.nfo"
+        },
+        {
+          "role": "original-6",
+          "path": "media/baseset/openttd/aqueduct.png"
+        },
+        {
+          "role": "original-7",
+          "path": "media/baseset/openttd/autorail.nfo"
+        },
+        {
+          "role": "original-8",
+          "path": "media/baseset/openttd/autorail.png"
+        },
+        {
+          "role": "original-9",
+          "path": "media/baseset/openttd/bridge_decks.nfo"
+        },
+        {
+          "role": "original-10",
+          "path": "media/baseset/openttd/bridge_decks.png"
+        },
+        {
+          "role": "original-11",
+          "path": "media/baseset/openttd/bridge_decks_toyland.png"
+        },
+        {
+          "role": "original-12",
+          "path": "media/baseset/openttd/canal_locks.png"
+        },
+        {
+          "role": "original-13",
+          "path": "media/baseset/openttd/canals.nfo"
+        },
+        {
+          "role": "original-14",
+          "path": "media/baseset/openttd/canals.png"
+        },
+        {
+          "role": "original-15",
+          "path": "media/baseset/openttd/chars.nfo"
+        },
+        {
+          "role": "original-16",
+          "path": "media/baseset/openttd/chars.png"
+        },
+        {
+          "role": "original-17",
+          "path": "media/baseset/openttd/elrails.nfo"
+        },
+        {
+          "role": "original-18",
+          "path": "media/baseset/openttd/elrails.png"
+        },
+        {
+          "role": "original-19",
+          "path": "media/baseset/openttd/foundations.nfo"
+        },
+        {
+          "role": "original-20",
+          "path": "media/baseset/openttd/foundations.png"
+        },
+        {
+          "role": "original-21",
+          "path": "media/baseset/openttd/ground_final.nfo"
+        },
+        {
+          "role": "original-22",
+          "path": "media/baseset/openttd/ground_final.png"
+        },
+        {
+          "role": "original-23",
+          "path": "media/baseset/openttd/launch_final.nfo"
+        },
+        {
+          "role": "original-24",
+          "path": "media/baseset/openttd/launch_final.png"
+        },
+        {
+          "role": "original-25",
+          "path": "media/baseset/openttd/map_layers.nfo"
+        },
+        {
+          "role": "original-26",
+          "path": "media/baseset/openttd/map_layers.png"
+        },
+        {
+          "role": "original-27",
+          "path": "media/baseset/openttd/map_layers_m1.nfo"
+        },
+        {
+          "role": "original-28",
+          "path": "media/baseset/openttd/map_layers_m1.png"
+        },
+        {
+          "role": "original-29",
+          "path": "media/baseset/openttd/mono.nfo"
+        },
+        {
+          "role": "original-30",
+          "path": "media/baseset/openttd/mono.png"
+        },
+        {
+          "role": "original-31",
+          "path": "media/baseset/openttd/oneway.nfo"
+        },
+        {
+          "role": "original-32",
+          "path": "media/baseset/openttd/oneway.png"
+        },
+        {
+          "role": "original-33",
+          "path": "media/baseset/openttd/openttd.nfo"
+        },
+        {
+          "role": "original-34",
+          "path": "media/baseset/openttd/openttdgui.nfo"
+        },
+        {
+          "role": "original-35",
+          "path": "media/baseset/openttd/openttdgui.png"
+        },
+        {
+          "role": "original-36",
+          "path": "media/baseset/openttd/openttdgui_build_tram.png"
+        },
+        {
+          "role": "original-37",
+          "path": "media/baseset/openttd/openttdgui_convert_road.png"
+        },
+        {
+          "role": "original-38",
+          "path": "media/baseset/openttd/openttdgui_convert_tram.png"
+        },
+        {
+          "role": "original-39",
+          "path": "media/baseset/openttd/openttdgui_group_livery.png"
+        },
+        {
+          "role": "original-40",
+          "path": "media/baseset/openttd/orbital_final.nfo"
+        },
+        {
+          "role": "original-41",
+          "path": "media/baseset/openttd/orbital_final.png"
+        },
+        {
+          "role": "original-42",
+          "path": "media/baseset/openttd/overlay_coastal_rocks.png"
+        },
+        {
+          "role": "original-43",
+          "path": "media/baseset/openttd/overlay_rocks.nfo"
+        },
+        {
+          "role": "original-44",
+          "path": "media/baseset/openttd/overlay_rocks.png"
+        },
+        {
+          "role": "original-45",
+          "path": "media/baseset/openttd/overlay_snowy_rocks_1.png"
+        },
+        {
+          "role": "original-46",
+          "path": "media/baseset/openttd/overlay_snowy_rocks_2.png"
+        },
+        {
+          "role": "original-47",
+          "path": "media/baseset/openttd/overlay_snowy_rocks_3.png"
+        },
+        {
+          "role": "original-48",
+          "path": "media/baseset/openttd/overlay_snowy_rocks_4.png"
+        },
+        {
+          "role": "original-49",
+          "path": "media/baseset/openttd/overlay_toyland_coastal_rocks.png"
+        },
+        {
+          "role": "original-50",
+          "path": "media/baseset/openttd/overlay_toyland_rocks.png"
+        },
+        {
+          "role": "original-51",
+          "path": "media/baseset/openttd/palette.nfo"
+        },
+        {
+          "role": "original-52",
+          "path": "media/baseset/openttd/road_waypoints.nfo"
+        },
+        {
+          "role": "original-53",
+          "path": "media/baseset/openttd/road_waypoints.png"
+        },
+        {
+          "role": "original-54",
+          "path": "media/baseset/openttd/roadstops.nfo"
+        },
+        {
+          "role": "original-55",
+          "path": "media/baseset/openttd/roadstops.png"
+        },
+        {
+          "role": "original-56",
+          "path": "media/baseset/openttd/signals.nfo"
+        },
+        {
+          "role": "original-57",
+          "path": "media/baseset/openttd/signals.png"
+        },
+        {
+          "role": "original-58",
+          "path": "media/baseset/openttd/sloped_tracks.nfo"
+        },
+        {
+          "role": "original-59",
+          "path": "media/baseset/openttd/sloped_tracks.png"
+        },
+        {
+          "role": "original-60",
+          "path": "media/baseset/openttd/space_final.nfo"
+        },
+        {
+          "role": "original-61",
+          "path": "media/baseset/openttd/space_final.png"
+        },
+        {
+          "role": "original-62",
+          "path": "media/baseset/openttd/space_preview.nfo"
+        },
+        {
+          "role": "original-63",
+          "path": "media/baseset/openttd/space_preview.png"
+        },
+        {
+          "role": "original-64",
+          "path": "media/baseset/openttd/tramtracks.nfo"
+        },
+        {
+          "role": "original-65",
+          "path": "media/baseset/openttd/tramtracks.png"
+        },
+        {
+          "role": "original-66",
+          "path": "media/baseset/openttd/tramtracks_bare_depot.png"
+        },
+        {
+          "role": "original-67",
+          "path": "media/baseset/openttd/tunnel_portals.nfo"
+        },
+        {
+          "role": "original-68",
+          "path": "media/baseset/openttd/tunnel_portals.png"
+        },
+        {
+          "role": "original-69",
+          "path": "media/baseset/openttd.grf"
+        },
+        {
+          "role": "original-70",
+          "path": "media/baseset/openttd.grf.hash"
+        },
+        {
+          "role": "original-71",
+          "path": "src/tests/fixtures/cleanup/tool-requirements.json"
+        }
+      ],
+      "requires": [
+        {
+          "recipe": "m1-derived-inputs",
+          "role": "manifest",
+          "as": "m1"
+        },
+        {
+          "recipe": "space-derived-inputs",
+          "role": "manifest",
+          "as": "space"
+        },
+        {
+          "recipe": "orbital-derived-inputs",
+          "role": "manifest",
+          "as": "orbital"
+        },
+        {
+          "recipe": "launch-derived-inputs",
+          "role": "manifest",
+          "as": "launch"
+        },
+        {
+          "recipe": "ground-derived-inputs",
+          "role": "manifest",
+          "as": "ground"
+        }
+      ],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/candidates.json"
+        },
+        {
+          "role": "grf",
+          "path": "data/openttd.grf"
+        },
+        {
+          "role": "checksum",
+          "path": "data/openttd.grf.hash"
+        }
+      ],
+      "original_parameters": {
+        "operation": "encode_current_five_family_candidates",
+        "publication": false,
+        "encoder": "cmake/scripts/CreateGRF.cmake"
+      },
+      "native_timeout_seconds": null,
+      "implementation_sources": [
+        "media/multilayer/regenerate_art_sources.py",
+        "media/multilayer/evidence.py",
+        "cmake/scripts/CreateGRF.cmake"
+      ]
+    },
+    {
+      "id": "merged-ground-normal-start",
+      "producer": "src/tests/multilayer/acceptance/merged_ground_recipe.py",
+      "feature": "merged-ground",
+      "scenario": "normal-start",
+      "target": "openttd_tube_test",
+      "test_tags": [
+        "[.machinery-lineage-native]"
+      ],
+      "tag_sources": [
+        "src/tests/machinery_lineage_native.cpp"
+      ],
+      "execution": "native_fixture",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": true,
+      "configuration_reuse": "forbid",
+      "comparison": "native_current",
+      "tools": [
+        "python",
+        "cmake",
+        "msvc"
+      ],
+      "retained_inputs": [
+        {
+          "role": "recovery-contract",
+          "path": "src/tests/fixtures/checkpoints/underground/merged-recovery-inputs.json"
+        },
+        {
+          "role": "original-bank",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/normal-ground-originals.json"
+        },
+        {
+          "role": "original-source",
+          "path": "savegames/retained/openttd3-75ea75718f/2c616008e4980ba3-debug-debug-sealed-standard-baseline-read.sav",
+          "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+        },
+        {
+          "role": "original-handoff",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/ef5789972ab288e7-standard-machinery-verification.json",
+          "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+        },
+        {
+          "role": "original-config",
+          "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+          "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+        },
+        {
+          "role": "lineage-originals",
+          "path": "src/tests/fixtures/saveload/lineage-originals.json"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/acceptance-{configuration}.json"
+        }
+      ],
+      "original_parameters": {
+        "mechanism": "original-migration",
+        "evidence_family": "normal-start",
+        "bounded_recovery_only": true,
+        "full_historical_acceptance_replayed": false,
+        "build_targets": [
+          "openttd_tube_test"
+        ]
+      },
+      "native_timeout_seconds": 60,
+      "required_interface": "Implemented bounded actual-owner recovery; full historical acceptance remains separately frozen.",
+      "implementation_sources": [
+        "src/tests/multilayer/acceptance/normal_ground_merge.py",
+        "src/tests/multilayer/acceptance/normal_ground_recovery.py",
+        "src/tests/multilayer/acceptance/bounded_performance.py"
+      ]
+    },
+    {
+      "id": "merged-ground-lifecycle",
+      "producer": "src/tests/multilayer/acceptance/merged_ground_recipe.py",
+      "feature": "merged-ground",
+      "scenario": "lifecycle",
+      "target": "openttd_tube_test",
+      "test_tags": [
+        "[surface-supply-window]"
+      ],
+      "tag_sources": [
+        "src/tests/surface_supply_window.cpp"
+      ],
+      "execution": "native_fixture",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": true,
+      "configuration_reuse": "forbid",
+      "comparison": "native_current",
+      "tools": [
+        "python",
+        "cmake",
+        "msvc"
+      ],
+      "retained_inputs": [
+        {
+          "role": "recovery-contract",
+          "path": "src/tests/fixtures/checkpoints/underground/merged-recovery-inputs.json"
+        },
+        {
+          "role": "original-bank",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/normal-ground-originals.json"
+        },
+        {
+          "role": "original-source",
+          "path": "savegames/retained/openttd3-75ea75718f/2c616008e4980ba3-debug-debug-sealed-standard-baseline-read.sav",
+          "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+        },
+        {
+          "role": "original-handoff",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/ef5789972ab288e7-standard-machinery-verification.json",
+          "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+        },
+        {
+          "role": "original-config",
+          "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+          "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+        },
+        {
+          "role": "lineage-originals",
+          "path": "src/tests/fixtures/saveload/lineage-originals.json"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/acceptance-{configuration}.json"
+        }
+      ],
+      "original_parameters": {
+        "mechanism": "supply-lifecycle",
+        "evidence_family": "lifecycle",
+        "bounded_recovery_only": true,
+        "full_historical_acceptance_replayed": false,
+        "build_targets": [
+          "openttd_tube_test"
+        ]
+      },
+      "native_timeout_seconds": 60,
+      "required_interface": "Implemented bounded actual-owner recovery; full historical acceptance remains separately frozen.",
+      "implementation_sources": [
+        "src/tests/multilayer/acceptance/normal_ground_merge.py",
+        "src/tests/multilayer/acceptance/normal_ground_recovery.py",
+        "src/tests/multilayer/acceptance/bounded_performance.py"
+      ]
+    },
+    {
+      "id": "merged-ground-useful-route",
+      "producer": "src/tests/multilayer/acceptance/merged_ground_recipe.py",
+      "feature": "merged-ground",
+      "scenario": "useful-route",
+      "target": "openttd_tube_test",
+      "test_tags": [
+        "[.normal-ground-wait]"
+      ],
+      "tag_sources": [
+        "src/tests/normal_ground_recovery.cpp"
+      ],
+      "execution": "native_fixture",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": true,
+      "configuration_reuse": "forbid",
+      "comparison": "native_current",
+      "tools": [
+        "python",
+        "cmake",
+        "msvc"
+      ],
+      "retained_inputs": [
+        {
+          "role": "recovery-contract",
+          "path": "src/tests/fixtures/checkpoints/underground/merged-recovery-inputs.json"
+        },
+        {
+          "role": "original-bank",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/normal-ground-originals.json"
+        },
+        {
+          "role": "original-source",
+          "path": "savegames/retained/openttd3-75ea75718f/2c616008e4980ba3-debug-debug-sealed-standard-baseline-read.sav",
+          "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+        },
+        {
+          "role": "original-handoff",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/ef5789972ab288e7-standard-machinery-verification.json",
+          "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+        },
+        {
+          "role": "original-config",
+          "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+          "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+        },
+        {
+          "role": "lineage-originals",
+          "path": "src/tests/fixtures/saveload/lineage-originals.json"
+        },
+        {
+          "role": "useful-wait",
+          "path": "savegames/retained/mlm/reviews/acceptance/normal-ground-useful/merge65-useful-40b3162c66/saves/useful-progress-repeat.sav",
+          "sha256": "cfdd082bb2fd41b11004171807859f2befe4ffb0cd238cecf2960601b352ed7f"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/acceptance-{configuration}.json"
+        }
+      ],
+      "original_parameters": {
+        "mechanism": "useful-first-frame",
+        "evidence_family": "useful-route",
+        "bounded_recovery_only": true,
+        "full_historical_acceptance_replayed": false,
+        "build_targets": [
+          "openttd_tube_test"
+        ]
+      },
+      "native_timeout_seconds": 60,
+      "required_interface": "Implemented bounded actual-owner recovery; full historical acceptance remains separately frozen.",
+      "implementation_sources": [
+        "src/tests/multilayer/acceptance/normal_ground_merge.py",
+        "src/tests/multilayer/acceptance/normal_ground_recovery.py",
+        "src/tests/multilayer/acceptance/bounded_performance.py"
+      ]
+    },
+    {
+      "id": "merged-ground-performance",
+      "producer": "src/tests/multilayer/acceptance/merged_ground_recipe.py",
+      "feature": "merged-ground",
+      "scenario": "performance",
+      "target": "openttd_tube_test",
+      "test_tags": [
+        "[utility-power-performance]"
+      ],
+      "tag_sources": [
+        "src/tests/utility_power_performance.cpp"
+      ],
+      "execution": "native_fixture",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": true,
+      "configuration_reuse": "forbid",
+      "comparison": "native_current",
+      "tools": [
+        "python",
+        "cmake",
+        "msvc"
+      ],
+      "retained_inputs": [
+        {
+          "role": "recovery-contract",
+          "path": "src/tests/fixtures/checkpoints/underground/merged-recovery-inputs.json"
+        },
+        {
+          "role": "original-bank",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/normal-ground-originals.json"
+        },
+        {
+          "role": "original-source",
+          "path": "savegames/retained/openttd3-75ea75718f/2c616008e4980ba3-debug-debug-sealed-standard-baseline-read.sav",
+          "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+        },
+        {
+          "role": "original-handoff",
+          "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/ef5789972ab288e7-standard-machinery-verification.json",
+          "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+        },
+        {
+          "role": "original-config",
+          "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+          "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+        },
+        {
+          "role": "lineage-originals",
+          "path": "src/tests/fixtures/saveload/lineage-originals.json"
+        },
+        {
+          "role": "workload-baseline",
+          "path": "src/tests/fixtures/performance/openttd3-75ea75718f/ordinary-baseline.json"
+        },
+        {
+          "role": "workload-protocol",
+          "path": "src/tests/fixtures/performance/openttd3-75ea75718f/ground-workloads.json"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/acceptance-{configuration}.json"
+        }
+      ],
+      "original_parameters": {
+        "mechanism": "utility-performance",
+        "evidence_family": "performance",
+        "bounded_recovery_only": true,
+        "full_historical_acceptance_replayed": false,
+        "build_targets": [
+          "openttd_tube_test"
+        ]
+      },
+      "native_timeout_seconds": 60,
+      "required_interface": "Implemented bounded actual-owner recovery; full historical acceptance remains separately frozen.",
+      "implementation_sources": [
+        "src/tests/multilayer/acceptance/normal_ground_merge.py",
+        "src/tests/multilayer/acceptance/normal_ground_recovery.py",
+        "src/tests/multilayer/acceptance/bounded_performance.py"
+      ]
+    },
+    {
+      "id": "space-continuation-inputs",
+      "producer": "src/tests/multilayer/acceptance/space_checkpoint.py",
+      "feature": "space",
+      "scenario": "retained-continuation-inputs",
+      "target": null,
+      "test_tags": [],
+      "tag_sources": [],
+      "execution": "read_only",
+      "enabled": true,
+      "pending_groups": [],
+      "publishes_source": false,
+      "stages": [
+        "inspect",
+        "build",
+        "prepare",
+        "verify"
+      ],
+      "configuration_required": false,
+      "configuration_reuse": "forbid",
+      "comparison": "retained_closed_continuation",
+      "tools": [
+        "python"
+      ],
+      "retained_inputs": [
+        {
+          "role": "selected-foundation",
+          "path": "src/tests/fixtures/checkpoints/space/continuations/5d8ca01b552778970bde977259f25037e935d3c87de779803e221280d398252c/reports/foundation.json",
+          "sha256": "8cc7f8743c2922537d49b1745641049692a3c297a1e1d72208526748c76a1f6e"
+        }
+      ],
+      "requires": [],
+      "outputs": [
+        {
+          "role": "manifest",
+          "path": "reports/retained-continuation-inputs.json"
+        }
+      ],
+      "original_parameters": {
+        "symbol": "verify_foundation",
+        "next_task": "Plan11/15CSGZVEEJ",
+        "scope": "Exact durable query successor, both configurations and closed cash/tick policies; no new native qualification or gameplay ticks."
       },
       "native_timeout_seconds": null
     }

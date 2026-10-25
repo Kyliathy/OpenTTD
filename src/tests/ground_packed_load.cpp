@@ -8,6 +8,7 @@
 
 #include "../stdafx.h"
 #include "test_artifact_paths.h"
+#include "test_candidate_sprite_input.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../spritecache.h"
@@ -98,9 +99,10 @@ TEST_CASE("Actual native loader preserves complete prefix and loads selected und
 		try {
 			REQUIRE(elapsed > 0);
 			GroundNativeArtEncoder encoder;
-			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
 			REQUIRE(origin != nullptr);
 			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			ObserveTestCandidateSpriteFile(*origin);
 			std::ifstream input(fixture, std::ios::binary);
 			REQUIRE(input.good());
 			std::array<char, 8> magic{};

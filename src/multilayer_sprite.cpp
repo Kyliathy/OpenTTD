@@ -16,6 +16,8 @@
  */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
+#include "geothermal_sprite.h"
 #include "multilayer_sprite.h"
 #include "ground_mine_sprite.h"
 #include "ground_processor_sprite.h"
@@ -69,6 +71,7 @@ std::optional<SpriteID> GetMultiLayerPurchaseSprite(uint16_t model, bool availab
 /** @copydoc GetMultiLayerEnginePurchaseSprite */
 std::optional<SpriteID> GetMultiLayerEnginePurchaseSprite(EngineID engine, bool available)
 {
+	if (const auto tube = GetTubeEnginePurchaseSprite(engine, available)) return tube;
 	uint16_t model = GetTBMEngineModel(engine);
 	if (model == UINT16_MAX) {
 		const auto *capability = GetUndergroundEngineCapability(engine);
@@ -183,6 +186,7 @@ std::optional<SpriteID> GetMultiLayerPortalSprite(TileIndex tile, bool front)
 /** @copydoc GetMultiLayerTrainSprite */
 std::optional<SpriteID> GetMultiLayerTrainSprite(const Train &train, Direction direction, uint64_t visual_ticks)
 {
+	if (const auto tube = GetTubeTrainSprite(train, direction, visual_ticks)) return tube;
 	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return std::nullopt;
 	if (direction >= Direction::End) return std::nullopt;
 	uint16_t model = GetTBMEngineModel(train.engine_type);
@@ -287,6 +291,7 @@ void RefreshMultiLayerTrainArt(Train &head, uint64_t visual_ticks)
 /** @copydoc GetMultiLayerRailDepotSprite */
 std::optional<SpriteID> GetMultiLayerRailDepotSprite(TileIndex tile, bool front, uint64_t visual_ticks)
 {
+	if (const auto tube = GetTubeFacilityArt(tile, visual_ticks)) return front ? tube->sprites.front : tube->sprites.back;
 	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return std::nullopt;
 	if (!IsValidTile(tile)) return std::nullopt;
 	if (!IsRailDepotTile(tile)) return std::nullopt;
@@ -429,6 +434,8 @@ std::optional<SpriteID> GetMultiLayerIndustrySprite(TileIndex tile, bool front, 
 	if (receiver) return receiver;
 	const auto collector = GetMultiLayerCollectorSprite(tile, front, visual_ticks);
 	if (collector) return collector;
+	if (const auto generator = GetGeothermalGeneratorSprite(tile, front, visual_ticks)) return generator;
+	if (const auto riser = GetGeothermalRiserSprite(tile, front, visual_ticks)) return riser;
 	const auto mine = GetGroundMineSprite(tile, front, visual_ticks);
 	return mine.has_value() ? mine : GetGroundProcessorSprite(tile, front, visual_ticks);
 }

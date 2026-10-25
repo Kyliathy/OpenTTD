@@ -1,6 +1,8 @@
 # Multilayer demo - underground mines and Outer Space
 
-Bundled player walkthrough for the [underground master](r2mlvs3mp-master-plan.md) and [asteroids/probes plan](r2mlvs10-asteroids-and-mining-probes.md). Updated **2026-10-13**. The underground baseline is tagged **`demo3`**. Recent committed Space features and the current verified construction/service work are included below. Gameplay implementation stopped after Plan11 Group3 for this playtest; both Debug and RelWithDebInfo compile.
+Bundled player walkthrough for the [underground master](r2mlvs3mp-master-plan.md), the [map-layer architecture](../../architecture/map-layers/archi-map-layers.md) and the [asteroids/probes plan](r2mlvs10-asteroids-and-mining-probes.md). Underground controls updated **2026-10-23** through [merge Groups24-24D](m2o23-2-come-space-a-execution.md). The `demo3` tag, numbered prepared tours and Space history below describe their dated checkpoints; they do not certify the current merged executable or reopen protected Space experiments.
+
+**Current review boundary,2026-10-25.** The [merged handoff](m2o23-4-come-space-b-integration-handoff.md) records final native artwork, player controls, imported-save compatibility, actual paid work/wait recovery and real peers. All five capsules and geothermal construction/working/shortage scenes have technical gallery proof; overall human art/demo feedback remains pending. Named launcher entries retain their dated paused tours. Build the selected game configuration using `COMPILING.md`; `.\play.ps1 tbm-plan -Config Debug -DryRun` checks its launch target without starting the game. The selected Space continuation still dispatches the read-onlyGZVEEJusefulness task.
 
 The default demo now starts with **a working Underground Coal mine and a mineral train delivering to a Surface power station**. The same world retains the completed50-cell public tunnel and the original TBM parked at its far exit. Separate checkpoints cover excavation planning, active spoil haulage, far-exit construction and Deep collector graphics. Thirteen additional retained Space checkpoints cover paid assembly, launches, descent, survey, resupply, Core service and module work. All prepared checkpoints start paused.
 
@@ -29,6 +31,17 @@ Start with **9 -> 12 -> 11 -> 13 -> 14 -> 15/16** for Underground, then
 starting points. Loading another checkpoint restarts its own world; changing
 layers does not create missing facilities or merge cargo. Save a personal copy
 before experimenting.
+
+## Current layer and window controls
+
+The main layer button and **Alt+1/2/3/4** select **Surface / Underground / Deep Underground / Outer Space**. **N** cycles them. An unallocated layer is ignored. The small map follows main-view layer changes; its own layer selector can preview another plane until the next main-view change. Changing an extra viewport leaves the main view and small map alone. The small map's legend height follows its selected map mode.
+
+Two preferences are in **Settings -> Interface -> General**:
+
+- **Pressing a window's hotkey again closes it** is on by default. A covered window is raised first; a repeated press closes it when it is as far forward as its window class permits. A rail/road toolbar switches to the requested remembered type before it can toggle closed.
+- **Close window with Escape** defaults to **Yes, except sticky**. Escape first cancels a placement/draft. With no active tool it closes the front-most closable window, preserving pinned windows under that default. Focused text boxes and queries retain their own Escape handling. Permanent toolbars/status/news are not close targets.
+
+Keys for pause, zoom, screenshots and layers keep their normal actions. Debug-only money/coordinate/crash shortcuts use **Ctrl+Alt**; Alt+1..4 only changes the view. Native excavation controls require the accepted **Multilayer Industry** profile; Classic, legacy or stale settings cannot open that palette. Standard cutters begin in1950; Deep operations retain the1980 calendar gate.
 
 ## What changed since the old guide
 
@@ -344,104 +357,52 @@ The completed old A-to-B tunnel also remains in this mine world: A is at(13,10),
 
 ## Tour excavation and the spoil loop
 
-Open `.\play.ps1 tbm-work`, select Underground, then:
+Open `.\play.ps1 tbm-work` with a freshly built selected configuration, choose **Underground**, then open **Underground Construction -> Projects**. The airport-construction position on a rock layer opens this palette. **Survey**, **Projects**, **New area** and **Fund a mine** are its current native entries; **Requirements and cutter dates** expands optional guidance.
 
-1. Open **Underground Construction -> Projects** and select the project for **Train#2**. **Open machine** opens the actual cutter; its centre-view control follows it even while it is in the Surface magazine. **Train#1** is the spoil hauler.
-2. Choose **Portal controls**. Read **Next:** and the current wait reason before changing the layout.
-3. Unpause and watch cutting, retreat, wagon exchange, Surface disposal and empty return. The accepted project and both trains are already enabled. Fast-forward shortens the wait.
-4. Pause the project independently of the whole game, resume it, then save/reload your own copy during a wait. Compare the physical wagons, floor and project progress.
-
-On Underground, the main toolbar's airport-construction position becomes the **TBM icon** for **Underground Construction**. Its palette contains **Survey**, **Projects**, **New area** and **Fund a mine**. **Requirements and cutter dates** expands optional guidance; Escape clears the active draft/footprint.
-
-For `tbm-plan`, choose **Extend work** or **Pause and extend**, then **Straight tunnel** and an endpoint directly ahead. Six more cells reach Underground(13,60). Review the numbered route, charged working space, cost, cutting time and spoil before **Add work to this machine**. Start both trains if stopped, resume the project and unpause. Cancelling the draft leaves earlier accepted work intact and buys no second TBM.
+1. Select the actual project. **Open machine** opens its cutter, and its centre-view control follows the real train across layers. Prepared tour train numbers are checkpoint-specific; use the project's actual machine and assigned hauler.
+2. Open **Portal controls**. Read its phase, **Waiting:** reason, **Next:** action and the project's actual **Carrying:** lines. Cargo aboard the cutter and each hauler is separate from its wait reason.
+3. Start any stopped participants and release global pause. At a suitable face stand the hauler brings empty hoppers to the waiting cutter and takes its spoil there. When no safe stand fits, the existing bay exchange remains the fallback. Watch loaded travel to the real Surface origin, paid disposal and the empty return.
+4. Project pause/resume is separate from global pause. **Return and park** keeps unfinished work; final release still waits for the whole machine to withdraw and the hauler to settle its last load. Repainting, opening a window or changing the view does no work.
 
 ### Select work successfully: start with save12
 
-1. Load **12 / `tbm-plan`** and select **Underground**. Open the TBM-icon
-   **Underground Construction** palette, then **Projects**.
-2. Select the existing Train#2 project. Press **Extend work** or **Pause and
-   extend**. This selects its actual portal/machine and leaves that project
-   paused. **Global pause alone is not the project's pause control.**
-3. In the planning palette's work-shape dropdown, choose **Straight tunnel**.
-   Click one endpoint **directly ahead of the accepted route**, up to
-   Underground(13,60). This mode uses a single click, not a dragged rectangle.
-4. Review the numbered cutter positions and quote. Press **Add work to this
-   machine** only when the whole plan is accepted. No second machine is bought.
-5. Open **Portal controls**, **Resume** the project, start any stopped machine
-   and hauler, and release global pause. Confirming the draft alone does not
-   start excavation. Escape cancels only the draft and leaves the project paused.
+For the prepared `tbm-plan` tour, enter **Projects -> Pause and extend**. This is additional work after the already accepted endpoint; it deliberately pauses that project. Choose **Straight tunnel** and click an endpoint ahead of that endpoint. The historical tour's six-cell continuation reaches Underground(13,60); confirm the actual quoted route for the checkpoint you loaded.
+
+Review the numbered cutter positions, future cutting price, Earth/Rock, support and approximate work time, then press **Add work to this machine**. No second cutter is bought. Resume the project, start stopped participants and release global pause to continue. Escape cancels this draft and leaves the extension's project paused.
+
+**Change work area** is a different action. After at least one cut has completed, select it in **Projects**, or press **New area** and click that project's own rock-side portal. It replaces only the unfinished remainder, starting from the last completed cut. Working, paused, returning and parked projects can be quoted; completed/releasing work cannot. Planning does not pause a working machine or resume a parked one.
+
+The change quote states completed cuts kept, old planned cuts replaced, new cuts and any partial cut work abandoned. Completed ground, paid costs and carried cargo stay. Confirm **Change work area** only for the route you want. A newly completed cut makes the old quote stale; redraw it. Escape cancels a change draft while the machine keeps its existing plan and current activity.
+
+**New area** on a busy portal therefore uses its existing machine: before the first cut it enters Pause and extend; afterward it offers Change work area. A finished project offers **Release and plan new work**. Declining keeps it; accepting posts the normal release action, which can still refuse until withdrawal and haulage are settled. An eligible withdrawn machine is retained for the next quote rather than silently replaced after sale.
 
 ### Select a digging area: the exact mouse sequence
 
-A rectangle describes **floor to excavate**. It does not instantly remove rock,
-lay normal rail or buy a machine. Use **Area clearing**, not Straight tunnel.
-
-For an existing project, start from **Projects -> Pause and extend** as above.
-The portal is already selected. Hold the **left mouse button** on one floor
-corner, move to the opposite corner while holding it, and **release**. The quote
-is created on mouse release. For a first small experiment, request a narrow
-three-cell strip immediately beyond the last accepted cutter position, in the
-same forward heading. The planner adds the cutter's required width as working
-space. Reload12 before switching between alternative experiments.
+A rectangle describes final-use **floor to excavate**. It does not instantly clear rock, lay public rail or purchase machinery. Use **Area clearing** and left-drag from one corner to the other, releasing in the map to obtain the quote. For an existing machine first enter Pause and extend or Change work area as appropriate; its portal is already selected.
 
 For a **new machine at an unused portal**:
 
-1. On Surface, open the **rail toolbar -> layer portal** tool (**P**). Choose
-   the mouth direction, build on clear ground and leave the portal **Sealed**.
-   Its other end is in Underground. Leave room around the Surface housing for
-   the machine and exchange approach; direct Surface-to-Deep rail is unavailable.
-2. Lay a connected Surface line to an owned rail station and depot. Fund an
-   **Earth Reclamation Site** and **Rock Crusher** in that station's catchment,
-   so it accepts both spoil labels. The current controls automatically choose
-   a compatible cutter and the nearest eligible owned Surface station; there
-   is no manual origin picker in this area tool. Buy a compatible spoil hauler
-   with matching empty capacity: the default Standard set has two Earth and
-   two Rock wagons; Deep has two Earth and four Rock. Give it a visit order to
-   the Surface origin station. Deep work requires1980 or later.
-3. Switch to the destination rock layer. Open **Underground Construction** and
-   press **New area**. **First click the actual rock-side portal housing.** A
-   click on an ordinary rock tile at this stage only repeats the portal prompt.
-4. Wait for **Drag the intended final floor on this layer**. Keep **Area
-   clearing** selected. Left-drag the intended rectangle and release. Start
-   with the three-cell strip directly forward of the portal, leaving room on
-   both sides for the cutter; large rooms require legal approaches and turns.
-5. Read the quote and overlay: **white = requested floor**, **blue = additional
-   charged working space**, **red = uncovered/refused floor**. Numbers are the
-   cutter's successive positions. The quote includes Earth/Rock, work and cost.
-6. Only a complete valid plan enables **Commission the complete area plan**.
-   Confirm, open the portal controls and **Start** the project. Press **Assign
-   hauler**, then click the actual hauler in the map, depot or train list.
-   Start that train and unpause globally. Previewing and surveying never
-   excavate the floor. Read **Next:** whenever the machine waits.
+1. Build an owned **Sealed** rail portal from the rail toolbar's layer-portal tool. Leave complete housing, body and approach clearance. Standard rail work links Surface and Underground; Deep rail work uses Underground and Deep, not a direct Surface-to-Deep rail pair.
+2. Connect the Surface logistics line to an owned rail station and a depot. Its catchment must accept both spoil streams through the actual **Earth Reclamation Site** and **Rock Crusher**. The tool selects a compatible cutter and eligible owned Surface origin; it has no manual origin picker.
+3. Provide an actual compatible hauler with a visit order to that Surface origin. Native defaults are two Earth/two Rock wagons for Standard and two Earth/four Rock for Deep; independent capacity for both spoils matters. Deep work requires1980 or later.
+4. Switch to the destination rock layer, open **Underground Construction**, press **New area**, and first click the actual owned rock-side rail-portal housing. A plain rock tile does not select a portal. With **Area clearing**, left-drag the requested floor and release. With **Straight tunnel**, click the exact requested cutter-centre endpoint instead of dragging.
+5. Review the overlay: **white** is final floor, **blue** is extra charged working space and **red** is uncovered/refused ground. Numbers identify successive canonical cutter positions, including revisits. A refused quote marks its stopping tile **!** where a location is available.
+6. The machine can quote a bounded paid approach and advancing turns to an off-axis floor or endpoint. **Approach and turning space** lists that extra work separately; it is already included in the total, not a second charge. Existing buildings, other claims and complete body/support clearance still constrain the route.
+7. A refused quote hides price/material/time and reports reachable floor and the stopping reason. Adjust the request and quote again. Only a fully accepted current quote enables **Commission the complete area plan**. Confirm, then use the portal's Start/Assign-hauler controls and start the actual hauler before unpausing. Surveying and previewing never excavate or reserve floor.
 
-For a simple new straight corridor, the portal window also offers a length
-of2-60 cells and **Commission TBM**; it uses the same physical logistics. For
-the graphical endpoint tool, select **Straight tunnel** after selecting the
-portal, then click a forward endpoint. That mode does not accept a floor drag.
-
-Do not use **New area** on save12's existing portal: it already owns a project
-and deliberately directs you back to **Projects -> Extend work**. Switching
-layers, selecting another tool, closing the palette or pressing Escape can
-cancel the placement tool; re-arm it before drawing again.
+The portal window's **Commission TBM** corridor control remains an alternative for a short axial request of2-60 cells. Both flows use the same physical acquisition and logistics owners. Switching a view's layer, changing tools, closing the palette or Escape can cancel an unfinished selection; re-arm it before drawing again.
 
 | What you see | What to try |
 | --- | --- |
-| Dragging produces no quote | Check the correct layer, armed Area clearing tool and selected portal. Hold left-drag and release in the map, outside the palette. |
-| "Click an owned rail portal..." | Click the rock-side housing first. For an existing project, enter through Projects -> Extend work. |
-| "This portal already has a TBM project" | Extend that project; New area commissions a separate machine at an unused eligible portal. |
-| "No Surface origin" / no available cutter | Provide an owned Surface rail station accepting Earth and Rock, a valid sealed portal, and an available cutter for this layer/date. Defaults are selected automatically. |
-| Red cells or disabled confirmation | Move/shrink the rectangle into a physically reachable forward area; allow the full cutter/consist width and advancing45-degree turns. An arbitrary remote room cannot be dug through intervening solid rock. |
-| Selected floor already covered | Request new floor beyond the accepted route; selecting existing planned floor adds no work. |
-| Quote becomes stale | Redraw after project, terrain, owner or money changes; old quotes cannot authorize new work. |
-| Accepted but nothing moves | Resume the project, start both trains, unpause globally, then read **Next:** and the exact wait reason. Check matching empty Earth/Rock capacity and Surface disposal orders. |
-| Ordinary rail refuses solid rock | Use the TBM to earn floor first, withdraw safely, then release/convert support before ordinary construction. |
+| Dragging produces no quote | Check the intended rock layer, armed Area clearing tool and selected portal; release in the map outside the palette. |
+| A portal prompt | Click the actual rock-side housing, or start an existing project's work action in Projects. |
+| No Surface origin or available cutter | Supply an owned origin accepting both spoil streams, a valid pair and an available native model for the actual layer/date. |
+| A red cell, named blocking train/tile or disabled confirmation | Read the refusal; allow body/turn clearance and a reachable approach, and avoid other claims/structures. Remove an actual temporary obstruction before retrying. |
+| A stale quote | Redraw after a completed cut or changed quoted participants/geometry; an old token cannot authorize new work. |
+| Accepted work but no movement | Distinguish global pause, a project pause, a parked machine and stopped trains; read Next and the current hold, then check empties and Surface disposal orders. |
+| Ordinary rail refuses solid rock | Earn floor through actual cutting, withdraw safely and release/convert protected support before ordinary construction. |
 
-Look for these details:
-
-- Newly open floor must be earned before ordinary rail can use solid rock. Occupied temporary support remains protected.
-- The cutter advances/backtracks with its whole consist; it cannot spin on one tile. Use the legacy bent route to inspect legal advancing bends.
-- Soft/Mixed/Hard/Basalt cut yields are respectively Earth/Rock3/6,2/12,1/20 and1/24 tonnes. Cutting takes twice the former active time; travel and haulage waits remain separate.
-- Surface disposal charges money. Pausing or reloading should not remove loaded spoil or buy free cuts.
+Soft/Mixed/Hard/Basalt currently yield Earth/Rock3/6,2/12,1/20 and1/24 tonnes per newly cut cell. Work time, travel, haulage and recurring charges are separate. Surface disposal costs money; view changes do not unload cargo or create free cuts.
 
 ## Build the far exit and retain the TBM
 
@@ -487,6 +448,9 @@ The interrupted **chemical works40C** task is now complete: genuine unfinished/f
 Other completed selected source families include the ordinary/sealed mineral wagons, open/sealed mine trucks, conventional station/terminal, seven selected mines, metal refinery, Vent-Tap/Magma-Loop generators, utility conduits/riser and tube/geothermal control icons. **Those sources still need the later packing/native-display checkpoint.** Battery and electronics source families remain next in the selected queue. No completion box was added for unfinished game integration.
 
 ## Verification and feedback
+
+**2026-10-23 control update:** merge Groups24-24D provide focused current-source functional results for map navigation, native quotes, profile/date refusal, window controls, actual face status and project ownership. See the [merge execution record](m2o23-2-come-space-a-execution.md) for selectors and disposable `test-cache/merge-supply/` reports. These checks use native windows with mock raster prerequisites. Current rendered art and personal feedback remain **pending** until the later native gallery review. Historical evidence below retains its original date and scope.
+
 
 The current Debug and RelWithDebInfo game/test targets compile. Plan11 Group3
 passes3,173 assertions in10 focused cases per configuration, actual interrupted

@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
+/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 (window-close settings) */
 
 #ifndef SETTINGS_TYPE_H
 #define SETTINGS_TYPE_H
@@ -106,6 +106,13 @@ enum class RightClickClose : uint8_t {
 	No = 0,
 	Yes,
 	YesExceptSticky,
+};
+
+/** What Escape does when no placement is active (r2df decision D10). */
+enum class EscapeCloseWindow : uint8_t {
+	No = 0, ///< Escape only cancels placement, as before.
+	Yes, ///< Escape closes the front-most closable window.
+	YesExceptSticky, ///< Escape closes the front-most closable window that is not pinned.
 };
 
 /**
@@ -258,6 +265,8 @@ struct GUISettings {
 	uint8_t scrollwheel_multiplier; ///< how much 'wheel' per incoming event from the OS?
 	bool timetable_arrival_departure; ///< show arrivals and departures in vehicle timetables
 	RightClickClose right_click_wnd_close; ///< close window with right click
+	bool hotkey_toggles_window; ///< pressing a window's hotkey again closes it when it is the front-most closable window (r2df D10)
+	EscapeCloseWindow escape_closes_window; ///< what Escape closes when no placement is active (r2df D10)
 	bool toolbar_dropdown_autoselect; ///< should toolbar dropdown buttons autoselect when releasing the mouse button
 	bool pause_on_newgame; ///< whether to start new games paused or not
 	SignalGUISettings signal_gui_mode; ///< select which signal types are shown in the signal GUI

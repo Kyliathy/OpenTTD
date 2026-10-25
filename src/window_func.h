@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window_func.h %Window functions not directly related to making/drawing windows. */
+/** @file window_func.h %Window functions not directly related to making/drawing windows. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 */
 
 #ifndef WINDOW_FUNC_H
 #define WINDOW_FUNC_H
@@ -50,6 +50,40 @@ void InvalidateWindowClassesData(WindowClass cls, T data, bool gui_scope = false
 
 void CloseNonVitalWindows();
 void CloseAllNonVitalWindows();
+
+/**
+ * Find the window a player would close first: the front-most window that is not the main view, a vital window
+ * (toolbar, status bar, news, chat), a window that cannot be closed or, if asked, a pinned window.
+ * @param except_sticky Whether pinned windows are skipped.
+ * @return That window, or nullptr when no window qualifies.
+ * @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md decision D10
+ */
+Window *FindFrontmostClosableWindow(bool except_sticky);
+
+/**
+ * Whether bringing a window to the front would change nothing: every window in front of it always stays above it
+ * (a higher z-priority, as the game options, query windows, toolbars and tooltips have over a map or list window).
+ * The D10 hotkey toggle closes its window in that case, so a key whose window is already as high as it can go
+ * never does nothing.
+ * @param w Open window.
+ * @return Whether \a w is already raised as far as the window stack allows.
+ * @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md decision D10
+ */
+bool IsWindowRaisedAsFarAsPossible(const Window *w);
+
+/**
+ * Close the window #FindFrontmostClosableWindow names (Escape).
+ * @param except_sticky Whether pinned windows are skipped.
+ * @return Whether a window was closed.
+ */
+bool CloseFrontmostClosableWindow(bool except_sticky);
+
+/**
+ * The Escape hotkey (D10): cancel an active placement first, exactly as before; only without one, and only when
+ * the "close window with Escape" setting allows it, close the front-most closable window. Focused edit boxes,
+ * queries and other windows that handle Escape themselves receive the key before this hotkey runs.
+ */
+void CancelPlacementOrCloseWindow();
 void DeleteAllMessages();
 void CloseConstructionWindows();
 void HideVitalWindows();

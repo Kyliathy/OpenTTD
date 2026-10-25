@@ -27,14 +27,14 @@ class DonorInputChecks(unittest.TestCase):
         self.root = Path(__file__).resolve().parents[3] / "test-cache/donor-input-checks" / uuid.uuid4().hex
         path = self.root / "src/tests/fixtures/legacy/original.sav"
         path.parent.mkdir(parents=True)
-        (self.root / "CMakeLists.txt").write_text("# m2o23-1-come-space.md Group 2 isolated ownership marker; never built.\n", encoding="utf-8")
+        (self.root / "CMakeLists.txt").write_text("# @see r2fc-file-cleanup3.md; isolated ownership marker, never built.\n", encoding="utf-8")
         path.write_bytes(b"independent original bytes")
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
         self.namespace = "donor/openttd3-75ea75718f/"
         self.original = "build/save/original.sav"
         self.row = dict(role="save", destination=path.relative_to(self.root).as_posix(), sha256=digest, bytes=path.stat().st_size, original_paths=[self.original])
         self.document = dict(schema_version=1, kind="donor_input_preservation", namespace=self.namespace, payloads=[self.row])
-        self.catalogue = dict(_documentation="m2o23-1-come-space.md Group 2 test fixture.", schema_version=2,
+        self.catalogue = dict(_documentation="@see r2fc-file-cleanup3.md; Group2 isolated test fixture.", schema_version=2,
                               inputs={self.namespace + self.original: dict(path=self.row["destination"], sha256=digest)})
         self.publish_catalogue()
 

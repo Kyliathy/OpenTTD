@@ -8,6 +8,8 @@
 /** @file industry_cmd.cpp Handling of industry tiles. @see docs/zz-reach2/architecture/landscape/industry-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B */
 
 #include "stdafx.h"
+#include "geothermal_sprite.h"
+#include "geothermal_conduit_sprite.h"
 #include "launch_center.h"
 #include "misc/history_type.hpp"
 #include "misc/history_func.hpp"
@@ -65,6 +67,7 @@
 #include "layer_industry_baseline.h"
 #include "multilayer_industry.h"
 #include "geothermal_collector.h"
+#include "geothermal_generator.h"
 #include "geothermal_riser.h"
 #include "geothermal_utility.h"
 
@@ -168,6 +171,7 @@ Industry::~Industry()
 	if (CleaningPool()) return;
 
 	ReleaseGeothermalCollectorIndustry(this->index); // Retire only constructed machinery/source binding, preserving original natural field and consumed blueprint history.
+	ReleaseGeothermalGeneratorIndustry(this->index); // A recycled IndustryID cannot inherit paid work or its consumed bill.
 	ReleaseGeothermalRiserIndustry(this->index); // A reused native ID cannot inherit this demolished machinery's paid work or portal association.
 	ReleaseLayerMineIndustry(this->index); // Demolition releases ownership, retaining the original finite geological reserve/cavity.
 	UnregisterSpoilReceiver(this->index); // A receiver's state goes with its industry (r2mlvs5 Group 8).
@@ -363,17 +367,26 @@ static void DrawTile_Industry(TileInfo *ti)
 	IndustryGfx gfx = GetIndustryGfx(ti->tile);
 	Industry *ind = Industry::GetByTile(ti->tile);
 	if (const auto native_back = GetMultiLayerIndustrySprite(ti->tile, false, TimerGameTick::counter)) {
-		// Selected native receivers/collectors use their exact funded world cells and aligned
+		// Selected native receivers/collectors/generators/risers use their exact funded world cells and aligned
 		// back/fronts. Existing foreign/climate industries retain their own resolver.
 		if (ti->tileh != SLOPE_FLAT) DrawFoundation(ti, Foundation::Leveled);
 		DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
+		DrawGeothermalConduitGround(ti->tile);
 		if (!IsInvisibilitySet(TransparencyOption::Industries)) {
-			SpriteID back = *native_back;
 			const bool transparent = IsTransparencySet(TransparencyOption::Industries);
-			if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
-			DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+			if (const auto back_bounds = GetGeothermalIndustryBackBounds(ti->tile)) {
+				// The approved solid riser body lives in its original back part;
+				// it participates in native object sorting/transparency like other
+				// machinery rather than becoming tall terrain under its neighbours.
+				AddSortableSpriteToDraw(*native_back, PAL_NONE, *ti, *back_bounds, transparent);
+			} else {
+				SpriteID back = *native_back;
+				if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
+				DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+			}
 			const SpriteID front = *GetMultiLayerIndustrySprite(ti->tile, true, TimerGameTick::counter);
-			AddSortableSpriteToDraw(front, PAL_NONE, *ti, SpriteBounds{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}}, transparent);
+			const auto bounds = GetGeothermalIndustryFrontBounds(ti->tile).value_or(SpriteBounds{{0, 0, 0}, {TILE_SIZE, TILE_SIZE, 20}, {}});
+			AddSortableSpriteToDraw(front, PAL_NONE, *ti, bounds, transparent);
 		}
 		return;
 	}
@@ -536,7 +549,7 @@ static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 {
 	Industry *i = Industry::GetByTile(tile);
 	// Geological output and delivered processor inputs remain accountable until transported/consumed; demolition cannot discard them.
-	if (LayerMineHasStoredOutput(*i) || LayerProcessorHasStoredCargo(*i) || LayerBaselineSteelHasStoredCargo(*i) || GeothermalCollectorHasStoredCargo(*i) || GeothermalRiserHasStoredCargo(*i)) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+	if (LayerMineHasStoredOutput(*i) || LayerProcessorHasStoredCargo(*i) || LayerBaselineSteelHasStoredCargo(*i) || GeothermalCollectorHasStoredCargo(*i) || GeothermalRiserHasStoredCargo(*i) || GeothermalGeneratorHasStoredCargo(*i)) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
 	std::vector<TileIndex> footprint;
 	// Industry demolition removes every owned foundation, while empty layout holes retain independent geology.
 	for (TileIndex member : i->location) {
@@ -548,6 +561,11 @@ static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 	const bool owned_collector = collector != nullptr && (collector->owner == _current_company ||
 		(collector->owner == CompanyID::Invalid() && Company::IsValidID(_current_company))); // Actual controller, or a valid company clearing empty abandoned machinery, can retire this physical source safely.
 	const auto *riser = GetGeothermalRiserState(i->index);
+	const auto *generator = GetGeothermalGeneratorState(i->index);
+	// Only the actual controller, or a company reclaiming empty abandoned
+	// machinery, may retire paid powerhouse work without a stock refund.
+	const bool owned_generator = generator != nullptr && (generator->owner == _current_company ||
+		(generator->owner == CompanyID::Invalid() && Company::IsValidID(_current_company)));
 	// Empty paid machinery can be cleared by its controller or a company
 	// reclaiming abandoned floor, without changing either portal endpoint.
 	const bool owned_riser = riser != nullptr && (riser->site.owner == _current_company ||
@@ -556,14 +574,14 @@ static CommandCost ClearTile_Industry(TileIndex tile, DoCommandFlags flags)
 	const bool owned_mine = mine != nullptr && (mine->company == _current_company ||
 		(mine->phase == LayerMinePhase::Abandoned && Company::IsValidID(_current_company)));
 
-	/* An empty native mine may be removed by its actual claimant. Other industries retain the legacy demolition policy:
+	/* An empty native mine or paid geothermal facility may be removed by its actual controller. Other industries retain the legacy demolition policy:
 	 * water can destroy industries
 	 * in editor you can bulldoze industries
 	 * with magic_bulldozer cheat you can destroy industries
 	 * (area around OILRIG is water, so water shouldn't flood it
 	 */
 	if ((_current_company != OWNER_WATER && _game_mode != GameMode::Editor &&
-			!_cheats.magic_bulldozer.value && !owned_mine && !owned_collector && !owned_riser) ||
+			!_cheats.magic_bulldozer.value && !owned_mine && !owned_collector && !owned_riser && !owned_generator) ||
 			flags.Test(DoCommandFlag::Auto) ||
 			(_current_company == OWNER_WATER &&
 				(indspec->behaviour.Test(IndustryBehaviour::BuiltOnWater) ||
@@ -916,6 +934,7 @@ static void TileLoop_Industry(TileIndex tile)
 	// Per-tile legacy growth, Surface effects and cargo dispatch must not
 	// complete or operate an under-construction Deep collector for free.
 	if (IsGeothermalCollectorDefinition(industry->type)) return;
+	if (IsGeothermalGeneratorDefinition(industry->type)) return; // Only whole-building prepaid labour advances these sixteen cells.
 	if (IsGeothermalRiserDefinition(industry->type)) return; // Native paid labour owns all machinery stages; ordinary tile loops cannot finish it for free.
 	// Native recipes and validated baseline Steel share exact finite supply; neither may enter lossy legacy dispatch.
 	if (IsLayerProcessorDefinition(industry->type) || IsLayerBaselineSteelDefinition(industry->type)) {
@@ -1274,6 +1293,7 @@ static void ProduceIndustryGoods(Industry *i)
 	// One actual native collector construction participant runs per economy
 	// tick; inherited cargo production and callbacks cannot complete it for free.
 	if (IsGeothermalCollectorDefinition(i->type)) { AdvanceGeothermalCollector(*i); return; }
+	if (IsGeothermalGeneratorDefinition(i->type)) { AdvanceGeothermalGenerator(*i); return; } // Actual synchronized construction creates no energy.
 	if (IsGeothermalRiserDefinition(i->type)) { AdvanceGeothermalRiser(*i); return; } // All-company native construction runs once, independently of camera and electrical supply.
 	if (IsLayerBaselineSteelDefinition(i->type)) {
 		ProcessLayerBaselineSteel(*i); // Retry retained Iron Ore against actual output/history room; legacy conversion cannot clamp it away.
@@ -2157,7 +2177,7 @@ static void DoCreateNewIndustry(Industry *i, TileIndex tile, IndustryType type, 
  * @param creation_type The circumstances the industry is created under.
  * @param[out] ip Pointer to store newly created industry.
  * @param mine_request Explicit native seam request, or nullptr for legacy/automatic Surface construction.
- * @param collector_claim Explicit actual cold collector identity, or nullptr for other funding; generic callers cannot omit its source/material/capital contract.
+ * @param collector_claim Explicit actual cold collector/generator identity, or nullptr for other funding; generic callers cannot omit its source/material/capital contract.
  * @param riser_request Explicit original portal and whole machinery floor, or nullptr; generic funding cannot bypass paid riser admission.
  * @return Succeeded or failed command.
  *
@@ -2200,6 +2220,24 @@ static CommandCost CreateNewIndustryHelper(TileIndex tile, IndustryType type, Do
 		if (flags.Test(DoCommandFlag::Execute)) {
 			Industry *candidate = Industry::Create(tile);
 			if (!BindGeothermalCollectorIndustry(*candidate, *collector_claim)) { delete candidate; return CMD_ERROR; }
+			DoCreateNewIndustry(candidate, tile, type, indspec->layouts[0], 0, town, founder, random_initial_bits, nullptr, &admission.foundation);
+			*ip = candidate;
+		}
+		return CommandCost(ExpensesType::Construction, admission.foundation.construction->capital_cost);
+	}
+	if (IsGeothermalGeneratorDefinition(type)) {
+		// The shared explicit cold-site argument also carries Powerhouse claims.
+		// Generic/editor/random construction cannot omit its original source,
+		// whole paid floor, capital or subsequent transported material obligation.
+		if (collector_claim == nullptr || layout_index != 0 || founder != _current_company) return CMD_ERROR;
+		const auto admission = PrepareGeothermalGeneratorConstruction(*collector_claim);
+		const auto *claim = GetGeothermalSiteClaim(*collector_claim);
+		if (admission.foundation.error != GeothermalError::None || admission.type != type || claim == nullptr || claim->site.tile != tile) return CMD_ERROR; // Original site, current native definition and actual funded anchor must all agree before pool or claim mutation.
+		Town *town = ClosestTownFromTile(tile, UINT_MAX);
+		if (town == nullptr) return CommandCost(STR_ERROR_SITE_UNSUITABLE);
+		if (flags.Test(DoCommandFlag::Execute)) {
+			Industry *candidate = Industry::Create(tile);
+			if (!BindGeothermalGeneratorIndustry(*candidate, *collector_claim)) { delete candidate; return CMD_ERROR; }
 			DoCreateNewIndustry(candidate, tile, type, indspec->layouts[0], 0, town, founder, random_initial_bits, nullptr, &admission.foundation);
 			*ip = candidate;
 		}
@@ -2412,6 +2450,27 @@ CommandCost CmdBuildGeothermalCollector(DoCommandFlags flags, TileIndex tile, Ge
 	const auto result = CreateNewIndustryHelper(tile, type, flags, GetIndustrySpec(type), 0, seed, GB(seed, 0, 16),
 		_current_company, IndustryAvailabilityCallType::UserCreation, &industry, nullptr, &site);
 	if (result.Succeeded() && industry != nullptr && _game_mode != GameMode::Editor) AdvertiseIndustryOpening(industry); // Only a committed actual facility publishes native news/events.
+	return result;
+}
+
+/** @copydoc CmdBuildGeothermalGenerator */
+CommandCost CmdBuildGeothermalGenerator(DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed)
+{
+	// Match the actual controls and construction/operation driver: editor
+	// placement policy does not authorize a company invoice or consume its plan.
+	if (_game_mode != GameMode::Normal) return CMD_ERROR;
+	const auto *claim = GetGeothermalSiteClaim(site);
+	if (claim == nullptr) return CMD_ERROR;
+	const auto model = GetMultiLayerGeothermalGeneratorModel(claim->site.kind);
+	if (!model.has_value()) return CMD_ERROR;
+	const auto type = GetGeothermalGeneratorIndustryType(*model);
+	if (type == IT_INVALID) return CMD_ERROR;
+	Industry *industry = nullptr;
+	const auto result = CreateNewIndustryHelper(tile, type, flags, GetIndustrySpec(type), 0, seed, GB(seed, 0, 16),
+		_current_company, IndustryAvailabilityCallType::UserCreation, &industry, nullptr, &site);
+	// Only actual committed normal-game machinery publishes opening events;
+	// estimates and refusals leave presentation and gameplay state untouched.
+	if (result.Succeeded() && industry != nullptr && _game_mode != GameMode::Editor) AdvertiseIndustryOpening(industry);
 	return result;
 }
 
@@ -3175,7 +3234,7 @@ static void ChangeIndustryProduction(Industry *i, bool monthly)
 	// Native finite mines and bounded factories hold their buffers/work; random legacy closure cannot discard material.
 	// Geological production and paid collector/riser construction retain their
 	// actual participants; legacy production controls cannot manufacture output.
-	if (IsLayerMineDefinition(i->type) || IsLayerProcessorDefinition(i->type) || IsGeothermalCollectorDefinition(i->type) || IsGeothermalRiserDefinition(i->type) || LayerBaselineSteelHasStoredCargo(*i)) return;
+	if (IsLayerMineDefinition(i->type) || IsLayerProcessorDefinition(i->type) || IsGeothermalCollectorDefinition(i->type) || IsGeothermalRiserDefinition(i->type) || IsGeothermalGeneratorDefinition(i->type) || LayerBaselineSteelHasStoredCargo(*i)) return;
 	StringID str = STR_NULL;
 	bool closeit = false;
 	const IndustrySpec *indspec = GetIndustrySpec(i->type);

@@ -42,6 +42,38 @@ def _document(path, root):
     return document, before
 
 
+def resolve_exported_save(reference, root=None):
+    """Resolve an exact exported save alias through this owner's committed journal.
+
+    @param reference Original path/SHA256 identity named by a completed producer.
+    @param root Optional explicit checkout; no generated cache is searched.
+    @return Exact retained path/SHA256 after original identity and payload checks.
+    """
+    source = Path(root).resolve() if root is not None else repository_root()
+    # A loose historical dict cannot choose a recovery input. Require the exact
+    # producer identity before consulting the sole committed alias owner.
+    if not isinstance(reference, dict) or set(reference) != {"path", "sha256"}:
+        raise ValueError("exported save selection requires exact path/SHA256")
+    journal, _ = _document(JOURNAL, source)
+    # Only committed exports grant a durable alias. A matching disposable file
+    # or an uncommitted proposed copy cannot substitute after cache removal.
+    if journal.get("schema_version") != 1 or journal.get("kind") != "incremental_save_exports":
+        raise ValueError("exported save journal is absent or unsupported")
+    retained = journal["aliases"].get(reference["path"])
+    if retained is None:
+        raise ValueError("save alias has not been durably exported")
+    if retained["sha256"] != reference["sha256"]:
+        raise ValueError("exported save original identity disagrees")
+    target = checked_path(retained["path"], source)
+    # Exported gameplay inputs stay in the sole retained-save owner. A journal
+    # entry may not redirect a recovery operation to a fixture, EXE or cache.
+    if not target.is_relative_to(source / "savegames/retained") or target.suffix.lower() not in (".sav", ".scn"):
+        raise ValueError("exported save is outside retained gameplay storage")
+    if file_identity(target)[0] != retained["sha256"]:
+        raise ValueError("exported save payload changed")
+    return dict(retained)
+
+
 def _observe(root, scopes, configurations=False):
     """Identify every save-like file, including renamed and undecodable saves.
 
@@ -202,10 +234,14 @@ def _copy_payload(row, root):
         if file_identity(source)[0] != expected:
             raise ValueError("source save changed while exporting")
         try:
-            # Linking the finished temporary file is atomic and refuses an
-            # existing destination on both Windows and POSIX. Removing the
-            # temporary name leaves one ordinary retained file, no shared home.
-            os.link(pending, target)
+            # Windows rename is atomic and refuses an existing destination.
+            # It publishes the finished private copy without creating a second
+            # name that would require a temporary-file deletion for every save.
+            # POSIX keeps the existing no-overwrite link publication semantics.
+            if os.name == "nt":
+                os.rename(pending, target)
+            else:
+                os.link(pending, target)
         except FileExistsError:
             if file_identity(target)[0] != expected:
                 raise ValueError("concurrent retained save destination conflict")

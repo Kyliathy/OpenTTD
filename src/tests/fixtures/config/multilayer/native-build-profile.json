@@ -14,14 +14,14 @@
   "msbuild_node_reuse": false,
   "tools": {
     "cmake": "3.31.6-msvc6",
-    "compiler": "19.44.35216",
+    "compiler": "19.44.35229",
     "toolset": "14.44.35207",
-    "msbuild": "17.14.23.42201",
+    "msbuild": "17.14.60.43110",
     "windows_sdk": "10.0.26100.0",
     "grfcodec": "6.2.0",
     "nforenum": "6.2.0",
     "vcpkg": "2026-09-26-51bf87ca6e9bf3e622d84ff323bd202ab1ca0c0b",
-    "patch": "GNU patch 2.8"
+    "patch": "GNU patch 2.7.6"
   },
   "options": {
     "OPTION_DEDICATED": "OFF",

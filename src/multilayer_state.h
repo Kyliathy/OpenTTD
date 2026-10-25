@@ -141,6 +141,7 @@ enum class MultiLayerCanonicalKind : uint8_t {
 	SurfaceSupplyRoot, ///< Group7 reserved append: one canonical tagged history/packet-purpose digest; no second stock owner.
 	GeothermalGeneratorRoot, ///< Group7 reserved append: original generator machinery/history, excluding utility balances.
 	TubeGeothermalRoot, ///< Group7 reserved append: original inlet references/history, excluding grants or derived readiness.
+	CargoPacketRoot, ///< Appended merged diagnostic: actual packet quantities/age/provenance and exact U64receipt/departure fields, never another stock owner.
 	End,
 };
 
@@ -165,6 +166,12 @@ struct MultiLayerCanonicalRecord {
  * @return Portable FNV-1a diagnostic value, or no result for invalid bounds/duplicate/encoding input.
  */
 std::optional<uint64_t> ComputeMultiLayerStateDigest(const MultiLayerStateSchema &schema, std::span<const MultiLayerCanonicalRecord> records = {});
+
+/** Read existing canonical owner roots through the same explicit record schema used by desync diagnostics.
+ * @param schema Actual installed metadata, never a detached candidate borrowing live owners.
+ * @return Complete live feature digest or invalid metadata/record refusal; no state is changed or normalized.
+ */
+std::optional<uint64_t> ComputeLiveMultiLayerStateDigest(const MultiLayerStateSchema &schema);
 
 /**
  * Emit explicit authoritative metadata/digest to existing desync diagnostics.

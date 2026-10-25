@@ -108,13 +108,17 @@ static void PrintExceptionStack(EXCEPTION_POINTERS *exception)
 }
 
 /**
- * Print an actual access-violation stack before Catch's fatal-condition handler unwinds it.
+ * Print an actual access/arithmetic-fault stack before Catch's fatal-condition handler unwinds it.
  * @param exception Windows exception context; ordinary C++ exceptions remain with their existing handlers.
  * @return Continue normal exception handling after recording the fault; never turn a crash into a passing test.
  */
-static LONG WINAPI PrintAccessViolationStack(EXCEPTION_POINTERS *exception)
+static LONG WINAPI PrintNativeFaultStack(EXCEPTION_POINTERS *exception)
 {
-	if (exception->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) PrintExceptionStack(exception);
+	const DWORD code = exception->ExceptionRecord->ExceptionCode;
+	// Fatal freight arithmetic and access faults lose their original frame when
+	// Catch reports them. Preserve the stack while retaining the actual failing
+	// exit; ordinary C++ exceptions keep their existing handlers.
+	if (code == EXCEPTION_ACCESS_VIOLATION || code == EXCEPTION_INT_DIVIDE_BY_ZERO || code == EXCEPTION_FLT_DIVIDE_BY_ZERO) PrintExceptionStack(exception);
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
@@ -144,7 +148,7 @@ static bool QuietTestAssertions()
 	_CrtSetReportHook(PrintCheckedLibraryStack);
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 	signal(SIGABRT, PrintAbortStack);
-	AddVectoredExceptionHandler(1, PrintAccessViolationStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.
+	AddVectoredExceptionHandler(1, PrintNativeFaultStack); // Record the failing native frame before fatal-condition reporting discards its original call stack.
 	SetFatalErrorReporter(PrintFatalTestError);
 	return true;
 }

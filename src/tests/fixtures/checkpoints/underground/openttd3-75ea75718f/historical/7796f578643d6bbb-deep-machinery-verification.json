@@ -1,0 +1,817 @@
+{
+  "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDD;native Deep readiness paid on Standard-earned accessible normal originals;no Deep cuts yet",
+  "controller": {
+    "path": "src/tests/multilayer/normal_ground_deep_report.py",
+    "bytes": 10160,
+    "sha256": "89d073ab2574abe71fe05dfdef20e38121dca4d7de5a535218e28fb2bbc85526"
+  },
+  "access_handoff": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/ordinary-access-verification.json",
+    "bytes": 15900,
+    "sha256": "4cc933379184d4502af1bd7f85a84d1fa8b798711fe1564f427f746afb9a4b98"
+  },
+  "records": {
+    "Debug": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/reports/normal-deep-Debug.json",
+        "bytes": 6994,
+        "sha256": "3d08be98c46805954a32dd79d791530880681cd6381cf91b96ebeed7ab1fcf3a"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDD;actual Deep acquisition uses only paid Standard-earned accessible floor;no Deep cuts",
+        "configuration": "Debug",
+        "classification": "normal_start_deep_machinery",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_deep.py",
+          "bytes": 7192,
+          "sha256": "78852396b70e32b330b28727565553f1007d2108db4c7bbed6b90e0aed5a8baf"
+        },
+        "binary": {
+          "path": "build/Debug/openttd_test.exe",
+          "bytes": 79256064,
+          "sha256": "81fc12f9acd95a8561a0a5c20117659099d3a6256813df37730836a3e8a9c928"
+        },
+        "access_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/ordinary-access-verification.json",
+          "bytes": 15900,
+          "sha256": "4cc933379184d4502af1bd7f85a84d1fa8b798711fe1564f427f746afb9a4b98"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142822-35ee6ce6db/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "bd639f2278abec9a20369537e430672c3bf7173b71a42be61a7cd3b656054196"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-access/20261019-174528-49c6811097/saves/ordinary-access.sav",
+          "bytes": 42332,
+          "sha256": "c805be0da166c08403b23314a3931bebefb4490e56c6f37a1b325dd7dc5e76a8"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-175003-15cb0d416d/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-175003-15cb0d416d/main/scripts/game_start.scr",
+          "bytes": 102,
+          "sha256": "9c3944c670fd406574be75b63617f9beee726910ddc6763127ca2498b4f2e55d"
+        },
+        "ready": {
+          "project": 1,
+          "job": 1,
+          "cutter": 49,
+          "hauler": 30,
+          "portal": 25823,
+          "target": 58591,
+          "access": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 58846,
+          "last": 59872,
+          "opening_cash": 1340266,
+          "cash": 367432,
+          "loan": 300000,
+          "tick": 1263079,
+          "original_solid": 31716,
+          "solid": 31680,
+          "excavating": 36,
+          "excavated": 36,
+          "reserved": 0,
+          "earth_wagons": 2,
+          "rock_wagons": 4
+        },
+        "quote": {
+          "portal": 25823,
+          "first": 58846,
+          "last": 59872,
+          "ok": 1,
+          "error": 65535,
+          "purchase": 803510,
+          "earth": 36,
+          "rock": 724,
+          "support": 36
+        },
+        "invoices": [
+          {
+            "action": "deep_platform",
+            "cost": 307,
+            "cash": 1339959
+          },
+          {
+            "action": "deep_source_rail",
+            "cost": -53,
+            "cash": 1340012
+          },
+          {
+            "action": "deep_portal",
+            "cost": 1498,
+            "cash": 1338514
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 164062,
+            "cash": 1174452
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1173867
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1173867
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1173282
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1173282
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1172697
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1172697
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1172112
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1172112
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1171527
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1171527
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1170942
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1170942
+          },
+          {
+            "action": "deep_origin_order",
+            "cost": 0,
+            "cash": 1170942
+          },
+          {
+            "action": "deep_commission",
+            "cost": 803510,
+            "cash": 367432
+          },
+          {
+            "action": "deep_assign",
+            "cost": 0,
+            "cash": 367432
+          },
+          {
+            "action": "pause_deep",
+            "cost": 0,
+            "cash": 367432
+          }
+        ],
+        "capital_paid": 972834,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/saves/deep-ready.sav",
+            "bytes": 43368,
+            "sha256": "145fb15a07bf9f7208305431cc03bc0cef07b0021003295fc5f142c5ab497a53"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/saves/deep-ready-repeat.sav",
+            "bytes": 43368,
+            "sha256": "145fb15a07bf9f7208305431cc03bc0cef07b0021003295fc5f142c5ab497a53"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/deep-Debug.log",
+            "bytes": 38029,
+            "sha256": "ec6f723054e75d09c213c9f26c65c16b984265b0fea8007b576f33fb37f16548"
+          },
+          "assertions": 154,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_deep_fixture.h",
+            "bytes": 8304,
+            "sha256": "1e442d05702a8400a5fd9b4ebb34313e92e66b57c55afe45d87d82736a2d74fd"
+          },
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 35715,
+            "sha256": "870d99d38e34a61017a005ea523835549502b26115830e234e9fd9d56951f37b"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/tbm_acquisition.cpp",
+            "bytes": 23483,
+            "sha256": "3ee6dc3e68cc9b63f2a46adc7d2a55d785fbe4bde5c5eebb88b719780ecca59e"
+          },
+          {
+            "path": "src/tbm_model.cpp",
+            "bytes": 6397,
+            "sha256": "b910e2fdbf29cb184f468e787270a1837394fb7f84686eedfd29a46e32d3ff74"
+          },
+          {
+            "path": "src/layer_portal_work.cpp",
+            "bytes": 57638,
+            "sha256": "c379ed4749c3b16d6a2a09e38f23c40649be3d1d547cdb3feba9c699c66767c1"
+          },
+          {
+            "path": "src/layer_portal_cmd.cpp",
+            "bytes": 51133,
+            "sha256": "ae515ea92eab86faa7f747eedda6a059f47199ee1b008bdd83b397a0998ceb6f"
+          },
+          {
+            "path": "src/station_cmd.cpp",
+            "bytes": 213446,
+            "sha256": "888aa4af216568bf6e9651789a07bdf08be1d684146303df06892896f8e6783b"
+          },
+          {
+            "path": "src/rail_cmd.cpp",
+            "bytes": 136961,
+            "sha256": "d0032938763a2a893d54be0c18e2dee6b03513add6976af025e22d50078ff76b"
+          }
+        ],
+        "remaining": "6D original normal-start full S1/S2 irregular clearing/useful final-use/recurring logistics and native recovery/runner provenance."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/saves/deep-ready.sav",
+        "bytes": 43368,
+        "sha256": "145fb15a07bf9f7208305431cc03bc0cef07b0021003295fc5f142c5ab497a53"
+      },
+      "ready": {
+        "project": 1,
+        "job": 1,
+        "cutter": 49,
+        "hauler": 30,
+        "portal": 25823,
+        "target": 58591,
+        "access": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 58846,
+        "last": 59872,
+        "opening_cash": 1340266,
+        "cash": 367432,
+        "loan": 300000,
+        "tick": 1263079,
+        "original_solid": 31716,
+        "solid": 31680,
+        "excavating": 36,
+        "excavated": 36,
+        "reserved": 0,
+        "earth_wagons": 2,
+        "rock_wagons": 4
+      },
+      "quote": {
+        "portal": 25823,
+        "first": 58846,
+        "last": 59872,
+        "ok": 1,
+        "error": 65535,
+        "purchase": 803510,
+        "earth": 36,
+        "rock": 724,
+        "support": 36
+      },
+      "project": {
+        "id": 1,
+        "job": 1,
+        "company": 0,
+        "cutter": 49,
+        "model": 1,
+        "parts": 2,
+        "part0": 49,
+        "part1": 50,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 25823,
+        "exchange": 25823,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 1,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 1,
+        "anchor": 58591,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 27,
+        "authorized": 61,
+        "routes": 9
+      },
+      "assignment": {
+        "id": 1,
+        "project": 1,
+        "hauler": 30,
+        "bay": 25823,
+        "set": 2,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 2,
+        "project": 1,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 6
+      },
+      "geology": {
+        "header": "0002000100000080000000800000000c000020000000000c00000030010001198e6743cf223c36",
+        "width": 128,
+        "height": 128,
+        "hardness_version": 1,
+        "hardness_seed": 1841522838576708662,
+        "layers": {
+          "underground": {
+            "solid": 16348,
+            "excavating": 0,
+            "excavated": 36,
+            "reserved": 0
+          },
+          "deep": {
+            "solid": 16348,
+            "excavating": 36,
+            "excavated": 0,
+            "reserved": 0
+          }
+        }
+      },
+      "native_purchase_random": {
+        "opening": [
+          4123799996,
+          3312565813
+        ],
+        "closing": [
+          3141808983,
+          3898647037
+        ]
+      },
+      "unchanged_date_fields": 16
+    },
+    "RelWithDebInfo": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175147-da8388ea5a/reports/normal-deep-RelWithDebInfo.json",
+        "bytes": 7021,
+        "sha256": "d187e1e104e6c6f71c0d16baf751cd54dcf9745691b89d68819cbcf17da5ce64"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDD;actual Deep acquisition uses only paid Standard-earned accessible floor;no Deep cuts",
+        "configuration": "RelWithDebInfo",
+        "classification": "normal_start_deep_machinery",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_deep.py",
+          "bytes": 7192,
+          "sha256": "78852396b70e32b330b28727565553f1007d2108db4c7bbed6b90e0aed5a8baf"
+        },
+        "binary": {
+          "path": "build/RelWithDebInfo/openttd_test.exe",
+          "bytes": 37291008,
+          "sha256": "562792f2f538ca9f44c706e23f66884acb98e814696eea2657fad70fc6224f31"
+        },
+        "access_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/ordinary-access-verification.json",
+          "bytes": 15900,
+          "sha256": "4cc933379184d4502af1bd7f85a84d1fa8b798711fe1564f427f746afb9a4b98"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142954-e7679b13e9/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "1b2bda1a96cba833f7e1e847bc99c57ce53f3447fb761a94f749aede7540680e"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-access/20261019-174643-5a6232c740/saves/ordinary-access.sav",
+          "bytes": 42464,
+          "sha256": "8ba2bfc22c76dc1d9feefd1c9145291338490e5e56a520492d1af251ff8d5e5e"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-175147-da8388ea5a/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-175147-da8388ea5a/main/scripts/game_start.scr",
+          "bytes": 102,
+          "sha256": "9c3944c670fd406574be75b63617f9beee726910ddc6763127ca2498b4f2e55d"
+        },
+        "ready": {
+          "project": 1,
+          "job": 1,
+          "cutter": 51,
+          "hauler": 39,
+          "portal": 25823,
+          "target": 58591,
+          "access": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 58846,
+          "last": 59872,
+          "opening_cash": 1327925,
+          "cash": 355091,
+          "loan": 300000,
+          "tick": 1255375,
+          "original_solid": 31716,
+          "solid": 31680,
+          "excavating": 36,
+          "excavated": 36,
+          "reserved": 0,
+          "earth_wagons": 2,
+          "rock_wagons": 4
+        },
+        "quote": {
+          "portal": 25823,
+          "first": 58846,
+          "last": 59872,
+          "ok": 1,
+          "error": 65535,
+          "purchase": 803510,
+          "earth": 36,
+          "rock": 724,
+          "support": 36
+        },
+        "invoices": [
+          {
+            "action": "deep_platform",
+            "cost": 307,
+            "cash": 1327618
+          },
+          {
+            "action": "deep_source_rail",
+            "cost": -53,
+            "cash": 1327671
+          },
+          {
+            "action": "deep_portal",
+            "cost": 1498,
+            "cash": 1326173
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 164062,
+            "cash": 1162111
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1161526
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1161526
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1160941
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1160941
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1160356
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1160356
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1159771
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1159771
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1159186
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1159186
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1158601
+          },
+          {
+            "action": "deep_couple",
+            "cost": 0,
+            "cash": 1158601
+          },
+          {
+            "action": "deep_origin_order",
+            "cost": 0,
+            "cash": 1158601
+          },
+          {
+            "action": "deep_commission",
+            "cost": 803510,
+            "cash": 355091
+          },
+          {
+            "action": "deep_assign",
+            "cost": 0,
+            "cash": 355091
+          },
+          {
+            "action": "pause_deep",
+            "cost": 0,
+            "cash": 355091
+          }
+        ],
+        "capital_paid": 972834,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175147-da8388ea5a/saves/deep-ready.sav",
+            "bytes": 43492,
+            "sha256": "49cfddc3aa9e57b5ac6afa0bbc25bea2e34c211e3094b2b30ef0b220a66e6d9e"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175147-da8388ea5a/saves/deep-ready-repeat.sav",
+            "bytes": 43492,
+            "sha256": "49cfddc3aa9e57b5ac6afa0bbc25bea2e34c211e3094b2b30ef0b220a66e6d9e"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-deep/20261019-175147-da8388ea5a/deep-RelWithDebInfo.log",
+            "bytes": 38029,
+            "sha256": "5e548b218f97ac48e41c9e394f4612b8dc51ef11d301f601674049cc407d5692"
+          },
+          "assertions": 154,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_deep_fixture.h",
+            "bytes": 8304,
+            "sha256": "1e442d05702a8400a5fd9b4ebb34313e92e66b57c55afe45d87d82736a2d74fd"
+          },
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 35715,
+            "sha256": "870d99d38e34a61017a005ea523835549502b26115830e234e9fd9d56951f37b"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/tbm_acquisition.cpp",
+            "bytes": 23483,
+            "sha256": "3ee6dc3e68cc9b63f2a46adc7d2a55d785fbe4bde5c5eebb88b719780ecca59e"
+          },
+          {
+            "path": "src/tbm_model.cpp",
+            "bytes": 6397,
+            "sha256": "b910e2fdbf29cb184f468e787270a1837394fb7f84686eedfd29a46e32d3ff74"
+          },
+          {
+            "path": "src/layer_portal_work.cpp",
+            "bytes": 57638,
+            "sha256": "c379ed4749c3b16d6a2a09e38f23c40649be3d1d547cdb3feba9c699c66767c1"
+          },
+          {
+            "path": "src/layer_portal_cmd.cpp",
+            "bytes": 51133,
+            "sha256": "ae515ea92eab86faa7f747eedda6a059f47199ee1b008bdd83b397a0998ceb6f"
+          },
+          {
+            "path": "src/station_cmd.cpp",
+            "bytes": 213446,
+            "sha256": "888aa4af216568bf6e9651789a07bdf08be1d684146303df06892896f8e6783b"
+          },
+          {
+            "path": "src/rail_cmd.cpp",
+            "bytes": 136961,
+            "sha256": "d0032938763a2a893d54be0c18e2dee6b03513add6976af025e22d50078ff76b"
+          }
+        ],
+        "remaining": "6D original normal-start full S1/S2 irregular clearing/useful final-use/recurring logistics and native recovery/runner provenance."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175147-da8388ea5a/saves/deep-ready.sav",
+        "bytes": 43492,
+        "sha256": "49cfddc3aa9e57b5ac6afa0bbc25bea2e34c211e3094b2b30ef0b220a66e6d9e"
+      },
+      "ready": {
+        "project": 1,
+        "job": 1,
+        "cutter": 51,
+        "hauler": 39,
+        "portal": 25823,
+        "target": 58591,
+        "access": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 58846,
+        "last": 59872,
+        "opening_cash": 1327925,
+        "cash": 355091,
+        "loan": 300000,
+        "tick": 1255375,
+        "original_solid": 31716,
+        "solid": 31680,
+        "excavating": 36,
+        "excavated": 36,
+        "reserved": 0,
+        "earth_wagons": 2,
+        "rock_wagons": 4
+      },
+      "quote": {
+        "portal": 25823,
+        "first": 58846,
+        "last": 59872,
+        "ok": 1,
+        "error": 65535,
+        "purchase": 803510,
+        "earth": 36,
+        "rock": 724,
+        "support": 36
+      },
+      "project": {
+        "id": 1,
+        "job": 1,
+        "company": 0,
+        "cutter": 51,
+        "model": 1,
+        "parts": 2,
+        "part0": 51,
+        "part1": 52,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 25823,
+        "exchange": 25823,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 1,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 1,
+        "anchor": 58591,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 27,
+        "authorized": 61,
+        "routes": 9
+      },
+      "assignment": {
+        "id": 1,
+        "project": 1,
+        "hauler": 39,
+        "bay": 25823,
+        "set": 2,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 2,
+        "project": 1,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 6
+      },
+      "geology": {
+        "header": "0002000100000080000000800000000c000020000000000c00000030010001198e6743cf223c36",
+        "width": 128,
+        "height": 128,
+        "hardness_version": 1,
+        "hardness_seed": 1841522838576708662,
+        "layers": {
+          "underground": {
+            "solid": 16348,
+            "excavating": 0,
+            "excavated": 36,
+            "reserved": 0
+          },
+          "deep": {
+            "solid": 16348,
+            "excavating": 36,
+            "excavated": 0,
+            "reserved": 0
+          }
+        }
+      },
+      "native_purchase_random": {
+        "opening": [
+          1898358897,
+          3138807056
+        ],
+        "closing": [
+          1499040939,
+          1529907721
+        ]
+      },
+      "unchanged_date_fields": 16
+    }
+  },
+  "classification": "normal_start_deep_machinery",
+  "bootstrap_claim": false,
+  "native_cases": 2,
+  "native_assertions": 308,
+  "pure_pairs": 2,
+  "complete_chunks_equal": 126,
+  "ignored_chunks": [],
+  "remaining": "6D full actual normal-start S1/S2 irregular clearing/useful final-use,recurring haulage and native recovery/runner provenance."
+}

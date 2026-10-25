@@ -13,6 +13,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pack_m1_art as pack
@@ -56,6 +57,47 @@ def digest(path):
     @return Lowercase SHA256 of its exact bytes.
     """
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def cpp_ignored(match):
+    """Blank an ignored C++ token without moving subsequent declaration lines.
+
+    @param match Comment or literal matched by the callback verifier's tokenizer.
+    @return Whitespace retaining the original line boundaries for declaration matching.
+    """
+    return re.sub(r"[^\r\n]", " ", match.group())
+
+def cpp_code(source):
+    """Exclude comments and literals from actual native callback verification.
+
+    @param source Actual C++ source text, never an enum/header/test declaration offered as a renderer.
+    @return Code tokens with comments/string/character literals replaced by whitespace, preventing a commented-out or quoted call from proving a consumer.
+    """
+    return re.sub(r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', cpp_ignored, source)
+
+def cpp_function(source, symbol):
+    """Locate one real native function body with nested blocks and no comment/literal impostors.
+
+    @param source Actual implementation text, independent of the public binding description.
+    @param symbol Canonical native function, optionally qualified for an out-of-class definition.
+    @return Normalized complete body; declarations, call sites and missing/unbalanced definitions refuse.
+    """
+    code = cpp_code(source)
+    names = (symbol, symbol.rsplit("::", 1)[-1])
+    for name in names:  # In-class widget methods omit the qualifier; ordinary out-of-class native consumers retain it.
+        # These native owners declare return types on the signature line.
+        # Requiring that declaration prevents an if/call block from standing
+        # in for a removed selector implementation elsewhere in the file.
+        declaration = r"(?m)^[ \t]*(?!(?:if|while|for|switch|return)\b)[A-Za-z_][\w:<>,*& \t]*[ \t]+"
+        match = re.search(declaration + re.escape(name) + r"\s*\([^;{}]*\)\s*(?:(?:const|noexcept|override|final)\s*)*\{", code)
+        if match is None:
+            continue
+        start = match.end() - 1; depth = 0
+        for position in range(start, len(code)):  # Only real code braces define the body; quoted artwork/status strings cannot hide or invent a call edge.
+            depth += (code[position] == "{") - (code[position] == "}")
+            if depth == 0:
+                return code[start:position + 1]
+    raise AssertionError("native function body is absent: " + symbol)
 
 
 def binding_for(asset):

@@ -29,6 +29,13 @@
 
 /** Actual native consist owner; tube views borrow its vehicles without replacing their pool or packet authority. */
 struct Train;
+/** Detached original inlet references used only with their candidate shared utility owner. */
+struct TubeGeothermalPowerState;
+/** Existing physical Heat requests and complete native participants borrowed for the single thermal allocation. */
+struct GeothermalHeatDemand;
+
+/** Nonreused original geothermal physical inlet identity; utility quantities remain in the shared ledger. */
+using TubeGeothermalSourceID = StrongType::Typedef<uint32_t, struct TubeGeothermalSourceIDTag, StrongType::Compare>;
 
 inline constexpr RailTypeLabel RAILTYPE_LABEL_TUBE{"UTUB"}; ///< Exact first-party semantic label; the canonical registry allocates its runtime slot.
 
@@ -67,18 +74,26 @@ struct TubeVehicleCapability {
 };
 
 /**
- * Install the single Mole-70 prototype at its existing canonical EIDS identity.
+ * Install all five delivered capsules at their existing canonical EIDS identities.
  * @param activated Exact admitted content; the native tube registry must already exist.
  * @return Whether definition preflight and reconstruction succeed without collisions or missing cargo.
- * Loader/purchase-menu activation and electrical movement remain with later producer groups.
+ * Complete family preflight preserves model9 and persisted slots; registration grants no purchase or electrical movement rights.
  */
 bool InitialiseTubeEngineDefinitions(const GRFConfigList &activated);
 
-/** @param model_id Prototype logical model9. @return Actual native EIDS engine, or Invalid for absent/foreign/unimplemented models. */
+/** @param model_id Canonical logical model9..13. @return Actual native EIDS engine, or Invalid for absent/foreign/unimplemented models. */
 EngineID GetTubeEngine(uint16_t model_id);
 
 /** @param engine Actual engine identity. @return Derived native capsule view, or no value for ordinary/foreign engines. */
 std::optional<TubeVehicleCapability> GetTubeVehicleCapability(EngineID engine);
+
+/**
+ * Reconcile an original saved native capsule definition with its canonical launch calendar.
+ * @param engine Actual normally rebuilt and restored native engine; original/foreign engines are ignored.
+ * Only the definition's introduction date and already-date-valid public availability are corrected.
+ * Vehicle ages/cargo, engine reliability/age/hidden preferences, world clocks and accounts remain native saved owners.
+ */
+void RestoreTubeEngineIntroduction(Engine &engine);
 
 /**
  * Admit a whole actual train to its exclusive tube or conventional movement domain.
@@ -190,6 +205,8 @@ TubePowerError CloseTubeExternalPower(UtilityProducerID producer, bool execute =
 const TubePowerConnection *GetTubePowerConnection(UtilityProducerID producer);
 /** @return Bounded field-wise copied physical service transport; electrical balances remain in the common ledger. */
 std::vector<TubePowerConnection> CaptureTubePowerConnections();
+/** @return Borrowed bounded canonical external-service contracts for pure presentation; no copied paths, stock or energy owner is created. */
+std::span<const TubePowerConnection> GetTubePowerConnections();
 
 /** Derived actual facility view; native stations/depots own IDs, packets, platform geometry and lifecycle. This view is never saved. */
 struct TubeTerminal {
@@ -256,7 +273,7 @@ TubePowerError ValidateTubePowerConnections(std::span<const TubePowerConnection>
 	bool world_refs = true, const UtilityPowerState *utility = nullptr);
 /** @param rows Parsed bounded transport, unpublished until actual portal and utility acceptance. */
 void StageLoadedTubePowerConnections(std::vector<TubePowerConnection> rows);
-/** @return Whether staged physical services publish after actual referenced owners validate; old absence remains empty. */
+/** @return Whether staged physical services publish after actual referenced owners validate; accepted rows use canonical producer identity order and old absence remains empty. */
 bool AcceptLoadedTubePowerConnections();
 /** Reset unpublished concrete tube-power transport at world initialization. */
 void ResetTubePowerLoadStaging();
@@ -287,6 +304,8 @@ struct TubePowerVehicle {
 	TubePowerPhase phase = TubePowerPhase::Idle; ///< Exact globally planned actual work phase, validated again before native commit.
 	TubePowerWait wait = TubePowerWait::NoConnection; ///< Separate power wait; never stored as the player's Stopped flag.
 	bool active = true; ///< Retained unbound identities cannot supply a reused capsule pool ID.
+	TubeGeothermalSourceID geothermal_source{UINT32_MAX}; ///< Original geothermal inlet incarnation; absent only for retained external service.
+	UtilityLinkID local_feed{UINT32_MAX}; ///< Original unlinked work recipient attachment; no independent watt or energy budget.
 };
 
 /**
@@ -335,19 +354,23 @@ uint64_t GetTubePowerPreparedTick();
  * @param world_refs Resolve actual vehicles, source and ledger consumers when true.
  * @param utility Optional copied electrical family for independent preview reference validation.
  * @param connections Copied physical inlets paired with the preview electrical family; empty when actual owners resolve references.
+ * @param geothermal Optional same-candidate original geothermal inlet references; live owners resolve these only when world_refs is true.
  * @return Complete identity/fraction/referral validation without changing grants or work.
  */
 TubePowerError ValidateTubePowerVehicles(std::span<const TubePowerVehicle> rows, bool world_refs = true,
-	const UtilityPowerState *utility = nullptr, std::span<const TubePowerConnection> connections = {});
-/** @return Whether staged bindings resolve after actual physical connections, utility and vehicles load; old absence remains empty. */
+	const UtilityPowerState *utility = nullptr, std::span<const TubePowerConnection> connections = {}, const TubeGeothermalPowerState *geothermal = nullptr);
+/** @return Whether staged bindings resolve after actual physical connections, utility and vehicles load; accepted rows use canonical consumer identity order and old absence remains empty. */
 bool AcceptLoadedTubePowerVehicles();
 /** Clear physical capsule bindings and transient execution authorization at world initialization. */
 void ResetTubePowerVehicles();
 /** @return Exact field-wise physical binding digest; quantities retain their ledger and vehicle owners. */
 uint64_t ComputeTubePowerVehicleDigest();
 
-/** Prepare all companies' collector offers and capsule opportunities once before the native vehicle loop, including collector-only worlds; the common ledger owns both domains' allocation/rotation and saved common tick. */
-void PrepareTubePowerTick();
+/** Prepare all companies' physical source offers and opportunities once before the native vehicle loop.
+ * @param heat_demands Existing complete physical Heat requests; their original participants retain work and benefit authority.
+ * The common ledger alone owns both domains' allocation/rotation and the saved common tick; an unrelated orbital-only world does not acquire Heat.
+ */
+void PrepareTubePowerTick(std::span<const GeothermalHeatDemand> heat_demands = {});
 /** @param train Actual capsule front. @param participant Complete native movement/service callback. @return Whether powered work was admitted and settled once; unbound/unpowered work waits. */
 bool AdvanceTubePowerTick(Train &train, UtilityMutationParticipant &participant);
 /** @param train Actual capsule front. @return Whether its real native movement/service currently executes within the one paid whole-tick participant. */
@@ -375,5 +398,23 @@ void InvalidateTubePowerForPortal(TileIndex portal);
 void InvalidateTubePowerForTile(TileIndex tile);
 /** @param old_owner Company undergoing takeover/removal. @param new_owner Actual receiving company or INVALID_OWNER. Retire physical contracts before pool/tile identities change, retaining paid/consumed history. */
 void ChangeTubePowerCompanyOwnership(Owner old_owner, Owner new_owner);
+
+/** @param vehicle Actual owned stopped native front at a real depot on the source's component. @param source Original active geothermal inlet, not a reusable producer ID. @param execute False predicts the complete shared recipient/feed acquisition without any issuer, money, quantity or RNG change. @return Actual/predicted consumer after whole native source/consist/guideway admission; subsequent native ticks require the common allocation and original paid-path import. */
+std::optional<UtilityConsumerID> BindTubeGeothermalPowerVehicle(VehicleID vehicle, TubeGeothermalSourceID source, bool execute = true);
+
+/**
+ * Switch a physically held capsule to an explicitly selected original geothermal inlet.
+ * @param vehicle Existing owned native front held at zero speed, retaining its actual cargo and stop intent.
+ * @param source New active original inlet whose purchased cable and guideway reach every actual part; a different inlet may share the same original generator.
+ * @param execute False validates and predicts both recipient references without changing old rights, demand carry or issuers.
+ * @return Fresh original recipient identity on complete success; only unused old rights expire, and the sole admitted fraction moves once. Existing provider invoices and consumed history remain unchanged.
+ */
+std::optional<UtilityConsumerID> ReconnectTubeGeothermalPowerVehicle(VehicleID vehicle, TubeGeothermalSourceID source, bool execute = true);
+
+/** @param source Original active geothermal inlet incarnation. @param train Actual complete native capsule consist. @return Whether every actual occupied part reaches that source through owned layer-local guideway and its current original purchased electrical path; this pure query promises no grant. */
+bool IsTubeGeothermalPowerConnected(TubeGeothermalSourceID source, const Train &train);
+
+/** @param source Original active geothermal inlet incarnation. @param tile Actual candidate guideway cell. @param required Actual occupied tracks, empty for the native depot stand. @return Pure current physical reachability without energy, service or cached compatibility promises. */
+bool IsTubeGeothermalPowerConnectedTile(TubeGeothermalSourceID source, TileIndex tile, TrackBits required = {});
 
 #endif /* TRANSPORT_TUBE_H */

@@ -180,3 +180,29 @@ TEST_CASE("Legacy A conversion refuses nonnative and invalid native purchase evi
 	const auto before = original.snapshot; const ConversionWitness witness;
 	CHECK_FALSE(ConvertLegacyASupply(original, rig.context)); CHECK(original.snapshot == before); witness.CheckUnchanged();
 }
+
+/** Only original invalid-Industry linked facts project to non-paying purpose; no active-world buyer or same-label inference is permitted. */
+TEST_CASE("Legacy B packet projection preserves original paid evidence and ordinary cargo", "[surface-supply-conversion]")
+{
+	SurfaceSupplyRecordRig rig;
+	const auto snapshot = ConvertLegacyBSupply({1, 1, 2, {OriginalLegacyRow(1)}}, rig.context); REQUIRE(snapshot.has_value());
+	const SurfaceSupplyPacketFacts raw{CargoPacketID{17}, 40, {Source::Invalid, SourceType::Industry}, Money{0}, 1, true};
+	const ConversionWitness witness;
+	const auto projected = ProjectLegacyBSupplyPacket(raw, *snapshot); REQUIRE(projected.has_value());
+	CHECK(projected->source == (Source{Source::Invalid, SourceType::CompanySupply}));
+	CHECK(projected->order == 1); CHECK(projected->shipped); CHECK(projected->quantity == 40); CHECK(projected->feeder_share == Money{0});
+	auto ordinary = raw; ordinary.order = 0; ordinary.shipped = false;
+	CHECK(ProjectLegacyBSupplyPacket(ordinary, *snapshot) == ordinary);
+	const auto fault = GENERATE(0, 1, 2, 3, 4, 5);
+	auto malformed = raw;
+	switch (fault) {
+		case 0: malformed.source.id = 0; break; // Today's owner is not the unavailable historical buyer.
+		case 1: malformed.source.type = SourceType::Town; break; // Matching material cannot change ordinary provenance.
+		case 2: malformed.source.type = SourceType::CompanySupply; break; // Original B did not define A's tag.
+		case 3: malformed.feeder_share = Money{1}; break; // Paid packets cannot acquire transfer income.
+		case 4: malformed.order = 2; break; // The exact unissued identity supplies no receipt.
+		case 5: malformed.order = 0; break; // Shipped-without-link cannot become ordinary or bought cargo.
+	}
+	CHECK_FALSE(ProjectLegacyBSupplyPacket(malformed, *snapshot));
+	witness.CheckUnchanged();
+}

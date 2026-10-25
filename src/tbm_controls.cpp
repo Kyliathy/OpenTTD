@@ -7,6 +7,8 @@
 /**
  * @file tbm_controls.cpp The player's view of a rail portal pair and its boring project (R2MLVS3MP master 7.9): the
  * controls the portal window offers and the next step of a project's life, derived from the commands' own checks.
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md physical managed destinations.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23B actual face-hold guidance.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, tasks 16.1/16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
  */
@@ -17,6 +19,7 @@
 #include "excavation.h"
 #include "layer_portal_cmd.h"
 #include "train.h"
+#include "cargotype.h"
 #include "company_func.h"
 #include "core/backup_type.hpp"
 #include "table/strings.h"
@@ -34,6 +37,53 @@ StringID GetGeologyHardnessString(GeologyHardness hardness)
 		default: return STR_PORTAL_HARDNESS_UNKNOWN;
 	}
 }
+
+/** @copydoc SumTBMCutterSpoil */
+TBMSpoilLoad SumTBMCutterSpoil(const Train &cutter, const TBMProject &project)
+{
+	TBMSpoilLoad spoil;
+	// Only whole attached units contribute to replacement counts and storage.
+	// Articulated parts carry their own packets/capacity; planned pass limits
+	// and historical dug totals must never stand in for this live inventory.
+	for (const TBMConsistUnit &unit : InspectTBMConsist(cutter, project).exchangeable_units) {
+		if (unit.role == TBMConsistRole::EarthWagon) ++spoil.earth_hoppers;
+		if (unit.role == TBMConsistRole::RockWagon) ++spoil.rock_hoppers;
+		const Train *head = Train::Get(unit.vehicle);
+		const Train *next_unit = head->GetNextUnit();
+		// Stop at this unit's boundary so each articulated part is counted
+		// exactly once, including when physical exchange replaces the head.
+		for (const Train *part = head; part != next_unit; part = part->Next()) {
+			if (unit.role == TBMConsistRole::EarthWagon) {
+				spoil.earth_loaded_t += part->cargo.TotalCount();
+				spoil.earth_capacity_t += part->cargo_cap;
+			} else {
+				spoil.rock_loaded_t += part->cargo.TotalCount();
+				spoil.rock_capacity_t += part->cargo_cap;
+			}
+		}
+	}
+	return spoil;
+}
+
+/** @copydoc SumTrainSpoil */
+TBMSpoilLoad SumTrainSpoil(const Train &front)
+{
+	TBMSpoilLoad spoil;
+	// Every part counts by its own cargo: a hauler's hoppers may be refitted either way and its engine carries nothing.
+	for (const Train *part = &front; part != nullptr; part = part->Next()) {
+		if (!IsValidCargoType(part->cargo_type)) continue;
+		const CargoLabel label = CargoSpec::Get(part->cargo_type)->label;
+		if (label == CargoLabel{"ERTH"}) {
+			spoil.earth_loaded_t += part->cargo.TotalCount();
+			spoil.earth_capacity_t += part->cargo_cap;
+		} else if (label == CargoLabel{"ROCK"}) {
+			spoil.rock_loaded_t += part->cargo.TotalCount();
+			spoil.rock_capacity_t += part->cargo_cap;
+		}
+	}
+	return spoil;
+}
+
 
 /** @copydoc GetTBMOrderProblem */
 std::optional<StringID> GetTBMOrderProblem(const Train &front)
@@ -69,7 +119,9 @@ std::optional<StringID> GetTBMOrderProblem(const Train &front)
 		return order.IsType(OT_GOTO_STATION) && order.GetDestination().ToStationID() == project->origin;
 	};
 	if (!std::ranges::any_of(front.Orders(), visits_origin)) return STR_TBM_OPERATION_ORIGIN_ORDER;
-	if (front.vehicle_flags.Test(VehicleFlag::PathfinderLost) && CheckTBMExchangeParticipant(front, bay, project->company) != TBMExchangeError::None) return STR_PORTAL_WAIT_BLOCKED_LINE; // An admitted stationary magazine train has reached its managed destination; only a lost route away from it needs repair.
+	// An admitted stationary magazine train or a hauler held at its real face meeting has reached its managed
+	// destination. A stale path-search flag there must not ask the player to repair a healthy native logistics cycle.
+	if (front.vehicle_flags.Test(VehicleFlag::PathfinderLost) && CheckTBMExchangeParticipant(front, bay, project->company) != TBMExchangeError::None && !IsTBMHaulerHeld(front)) return STR_PORTAL_WAIT_BLOCKED_LINE;
 	return INVALID_STRING_ID;
 }
 
@@ -94,6 +146,7 @@ static bool IsTrainOnTile(const Train &train, TileIndex tile)
 static bool IsTrainWithdrawnAt(const Train &train, TileIndex key)
 {
 	if (!train.vehstatus.Test(VehState::Stopped)) return false;
+	// A withdrawn label requires every actual part in this bay's storage; a head alone cannot release occupied track.
 	for (const Train *part = &train; part != nullptr; part = part->Next()) {
 		if (part->tile != key || part->track != Track::Depot) return false;
 	}
@@ -140,6 +193,7 @@ static TBMPlayerStep ChooseTBMProjectStep(const TBMPairControls &controls)
 		if (controls.retire) return TBMPlayerStep::Retire;
 		return controls.running ? TBMPlayerStep::StopMachine : TBMPlayerStep::FixHold;
 	}
+	// Stored machines and ordinary-order travel retain unfinished work until the player explicitly hands control back.
 	if (project.phase == TBMPhase::Parked || project.phase == TBMPhase::ParkedHangar || project.phase == TBMPhase::FollowOrders) return TBMPlayerStep::Resume;
 	if (project.phase == TBMPhase::ReleasePending) return controls.retire ? TBMPlayerStep::Retire : TBMPlayerStep::DeliverLast;
 	if (project.blocked == TBMBlockedReason::Paused) return TBMPlayerStep::Resume;
@@ -189,26 +243,14 @@ static void DescribeTBMProject(TBMPairControls &controls)
 	}
 	if (const Train *cutter = Train::GetIfValid(project.cutter); cutter != nullptr) {
 		controls.running = !cutter->vehstatus.Test(VehState::Stopped);
-		// Only whole attached units contribute to replacement counts and storage.
-		// Articulated parts carry their own packets/capacity; planned pass limits
-		// and historical dug totals must never stand in for this live inventory.
-		for (const TBMConsistUnit &unit : InspectTBMConsist(*cutter, project).exchangeable_units) {
-			if (unit.role == TBMConsistRole::EarthWagon) ++controls.earth_hoppers;
-			if (unit.role == TBMConsistRole::RockWagon) ++controls.rock_hoppers;
-			const Train *head = Train::Get(unit.vehicle);
-			const Train *next_unit = head->GetNextUnit();
-			// Stop at this unit's boundary so each articulated part is counted
-			// exactly once, including when physical exchange replaces the head.
-			for (const Train *part = head; part != next_unit; part = part->Next()) {
-				if (unit.role == TBMConsistRole::EarthWagon) {
-					controls.earth_loaded_t += part->cargo.TotalCount();
-					controls.earth_capacity_t += part->cargo_cap;
-				} else {
-					controls.rock_loaded_t += part->cargo.TotalCount();
-					controls.rock_capacity_t += part->cargo_cap;
-				}
-			}
-		}
+		// The controls and work-change admission share the same actual attached packet measurement.
+		const auto spoil = SumTBMCutterSpoil(*cutter, project);
+		controls.earth_hoppers = spoil.earth_hoppers;
+		controls.rock_hoppers = spoil.rock_hoppers;
+		controls.earth_loaded_t = spoil.earth_loaded_t;
+		controls.earth_capacity_t = spoil.earth_capacity_t;
+		controls.rock_loaded_t = spoil.rock_loaded_t;
+		controls.rock_capacity_t = spoil.rock_capacity_t;
 	}
 	controls.wait = GetTBMLogisticsWait(project);
 	if (const TBMExchangeAssignment *assignment = GetTBMExchangeAssignment(project.id); assignment != nullptr) controls.hauler = *assignment;
@@ -262,6 +304,12 @@ static void DescribeTBMPair(TileIndex key, CompanyID company, TBMPairControls &c
 	}
 }
 
+/**
+ * Derive controls from original participants without changing work or advancing simulation.
+ * @param key Actual canonical rail-pair key.
+ * @param company Company whose authorized actions the view describes.
+ * @return Current controls and physical lifecycle guidance for this pair.
+ */
 TBMPairControls GetTBMPairControls(TileIndex key, CompanyID company)
 {
 	// The command checks below answer for their actor, so they run as the asking company.

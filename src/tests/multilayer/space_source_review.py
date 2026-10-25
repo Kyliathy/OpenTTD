@@ -22,7 +22,7 @@ from artifact_paths import RunContext, contained, identifier
 from artifact_rebuild import identity, load_recipe, snapshot, verify_current_build, verify_retained_inputs
 from artifact_recipes import load_catalogue
 from runner import run_native
-from sprite_native_loader import prepared_outputs
+from sprite_native_loader import check_candidate_result, prepared_outputs
 
 
 def selected_recipe(family):
@@ -106,6 +106,10 @@ def checked_request(request, root):
             raise ValueError("current native decoder witness changed")
     process = json.loads((root / native["native_process"]["path"]).read_text(encoding="utf-8"))
     text = (root / native["terminal"]["path"]).read_text(encoding="utf-8", errors="replace")
+    # Expected pixels alone never identify the decoded container. Reuse the
+    # loader owner's complete source-copy-opened-stream/process verification
+    # before admitting its actual candidate into downstream selector evidence.
+    check_candidate_result(native, root)
     validate_native_process(native, process, text)
     # Runner-retained stdout/stderr remain actual measured evidence too; an
     # intact top-level report cannot conceal a removed execution transcript.
@@ -187,13 +191,14 @@ def validate_native_process(native, process, text):
     binding = dict(role="expected_sprites", family=native["family"], configuration=native["configuration"],
                    **native["expected_payload"], source_manifest=native["expected_manifest"])
     summary = re.search(r"All tests passed \(([\d,]+) assertions in 1 test case\)", text)
-    # A successful unrelated process, stale input binding or source-only flag
-    # cannot become actual current decoder qualification for these selectors.
+    # The decoder owns exactly three distinct inputs: independent pixels and
+    # the selected GRF/checksum pair. Missing or foreign inputs cannot qualify
+    # selectors; the caller separately closes the actual opened-file chain.
     if (process.get("exit_status") != 0 or process.get("input_integrity_passed") is not True
             or process.get("configuration") != native["configuration"] or process.get("run_id") != native["run_id"]
             or process.get("executable") != native["application"]
             or process.get("argv", [])[1:] != [native["tag"], "--reporter", "console", "--durations", "yes"]
-            or process.get("inputs") != [native["expected_payload"]]
+            or process.get("inputs") != [native["expected_payload"], native["actual_candidate"], native["candidate_checksum"]]
             or binding not in process.get("bound_inputs", []) or summary is None
             or int(summary.group(1).replace(",", "")) != native["assertions"] or native["marker"] not in text):
         raise ValueError("actual decoder process/source/terminal evidence disagrees")

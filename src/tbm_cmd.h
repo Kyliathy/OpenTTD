@@ -58,6 +58,22 @@ CommandCost CmdExtendTBMProject(DoCommandFlags flags, TBMProjectID project, Tile
 DEF_CMD_TRAIT(Commands::ExtendTBMProject, CmdExtendTBMProject, CommandFlags{}, CommandType::VehicleManagement)
 
 /**
+ * Replace the unfinished remainder of a live project's work with a reviewed new area, without a pause (r2df Group 12).
+ * Completed cuts, ground, cargo and money stay; the controller keeps its phase, heading and work remainder.
+ * @param flags Estimate/execute policy; both paths revalidate the complete live quote.
+ * @param project Actual owned unfinished controller with at least one completed cut.
+ * @param area_start First new floor corner, or the last completed cut's position for a straight tunnel.
+ * @param area_end Opposite floor corner, or the tunnel end.
+ * @param expected_cursor Completed-cut count the quote was made at; another completed cut makes it stale.
+ * @param expected_fingerprint Exact geometry, quantities and participant fingerprint from the preview.
+ * @param intent Reviewed area coverage or straight tunnel; part of the synchronized quote.
+ * @return Zero immediate cost or an actionable unchanged refusal; later cuts pay their own work.
+ */
+CommandCost CmdChangeTBMWork(DoCommandFlags flags, TBMProjectID project, TileIndex area_start, TileIndex area_end, uint32_t expected_cursor, uint64_t expected_fingerprint, ExcavationPlanIntent intent);
+
+DEF_CMD_TRAIT(Commands::ChangeTBMWork, CmdChangeTBMWork, CommandFlags{}, CommandType::VehicleManagement)
+
+/**
  * Convert released temporary support on one tile into permanent track (Group 9). The track stays; its support
  * metadata and traffic restriction go, for the recorded conversion price. Support still in use by an unfinished
  * project refuses.

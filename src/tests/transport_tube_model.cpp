@@ -63,14 +63,14 @@ TEST_CASE("Tube physical source geometry matches the actual command bought proto
 	const auto engines = Engine::GetNumItems(), vehicles = Vehicle::GetNumItems(), packets = CargoPacket::GetNumItems();
 	const auto ledger = ComputeUtilityPowerDigest();
 	// Future physical descriptors preserve the prototype's actual engine/part
-	// identity and utility owner. Their definitions and activation remain later.
+	// identity and utility owner. Their installed definitions grant no paid power or additional physical parts.
 	for (const auto &capability : GetMultiLayerVehicleCapabilities()) {
 		if (capability.transport != MultiLayerVehicleTransport::Tube) continue;
 		const auto other = GetTubeVehicleGeometry(capability.model_id);
 		REQUIRE(other.has_value());
 		CHECK(other->native_parts == geometry->native_parts);
 		CHECK(other->vehicle_length_units == geometry->vehicle_length_units);
-		if (capability.model_id != 9) CHECK(GetTubeEngine(capability.model_id) == EngineID::Invalid());
+		CHECK(GetTubeEngine(capability.model_id) != EngineID::Invalid());
 	}
 	CHECK(GetTubeEngine(9) == capsule->engine_type);
 	CHECK(Engine::GetNumItems() == engines);

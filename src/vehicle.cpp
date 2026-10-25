@@ -204,12 +204,16 @@ bool Vehicle::NeedsAutorenewing(const Company *c, bool use_renew_setting) const
 void VehicleServiceInDepot(Vehicle *v)
 {
 	assert(v != nullptr);
-	// A capsule's actual service is mandatory powered work. Automatic depot,
-	// purchase and departure callbacks may not service it outside the complete
-	// metered participant; ordinary vehicles retain their existing service owner.
-	if (v->type == VehicleType::Train && GetTubeVehicleCapability(v->engine_type).has_value() && !IsTubeExternalPowerCommitting()) return;
+	// A capsule's actual service is mandatory powered work. Native geothermal
+	// work and the original external tariff participant both authorize the real
+	// repair; automatic purchase/departure callbacks outside either transaction
+	// remain refused. Ordinary vehicles retain their existing service owner.
+	if (v->type == VehicleType::Train && GetTubeVehicleCapability(v->engine_type).has_value() &&
+		!IsTubeExternalPowerCommitting() && !IsTubePowerExecutionAuthorized(*Train::From(v))) return;
 	SetWindowDirty(WindowClass::VehicleDetails, v->index); // ensure that last service date and reliability are updated
 
+	// One admitted depot service repairs every actual engine in this linked
+	// consist; it cannot repair another front or omit a powered trailing part.
 	do {
 		v->date_of_last_service = TimerGameEconomy::date;
 		v->date_of_last_service_newgrf = TimerGameCalendar::date;

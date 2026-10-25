@@ -4,7 +4,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file tbm_replanning.h Read-only, revision-bound work extension for the actual paused cutter. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group3B */
+/** @file tbm_replanning.h Pure extension and unfinished work-change quotes for the actual native cutter. @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group3B */
 
 #ifndef TBM_REPLANNING_H
 #define TBM_REPLANNING_H
@@ -18,6 +18,7 @@ struct TBMExtensionPreview {
 	ExcavationOutline outline; ///< Actual requested area and accepted old/new working space.
 	ExcavationRouteProposal plan; ///< Only additional canonical cuts beyond the old accepted endpoint.
 	std::vector<TileIndex> working_space; ///< Swept extension cells outside the additional final floor.
+	TBMApproachSummary approach; ///< Actual additional approach cells, already counted by the canonical route quote.
 	uint64_t job_revision = 0; ///< Exact geological revision reviewed, including partial work.
 	uint64_t fingerprint = 0; ///< Geometry, quantities and controller identity accepted by confirmation.
 };
@@ -32,5 +33,36 @@ struct TBMExtensionPreview {
  * @return Complete additional-work quote or actionable refusal, with all saved owners unchanged.
  */
 TBMExtensionPreview PreviewTBMExtension(CompanyID company, TBMProjectID project, TileIndex area_start, TileIndex area_end, ExcavationPlanIntent intent = ExcavationPlanIntent::Area);
+
+/** Transient change-work quote (M2O23 Group23CC): the unfinished remainder replaced from the last completed cut; nothing is allocated. */
+struct TBMWorkChangePreview {
+	CommandCost result; ///< Zero immediate cost on success, or the player's refusal message.
+	VehicleID cutter = VehicleID::Invalid(); ///< Actual machine quoted.
+	ExcavationOutline outline; ///< New floor, ring and approach.
+	ExcavationRouteProposal plan; ///< New cuts from the last completed cut, with their quantities.
+	std::vector<TileIndex> working_space; ///< New swept cells outside the new floor.
+	TBMApproachSummary approach; ///< Approach and turning space the new cuts dig beyond the new floor, its ring and the completed work.
+	ExcavationLoadStart load; ///< Spoil aboard when quoted; the command measures it again when it executes.
+	uint32_t cursor = 0; ///< Completed cuts kept; the quote is bound to this count.
+	uint32_t dropped_cuts = 0; ///< Planned cuts that will no longer be made.
+	uint64_t abandoned_work_ticks = 0; ///< Work on the cut in progress that a different first new cut discards, at quote time.
+	uint64_t cut_work_ticks = 0; ///< Work the cut in progress needs in total, to state the abandoned share.
+	TBMSupportPlan face_support; ///< Junction piece the face needs when its laid piece points away from the new first cut.
+	uint64_t fingerprint = 0; ///< Reviewed geometry, quantities, cursor and participants; not the moving partial work.
+};
+
+/**
+ * Quote replacing the unfinished remainder of a live project with a new area, without pausing it.
+ * Working, paused, returning and parked projects are accepted; finished or releasing ones, and one whose machine has
+ * not completed a cut yet, are refused. Completed cuts, ground, cargo and money stay.
+ * @param company Actual requesting company; the query restores the caller's command context.
+ * @param project Actual existing controller.
+ * @param area_start First new floor corner, or the last completed cut's position for a straight tunnel.
+ * @param area_end Opposite floor corner, or the tunnel end.
+ * @param intent Area coverage or straight tunnel.
+ * @return Complete change quote or actionable refusal, with all saved owners unchanged.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CC
+ */
+TBMWorkChangePreview PreviewTBMWorkChange(CompanyID company, TBMProjectID project, TileIndex area_start, TileIndex area_end, ExcavationPlanIntent intent = ExcavationPlanIntent::Area);
 
 #endif /* TBM_REPLANNING_H */

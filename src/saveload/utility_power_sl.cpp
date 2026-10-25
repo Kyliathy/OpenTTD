@@ -5,6 +5,7 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/savegame/archi-savegame.md; original B adapters use explicit lineage capabilities.
  * @file utility_power_sl.cpp Bounded shared typed energy epochs, exact meters, domain roles, connectivity and grant-slice transport.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5 paid native electrical links
@@ -17,6 +18,7 @@
 #include "saveload_error.hpp"
 #include "../utility_power.h"
 #include "../utility_power_lineage.h"
+#include "../utility_power_conversion_wire.h"
 #include "../multilayer_state.h"
 #include "../map_layer.h"
 #include "../fios.h"
@@ -57,6 +59,10 @@ struct UtilityWireRow {
 	uint16_t riser = 0; ///< Version401 actual paid native machinery ID for ElectricalRiser links only; reserved zero in every older/different row role.
 	uint32_t share = 0; ///< Version403 shared slice identity, used only by reservation rows.
 	uint32_t parent = 0; ///< Version403 exact preceding slice, or invalid for a root; reserved zero in other roles.
+	uint16_t town_terminal = 0; ///<431 consumer-only original paid Surface station; other wire kinds must retain zero.
+	uint32_t town_supply = 0; ///<431 consumer-only original Deep forwarding reservation; never energy.
+	uint32_t town_source_port = 0; ///<431 consumer-only native powerhouse boundary tile.
+	uint16_t generator = 0; ///<432 ElectricalFeed-only original native generator; every other wire role keeps zero.
 };
 
 static const SaveLoad _utility_row_desc[] = {
@@ -89,6 +95,10 @@ static const SaveLoad _utility_row_desc[] = {
 	SaveLoad::Variable<VarFileType::U16>("riser", SLE_OBJECT_ADDRESS(UtilityWireRow, riser), SaveLoadVersion::PaidElectricalRiserLinks),
 	SaveLoad::Variable<VarFileType::U32>("share", SLE_OBJECT_ADDRESS(UtilityWireRow, share), SaveLoadVersion::UtilityShareLineage),
 	SaveLoad::Variable<VarFileType::U32>("parent", SLE_OBJECT_ADDRESS(UtilityWireRow, parent), SaveLoadVersion::UtilityShareLineage),
+	SaveLoad::Variable<VarFileType::U16>("town_terminal", SLE_OBJECT_ADDRESS(UtilityWireRow, town_terminal)).WithCapability(SaveCapability::UtilityTownService),
+	SaveLoad::Variable<VarFileType::U32>("town_supply", SLE_OBJECT_ADDRESS(UtilityWireRow, town_supply)).WithCapability(SaveCapability::UtilityTownService),
+	SaveLoad::Variable<VarFileType::U32>("town_source_port", SLE_OBJECT_ADDRESS(UtilityWireRow, town_source_port)).WithCapability(SaveCapability::UtilityTownService),
+	SaveLoad::Variable<VarFileType::U16>("generator", SLE_OBJECT_ADDRESS(UtilityWireRow, generator)).WithCapability(SaveCapability::UtilityLocalElectricalFeed),
 };
 
 static std::array<bool, 2> _utility_presence{}; ///< Unaccepted header/table presence, separate from live authority.
@@ -107,6 +117,7 @@ void ResetUtilityPowerLoadStaging()
 	_utility_counts.fill(0);
 	_utility_rows = {};
 	_utility_path_presence.fill(false); _utility_path_header.fill(0); _utility_path_rows.clear();
+	ResetUtilityHeatConversionLoadStaging();
 }
 
 /**
@@ -120,7 +131,7 @@ static bool CheckUtilityPowerFamily(bool preview)
 	const auto &header = preview ? _load_check_data.utility_power_header : _utility_header;
 	const auto &counts = preview ? _load_check_data.utility_power_rows : _utility_counts;
 	auto &rows = preview ? _load_check_data.utility_power_state : _utility_rows;
-	const auto *metadata = GetPendingMultiLayerStateSchema();
+	const auto *metadata = preview ? nullptr : GetPendingMultiLayerStateSchema();
 	const uint32_t flags = preview ? _load_check_data.multilayer_feature_flags : metadata == nullptr ? 0 : metadata->feature_flags;
 	const bool required = (flags & MULTILAYER_FEATURE_UTILITY_POWER) != 0;
 	if (!presence[0]) {
@@ -167,18 +178,34 @@ static bool CheckUtilityPowerFamily(bool preview)
 		}
 	} else if (MigrateUtilityPowerLineage(rows) != UtilityPowerError::None) SlErrorCorrupt("Invalid older utility lineage");
 	if (preview) {
-		const uint64_t plane_size = static_cast<uint64_t>(_load_check_data.map_size_x) * _load_check_data.map_size_y;
-		// Local cell addresses resolve only against this file's copied geometry
-		// and companies; the running world's layer size/ownership is irrelevant.
+		// Physical roles resolve in this candidate's native geometry. Neither a
+		// coincident live tile nor a scalar division can supply missing endpoints.
 		for (const auto &link : rows.links) {
+			if (link.kind == UtilityLinkKind::ElectricalFeed) {
+				const auto source = MultiLayerMap::DecodeStoredTile(link.source_endpoint, _load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.map_layers);
+				const auto destination = MultiLayerMap::DecodeStoredTile(link.destination_endpoint, _load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.map_layers);
+				// A local electrical feed joins two original Deep boundaries; wrong-plane references must never acquire usable power.
+				if (!source.has_value() || !destination.has_value() || source->layer != MapLayer::DeepUnderground || destination->layer != MapLayer::DeepUnderground) SlErrorCorrupt("Invalid local electrical feed preview geometry");
+			}
 			if (link.kind != UtilityLinkKind::LocalCell) continue;
-			if (plane_size == 0 || _load_check_data.map_layers != 4 || link.source_endpoint.base() / plane_size != to_underlying(link.local_layer) ||
+			const auto source = MultiLayerMap::DecodeStoredTile(link.source_endpoint, _load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.map_layers);
+			// Installed cells need this file's declared layer and company; copying geometry cannot confer another owner's network rights.
+			if (!source.has_value() || source->layer != link.local_layer ||
 				(link.active && !_load_check_data.companies.contains(link.local_owner.base()))) SlErrorCorrupt("Invalid local utility preview geometry/owner");
+		}
+		// Town service keeps only a reference to the original Deep powerhouse;
+		// the shared utility ledger remains the sole quantity and history owner.
+		for (const auto &consumer : rows.consumers) {
+			if (consumer.town_terminal == StationID::Invalid()) continue;
+			const auto port = MultiLayerMap::DecodeStoredTile(consumer.town_source_port, _load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.map_layers);
+			// An absent or foreign-plane boundary cannot dispatch a saved physical service.
+			if (!port.has_value() || port->layer != MapLayer::DeepUnderground) SlErrorCorrupt("Invalid copied town service source port");
 		}
 		if (ValidateUtilityPowerLineage(rows, {_load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.map_layers}) != UtilityPowerError::None) SlErrorCorrupt("Invalid copied utility lineage geometry");
 	}
 
 	MultiLayerProfileSelection selection;
+	JoinLoadedUtilityHeatConversions(rows, preview); // Attach only this file's exact metadata/provenance before complete numerical validation; repeated checks replace copied extensions.
 	selection.id = preview ? static_cast<MultiLayerGameplayProfileID>(_load_check_data.gameplay_profile_id) : metadata == nullptr ? MultiLayerGameplayProfileID::Classic : metadata->profile.id;
 	if (ValidateUtilityPowerState(rows, selection, false, preview ? _load_check_data.map_layers : MultiLayerMap::GetLayerCount()) != UtilityPowerError::None) SlErrorCorrupt("Invalid utility power structural balances");
 	return true;
@@ -286,6 +313,7 @@ struct UPLDChunkHandler : ChunkHandler {
 				consumer.meter.accounting_interval, consumer.capacity_j, consumer.meter.demand_energy_j, consumer.meter.granted_energy_j, consumer.meter.unmet_energy_j, 0, 0};
 			wire.town = consumer.town.base(); wire.town_bonus = consumer.town_bonus_percent;
 			wire.town_applied = consumer.town_effect_applied; wire.town_suspended = consumer.town_effect_suspended;
+			wire.town_terminal = consumer.town_terminal.base(); wire.town_supply = consumer.town_supply.base(); wire.town_source_port = consumer.town_source_port.base();
 			wire.domain = to_underlying(consumer.meter.domain);
 			emit(wire);
 		}
@@ -313,7 +341,8 @@ struct UPLDChunkHandler : ChunkHandler {
 				emit(wire); continue; // Installed physical rate/identity has no source reservation, generated energy or metered flow.
 			}
 			const bool paid = link.kind == UtilityLinkKind::ElectricalRiser;
-			UtilityWireRow wire{4, link.id.base(), link.source.base(), 0, 0, static_cast<uint8_t>(paid ? 2 : 0), link.active, link.portal_revision, paid ? link.riser_capacity_w : link.capacity_j, link.flow_j};
+			UtilityWireRow wire{4, link.id.base(), link.source.base(), 0, 0, to_underlying(link.kind), link.active, link.portal_revision, paid ? link.riser_capacity_w : link.capacity_j, link.flow_j};
+			if (link.kind == UtilityLinkKind::ElectricalFeed) wire.generator = link.generator.base(); // Only the explicit current role may retain native plant identity, including IndustryID zero.
 			if (paid) wire.riser = link.riser.base(); // Declared paid role retains physical watts and its original native machinery; genuine older roles keep their original interval-joule encoding.
 			wire.destination = link.destination.base(); wire.source_endpoint = link.source_endpoint.base(); wire.destination_endpoint = link.destination_endpoint.base();
 			emit(wire);
@@ -331,14 +360,16 @@ struct UPLDChunkHandler : ChunkHandler {
 		const bool local = !IsSavegameVersionBefore(SaveLoadVersion::LocalUtilityLinks);
 		const bool paid = !IsSavegameVersionBefore(SaveLoadVersion::PaidElectricalRiserLinks);
 		const bool lineage = !IsSavegameVersionBefore(SaveLoadVersion::UtilityShareLineage);
-		if (description.size() != (lineage ? 29 : paid ? 27 : !IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) ? 26 : effects ? 25 : transfers ? 21 : old ? 14 : 16)) SlErrorCorrupt("Invalid utility power field count");
+		const bool town_service = SlHasSaveCapability(SaveCapability::UtilityTownService);
+		const bool local_feed = SlHasSaveCapability(SaveCapability::UtilityLocalElectricalFeed);
+		if (description.size() != (local_feed ? 33 : town_service ? 32 : lineage ? 29 : paid ? 27 : !IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains) ? 26 : effects ? 25 : transfers ? 21 : old ? 14 : 16)) SlErrorCorrupt("Invalid utility power field count");
 		if (!IsSavegameVersionBefore(SaveLoadVersion::UtilityHeatDomains)) {
 			// Current typed native quantities require every named scalar. A
 			// same-sized unknown replacement cannot default a Heat source into
 			// Electricity or erase its original ID/owner/lifetime/carry/role.
 			for (const auto &field : _utility_row_desc) {
-				if (IsSavegameVersionBefore(field.version_from)) continue; // Genuine older typed tables cannot default into a later paid machinery role or be required to carry its new column.
-				if (std::ranges::find(description, field.name, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing typed utility field");
+				if (!SlIsObjectValidInSavegame(field)) continue; // Genuine older typed tables cannot default into a later paid machinery role or be required to carry its new column.
+				if (std::ranges::count(description, field.name, &SaveLoad::name) != 1) SlErrorCorrupt("Missing typed utility field");
 			}
 		}
 		// A missing scalar may not default to a free grant, a zero consumption
@@ -346,8 +377,8 @@ struct UPLDChunkHandler : ChunkHandler {
 		for (const auto &field : _utility_row_desc) {
 			// Version381 did not expose settlement totals; later files require
 			// every new scalar rather than silently resetting consumed history.
-			if (IsSavegameVersionBefore(field.version_from)) continue;
-			if (std::ranges::find(description, field.name, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing utility power field");
+			if (!SlIsObjectValidInSavegame(field)) continue;
+			if (std::ranges::count(description, field.name, &SaveLoad::name) != 1) SlErrorCorrupt("Missing utility power field");
 		}
 		auto &rows = preview ? _load_check_data.utility_power_state : _utility_rows;
 		auto &counts = preview ? _load_check_data.utility_power_rows : _utility_counts;
@@ -370,13 +401,18 @@ struct UPLDChunkHandler : ChunkHandler {
 			if (wire.type != 3 && (wire.share != 0 || wire.parent != 0)) SlErrorCorrupt("Invalid utility slice role fields"); // Only actual reservation rows can name a shared slice or parent; generation and native links cannot hide quantities here.
 			if (wire.type != 4 && (wire.destination != 0 || wire.source_endpoint != 0 || wire.destination_endpoint != 0)) SlErrorCorrupt("Invalid utility route fields");
 			if (wire.riser != 0 && !(paid && wire.type == 4 && wire.kind == 2)) SlErrorCorrupt("Invalid paid machinery role fields"); // Only the explicit paid electrical role can name a native riser, including actual IndustryID zero.
+			// A genuine older table cannot acquire a later feed, and unrelated
+			// rows cannot conceal another native machinery reference.
+			if (wire.generator != 0 && !(local_feed && wire.type == 4 && wire.kind == 3)) SlErrorCorrupt("Invalid local feed machinery fields");
 			// Only consumer rows carry a city offer; every serialized flag is an
 			// actual boolean and cannot hide a second growth authority elsewhere.
 			if ((wire.type != 1 && (wire.town != 0 || wire.town_bonus != 0 || wire.town_applied != 0 || wire.town_suspended != 0)) || wire.town_applied > 1 || wire.town_suspended > 1) SlErrorCorrupt("Invalid utility town fields");
+			if (wire.type != 1 && (wire.town_terminal != 0 || wire.town_supply != 0 || wire.town_source_port != 0)) SlErrorCorrupt("Invalid utility town service role fields"); // A route, source or subordinate share cannot conceal another physical consumer.
 			// Source/consumer records own typed quantities. A subordinate
 			// connection, slice or electrical route cannot conceal another meter.
 			if (wire.domain > to_underlying(UtilityEnergyDomain::Heat) || (wire.type > 1 && wire.domain != 0 && !(local && wire.type == 4 && wire.kind == 1))) SlErrorCorrupt("Invalid utility energy domain fields");
 			if (wire.type == 0) {
+				if (!SlHasSaveCapability(SaveCapability::UtilityHeatConversion) && wire.kind == to_underlying(UtilityGenerationKind::HeatConversion)) SlErrorCorrupt("Unexpected exact conversion in older utility format"); // Older rate-derived rows cannot acquire later coupled output semantics.
 				// Producer rows cannot carry a foreign reference or consumer-only
 				// payload, and liveness must be an actual boolean.
 				if (wire.reference != 0 || wire.active > 1 || wire.d != 0) SlErrorCorrupt("Invalid utility source wire fields");
@@ -407,6 +443,9 @@ struct UPLDChunkHandler : ChunkHandler {
 				consumer.town = effects ? TownID{wire.town} : TownID::Invalid();
 				consumer.town_bonus_percent = wire.town_bonus; consumer.town_effect_applied = wire.town_applied != 0;
 				consumer.town_effect_suspended = wire.town_suspended != 0;
+				consumer.town_terminal = town_service ? StationID{wire.town_terminal} : StationID::Invalid();
+				consumer.town_supply = town_service ? UtilityConsumerID{wire.town_supply} : UtilityConsumerID{UINT32_MAX};
+				consumer.town_source_port = town_service ? TileIndex{wire.town_source_port} : INVALID_TILE;
 				rows.consumers.push_back(std::move(consumer));
 			} else if (wire.type == 4) {
 				if (local && wire.kind == 1) {
@@ -427,12 +466,14 @@ struct UPLDChunkHandler : ChunkHandler {
 				// Directed route payload contains physical references and metering
 				// only; producer/consumer publication or use cannot hide in it.
 				const bool paid_row = paid && wire.kind == 2;
-				if (wire.owner != 0 || wire.layer != 0 || (wire.kind != 0 && !paid_row) || wire.active > 1 || wire.c != 0 || wire.d != 0 || wire.ticks != 0 || wire.remainder != 0 || wire.lifetime_generated != 0 || wire.lifetime_consumed != 0) SlErrorCorrupt("Invalid utility link wire fields");
+				const bool feed_row = local_feed && wire.kind == 3;
+				if (wire.owner != 0 || wire.layer != 0 || (wire.kind != 0 && !paid_row && !feed_row) || wire.active > 1 || wire.c != 0 || wire.d != 0 || wire.ticks != 0 || wire.remainder != 0 || wire.lifetime_generated != 0 || wire.lifetime_consumed != 0) SlErrorCorrupt("Invalid utility link wire fields");
 				UtilityPowerLink link;
 				link.id = UtilityLinkID{wire.id}; link.source = UtilityConsumerID{wire.reference}; link.destination = UtilityConsumerID{wire.destination};
 				link.source_endpoint = TileIndex{wire.source_endpoint}; link.destination_endpoint = TileIndex{wire.destination_endpoint};
 				link.portal_revision = wire.epoch; link.flow_j = wire.b; link.active = wire.active != 0;
 				if (paid_row) { link.kind = UtilityLinkKind::ElectricalRiser; link.riser = IndustryID{wire.riser}; link.riser_capacity_w = wire.a; }
+				else if (feed_row) { link.kind = UtilityLinkKind::ElectricalFeed; link.generator = IndustryID{wire.generator}; link.capacity_j = wire.a; }
 				else link.capacity_j = wire.a; // Preserve genuine older numerical portal caps; only declared401 paid roles interpret the scalar as an immutable physical rate.
 				rows.links.push_back(link);
 			} else {
@@ -534,7 +575,7 @@ struct UPPDChunkHandler : ChunkHandler {
 		// All named fields are mandatory; an unknown same-sized replacement may
 		// not default a path into a different parent or physical reference.
 		for (const auto &field : _utility_path_desc) {
-			if (std::ranges::find(description, field.name, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing utility lineage field");
+			if (std::ranges::count(description, field.name, &SaveLoad::name) != 1) SlErrorCorrupt("Missing utility lineage field");
 		}
 		auto &rows = preview ? _load_check_data.utility_path_rows : _utility_path_rows;
 		uint32_t ordinal = 0; std::optional<std::pair<uint32_t, uint32_t>> previous;

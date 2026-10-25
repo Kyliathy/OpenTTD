@@ -44,6 +44,8 @@
 #include "../utility_power.h"
 #include "../geothermal_heat.h"
 #include "../geothermal_collector.h"
+#include "../geothermal_generator.h"
+#include "../transport_tube_geothermal.h"
 #include "../geothermal_riser.h"
 #include "../geothermal_utility.h"
 #include "../transport_tube.h"
@@ -3499,6 +3501,16 @@ bool AfterLoadGame()
 	}
 
 	AfterLoadLabelMaps();
+	// Native phase2built consist power before converting the saved rail-label
+	// slots. A donor Tube slot can name an unpowered current track until this
+	// remap; rebuild only canonical capsule caches now so the FIRST resumed tick
+	// and first441save use the same physical coefficients as their later reload.
+	// Recalculation neither moves a train nor spends utility, cargo or company money.
+	for (Train *train : Train::Iterate()) {
+		if (!train->IsFrontEngine()) continue;
+		if (!GetTubeVehicleCapability(train->engine_type).has_value()) continue;
+		train->ConsistChanged(CCF_SAVELOAD);
+	}
 	AfterLoadCompanyStats();
 	// Projects bind actual train chains, so they are validated only now that vehicles, geology and portal work are rebuilt.
 	if (!AcceptLoadedTBMProjects()) SlErrorCorrupt("Invalid TBM project authority");
@@ -3529,7 +3541,7 @@ bool AfterLoadGame()
 	// Restore the sole private processing owners only after their exact native module and original utility identities have both admitted this same file.
 	if (!AcceptLoadedOrbitalRecipes()) SlErrorCorrupt("Invalid native orbital processing authority");
 	// Adopt only complete original order history/commitments after native profile, geometry, companies, stations and economy date agree; load issues no shipment or expense.
-	if (!AcceptLoadedSurfaceSupplyOrders(!IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders))) SlErrorCorrupt("Invalid native Surface supply order authority");
+	if (!AcceptLoadedSurfaceSupplyOrders(SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB))) SlErrorCorrupt("Invalid native Surface supply order authority");
 	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
 	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
 	// Saved approach claims resolve only after native hulls, owned sites and body leases have all installed their original identities.
@@ -3542,11 +3554,19 @@ bool AfterLoadGame()
 	}
 	// Paid physical inlets resolve after their actual portal, geology and ledger owners; load never fabricates a replacement contract.
 	if (!AcceptLoadedTubePowerConnections()) SlErrorCorrupt("Invalid tube power authority");
-	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority"); // Actual saved vehicles and paid sources resolve before native ticks.
 	if (!AcceptLoadedGeothermalSiteClaims()) SlErrorCorrupt("Invalid cold geothermal site authority"); // Original geology, actual company, full floor and shared date resolve before planning rights publish.
 	if (!AcceptLoadedGeothermalCollectors()) SlErrorCorrupt("Invalid native geothermal collector authority"); // Consumed blueprint, actual native floor/stock/receipt/work and company resolve before heat readiness publishes.
+	// Original consumed sites, native stock and service receipts bind machinery
+	// after the shared owner has restored its exact utility identities.
+	if (!AcceptLoadedGeothermalGenerators()) SlErrorCorrupt("Invalid native geothermal generator construction");
 	if (!ValidateGeothermalUtilityLinks()) SlErrorCorrupt("Invalid installed rock utility geometry"); // Shared installed cells resolve actual native coexistence/collector/riser ports and owned electrical housings without repairing physical rights or energy.
 	if (!AcceptLoadedGeothermalHeatState()) SlErrorCorrupt("Invalid physical geothermal heat routes"); // Exact original shared slices and actual installed path geometry agree before usable physical rights publish.
+	// Resolve opposite physical references only after both owners accept;
+	// load cannot replace an input port, plant, feed or forwarding source.
+	if (!ValidateGeothermalGeneratorPhysicalReferences()) SlErrorCorrupt("Invalid native geothermal generator ports");
+	if (ValidateUtilityPowerState(CaptureUtilityPowerState(), GetCurrentMultiLayerProfileSelection()) != UtilityPowerError::None) SlErrorCorrupt("Invalid final utility physical references");
+	if (!AcceptLoadedTubeGeothermalPowerState()) SlErrorCorrupt("Invalid original geothermal tube sources");
+	if (!AcceptLoadedTubePowerVehicles()) SlErrorCorrupt("Invalid metered capsule authority");
 	RevalidateUtilityHeatRoutes(); // Actual native ownership expires only older lost-path unused rights; consumed history and healthy current source/path bytes remain unchanged.
 	// Diagnostics read every accepted feature owner, the TBM and receiver stores included (Plan 15 14.3), so saved
 	// work/terrain/fleet differences cannot hide in metadata-only hashes.

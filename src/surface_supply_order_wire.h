@@ -62,6 +62,14 @@ struct LegacyBSupplyTransport {
  */
 std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupplyTransport &original, const SurfaceSupplyRecordContext &same_file);
 
+/** Project original B packet purpose for the subsequent complete custody check, without changing any packet.
+ * @param original Actual decoded original packet scalars, with a literal validated departure flag.
+ * @param snapshot Same-file converted legacy history, already structurally/reference validated.
+ * @return Unchanged ordinary facts, or a CompanySupply projection only for an exact original invalid-Industry/zero-credit/nonzero legacy link. Contradictory purpose or absent receipt refuses.
+ * This projection is not adoption: native mutation and copied success still require the complete shared ownership/finite-history join.
+ */
+std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot);
+
 /** Project a decoded original A440 family to native evidence without changing its price, identity or Pending rights.
  * @param original Exact A440 decoded transport; the caller retains saved_day for the independent same-file DATE join.
  * @param same_file Candidate-owned map/profile/company/station facts, never current-world defaults.

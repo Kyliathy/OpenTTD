@@ -89,20 +89,23 @@ $demoSaves = @(
         Snapshot = 'src\tests\fixtures\demos\underground\mine-build-403.sav';
         Text = 'Earlier mine checkpoint: paid machinery construction and complete freight route';
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-    @{ Name = 'tbm-work'; SaveName = 'tbm-work-403';
-        Snapshot = 'src\tests\fixtures\demos\underground\tbm-work-403.sav';
-        Text = 'Excavation: current 50-cell TBM project and spoil hauler, ready to unpause';
+    # Use qualified441 successors so ordinary startup has self-describing
+    # lineage without guessing the ambiguous donor425 origin. Both original
+    # fixture sets remain durable inputs; these four named choices use the merge.
+    @{ Name = 'tbm-work'; SaveName = 'tbm-work-441';
+        Snapshot = 'savegames/retained/mlm/reviews/space/machinery-lineage-original/merge63-demo-work-094eca897b/saves/tbm-work-441.sav';
+        Text = 'Excavation: 50-cell TBM project; the hauler takes spoil at the face; ready to unpause';
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-    @{ Name = 'tbm-plan'; SaveName = 'tbm-plan-403';
-        Snapshot = 'src\tests\fixtures\demos\underground\tbm-plan-403.sav';
+    @{ Name = 'tbm-plan'; SaveName = 'tbm-plan-441';
+        Snapshot = 'savegames/retained/mlm/reviews/space/machinery-lineage-original/merge63-demo-plan-5c1f3f4b23/saves/tbm-plan-441.sav';
         Text = 'Try planning: paused 44-cell project with room to preview six more cells';
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-    @{ Name = 'tbm-exit'; SaveName = 'tbm-exit-403';
-        Snapshot = 'src\tests\fixtures\demos\underground\tbm-exit-403.sav';
+    @{ Name = 'tbm-exit'; SaveName = 'tbm-exit-441';
+        Snapshot = 'savegames/retained/mlm/reviews/space/machinery-lineage-original/merge63-demo-exit-4cfe2ab408/saves/tbm-exit-441.sav';
         Text = 'Build exit B: 50 cells finished, whole TBM stopped clear of the exit site';
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
-    @{ Name = 'tbm-tunnel'; SaveName = 'tbm-tunnel-403';
-        Snapshot = 'src\tests\fixtures\demos\underground\tbm-tunnel-403.sav';
+    @{ Name = 'tbm-tunnel'; SaveName = 'tbm-tunnel-441';
+        Snapshot = 'savegames/retained/mlm/reviews/space/machinery-lineage-original/merge63-demo-tunnel-813c192b88/saves/tbm-tunnel-441.sav';
         Text = 'Public A-to-B tunnel: original TBM parked at B, ordinary train running';
         Guide = 'docs\zz-reach2\upgrades\2026-10\d2um-underground-mines.md' }
     @{ Name = 'collector-build'; SaveName = 'collector-build-403';

@@ -36,9 +36,12 @@ class SpacePackingTests(unittest.TestCase):
     def setUpClass(cls):
         """Select the complete declared source reports for this invocation.
 
+        @param cls Active explicitly selected candidate check.
         @return None; missing current inputs fail without searching another run.
         """
-        cls.context = RunContext(ROOT, "space", COLLECTION + "-derived-inputs", RUN_ID)
+        # Check/repeat products stay separate from the active recipe supplier,
+        # preserving its exact report identity for the aggregate consumer.
+        cls.context = RunContext(ROOT, "space", COLLECTION + "-packing-check", RUN_ID)
         if not (ROOT / "mlm/runtime/.runs" / RUN_ID).is_dir():
             raise ValueError("packing requires an explicitly reserved source invocation")
         catalogue = json.loads((ROOT / "mlm/review-producers.json").read_text(encoding="utf-8"))
@@ -53,6 +56,7 @@ class SpacePackingTests(unittest.TestCase):
     def test_actual_packing_repeats_independent_canonical_bytes(self):
         """Derive twice from selected fresh sources and compare canonical outputs.
 
+        @param self Active explicitly selected candidate check.
         @return None; only disposable candidate data and reports are written.
         """
         public = pack.PUBLIC.read_bytes()
@@ -85,6 +89,7 @@ class SpacePackingTests(unittest.TestCase):
     def test_missing_changed_foreign_sources_and_encoder_refuse(self):
         """Refuse missing/stale source identities, another run and a wrong encoder.
 
+        @param self Active explicitly selected candidate check.
         @return None; intentional faults modify only in-memory selection records.
         """
         changed = copy.deepcopy(self.manifests)
@@ -114,6 +119,7 @@ class SpacePackingTests(unittest.TestCase):
     def test_independent_launch_alias_facts_refuse_coherent_wrong_state_pixels(self):
         """Refuse an otherwise valid physical alias that shows working art during construction.
 
+        @param self Active explicitly selected candidate check.
         @return None; altered metadata stays in memory and all source PNG bytes remain exact.
         """
         if COLLECTION != "launch":
@@ -158,12 +164,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--collection", choices=("space", "orbital", "launch"), default="space")
-    parser.add_argument("--case", choices=("all", "alias", "refusals"), default="all")
+    parser.add_argument("--case", choices=("all", "repeat", "alias", "refusals"), default="all")
     arguments = parser.parse_args()
     RUN_ID, COLLECTION = arguments.run_id, arguments.collection
     pack = importlib.import_module("pack_launch_fleet_art" if COLLECTION == "launch" else "pack_" + COLLECTION + "_art")
     selected = [__file__]
-    if arguments.case == "alias":
+    if arguments.case == "repeat":
+        selected.append("SpacePackingTests.test_actual_packing_repeats_independent_canonical_bytes")
+    elif arguments.case == "alias":
         selected.append("SpacePackingTests.test_independent_launch_alias_facts_refuse_coherent_wrong_state_pixels")
     elif arguments.case == "refusals":
         selected.append("SpacePackingTests.test_missing_changed_foreign_sources_and_encoder_refuse")

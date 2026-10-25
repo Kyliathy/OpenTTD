@@ -1,5 +1,7 @@
 # Space demo - asteroids and native mining probes
 
+**Preserved historical guide,2026-10-25.** Bdeleted this document; Aexplicitly keeps it as compatibility navigation. Use [Space adventures](d2sa-space-adventures.md) for current tours and the [merged handoff](m2o23-4-come-space-b-integration-handoff.md) for qualification/continuation scope. Earlier return-path limits below describe this guide's original checkpoint. [Storage authority](../../architecture/archi-historical-debug.md).
+
 The [bundled underground and Space guide](d2um-underground-mines.md) is the main
 playtest walkthrough and includes the new `space-hub` checkpoint.
 

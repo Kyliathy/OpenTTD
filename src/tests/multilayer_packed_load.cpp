@@ -16,6 +16,7 @@
 
 #include "../stdafx.h"
 #include "test_artifact_paths.h"
+#include "test_candidate_sprite_input.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../openttd.h"
 #include "../spritecache.h"
@@ -109,9 +110,10 @@ TEST_CASE("Actual native loader preserves M0 and loads every selected M1 sprite"
 		try {
 			REQUIRE(elapsed > 0);
 			NativeArtEncoder encoder;
-			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
 			REQUIRE(origin != nullptr);
 			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			ObserveTestCandidateSpriteFile(*origin);
 			std::ifstream input(fixture, std::ios::binary);
 			REQUIRE(input.good());
 			std::array<char, 8> magic{};
@@ -187,9 +189,10 @@ TEST_CASE("Actual native loader preserves previews and loads all final Space spr
 		try {
 			REQUIRE(elapsed > 0);
 			NativeArtEncoder encoder;
-			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
 			REQUIRE(origin != nullptr);
 			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			ObserveTestCandidateSpriteFile(*origin);
 			std::ifstream input(fixture, std::ios::binary);
 			REQUIRE(input.good());
 			std::array<char, 8> magic{};
@@ -266,9 +269,10 @@ TEST_CASE("Actual native loader loads every appended orbital sprite exactly", "[
 		try {
 			REQUIRE(elapsed > 0);
 			NativeArtEncoder encoder;
-			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
 			REQUIRE(origin != nullptr);
 			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			ObserveTestCandidateSpriteFile(*origin);
 			std::ifstream input(fixture, std::ios::binary);
 			REQUIRE(input.good());
 			std::array<char, 8> magic{};
@@ -346,9 +350,10 @@ TEST_CASE("Actual native loader loads every appended launch and rocket sprite ex
 		try {
 			REQUIRE(elapsed > 0);
 			NativeArtEncoder encoder;
-			const SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
+			SpriteFile *origin = GetOriginFile(SPR_MAP_LAYER_BASE);
 			REQUIRE(origin != nullptr);
 			REQUIRE(StrEqualsIgnoreCase(std::filesystem::path(origin->GetFilename()).filename().string(), "openttd.grf"));
+			ObserveTestCandidateSpriteFile(*origin);
 			std::ifstream input(fixture, std::ios::binary);
 			REQUIRE(input.good());
 			std::array<char, 8> magic{};

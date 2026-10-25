@@ -15,6 +15,8 @@
 #include "geothermal_utility_cmd.h"
 #include "command_func.h"
 #include "geothermal_collector.h"
+#include "geothermal_generator.h"
+#include "transport_tube.h"
 #include "geothermal_riser.h"
 #include "layer_portal_cmd.h"
 #include "layer_portal_map.h"
@@ -114,6 +116,12 @@ std::optional<CompanyID> GetGeothermalUtilityPortOwner(TileIndex tile, UtilityEn
 	}
 	if (!IsTileType(tile, TileType::Industry)) return std::nullopt;
 	const auto *industry = Industry::GetByTile(tile);
+	const auto *generator = GetGeothermalGeneratorState(industry->index);
+	// Both networks attach only at the original paid blueprint's declared
+	// boundary port. Separate installed domain cells never imply shared energy.
+	if (generator != nullptr && Company::IsValidID(generator->owner) && GetGeothermalGeneratorPort(industry->index) == tile &&
+		IsGeothermalGeneratorDefinition(industry->type)) return generator->owner;
+
 	if (domain == UtilityEnergyDomain::Electricity) {
 		const auto *riser = GetGeothermalRiserState(industry->index);
 		// Preparatory cable may attach to funded machinery, but only its exact
@@ -171,6 +179,10 @@ GeothermalUtilityAdmission PrepareGeothermalUtilityLink(TileIndex tile, UtilityE
 	if (IsTileType(tile, TileType::Industry) || IsLayerPortalTile(tile)) {
 		if (GetGeothermalUtilityPortOwner(tile, domain) != std::optional<CompanyID>{_current_company}) { result.error = GeothermalError::Endpoint; return result; }
 		if (IsLayerPortalTile(tile) && GetLayerPortalTransportType(tile) == TransportType::Rail && GetLayerPortalReservationTrackBits(tile).Any()) { result.error = GeothermalError::Occupied; return result; } // A reserved rail housing cannot be rewired beneath its admitted traffic; road housings have no rail reservation field.
+	} else if (IsTileType(tile, TileType::Station)) {
+		// Purchased electricity may share an actual owned Tube loading platform;
+		// ordinary stations and Heat cannot acquire this native inlet permission.
+		if (domain != UtilityEnergyDomain::Electricity || !GetTubeTerminal(tile, _current_company).has_value()) { result.error = GeothermalError::Endpoint; return result; }
 	} else if (!IsTileType(tile, TileType::Clear) && !IsTileType(tile, TileType::Railway) && !IsTileType(tile, TileType::Road)) {
 		result.error = GeothermalError::Occupied; return result;
 	} else if (IsTileType(tile, TileType::Railway) || IsTileType(tile, TileType::Road)) {
@@ -287,6 +299,10 @@ bool ValidateGeothermalUtilityLinks()
 			if (GetGeothermalUtilityPortOwner(tile, link.local_domain) != std::optional<CompanyID>{link.local_owner}) return false;
 		} else if (IsTileType(tile, TileType::Railway) || IsTileType(tile, TileType::Road)) {
 			if (GetTileOwner(tile) != link.local_owner) return false;
+		} else if (IsTileType(tile, TileType::Station)) {
+			// A retained platform overlay must still resolve its original native
+			// owner/facility. Another station family cannot inherit an old inlet.
+			if (link.local_domain != UtilityEnergyDomain::Electricity || !GetTubeTerminal(tile, link.local_owner).has_value()) return false;
 		} else if (!IsTileType(tile, TileType::Clear)) return false;
 	}
 	return true;

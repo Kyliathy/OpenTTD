@@ -9,6 +9,194 @@ from pathlib import Path
 
 from artifact_paths import RunContext, contained, identifier, resolve_input_path
 from artifact_rebuild import identity, verify_current_build
+from artifact_recipes import check_reference_roles, load_catalogue, validate_selection
+
+IMPORTED_FAMILIES = ("normal-start", "lifecycle", "useful-route", "performance")
+
+
+def retained_reference(reference, context):
+    """Observe original bytes through the existing retained-first alias owner.
+
+    @param reference Original sealed path/hash, optionally including its byte count.
+    @param context Consumer's explicit checkout; no donor directory is searched.
+    @return Physical path and a separate observation preserving the original reference.
+    """
+    path = resolve_input_path(reference["path"], context.root)
+    observed = identity(path, context.root)
+    # Relocation may change only the pathname. Original content and any sealed
+    # byte count must survive; current code/images never replace dated facts.
+    if observed["sha256"] != reference["sha256"] or ("bytes" in reference and path.stat().st_size != reference["bytes"]):
+        raise ValueError("retained evidence alias/hash/byte count disagrees")
+    return path, dict(original=dict(reference), observed=observed, role="historical_fact")
+
+
+def generated_evidence_inputs(context, suppliers, configuration):
+    """Verify exact current completed suppliers using the sole recipe catalogue.
+
+    @param context Explicit selected run; earlier invocations are never inferred.
+    @param suppliers Records with recipe, configuration and exact verify-stage result identity.
+    @param configuration Actual independent native consumer configuration.
+    @return Exact output references authorized as generated prerequisites.
+    """
+    from artifact_rebuild import verify_passed_stage
+    catalogue = load_catalogue(context.root)
+    result, seen = [], set()
+    # Every supplier must independently prove its registered output role and
+    # completed current run. A copied path/hash plus a recipe label is not proof.
+    for supplier in suppliers:
+        recipe = validate_selection(catalogue, supplier["recipe"], context.root)[supplier["recipe"]]
+        path = contained(context.root / supplier["result"]["path"], context.root / "mlm/reviews")
+        if identity(path, context.root) != supplier["result"]:
+            raise ValueError("generated supplier result identity changed")
+        document = json.loads(path.read_text(encoding="utf-8"))
+        selected_configuration = configuration if recipe["configuration_required"] else None
+        # Configuration-free pure sources remain distinct from a native run;
+        # their explicit None binding cannot authorize an opposite native image.
+        if (supplier.get("configuration") != selected_configuration or document.get("configuration") != selected_configuration
+                or document.get("kind") != "artifact_recipe_stage_result" or document.get("complete") is not True
+                or document.get("recipe") != recipe["id"] or document.get("stage") != "verify"
+                or document.get("run_id") != context.run_id or context.run_id not in path.parts
+                or recipe["id"] in seen or recipe["enabled"] is not True):
+            raise ValueError("generated prerequisite recipe/run/configuration is unbound")
+        seen.add(recipe["id"])
+        verify_passed_stage(dict(result=supplier["result"]), context.root)
+        expected = {row["role"]: (RunContext(context.root, recipe["feature"], recipe["scenario"], context.run_id).directory /
+                    row["path"].format(configuration=selected_configuration)).relative_to(context.root).as_posix()
+                    for row in recipe["outputs"]}
+        if {role: row["path"] for role, row in document["outputs"].items()} != expected:
+            raise ValueError("generated prerequisite output roles disagree with catalogue")
+        request_path = contained(context.root / document["request"]["path"], context.root / "mlm/reviews")
+        if identity(request_path, context.root) != document["request"]:
+            raise ValueError("generated supplier request identity changed")
+        request = json.loads(request_path.read_text(encoding="utf-8"))
+        # A fresh wrapper must not launder stale conversion/controller bytes.
+        # Recheck the original exact declaration, request and supplying sources;
+        # no adapter is rerun and no old receipt is edited by this observation.
+        if (request.get("kind") != "artifact_recipe_stage_request" or request.get("schema_version") != 1
+                or request.get("stage") != "verify" or request.get("recipe") != recipe["id"]
+                or request.get("declaration") != recipe or request.get("run_id") != context.run_id
+                or request.get("configuration") != selected_configuration or request.get("outputs") != expected
+                or request.get("result_path") != supplier["result"]["path"]
+                or request.get("publishes_source") is not False or request.get("paid_work_authorized") is not False
+                or request.get("inputs") != document.get("inputs") or request.get("sources") != document.get("sources")
+                or not document.get("facts", {}).get("checks") or not request.get("sources")):
+            raise ValueError("generated supplier request/declaration/source binding disagrees")
+        for source in [*request["sources"], *request["inputs"].values()]:
+            if identity(contained(context.root / source["path"], context.root), context.root) != source:
+                raise ValueError("generated supplier current source/input changed")
+        result.extend(document["outputs"].values())
+    return result
+
+
+def evidence_references(value, pointer=""):
+    """Enumerate structured references without guessing roles from directory names.
+
+    @param value Actual imported report metadata, not text scraped from diagnostics.
+    @param pointer JSON-pointer prefix used to bind exact fields in the caller's adapter.
+    @return Iterator of exact pointer/reference pairs; quoted history still needs an explicit role.
+    """
+    if isinstance(value, dict):
+        if "path" in value and "sha256" in value:
+            yield pointer, value
+            return
+        # A field's exact position is the adaptation contract. Recursive walking
+        # discovers undeclared dependencies; it never supplies default live roles.
+        for name, child in value.items():
+            token = str(name).replace("~", "~0").replace("/", "~1")
+            yield from evidence_references(child, pointer + "/" + token)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from evidence_references(child, pointer + "/" + str(index))
+
+
+def read_imported_evidence(family, reference, context, *, historical=False, bindings=(), suppliers=(),
+                           configuration=None, build=None, recipe=None, native_processes=()):
+    """Translate donor report references without promoting history to current acceptance.
+
+    @param family One of normal-start, lifecycle, useful-route or performance reader scopes.
+    @param reference Exact original/current report identity selected by the caller.
+    @param context Existing RunContext; no alternate catalogue or output owner is created.
+    @param historical Explicit read-only historical inspection; never a native acceptance claim.
+    @param bindings Exact JSON-pointer-to-role declarations for every reference in a current report.
+    @param suppliers Explicit completed recipe/run/configuration witnesses for generated inputs.
+    @param configuration Current independent Debug/RelWithDebInfo execution, absent for history.
+    @param build Current build stage containing its exact native_build_result reference.
+    @param recipe Actual registered native consumer declaration, required for current evidence.
+    @param native_processes Required actual command reports produced in this invocation.
+    @return Original metadata and separate checked role observations; domain acceptance stays with its public reader.
+    """
+    if family not in IMPORTED_FAMILIES:
+        raise ValueError("unsupported imported evidence reader scope")
+    if historical:
+        # Historical inspection has no current build or generated suppliers.
+        # Keeping this branch disjoint prevents an old passed receipt becoming
+        # current by supplying a new executable beside its dated observations.
+        if bindings or suppliers or build is not None or recipe is not None or native_processes or configuration is not None:
+            raise ValueError("historical evidence cannot carry current acceptance bindings")
+        path, relocation = retained_reference(reference, context)
+        return dict(family=family, classification="historical_relocation", report=json.loads(path.read_text(encoding="utf-8")),
+                    relocation=relocation, transport_verified=False, gameplay_acceptance=False)
+    if configuration not in ("Debug", "RelWithDebInfo") or build is None or recipe is None or not native_processes:
+        raise ValueError("current evidence requires explicit build/configuration and native command reports")
+    registered = validate_selection(load_catalogue(context.root), recipe["id"], context.root)[recipe["id"]]
+    if recipe != registered:
+        raise ValueError("current reader recipe differs from the sole catalogue")
+    verify_current_build(build, configuration, registered, context.root)
+    generated = generated_evidence_inputs(context, suppliers, configuration)
+    check_reference_roles(dict(role="generated_prerequisite", **reference), context.root, generated, context.run_id)
+    path = contained(context.root / reference["path"], context.root / "mlm/reviews")
+    document = json.loads(path.read_text(encoding="utf-8"))
+    if document.get("run_id") != context.run_id or document.get("configuration") != configuration:
+        raise ValueError("current report run/configuration disagrees")
+    declared = {row["pointer"]: row["role"] for row in bindings}
+    actual = dict(evidence_references(document))
+    if len(declared) != len(bindings) or declared.keys() != actual.keys():
+        raise ValueError("current report has undeclared or duplicate reference bindings")
+    observations = []
+    # Every live dependency receives its own role. Only explicitly historical
+    # fields may quote vanished code/images; required transcripts are generated
+    # prerequisites, never optional diagnostics merely because they end in .log.
+    for pointer, row in actual.items():
+        role = declared[pointer]
+        if role not in {"historical_fact", "retained_input", "generated_prerequisite", "current_source", "current_executable", "current_output", "diagnostic"}:
+            raise ValueError("unknown imported reference role")
+        check_reference_roles(dict(row, role=role), context.root, generated, context.run_id)
+        observations.append(dict(pointer=pointer, role=role, original=row))
+    images = json.loads((context.root / build["result"]["path"]).read_text(encoding="utf-8"))["targets"].values()
+    commands = []
+    # A real successful command in this exact run/configuration/image is the
+    # process boundary; transported metadata alone never proves native work.
+    for process in native_processes:
+        check_reference_roles(dict(process, role="current_output"), context.root, generated, context.run_id)
+        native = json.loads((context.root / process["path"]).read_text(encoding="utf-8"))
+        if (native.get("run_id") != context.run_id or native.get("configuration") != configuration
+                or native.get("exit_status") != 0 or native.get("timed_out") is not False
+                or native.get("root_reaped") is not True or native.get("input_integrity_passed") is not True
+                or native.get("executable") not in images or not native.get("transcripts")):
+            raise ValueError("current command image/run/configuration/status is unbound")
+        for transcript in native["transcripts"]:
+            check_reference_roles(dict(transcript, role="current_output"), context.root, run_id=context.run_id)
+        commands.append(process)
+    return dict(family=family, classification="current_role_observation", report=document, observations=observations,
+                native_processes=commands, build=build, transport_verified=True, gameplay_acceptance=False)
+
+
+def publish_relocation(context, name, family, reference):
+    """Write a separate historical relocation observation while preserving the sealed receipt.
+
+    @param context Explicit generated report owner.
+    @param name Fresh output basename inside this RunContext's reports.
+    @param family Explicit normal-start/lifecycle/useful-route/performance reader scope.
+    @param reference Original sealed report identity, possibly using a retained alias.
+    @return New observation identity; no original receipt is rewritten or certified as current.
+    """
+    observation = read_imported_evidence(family, reference, context, historical=True)
+    document = dict(_documentation=__doc__, schema_version=1, kind="historical_relocation_observation",
+                    run_id=context.run_id, **{key: value for key, value in observation.items() if key != "report"})
+    target = context.output("reports", name)
+    with target.open("x", encoding="utf-8") as sink:
+        sink.write(json.dumps(document, indent=2) + "\n")
+    return identity(target, context.root)
 
 
 def stage_path(context, name):

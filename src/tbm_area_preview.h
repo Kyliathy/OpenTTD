@@ -46,6 +46,67 @@ ExcavationOutline MakeTBMWorkOutline(TileIndex anchor, TileIndex area_start, Til
  */
 ExcavationOutline MakeTBMTunnelOutline(TileIndex start, Direction heading, TileIndex end, std::span<const TileIndex> previous_work = {});
 
+/**
+ * Summarize the approach a quoted route actually digs: the cells it sweeps among the approach proposal's extra cells.
+ * The authorization may hold a few more cells the final route does not need; those are neither dug nor charged.
+ * @param route The quote's route.
+ * @param extra_tiles Canonical extra cells of the approach proposal.
+ * @param model_id Cutter model, for the cells' quote.
+ * @param own_job Job whose remainder is being replaced, or an invalid ID: its own unopened claimed cells are quoted as
+ *                the rock they are (r2df task 12.4).
+ * @return The cells, the cutter positions that use them and their quote; empty without extra cells.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+TBMApproachSummary SummarizeTBMApproach(std::span<const ExcavationCutGeometry> route, std::span<const TileIndex> extra_tiles, uint16_t model_id, ExcavationJobID own_job = ExcavationJobID{UINT32_MAX});
+
+/**
+ * Short reason for an approach the planner could not find.
+ * @param error The approach refusal.
+ * @param tile Its failing tile.
+ * @return "Would leave the map", "a building is in the way", "another company's or project's work", "too far to plan",
+ *         or the general route refusal.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+StringID GetTBMApproachRefusal(ExcavationError error, TileIndex tile);
+
+/**
+ * Form the rectangle's floor and ring as MakeTBMWorkOutline does, then add the approach and turning space the cutter
+ * needs from its start pose. A floor away from the housing is allowed: the approach joins them.
+ * @param start Cutter start pose: the housing with the measured planning points, or the pose after an accepted route.
+ * @param solid_start Whether the start may be an unopened portal housing (a commission).
+ * @param model_id Cutter model.
+ * @param continuing_job The job being extended, or an invalid ID for a commission.
+ * @param ring_anchor Housing whose 3x3 belongs to the working space.
+ * @param area_start First explicit floor corner on the anchor's layer.
+ * @param area_end Opposite floor corner.
+ * @param previous_work Already accepted work retained when extending an existing job.
+ * @param[out] approach The approach proposal: its extra cells, route and expansions, or its refusal and blocking tile.
+ * @param kept_cuts Accepted cuts of the continuing job that precede the new work: all for an extension, the completed
+ *                  ones for a change of work area (r2df task 12.4).
+ * @return Floor and connected authorization (floor, ring, housing, earlier work and approach), unquoted like
+ *         MakeTBMWorkOutline, or a refusal that keeps the requested floor; nothing is reserved or charged.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+ExcavationOutline MakeTBMWorkOutlineWithApproach(const ExcavationPlanningPose &start, bool solid_start, uint16_t model_id, ExcavationJobID continuing_job,
+	TileIndex ring_anchor, TileIndex area_start, TileIndex area_end, std::span<const TileIndex> previous_work, ExcavationApproachProposal &approach, uint32_t kept_cuts = UINT32_MAX);
+
+/**
+ * Form a tunnel from a start pose to an end: straight when the end lies exactly ahead (as the overload above),
+ * otherwise an angled tunnel along an exact-goal approach, whose cutter centres are the floor and whose sweeps the work.
+ * @param start Cutter start pose: the housing with the measured planning points, or the pose after an accepted route.
+ * @param solid_start Whether the start may be an unopened portal housing (a commission).
+ * @param model_id Cutter model.
+ * @param continuing_job The job being extended, or an invalid ID for a commission.
+ * @param end Chosen centre endpoint on the start's layer, at most 64 tiles away.
+ * @param previous_work Already accepted approach/tail authorization retained for extension.
+ * @param[out] approach The angled tunnel's approach; empty for a straight one.
+ * @param kept_cuts Accepted cuts of the continuing job that precede the new work, as for the area builder.
+ * @return Canonical requested floor/working outline or refusal.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+ExcavationOutline MakeTBMTunnelOutline(const ExcavationPlanningPose &start, bool solid_start, uint16_t model_id, ExcavationJobID continuing_job,
+	TileIndex end, std::span<const TileIndex> previous_work, ExcavationApproachProposal &approach, uint32_t kept_cuts = UINT32_MAX);
+
 /** Transient quote; no identities, terrain or inventories are allocated. */
 struct TBMCommissionAreaPreview {
 	CommandCost purchase; ///< Full machinery/wagon command estimate, separate from later geological work charges.

@@ -112,7 +112,7 @@ struct UtilityHeatConversion {
 };
 
 /** Source family before its one source-specific availability/mirror calculation. */
-enum class UtilityGenerationKind : uint8_t { SolarFarm, Geothermal, Nuclear, Coal, External, OrbitalPanel };
+enum class UtilityGenerationKind : uint8_t { SolarFarm, Geothermal, Nuclear, Coal, External, OrbitalPanel, HeatConversion };
 
 /** Frozen paid rock-layer utility-cell definition; capacities are rates, never stored energy or an implicit generator. */
 struct MultiLayerLocalUtilityLinkContract {

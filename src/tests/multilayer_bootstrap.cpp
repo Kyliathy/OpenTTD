@@ -24,6 +24,7 @@ TEST_CASE("All first-build milestones expand from paid Surface supplies and earl
 	// Topological expansion rejects backward/self dependencies and checks the cumulative cash ledger at every milestone.
 	for (const auto &milestone : milestones) {
 		CHECK_FALSE(reachable.contains(milestone.stage));
+		// Every predecessor must already be affordable and dated before its dependent industry can bootstrap.
 		for (const auto prerequisite : milestone.prerequisites) {
 			REQUIRE(reachable.contains(prerequisite));
 			CHECK(reachable.at(prerequisite) <= milestone.introduction_year);
@@ -69,7 +70,16 @@ TEST_CASE("All first-build milestones expand from paid Surface supplies and earl
 TEST_CASE("Vehicle catalogue provides conventional resource paths without tube or liquid bypasses", "[multilayer-vehicle-catalogue]")
 {
 	const auto vehicles = GetMultiLayerVehicleCapabilities();
-	REQUIRE(vehicles.size() == 21);
+	// Space revision2 appends the orbital-built heavy miner at logical ID21;
+	// preserving its paid assembly route must not remove any of the21earlier designs.
+	REQUIRE(vehicles.size() == 22);
+	const auto heavy_miner = std::ranges::find(vehicles, uint16_t{21}, &LayerVehicleCapability::model_id);
+	REQUIRE(heavy_miner != vehicles.end());
+	CHECK(heavy_miner->transport == MultiLayerVehicleTransport::Orbital);
+	CHECK(heavy_miner->supported_layers == MultiLayerCapabilities{MapLayer::Space});
+	CHECK(heavy_miner->commissioning == MultiLayerCommissioningFacility::OrbitalAssembly);
+	CHECK(heavy_miner->service == MultiLayerServiceFacility::OrbitalService);
+	CHECK(heavy_miner->mining_tuning != nullptr);
 	std::set<uint16_t> models;
 	// Capability invariants apply to every logical design before feature owners map it to an engine pool.
 	for (const auto &vehicle : vehicles) {

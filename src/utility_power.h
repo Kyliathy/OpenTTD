@@ -21,10 +21,12 @@
 #include "company_type.h"
 #include "tile_type.h"
 #include "town_type.h"
+#include "station_type.h"
 #include "industry_type.h"
 
 static constexpr size_t MAX_UTILITY_POWER_CONNECTIONS = 16384; ///< Whole-ledger explicit-link cap keeps concrete save/load transport bounded.
 static constexpr size_t MAX_UTILITY_POWER_SHARES = 16384; ///< Whole-ledger current slice cap, including later bounded transfers.
+static constexpr size_t MAX_UTILITY_CONVERSION_ORIGINS = 16384; ///< Whole-ledger retained Heat/output source pairs; exhausted provenance refuses new use without pruning or refunds.
 static constexpr size_t MAX_UTILITY_LINEAGE_LINKS = 65536; ///< Whole-epoch reconstructed physical-reference cap; parent graphs cannot hide unbounded traversal or file memory.
 
 /** Shared per-epoch reservation-slice identity; this names an existing quantity's lineage, never another source or energy account. */
@@ -38,6 +40,14 @@ enum class UtilityPowerError : uint8_t {
 	InsufficientGrant, StaleMutation, Refused,
 };
 
+/** Historical original thermal contribution to one exact electrical source; this attribution cannot be spent or reserved again. */
+struct UtilityHeatConversionOrigin {
+	UtilityProducerID producer{UINT32_MAX}; ///< Original nonreused native Heat source, including retired history.
+	uint64_t heat_j = 0; ///< Lifetime actual Heat use attributed to this conversion output.
+	/** @param other Candidate contribution. @return Exact original source and historical quantity equality. */
+	bool operator==(const UtilityHeatConversionOrigin &other) const = default;
+};
+
 /** One native producer's immutable Heat/Electricity meter; its feature owns physical availability and generation inputs. */
 struct UtilityPowerProducer {
 	UtilityPowerAccount meter; ///< Frozen unit/interval/remainder fields, owned only by this ledger.
@@ -47,6 +57,11 @@ struct UtilityPowerProducer {
 	bool active = true; ///< Retired source identities cannot publish again or silently bind a replacement.
 	uint64_t generated_lifetime_j = 0; ///< Once-only whole generation across rotations; never increased by import or query.
 	uint64_t consumed_lifetime_j = 0; ///< Settled original-source use survives rotation, loss and save/retry.
+	UtilityConsumerID conversion_input{UINT32_MAX}; ///< Conversion-only original HeatGenerator consumer; absent for every earlier source kind.
+	uint8_t conversion_efficiency = 0; ///< Immutable conversion percent1..100; ordinary source kinds retain zero.
+	uint64_t conversion_capacity_w = 0; ///< Immutable actual rated electrical ceiling, checked for each synchronized publication duration.
+	uint8_t conversion_remainder = 0; ///< Sole saved fractional-percent numerator0..99; distinct from the rate integrator's millijoule carry.
+	std::vector<UtilityHeatConversionOrigin> conversion_origins; ///< Canonical lifetime original-source attribution, not another live energy balance.
 };
 
 /** Saved source slice of a consumer reservation; original, used and released quantities have one ledger owner. */
@@ -63,7 +78,7 @@ struct UtilityPowerShare {
 };
 
 /** Immutable shared link role; local geometry never becomes a portal export or generation account. */
-enum class UtilityLinkKind : uint8_t { ElectricalPortal, LocalCell, ElectricalRiser };
+enum class UtilityLinkKind : uint8_t { ElectricalPortal, LocalCell, ElectricalRiser, ElectricalFeed };
 
 /** Saved shared link identity; portal routes meter flow, while local cells retain installed rate/owner/domain without an energy balance. */
 struct UtilityPowerLink {
@@ -83,6 +98,7 @@ struct UtilityPowerLink {
 	IndustryID riser = IndustryID::Invalid(); ///< Paid electrical machinery's original native identity; genuine older portal/local roles have none.
 	uint64_t riser_capacity_w = 0; ///< Frozen paid electrical riser rate; the interval flow owner derives its joule opportunity, never a new generation account.
 	MapLayer local_layer = MapLayer::DeepUnderground; ///< Explicit installed-cell plane, checked against native geometry; older Deep cells and nonlocal roles retain this default.
+	IndustryID generator = IndustryID::Invalid(); ///< Original native generator for an ElectricalFeed; every earlier role retains Invalid, never borrowing an output identity.
 };
 
 /** One registered consumer and the explicit same-layer sources validated by its physical network owner. */
@@ -98,6 +114,9 @@ struct UtilityPowerConsumer {
 	uint8_t town_bonus_percent = 0; ///< Accepted bounded current-interval native bonus, applied once against normal growth.
 	bool town_effect_applied = false; ///< One town effect settlement per interval; save/retry never reapplies it.
 	bool town_effect_suspended = false; ///< Custom GS takeover suppresses this interval even after relinquishing custom growth.
+	StationID town_terminal = StationID::Invalid(); ///< Explicit paid Surface distribution terminal; absent in genuine pre431 effect-only consumers.
+	UtilityConsumerID town_supply{UINT32_MAX}; ///< Original Deep forwarding reservation, never a new generator or intermediate import account.
+	TileIndex town_source_port = INVALID_TILE; ///< Original native powerhouse electrical boundary; shared paid routing discovers both crossings.
 };
 
 /** Bounded whole-ledger transport; versioned load acceptance validates every meter and reservation before publication. */
@@ -130,6 +149,8 @@ std::optional<UtilityLinkID> RegisterUtilityLocalLink(CompanyID owner, UtilityEn
 const UtilityPowerLink *GetUtilityPowerLink(UtilityLinkID id);
 /** @return Borrowed bounded shared link list; callers filter actual immutable kinds, with no copied identity or energy authority. */
 std::span<const UtilityPowerLink> GetUtilityPowerLinks();
+/** @return Borrowed canonical consumer identity order for read-only native inspection; re-query after ledger mutation/reset and never retain balances or infer permission from this view. */
+std::span<const UtilityPowerConsumer> GetUtilityPowerConsumers();
 /** @return Committed local topology revision; ordinary resource queries/publications cannot change it. */
 uint64_t GetUtilityLocalLinkRevision();
 /** @return Whether retained local-cell identities exist, including removed historical installations; no cell or energy is created. */
@@ -220,6 +241,57 @@ public:
 	virtual bool Commit(const UtilityWorkEffect &effect) noexcept = 0;
 };
 
+/** Exact once-per-epoch cross-domain request; preparation borrows the actual grant rather than creating heat or an output account. */
+struct UtilityHeatConversionRequest {
+	UtilityGrantID grant; ///< Existing original HeatGenerator reservation and accounting interval.
+	UtilityProducerID output{UINT32_MAX}; ///< Existing conversion-only electrical source bound to that original consumer.
+	uint64_t heat_j = 0; ///< Exact positive original thermal quantity proposed for use.
+	uint32_t economy_ticks = 0; ///< Actual committed synchronized service duration, independent of views or wall time.
+};
+
+/** Pure sealed whole conversion proposal; it contains no spendable quantity and cannot survive another accepted ledger mutation. */
+struct UtilityHeatConversionProposal {
+	UtilityPowerError error = UtilityPowerError::InvalidReference; ///< Only None permits complete commit revalidation.
+	UtilityHeatConversionRequest request; ///< Exact original input/output/duration identity.
+	CompanyID owner = CompanyID::Invalid(); ///< Actual native controller that prepared the proposal.
+	uint64_t sequence_before = 0; ///< Exact shared retry identity before preparation.
+	uint64_t electric_j = 0; ///< Checked whole output derived from the original input and saved source numerator.
+	uint64_t loss_j = 0; ///< Explicit whole-joule input minus output; no heat can be counted as both useful domains.
+	uint8_t remainder_after = 0; ///< Proposed fractional-percent numerator; refused work leaves the saved numerator unchanged.
+	uint64_t seal = 0; ///< Field-wise whole request/result fingerprint; modified tickets refuse unchanged.
+};
+
+/** One complete shared conversion receipt; historical actual use and electrical publication share the same accepted operation sequence. */
+struct UtilityHeatConversionReceipt {
+	UtilityPowerError error = UtilityPowerError::InvalidReference; ///< Exact admission/refusal; failed receipts settle no quantity.
+	uint64_t sequence_after = 0; ///< Shared ledger identity after success or the untouched current identity on refusal.
+	uint64_t heat_consumed_j = 0; ///< Exact original thermal quantity settled once.
+	uint64_t electricity_generated_j = 0; ///< Exact new electrical publication, including a valid zero whole-joule result.
+	uint64_t loss_j = 0; ///< Explicit whole-joule conversion loss, distinct from later unused electrical curtailment.
+};
+
+/**
+ * Register one exact electrical output for an existing original HeatGenerator consumer.
+ * @param owner Actual company controlling the original Heat consumer and output.
+ * @param input Existing active native Deep HeatGenerator identity, with at most one retained conversion output.
+ * @param efficiency_percent Immutable canonical model efficiency1..100.
+ * @param capacity_w Actual canonical electrical rating, bounded by the shared rate contract.
+ * @param execute False predicts the nonreused identity without allocating or changing the ledger.
+ * @return Issued conversion-only electrical identity or unchanged refusal; ordinary rate registration/publication cannot bypass this binding.
+ */
+std::optional<UtilityProducerID> RegisterUtilityHeatConversionProducer(CompanyID owner, UtilityConsumerID input,
+	uint8_t efficiency_percent, uint64_t capacity_w, bool execute = true);
+/** @param request Exact original Heat/output/duration request. @return Pure checked sealed conversion; no IDs, quantities, carry, cash or participant state change. */
+UtilityHeatConversionProposal PrepareUtilityHeatConversion(const UtilityHeatConversionRequest &request);
+/**
+ * Commit one revalidated whole conversion through the shared owner.
+ * @param proposal Exact untouched current sealed proposal.
+ * @param participant Actual HeatGenerator physical/work/invoice owner; validation and complete unchanged-refusal commit prohibit recursive utility mutation.
+ * @return Complete original Heat use/output/loss receipt, or unchanged refusal before any partial benefit.
+ */
+UtilityHeatConversionReceipt CommitUtilityHeatConversion(const UtilityHeatConversionProposal &proposal, UtilityMutationParticipant &participant);
+/** @param input Original HeatGenerator consumer. @param output Its original conversion source, or invalid while registration is pending. @param execute False checks complete retirement without mutation. @return Whole retirement preserving IDs, fractions and consumed history; unused reservations alone expire. */
+UtilityPowerError RetireUtilityHeatConversion(UtilityConsumerID input, UtilityProducerID output, bool execute = true);
 /** Complete utility transaction result, defined below; effect APIs share the same settlement receipt. */
 struct UtilityMutationReceipt;
 
@@ -240,6 +312,51 @@ UtilityMutationReceipt ApplyUtilityWorkEffect(UtilityConsumerID consumer, uint32
  * @return Complete binding or specific unchanged refusal; no effect exists until actual settlement.
  */
 UtilityPowerError BindUtilityTownConsumer(UtilityConsumerID consumer, TownID town, bool execute = true);
+
+/**
+ * Attach one existing native town effect to a real paid Surface distribution terminal and original powerhouse reservation.
+ * @param destination Existing same-owner Surface TownGrowth consumer bound to a real town.
+ * @param source Existing Deep electrical forwarding consumer linked only to the actual native powerhouse output.
+ * @param terminal Actual owned Surface rail/truck terminal in the town's ordinary local-authority area.
+ * @param source_port Actual completed native powerhouse boundary with its separately paid electrical cell.
+ * @param execute False validates the complete connection without allocating or changing any owner.
+ * @return Complete unchanged refusal or one reference-only connection; this creates no demand, energy or additional capital bill.
+ */
+UtilityPowerError BindUtilityTownService(UtilityConsumerID destination, UtilityConsumerID source, StationID terminal, TileIndex source_port, bool execute = true);
+
+/** Explicit actual machinery/recipient selection; the shared owner derives every account, physical port and bounded demand. */
+struct GeothermalTownServiceRequest {
+	IndustryID generator = IndustryID::Invalid(); ///< Completed actual native generator, never an arbitrary numerical rate source.
+	IndustryID first_riser = IndustryID::Invalid(); ///< Actual paid Deep sender; its real destination determines the next plane.
+	IndustryID second_riser = IndustryID::Invalid(); ///< Actual Underground-to-Surface sender, absent only for a direct Deep/Surface pair.
+	StationID terminal = StationID::Invalid(); ///< Existing owned occupied Surface train/truck terminal.
+	TownID town = TownID::Invalid(); ///< Actual native town authorized by every serving terminal tile.
+};
+
+/** Whole connection outcome; pure estimates predict identities but confer no reservation, power or physical rights. */
+struct GeothermalTownServiceConnection {
+	UtilityPowerError error = UtilityPowerError::Refused; ///< Whole unchanged refusal or complete shared-owner admission.
+	UtilityConsumerID source{UINT32_MAX}; ///< Actual/predicted original-output forwarding account.
+	UtilityConsumerID relay{UINT32_MAX}; ///< Actual/predicted Underground relay, absent for direct export.
+	UtilityConsumerID destination{UINT32_MAX}; ///< Actual/predicted single native town account.
+	std::array<UtilityLinkID, 2> links{UtilityLinkID{UINT32_MAX}, UtilityLinkID{UINT32_MAX}}; ///< Original paid direction identities in physical route order.
+};
+
+/**
+ * Prepare or atomically connect/recover an owned native town service through explicitly selected paid physical machinery.
+ * @param request Actual generator, ordered one/two-riser route, Surface terminal and authorized native town.
+ * @param execute False validates the complete candidate without changing any identity, balance, stock, work, cash or RNG.
+ * @return Complete connection/recovery or unchanged refusal. Recovery preserves the original town account and one/two-plane topology, keeps exact unchanged edges and retires only superseded unused rights; an identical request refuses without settlement.
+ */
+GeothermalTownServiceConnection ConnectGeothermalTownService(const GeothermalTownServiceRequest &request, bool execute = true);
+/** @param requests Complete synchronized request set. Append only feasible real terminal/town service demands before the sole electrical allocation. */
+void AppendUtilityTownServiceRequests(std::vector<UtilityPowerRequest> &requests);
+/** Settle each actual exported original-source offer and its one native town effect after the common electrical allocation. */
+void RunUtilityTownServices();
+/** @return Whether retained explicit town services need synchronized expiry/recovery even when their last physical energy source has disappeared. */
+bool HasUtilityTownServices();
+/** @param terminal Station being destroyed before pool-ID reuse. Revoke its eligibility and any unconsumed/current town offer. */
+void RemoveUtilityTownServiceTerminal(StationID terminal);
 
 /**
  * Settle one current native town-power offer and apply its capped growth benefit together.
@@ -382,6 +499,9 @@ UtilityPowerError AllocateUtilityHeat(uint64_t interval, std::span<const Utility
 bool IsUtilityHeatAllocated();
 /** @return Whether thermal identity/phase history exists in the shared native owner; no snapshot or second registry is allocated. */
 bool HasUtilityHeatState();
+
+/** @return Whether retained exact-conversion producer metadata/history belongs to the sole utility owner; no energy or copied ledger is created. */
+bool HasUtilityHeatConversionState();
 
 /** @param consumer Asking company's actual registered Heat consumer. @return Remaining current thermal reservation/unmet view, or absence; queries never allocate/use/renew heat. */
 std::optional<UtilityPowerAccount> GetUtilityHeatAllocation(UtilityConsumerID consumer);

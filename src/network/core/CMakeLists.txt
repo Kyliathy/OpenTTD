@@ -1,3 +1,4 @@
+# Native buffered save replay: docs/zz-reach2/architecture/savegame/archi-savegame.md.
 add_files(
     address.cpp
     address.h
@@ -14,6 +15,7 @@ add_files(
     os_abstraction.h
     packet.cpp
     packet.h
+    packet_reader.h
     tcp.cpp
     tcp.h
     tcp_admin.cpp

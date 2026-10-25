@@ -34,8 +34,14 @@
 /** @copydoc GetSpaceSupplyCargo */
 CargoType GetSpaceSupplyCargo(SpaceSupply supply)
 {
+	return supply < SpaceSupply::End ? GetCargoTypeByLabel(GetSpaceSupplyLabel(supply)) : INVALID_CARGO;
+}
+
+/** @copydoc GetSpaceSupplyLabel */
+CargoLabel GetSpaceSupplyLabel(SpaceSupply supply)
+{
 	static constexpr CargoLabel labels[] = {CargoLabel{"PROP"}, CargoLabel{"RFMT"}, CargoLabel{"ELEC"}};
-	return supply < SpaceSupply::End ? GetCargoTypeByLabel(labels[to_underlying(supply)]) : INVALID_CARGO;
+	return supply < SpaceSupply::End ? labels[to_underlying(supply)] : CT_INVALID;
 }
 /** @copydoc GetSpaceSupplyCapacity */
 uint16_t GetSpaceSupplyCapacity(uint16_t model, SpaceSupply supply)

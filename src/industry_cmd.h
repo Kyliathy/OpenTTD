@@ -52,6 +52,16 @@ CommandCost CmdBuildLayerMine(DoCommandFlags flags, TileIndex tile, IndustryType
 CommandCost CmdBuildGeothermalCollector(DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed);
 
 /**
+ * Fund the actual native powerhouse on its original fully admitted cold site.
+ * @param flags Pure whole estimate or synchronized execution.
+ * @param tile Original native4x4 machinery anchor, never a view-relative location.
+ * @param site Actual active owned Powerhouse blueprint; execution retires only its reservation.
+ * @param seed Synchronized creation seed; estimates consume no RNG.
+ * @return Full dated capital charge or unchanged refusal; transported bill and dated native labour ticks remain required before operating admission.
+ */
+CommandCost CmdBuildGeothermalGenerator(DoCommandFlags flags, TileIndex tile, GeothermalSiteID site, uint32_t seed);
+
+/**
  * Fund original-portal-bound riser machinery through ordinary once-only capital settlement.
  * @param flags Pure whole estimate or complete execution.
  * @param tile Native2x2 machinery anchor on an excavated rock plane.
@@ -83,6 +93,7 @@ CommandCost CmdIndustrySetProduction(DoCommandFlags flags, IndustryID ind_id, ui
 
 DEF_CMD_TRAIT(Commands::BuildIndustry, CmdBuildIndustry, CommandFlag::Deity, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildGeothermalCollector, CmdBuildGeothermalCollector, {}, CommandType::LandscapeConstruction)
+DEF_CMD_TRAIT(Commands::BuildGeothermalGenerator, CmdBuildGeothermalGenerator, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildGeothermalRiser, CmdBuildGeothermalRiser, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::BuildLayerMine, CmdBuildLayerMine, {}, CommandType::LandscapeConstruction)
 DEF_CMD_TRAIT(Commands::SelectLayerIndustryRecipe, CmdSelectLayerIndustryRecipe, CommandFlag::Deity, CommandType::OtherManagement)

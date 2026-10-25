@@ -17,6 +17,7 @@
 
 #include "stdafx.h"
 #include "tbm_exchange.h"
+#include "transport_tube.h"
 #include "tbm_hangar.h"
 #include "tbm_cmd.h"
 #include "train.h"
@@ -211,6 +212,22 @@ TBMExchangeError CheckTBMProjectTakesHauler(TBMProjectID project_id)
 	return TBMExchangeError::None;
 }
 
+/**
+ * Identify a layer-local tube participant that cannot serve the mandatory conventional spoil leg.
+ * @param hauler Any actual part; its existing native chain provides every semantic engine identity.
+ * @return Whether any physical part is a canonical capsule, independently of sprites or broad compatibility masks.
+ */
+static bool TBMHaulerContainsTubeCapsule(const Train &hauler)
+{
+	// Every part must permit conventional wagon/Surface-origin travel. Checking
+	// the complete native chain also refuses a capsule hidden behind an ordinary front.
+	for (const Train *part = hauler.First(); part != nullptr; part = part->Next()) {
+		if (GetTubeVehicleCapability(part->engine_type).has_value()) return true;
+	}
+	return false;
+}
+
+/** @copydoc AssignTBMHauler */
 TBMExchangeError AssignTBMHauler(TBMProjectID project_id, VehicleID hauler_id, bool execute)
 {
 	if (const auto error = CheckTBMProjectTakesHauler(project_id); error != TBMExchangeError::None) return error;
@@ -220,6 +237,8 @@ TBMExchangeError AssignTBMHauler(TBMProjectID project_id, VehicleID hauler_id, b
 	// The hauler is a separate whole company train; no cutter, of this or another project, can haul spoil.
 	if (hauler == nullptr || !hauler->IsFrontEngine() || hauler->owner != project->company || hauler->vehstatus.Test(VehState::Crashed)) return TBMExchangeError::InvalidHauler;
 	if (hauler->index == project->cutter || IsTBMCutterEngine(hauler->engine_type) || GetTBMProjectForCutter(hauler->index) != nullptr) return TBMExchangeError::InvalidHauler;
+	// Layer-local capsules cannot carry this project's mandatory real wagon/Surface-origin spoil leg, even behind a conventional front.
+	if (TBMHaulerContainsTubeCapsule(*hauler)) return TBMExchangeError::InvalidHauler;
 	if (FindTBMExchangeAssignmentForHauler(hauler_id) != nullptr) return TBMExchangeError::Reserved; // One assignment per hauler.
 
 	/* The hauler's wagons either form one unowned set of this project, which it recovers, or empties for a new set. */
@@ -1384,6 +1403,8 @@ static bool IsLoadedTBMAssignmentStoreValid(const TBMExchangeStaging &staged)
 		const Train *hauler = Train::GetIfValid(assignment.hauler);
 		// The hauler is a live front engine of the project's company, no cutter, with exactly one assignment.
 		if (hauler == nullptr || !hauler->IsFrontEngine() || hauler->owner != project->company || IsTBMCutterEngine(hauler->engine_type) || GetTBMProjectForCutter(hauler->index) != nullptr) return false;
+		// Loaded assignments must obey the same conventional spoil domain as new commands; saved references cannot authorize a capsule substitute.
+		if (TBMHaulerContainsTubeCapsule(*hauler)) return false;
 		if (!haulers.insert(assignment.hauler).second) return false;
 		if (assignment.set == TBMWagonSetID{UINT32_MAX}) continue;
 		// A carried set exists, serves the same project, is not the cutter's, and has one carrier.
@@ -1533,6 +1554,8 @@ std::optional<VehicleID> GetTBMProjectSettlementBlocker(TBMProjectID project)
 		const Train *front = Train::GetIfValid(assignment.hauler);
 		if (front == nullptr) return VehicleID::Invalid();
 		if (front->owner != owner->company || front->vehstatus.Test(VehState::Crashed) || assignment.phase != TBMHaulerPhase::ReturnEmpties) return front->index;
+		// Empty sets still in the paid corridor or pair retain their actual exit authority and keep final claims protected.
+		if (IsTBMHaulerInCorridor(*owner, front->index)) return front->index;
 		// Releasing one hidden head must not remove an outside tail's magazine
 		// exit authority. The complete actual chain must already have left.
 		for (const Train *part = front; part != nullptr; part = part->Next()) {

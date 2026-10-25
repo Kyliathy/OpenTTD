@@ -1,5 +1,7 @@
 # R2MLVS7 - Underground Construction and Fleet
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) integrates existing native fleet/provider roles, dated model admission, actual source/path loss and saved/manual-stop recovery. No second fleet registry or constructed substitute cargo owner is introduced. The dated feature checklist keeps its own later scope. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

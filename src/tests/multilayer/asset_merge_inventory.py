@@ -20,6 +20,48 @@ GEOMETRY = ("states", "frames", "directions", "tile_variants", "parts", "native_
             "transparent_index", "company_colors", "geometry")
 
 
+def geometry_fields(left, right):
+    """Include physical parent/child absence and signed native offsets in family review.
+
+    @param left Destination public family, or no declaration.
+    @param right Retained original donor family, or no declaration.
+    @return Stable explicit fields; historical renderer hashes remain evidence only.
+    """
+    fields = set(GEOMETRY)
+    # Native origins, relative children and structurally absent parts affect
+    # placement even when the Cartesian pose counts and source PNGs match.
+    for family in (left or {}, right or {}):
+        fields.update(key for key in family if key.startswith(("native_", "nullable_")) or key == "source_part_policy")
+    return sorted(fields)
+
+
+def family_record_comparison(asset, left, right):
+    """Bound differing shared records to the actual selected family instead of all authoring history.
+
+    @param asset Exact family ID whose crops, selections and apparatus are compared.
+    @param left Destination source facts with its original generation record.
+    @param right Retained donor source facts with its original generation record.
+    @return Explicit record/family equality or bounded differing field names.
+    """
+    a = (left or {}).get("source_record")
+    b = (right or {}).get("source_record")
+    # Missing original records cannot become equality through two absent values;
+    # those families retain their explicit public/source contracts for review.
+    if not a or not b:
+        return {"status": "no_shared_record_comparison"}
+    if a["sha256"] == b["sha256"]:
+        return {"status": "identical_record"}
+    first = json.loads((ROOT / a["path"]).read_text(encoding="utf-8")).get("families", {}).get(asset)
+    second = json.loads((ROOT / b["path"]).read_text(encoding="utf-8")).get("families", {}).get(asset)
+    # Two missing named sections are not proof of equal crops or component
+    # selection; preserve that limitation instead of comparing absent values.
+    if first is None or second is None:
+        return {"status": "no_named_family_section"}
+    differences = sorted(key for key in first.keys() | second.keys() if first.get(key) != second.get(key))
+    return {"status": "different_family_section" if differences else "identical_family_section",
+            "different_fields": differences}
+
+
 @lru_cache(maxsize=None)
 def fingerprint(relative):
     """Identify actual bytes once per observation, without assuming a historical hash.
@@ -152,7 +194,7 @@ def observation():
         left_keys, right_keys = set(left_poses), set(right_poses)
         left_source = source_facts(left) if left else None
         right_source = source_facts(right, aliases) if right else None
-        geometry = {key: {"A": left.get(key), "B": right.get(key)} for key in GEOMETRY
+        geometry = {key: {"A": left.get(key), "B": right.get(key)} for key in geometry_fields(left, right)
                     if left and right and left.get(key) != right.get(key)}
         ah = left.get("source", {}).get("sha256") if left else None
         bh = right.get("source", {}).get("sha256") if right else None
@@ -200,6 +242,7 @@ def observation():
                      "first_B_only_pose": next((key for key in right_poses if key not in left_keys), None),
                      "first_common_pose": next((key for key in left_poses if key in right_keys), None),
                      "A_source": left_source, "B_source": right_source,
+                     "source_record_comparison": family_record_comparison(asset, left_source, right_source),
                      "A_binding": left.get("packed") if left else None, "B_binding": right.get("packed") if right else None,
                      "donor_draw_contract": render,
                      "destination_draw_contract": current_draw})

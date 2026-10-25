@@ -8,6 +8,8 @@
 /** @file road_cmd.cpp Commands related to road tiles. @see docs/zz-reach2/architecture/landscape/road-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
+#include "geothermal_conduit_sprite.h"
 #include "multilayer_sprite.h"
 #include "timer/timer_game_tick.h"
 #include "bridge.h"
@@ -1912,6 +1914,8 @@ static void DrawTile_Road(TileInfo *ti)
 			DiagDirection dir = GetRoadDepotDirection(ti->tile);
 			const DrawTileSprites *dts = &_road_depot[dir];
 			DrawGroundSprite(dts->ground.sprite, PAL_NONE);
+			DrawTubeConduitGround(ti->tile); // The paid external corridor may cross an owned road depot, below its building.
+			DrawGeothermalConduitGround(ti->tile);
 			// A custom road-type depot keeps its own graphics. The selected native
 			// service family replaces only the ordinary underground default building.
 			const auto native_back = default_gfx ? GetMultiLayerRoadDepotSprite(ti->tile, false, TimerGameTick::counter) : std::nullopt;
@@ -1943,6 +1947,12 @@ static void DrawTile_Road(TileInfo *ti)
 			blocked_pillars = BRIDGEPILLARFLAGS_ALL;
 			break;
 		}
+	}
+	// Depot floors already inserted their overlays before the building back;
+	// other road floors are complete here, beneath sortable traffic/structures.
+	if (GetRoadTileType(ti->tile) != RoadTileType::Depot) {
+		DrawTubeConduitGround(ti->tile);
+		DrawGeothermalConduitGround(ti->tile);
 	}
 	DrawBridgeMiddle(ti, blocked_pillars);
 }
@@ -2069,6 +2079,8 @@ static_assert(lengthof(_town_road_types_2) == NUM_HOUSE_ZONES);
 /** @copydoc TileLoopProc */
 static void TileLoop_Road(TileIndex tile)
 {
+	// Existing bounded tile visits refresh derived source-expiry lamps without advancing power or scanning the map.
+	if (GetTubeConduitArt(tile).has_value()) MarkTileDirtyByTile(tile);
 	//Towns do not pave or start road works off the surface. The roadside stays barren.
 	if (!MultiLayerMap::GetRules(tile).has_climate) {
 		if (!IsRoadDepot(tile) && GetRoadside(tile) != Roadside::Barren) {

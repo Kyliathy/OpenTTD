@@ -13,6 +13,7 @@
 #include "../core/backup_type.hpp"
 #include <array>
 
+#include "ground_render_camera_fixture.h"
 #include "../safeguards.h"
 
 /** Real command-body fixture installs the current native definition and funds its actual nine machinery cells. */
@@ -205,4 +206,14 @@ TEST_CASE("Selected mine sprites do not claim unpublished Bauxite source", "[gro
 {
 	GroundMineRig rig(3);
 	CHECK_FALSE(GetGroundMineSprite(rig.industry->location.tile, false, 0));
+}
+
+/** Actual main/extra cameras and hidden-building presentation preserve the physical source owner and its live state. */
+TEST_CASE("Merged mine selection retains its physical owner across actual cameras", "[merged-ground-camera]")
+{
+	PrepareGroundRenderCameraLanguage();
+	GroundMineRig rig(0);
+	/** @return Actual public consumer identities at the unchanged visual phase; no raster or earned work is claimed. */
+	const auto query = [&] { const auto tile = rig.industry->location.tile; return std::vector<SpriteID>{GetMultiLayerIndustrySprite(tile, false, 24).value(), GetMultiLayerIndustrySprite(tile, true, 24).value()}; };
+	CheckGroundRenderCameraPurity(query);
 }

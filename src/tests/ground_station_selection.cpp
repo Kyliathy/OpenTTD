@@ -15,6 +15,7 @@
 #include "../train_cmd.h"
 #include "underground_fleet_fixture.h"
 
+#include "ground_render_camera_fixture.h"
 #include "../safeguards.h"
 
 /** Native owned facilities and carriers, without a replacement catchment or loading-status owner. */
@@ -248,4 +249,21 @@ TEST_CASE("Selected station source owns its spans and refuses invalid source axe
 	CHECK_FALSE(view.GetSequence()[3].IsParentSprite());
 	CHECK(HasBit(view.GetSequence()[3].image.sprite, PALETTE_MODIFIER_TRANSPARENT));
 	CHECK(view.GetSequence()[3].image.pal == PALETTE_TO_TRANSPARENT);
+}
+
+/** Default rail/road stations keep ordered foreground parents and native child images across view/visibility changes. */
+TEST_CASE("Merged station parents retain actual tile ownership across cameras", "[merged-ground-camera]")
+{
+	PrepareGroundRenderCameraLanguage();
+	const auto type = GENERATE(StationType::Rail, StationType::Truck); GroundStationRig rig(type);
+	/** @return Actual tile-local sequence, including every retained parent/child image. */
+	const auto query = [&] {
+		const auto layout = GetGroundStationTileLayout(rig.tile, 24); REQUIRE(layout);
+		std::vector<SpriteID> result{layout->ground.sprite};
+		// Preserve every actual sequence member, including relative roof glass;
+		// hidden flags must not reinterpret a foreground as another native parent.
+		for (const auto &piece : layout->View().GetSequence()) result.push_back(piece.image.sprite);
+		return result;
+	};
+	CheckGroundRenderCameraPurity(query);
 }

@@ -23,7 +23,8 @@ from artifact_inventory import checked_path, file_identity
 from artifact_paths import RunContext, create_run_context, identifier
 from runner import run_native
 from savegame_tables import saved_owner_table as table
-from space_checkpoint import SpaceCheckpoint, load_checkpoint, verify_checkpoint
+from space_checkpoint import (SpaceCheckpoint, SpaceFoundation, load_checkpoint, verify_checkpoint,
+                              load_foundation, verify_foundation)
 from space_preview_checks import chunks
 from surface_constructor_retirement_ledger import observe
 
@@ -42,9 +43,89 @@ SOURCE_FILES = ("src/tests/space_checkpoint_load.h", "src/tests/surface_entry_pr
                 "src/tests/multilayer/acceptance/surface_constructor_retirement_ledger.py",
                 "src/tests/multilayer/support/savegame_tables.py",
                 "src/tests/multilayer/support/runner.py", "src/tests/multilayer/support/artifact_paths.py")
+MERGED_SOURCE_FILES = ("src/tests/multilayer/acceptance/space_checkpoint_migration.py",
+                       "src/tests/multilayer/acceptance/surface_gateway_core_ledger.py")
 FIELDS = {"_documentation", "schema_version", "kind", "complete", "configuration", "phase", "tag",
           "seal", "source", "application", "run_id", "before", "output", "terminal", "native_process",
           "source_files", "observed", "gameplay_ticks_executed"}
+
+
+def selected_checkpoint(checkpoint, configuration):
+    """Resolve the exact typed original or selected successor without changing dispatch.
+
+    @param checkpoint Explicit immutable seal or verified continuation foundation.
+    @param configuration Independently selected native configuration.
+    @return Original save identity and independent original-file owner observation.
+    """
+    if isinstance(checkpoint, SpaceFoundation):
+        verify_foundation(checkpoint)
+        document = json.loads(checkpoint.manifest_path.read_text(encoding="utf-8"))
+        row = document["configurations"][configuration]
+        reference = row["output"]
+        expected = json.loads(json.dumps(observe(checked(reference, checkpoint.root))))
+    elif isinstance(checkpoint, SpaceCheckpoint):
+        verify_checkpoint(checkpoint)
+        document = json.loads(checkpoint.manifest_path.read_text(encoding="utf-8"))
+        row = document["configurations"][configuration]
+        reference = row["save"]
+        expected = json.loads(checked(row["expected_observation"], checkpoint.root).read_text(encoding="utf-8"))["observation"]
+    else:
+        raise TypeError("checkpoint inspection requires an explicit typed selection")
+    return dict(save=reference, expected=expected)
+
+
+def load_selection(path, configuration, root):
+    """Restore the typed identity recorded by an actual paused-load result.
+
+    @param path Verified original seal or selected foundation manifest.
+    @param configuration Explicit result configuration.
+    @param root Checkout containing the declared witnesses.
+    @return Typed original seal or successor foundation; no latest-run inference.
+    """
+    kind = json.loads(path.read_text(encoding="utf-8"))["kind"]
+    if kind in ("space_operation_receipt", "qualified_space_foundation"):
+        return load_foundation(path, configuration, root)
+    return load_checkpoint(path, configuration, root)
+
+
+def checkpoint_observation(path):
+    """Read actual Space owners with explicit neutral migration-field normalization.
+
+    @param path Actual original440or merged441snapshot; its envelope is never changed.
+    @return Complete original observer shape, retaining all nonstructural fields.
+    """
+    result = normalize_packet_metadata(json.loads(json.dumps(observe(path))))
+    # The original Space panel has no town/generator participation. Its four
+    # new UPLDreferences must stay neutral; all historical panel counters remain.
+    panel = result["panel"]
+    for key in ("town_supply", "generator", "town_terminal", "town_source_port"):
+        if key in panel:
+            if panel.pop(key) != 0:
+                raise ValueError("legacy Space panel gained a utility participant")
+    return result
+
+
+def normalize_packet_metadata(value):
+    """Remove only proven zero-valued fields added to legacy A packet observations.
+
+    @param value Actual decoded observation subtree, including nested packet copies.
+    @return Same semantic owners with neutral new receipt references omitted.
+    """
+    if isinstance(value, list):
+        return [normalize_packet_metadata(item) for item in value]
+    if not isinstance(value, dict):
+        return value
+    result = {}
+    # The observer exposes the same packet in several custody views. Validate
+    # each copy's new fields rather than ignoring a cargo family or changing any
+    # original quantity, source, owner, transit age or finite entitlement.
+    for key, item in value.items():
+        if key in ("company_supply_order", "company_supply_shipped"):
+            if item != 0:
+                raise ValueError("legacy A checkpoint gained supply packet history")
+        else:
+            result[key] = normalize_packet_metadata(item)
+    return result
 
 
 def identity(path, root):
@@ -212,28 +293,40 @@ def compare_loaded_saves(source, before, output, expected, native):
     original, first, last = owners
     # This sealed source owns the current440 complete family set. A version or
     # family migration cannot be concealed as a routine zero-tick load check.
-    if versions != (440, 440, 440) or len(original) != 121 or original.keys() != first.keys() or original.keys() != last.keys():
+    merged = versions == (440, 441, 441)
+    normalizations = None
+    if merged:
+        from space_checkpoint_migration import compare_migration
+        normalizations = compare_migration(source, before)
+    # Legacy historical qualification retains its exact old contract. The
+    # merged branch admits only the separately checked structural migration.
+    elif versions != (440, 440, 440) or len(original) != 121 or original.keys() != first.keys() or original.keys() != last.keys():
         raise ValueError("checkpoint save version/121-family closure changed")
     # Before/after snapshots are within one paused callback, so even DATE/GLOG
     # must be byte-identical between them. Only source-to-load metadata uses the
     # individually checked clock/pause and single revision rules above/below.
+    if first.keys() != last.keys():
+        raise ValueError("paused native snapshot changed its complete owner set")
     for family, raw in first.items():
         if last[family] != raw:
             raise ValueError(f"paused native snapshot changed family: {family!r}")
-        if family not in (b"DATE", b"GLOG") and original[family] != raw:
+        if not merged and family not in (b"DATE", b"GLOG") and original[family] != raw:
             raise ValueError(f"native load changed family: {family!r}")
     appended = compare_revision(source, before, native)
-    actual = json.loads(json.dumps(observe(before)))
+    actual = checkpoint_observation(before)
     # Equal newly written files are insufficient: each actual loaded owner set
     # must equal the independently retained original observation.
-    if actual != expected or json.loads(json.dumps(observe(output))) != expected:
+    if actual != expected or checkpoint_observation(output) != expected:
         raise ValueError("loaded actual owner/material observation disagrees")
     # The native observation must identify the same real owner/counters, not
     # merely print a zero-tick marker while a different world was serialized.
-    if native["company"] != 0 or native["cash"] != expected["company"]["cash"] or native["debt"] != expected["company"]["debt"] or native["tick_before"] != clocks["source"]["tick_counter"] or native["tick_after"] != native["tick_before"] or native["save_version"] != 440:
+    if native["company"] != 0 or native["cash"] != expected["company"]["cash"] or native["debt"] != expected["company"]["debt"] or native["tick_before"] != clocks["source"]["tick_counter"] or native["tick_after"] != native["tick_before"] or native["save_version"] != versions[1]:
         raise ValueError("native owner/clock marker disagrees with saved state")
-    return dict(chunk_families=121, saved_family_comparisons=242, clocks=clocks,
-                appended_load_revision=appended, observed=actual, gameplay_ticks_executed=0)
+    facts = dict(chunk_families=len(first), saved_family_comparisons=len(first) * 2, clocks=clocks,
+                 appended_load_revision=appended, observed=actual, gameplay_ticks_executed=0)
+    if merged:
+        facts["structural_migration"] = normalizations
+    return facts
 
 
 def verify_load_result(document, root=None):
@@ -253,10 +346,8 @@ def verify_load_result(document, root=None):
     if type(document["schema_version"]) is not int or document["schema_version"] != 1 or document["kind"] != KIND or document["complete"] is not True or document["tag"] != TAG or document["phase"] != PHASE or type(document["gameplay_ticks_executed"]) is not int or document["gameplay_ticks_executed"] != 0:
         raise ValueError("unexpected native load schema/tag/phase")
     seal_path = checked(document["seal"], source_root)
-    checkpoint = load_checkpoint(seal_path, document["configuration"], source_root)
-    verify_checkpoint(checkpoint)
-    seal = json.loads(seal_path.read_text(encoding="utf-8"))
-    selected = seal["configurations"][document["configuration"]]
+    checkpoint = load_selection(seal_path, document["configuration"], source_root)
+    selected = selected_checkpoint(checkpoint, document["configuration"])
     if document["source"] != selected["save"]:
         raise ValueError("native load selected the wrong save/configuration")
     source = checked(document["source"], source_root)
@@ -282,12 +373,15 @@ def verify_load_result(document, root=None):
     # terminal; finding files afterward cannot supply missing process evidence.
     if any(reference not in process["artifacts"] for reference in required_outputs) or document["terminal"] not in process["transcripts"]:
         raise ValueError("incomplete native process outputs/transcript")
-    if {reference["path"] for reference in document["source_files"]} != set(SOURCE_FILES):
+    required_sources = set(SOURCE_FILES)
+    if isinstance(checkpoint, SpaceFoundation):
+        required_sources.update(MERGED_SOURCE_FILES)
+    if {reference["path"] for reference in document["source_files"]} != required_sources:
         raise ValueError("native load lacks explicit source owner identities")
     for reference in document["source_files"]:
         checked(reference, source_root)
     native = terminal_fields(terminal.read_text(encoding="utf-8", errors="replace"))
-    expected = json.loads(checked(selected["expected_observation"], source_root).read_text(encoding="utf-8"))["observation"]
+    expected = selected["expected"]
     facts = compare_loaded_saves(source, before, output, expected, native)
     if facts["observed"] != document["observed"]:
         raise ValueError("native load receipt observation changed")
@@ -301,21 +395,19 @@ def verify_load_result(document, root=None):
 def execute_load_check(checkpoint, configuration, application):
     """Execute only the dedicated paused callback against one sealed original.
 
-    @param checkpoint Typed original seal, already present in this checkout.
+    @param checkpoint Typed original seal or exact selected continuation foundation.
     @param configuration Explicit independently linked Debug/RelWithDebInfo image.
     @param application Explicit fresh isolated capital application; no build fallback.
     @return Published current-run load receipt identity, after complete verification.
     """
-    if not isinstance(checkpoint, SpaceCheckpoint):
+    if not isinstance(checkpoint, (SpaceCheckpoint, SpaceFoundation)):
         raise TypeError("native load requires a typed sealed SpaceCheckpoint")
     # A caller cannot select a different configuration after loading an explicit
     # typed selection, even though the seal physically retains both originals.
     if configuration not in ("RelWithDebInfo", "Debug") or checkpoint.configuration not in (None, configuration):
         raise ValueError("native load configuration disagrees with its typed selection")
-    verify_checkpoint(checkpoint)
     root = checkpoint.root
-    seal = json.loads(checkpoint.manifest_path.read_text(encoding="utf-8"))
-    selected = seal["configurations"][configuration]
+    selected = selected_checkpoint(checkpoint, configuration)
     source = checked(selected["save"], root)
     app_reference = identity(application, root)
     application = checked(app_reference, root)
@@ -324,6 +416,8 @@ def execute_load_check(checkpoint, configuration, application):
     if application.parent.name != configuration or application.name not in ("openttd_surface_capital_test.exe", "openttd_surface_capital_test"):
         raise ValueError("select the exact configuration's capital load application")
     sources = [identity(root / path, root) for path in SOURCE_FILES]
+    if isinstance(checkpoint, SpaceFoundation):
+        sources.extend(identity(root / path, root) for path in MERGED_SOURCE_FILES)
     context = create_run_context("space", SCENARIO, root=root)
     # Fresh native proof never overwrites an earlier process in an inherited
     # run. Restart inspection must verify that receipt without rerunning it.
@@ -354,7 +448,7 @@ def execute_load_check(checkpoint, configuration, application):
         source=selected["save"], application=app_reference, run_id=context.run_id,
         before=identity(context.saves / "checkpoint-before.sav", root), output=identity(output, root),
         terminal=process["transcripts"][0], native_process=identity(reports[0], root),
-        source_files=sources, observed=json.loads(json.dumps(observe(output))), gameplay_ticks_executed=0)
+        source_files=sources, observed=checkpoint_observation(output), gameplay_ticks_executed=0)
     verify_load_result(document, root)
     target = context.output("reports", "space-checkpoint-load.json")
     target.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")

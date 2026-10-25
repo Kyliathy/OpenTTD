@@ -9,6 +9,8 @@ owned by the engine's file subsystem.
 
 ## Delivery boundary
 
+**Merged qualification,2026-10-25.** The four M2O23plans now integrate the original Space/underground owners, writer441and the complete128-family contract. Actual original-world, real-peer, bounded performance, final runtime gallery and selected cold recovery results are indexed in the [integration handoff](../upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md). It records exact producing epochs, canonical bytes, public reconstruction commands and pending human feedback. Older cleanup/transfer observations below retain their original dates and counts. The storage table here remains the single layout authority.
+
 As of2026-10-23, retained-first readers, compact Space foundations,
 incremental save export, the guarded cleaner, portable build inputs and the
 shared cold rehearsal are delivered. Group33removed59128115119bytes
@@ -39,7 +41,7 @@ source epoch and required semantic input has a verified durable owner.
 | `media/` | Authored/selected originals, palettes, source contracts and canonical shipping assets, including the existing GRF authority. | Preserve exact originals; regenerating a prompt cannot recover approved pixels. |
 | `src/tests/fixtures/<feature>/<purpose>/`, `regression/` | Curated immutable worlds, older-format compatibility inputs and independent expectations. | Preserve; ordinary tests must not regenerate their own expected baselines. |
 | `src/tests/fixtures/checkpoints/space/` | Exact Space continuation save pair, compact state/closed-policy contract and historical facts. | Durable checkpoint; current qualification is generated separately. |
-| `src/tests/fixtures/checkpoints/underground/` | Paused Tube source checkpoint, distinct baseline epochs and historical terminal scope. | Durable; does not qualify the provisional five-model feature. |
+| `src/tests/fixtures/checkpoints/underground/` | Original Apaused Tube checkpoint plus separately selected imported paid originals, runtime-gallery and genuine wait contracts. | Durable; retain each world's actual original/component qualification. Imported acceptance does not promote A's unrelated provisional source world. |
 | `savegames/retained/` | Other discovered saves, scenarios, backups and aliases of exported review/runtime saves. | Preserve every payload; equal bytes may share storage with complete aliases. |
 | `src/tests/fixtures/cleanup/` | Save migration map, source-epoch inventory, dependency dispositions and compact historical facts. Unique source versions use `source-epochs/`. | Durable preservation contracts, not a second image/EXE cache. Refresh live-source references before deleting their original snapshots. |
 | `src/tests/fixtures/config/multilayer/` | Runtime templates, portable native build profile and pinned dependency recipe sources. | Durable configuration/tool contract; machine CMake caches are disposable. |
@@ -55,9 +57,10 @@ source epoch and required semantic input has a verified durable owner.
 ### Parallel-repository originals
 
 [M2O23-1](../upgrades/2026-10/m2o23-1-come-space.md) brings the pinned
-OpenTTD3 lineage into these existing owners. Group 2 has delivered exact input
-retention; gameplay, renderer integration and new native qualification remain
-separate pending work. [donor-import.json](../../../src/tests/fixtures/cleanup/donor-import.json)
+OpenTTD3 lineage into these existing owners. Exact input retention, gameplay,
+renderer integration and new native qualification are delivered through the four
+merge plans; their distinct current evidence remains explicit in the integration
+handoff above. [donor-import.json](../../../src/tests/fixtures/cleanup/donor-import.json)
 records original aliases, hashes, roles and dated dependency facts. It is a
 preservation record, not a replacement asset catalogue or runtime supplier.
 
@@ -83,14 +86,19 @@ save resolver.
 verifies retained payloads and aliases in bounded `saves`, `sources`, `assets`
 and `history` scopes. Its `donor-underground-inputs` declaration lives in the
 sole [review-producers.json](../../../mlm/review-producers.json) catalogue and
-is disabled until Group 58 supplies its stage adapter. Direct input verification
-is delivered; neither that declaration nor this architecture claims completion
-of the later integration.
+is enabled through its implemented Group58stage adapter. Direct input verification
+and the final Group70cold recovery use these same retained owners; no donor cache
+is a current prerequisite. Dated donor-source links in the imported archive remain
+historical navigation and do not become executable inputs.
 
 ### Graphics candidates, expectations and publication
 
-The import uses the existing graphics flow below. Groups 48-62 will adapt donor
-families and native consumers to it; those adapters are still planned.
+The import uses the existing graphics flow below. Groups48-58delivered the
+source/renderer, expectation and candidate-input adapters;59-62qualified the
+frozen native matrix and explicitly adopted17already-identical canonical outputs.
+The completeGRFremainsSHA256c04fbf0d5525edc53250cfbd963f5e3bbe0d0bce655a3553c73b76483a8e8744.
+Group69adds actual retained runtime representatives and ordinary controls while
+preserving independent source/expectation versus actual-frame roles.
 
 ```mermaid
 flowchart LR
@@ -111,8 +119,16 @@ publisher must keep PNG/NFO/GRF/hash and manifest companions consistent.
 `bind_expected_payload` / `observe_expected_payload` in
 [sprite_native_inputs.py](../../../src/tests/multilayer/support/sprite_native_inputs.py)
 bind that expectation to one native configuration. An expected-payload hash is
-not the identity of the candidate GRF actually loaded. The planned native
-candidate binding must record both identities before Group 62 publication.
+not the identity of the candidate GRF actually loaded. Delivered Plan4 Group57
+uses `RunContext.prepare_candidate_baseset` to install the exact selected GRF,
+checksum and required original descriptor/base files only in its process home.
+`bind_candidate_baseset`/`observe_candidate_baseset` bind that actual generated
+input separately from expected pixels. The existing native packed-art observers
+call `ObserveTestCandidateSpriteFile`, hashing the actual already-opened
+`SpriteFile` and restoring its cursor before the original pixel/geometry loop.
+A prepared copy alone grants no loading or pixel acceptance. M1 Debug has actual
+opened-byte/full-source-record proof and a real wrong-pixel refusal; Group61records
+the completed five-family/dual-configuration frozen-epoch matrix.
 `sprite_native_loader.execute_stage` / `collect_stage` own native execution and
 collection; `EvidenceSet.selected` / `validate_capture` preserve exact selected
 capture provenance.
@@ -124,8 +140,38 @@ Only optional diagnostics belong in `logs/`; temporary verification workspaces
 and reports belong in `test-cache/`. No approval, original source, unique save or
 required proof may depend solely on a log. New merged evidence is generated from
 declared retained inputs, never by restoring a historical EXE or reclassifying
-an old receipt. Group 71 must replace planned adapter status with actual delivery
-paths and results.
+an old receipt. The existing `prior_stage_evidence` owner now translates imported
+normal-start, lifecycle, useful-route and performance evidence through explicit
+roles. Current observations require their original completed supplier request,
+declaration, run/configuration, current source/build/image and actual command
+transcripts. Historical inspection/relocation never grants current gameplay
+acceptance. The sole catalogue keeps incomplete genuine-world/performance
+providers disabled until their named native APIs and inputs exist. Group71
+consolidates remaining runtime/gallery/performance delivery after those groups.
+
+The delivered process/build boundary records opening input/source/image bytes,
+required stdout/stderr, exact exits and owned-child reaping. Windows jobs cover
+descendants even after root failure. The selected builder uses one project,
+one compiler worker by default/two maximum, disabled node reuse and measured
+6 GiB physical/8 GiB commit reserves. Compatible CMake trees are reconfigured with
+explicit portable options; incompatible trees require a new contained build
+directory. `--fresh` is forbidden because it recursively removes generated files.
+
+| Role | Existing delivered owner | Acceptance boundary |
+| --- | --- | --- |
+| Original selected pixels, palettes and geometry | Existing media/fixture contracts and source recipes | Immutable roots; native output never supplies expected pixels. |
+| Pure GRF/checksum candidate and independent expectations | `merged-art-candidates` and `sprite_expected_payload` | Separate exact source-phase products, neither a native pass nor canonical publication. |
+| Process-local actual candidate | `RunContext.prepare_candidate_baseset` and `sprite_native_inputs` | Exact generated input plus isolated copy, required descriptor/checksum/base companions and actual native opened bytes. |
+| Selected native art closure | `sprite_native_loader.execute_stage`/`check_candidate_result`/`collect_stage`, existing `EvidenceSet` | One actual candidate across complete family leaves, actual producer/output/transcript and independent geometry/pixel coverage; paid usefulness remains separate. |
+| Retained donor inputs | `verify_donor_inputs.verify_retained_inputs`, sole `donor-underground-inputs` recipe | Original hashes/namespaced aliases resolve through A without B directories or old caches; historical receipts remain unchanged. |
+| Selected Space continuation inputs | Public `space_checkpoint.load_foundation`/`verify_foundation`, sole `space-continuation-inputs` recipe | Exact durable GZVEEI successor retains GZVEEJ dispatch and closed cash/tick policies; no old EXE or new paid scope. |
+
+The older 440-only native `space-checkpoint` qualification remains explicitly
+pending Group64's merged441/complete128-family adapter. Its retained continuation
+input reader is delivered independently; disabling an incomplete native API does
+not suppress missing retained-input errors or demote the chosen successor.
+The scoped producing records and rebuild commands are in
+[Plan4's execution record](../upgrades/2026-10/m2o23-4-come-space-a-execution.md).
 
 Incremental export is delivered by
 [save_retention.py](../../../src/tests/multilayer/support/save_retention.py).

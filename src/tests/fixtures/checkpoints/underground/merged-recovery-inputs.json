@@ -1,0 +1,12 @@
+{
+  "_documentation": "Replace implemented recovery placeholders with bounded actual-owner declarations.\n\n@see docs/zz-reach2/architecture/archi-historical-debug.md\n@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md\n",
+  "schema_version": 1,
+  "useful_wait": {
+    "path": "savegames/retained/mlm/reviews/acceptance/normal-ground-useful/merge65-useful-40b3162c66/saves/useful-progress-repeat.sav",
+    "sha256": "cfdd082bb2fd41b11004171807859f2befe4ffb0cd238cecf2960601b352ed7f"
+  },
+  "classification": "genuine_original_retained_loaded_wait",
+  "expected_families": 128,
+  "native_ticks_per_branch": 1,
+  "all_paid_acceptance_replayed": false
+}

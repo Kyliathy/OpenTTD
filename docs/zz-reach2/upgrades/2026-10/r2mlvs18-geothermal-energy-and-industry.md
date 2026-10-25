@@ -1,5 +1,7 @@
 # R2MLVS18 - Geothermal Energy and Industry
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) joins commissioned plant/riser/town and Tube demand through existing thermal/electrical owners. Original paid construction/working/shortage worlds, installed components and real cold peer binding remain separately classified; finite heat and retired identities are preserved. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

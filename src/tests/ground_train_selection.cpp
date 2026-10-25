@@ -17,6 +17,7 @@
 #include "../cargopacket.h"
 #include "underground_fleet_fixture.h"
 
+#include "ground_render_camera_fixture.h"
 #include "../safeguards.h"
 
 /** Real command-built freight, with packet staging confined to explicit draw boundaries. */
@@ -250,4 +251,14 @@ TEST_CASE("Selected rail purchase previews preserve actual engine and company gu
 	CHECK_FALSE(GetGroundRailPurchaseSprite(7, true));
 	CHECK(GetMultiLayerPurchaseSprite(7, true) == GetGroundSprite(GroundSpriteFamily::PurchaseModel07, {0}));
 	CHECK(GetMultiLayerEnginePurchaseSprite(GetUndergroundEngine(4), true) == GetMultiLayerSprite(MultiLayerSpriteAsset::PurchaseModel04, {0}));
+}
+
+/** Actual main/extra cameras and hidden-building presentation preserve the physical source owner and its live state. */
+TEST_CASE("Merged rail freight selection retains physical cargo across cameras", "[merged-ground-camera]")
+{
+	PrepareGroundRenderCameraLanguage();
+	GroundTrainRig rig(5); rig.Load(10);
+	/** @return Actual public consumer identities at the unchanged visual phase; no raster or earned work is claimed. */
+	const auto query = [&] { return std::vector<SpriteID>{GetMultiLayerTrainSprite(*rig.wagon, Direction::NE, 24).value()}; };
+	CheckGroundRenderCameraPurity(query);
 }

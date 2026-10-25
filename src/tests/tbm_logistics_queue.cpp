@@ -5,6 +5,8 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md native queue/custody ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23EC.
  * @file tbm_logistics_queue.cpp Two genuinely driven haulers preserve the source bay's FIFO turn through a real save.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13AC
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
@@ -18,6 +20,7 @@
 #include "layer_save_fixture.h"
 #include "underground_workflow_fixture.h"
 #include "../tbm_cmd.h"
+#include "../space_vehicle.h"
 #include "../order_cmd.h"
 #include "../saveload/saveload_func.h"
 #include "../table/sprites.h"
@@ -36,6 +39,9 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 	LoadGeneratedWindowTestLanguage();
 	UndergroundWorkflowWorld world(MapLayer::DeepUnderground, true, true);
 	LayerSaveContent content(world.ActivatedContent(), true);
+	// A disk-ready Industry world includes the same default Space engine mapping as ordinary NewGRF finalization.
+	// Register its actual definition before recording; no hull, order, inventory or purchase is created.
+	REQUIRE(InitialiseSpaceEngineDefinition());
 	std::vector<VehicleID> spare;
 	uint earth = 0, rock = 0;
 	// The first actual train brings a smaller empty set; unused initial units remain genuine owned depot wagons.
@@ -66,11 +72,23 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 	TBMProjectID project_id{UINT32_MAX};
 	uint32_t first_cycle = 0;
 	uint32_t peer_cycle = 0; ///< The peer may already have served an earlier physical arrival; occupation must not steal its current turn.
+	std::string journal, last; ///< Every change of both haulers' cycle and lead tile, so a missed checkpoint shows the real order of events.
 	/** @param current Actual whole native frame; record the real second train's wait and the first train's preserved turn. */
 	const auto observe = [&](const UndergroundWorkflowWorld &current) {
 		const auto *first = GetTBMExchangeAssignmentForHauler(current.hauler->index);
 		REQUIRE(first != nullptr);
 		const auto *peer = GetTBMExchangeAssignmentForHauler(second->index);
+		// Journal each change of either hauler's phase, wait, exchanges or lead tile, with the project's phase and cursor.
+		const auto *work = GetTBMProject(first->project);
+		const auto *job = work == nullptr ? nullptr : GetExcavationJob(work->job);
+		std::string now = fmt::format("first {}/{}/{} at {} | second {} at {} | project {} cursor {}",
+			to_underlying(first->phase), to_underlying(first->wait), first->exchanges, current.hauler->GetMovingFront()->tile.base(),
+			peer == nullptr ? std::string{"unassigned"} : fmt::format("{}/{}/{}", to_underlying(peer->phase), to_underlying(peer->wait), peer->exchanges),
+			second->GetMovingFront()->tile.base(), work == nullptr ? -1 : static_cast<int64_t>(to_underlying(work->phase)), job == nullptr ? -1 : static_cast<int64_t>(job->cursor));
+		if (now != last) {
+			journal += fmt::format("\n{}: {}", current.ticks, now);
+			last = std::move(now);
+		}
 		// Both physical trains must be admitted at the source and the first must still own the turn; a staged queue index cannot establish occupation.
 		if (peer != nullptr && !occupied && peer->wait == TBMHaulerWait::OccupiedBay) {
 			REQUIRE(first->wait == TBMHaulerWait::NoEmpties);
@@ -83,7 +101,13 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 			peer_cycle = peer->exchanges;
 			occupied = true;
 			if (record_prefix != nullptr) {
-				const auto directory = GetTestCaseArtifactPaths("tbm", "logistics").saves;
+				// The explicit occupied-file check owns fresh disposable cache products; ordinary callers retain their existing recipe paths.
+				const char *cache = std::getenv("OTTD_TBM_OCCUPIED_CACHE");
+				const auto directory = cache == nullptr ? GetTestCaseArtifactPaths("tbm", "logistics").saves :
+					RequireTestArtifactWithin(cache, FindTestRepositoryRoot() / "test-cache/merge-supply");
+				REQUIRE(std::filesystem::is_directory(directory));
+				// This ordinary-file regression must never smuggle the later phase20 dialect through its current reader.
+				REQUIRE(to_underlying(work->phase) <= to_underlying(TBMPhase::FollowOrders));
 				const auto path = directory / (std::string(record_prefix) + "-occupied-bay.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));
 				SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
@@ -101,9 +125,12 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 	};
 	/** @param current Real player action boundary; assign/start the second train and later cancel remaining work through its canonical command. */
 	const auto control = [&](const UndergroundWorkflowWorld &current) {
-		if (!assigned) {
-			const auto *first = GetTBMExchangeAssignmentForHauler(current.hauler->index);
-			REQUIRE(first != nullptr);
+		const auto *first = GetTBMExchangeAssignmentForHauler(current.hauler->index);
+		REQUIRE(first != nullptr);
+		// The second hauler starts once the first is admitted at the bay. Both leave the same depot onto one unsignalled
+		// block, so the native depot rule releases the second only after the first has left it; the declared FIFO order
+		// is the first hauler's turn (master task 10R.1, after the r2df block boundary at the closed pair).
+		if (!assigned && first->phase == TBMHaulerPhase::AwaitExchange) {
 			REQUIRE(Command<Commands::AssignTBMHauler>::Do(DoCommandFlag::Execute, first->project, second->index).Succeeded());
 			REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, second->index, true).Succeeded());
 			assigned = true;
@@ -116,6 +143,7 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 	};
 	try {
 		RunUndergroundExcavationWorkflow(world, Ticks::DAY_TICKS, observe, control);
+		INFO("phase/wait/exchanges journal:" << journal);
 		FAIL("the two-hauler scenario must reach its declared FIFO checkpoint");
 	} catch (const ReachedQueueTransition &) {
 		CHECK(assigned);

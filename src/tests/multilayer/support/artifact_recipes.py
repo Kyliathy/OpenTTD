@@ -16,7 +16,7 @@ STAGES = ("inspect", "build", "prepare", "verify")
 EXECUTIONS = {"read_only", "pure_conversion", "native_fixture", "native_application"}
 
 
-def check_reference_roles(document, root, generated_inputs=(), run_id=None, verify_bytes=True, input_aliases=None):
+def check_reference_roles(document, root, generated_inputs=(), run_id=None, verify_bytes=True, input_aliases=None, generated_runs=None):
     """Validate live typed references while leaving quoted historical facts inert.
 
     @param document Current request/result, known retained world/checkpoint, or role-annotated metadata.
@@ -25,6 +25,7 @@ def check_reference_roles(document, root, generated_inputs=(), run_id=None, veri
     @param run_id Current invocation for generated references, or the envelope's own ID.
     @param verify_bytes Hash live references; declaration-only callers defer bytes to the existing input observer.
     @param input_aliases Optional invocation-local canonical alias map, avoiding catalogue rereads per declaration.
+    @param generated_runs Optional exact prerequisite path/hash to validated supplying invocation map; never request-supplied ownership.
     @return Number of distinct live files inspected; no directory or output is created.
     """
     root = Path(root).resolve()
@@ -33,6 +34,13 @@ def check_reference_roles(document, root, generated_inputs=(), run_id=None, veri
     if aliases is None:
         aliases = json.loads(catalogue.read_text(encoding="utf-8"))["inputs"] if catalogue.is_file() else {}
     supplied = {(row["path"], row["sha256"]) for row in generated_inputs}
+    supplier_runs = dict(generated_runs or {})
+    # A checked supplier run can qualify only an already selected prerequisite.
+    # It cannot turn another file or historical reference into a live input.
+    if any(key not in supplied for key in supplier_runs):
+        raise ValueError("supplier invocation is not an exact selected prerequisite")
+    for supplier in supplier_runs.values():
+        identifier(supplier)
     seen, inspected = set(), set()
     invocation = run_id or document.get("run_id")
     live_kinds = {"artifact_recipe_stage_request", "artifact_recipe_stage_result", "native_process_result", "native_capture_result"}
@@ -73,10 +81,13 @@ def check_reference_roles(document, root, generated_inputs=(), run_id=None, veri
             path = checked_path(declared, root)
             relative = path.relative_to(root).as_posix()
             prepared = (relative, expected) in supplied
-            # Generated prerequisites require the exact supplying result and
-            # current invocation; a familiar filename cannot select old output.
+            # Generated inputs require their exact validated supplying result
+            # and invocation. A capture may borrow those precise source bytes,
+            # while every output must still belong to its fresh capture run.
             if role == "generated_prerequisite" or prepared:
-                if not prepared or not relative.startswith("mlm/reviews/") or invocation not in path.parts:
+                supplier = invocation if role == "current_output" else supplier_runs.get((relative, expected), invocation)
+                parts = path.relative_to(root / "mlm/reviews").parts if relative.startswith("mlm/reviews/") else ()
+                if not prepared or len(parts) < 5 or parts[2] != supplier:
                     raise ValueError("unbound generated prerequisite recipe/run")
             elif role in {"retained_input", "current_source"}:
                 if in_disposable(relative):
@@ -354,19 +365,10 @@ def inspect_recipe(name, configuration=None, root=None):
     @param root Optional checkout whose catalogue and retained inputs are inspected.
     @return Read-only recipe plan with exact missing-input/provider and pending-group details.
     """
-    root = repository_root(root)
-    recipes = validate_recipes(load_catalogue(root), root)
-    order = recipe_order(name, recipes)
-    if configuration not in {None, "Debug", "RelWithDebInfo"}:
-        raise ValueError("unsupported recipe configuration")
-    selected = recipes[name]
-    # Native proof cannot silently choose a default build and later be reused
-    # as evidence for the other independently linked configuration.
-    if selected["configuration_required"] and configuration is None:
-        raise ValueError(f"recipe requires an explicit configuration: {name}")
-    missing = [dict(recipe=item, **row) for item in order for row in recipes[item]["retained_inputs"]
-        if not checked_path(row["path"], root).is_file()]
-    pending = {item: recipes[item]["pending_groups"] for item in order if not recipes[item]["enabled"]}
-    return dict(recipe=name, configuration=configuration, order=order, missing_inputs=missing,
-        pending_groups=pending, executable=not missing and not pending,
-        publishes_source=False, reserves_run_id=False)
+    # The executor's existing read-only selector owns retained-first aliases,
+    # exact bounded closure and current input observations. Sharing it prevents
+    # this metadata view from falsely requiring unrelated providers/old paths.
+    from artifact_rebuild import load_recipe
+    selected = load_recipe(name, configuration, root)
+    return {key: selected[key] for key in ("recipe", "configuration", "order", "missing_inputs", "pending_groups", "executable",
+                                           "publishes_source", "reserves_run_id")}

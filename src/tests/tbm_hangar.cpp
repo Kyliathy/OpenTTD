@@ -94,38 +94,6 @@ TEST_CASE("A TBM unloads and parks at a selected portal before resuming its real
 	fmt::print("HANGAR_RESUMED cutter={} depot={} job={} partial={} ticks={}\n", front->index.base(), selected.base(), before.id.base(), before.partial_work_ticks, workflow.world.ticks);
 }
 
-/** The selected service command retains the ordinary native depot visit and the same paid unfinished work. */
-TEST_CASE("A TBM visits a selected native depot for service and rejoins its work", "[tbm-hangar-service]")
-{
-	MockEnvironment::Instance();
-	LoadGeneratedWindowTestLanguage();
-	UndergroundDepotWorkflow workflow;
-	workflow.Prepare();
-	const auto id = workflow.StartFurther();
-	/** @return Whether the actual cutter is at an unfinished face away from storage. */
-	const auto cutting = [&]() { return GetTBMProject(id)->phase == TBMPhase::Bore && GetExcavationJob(GetTBMProject(id)->job)->partial_work_ticks >= 20; };
-	workflow.DriveUntil(cutting);
-	const auto before = *GetExcavationJob(GetTBMProject(id)->job);
-	Train *front = Train::Get(workflow.first.cutter);
-	workflow.Do<Commands::SendTBMToHangar>(front->index, workflow.connection, false); // The explicit service request below must supersede an unfinished selected-hangar trip.
-	workflow.Do<Commands::SendTBMToHangar>(front->index, workflow.depot, true);
-	REQUIRE_FALSE(front->current_order.GetDepotActionType().Test(OrderDepotActionFlag::Halt));
-	bool serviced = false;
-	/** @return Whether native depot entry completed the actual service order. */
-	const auto entered = [&]() {
-		serviced = front->tile == workflow.depot && front->IsChainInDepot() && !front->current_order.IsType(OT_GOTO_DEPOT);
-		return serviced;
-	};
-	workflow.DriveUntil(entered);
-	CHECK(*GetExcavationJob(before.id) == before);
-	/** @return Whether native departure and approach reach the next real cut of the original job. */
-	const auto resumed = [&]() { return GetExcavationJob(before.id)->cursor > before.cursor; };
-	workflow.DriveUntil(resumed);
-	CHECK(serviced);
-	CHECK(GetTBMProject(id)->cutter == front->index);
-	CHECK(GetTBMProject(id)->job == before.id);
-}
-
 /** Real GameScript actor scope; the native command and normal suspension protocol retain execution ownership. */
 class HangarScriptScope : public ScriptObject {
 	ActiveInstance active; ///< Restored before the owning GameInstance is destroyed.

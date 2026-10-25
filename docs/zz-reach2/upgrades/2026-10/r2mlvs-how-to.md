@@ -1,5 +1,7 @@
 # R2MLVS how-to - Digging around in the current build
 
+**Preserved compatibility guide,2026-10-25.** Bdeleted this file; Akeeps its dated controls and prepared examples. Current native face/bay, genuine original-world freight and player-control qualification are indexed in the [merged handoff](m2o23-4-come-space-b-integration-handoff.md). The [underground walkthrough](d2um-underground-mines.md) is the current player entry. Prepared examples do not become an unassisted newgame bootstrap claim. [Storage authority](../../architecture/archi-historical-debug.md).
+
 Player guidance for the delivered [portal/TBM master](r2mlvs3mp-master-plan.md), owned by the
 [multilayer epic](r2mlvs-multilayer-vehicles-and-structures.md). Architecture:
 [map layers](../../architecture/map-layers/archi-map-layers.md). Updated 2026-10-08.

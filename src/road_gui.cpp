@@ -1121,6 +1121,12 @@ static WindowDesc _build_tramway_desc(
 	&BuildRoadToolbarWindow::tram_hotkeys
 );
 
+/** @copydoc GetBuildRoadToolbarRoadType */
+RoadType GetBuildRoadToolbarRoadType()
+{
+	return _cur_roadtype;
+}
+
 /**
  * Open the build road toolbar window
  *

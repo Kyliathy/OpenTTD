@@ -1,5 +1,7 @@
 # R2MLVS3 - Sealed Portals and Deep Rail
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) integrates actual paid portal/support conversion, face/bay operation, useful freight and geothermal consumers with Space. The dated child checklist below retains its original scope; current merge dispatch and evidence live in that handoff and the [storage architecture](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

@@ -4,6 +4,7 @@
  * Original persistence phases declare metadata only. Paid phases use actual synchronized commands and native station ingress in a declared retained world; no phase supplies an unassisted or final factory predecessor.
  */
 #include "../stdafx.h"
+#include "save_first_tick_fixture.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../surface_supply_order_runtime.h"
 #include "../surface_supply_order_wire.h"
@@ -27,6 +28,7 @@
 #include "../timer/timer_game_tick.h"
 #include "layer_save_fixture.h"
 #include "test_artifact_paths.h"
+#include "save_merged_refusal_fixture.h"
 #include "../safeguards.h"
 
 static std::function<void()> *supply_order_observer = nullptr; ///< Non-owning invocation callback; no gameplay owner or tick permission is introduced.
@@ -204,6 +206,69 @@ static void ObservePaidSurfaceSupplyFile(std::string_view phase, const TestArtif
 		phase, before.base(), company->money.base(), charged.base(), refunded.base());
 }
 
+/** Write and reconstruct a new merged successor without changing original financial or physical owners.
+ * @param output Explicit test-cache successor pathname, separate from the retained original.
+ * Native and imported B receipts keep their exact tags, quantities, purpose,
+ * shipment history and wallets through copied preview, full load and second save.
+ */
+static void CheckMergedSupplySuccessor(const char *output)
+{
+	REQUIRE(output != nullptr);
+	const auto book = CaptureSurfaceSupplyOrders();
+	std::vector<SurfaceSupplyPacketFacts> packets;
+	std::vector<std::pair<CompanyID, Money>> wallets;
+	// Actual native wallets are independent of receipt/packet metadata;
+	// persistence cannot charge or refund any loaded company.
+	for (const auto *company : Company::Iterate()) wallets.emplace_back(company->index, company->money);
+	// Snapshot actual original native fragments before saving; no cached
+	// station quantity or receipt stands in for physical packet evidence.
+	for (const auto *packet : CargoPacket::Iterate()) packets.push_back({packet->index, packet->Count(), packet->GetSource(),
+		packet->GetFeederShare(), packet->GetCompanySupplyOrder(), packet->HasCompanySupplyShipped()});
+	SaveSurfaceSupplyFile(output);
+	REQUIRE(SaveOrLoad(output, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+	CHECK(book == CaptureSurfaceSupplyOrders()); CHECK(book == _load_check_data.surface_supply_orders.snapshot);
+	REQUIRE(packets.size() == _load_check_data.native_cargo_packet_rows.size());
+	// The fresh output's original CAPA rows must retain each exact
+	// quantity, purpose and transfer credit, including unlinked A supplies.
+	for (size_t index = 0; index < packets.size(); ++index) {
+		const auto &before = packets[index]; const auto &after = _load_check_data.native_cargo_packet_rows[index];
+		CHECK(before.packet == after.packet); CHECK(before.quantity == after.quantity); CHECK(before.source == after.source);
+		CHECK(before.feeder_share == after.feeder_share); CHECK(before.order == after.company_supply_order);
+		CHECK(before.shipped == (after.company_supply_shipped != 0));
+	}
+	REQUIRE(SaveOrLoad(output, SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+	CHECK(CaptureSurfaceSupplyOrders() == book); CHECK(CargoPacket::GetNumItems() == packets.size());
+	// Complete the roundtrip through actual full reconstruction too;
+	// copied admission alone cannot certify real stock or wallet restoration.
+	for (const auto &before : packets) {
+		const auto *after = CargoPacket::GetIfValid(before.packet); REQUIRE(after != nullptr);
+		CHECK(after->Count() == before.quantity); CHECK(after->GetSource() == before.source);
+		CHECK(after->GetFeederShare() == before.feeder_share); CHECK(after->GetCompanySupplyOrder() == before.order);
+		CHECK(after->HasCompanySupplyShipped() == before.shipped);
+	}
+	for (const auto &[id, money] : wallets) { REQUIRE(Company::IsValidID(id)); CHECK(Company::Get(id)->money == money); }
+	if (std::getenv("OTTD_MERGE_SUPPLY_REFUSALS") != nullptr) {
+		/** Assert actual book, native fragments and wallets after nondestructive copied refusal or complete native recovery. */
+		const auto unchanged = [&] {
+			CHECK(CaptureSurfaceSupplyOrders() == book); CHECK(CargoPacket::GetNumItems() == packets.size());
+			// Every original physical fragment retains its own quantity/purpose/link;
+			// matching receipt totals cannot hide a lost or duplicated native packet.
+			for (const auto &before : packets) {
+				const auto *after = CargoPacket::GetIfValid(before.packet); REQUIRE(after != nullptr);
+				CHECK(after->Count() == before.quantity); CHECK(after->GetSource() == before.source);
+				CHECK(after->GetCompanySupplyOrder() == before.order); CHECK(after->HasCompanySupplyShipped() == before.shipped);
+			}
+			for (const auto &[id, money] : wallets) { REQUIRE(Company::IsValidID(id)); CHECK(Company::Get(id)->money == money); }
+		};
+		CheckMergedNativeRefusals(output, unchanged);
+	}
+	// A second save after actual reconstruction must preserve the same canonical
+	// evidence; original A440fixed bytes are never used as the new writer layout.
+	const auto second = std::string{output} + ".again.sav"; SaveSurfaceSupplyFile(second);
+	REQUIRE(SaveOrLoad(second, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+	CHECK(_load_check_data.surface_supply_orders.snapshot == book);
+}
+
 /** Actual native load/save entry; each invocation is isolated and bounded by the external harness, and no iteration advances a dispatch tick. */
 TEST_CASE("Native Surface order files preserve metadata and actual paid continuation", "[.surface-supply-order-native]")
 {
@@ -220,7 +285,57 @@ TEST_CASE("Native Surface order files preserve metadata and actual paid continua
 			auto save = [&](std::string_view name) {
 				SaveSurfaceSupplyFile(paths.saves / name);
 			};
-			if (phase.starts_with("paid-")) {
+			if (phase == "legacy-b-refusal") {
+				const char *bad = std::getenv("OTTD_SURFACE_SUPPLY_BAD"); REQUIRE(bad != nullptr);
+				CHECK(SaveOrLoad(bad, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
+				REQUIRE(SaveOrLoad(bad, SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::ReInit);
+				CHECK(CaptureSurfaceSupplyOrders().records.empty()); CHECK(GetNextSurfaceSupplyOrderID() == 1);
+				size_t linked = 0;
+				// A late whole-file refusal reconstructs a partial native world;
+				// no original linked fragment may have been normalized before ALL
+				// receipt/custody evidence passed, and no refund book is installed.
+				for (const auto *packet : CargoPacket::Iterate()) {
+					CHECK_FALSE(packet->GetSource().IsCompanySupply());
+					if (packet->GetCompanySupplyOrder() != 0) ++linked;
+				}
+				CHECK(linked != 0);
+			// Both original A observer names now publish a separate explicit merged
+			// successor while retaining the original source and paid evidence.
+			} else if (phase == "legacy-a-roundtrip" || phase == "merged-a-roundtrip") {
+				CheckMergedSupplySuccessor(std::getenv("OTTD_MERGE_SUPPLY_OUTPUT"));
+			// Original B scalar/custody observation is shared; the merged phase
+			// additionally certifies a new successor without rewriting legacy media.
+			} else if (phase == "legacy-b-inspect" || phase == "merged-b-roundtrip") {
+				const auto book = CaptureSurfaceSupplyOrders();
+				REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+				REQUIRE(_load_check_data.legacy_b_supply_packet_fields_present);
+				CHECK(book == _load_check_data.surface_supply_orders.snapshot);
+				CHECK(CargoPacket::GetNumItems() == _load_check_data.native_cargo_packet_rows.size());
+				size_t linked = 0;
+				// Compare every actual reconstructed fragment to original copied
+				// CAPA scalars. Only an exactly linked B purchase changes purpose;
+				// quantities, shipment history and unavailable buyer remain original.
+				for (const auto *packet : CargoPacket::Iterate()) {
+					const auto &rows = _load_check_data.native_cargo_packet_rows;
+					const auto raw = std::ranges::lower_bound(rows, packet->index, {}, &NativeCargoPacketPreview::packet);
+					REQUIRE(raw != rows.end()); REQUIRE(raw->packet == packet->index);
+					const auto expected = ProjectLegacyBSupplyPacket({raw->packet, raw->quantity, raw->source, raw->feeder_share,
+						raw->company_supply_order, raw->company_supply_shipped != 0}, book);
+					REQUIRE(expected.has_value());
+					CHECK(packet->Count() == expected->quantity); CHECK(packet->GetSource() == expected->source);
+					CHECK(packet->GetFeederShare() == expected->feeder_share); CHECK(packet->GetCompanySupplyOrder() == expected->order);
+					CHECK(packet->HasCompanySupplyShipped() == expected->shipped);
+					if (expected->order != 0) { ++linked; CHECK(packet->GetSource().id == Source::Invalid); }
+				}
+				REQUIRE(linked != 0);
+				// Loading and purpose normalization create no financial settlement.
+				// Independent original PLYR balances remain the actual native wallets.
+				for (const auto *company : Company::Iterate()) {
+					const auto original = _load_check_data.companies.find(company->index.base());
+					REQUIRE(original != _load_check_data.companies.end()); CHECK(company->money == original->second->money);
+				}
+				if (phase == "merged-b-roundtrip") CheckMergedSupplySuccessor(std::getenv("OTTD_MERGE_SUPPLY_OUTPUT"));
+			} else if (phase.starts_with("paid-")) {
 				ObservePaidSurfaceSupplyFile(phase, paths, source);
 			} else if (phase == "prepare") {
 				REQUIRE(CaptureSurfaceSupplyOrders().records.empty()); REQUIRE(GetNextSurfaceSupplyOrderID() == 1);
@@ -257,6 +372,10 @@ TEST_CASE("Native Surface order files preserve metadata and actual paid continua
 				REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 				CHECK(_load_check_data.surface_supply_orders_present); CHECK(_load_check_data.surface_supply_orders.snapshot.records.size() == 4);
 				save("surface-supply-order-resave-440.sav");
+			}
+			if (std::getenv("OTTD_MERGED_FIRST_TICK") != nullptr) {
+				const char *output = std::getenv("OTTD_MERGE_SUPPLY_OUTPUT"); REQUIRE(output != nullptr);
+				CheckFirstNativeTick(source, std::nullopt, output);
 			}
 			fmt::print("SURFACE_SUPPLY_ORDER_FILE phase={} native=true paid_continuation={} unassisted=false\n", phase, phase.starts_with("paid-")); observed = true;
 		} catch (...) { failure = std::current_exception(); }

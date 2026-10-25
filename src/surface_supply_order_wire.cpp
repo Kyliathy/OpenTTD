@@ -120,6 +120,24 @@ std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupp
 	return candidate;
 }
 
+/** @copydoc ProjectLegacyBSupplyPacket */
+std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot)
+{
+	if (original.source.IsCompanySupply()) return std::nullopt;
+	if (original.order == 0) {
+		if (original.shipped) return std::nullopt;
+		return original;
+	}
+	const auto *record = FindSurfaceSupplyOrderRecord(snapshot, original.order);
+	// B's producer created only invalid-Industry packets with a distinct paid
+	// link and no virtual credit. A same-label ordinary packet supplies none of
+	// that evidence, and today's receipt owner is never an original buyer.
+	if (original.source.type != SourceType::Industry || original.source.id != Source::Invalid || original.feeder_share != Money{0} ||
+		record == nullptr || record->Legacy() == nullptr) return std::nullopt;
+	original.source = {Source::Invalid, SourceType::CompanySupply};
+	return original;
+}
+
 /** @copydoc ConvertLegacyASupply */
 std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyASupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file)
 {

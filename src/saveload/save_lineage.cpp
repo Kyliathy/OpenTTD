@@ -167,6 +167,9 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 			!CompletePair(facts, SaveLineageFamily::GeneratorHeader, SaveLineageFamily::GeneratorRows, 8, 2) ||
 			!CompletePair(facts, SaveLineageFamily::ConversionHeader, SaveLineageFamily::ConversionRows, 32, 1) ||
 			!CompletePair(facts, SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows, 20, 1) || !ConsistentHistoryFlags(facts, false)) return result(SaveLineageStatus::Corrupt);
+		// The sole canonical issuer retains paid history even after terminal rows
+		// are pruned; row cardinality cannot clear or invent its metadata marker.
+		if (facts.merged_supply_next_id == 0 || ((facts.feature_flags & (1U << 23)) != 0) != (facts.merged_supply_next_id != 1)) return result(SaveLineageStatus::Corrupt);
 		return result(SaveLineageStatus::Accepted, SaveDialect::Merged);
 	}
 	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);

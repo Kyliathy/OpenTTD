@@ -8,12 +8,14 @@
 #define SAVELOAD_SPACE_CARGO_PREVIEW_H
 
 struct LoadCheckData;
+class SurfaceSupplyCustodyCheck;
 
 /** Join original copied references to their same-file physical packet identities without consulting runtime pools.
  * @param data Complete unpublished native/feature metadata from one checked file, including legitimately empty native families.
+ * @param supply Optional shared paid-supply check; every actual container additionally contributes its own same-file label/queue. No live cargo registry is consulted.
  * @return Whether every referenced packet exists with positive quantity and belongs to exactly one inspected container. Original family validators retain recipe/quantity/role admission.
  */
-bool ValidateSpaceCargoPreviewOwners(const LoadCheckData &data);
+bool ValidateSpaceCargoPreviewOwners(const LoadCheckData &data, SurfaceSupplyCustodyCheck *supply = nullptr);
 
 /** Match immutable descent weights, processor buffers and hauler holdings to this file's configured cargo metadata, without loading NewGRFs.
  * @param data Complete unpublished same-file preview with its version-admitted dimension family.

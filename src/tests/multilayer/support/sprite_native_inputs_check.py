@@ -21,7 +21,7 @@ import runner
 import sprite_expected_payload as source
 from sprite_native_inputs import PREFIX, bind_expected_payload, observe_expected_payload
 
-APPLICATION = RUN_ID = RECIPE = CONFIGURATION = None
+APPLICATION = RUN_ID = RECIPE = CONFIGURATION = EXPECTATIONS = None
 
 
 class SpriteNativeInputChecks(unittest.TestCase):
@@ -40,13 +40,20 @@ class SpriteNativeInputChecks(unittest.TestCase):
         # File existence or an old native success flag cannot supply this boundary.
         if state["complete"] is not True or state["status"] != "verified" or state["run_id"] != RUN_ID:
             raise ValueError("native input checks require the explicit completed source recipe")
+        cls.packing = state["nodes"]["m1-derived-inputs"]["outputs"]["manifest"]
+        if EXPECTATIONS is not None:
+            context = RunContext(source.ROOT, "multilayer-art", "sprite-input-suppliers", RUN_ID)
+            bundle = source.checked_expectation_bundle(identity(EXPECTATIONS, source.ROOT), context)
+            if bundle["source_result"] != identity(path, source.ROOT):
+                raise ValueError("native input expectation bundle has a different source supplier")
+            cls.manifests = {family: result["manifest"] for family, result in bundle["families"].items()}
+            return
         cls.manifests = {}
         for family in source.load_facts():
             node = state["nodes"][source.recipe_family(family) + "-expected-payload"]
             if node["status"] != "verified":
                 raise ValueError("native input source supplier is incomplete")
             cls.manifests[family] = node["outputs"]["manifest"]
-        cls.packing = state["nodes"]["m1-derived-inputs"]["outputs"]["manifest"]
 
     def setUp(self):
         """Create a fresh feature view so each input test owns exact process/report outputs.
@@ -197,7 +204,9 @@ if __name__ == "__main__":
     parser.add_argument("--configuration", choices=("Debug", "RelWithDebInfo"), required=True)
     parser.add_argument("--run-id", required=True)
     parser.add_argument("--recipe", default="ground-expected-payload")
+    parser.add_argument("--expectations", type=Path, help="Exact current expectation bundle continuing the completed source graph.")
     arguments = parser.parse_args()
     APPLICATION = contained(arguments.application, source.ROOT)
     CONFIGURATION, RUN_ID, RECIPE = arguments.configuration, arguments.run_id, arguments.recipe
+    EXPECTATIONS = contained(arguments.expectations, source.ROOT) if arguments.expectations is not None else None
     unittest.main(argv=[sys.argv[0]], verbosity=2)

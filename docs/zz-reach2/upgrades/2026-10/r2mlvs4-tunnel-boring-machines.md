@@ -1,5 +1,7 @@
 # R2MLVS4 - Tunnel Boring Machines
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) joins the actual native face/bay exchange, recurring spoil/empty-return workflows, saved waits and final original-world retirement/support conversion. Genuine paid originals and prepared components retain separate evidence; dated child rows do not dispatch another merge replay. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

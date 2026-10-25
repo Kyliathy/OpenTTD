@@ -28,9 +28,10 @@ static constexpr std::array<ExcavationCellTerms, 4> _cut_terms = {{{3, 6, 1, 1, 
  * Quote explicitly previewed working cells through the actual terrain/seam owner and shared frozen terms.
  * @param tiles Bounded canonical cells; this creates no live reservation.
  * @param model_id Logical TBM whose layer/hardness capability applies.
+ * @param own_job Job whose own unfinished claims are being planned again; invalid for none.
  * @return Complete extra-work estimate, or stable zero-quantity refusal.
  */
-ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id)
+ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id, ExcavationJobID own_job)
 {
 	if (tiles.empty()) return {};
 	if (tiles.size() > MAX_EXCAVATION_JOB_TILES) return {ExcavationError::Limit};
@@ -58,10 +59,14 @@ ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint1
 		if (previous != INVALID_TILE && tile <= previous) return {ExcavationError::InvalidRoute, tile}; // Canonical uniqueness prevents previews from double-charging duplicate extra cells.
 		previous = tile;
 		if (geology.generator_version == 0) continue;
-		if (geology.job_claims.contains(tile)) return {ExcavationError::ActiveCut, tile};
+		const auto claim = geology.job_claims.find(tile);
+		const bool own = claim != geology.job_claims.end() && claim->second == own_job;
+		// Another job's reservation is never quotable work. The replanned job's own unfinished cells are, as what they are.
+		if (claim != geology.job_claims.end() && !own) return {ExcavationError::ActiveCut, tile};
 		const auto terrain = geology.terrain.Get(tile);
 		if (!terrain) return {ExcavationError::InvalidTile, tile};
-		if (*terrain == ExcavationState::Excavating) return {ExcavationError::ActiveCut, tile};
+		// An active cell is still unopened rock: only the replanned job's own claimed one is quoted, and charged as rock.
+		if (*terrain == ExcavationState::Excavating && !own) return {ExcavationError::ActiveCut, tile};
 		if (*terrain == ExcavationState::Excavated) continue;
 		const auto &terms = _cut_terms[to_underlying(GetExcavationCellHardness(geology, tile))];
 		const uint days = model_id == 0 ? terms.standard_days : terms.deep_days;

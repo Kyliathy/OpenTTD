@@ -76,6 +76,9 @@ static bool CheckGeothermalSiteFamily(bool preview)
 	// active cold floors/collectors are exclusive, including between companies.
 	for (size_t index = 0; index < rows.size(); ++index) {
 		const auto &row = rows[index];
+		// The Magma cold model belongs to B430+ and merged saves. A's colliding
+		// later Space versions cannot introduce that paid machinery lineage.
+		if (row.kind == to_underlying(MultiLayerGeothermalConstructionKind::MagmaPowerhouse) && !SlHasSaveCapability(SaveCapability::GeothermalMagmaLoop)) SlErrorCorrupt("Unexpected Magma-Loop site in original save lineage");
 		const auto *terms = GetMultiLayerGeothermalConstruction(static_cast<MultiLayerGeothermalConstructionKind>(row.kind));
 		const auto vent = std::ranges::find(vents, GeothermalVentID{row.vent}, &GeothermalVentField::id);
 		// Hostile scalars cannot turn a blueprint into a riser, forget cancelled

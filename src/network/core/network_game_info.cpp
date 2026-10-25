@@ -5,7 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file network_game_info.cpp Functions to convert NetworkGameInfo to Packet and back. */
+/** @file network_game_info.cpp Native peer admission and game-information transport.
+ * @see docs/zz-reach2/architecture/commands/archi-commands.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ */
 
 #include "../../stdafx.h"
 #include "network_game_info.h"
@@ -21,6 +24,9 @@
 #include "../../settings_type.h"
 #include "../../strings_func.h"
 #include "../../rev.h"
+#include "../../command_type.h"
+#include "../../multilayer_content.h"
+#include "../../saveload/save_lineage.h"
 #include "../network_func.h"
 #include "../network.h"
 #include "../network_internal.h"
@@ -39,6 +45,18 @@ static const uint GITHASH_SUFFIX_LEN = 12;
 
 NetworkServerGameInfo _network_game_info; ///< Information about our game.
 
+/** Identify the merged protocol using the existing save, command and content owners.
+ * @return Revision suffix retained inside the native length bound and hash comparison.
+ * Original A/B binaries lack this suffix even when a dirty checkout shares a Git hash.
+ * Exact active NewGRF bytes remain governed by the ordinary join/content handshake.
+ */
+static std::string_view GetMergedNetworkRevisionSuffix()
+{
+	static const std::string suffix = fmt::format("+m{}c{}p{}", MERGED_SAVE_LINEAGE_VERSION,
+		to_underlying(Commands::End), GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content->version);
+	return suffix;
+}
+
 /**
  * Get the network version string used by this build.
  * The returned string is guaranteed to be at most NETWORK_REVISION_LENGTH bytes including '\0' terminator.
@@ -49,6 +67,9 @@ std::string_view GetNetworkRevisionString()
 	static std::string network_revision;
 
 	if (network_revision.empty()) {
+		const auto merged_suffix = GetMergedNetworkRevisionSuffix();
+		assert(merged_suffix.size() + GITHASH_SUFFIX_LEN < NETWORK_REVISION_LENGTH);
+		const size_t revision_limit = NETWORK_REVISION_LENGTH - merged_suffix.size();
 #if not defined(NETWORK_INTERNAL_H)
 #	error("network_internal.h must be included, otherwise the debug related preprocessor tokens won't be picked up correctly.")
 #elif not defined(ENABLE_NETWORK_SYNC_EVERY_FRAME)
@@ -63,7 +84,7 @@ std::string_view GetNetworkRevisionString()
 #endif
 		if (_openttd_revision_tagged) {
 			/* Tagged; do not mangle further, though ensure it's not too long. */
-			if (network_revision.size() >= NETWORK_REVISION_LENGTH) network_revision.resize(NETWORK_REVISION_LENGTH - 1);
+			if (network_revision.size() >= revision_limit) network_revision.resize(revision_limit - 1);
 		} else {
 			/* Not tagged; add the githash suffix while ensuring the string does not become too long. */
 			assert(_openttd_revision_modified < 3);
@@ -73,11 +94,12 @@ std::string_view GetNetworkRevisionString()
 			/* Where did the hash start in the original string? Overwrite from that position, unless that would create a too long string. */
 			size_t hash_end = network_revision.find_last_of('-');
 			if (hash_end == std::string::npos) hash_end = network_revision.size();
-			if (hash_end + githash_suffix.size() >= NETWORK_REVISION_LENGTH) hash_end = NETWORK_REVISION_LENGTH - githash_suffix.size() - 1;
+			if (hash_end + githash_suffix.size() >= revision_limit) hash_end = revision_limit - githash_suffix.size() - 1;
 
 			/* Replace the git hash in revision string. */
 			network_revision.replace(hash_end, std::string::npos, githash_suffix);
 		}
+		network_revision += merged_suffix;
 		assert(network_revision.size() < NETWORK_REVISION_LENGTH); // size does not include terminator, constant does, hence strictly less than
 		Debug(Facility::Net, Severity::Notice, "Network revision name: {}", network_revision);
 	}
@@ -106,6 +128,9 @@ static std::string_view ExtractNetworkRevisionHash(std::string_view revision_str
 bool IsNetworkCompatibleVersion(std::string_view other)
 {
 	std::string_view our_revision = GetNetworkRevisionString();
+	// Original or stale protocol peers must refuse before authentication/map or
+	// command admission, even when their numeric tail or source hash coincides.
+	if (!other.ends_with(GetMergedNetworkRevisionSuffix())) return false;
 	if (our_revision == other) return true;
 
 	/* If this version is tagged, then the revision string must be a complete match,

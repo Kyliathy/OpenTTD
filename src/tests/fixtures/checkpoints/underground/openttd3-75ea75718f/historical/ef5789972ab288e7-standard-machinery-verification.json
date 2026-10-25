@@ -1,0 +1,733 @@
+{
+  "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDB;native Standard cutter and actual hauler acquired on paid normal-world lineage;no opened floor",
+  "controller": {
+    "path": "src/tests/multilayer/normal_ground_machinery_report.py",
+    "bytes": 7814,
+    "sha256": "601d049bf8ff9756a8caacc72a1355e5a36e1ddad6affca5a59179781a10bcc5"
+  },
+  "yard_handoff": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/surface-yard-verification.json",
+    "bytes": 15872,
+    "sha256": "6cd491b51db7a70138868f37082b49e2fe10a67f319d3b6c97540757765631f2"
+  },
+  "records": {
+    "Debug": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172909-799e197f82/reports/normal-machinery-Debug.json",
+        "bytes": 7011,
+        "sha256": "f6b4badd7f4ce5cee82bbb9424009734af72a47ddbc4d48156ee5b2c06270b2b"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDB;actual normally earned funds buy native Standard participants;no cuts driven",
+        "configuration": "Debug",
+        "classification": "normal_start_standard_machinery",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_machinery.py",
+          "bytes": 7916,
+          "sha256": "c345420f23edc253417e67ce447a983327dd93448efa2788f83001ae5e534018"
+        },
+        "binary": {
+          "path": "build/Debug/openttd_test.exe",
+          "bytes": 79044096,
+          "sha256": "88dca000bb0a09f352e9a0daaafb7eacb8b1250052594db158ed96863707993d"
+        },
+        "yard_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/surface-yard-verification.json",
+          "bytes": 15872,
+          "sha256": "6cd491b51db7a70138868f37082b49e2fe10a67f319d3b6c97540757765631f2"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142822-35ee6ce6db/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "bd639f2278abec9a20369537e430672c3bf7173b71a42be61a7cd3b656054196"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-yard/20261019-171009-801c2676c3/saves/yard-paid.sav",
+          "bytes": 41412,
+          "sha256": "0a9c10ea7e54915a8059419ab3564b1844f44a7fc6825f6d3709b8d3be4754ac"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-172909-799e197f82/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-172909-799e197f82/main/scripts/game_start.scr",
+          "bytes": 107,
+          "sha256": "5006b53dfeb1fafabca2701cc035c43e077c0f7d07a77a0346f2600319618595"
+        },
+        "ready": {
+          "project": 0,
+          "job": 0,
+          "cutter": 38,
+          "hauler": 33,
+          "portal": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 25310,
+          "last": 26336,
+          "opening_cash": 1913625,
+          "cash": 1344658,
+          "loan": 300000,
+          "tick": 1254714,
+          "original_solid": 31752,
+          "solid": 31716,
+          "reserved": 0,
+          "excavating": 36,
+          "excavated": 0
+        },
+        "quote": {
+          "first": 25310,
+          "last": 26336,
+          "ok": 1,
+          "error": 65535,
+          "purchase": 402340,
+          "earth": 108,
+          "rock": 216,
+          "support": 36
+        },
+        "engines": [
+          {
+            "model": 4,
+            "engine": 260,
+            "available": 1,
+            "cost": 164062
+          },
+          {
+            "model": 2,
+            "engine": 258,
+            "available": 1,
+            "cost": 585
+          },
+          {
+            "model": 3,
+            "engine": 259,
+            "available": 1,
+            "cost": 585
+          }
+        ],
+        "invoices": [
+          {
+            "action": "assembly_clear",
+            "cost": 30,
+            "cash": 1913595
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 60,
+            "cash": 1913535
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 60,
+            "cash": 1913475
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 15,
+            "cash": 1913460
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 30,
+            "cash": 1913430
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 30,
+            "cash": 1913400
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 164062,
+            "cash": 1749338
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1748753
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1748753
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1748168
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1748168
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1747583
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1747583
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1746998
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1746998
+          },
+          {
+            "action": "spoil_origin_order",
+            "cost": 0,
+            "cash": 1746998
+          },
+          {
+            "action": "standard_commission",
+            "cost": 402340,
+            "cash": 1344658
+          },
+          {
+            "action": "assign_hauler",
+            "cost": 0,
+            "cash": 1344658
+          },
+          {
+            "action": "pause_standard",
+            "cost": 0,
+            "cash": 1344658
+          }
+        ],
+        "capital_paid": 568967,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172909-799e197f82/saves/standard-ready.sav",
+            "bytes": 42556,
+            "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172909-799e197f82/saves/standard-ready-repeat.sav",
+            "bytes": 42556,
+            "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-machinery/20261019-172909-799e197f82/machinery-Debug.log",
+            "bytes": 38035,
+            "sha256": "3a5b410df89b0303fda0b19866e3fbf8def2e43bf58d0eb1d1a90d58a0ac1f01"
+          },
+          "assertions": 113,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/normal_ground_yard_fixture.h",
+            "bytes": 7515,
+            "sha256": "a3143d09120794e30e798bd81bfbf24262fccda2e9ed7d24fd45ccfc8ff9d80f"
+          },
+          {
+            "path": "src/tests/normal_ground_freight_fixture.h",
+            "bytes": 26811,
+            "sha256": "08dcbdb317e7ea34feb6a5c54a7bfe613b5b6207ba92e4d93ceb971856bd1cb3"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 34782,
+            "sha256": "87c35fe64528ada7d911c050de9c4a7b185c65243408b05a2a7787b0c5a15859"
+          },
+          {
+            "path": "src/tbm_cmd.h",
+            "bytes": 11055,
+            "sha256": "02d1c4ca1395443181ba833a66ffb5f79d9a774d941bec6bbd2d7ef21bac31f5"
+          },
+          {
+            "path": "src/tbm_area_preview.h",
+            "bytes": 8838,
+            "sha256": "c5f6fbf72901a990156baa1018036fa2381e612c8dd8c64972e020caf06e9122"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/underground_vehicle.cpp",
+            "bytes": 10932,
+            "sha256": "4420deb11696867d33afb69916acfdfb23e0ef53cef91ddc6107cc7e37af5a77"
+          },
+          {
+            "path": "src/tbm_exchange.cpp",
+            "bytes": 87388,
+            "sha256": "368219b12cae05c3677b74ddf60ff581e2388b9383bbe9069f03772b7e9e1859"
+          }
+        ],
+        "remaining": "6CDC paid Standard clearing/disposal/withdrawal and accessible Underground floor;6CDD Deep readiness;6D normal-start S1/S2."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172909-799e197f82/saves/standard-ready.sav",
+        "bytes": 42556,
+        "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+      },
+      "ready": {
+        "project": 0,
+        "job": 0,
+        "cutter": 38,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25310,
+        "last": 26336,
+        "opening_cash": 1913625,
+        "cash": 1344658,
+        "loan": 300000,
+        "tick": 1254714,
+        "original_solid": 31752,
+        "solid": 31716,
+        "reserved": 0,
+        "excavating": 36,
+        "excavated": 0
+      },
+      "project": {
+        "id": 0,
+        "job": 0,
+        "company": 0,
+        "cutter": 38,
+        "model": 0,
+        "parts": 2,
+        "part0": 38,
+        "part1": 39,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 8671,
+        "exchange": 8671,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 0,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 0,
+        "anchor": 25055,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 27,
+        "authorized": 61,
+        "routes": 9
+      },
+      "assignment": {
+        "id": 0,
+        "project": 0,
+        "hauler": 33,
+        "bay": 8671,
+        "set": 0,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 0,
+        "project": 0,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 4
+      }
+    },
+    "RelWithDebInfo": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172954-75e0e98593/reports/normal-machinery-RelWithDebInfo.json",
+        "bytes": 7038,
+        "sha256": "a081f427871a3bfa8fdb6627b08e05651d9471441a6ecd119a17e1fce251f950"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6CDB;actual normally earned funds buy native Standard participants;no cuts driven",
+        "configuration": "RelWithDebInfo",
+        "classification": "normal_start_standard_machinery",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_machinery.py",
+          "bytes": 7916,
+          "sha256": "c345420f23edc253417e67ce447a983327dd93448efa2788f83001ae5e534018"
+        },
+        "binary": {
+          "path": "build/RelWithDebInfo/openttd_test.exe",
+          "bytes": 37186560,
+          "sha256": "05508fccb39a5f0215a44ea386f9c7d14544d477de358684c3d576f2f5bb4a90"
+        },
+        "yard_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/surface-yard-verification.json",
+          "bytes": 15872,
+          "sha256": "6cd491b51db7a70138868f37082b49e2fe10a67f319d3b6c97540757765631f2"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142954-e7679b13e9/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "1b2bda1a96cba833f7e1e847bc99c57ce53f3447fb761a94f749aede7540680e"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-yard/20261019-171330-f953120512/saves/yard-paid.sav",
+          "bytes": 41288,
+          "sha256": "8148fc0d55420f8fadb06d92cb1b010c177d11aa4b7a655ac269cac7460c0c3c"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-172954-75e0e98593/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-172954-75e0e98593/main/scripts/game_start.scr",
+          "bytes": 107,
+          "sha256": "5006b53dfeb1fafabca2701cc035c43e077c0f7d07a77a0346f2600319618595"
+        },
+        "ready": {
+          "project": 0,
+          "job": 0,
+          "cutter": 48,
+          "hauler": 33,
+          "portal": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 25310,
+          "last": 26336,
+          "opening_cash": 1911505,
+          "cash": 1342553,
+          "loan": 300000,
+          "tick": 1246918,
+          "original_solid": 31752,
+          "solid": 31716,
+          "reserved": 0,
+          "excavating": 36,
+          "excavated": 0
+        },
+        "quote": {
+          "first": 25310,
+          "last": 26336,
+          "ok": 1,
+          "error": 65535,
+          "purchase": 402340,
+          "earth": 108,
+          "rock": 216,
+          "support": 36
+        },
+        "engines": [
+          {
+            "model": 4,
+            "engine": 260,
+            "available": 1,
+            "cost": 164062
+          },
+          {
+            "model": 2,
+            "engine": 258,
+            "available": 1,
+            "cost": 585
+          },
+          {
+            "model": 3,
+            "engine": 259,
+            "available": 1,
+            "cost": 585
+          }
+        ],
+        "invoices": [
+          {
+            "action": "assembly_clear",
+            "cost": 15,
+            "cash": 1911490
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 45,
+            "cash": 1911445
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 60,
+            "cash": 1911385
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 15,
+            "cash": 1911370
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 30,
+            "cash": 1911340
+          },
+          {
+            "action": "assembly_clear",
+            "cost": 45,
+            "cash": 1911295
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 164062,
+            "cash": 1747233
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1746648
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1746648
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1746063
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1746063
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1745478
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1745478
+          },
+          {
+            "action": "machinery_unit",
+            "cost": 585,
+            "cash": 1744893
+          },
+          {
+            "action": "machinery_couple",
+            "cost": 0,
+            "cash": 1744893
+          },
+          {
+            "action": "spoil_origin_order",
+            "cost": 0,
+            "cash": 1744893
+          },
+          {
+            "action": "standard_commission",
+            "cost": 402340,
+            "cash": 1342553
+          },
+          {
+            "action": "assign_hauler",
+            "cost": 0,
+            "cash": 1342553
+          },
+          {
+            "action": "pause_standard",
+            "cost": 0,
+            "cash": 1342553
+          }
+        ],
+        "capital_paid": 568952,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172954-75e0e98593/saves/standard-ready.sav",
+            "bytes": 42452,
+            "sha256": "94967a6610a4fc8e20da3c34b503dc304852e84ca3b1d5a770943bbb15de5cab"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172954-75e0e98593/saves/standard-ready-repeat.sav",
+            "bytes": 42452,
+            "sha256": "94967a6610a4fc8e20da3c34b503dc304852e84ca3b1d5a770943bbb15de5cab"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-machinery/20261019-172954-75e0e98593/machinery-RelWithDebInfo.log",
+            "bytes": 38035,
+            "sha256": "cebcbf96c5f66c64ef127416b8da93238c9f578875dc46d537c17260487384d3"
+          },
+          "assertions": 113,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/normal_ground_yard_fixture.h",
+            "bytes": 7515,
+            "sha256": "a3143d09120794e30e798bd81bfbf24262fccda2e9ed7d24fd45ccfc8ff9d80f"
+          },
+          {
+            "path": "src/tests/normal_ground_freight_fixture.h",
+            "bytes": 26811,
+            "sha256": "08dcbdb317e7ea34feb6a5c54a7bfe613b5b6207ba92e4d93ceb971856bd1cb3"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 34782,
+            "sha256": "87c35fe64528ada7d911c050de9c4a7b185c65243408b05a2a7787b0c5a15859"
+          },
+          {
+            "path": "src/tbm_cmd.h",
+            "bytes": 11055,
+            "sha256": "02d1c4ca1395443181ba833a66ffb5f79d9a774d941bec6bbd2d7ef21bac31f5"
+          },
+          {
+            "path": "src/tbm_area_preview.h",
+            "bytes": 8838,
+            "sha256": "c5f6fbf72901a990156baa1018036fa2381e612c8dd8c64972e020caf06e9122"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/underground_vehicle.cpp",
+            "bytes": 10932,
+            "sha256": "4420deb11696867d33afb69916acfdfb23e0ef53cef91ddc6107cc7e37af5a77"
+          },
+          {
+            "path": "src/tbm_exchange.cpp",
+            "bytes": 87388,
+            "sha256": "368219b12cae05c3677b74ddf60ff581e2388b9383bbe9069f03772b7e9e1859"
+          }
+        ],
+        "remaining": "6CDC paid Standard clearing/disposal/withdrawal and accessible Underground floor;6CDD Deep readiness;6D normal-start S1/S2."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172954-75e0e98593/saves/standard-ready.sav",
+        "bytes": 42452,
+        "sha256": "94967a6610a4fc8e20da3c34b503dc304852e84ca3b1d5a770943bbb15de5cab"
+      },
+      "ready": {
+        "project": 0,
+        "job": 0,
+        "cutter": 48,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25310,
+        "last": 26336,
+        "opening_cash": 1911505,
+        "cash": 1342553,
+        "loan": 300000,
+        "tick": 1246918,
+        "original_solid": 31752,
+        "solid": 31716,
+        "reserved": 0,
+        "excavating": 36,
+        "excavated": 0
+      },
+      "project": {
+        "id": 0,
+        "job": 0,
+        "company": 0,
+        "cutter": 48,
+        "model": 0,
+        "parts": 2,
+        "part0": 48,
+        "part1": 49,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 8671,
+        "exchange": 8671,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 0,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 0,
+        "anchor": 25055,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 27,
+        "authorized": 61,
+        "routes": 9
+      },
+      "assignment": {
+        "id": 0,
+        "project": 0,
+        "hauler": 33,
+        "bay": 8671,
+        "set": 0,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 0,
+        "project": 0,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 4
+      }
+    }
+  },
+  "classification": "normal_start_standard_machinery",
+  "bootstrap_claim": false,
+  "native_cases": 2,
+  "native_assertions": 226,
+  "pure_pairs": 2,
+  "complete_chunks_equal": 126,
+  "ignored_chunks": [],
+  "remaining": "6CDC paid Standard access;6CDD Deep readiness;6D full normal-start S1/S2."
+}

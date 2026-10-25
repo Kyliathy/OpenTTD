@@ -272,6 +272,16 @@ struct TBMAreaRequest {
 	TileIndex tunnel_end = INVALID_TILE; ///< Exact endpoint for straight intent; ignored for area coverage.
 };
 
+/**
+ * Working space beyond the floor, its ring, the housing and earlier work that a quoted route digs: the approach and the
+ * turning space (r2df Groups 9-10).
+ */
+struct TBMApproachSummary {
+	std::vector<TileIndex> tiles; ///< Canonical cells the route sweeps outside that existing authorization.
+	uint32_t cuts = 0; ///< Cutter positions of the route whose sweep reaches one of those cells.
+	ExcavationCutResult estimate; ///< QuoteExcavationCells of those cells; already part of the route's totals.
+};
+
 /** Read-only preview shown before any command accepts the area. */
 struct TBMAreaPreview {
 	ExcavationError error = ExcavationError::None; ///< Planner, pass or reservation refusal.
@@ -285,6 +295,7 @@ struct TBMAreaPreview {
 	ExcavationPassTerms terms; ///< Frozen pass terms at the consist's capacities, including exchange breakpoints.
 	ExcavationJob proposal; ///< Canonical job proposal; a partial plan requests only its covered floor.
 	ExcavationJobID prospective_job{UINT32_MAX}; ///< Identity a reservation would allocate now; not reserved.
+	TBMApproachSummary approach; ///< Actual approach cells and their existing share of the whole-route quote.
 };
 
 /**
@@ -773,6 +784,19 @@ struct TBMSupportPlan {
 TBMSupportPlan PrepareTBMSupport(const TBMProject &project, const ExcavationJob &job);
 
 /**
+ * Prepare the piece the face needs after a change of work area (r2df Group 12). The face piece was laid by the last
+ * completed cut, aimed at the next planned cut; a new remainder may leave the face another way. Changes nothing.
+ * @param project Assigned project.
+ * @param job Its job with the new remainder after the completed cuts.
+ * @return No pieces when the laid track already leads to the next cut; else one junction piece at the face; or an
+ *         Obstruction refusal at the face when a train stands on it or the cell cannot take the piece.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+TBMSupportPlan PrepareTBMFaceSupport(const TBMProject &project, const ExcavationJob &job);
+
+
+
+/**
  * Read the canonical edge-connected track path used by native cut/support planning.
  * @param job Canonical job whose accepted route and commissioning anchor supply every position.
  * @param positions Number of route positions to include, bounded by the actual route.
@@ -1065,6 +1089,37 @@ std::optional<TBMCutterSteeringTarget> GetTBMCutterSteeringTarget(const Train &f
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 9B
  */
 bool CheckTBMSupportRailTurns(const ExcavationJob &job);
+
+/** The first cell where a route's support would be refused (r2df task 7.3). */
+struct TBMSupportRouteBlocker {
+	TileIndex tile = INVALID_TILE; ///< The refused cell, or INVALID_TILE when the whole route can be supported.
+	bool fundable = false; ///< The cell is the company's own permanent track lacking only the needed piece, which it can build.
+};
+
+/**
+ * Find the first cell from the job's cursor onwards where a cut could not lay or reuse its support, with the same rule
+ * PrepareTBMSupport applies cut by cut (r2df task 7.3). Quotes use it so they never accept a route whose cut is
+ * then refused.
+ * @param job Portal-anchored proposal or job, with its cursor at the first cut still to be supported.
+ * @param project The project that will lay the support; a quote before commissioning passes one that matches no record.
+ * @param company Company laying the support.
+ * @return The first cell with infrastructure the support may not merge with or replace, if any.
+ */
+TBMSupportRouteBlocker FindTBMSupportRouteBlocker(const ExcavationJob &job, TBMProjectID project, CompanyID company);
+
+/** What holds a project's cutter for the status line (r2df task 7.5). */
+struct TBMObstruction {
+	VehicleID vehicle = VehicleID::Invalid(); ///< Train in the way, if a train is.
+	TileIndex tile = INVALID_TILE; ///< Existing track or structure in the way, if no train is.
+};
+
+/**
+ * Name what keeps the cutter from moving on, for display only: a train in the next cut's sweep, a cell the next cut's
+ * support may not use, or another train on the pair while the cutter waits in or at its housing.
+ * @param project Live project.
+ * @return The blocker; both fields invalid when none can be named.
+ */
+TBMObstruction FindTBMObstruction(const TBMProject &project);
 
 /** Result of one work step at the face (Groups 6-7). */
 struct TBMFaceWork {

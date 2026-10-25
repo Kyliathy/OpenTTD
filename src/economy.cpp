@@ -13,6 +13,7 @@
  */
 
 #include "stdafx.h"
+#include "transport_tube_geothermal.h"
 #include "surface_supply_order_runtime.h"
 #include "asteroid.h"
 #include "launch_center.h"
@@ -21,6 +22,7 @@
 #include "utility_power.h"
 #include "transport_tube.h"
 #include "geothermal_collector.h"
+#include "geothermal_generator.h"
 #include "geothermal_riser.h"
 #include <ranges>
 #include "company_func.h"
@@ -502,8 +504,10 @@ void ChangeOwnershipOfCompanyItems(Owner old_owner, Owner new_owner)
 	// Electrical account history follows the same real company event before
 	// portal tiles or pool IDs disappear; only unused grants expire on removal.
 	ChangeUtilityPowerCompanyOwnership(old_owner, new_owner);
+	ChangeTubeGeothermalPowerCompanyOwnership(old_owner, new_owner); // Shared original ownership is settled first; old geothermal inlet permission never transfers implicitly.
 	ChangeTubePowerCompanyOwnership(old_owner, new_owner); // Retire physical inlets/bindings after exact electrical lineage, before old company/tile identities disappear.
 	ChangeGeothermalCollectorOwnership(old_owner, new_owner); // Paid construction/control follows actual takeover, retaining native stock/work and original source association.
+	ChangeGeothermalGeneratorOwnership(old_owner, new_owner); // Preserve paid work/native stock while transferring control or suspending abandoned machinery.
 	ChangeGeothermalRiserOwnership(old_owner, new_owner); // Native stock/work and the original physical portal incarnation survive takeover or abandonment.
 	ChangeGeothermalSiteCompanyOwnership(old_owner, new_owner); // Cancel unbuilt site reservations before the old company/tile identities can be reused.
 	ChangeSpacePodOwnership(old_owner, new_owner); // Retain actual paid shells, retiring old company custody before pool/tile reuse.
@@ -1104,6 +1108,9 @@ static uint DeliverGoodsToIndustry(const Station *st, CargoType cargo_type, uint
 		if (IsGeothermalCollectorDefinition(ind->type)) {
 			amount = ReceiveGeothermalCollectorCargo(*ind, cargo_type, amount); // Whole remaining construction bill enters actual stock/history; excess stays in carrier packets.
 			if (amount == 0) continue;
+		} else if (IsGeothermalGeneratorDefinition(ind->type)) {
+			amount = ReceiveGeothermalGeneratorCargo(*ind, cargo_type, amount); // Receipt stays in Industry stock/history; all excess remains aboard.
+			if (amount == 0) continue;
 		} else if (IsGeothermalRiserDefinition(ind->type)) {
 			amount = ReceiveGeothermalRiserCargo(*ind, cargo_type, amount); // Only the exact remaining bill enters native stock/history; excess remains in carrier custody.
 			if (amount == 0) continue;
@@ -1214,6 +1221,7 @@ static void TriggerIndustryProduction(Industry *i)
 	/* A spoil receiver keeps its stock for its own interval processing (r2mlvs5 Group 8.2). */
 	if (GetSpoilReceiverKind(i->type) != SpoilReceiverKind::End) return;
 	if (IsGeothermalCollectorDefinition(i->type)) return; // Arrived construction supplies remain in actual accepted stock until the whole paid collector participant consumes its bill.
+	if (IsGeothermalGeneratorDefinition(i->type)) return; // The whole paid bill waits for native construction; generic callbacks cannot spend it.
 	if (IsGeothermalRiserDefinition(i->type)) return; // Electrical machinery consumes its complete native material bill once; generic arrival callbacks cannot spend it.
 	if (IsLayerProcessorDefinition(i->type)) return; // Delivered inputs wait for the sole all-input batch owner; legacy multipliers must not independently clear them.
 

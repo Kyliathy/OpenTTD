@@ -256,10 +256,13 @@ struct TBMPChunkHandler : ChunkHandler {
 			// already use the new divisor and must never be scaled a second time.
 			if (wire.work_remainder >= divisor) SlErrorCorrupt("Invalid TBM work fraction");
 			if (old_rate) wire.work_remainder *= 2;
+			// Only B425+ or the merged writer owns AwaitFaceTransfer. A's same
+			// numeric425-440 history keeps FollowOrders as its original phase ceiling.
 			const auto max_phase = IsSavegameVersionBefore(SaveLoadVersion::TBMReturnParking) ? TBMPhase::Cancelled :
 				IsSavegameVersionBefore(SaveLoadVersion::TBMSettledRelease) ? TBMPhase::Parked :
 				IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) ? TBMPhase::ReleasePending :
-				IsSavegameVersionBefore(SaveLoadVersion::TBMNativeOrderControl) ? TBMPhase::ParkedHangar : TBMPhase::FollowOrders;
+				IsSavegameVersionBefore(SaveLoadVersion::TBMNativeOrderControl) ? TBMPhase::ParkedHangar :
+				SlHasSaveCapability(SaveCapability::TBMFaceTransfer) ? TBMPhase::AwaitFaceTransfer : TBMPhase::FollowOrders;
 			const auto max_block = IsSavegameVersionBefore(SaveLoadVersion::TBMHangarDepots) ? TBMBlockedReason::LogisticsStall :
 				IsSavegameVersionBefore(SaveLoadVersion::TBMNativeOrderControl) ? TBMBlockedReason::OccupiedHangar : TBMBlockedReason::MissingOrders;
 			// Identities increase strictly; company, phase, reason and heading are known values; tiles fit the map.

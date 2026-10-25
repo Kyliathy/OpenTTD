@@ -78,6 +78,8 @@ void LoadCheckData::Clear()
 {
 	// Every copied procurement check must supply its own original order family, native economy day and map geometry; stale prior-file evidence grants no new pending/refund rights.
 	this->surface_supply_orders_present = false; this->surface_supply_orders = {};
+	this->legacy_a_supply_wire = false; this->legacy_b_supply_present.fill(false); this->legacy_b_supply = {}; // Each preview proves its own original wire family; no prior header/rows can lend legacy rights.
+	this->legacy_b_supply_packet_fields_present = false;
 	this->native_map_dimensions_present = this->native_economy_date_present = false; this->native_economy_date = TimerGameEconomy::Date{0};
 	// Each preview must supply its own complete processing family and retired history; a valid previous file cannot lend paid work or presence to a missing/malformed next file.
 	this->orbital_recipes_present = false; this->orbital_recipe_rows.clear(); this->orbital_retired_recipe_batches.clear(); this->orbital_retired_discarded_paid_j = 0;
@@ -89,6 +91,7 @@ void LoadCheckData::Clear()
 	// Ordinary freight and hub handling must come entirely from this next file; stale copied references could otherwise conceal shared ownership or fabricate a missing packet.
 	this->native_vehicle_cargo_present = this->native_station_cargo_present = false;
 	this->native_ordinary_vehicle_cargo_refs.clear(); this->native_station_cargo_refs.clear(); this->surface_handling_rows.clear();
+	this->native_cargo_owner_rows.clear(); // No preceding file may lend a label or refundable source queue to this candidate's packets.
 	this->space_production_present = this->launch_operations_present = false;
 	this->space_manifests_present = false; this->space_manifest_rows.clear();
 	this->space_pods_present = false; this->next_space_pod_generation = 1; this->space_pod_rows.clear();
@@ -147,6 +150,11 @@ void LoadCheckData::Clear()
 	this->tbm_exchange_rows.fill(0);
 	// Each preview owns fresh utility transport; a previous file cannot supply
 	// missing fractions, grants or chunk presence to the next selection.
+	// Every copied selection owns its original machinery and conversion facts;
+	// prior previews cannot supply absent paid work, carry or forwarding rights.
+	this->utility_conversion_present.fill(false); this->utility_conversion_header.fill(0); this->utility_conversion_rows.clear();
+	this->tube_geothermal_present.fill(false); this->tube_geothermal_expected = 0; this->tube_geothermal_state = {};
+	this->geothermal_generator_present.fill(false); this->geothermal_generator_expected = 0; this->geothermal_generator_rows.clear();
 	this->utility_power_present.fill(false);
 	this->utility_power_header.fill(0);
 	this->utility_power_rows.fill(0);

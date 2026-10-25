@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file main_gui.cpp Handling of the main viewport. */
+/** @file main_gui.cpp Handling of the main viewport. @see docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (Debug keys moved to Ctrl+Alt) */
 
 #include "stdafx.h"
 #include "spritecache.h"
@@ -327,7 +327,7 @@ struct MainWindow : Window
 				break;
 			}
 
-			case GHK_RESET_OBJECT_TO_PLACE: ResetObjectToPlace(); break;
+			case GHK_RESET_OBJECT_TO_PLACE: CancelPlacementOrCloseWindow(); break;
 			case GHK_DELETE_WINDOWS: CloseNonVitalWindows(); break;
 			case GHK_DELETE_NONVITAL_WINDOWS: CloseAllNonVitalWindows(); break;
 			case GHK_DELETE_ALL_MESSAGES: DeleteAllMessages(); break;
@@ -488,9 +488,10 @@ struct MainWindow : Window
 		Hotkey(WKC_DELETE | WKC_CTRL, "delete_all_messages", GHK_DELETE_ALL_MESSAGES),
 		Hotkey('R' | WKC_CTRL, "refresh_screen", GHK_REFRESH_SCREEN),
 #if defined(_DEBUG)
-		Hotkey('0' | WKC_ALT, "crash_game", GHK_CRASH),
-		Hotkey('1' | WKC_ALT, "money", GHK_MONEY),
-		Hotkey('2' | WKC_ALT, "update_coordinates", GHK_UPDATE_COORDS),
+		// Ctrl+Alt keeps these developer keys clear of the per-layer Alt+1..4 (r2df decision D2); global hotkeys win over the toolbar.
+		Hotkey('0' | WKC_CTRL | WKC_ALT, "crash_game", GHK_CRASH),
+		Hotkey('1' | WKC_CTRL | WKC_ALT, "money", GHK_MONEY),
+		Hotkey('2' | WKC_CTRL | WKC_ALT, "update_coordinates", GHK_UPDATE_COORDS),
 #endif
 		Hotkey('1' | WKC_CTRL, "transparency_signs", GHK_TOGGLE_TRANSPARENCY),
 		Hotkey('2' | WKC_CTRL, "transparency_trees", GHK_TOGGLE_TRANSPARENCY + 1),

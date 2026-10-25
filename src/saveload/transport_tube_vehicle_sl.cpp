@@ -4,7 +4,8 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file transport_tube_vehicle_sl.cpp Saved387 capsule bindings and common interval tick, also driven by391 collectors without capsules.
+/** @see docs/zz-reach2/architecture/savegame/archi-savegame.md.
+ * @file transport_tube_vehicle_sl.cpp Saved387 capsule bindings and common interval tick, also driven by391 collectors without capsules.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group6
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group2
  */
@@ -23,6 +24,7 @@ struct TubeVehicleWire {
 	uint16_t remainder = 0; ///< Admitted0..999 demand numerator.
 	uint64_t prepared = UINT64_MAX, consumed = UINT64_MAX; ///< Global/front opportunity history; sentinel means no opportunity yet.
 	uint8_t phase = 0, wait = 0, active = 0; ///< Checked native phase, separate electrical wait and physical binding liveness.
+	uint32_t geothermal_source = UINT32_MAX, local_feed = UINT32_MAX; ///<434 original native provider/feed, default absent for genuine older external bindings.
 };
 
 static const SaveLoad _tube_vehicle_desc[] = {
@@ -35,6 +37,8 @@ static const SaveLoad _tube_vehicle_desc[] = {
 	SaveLoad::Variable<VarFileType::U8>("phase", SLE_OBJECT_ADDRESS(TubeVehicleWire, phase)),
 	SaveLoad::Variable<VarFileType::U8>("wait", SLE_OBJECT_ADDRESS(TubeVehicleWire, wait)),
 	SaveLoad::Variable<VarFileType::U8>("active", SLE_OBJECT_ADDRESS(TubeVehicleWire, active)),
+	SaveLoad::Variable<VarFileType::U32>("geothermal_source", SLE_OBJECT_ADDRESS(TubeVehicleWire, geothermal_source)).WithCapability(SaveCapability::TubeGeothermalBindings),
+	SaveLoad::Variable<VarFileType::U32>("local_feed", SLE_OBJECT_ADDRESS(TubeVehicleWire, local_feed)).WithCapability(SaveCapability::TubeGeothermalBindings),
 };
 
 static std::array<bool, 2> _tube_vehicle_presence{}; ///< Unpublished actual family presence.
@@ -55,7 +59,7 @@ static bool CheckTubeVehicleFamily(bool preview)
 	const auto expected = preview ? _load_check_data.tube_vehicle_expected : _tube_vehicle_expected;
 	const auto tick = preview ? _load_check_data.tube_vehicle_tick : _tube_vehicle_tick;
 	const auto &rows = preview ? _load_check_data.tube_vehicle_rows : _tube_vehicle_rows;
-	const auto *metadata = GetPendingMultiLayerStateSchema();
+	const auto *metadata = preview ? nullptr : GetPendingMultiLayerStateSchema();
 	const auto flags = preview ? _load_check_data.multilayer_feature_flags : metadata == nullptr ? 0 : metadata->feature_flags;
 	const bool required = (flags & MULTILAYER_FEATURE_TUBE_VEHICLES) != 0;
 	if (!presence[0]) {
@@ -67,7 +71,8 @@ static bool CheckTubeVehicleFamily(bool preview)
 	if (!presence[1] || rows.size() != expected || required != !rows.empty()) SlErrorCorrupt("Incomplete capsule power family"); // Exact saved counts retain physical consumer lineage and demand carry.
 	const auto *utility = preview ? &_load_check_data.utility_power_state : nullptr;
 	const auto connections = preview ? std::span<const TubePowerConnection>{_load_check_data.tube_power_rows} : std::span<const TubePowerConnection>{};
-	if (ValidateTubePowerVehicles(rows, false, utility, connections) != TubePowerError::None) SlErrorCorrupt("Invalid capsule power structure");
+	const auto *geothermal = preview ? &_load_check_data.tube_geothermal_state : nullptr;
+	if (ValidateTubePowerVehicles(rows, false, utility, connections, geothermal) != TubePowerError::None) SlErrorCorrupt("Invalid capsule power structure");
 	// Before391 only capsules could drive this clock. Collector-only worlds
 	// and their retained post-demolition history now use the same saved driver.
 	if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatSources) && rows.empty() && tick != UINT64_MAX) SlErrorCorrupt("Unexpected empty capsule power tick history");
@@ -113,7 +118,9 @@ struct TUVHChunkHandler final : ChunkHandler {
 	/** Stage complete transport for later actual vehicle/source acceptance. */
 	void FixPointers() const override
 	{
-		if (!SlIsFixingPointers()) return;
+		// A failed native attempt cannot leave a valid-looking consumer binding
+		// available to a later world, even when it fails after vehicle adoption.
+		if (!SlIsFixingPointers()) { ResetTubePowerVehicles(); return; }
 		if (CheckTubeVehicleFamily(false)) StageLoadedTubePowerVehicles(_tube_vehicle_rows, _tube_vehicle_tick);
 	}
 };
@@ -130,7 +137,8 @@ struct TUVDChunkHandler final : ChunkHandler {
 		// physical record; packets and invoices keep their separate owners.
 		for (const auto &row : CaptureTubePowerVehicles()) {
 			TubeVehicleWire wire{row.consumer.base(), row.source.base(), row.vehicle.base(), row.remainder_mj,
-				row.prepared_tick, row.consumed_tick, to_underlying(row.phase), to_underlying(row.wait), row.active};
+				row.prepared_tick, row.consumed_tick, to_underlying(row.phase), to_underlying(row.wait), row.active,
+				row.geothermal_source.base(), row.local_feed.base()};
 			SlSetArrayIndex(ordinal++); SlObject(&wire, _tube_vehicle_desc);
 		}
 	}
@@ -141,10 +149,13 @@ struct TUVDChunkHandler final : ChunkHandler {
 		auto &presence = preview ? _load_check_data.tube_vehicle_present : _tube_vehicle_presence;
 		if (presence[1]) SlErrorCorrupt("Duplicate capsule power table");
 		const auto desc = SlTableHeader(_tube_vehicle_desc);
-		if (desc.size() != std::size(_tube_vehicle_desc)) SlErrorCorrupt("Invalid capsule power fields");
+		const bool legacy = !SlHasSaveCapability(SaveCapability::TubeGeothermalBindings);
+		if (desc.size() != std::size(_tube_vehicle_desc) - (legacy ? 2 : 0)) SlErrorCorrupt("Invalid capsule power fields");
 		// Missing scalars cannot become a fresh allocation or silently discard
 		// the previously paid native work's fractional demand numerator.
 		for (const auto &field : _tube_vehicle_desc) {
+			const std::string_view name{field.name};
+			if (legacy && (name == "geothermal_source" || name == "local_feed")) continue; // Genuine older external rows have neither provider field; every current row must explicitly carry both original-role sentinels or identities.
 			if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing capsule power field");
 		}
 		auto &rows = preview ? _load_check_data.tube_vehicle_rows : _tube_vehicle_rows;
@@ -156,7 +167,8 @@ struct TUVDChunkHandler final : ChunkHandler {
 			TubeVehicleWire wire; SlObject(&wire, desc);
 			if (wire.active > 1 || (!rows.empty() && wire.consumer <= rows.back().consumer.base())) SlErrorCorrupt("Invalid capsule power order"); // Checked wire booleans and source order reject duplicate/default bindings.
 			rows.push_back({UtilityConsumerID{wire.consumer}, UtilityProducerID{wire.source}, VehicleID{wire.vehicle}, wire.remainder,
-				wire.prepared, wire.consumed, static_cast<TubePowerPhase>(wire.phase), static_cast<TubePowerWait>(wire.wait), wire.active != 0});
+				wire.prepared, wire.consumed, static_cast<TubePowerPhase>(wire.phase), static_cast<TubePowerWait>(wire.wait), wire.active != 0,
+				TubeGeothermalSourceID{wire.geothermal_source}, UtilityLinkID{wire.local_feed}});
 		}
 		presence[1] = true;
 	}

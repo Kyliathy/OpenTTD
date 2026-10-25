@@ -306,6 +306,166 @@ ExcavationJobResult AppendExcavationJob(ExcavationJobID id, uint64_t expected_re
 	return {ExcavationError::None, id};
 }
 
+/** @copydoc ReplaceExcavationJobRemainder */
+ExcavationJobResult ReplaceExcavationJobRemainder(ExcavationJobID id, uint32_t expected_cursor, const ExcavationOutline &outline,
+	std::span<const ExcavationCutGeometry> route, ExcavationLoadStart load, bool execute)
+{
+	if (GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return {ExcavationError::InvalidPolicy};
+	const auto *job = MutableExcavationJob(id);
+	// Only the actual company can replace its own live work; a copied or stale job ID cannot redirect another project.
+	if (job == nullptr || !Company::IsValidID(job->company) || job->company != _current_company) return {ExcavationError::InvalidOwner};
+	// Closed history has settled its claims; new work there is a new project, never a reopened job.
+	if (job->state == ExcavationJobState::Completed || job->state == ExcavationJobState::Cancelled) return {ExcavationError::AlreadyCompleted};
+	// With no completed cut the cutter is still in its housing, whose first cut belongs to the commission. A live job
+	// always has a next cut; a cursor at the end is malformed.
+	if (job->cursor == 0 || job->cursor >= job->route.size()) return {ExcavationError::InvalidRoute};
+	// The quote binds the completed-cut count: a cut completed since then makes it stale.
+	if (job->cursor != expected_cursor || job->revision == UINT64_MAX) return {ExcavationError::StaleParticipant};
+	if (!ValidateExcavationJobReferences(*job)) return {ExcavationError::InvalidOwner};
+	const auto valid = ValidateExcavationJobGeometry(_geology_world, *job);
+	if (valid.error != ExcavationError::None) return {valid.error, id, valid.failure_tile};
+	const uint32_t cursor = job->cursor;
+	// Saved backing/capacity proof and a bounded non-empty new remainder are required.
+	if (!job->pass_terms || route.empty() || route.size() > MAX_EXCAVATION_ROUTE - cursor) return {ExcavationError::InvalidRoute};
+	if (outline.error != ExcavationError::None) return {outline.error, id, outline.failure_tile};
+	if (outline.layer != GetTileLayer(job->commissioning_anchor)) return {ExcavationError::MixedLayers};
+	const auto requested = NormalizeExcavationOutline(outline.layer, outline.requested_tiles);
+	if (requested.error != ExcavationError::None) return {requested.error, id, requested.failure_tile};
+	const auto work = NormalizeExcavationOutline(outline.layer, outline.authorized_tiles);
+	if (work.error != ExcavationError::None) return {work.error, id, work.failure_tile};
+
+	ExcavationJob next = *job;
+	next.route.resize(cursor);
+	// Delivered floor stays requested. Requested cells still unopened belonged to the dropped remainder and leave with it.
+	/** @param tile Original requested cell. @return Whether its unfinished floor belonged only to the dropped plan. */
+	std::erase_if(next.requested_tiles, [](TileIndex tile) { return _geology_world.terrain.Get(tile) != ExcavationState::Excavated; });
+	next.requested_tiles.insert(next.requested_tiles.end(), requested.requested_tiles.begin(), requested.requested_tiles.end());
+	// The completed cuts' sweeps and the delivered floor stay authorized, plus the new working space. Authorization that
+	// only the dropped cuts used is withdrawn: nothing was dug there.
+	next.authorized_tiles = next.requested_tiles;
+	for (const auto &cut : next.route) next.authorized_tiles.insert(next.authorized_tiles.end(), cut.swept_tiles.begin(), cut.swept_tiles.end());
+	next.authorized_tiles.insert(next.authorized_tiles.end(), work.requested_tiles.begin(), work.requested_tiles.end());
+	for (auto *tiles : {&next.requested_tiles, &next.authorized_tiles}) {
+		std::ranges::sort(*tiles);
+		tiles->erase(std::unique(tiles->begin(), tiles->end()), tiles->end());
+	}
+	next.route.insert(next.route.end(), route.begin(), route.end());
+	// Work done on the cut in progress stays only if the new remainder starts with that very cut; otherwise the face
+	// work is abandoned, and the quote states it.
+	if (route.front() != job->route[cursor]) next.partial_work_ticks = 0;
+	// Validate the changed geometry before deriving its new static proof. The live job keeps its old proof throughout.
+	next.pass_terms.reset();
+	const auto geometry = ValidateExcavationJobGeometry(_geology_world, next);
+	if (geometry.error != ExcavationError::None) return {geometry.error, id, geometry.failure_tile};
+
+	auto terms = *job->pass_terms;
+	// Exchanges up to the cursor were planned for the kept cuts; the dropped cuts' later exchanges leave with them.
+	/** @param prefix Original exchange boundary. @return Whether it belongs to discarded future cuts. */
+	std::erase_if(terms.exchange_after, [cursor](uint16_t prefix) { return prefix > cursor; });
+	std::set<TileIndex> cleared, footprint;
+	for (size_t index = 0; index < cursor; ++index) cleared.insert(job->route[index].swept_tiles.begin(), job->route[index].swept_tiles.end());
+	for (TileIndex tile : next.authorized_tiles) {
+		if (_geology_world.terrain.Get(tile) == ExcavationState::Excavated) cleared.insert(tile);
+	}
+	// With an exchange due at the cursor the wagons leave empty before the first new cut. Otherwise the spoil aboard
+	// now fills them first, so a nearly full load makes the exchange due at once.
+	const bool exchanging = std::ranges::binary_search(terms.exchange_after, static_cast<uint16_t>(cursor));
+	uint64_t earth = exchanging ? 0 : load.earth_t, rock = exchanging ? 0 : load.rock_t;
+	// Each new cut keeps the append rules: open support, no other job's claim, no structure or foreign seam, and one
+	// whole cut must fit each wagon group. Its sweep becomes this job's footprint.
+	for (size_t index = 0; index < route.size(); ++index) {
+		const auto &cut = route[index];
+		for (TileIndex tile : cut.support_tiles) {
+			if (!cleared.contains(tile)) return {ExcavationError::MissingSupport, id, tile};
+		}
+		std::vector<TileIndex> fresh;
+		// Every swept cell, even open floor that yields no spoil, keeps the structure, seam and claim rules.
+		for (TileIndex tile : cut.swept_tiles) {
+			const auto claim = _geology_world.job_claims.find(tile);
+			if (claim != _geology_world.job_claims.end() && claim->second != id) return {ExcavationError::Conflict, id, tile};
+			const auto terrain = _geology_world.terrain.Get(tile);
+			if (!terrain) return {ExcavationError::InvalidTile, id, tile};
+			// An orphaned active bit cannot be adopted as this job's permission.
+			if (*terrain == ExcavationState::Excavating && claim == _geology_world.job_claims.end()) return {ExcavationError::ActiveCut, id, tile};
+			const auto type = GetTileType(tile);
+			if (type != TileType::Clear && type != TileType::Railway && type != TileType::LayerPortal) return {ExcavationError::Conflict, id, tile};
+			if (type == TileType::Railway && !IsPlainRailTile(tile)) return {ExcavationError::Conflict, id, tile}; // A depot is a building, not free swept clearance.
+			if (type != TileType::Clear && (GetTileOwner(tile) != job->company || !cleared.contains(tile))) return {ExcavationError::InvalidOwner, id, tile}; // Only owned open support may precede the new cuts.
+			const auto *deposit = _geology_world.deposits.Get(_geology_world.deposits.Find(tile));
+			if (deposit != nullptr && deposit->claimant != CompanyID::Invalid() && deposit->claimant != job->company) return {ExcavationError::Conflict, id, tile}; // Another company's seam never becomes this project's working space.
+			footprint.insert(tile);
+			if (!cleared.contains(tile)) fresh.push_back(tile);
+		}
+		// The dropped cuts' unopened cells are still rock: reusing one charges it again.
+		const auto quote = QuoteExcavationCells(fresh, job->model_id, id);
+		if (quote.error != ExcavationError::None) return {quote.error, id, quote.failure_tile};
+		if (quote.earth_t > terms.earth_capacity_t || quote.rock_t > terms.rock_capacity_t) return {ExcavationError::InsufficientCapacity, id, cut.cutter_position};
+		if (earth > terms.earth_capacity_t - quote.earth_t || rock > terms.rock_capacity_t - quote.rock_t) {
+			// Neither cargo group may borrow the other's free space: the exchange comes before this cut.
+			terms.exchange_after.push_back(static_cast<uint16_t>(cursor + index));
+			earth = 0;
+			rock = 0;
+		}
+		earth += quote.earth_t;
+		rock += quote.rock_t;
+		cleared.insert(cut.swept_tiles.begin(), cut.swept_tiles.end());
+	}
+	terms.exchange_after.push_back(static_cast<uint16_t>(next.route.size()));
+	terms.fingerprint = ComputeExcavationPassFingerprint(next, terms);
+	next.pass_terms = std::move(terms);
+	const auto complete = ValidateExcavationJobGeometry(_geology_world, next);
+	if (complete.error != ExcavationError::None) return {complete.error, id, complete.failure_tile};
+	size_t cells = 0, old_claims = 0;
+	// The replaced job shares the world-wide saved-geometry and claim budgets with every other job.
+	for (const auto &existing : _geology_world.jobs) {
+		for (const auto &cut : existing.id == id ? next.route : existing.route) cells += cut.swept_tiles.size() + cut.support_tiles.size();
+	}
+	for (const auto &[tile, owner] : _geology_world.job_claims) old_claims += owner == id;
+	if (cells > 262144 || _geology_world.job_claims.size() - old_claims + footprint.size() > MAX_EXCAVATION_CLAIMS) return {ExcavationError::Limit};
+	if (!execute) return {ExcavationError::None, id};
+
+	++next.revision;
+	auto jobs = _geology_world.jobs;
+	auto claims = _geology_world.job_claims;
+	std::vector<TileIndex> released;
+	// This job's claims are exactly its unfinished cuts' sweeps: those outside the new footprint are released.
+	for (auto it = claims.begin(); it != claims.end();) {
+		if (it->second == id && !footprint.contains(it->first)) {
+			released.push_back(it->first);
+			it = claims.erase(it);
+		} else {
+			++it;
+		}
+	}
+	for (TileIndex tile : footprint) claims.emplace(tile, id);
+	const auto target = std::lower_bound(jobs.begin(), jobs.end(), id, ExcavationJobBeforeID);
+	*target = std::move(next);
+	// Every allocation is complete before either owner container or any terrain bit is published.
+	_geology_world.jobs.swap(jobs);
+	_geology_world.job_claims.swap(claims);
+	// Released cells that were never opened go back to solid rock; opened floor never reverts.
+	for (TileIndex tile : released) {
+		if (_geology_world.terrain.Get(tile) != ExcavationState::Excavating) continue;
+		const bool accepted = _geology_world.terrain.Set(tile, ExcavationState::Solid);
+		assert(accepted);
+	}
+	for (TileIndex tile : footprint) {
+		if (_geology_world.terrain.Get(tile) != ExcavationState::Solid) continue;
+		const bool accepted = _geology_world.terrain.Set(tile, ExcavationState::Excavating);
+		assert(accepted);
+	}
+#ifdef _DEBUG
+	{
+		// The published state must be exactly what a reload would rebuild.
+		GeologyWorldState copy = _geology_world;
+		const auto published = copy.job_claims;
+		assert(RebuildExcavationJobClaims(copy) == GeologyError::None);
+		assert(copy.job_claims == published);
+	}
+#endif
+	return {ExcavationError::None, id};
+}
+
 /**
  * Expose only the actual sparse owner record.
  * @param id Exact stable identity.

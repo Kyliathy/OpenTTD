@@ -396,7 +396,7 @@ STR_TOOLBAR_TOOLTIP_FORWARD                                     :{BLACK}Fast for
 STR_TOOLBAR_TOOLTIP_OPTIONS                                     :{BLACK}Options and settings
 STR_TOOLBAR_TOOLTIP_SAVE_GAME_ABANDON_GAME                      :{BLACK}Save, load or abandon game, exit program
 STR_TOOLBAR_TOOLTIP_DISPLAY_MAP                                 :{BLACK}Open map, extra viewport, cargo flow or list of signs
-STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
+STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space. Keys: Alt+1 surface, Alt+2 underground, Alt+3 deep underground, Alt+4 outer space; N shows the next layer
 STR_TOOLBAR_TOOLTIP_DISPLAY_TOWN_DIRECTORY                      :{BLACK}Open town directory or found town
 STR_TOOLBAR_TOOLTIP_DISPLAY_SUBSIDIES                           :{BLACK}Open subsidy list
 STR_TOOLBAR_TOOLTIP_DISPLAY_LIST_OF_COMPANY_STATIONS            :{BLACK}Open list of company's stations
@@ -425,7 +425,7 @@ STR_TOOLBAR_TOOLTIP_LAND_BLOCK_INFORMATION                      :{BLACK}Open lan
 STR_TOOLBAR_TOOLTIP_SWITCH_TOOLBAR                              :{BLACK}Switch toolbars
 
 # Tooltips of the map layer button that name the shown layer
-STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space. Now showing: {STRING}
+STR_TOOLBAR_TOOLTIP_MAP_LAYER_CURRENT                           :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space. Now showing: {STRING}. Keys: Alt+1 surface, Alt+2 underground, Alt+3 deep underground, Alt+4 outer space; N shows the next layer
 STR_TOOLBAR_TOOLTIP_MAP_LAYER_SINGLE                            :{BLACK}This game has only one map layer
 
 # Extra tooltips for the scenario editor toolbar
@@ -436,7 +436,7 @@ STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_BACKWARD_TOOLTIP    :{BLACK}Move the
 STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_FORWARD_TOOLTIP     :{BLACK}Move the starting date forward 1 year
 STR_SCENEDIT_TOOLBAR_SET_DATE_TOOLTIP                           :{BLACK}Click to enter the starting year
 STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP         :{BLACK}Open map, extra viewport, sign list, or town or industry directory
-STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
+STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space. Keys: Alt+1 surface, Alt+2 underground, Alt+3 deep underground, Alt+4 outer space
 STR_SCENEDIT_TOOLBAR_LANDSCAPE_GENERATION_TOOLTIP               :{BLACK}Open landscaping menu or generate a new world
 STR_SCENEDIT_TOOLBAR_TOWN_GENERATION_TOOLTIP                    :{BLACK}Build or generate towns
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP                :{BLACK}Build or generate industries
@@ -1857,6 +1857,13 @@ STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_HELPTEXT               :Closes a window
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_NO                     :No
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_YES                    :Yes
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_YES_EXCEPT_STICKY      :Yes, except sticky
+STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW                       :Pressing a window's hotkey again closes it: {STRING2}
+STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW_HELPTEXT              :When the window a toolbar hotkey opens (for example F2 for Game Options) is already the front-most window, pressing that hotkey again closes it. Otherwise the hotkey opens or raises it as before
+STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW                         :Close window with Escape: {STRING2}
+STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_HELPTEXT                :Escape always cancels a tool that is being placed first. Without one, Escape closes the front-most window that has a close button, except the main toolbar, status bar and news
+STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_NO                      :No
+STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_YES                     :Yes
+STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_YES_EXCEPT_STICKY       :Yes, except sticky
 
 STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES                    :Use the {STRING2} date format for savegame names
 STR_CONFIG_SETTING_DATE_FORMAT_IN_SAVE_NAMES_HELPTEXT           :Format of the date in save game filenames
@@ -2948,8 +2955,10 @@ STR_PORTAL_CORRIDOR_DECREASE_TOOLTIP                            :{BLACK}Shorter 
 STR_PORTAL_CORRIDOR_INCREASE_TOOLTIP                            :{BLACK}Longer corridor. Ctrl+Click for five cells more
 STR_PORTAL_PROJECT_NONE                                         :{BLACK}No boring project here
 STR_PORTAL_PROJECT_PROGRESS                                     :{BLACK}Boring machine: {STRING}, {NUM} of {NUM} cut{P "" s} done
-STR_PORTAL_PROJECT_HOLD                                         :{BLACK}Held: {STRING}
-STR_PORTAL_PROJECT_NO_HOLD                                      :{BLACK}Held: nothing
+STR_PORTAL_PROJECT_HOLD                                         :{BLACK}Waiting: {STRING}
+STR_PORTAL_PROJECT_HOLD_TEXT                                    :{BLACK}Waiting: {RAW_STRING}
+STR_PORTAL_PROJECT_NO_HOLD                                      :{BLACK}Working normally
+STR_PORTAL_PROJECT_IDLE                                         :{BLACK}Not waiting for anything
 STR_PORTAL_PROJECT_DUG                                          :{BLACK}Dug so far: {NUM} t Earth, {NUM} t Rock
 STR_PORTAL_HAULER_NONE                                          :{BLACK}Hauler: none. A hauler is any train of yours with {NUM} empty Earth and {NUM} empty Rock hoppers and an order to {STATION}
 STR_PORTAL_HAULER                                               :{BLACK}Hauler: {VEHICLE}, {STRING}
@@ -2979,8 +2988,10 @@ STR_PORTAL_HOLD_EARTH_FULL                                      :the Earth hoppe
 STR_PORTAL_HOLD_ROCK_FULL                                       :the Rock hoppers are full
 STR_PORTAL_HOLD_FUNDS                                           :not enough money to go on boring
 STR_PORTAL_HOLD_OBSTRUCTION                                     :something is in the way
+STR_TBM_HOLD_TRAIN_IN_WAY                                       :{VEHICLE} is in the way
+STR_TBM_HOLD_TILE_IN_WAY                                        :the track or building at {NUM}, {NUM} is in the way
 STR_PORTAL_HOLD_ALLOCATION                                      :too many vehicles or projects
-STR_PORTAL_HOLD_PAUSED                                          :paused
+STR_PORTAL_HOLD_PAUSED                                          :the project is paused
 STR_PORTAL_HOLD_ILLEGAL_TURN                                    :the route turns too sharply
 STR_PORTAL_HOLD_LOGISTICS                                       :the spoil is not being delivered
 STR_PORTAL_HAULER_RETURN_EMPTIES                                :bringing empty hoppers
@@ -2988,6 +2999,8 @@ STR_PORTAL_HAULER_AWAIT_EXCHANGE                                :waiting for a h
 STR_PORTAL_HAULER_COLLECT_LOADED                                :taking the full hoppers
 STR_PORTAL_HAULER_VISIT_ORIGIN                                  :taking the spoil to the origin
 STR_PORTAL_HAULER_DISPOSE                                       :unloading at the origin
+STR_PORTAL_HAULER_FACE_RETURN                                   :bringing empty hoppers to the TBM
+STR_PORTAL_HAULER_FACE_TRANSFER                                 :taking spoil from the TBM
 STR_PORTAL_WAIT_STOPPED                                         :it is stopped
 STR_PORTAL_WAIT_CRASHED                                         :it has crashed
 STR_PORTAL_WAIT_LOST_PROJECT                                    :its project is gone
@@ -4800,6 +4813,7 @@ STR_VEHICLE_STATUS_HEADING_FOR_STATION_VEL                      :{LTBLUE}{1:VELO
 STR_VEHICLE_STATUS_NO_ORDERS_VEL                                :{LTBLUE}{VELOCITY} - No orders
 STR_TBM_VEHICLE_WORK_VEL                                       :{LTBLUE}{VELOCITY} - {STRING}
 STR_TBM_VEHICLE_WAIT_VEL                                       :{LTBLUE}{VELOCITY} - Waiting: {STRING}
+STR_TBM_VEHICLE_WAIT_VEL_TEXT                                  :{LTBLUE}{VELOCITY} - Waiting: {RAW_STRING}
 STR_TBM_OPERATION_WRONG_OWNER                                 :The train and excavation project have different owners
 STR_TBM_OPERATION_NO_RECEIVER                                 :Restore Earth and Rock acceptance at the project's origin
 STR_TBM_OPERATION_ORIGIN_ORDER                                :Add an order to the project's Surface origin station
@@ -5317,6 +5331,8 @@ STR_ERROR_DIRECTORY_PERMISSION_DENIED                           :You do not have
 STR_ERROR_GAME_LOAD_FAILED                                      :Game load failed...
 STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR                   :Internal error: {RAW_STRING}
 STR_GAME_SAVELOAD_ERROR_BROKEN_SAVEGAME                         :Broken savegame - {RAW_STRING}
+STR_GAME_SAVELOAD_ERROR_AMBIGUOUS_LINEAGE                       :Save lineage is ambiguous. An explicit origin bound to this file is required.
+STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE                         :Inconsistent save lineage - {RAW_STRING}
 STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME                        :Savegame is made with newer version
 STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE                       :File not readable
 STR_GAME_SAVELOAD_ERROR_FILE_NOT_WRITEABLE                      :File not writeable
@@ -5369,6 +5385,8 @@ STR_ERROR_TBM_SUPPORT_IN_USE                                    :{WHITE}This tem
 STR_ERROR_GEOTHERMAL_SITE_CLAIMED                               :{WHITE}Cancel the planned geothermal site before building or clearing here
 STR_INDUSTRY_NAME_GEOTHERMAL_COLLECTOR                          :Vent Collector
 STR_INDUSTRY_NAME_GEOTHERMAL_RISER                              :Electrical Riser
+STR_INDUSTRY_NAME_GEOTHERMAL_POWERHOUSE                         :Vent-Tap Powerhouse
+STR_INDUSTRY_NAME_GEOTHERMAL_MAGMA                              :Magma-Loop Power Station
 STR_ERROR_TBM_SUPPORT_NONE                                      :{WHITE}There is no temporary support track here
 STR_ERROR_TBM_SUPPORT_CONVERT_FIRST                             :{WHITE}Convert or remove the temporary support track first
 STR_ERROR_TBM_EXCHANGE_CAPACITY_LOSS                            :{WHITE}The exchanged wagons would hold less cargo than they carry
@@ -5408,6 +5426,7 @@ STR_TBM_PHASE_UNLOAD_HANGAR                                    :exchanging spoil
 STR_TBM_PHASE_TRAVEL_HANGAR                                    :travelling to the selected hangar
 STR_TBM_PHASE_PARKED_HANGAR                                    :parked at the selected hangar; work retained
 STR_TBM_PHASE_FOLLOW_ORDERS                                    :following vehicle orders; work retained
+STR_TBM_PHASE_AWAIT_FACE                                       :waiting for the hauler at the face
 STR_TBM_HOLD_MISSING_ORDERS                                    :No usable travel order; choose an order or resume excavation
 STR_TBM_FOLLOW_ORDERS                                         :Follow order
 STR_TBM_FOLLOW_ORDERS_TOOLTIP                                 :{BLACK}Suspend excavation and follow the selected native order. Resume work from Excavation projects when ready
@@ -6556,12 +6575,16 @@ STR_UNDERGROUND_SURVEY_OPEN                                   :Excavated ground
 STR_UNDERGROUND_SURVEY_LEGACY                                 :Legacy open terrain
 STR_UNDERGROUND_SURVEY_NO_DEPOSIT                             :No mineral deposit
 STR_UNDERGROUND_AREA                                          :{BLACK}New area
-STR_UNDERGROUND_AREA_TOOLTIP                                  :{BLACK}Click the rock-side rail portal, then drag the final floor. White marks final floor, blue marks extra working space and red marks uncovered cells. Previewing buys nothing and cuts no rock.
+STR_UNDERGROUND_AREA_TOOLTIP                                  :{BLACK}Click the rock-side rail portal, then drag the final floor. White marks final floor, blue marks extra working space (including the approach the machine digs to reach the floor and turn in it) and red marks uncovered cells. Numbers show the cutter's positions in order, approach included. Previewing buys nothing and cuts no rock.
 STR_UNDERGROUND_AREA_SELECT_FLOOR                              :{BLACK}Drag the intended final floor on this layer.
 STR_UNDERGROUND_AREA_EMPTY                                    :{BLACK}No excavation area selected.
 STR_UNDERGROUND_AREA_PRICE                                    :{BLACK}Machinery and wagons: {CURRENCY_LONG}; later geological work: {CURRENCY_LONG}.
 STR_UNDERGROUND_AREA_MATERIAL                                 :{BLACK}Earth: {COMMA} t; Rock: {COMMA} t; supports: {COMMA}; work: {COMMA} ticks.
-STR_UNDERGROUND_AREA_FLOOR                                    :{BLACK}Final floor: {NUM} cells; extra working space: {NUM}; new cuts: {NUM}; uncovered: {NUM}.
+STR_UNDERGROUND_AREA_FLOOR                                    :{BLACK}Final floor: {NUM} cells; extra working space: {NUM}; new solid cells: {NUM}; cutter positions: {NUM}; uncovered: {NUM}.
+STR_UNDERGROUND_AREA_APPROACH                                 :{BLACK}Approach and turning space: {NUM} cell{P "" s}, {CURRENCY_LONG}; Earth: {COMMA} t; Rock: {COMMA} t; used by {NUM} cutter position{P "" s}.
+STR_UNDERGROUND_AREA_APPROACH_TOOLTIP                         :{BLACK}Rock the machine must dig to reach the floor and to turn in it, outside the floor, its one-cell ring and the portal. It is shaded blue as working space, and its price is part of the later geological work above.
+STR_UNDERGROUND_AREA_REFUSED_AT                               :{BLACK}Planning stopped at tile {NUM}, {NUM} (marked ! on the map); {NUM} of {NUM} floor cell{P "" s} reachable.
+STR_UNDERGROUND_AREA_REFUSED                                  :{BLACK}{NUM} of {NUM} floor cell{P "" s} reachable.
 STR_UNDERGROUND_AREA_READY                                    :{BLACK}Complete plan. Confirm to buy the machine; excavation still needs actual work and spoil hauling.
 STR_UNDERGROUND_AREA_CONFIRM                                  :{BLACK}Commission the complete area plan
 STR_UNDERGROUND_MODEL_DATE                                    :{RAW_STRING} ({NUM})
@@ -6569,7 +6592,7 @@ STR_UNDERGROUND_MODEL_CALENDAR                                :{BLACK}Cutter int
 STR_UNDERGROUND_DETAILS                                       :{BLACK}Requirements and cutter dates
 STR_UNDERGROUND_SURVEY_NEXT                                   :{BLACK}Click rock on this layer to inspect its geology. Escape cancels.
 STR_UNDERGROUND_AREA_NEEDS_PORTAL                             :{BLACK}Click an owned rail portal on this layer, then drag the floor to excavate.
-STR_UNDERGROUND_PORTAL_HAS_PROJECT                            :{BLACK}This portal already has a TBM project. Open Projects to inspect its work.
+STR_UNDERGROUND_PORTAL_HAS_PROJECT                            :{BLACK}This portal's TBM project cannot take a new area now: it is finished, parking or its machine is missing. Open Projects to manage it.
 STR_UNDERGROUND_NO_CUTTER                                     :{BLACK}No compatible cutter is available here. Check the cutter dates under Requirements.
 STR_UNDERGROUND_NO_ORIGIN                                     :{BLACK}Build an owned Surface freight station with Earth and Rock disposal before commissioning.
 STR_UNDERGROUND_EXCHANGE_NEXT                                 :{BLACK}Project {NUM}: click its source portal or a compatible excavated rail depot for the exchange bay.
@@ -6577,6 +6600,11 @@ STR_UNDERGROUND_PROJECT_SELECTED                              :{BLACK}Project {N
 STR_TBM_PROJECTS_CAPTION                                      :{WHITE}Excavation projects - {STRING}
 STR_TBM_PROJECT_LIST_NAME                                     :Project {NUM}: {RAW_STRING}
 STR_TBM_PROJECT_LIST_PROGRESS                                 :{STRING}; {NUM}/{NUM} cuts complete
+STR_TBM_PROJECT_LIST_CARRYING                                 :Carrying: Earth {COMMA}/{COMMA} t, Rock {COMMA}/{COMMA} t
+STR_TBM_PROJECT_LIST_HAULER_CARRYING                          :{RAW_STRING} carrying: Earth {COMMA}/{COMMA} t, Rock {COMMA}/{COMMA} t
+STR_TBM_PROJECT_LIST_NO_HAULER                                :No hauler assigned
+STR_TBM_PROJECT_RELEASE_REQUIREMENT                           :{BLACK}To finish and release: {RAW_STRING}
+STR_TBM_PROJECT_RELEASE_READY                                 :{BLACK}To finish and release: ready now
 STR_TBM_PROJECT_SELECT                                        :{BLACK}Select footprint
 STR_TBM_PROJECT_VEHICLE                                       :{BLACK}Open machine
 STR_TBM_PROJECT_CENTRE                                        :{BLACK}Centre map
@@ -6590,12 +6618,29 @@ STR_TBM_REUSE_PRICE                                           :{BLACK}Reuse {RAW
 STR_TBM_EXTEND_READY                                          :{BLACK}Additional plan ready. Confirm to add work, then resume the project in its portal controls.
 STR_TBM_EXTEND_CONFIRM                                        :{BLACK}Add work to this machine
 STR_TBM_EXTEND_CANCELLED                                      :{BLACK}Planning closed. The machine stays paused; open Projects > Portal controls to resume it.
+STR_TBM_PROJECT_CHANGE_WORK                                   :{BLACK}Change work area
+STR_TBM_PROJECT_CHANGE_WORK_TOOLTIP                           :{BLACK}Replace the cuts this machine has not made yet with a new floor. Completed ground, cargo and money stay, and the machine keeps working while you plan.
+STR_TBM_CHANGE_SELECT_FLOOR                                   :{BLACK}Project {NUM}: drag the new floor. It replaces the cuts not made yet; the machine keeps working until you confirm.
+STR_TBM_CHANGE_PRICE                                          :{BLACK}Change {RAW_STRING}'s work; new cutting: {CURRENCY_LONG}.
+STR_TBM_CHANGE_SUMMARY                                        :{BLACK}Keeps {NUM} completed cut{P "" s}; replaces {NUM} planned cut{P "" s} with {NUM} new cut{P "" s}.
+STR_TBM_CHANGE_SUMMARY_ABANDON                                :{BLACK}Keeps {NUM} completed cut{P "" s}; replaces {NUM} planned cut{P "" s} with {NUM} new cut{P "" s}; abandons the cut in progress ({NUM}% done).
+STR_TBM_CHANGE_SUMMARY_TOOLTIP                                :{BLACK}Completed cuts and their ground stay. Planned cuts not made yet are dropped and their unopened rock is released. Work on the cut in progress is lost unless the new plan starts with that same cut.
+STR_TBM_CHANGE_READY                                          :{BLACK}New work area ready. Confirm to replace the planned cuts; the machine carries on without a pause.
+STR_TBM_CHANGE_CONFIRM                                        :{BLACK}Change work area
+STR_TBM_CHANGE_CANCELLED                                      :{BLACK}Planning closed. The machine carries on with its current plan.
+STR_TBM_RELEASE_AND_PLAN_CAPTION                              :{WHITE}Release and plan new work
+STR_TBM_RELEASE_AND_PLAN_QUERY                                :{YELLOW}Project {NUM} at this portal is finished. Release it and plan new work with the same machine?
 STR_TBM_INTENT_AREA                                           :{BLACK}Area clearing
 STR_TBM_INTENT_TUNNEL                                         :{BLACK}Straight tunnel
 STR_TBM_WORK_TIME                                             :{BLACK}Cutting: about {COMMA} simulation ticks at this machine's rate. Travel and haulage waits are additional.
 STR_TBM_INTENT_TOOLTIP                                        :{BLACK}Area clearing covers a dragged floor. Straight tunnel advances the cutter centre to a clicked endpoint in its current heading. White: floor; blue: extra working space; red: uncovered. Numbers show the cutter's successive positions.
 STR_TBM_TUNNEL_SELECT_END                                     :{BLACK}Click the tunnel end straight ahead of the portal or accepted route. The cutter centre will reach that tile; its full width is charged as working space.
 STR_ERROR_TBM_TUNNEL_ALIGNMENT                                :{WHITE}Choose an endpoint straight ahead in this machine's accepted heading, or choose Area clearing to plan turns
+STR_ERROR_TBM_CHANGE_FAILED                                   :{WHITE}Cannot change the work area...
+STR_ERROR_TBM_CHANGE_NO_CUT                                   :{WHITE}This machine has not finished its first cut yet. Wait for it, or use Pause and extend to add work after its plan
+STR_ERROR_TBM_CHANGE_ROUTE                                    :{WHITE}Select reachable floor with enough working space from where this machine finished its last cut
+STR_ERROR_TBM_CHANGE_STALE                                    :{WHITE}This machine finished another cut, or its work changed, since this quote; draw and review the area again
+STR_ERROR_TBM_CHANGE_FACE                                     :{WHITE}The machine stands at its last cut on track facing another way. Choose work that starts the way it faces, or return and park it first
 STR_ERROR_TBM_EXTEND_FAILED                                   :{WHITE}Cannot extend excavation work...
 STR_ERROR_TBM_EXTEND_REFERENCES                               :{WHITE}Restore this project's machine, original portal, Surface origin and exchange bay before extending its work
 STR_ERROR_TBM_EXTEND_PAUSE                                    :{WHITE}Pause this project before reviewing additional work
@@ -6604,6 +6649,13 @@ STR_ERROR_TBM_EXTEND_EMPTY                                    :{WHITE}The select
 STR_ERROR_TBM_EXTEND_STALE                                    :{WHITE}The project or its quoted work has changed; draw and review the additional area again
 STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY                       :This native freight design is unavailable for the current profile, calendar date, layer or cargo. Check its introduction date and supported refits.
 STR_ERROR_TBM_COMMISSION_RAIL_TURNS                            :This excavation route needs sharp rail bends. Allow 90-degree train turns in the game settings, or select a straight corridor.
+# Native approach/support refusal owner: archi-map-layers.md; m2o23-2-come-space.md Group23CB.
+STR_ERROR_TBM_APPROACH_MAP_EDGE                                 :{WHITE}The boring machine would leave the map to reach this area
+STR_ERROR_TBM_APPROACH_BUILDING                                 :{WHITE}A building is in the way of the boring machine's route into this area
+STR_ERROR_TBM_APPROACH_OTHER_WORK                               :{WHITE}Another company's or project's work is in the way of the boring machine's route into this area
+STR_ERROR_TBM_APPROACH_TOO_FAR                                  :{WHITE}This area is too far from the boring machine to plan a route: draw a closer area
+STR_ERROR_TBM_COMMISSION_SUPPORT                                :{WHITE}Existing track or a building on the route is in the boring machine's way
+STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE                          :{WHITE}The route crosses existing track that lacks the piece the boring machine needs: build that piece first
 
 STR_UNDERGROUND_JOB_NONE                                      :{BLACK}No active excavation project selected.
 STR_UNDERGROUND_JOB_PROGRESS                                  :{BLACK}Job {NUM}: {NUM} of {NUM} cuts complete; current face work: {COMMA} ticks.
@@ -6805,3 +6857,162 @@ STR_SURFACE_SUPPLY_CANCELLED                                 :cancelled
 STR_SURFACE_SUPPLY_LOST                                      :owner lost
 STR_SURFACE_SUPPLY_LEGACY_REFUND                             :Close original order: refund {NUM} units / {CURRENCY_LONG}
 STR_SURFACE_SUPPLY_LEGACY_CANCEL                             :Close original order
+
+# Native paid provider command refusals; r2mlvs17-underground-transport-tubes.md Groups12B/6BDB.
+STR_ERROR_TUBE_POWER_OWNER                                    :The tube depot, portal and power service must belong to your company.
+STR_ERROR_TUBE_POWER_FUNDS                                    :Your company cannot afford the tube power lease or outstanding usage.
+STR_ERROR_TUBE_POWER_UNAVAILABLE                              :Tube power service requires the multilayer industry profile and the appropriate calendar date.
+STR_ERROR_TUBE_POWER_TOPOLOGY                                 :Select an owned tube depot or terminal and a connected excavated utility route from a commissioned portal.
+STR_ERROR_TUBE_POWER_LIMIT                                    :This tube utility route or the number of power connections exceeds the supported limit.
+STR_ERROR_TUBE_POWER_REFUSED                                  :The tube power action is unavailable. Check the selected service, company and stopped capsule location.
+
+# Native control owners: docs/zz-reach2/architecture/gui/archi-gui.md; M2O23-3 Group37.
+STR_TUBE_HELP                                                :{BLACK}Build on excavated ground. Capsules cannot use ordinary rail or layer portals; transfer cargo to conventional freight to change layers. Use paid power from a commissioned portal or cable from an operating Deep plant. Select capsule and inlet to bind or reconnect. Underground 1970; Deep 1980.
+STR_TUBE_CONNECT                                             :Pay and connect
+STR_TUBE_SOURCE                                              :Choose power inlet
+STR_TUBE_SOURCE_ENTRY                                        :External inlet {NUM} at ({NUM}, {NUM})
+STR_TUBE_FLEET                                               :Capsules ({NUM})
+STR_TUBE_FLEET_ENTRY                                         :Capsule {NUM}: {RAW_STRING}
+STR_TUBE_BIND                                                :Bind power inlet
+STR_TUBE_RECONNECT                                           :Reconnect power
+STR_TUBE_MODEL_PREVIEW                                       :{BLACK}{RAW_STRING} (from {NUM}); capacity {NUM} cargo units. Refits: {RAW_STRING}
+STR_TUBE_PICK_PORTAL                                         :{BLACK}Select an owned commissioned rail portal on this layer.
+STR_TUBE_PICK_ROUTE                                          :{BLACK}Click the portal's door cell, then adjacent excavated cells in order, ending at your tube depot or terminal. Pay and connect confirms the quote.
+STR_TUBE_ROUTE_ADJACENT                                      :{BLACK}Start at the portal door and extend one adjacent cell per click. Keep the route within 128 cells, without repeated cells.
+STR_TUBE_ROUTE_PROGRESS                                      :{BLACK}Power route: {NUM} cells. {RAW_STRING}
+STR_TUBE_ROUTE_READY                                         :{BLACK}Power route ready: lease {CURRENCY_SHORT} per economy day, usage {CURRENCY_SHORT} per {COMMA} J. {NUM} cells. Pay and connect to install service.
+STR_TUBE_BIND_READY                                          :{BLACK}The selected capsule can use this inlet. Bind or reconnect it to confirm; electricity is allocated when the simulation runs.
+STR_TUBE_SUBMITTED                                           :{BLACK}Connection requested. Choose the installed power inlet, then select a stopped capsule and bind it. Electricity is allocated when the simulation runs.
+STR_TUBE_NO_CAPSULES                                         :{BLACK}No owned tube capsules on this layer. Buy one at a tube service depot when its design becomes available.
+STR_TUBE_NO_SOURCES                                          :{BLACK}No owned active inlet on this layer. Draw an external route from a commissioned portal, or select a Deep geothermal plant and a cable-connected tube inlet.
+STR_TUBE_SELECTED_STATUS                                     :{BLACK}{RAW_STRING} Carrying {NUM}/{NUM} {RAW_STRING}. Power: {RAW_STRING}.
+STR_TUBE_WAIT_NONE                                           :no power hold
+STR_TUBE_WAIT_CONNECTION                                     :no inlet bound
+STR_TUBE_WAIT_TOPOLOGY                                       :route disconnected
+STR_TUBE_WAIT_GRANT                                          :waiting for electricity
+STR_TUBE_WAIT_FUNDS                                          :cannot afford electricity
+STR_TUBE_WAIT_UNAVAILABLE                                    :technology unavailable
+STR_TUBE_GEOTHERMAL_CONNECT                                  :Connect geothermal inlet
+STR_TUBE_GEOTHERMAL_PICK_PLANT                               :{BLACK}Select your completed Deep geothermal plant with an operating electrical output. This control uses existing purchased cable; it does not build a utility path.
+STR_TUBE_GEOTHERMAL_PICK_INLET                               :{BLACK}Select your tube service depot or terminal on this layer, connected to the selected plant by purchased electrical cable.
+STR_TUBE_GEOTHERMAL_PATH                                     :{BLACK}Cannot connect. Recheck the original owned operating plant, Deep access, tube facility and purchased cable path. Select Geothermal inlet again to replace the plant selection.
+STR_TUBE_GEOTHERMAL_READY                                    :{BLACK}Plant and purchased cable reach this tube inlet. Connect geothermal inlet to confirm. The plant pays its own operating service; electricity still needs available Heat and allocation.
+STR_TUBE_GEOTHERMAL_ENTRY                                    :Geothermal inlet {NUM}, plant {NUM} at ({NUM}, {NUM})
+STR_TUBE_GEOTHERMAL_FUNDS                                    :plant cannot afford operating service
+STR_TUBE_SOURCE_STALE                                        :selected inlet is closed, missing or no longer owned
+STR_TUBE_BOUND                                               :{BLACK}Bound supply: {RAW_STRING}
+STR_ERROR_TUBE_POWER_ACTION                                  :{WHITE}Cannot change tube power service...
+STR_GEO_MENU                                                :Geothermal
+STR_GEO_HELP                                                :Inspect geothermal vents and plan facilities on excavated ground. Planning reserves a site; funding, transported materials and construction are separate steps.
+STR_GEO_COLLECTOR                                           :Vent collector
+STR_GEO_VENT_TAP                                            :Vent-Tap Powerhouse
+STR_GEO_MAGMA                                               :Magma-Loop Power Station
+STR_GEO_RISER                                               :Electrical riser
+STR_GEO_FAMILY_CHOICE                                        :{RAW_STRING} (from {NUM})
+STR_GEO_PICK_VENT                                            :Choose a geothermal vent
+STR_GEO_VENT_CHOICE                                          :Vent at {NUM},{NUM}: {COMMA} W
+STR_GEO_SITE_CHOICE                                          :{RAW_STRING} plan at {NUM},{NUM}
+STR_GEO_SELECT_PLAN                                          :Choose an existing plan
+STR_GEO_ACCESS_CHOICE                                        :Access: {RAW_STRING}
+STR_GEO_DIRECTION_NE                                         :Northeast
+STR_GEO_DIRECTION_SE                                         :Southeast
+STR_GEO_DIRECTION_SW                                         :Southwest
+STR_GEO_DIRECTION_NW                                         :Northwest
+STR_GEO_INSPECT_PROMPT                                       :{BLACK}Click a vent, plan or geothermal building to inspect it
+STR_GEO_ANCHOR_PROMPT                                        :{BLACK}Click the footprint corner, then its boundary utility connection cell
+STR_GEO_PORT_PROMPT                                          :{BLACK}Choose the boundary utility connection cell; select a clear outward access side
+STR_GEO_PLAN_READY                                           :{BLACK}Site ready. Reserve the plan, then choose it in the plan list to fund the building.
+STR_GEO_SUBMITTED                                            :{BLACK}Request submitted
+STR_GEO_REFUSED                                              :{BLACK}Cannot reserve this site. Check the vent, excavated floor, utility connection and access.
+STR_GEO_FUND_REFUSED                                         :{BLACK}The selected plan cannot be funded now
+STR_GEO_UNAVAILABLE                                          :{BLACK}This facility is not available here or at this date
+STR_GEO_NO_COMPANY                                           :{BLACK}Select a company to construct geothermal facilities
+STR_GEO_FLOOR_REFUSED                                        :{BLACK}Excavate the whole facility floor and a clear access side before planning
+STR_GEO_PORT_REFUSED                                         :{BLACK}Choose a boundary connection cell with clear outward access
+STR_GEO_OCCUPIED                                             :{BLACK}This floor is already occupied or reserved
+STR_GEO_NO_VENTS                                             :{BLACK}No geothermal vents are available in this world
+STR_GEO_NO_PLANS                                             :{BLACK}No active plans belong to this company on this layer
+STR_GEO_NO_VENT_HERE                                         :{BLACK}No geothermal vent or facility is present here
+STR_GEO_SURVEY_READY                                         :{BLACK}Geothermal source selected
+STR_GEO_SURVEY_CAPACITY                                      :{BLACK}Natural heat capacity: {COMMA} W
+STR_GEO_FUND_QUOTE                                           :{BLACK}Capital quote: {CURRENCY_LONG}; materials and construction work are still required
+STR_ERROR_GEO_ACTION                                        :{WHITE}Cannot complete geothermal construction action
+STR_GEO_GENERATOR_CHOICE                                     :{RAW_STRING} at {NUM},{NUM}
+STR_GEO_TERMINAL_CHOICE                                      :Surface terminal at {NUM},{NUM}
+STR_GEO_TOWN_CHOICE                                          :{TOWN}
+STR_GEO_DIRECT_ROUTE                                         :Direct to Surface
+STR_GEO_EXPORT_PROMPT                                        :{BLACK}Select a completed plant, its paid riser route and a Surface terminal and town
+STR_GEO_EXPORT_READY                                         :{BLACK}Town service quote accepted. Existing service and settled energy will be preserved.
+STR_GEO_EXPORT_REFUSED                                       :{BLACK}Cannot connect this service. Check ownership, machinery, installed cables, riser direction and town authority.
+STR_GEO_NO_GENERATORS                                        :{BLACK}No owned completed power plants are available
+STR_GEO_NO_RISERS                                            :{BLACK}No compatible owned completed risers are available
+STR_GEO_NO_TERMINALS                                         :{BLACK}No owned Surface freight terminals are available
+STR_GEO_NO_TOWNS                                             :{BLACK}No towns are available
+STR_GEO_CONSTRUCTION                                        :{BLACK}Construction: {NUM}% complete
+STR_GEO_STOCK                                               :{BLACK}{RAW_STRING}: {COMMA} in stock; construction bill: {COMMA}
+STR_GEO_ELECTRIC_METER                                      :{BLACK}Lifetime electricity: {COMMA} J generated; {COMMA} J used
+STR_GEO_CONVERSION                                          :{BLACK}Electrical conversion: {NUM}%
+STR_GEO_SERVICE_METER                                       :{BLACK}Current town use: {COMMA} J; growth bonus {NUM}%
+STR_GEO_WAITING                                             :{BLACK}Waiting: {RAW_STRING}
+STR_GEO_SITES_PAGE                                          :Sites and buildings
+STR_GEO_UTILITIES_PAGE                                      :Utilities and risers
+STR_GEO_TOWN_PAGE                                           :Town service
+STR_GEO_CELL_PROMPT                                         :{BLACK}Click an excavated cell for this utility action; each cell has its own cost
+STR_GEO_CELL_REFUSED                                        :{BLACK}This utility cell cannot be changed. Check the layer, floor, ownership and installed network.
+STR_GEO_RISER_PORTAL_PROMPT                                 :{BLACK}Click the original commissioned sending portal, then the machinery corner and boundary connection cell
+STR_GEO_RISER_ANCHOR_PROMPT                                 :{BLACK}Click the riser machinery corner on this layer, then the boundary cell adjoining the selected portal
+STR_GEO_RISER_READY                                         :{BLACK}Riser site ready. Fund it, then deliver its construction materials.
+STR_GEO_RISER_REFUSED                                       :{BLACK}Cannot fund this riser. Check both original commissioned housings, the complete floor, connection cell and access side.
+STR_GEO_SELECT_GENERATOR                                    :Choose a completed power plant
+STR_GEO_SELECT_FIRST_RISER                                  :Choose the Deep sending riser
+STR_GEO_SELECT_TERMINAL                                     :Choose a Surface freight terminal
+STR_GEO_SELECT_TOWN                                         :Choose a town
+STR_GEO_INFORMATION                                         :Information
+STR_GEO_BUILD_INFORMATION                                   :Construction stock and work
+STR_GEO_ENERGY_INFORMATION                                  :Heat and electricity
+STR_GEO_BILL_CONSUMED                                       :{BLACK}Construction materials consumed
+STR_GEO_BILL_REQUIRED                                       :Construction materials required
+STR_GEO_LABOUR_REQUIRED                                     :Construction work required
+STR_GEO_GRANT_METER                                         :{BLACK}Current request: {COMMA} J; granted: {COMMA} J; still available: {COMMA} J
+STR_GEO_SOURCE_METER                                        :{BLACK}Current Heat source: {COMMA} J generated; {COMMA} J reserved
+STR_GEO_SOURCE_LIFETIME                                     :{BLACK}Lifetime Heat: {COMMA} J generated; {COMMA} J consumed
+STR_GEO_CURRENT_ELECTRIC                                    :{BLACK}Current electrical output: {COMMA} J
+STR_GEO_TERMINAL_LOST                                       :Rebuild the Surface freight terminal, then reconnect service
+STR_GEO_TOWN_SUSPENDED                                      :Town power effect suspended by the town-growth authority
+STR_GEO_NEXT_INTERVAL                                       :Waiting to operate
+STR_GEO_PORTS_REQUIRED                                      :Install both Heat and electrical cells at the original generator port
+STR_GEO_HEAT_SHORTAGE                                       :Shared Heat demand is not fully supplied
+STR_GEO_PAUSED                                              :Simulation is paused
+STR_GEO_BILL_READY                                          :{BLACK}Construction materials ready; work still required
+STR_GEO_SOURCE_REQUIRED                                     :The original vent collector is not ready
+STR_GEO_HEAT_PATH_REQUIRED                                  :Connect the original collector and generator ports with owned Heat pipes
+STR_GEO_FUNDS_REQUIRED                                      :Insufficient funds for operating service
+STR_GEO_CONNECTED                                          :{BLACK}The selected town service is already connected
+
+# Native utility fold-outs: docs/zz-reach2/architecture/gui/archi-gui.md.
+STR_TUBE_MENU                                                :Transport Tubes
+STR_TUBE_GUIDEWAY                                            :Guideway
+STR_TUBE_TERMINAL                                            :Terminal
+STR_TUBE_DEPOT                                               :Service depot
+STR_TUBE_ROUTE                                               :Draw power route
+STR_TUBE_CLOSE                                               :Close power inlet
+STR_TUBE_VIEW                                                :Vehicle and orders
+STR_TUBE_MODELS                                              :Designs and refits
+STR_TUBE_GEOTHERMAL_ROUTE                                    :Geothermal inlet
+STR_GEO_SURVEY                                              :Inspect geothermal
+STR_GEO_PLAN                                                 :Choose site
+STR_GEO_CONFIRM                                              :Reserve plan
+STR_GEO_FUND                                                 :Fund building
+STR_GEO_CANCEL                                               :Cancel plan
+STR_GEO_HEAT                                                :Heat pipe
+STR_GEO_ELECTRIC                                             :Electrical cable
+STR_GEO_BUILD_RISER                                          :Build electrical riser
+STR_GEO_EXPORT                                              :Connect town service
+STR_GEO_REMOVE_HEAT                                         :Remove Heat pipe
+STR_GEO_REMOVE_ELECTRIC                                     :Remove electrical cable
+STR_GEO_PHYSICAL_HELP                                       :Install or remove one paid utility cell on excavated ground, or fund riser machinery attached to an original commissioned portal. Riser materials and construction remain separate obligations.
+
+# Tube picker identity: docs/zz-reach2/architecture/gui/archi-gui.md.
+STR_TUBE_CONSTRUCTION_CAPTION                                :{WHITE}Transport Tube Construction
+STR_TUBE_BUY_CAPSULES                                        :{WHITE}New Tube Capsules
+STR_TUBE_CAPSULE                                             :tube capsule

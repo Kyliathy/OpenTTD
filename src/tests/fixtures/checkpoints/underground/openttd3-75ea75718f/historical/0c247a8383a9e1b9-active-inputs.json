@@ -1,0 +1,351 @@
+{
+  "_documentation": "r2mlvs15-savegame-determinism-and-lifecycle.md18B;exact earned430 paid Standard/Deep unfinished excavation and real WaitForEmpties/loaded hauler originals for current native snapshot transfer;not network acceptance",
+  "controller": {
+    "path": "src/tests/multilayer/ground_network_active_inputs.py",
+    "bytes": 5346,
+    "sha256": "0b469dc9bbbeda0139b38578e146649e256f1ab4b68b434eed17d2e25064aab8"
+  },
+  "paid_handoff": {
+    "path": "logs/geothermal/first-plant/20261017-native-01/verification.json",
+    "bytes": 68265,
+    "sha256": "0ba8cda739824125f949af3c51d254e0b632a3a7230244cbf47e5549146619ee"
+  },
+  "wait_producer_report": {
+    "path": "mlm/reviews/geothermal/first-plant/20261017-030241-2267816d97/reports/first-plant-Debug-reload.json",
+    "bytes": 25212,
+    "sha256": "a1f8ad33521aa26fa69eb51f06fd357b38b3589f692d5ad015fddd7f92616541"
+  },
+  "records": {
+    "standard-active": {
+      "input": {
+        "path": "mlm/reviews/geothermal/first-plant/20261017-043836-b22207625d/saves/first-plant-standard-partial.sav",
+        "bytes": 11968,
+        "sha256": "70b4607e4931f723c2e5786e21f16daf85a7eb8040f2a4485ddbb9330c945ebc"
+      },
+      "source_version": 430,
+      "source_chunks": 124,
+      "clock": 1857,
+      "project": {
+        "id": 0,
+        "job": 0,
+        "company": 0,
+        "cutter": 5,
+        "model": 0,
+        "parts": 2,
+        "part0": 5,
+        "part1": 6,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 0,
+        "portal": 1523,
+        "exchange": 1523,
+        "phase": 3,
+        "blocked": 0,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 3,
+        "idle_ticks": 0,
+        "cost_remainder": 25640,
+        "revision": 4
+      },
+      "job": {
+        "id": 0,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 0,
+        "model": 0,
+        "anchor": 5619,
+        "state": 2,
+        "reason": 0,
+        "cursor": 1,
+        "partial": 0,
+        "revision": 890,
+        "earth": 36,
+        "rock": 72,
+        "cost": 360,
+        "requested": 45,
+        "authorized": 83,
+        "routes": 20
+      },
+      "hauler": {
+        "id": 0,
+        "project": 0,
+        "hauler": 0,
+        "bay": 1523,
+        "set": 0,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 1857,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "wagon_sets": {
+        "0": {
+          "id": 0,
+          "project": 0,
+          "state": 3,
+          "visited": 0,
+          "revision": 1,
+          "wagons": 4
+        }
+      },
+      "wagon_units": {
+        "0": {
+          "set": 0,
+          "wagon": 1
+        },
+        "1": {
+          "set": 0,
+          "wagon": 2
+        },
+        "2": {
+          "set": 0,
+          "wagon": 3
+        },
+        "3": {
+          "set": 0,
+          "wagon": 4
+        }
+      },
+      "requires_native_resume_before_join": false
+    },
+    "deep-active": {
+      "input": {
+        "path": "mlm/reviews/geothermal/first-plant/20261017-043836-b22207625d/saves/first-plant-deep-partial.sav",
+        "bytes": 16444,
+        "sha256": "af56f5e92759b6ceae52049b47e69138c7853ad963b311a077791b13fcaa00cc"
+      },
+      "source_version": 430,
+      "source_chunks": 124,
+      "clock": 16861,
+      "project": {
+        "id": 1,
+        "job": 1,
+        "company": 0,
+        "cutter": 13,
+        "model": 1,
+        "parts": 2,
+        "part0": 13,
+        "part1": 14,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 0,
+        "portal": 5939,
+        "exchange": 5939,
+        "phase": 3,
+        "blocked": 0,
+        "phase_ticks": 0,
+        "work_remainder": 2,
+        "active_ticks": 51,
+        "idle_ticks": 0,
+        "cost_remainder": 23560,
+        "revision": 4
+      },
+      "job": {
+        "id": 1,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 0,
+        "model": 1,
+        "anchor": 14131,
+        "state": 2,
+        "reason": 0,
+        "cursor": 1,
+        "partial": 0,
+        "revision": 1926,
+        "earth": 12,
+        "rock": 244,
+        "cost": 1000,
+        "requested": 70,
+        "authorized": 121,
+        "routes": 57
+      },
+      "hauler": {
+        "id": 1,
+        "project": 1,
+        "hauler": 0,
+        "bay": 5939,
+        "set": 2,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 2632,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "wagon_sets": {
+        "0": {
+          "id": 2,
+          "project": 1,
+          "state": 3,
+          "visited": 0,
+          "revision": 1,
+          "wagons": 6
+        }
+      },
+      "wagon_units": {
+        "0": {
+          "set": 2,
+          "wagon": 1
+        },
+        "1": {
+          "set": 2,
+          "wagon": 2
+        },
+        "2": {
+          "set": 2,
+          "wagon": 3
+        },
+        "3": {
+          "set": 2,
+          "wagon": 4
+        },
+        "4": {
+          "set": 2,
+          "wagon": 11
+        },
+        "5": {
+          "set": 2,
+          "wagon": 12
+        }
+      },
+      "requires_native_resume_before_join": false
+    },
+    "wagon-wait": {
+      "input": {
+        "path": "mlm/reviews/geothermal/first-plant/20261017-030241-2267816d97/saves/first-plant-continued.sav",
+        "bytes": 17136,
+        "sha256": "f0ab93220f9e872f4e01233b6e456ef688779f935b88c55a3bc5769e9c9a5338"
+      },
+      "source_version": 430,
+      "source_chunks": 124,
+      "clock": 66229,
+      "project": {
+        "id": 1,
+        "job": 1,
+        "company": 0,
+        "cutter": 13,
+        "model": 1,
+        "parts": 2,
+        "part0": 13,
+        "part1": 14,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 0,
+        "portal": 5939,
+        "exchange": 5939,
+        "phase": 5,
+        "blocked": 17,
+        "phase_ticks": 210,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 60,
+        "cost_remainder": 9750,
+        "revision": 161
+      },
+      "job": {
+        "id": 1,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 0,
+        "model": 1,
+        "anchor": 14131,
+        "state": 2,
+        "reason": 0,
+        "cursor": 55,
+        "partial": 0,
+        "revision": 26696,
+        "earth": 96,
+        "rock": 2256,
+        "cost": 11040,
+        "requested": 70,
+        "authorized": 121,
+        "routes": 57
+      },
+      "hauler": {
+        "id": 1,
+        "project": 1,
+        "hauler": 0,
+        "bay": 5939,
+        "set": 3,
+        "phase": 3,
+        "wait": 0,
+        "phase_ticks": 208,
+        "exchanges": 5,
+        "revision": 59
+      },
+      "wagon_sets": {
+        "0": {
+          "id": 2,
+          "project": 1,
+          "state": 1,
+          "visited": 0,
+          "revision": 10,
+          "wagons": 6
+        },
+        "1": {
+          "id": 3,
+          "project": 1,
+          "state": 2,
+          "visited": 0,
+          "revision": 10,
+          "wagons": 6
+        }
+      },
+      "wagon_units": {
+        "0": {
+          "set": 2,
+          "wagon": 1
+        },
+        "1": {
+          "set": 2,
+          "wagon": 2
+        },
+        "2": {
+          "set": 2,
+          "wagon": 3
+        },
+        "3": {
+          "set": 2,
+          "wagon": 4
+        },
+        "4": {
+          "set": 2,
+          "wagon": 11
+        },
+        "5": {
+          "set": 2,
+          "wagon": 12
+        },
+        "6": {
+          "set": 3,
+          "wagon": 15
+        },
+        "7": {
+          "set": 3,
+          "wagon": 16
+        },
+        "8": {
+          "set": 3,
+          "wagon": 17
+        },
+        "9": {
+          "set": 3,
+          "wagon": 18
+        },
+        "10": {
+          "set": 3,
+          "wagon": 19
+        },
+        "11": {
+          "set": 3,
+          "wagon": 20
+        }
+      },
+      "requires_native_resume_before_join": true
+    }
+  },
+  "remaining": "Current application afterload,public native Resume for the explicitly player-paused wait,actual fresh peer transfer and complete initial/next/agreed-frame comparisons in both configurations."
+}

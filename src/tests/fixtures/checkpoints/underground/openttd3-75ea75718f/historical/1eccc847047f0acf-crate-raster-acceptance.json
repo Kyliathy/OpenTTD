@@ -1,0 +1,4419 @@
+{
+  "_documentation": "r2mlvs17-underground-transport-tubes.md15CC.2; actual useful1975 Crate opposite-reader pixels/picking and complete native purity; closes15C.1 with pinned ordinary file proof",
+  "controller": {
+    "path": "src/tests/multilayer/crate_useful_raster_report.py",
+    "bytes": 12666,
+    "sha256": "0b0c57d7d3b6d64264299b1bf6208b426cf23c4cf4e55b56d71c2f0521d51752"
+  },
+  "summary": {
+    "Debug": {
+      "cases": 6,
+      "assertions": 60321
+    },
+    "RelWithDebInfo": {
+      "cases": 6,
+      "assertions": 60321
+    }
+  },
+  "native_cases": 12,
+  "native_assertions": 120642,
+  "records": [
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/reports/crate-useful-raster-Debug.json",
+        "bytes": 23103,
+        "sha256": "43b98a8e09ba681691fa99f6d3b4dc80910a0f83540bdb3424501e6fab241e16"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CC.2; original useful-route39-unit Crate earns native moving inspection, exact packed pixels/layer picking and pure complete worlds; other models/bootstrap remain separate",
+      "configuration": "Debug",
+      "focus": "raster",
+      "native": {
+        "log": {
+          "path": "logs/tubes/crate-files/20261018-041224-82170090c4/crate-raster.log",
+          "bytes": 4718,
+          "sha256": "113160df507ccfc3a54b456bbe7ae1686081e0fca085ec69f6d0c2e278cc046a"
+        },
+        "assertions": 278,
+        "cases": 1,
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        },
+        "output": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-useful-2-0-raster.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "action": "raster",
+        "observed_snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 911684037998369259,
+          "binding": 18372065736722718161,
+          "invoice": 3067496983069669529,
+          "tick": 5465,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 63,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 235,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 68,
+          "part0_progress": 89,
+          "part0_status": 9,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5390,
+          "part1_layer": 1,
+          "part1_x": 227,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 166,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 124,
+          "part2_subspeed": 106,
+          "part2_progress": 54,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 628,
+          "part3_y": 460,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 180,
+          "part3_progress": 106,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 468,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412745,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 675,
+          "consumed": 410481,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 4,
+          "packet0_purpose": 0
+        }
+      },
+      "writer": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/reports/crate-useful-files-RelWithDebInfo-write.json",
+        "bytes": 89364,
+        "sha256": "16513d926536e950a45bbbb1fbac0361fb030dde9c23cdcf13ca94f356fa74c3"
+      },
+      "checkpoint": {
+        "scene": 2,
+        "step": 0,
+        "tick": 5459,
+        "parts": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "references": [
+          0,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 2964575448378799111,
+          "binding": 4773088978699579070,
+          "invoice": 18182467305183935406,
+          "tick": 5459,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 57,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 231,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 12,
+          "part0_progress": 137,
+          "part0_status": 8,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5389,
+          "part1_layer": 1,
+          "part1_x": 223,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 160,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 117,
+          "part2_subspeed": 144,
+          "part2_progress": 123,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 631,
+          "part3_y": 463,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 124,
+          "part3_progress": 154,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 471,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412747,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 825,
+          "consumed": 408063,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 3,
+          "packet0_purpose": 0
+        },
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        }
+      },
+      "view": {
+        "model": 10,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14401,
+        "tile": 5642,
+        "mask": 1,
+        "track": 1,
+        "speed": 124,
+        "tick": 5465,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-before.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-after.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "rims": [
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 0,
+            "dy": 0,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": -32,
+            "dy": 16,
+            "front": 23697
+          }
+        ],
+        "frames": [
+          {
+            "zoom": 1,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-1-0.png",
+              "bytes": 40440,
+              "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+            }
+          },
+          {
+            "zoom": 1,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-1-1.png",
+              "bytes": 40440,
+              "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-2-0.png",
+              "bytes": 42088,
+              "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-2-1.png",
+              "bytes": 42088,
+              "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+            }
+          }
+        ],
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+            "bytes": 593602,
+            "sha256": "24c2fe024ace696d97d9dec434851e1e1183bb8da38418ab79769daee76f4d0f"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-authored.png",
+            "bytes": 10497,
+            "sha256": "415c1a97d4405076d77bd6db7c6ba9654eef9ae0196a61c70fe62fb4890a8550"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 239,
+              "visible_pixels": 238,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 239,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 155
+            },
+            {
+              "zoom": 1,
+              "source_points": 239,
+              "visible_pixels": 952,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 956,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 620
+            }
+          ]
+        }
+      },
+      "native_steps": 6,
+      "start_tick": 5459,
+      "end_tick": 5465,
+      "consumed_j": 2418,
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_raster.py",
+        "bytes": 5711,
+        "sha256": "7d3ea116cb7af497de53c341c7d903a6834daab35c9d5c14ac649a93c57c40d8"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 91079680,
+        "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/vehicle_sl.cpp",
+          "bytes": 64313,
+          "sha256": "6db99340d5935853609196039c2b0190257513a7c2711a5ba10dee0b4575f1a4"
+        },
+        {
+          "path": "src/saveload/town_sl.cpp",
+          "bytes": 23256,
+          "sha256": "8ef0745c39501bfba305d8e85374c859d932e53e2522ea7204d8e82b4d562613"
+        },
+        {
+          "path": "src/saveload/company_sl.cpp",
+          "bytes": 30411,
+          "sha256": "dc5b6675a25cd75d57b991f3561d3c0b642771644ee12258775729bbf9f357eb"
+        },
+        {
+          "path": "src/saveload/cargopacket_sl.cpp",
+          "bytes": 11095,
+          "sha256": "c14a2ff58483dcda162185c047decbcc896a65cc6443040b14a93640069d20a1"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_load.cpp",
+          "bytes": 16928,
+          "sha256": "752cf5af63786b2b1bbaa84b721d86dd16963f14b580e17dd37523319a48982f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/tests/multilayer/tube_travel_sprite_checks.py",
+          "bytes": 14931,
+          "sha256": "9bf4c41404c18cd7ff90c9aaae2a1d39ee30db457d1ff456196b286966eeba43"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      },
+      "file_receipt": {
+        "path": "logs/tubes/crate-files/20261018-native-01/verification.json",
+        "bytes": 972597,
+        "sha256": "34eaf3f165d8b4c2b712c619c5481b94b0fdc3c0288a03f96d937b5a01f99457"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/reports/crate-useful-raster-RelWithDebInfo.json",
+        "bytes": 23112,
+        "sha256": "f9e3582a0fc5d6e61c1c31308431a182231e743d3690432ad9fb296a1e235273"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CC.2; original useful-route39-unit Crate earns native moving inspection, exact packed pixels/layer picking and pure complete worlds; other models/bootstrap remain separate",
+      "configuration": "RelWithDebInfo",
+      "focus": "raster",
+      "native": {
+        "log": {
+          "path": "logs/tubes/crate-files/20261018-041230-bbe2157e64/crate-raster.log",
+          "bytes": 4718,
+          "sha256": "79128ece614eefd3c0723c3290f87146595119e5bc15bfb3147b406e7f1c5e81"
+        },
+        "assertions": 278,
+        "cases": 1,
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        },
+        "output": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-useful-2-0-raster.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "action": "raster",
+        "observed_snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 911684037998369259,
+          "binding": 18372065736722718161,
+          "invoice": 3067496983069669529,
+          "tick": 5465,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 63,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 235,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 68,
+          "part0_progress": 89,
+          "part0_status": 9,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5390,
+          "part1_layer": 1,
+          "part1_x": 227,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 166,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 124,
+          "part2_subspeed": 106,
+          "part2_progress": 54,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 628,
+          "part3_y": 460,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 180,
+          "part3_progress": 106,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 468,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412745,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 675,
+          "consumed": 410481,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 4,
+          "packet0_purpose": 0
+        }
+      },
+      "writer": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/reports/crate-useful-files-Debug-write.json",
+        "bytes": 89346,
+        "sha256": "1ac55e3584a3005259fd093639e702689b746683bcafe0f41d08e367692bd6a9"
+      },
+      "checkpoint": {
+        "scene": 2,
+        "step": 0,
+        "tick": 5459,
+        "parts": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "references": [
+          0,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 2964575448378799111,
+          "binding": 4773088978699579070,
+          "invoice": 18182467305183935406,
+          "tick": 5459,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 57,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 231,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 12,
+          "part0_progress": 137,
+          "part0_status": 8,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5389,
+          "part1_layer": 1,
+          "part1_x": 223,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 160,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 117,
+          "part2_subspeed": 144,
+          "part2_progress": 123,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 631,
+          "part3_y": 463,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 124,
+          "part3_progress": 154,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 471,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412747,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 825,
+          "consumed": 408063,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 3,
+          "packet0_purpose": 0
+        },
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        }
+      },
+      "view": {
+        "model": 10,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14401,
+        "tile": 5642,
+        "mask": 1,
+        "track": 1,
+        "speed": 124,
+        "tick": 5465,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-raster-before.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-raster-after.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "rims": [
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 0,
+            "dy": 0,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": -32,
+            "dy": 16,
+            "front": 23697
+          }
+        ],
+        "frames": [
+          {
+            "zoom": 1,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-1-0.png",
+              "bytes": 40440,
+              "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+            }
+          },
+          {
+            "zoom": 1,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-1-1.png",
+              "bytes": 40440,
+              "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-2-0.png",
+              "bytes": 42088,
+              "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-2-1.png",
+              "bytes": 42088,
+              "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+            }
+          }
+        ],
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+            "bytes": 593602,
+            "sha256": "24c2fe024ace696d97d9dec434851e1e1183bb8da38418ab79769daee76f4d0f"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-authored.png",
+            "bytes": 10497,
+            "sha256": "415c1a97d4405076d77bd6db7c6ba9654eef9ae0196a61c70fe62fb4890a8550"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 239,
+              "visible_pixels": 238,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 239,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 155
+            },
+            {
+              "zoom": 1,
+              "source_points": 239,
+              "visible_pixels": 952,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 956,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 620
+            }
+          ]
+        }
+      },
+      "native_steps": 6,
+      "start_tick": 5459,
+      "end_tick": 5465,
+      "consumed_j": 2418,
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_raster.py",
+        "bytes": 5711,
+        "sha256": "7d3ea116cb7af497de53c341c7d903a6834daab35c9d5c14ac649a93c57c40d8"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42973184,
+        "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/vehicle_sl.cpp",
+          "bytes": 64313,
+          "sha256": "6db99340d5935853609196039c2b0190257513a7c2711a5ba10dee0b4575f1a4"
+        },
+        {
+          "path": "src/saveload/town_sl.cpp",
+          "bytes": 23256,
+          "sha256": "8ef0745c39501bfba305d8e85374c859d932e53e2522ea7204d8e82b4d562613"
+        },
+        {
+          "path": "src/saveload/company_sl.cpp",
+          "bytes": 30411,
+          "sha256": "dc5b6675a25cd75d57b991f3561d3c0b642771644ee12258775729bbf9f357eb"
+        },
+        {
+          "path": "src/saveload/cargopacket_sl.cpp",
+          "bytes": 11095,
+          "sha256": "c14a2ff58483dcda162185c047decbcc896a65cc6443040b14a93640069d20a1"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_load.cpp",
+          "bytes": 16928,
+          "sha256": "752cf5af63786b2b1bbaa84b721d86dd16963f14b580e17dd37523319a48982f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/tests/multilayer/tube_travel_sprite_checks.py",
+          "bytes": 14931,
+          "sha256": "9bf4c41404c18cd7ff90c9aaae2a1d39ee30db457d1ff456196b286966eeba43"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      },
+      "file_receipt": {
+        "path": "logs/tubes/crate-files/20261018-native-01/verification.json",
+        "bytes": 972597,
+        "sha256": "34eaf3f165d8b4c2b712c619c5481b94b0fdc3c0288a03f96d937b5a01f99457"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/capsule-art/20261018-041250-340b292022/reports/tube-capsule-art-Debug-body-0.json",
+        "bytes": 4150,
+        "sha256": "e6e0a67e6687222e8701d2978f085097315e5b2014cb25b7957a0f92fb0db5fe"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md13CB; actual native capsule packet/service/source presentation; prepared unit-test floor/cargo is not useful-route acceptance",
+      "configuration": "Debug",
+      "focus": "body",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/capsule-art/20261018-041250-340b292022/body.log",
+          "bytes": 194,
+          "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+        },
+        "assertions": 4498,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 91079680,
+        "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_capsule_sprite_checks.py",
+        "bytes": 10744,
+        "sha256": "6cd91851adfd36de53b92148159029bdb7f6cd1a0fe20dee78afef621e34eb72"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_model.h",
+          "bytes": 4988,
+          "sha256": "f6f1ad3b871c929bb8eacc59cc410a028165c386e010cb53be5612b438897775"
+        },
+        {
+          "path": "src/transport_tube_engine.cpp",
+          "bytes": 11633,
+          "sha256": "6505605986828a218e14acf335a0ecb92a17b31f65580910839b5a9f4145fdb5"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/transport_tube_vehicle_sprite.cpp",
+          "bytes": 10510,
+          "sha256": "8fee3b12ab84171b2f37cdde4bdee89befb8c61d8f46643795d6e4ffa052d153"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/guideway-art/20261018-041251-c62b165c8e/reports/tube-guideway-art-Debug-geometry-0.json",
+        "bytes": 6599,
+        "sha256": "bfec2117efe11d9179eb135efe87a4942f5fa8fd10fd3f5c7a93f668b4d4602e"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md Group13B; actual native guideway presentation; prepared fixture floor is not paid bootstrap",
+      "configuration": "Debug",
+      "focus": "geometry",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/guideway-art/20261018-041251-c62b165c8e/geometry.log",
+          "bytes": 199,
+          "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+        },
+        "assertions": 2694,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 91079680,
+        "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_sprite_checks.py",
+        "bytes": 11278,
+        "sha256": "83cf92cae09081a8795da4eef22fd70f48b9eb44880283c5dfbb2625ee556ca8"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_sprite.cpp",
+          "bytes": 8586,
+          "sha256": "a061302500fb06e01c6a930defd14a8ffd6dc23fe2adb6e25adb91ae92b5b252"
+        },
+        {
+          "path": "src/rail_cmd.cpp",
+          "bytes": 136709,
+          "sha256": "5b80b82bb572f4a232afb4fff9c8f7dbd9a9c4e258805821cb19521ecb68aeb4"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_topology.cpp",
+          "bytes": 14177,
+          "sha256": "be6a963eede5d1694b515f8bc646874f47e2990b9feb8f152f14583eab87212c"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/pbs.h",
+          "bytes": 2623,
+          "sha256": "e2f8c5012338c32f3986a8aa1e5a09e63c7f199d25046022f0bb87635a7d2edc"
+        },
+        {
+          "path": "src/pbs.cpp",
+          "bytes": 20015,
+          "sha256": "35fd96d500ff0b5617c97f1606361df72503a2275211c2ab32cc64c94e29bca5"
+        },
+        {
+          "path": "src/rail_map.h",
+          "bytes": 20829,
+          "sha256": "14851579902d735c001a6e9baeaf97ba13e6b9e95cef01f007a07cc819a11db4"
+        },
+        {
+          "path": "src/transport_tube_geothermal.h",
+          "bytes": 7123,
+          "sha256": "f625d28344aff1343fd87a57f54eb607e55bbb400884978149d51e053e24aee9"
+        },
+        {
+          "path": "src/transport_tube_geothermal.cpp",
+          "bytes": 20312,
+          "sha256": "d4dbcd29f4eb6a7245fbf309e09a7c0377f96c3bc79b48c407007d73dc1457c0"
+        },
+        {
+          "path": "src/utility_power.h",
+          "bytes": 48371,
+          "sha256": "e8b1ef6502f729a51241be3e494486f84393c7eb550e1a27f27748c034db2e2d"
+        },
+        {
+          "path": "src/utility_power.cpp",
+          "bytes": 220979,
+          "sha256": "39c545295ac1c02a5e236d03fed23c0cd36e144e50384ed53d63948bb963dcca"
+        },
+        {
+          "path": "src/multilayer_state.cpp",
+          "bytes": 32891,
+          "sha256": "9c065e85fd7a359a7349b7587d3af214d0ffa1079367d53b219c270a53ab1600"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/transport_tube_vehicle_sl.cpp",
+          "bytes": 11738,
+          "sha256": "cd4831ee261a5431153827f48604668969ff0335f9d13cfe64267bd5243437e5"
+        },
+        {
+          "path": "src/saveload/transport_tube_geothermal_sl.cpp",
+          "bytes": 13283,
+          "sha256": "810d253fb5ba6b1ee5628123362b35026e4856f633291487cad4b22079f5092f"
+        },
+        {
+          "path": "src/saveload/map_sl.cpp",
+          "bytes": 11944,
+          "sha256": "8175f46f8af2acc57cf8fb087692a7dc33e07ce6ba2a6c862784802724a4039a"
+        },
+        {
+          "path": "src/saveload/saveload.h",
+          "bytes": 91824,
+          "sha256": "07a93e01c4af28af68a1138feec99d08aba3851569f8ad3bbe58062b39d9e865"
+        },
+        {
+          "path": "src/geothermal_generator.cpp",
+          "bytes": 38587,
+          "sha256": "fa8cfe026e4d75a1c63f379a9c9c2f3eeacf799d8a59bd773dbd640058002005"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite.cpp",
+          "bytes": 9414,
+          "sha256": "5685ed1dd38a7db91301df76c9d13ffe5ff021d555864768488afb88b4f00ef9"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/table/palettes.h",
+          "bytes": 8616,
+          "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/geothermal_tube_work_fixture.h",
+          "bytes": 3392,
+          "sha256": "587afa4aaa4084d18f7c2a02737e312fab6908d19793545ecb8b4a94a1f605fc"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-route/20261018-041253-2dc8c392b7/reports/crate-useful-Debug.json",
+        "bytes": 4418,
+        "sha256": "a5e6bf8e4b5c954ad5372c647e731a0947807edcda3bdb6317844534d7fa534d"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CBB.1; actual1975 original Goods, Surface/Underground conventional feed, paid layer-local Crate and conventional Surface town receipt/empty returns",
+      "configuration": "Debug",
+      "native": {
+        "log": {
+          "path": "logs/tubes/crate-route/20261018-041253-2dc8c392b7/crate.log",
+          "bytes": 585,
+          "sha256": "99a524e73815b6a5f68650adb721ef9211c94e87f5164899beffa93a68c21db8"
+        },
+        "assertions": 52439,
+        "cases": 1
+      },
+      "route": {
+        "delivered": 39,
+        "income": 844,
+        "consumed_j": 1187878,
+        "route_ticks": 3510,
+        "final_tick": 7827,
+        "native_quarter_history": 1
+      },
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_checks.py",
+        "bytes": 3564,
+        "sha256": "66d73a0b25cc1731c33f7206cb9d0107e4caf4aa46641006f0a2fb2df09b7ec9"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 91079680,
+        "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/multilayer/goods_source_checks.py",
+          "bytes": 3169,
+          "sha256": "86b385ccfc394779d4059a17fb7c9ff124c7431d47e1f931555de169a8f1ac97"
+        }
+      ],
+      "source_receipt": {
+        "path": "logs/tubes/goods-source/20261018-native-01/verification-2.json",
+        "bytes": 10301,
+        "sha256": "5885ed12ed02ce80fafb0325102ef4df307c25286ba29eca0b18da7461cbf33c"
+      },
+      "fixture_classification": "Prepared completed machinery, generated funded town, excavated floor and commissioned native portals remain explicit inputs. Every Wood/Goods unit is earned by original production and physical native orders/loading; source train retirement is an actual empty-depot sale. No arrival, order skip, stock or purpose rewrite. Ordinary files/runtime silhouette and actual TBM/bootstrap remain separate."
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041255-fee47d75f6/reports/crate-useful-files-Debug-step-2.json",
+        "bytes": 26200,
+        "sha256": "6c25f18a5c771a1dd1d8e3ee5d1fb4f7388809eff524cd2c0925b12f409bacb9"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CC.1; ordinary Crate application reload/full-native continuation with original town/packet/history owners",
+      "configuration": "Debug",
+      "phase": "step",
+      "case": 2,
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_files.py",
+        "bytes": 10709,
+        "sha256": "042c7e03eeb1928a9885792839e3e47bd6338d5a88707c4752a326afc9dfd015"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 91079680,
+        "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/vehicle_sl.cpp",
+          "bytes": 64313,
+          "sha256": "6db99340d5935853609196039c2b0190257513a7c2711a5ba10dee0b4575f1a4"
+        },
+        {
+          "path": "src/saveload/town_sl.cpp",
+          "bytes": 23256,
+          "sha256": "8ef0745c39501bfba305d8e85374c859d932e53e2522ea7204d8e82b4d562613"
+        },
+        {
+          "path": "src/saveload/company_sl.cpp",
+          "bytes": 30411,
+          "sha256": "dc5b6675a25cd75d57b991f3561d3c0b642771644ee12258775729bbf9f357eb"
+        },
+        {
+          "path": "src/saveload/cargopacket_sl.cpp",
+          "bytes": 11095,
+          "sha256": "c14a2ff58483dcda162185c047decbcc896a65cc6443040b14a93640069d20a1"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_load.cpp",
+          "bytes": 16928,
+          "sha256": "752cf5af63786b2b1bbaa84b721d86dd16963f14b580e17dd37523319a48982f"
+        }
+      ],
+      "writer": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/reports/crate-useful-files-RelWithDebInfo-write.json",
+        "bytes": 89364,
+        "sha256": "16513d926536e950a45bbbb1fbac0361fb030dde9c23cdcf13ca94f356fa74c3"
+      },
+      "checkpoint": {
+        "scene": 2,
+        "step": 0,
+        "tick": 5459,
+        "parts": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "references": [
+          0,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 2964575448378799111,
+          "binding": 4773088978699579070,
+          "invoice": 18182467305183935406,
+          "tick": 5459,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 57,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 231,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 12,
+          "part0_progress": 137,
+          "part0_status": 8,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5389,
+          "part1_layer": 1,
+          "part1_x": 223,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 160,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 117,
+          "part2_subspeed": 144,
+          "part2_progress": 123,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 631,
+          "part3_y": 463,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 124,
+          "part3_progress": 154,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 471,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412747,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 825,
+          "consumed": 408063,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 3,
+          "packet0_purpose": 0
+        },
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        }
+      },
+      "native": [
+        {
+          "log": {
+            "path": "logs/tubes/crate-files/20261018-041255-fee47d75f6/baseline.log",
+            "bytes": 4085,
+            "sha256": "4d46f491192287053d650b79d6b493d2c8458be400ac10d905ea8620251a978f"
+          },
+          "assertions": 204,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-1.sav",
+            "bytes": 11564,
+            "sha256": "99de0ea16febb1c7111845a84fb1d9d9839a87c4effd59b9a90d60dfcef7ba29"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-041255-fee47d75f6/saves/crate-useful-2-1-inspect.sav",
+            "bytes": 11660,
+            "sha256": "649d982d438587c3e7a4125bde2a3d90ae0a1fc62daa0e18c254506709cf3034"
+          },
+          "action": "inspect",
+          "observed_snapshot": {
+            "cargo5_weight": 8,
+            "cargo5_multiplier": 512,
+            "cargo5_payment": 6144,
+            "cargo5_acceptance": 3,
+            "cargo7_weight": 16,
+            "cargo7_multiplier": 256,
+            "cargo7_payment": 5005,
+            "cargo7_acceptance": 0,
+            "running_train_price": 3900,
+            "utility": 10449060526698474979,
+            "binding": 2947021426311322076,
+            "invoice": 16859060073014920552,
+            "tick": 5460,
+            "calendar": 721354,
+            "calendar_fraction": 0,
+            "calendar_year": 1975,
+            "calendar_month": 0,
+            "economy": 721427,
+            "economy_fraction": 58,
+            "economy_year": 1975,
+            "economy_month": 2,
+            "economy_days": 14,
+            "random0": 187233087,
+            "random1": 3610627658,
+            "vehicles": 5,
+            "packets": 1,
+            "part0_id": 0,
+            "part0_first": 0,
+            "part0_engine": 260,
+            "part0_owner": 0,
+            "part0_cargo": 1,
+            "part0_units": 0,
+            "part0_tile": 5390,
+            "part0_layer": 1,
+            "part0_x": 232,
+            "part0_y": 1352,
+            "part0_z": 0,
+            "part0_direction": 5,
+            "part0_track": 1,
+            "part0_speed": 80,
+            "part0_subspeed": 192,
+            "part0_progress": 65,
+            "part0_status": 9,
+            "part0_flags": 0,
+            "part0_order": 2,
+            "part0_destination": 1,
+            "part0_order_index": 3,
+            "part0_dest_tile": 1312,
+            "part0_profit": 18446744073709530273,
+            "part1_id": 1,
+            "part1_first": 0,
+            "part1_engine": 261,
+            "part1_owner": 0,
+            "part1_cargo": 5,
+            "part1_units": 0,
+            "part1_tile": 5390,
+            "part1_layer": 1,
+            "part1_x": 224,
+            "part1_y": 1352,
+            "part1_z": 0,
+            "part1_direction": 5,
+            "part1_track": 1,
+            "part1_speed": 0,
+            "part1_subspeed": 0,
+            "part1_progress": 0,
+            "part1_status": 8,
+            "part1_flags": 0,
+            "part1_order": 0,
+            "part1_destination": 0,
+            "part1_order_index": 0,
+            "part1_dest_tile": 4294967295,
+            "part1_profit": 0,
+            "part2_id": 2,
+            "part2_first": 2,
+            "part2_engine": 267,
+            "part2_owner": 0,
+            "part2_cargo": 5,
+            "part2_units": 39,
+            "part2_tile": 5642,
+            "part2_layer": 1,
+            "part2_x": 161,
+            "part2_y": 1416,
+            "part2_z": 0,
+            "part2_direction": 5,
+            "part2_track": 1,
+            "part2_speed": 118,
+            "part2_subspeed": 189,
+            "part2_progress": 107,
+            "part2_status": 8,
+            "part2_flags": 0,
+            "part2_order": 1,
+            "part2_destination": 3,
+            "part2_order_index": 1,
+            "part2_dest_tile": 5662,
+            "part2_profit": 18446744073709533539,
+            "part3_id": 3,
+            "part3_first": 3,
+            "part3_engine": 260,
+            "part3_owner": 0,
+            "part3_cargo": 1,
+            "part3_units": 0,
+            "part3_tile": 1831,
+            "part3_layer": 0,
+            "part3_x": 630,
+            "part3_y": 462,
+            "part3_z": 0,
+            "part3_direction": 0,
+            "part3_track": 32,
+            "part3_speed": 80,
+            "part3_subspeed": 48,
+            "part3_progress": 18,
+            "part3_status": 8,
+            "part3_flags": 128,
+            "part3_order": 2,
+            "part3_destination": 5,
+            "part3_order_index": 2,
+            "part3_dest_tile": 5914,
+            "part3_profit": 18446744073709530221,
+            "part4_id": 4,
+            "part4_first": 3,
+            "part4_engine": 261,
+            "part4_owner": 0,
+            "part4_cargo": 5,
+            "part4_units": 0,
+            "part4_tile": 1895,
+            "part4_layer": 0,
+            "part4_x": 632,
+            "part4_y": 470,
+            "part4_z": 0,
+            "part4_direction": 7,
+            "part4_track": 2,
+            "part4_speed": 0,
+            "part4_subspeed": 0,
+            "part4_progress": 0,
+            "part4_status": 8,
+            "part4_flags": 0,
+            "part4_order": 0,
+            "part4_destination": 0,
+            "part4_order_index": 0,
+            "part4_dest_tile": 4294967295,
+            "part4_profit": 0,
+            "cash": 412747,
+            "current_income": 426,
+            "current_expenses": 18446744073709551149,
+            "current_goods": 0,
+            "current_wood": 39,
+            "quarters": 0,
+            "total_income": 426,
+            "total_delivered": 0,
+            "town": 1,
+            "town_xy": 2928,
+            "town_houses": 29,
+            "town_population": 1286,
+            "industry0_id": 0,
+            "industry0_type": 3,
+            "industry0_tile": 903,
+            "industry0_width": 5,
+            "industry0_height": 5,
+            "industry0_cargo": 7,
+            "industry0_waiting": 0,
+            "industry0_rate": 13,
+            "industry0_produced": 0,
+            "industry0_transported": 0,
+            "industry1_id": 1,
+            "industry1_type": 2,
+            "industry1_tile": 986,
+            "industry1_width": 3,
+            "industry1_height": 3,
+            "industry1_cargo": 5,
+            "industry1_waiting": 0,
+            "industry1_rate": 0,
+            "industry1_produced": 0,
+            "industry1_transported": 0,
+            "station0_id": 1,
+            "station0_tile": 1306,
+            "station0_owner": 0,
+            "station0_town": 0,
+            "station0_goods": 0,
+            "station0_fraction": 0,
+            "station0_rating": 255,
+            "station0_speed": 80,
+            "station0_status": 2,
+            "station1_id": 2,
+            "station1_tile": 5384,
+            "station1_owner": 0,
+            "station1_town": 0,
+            "station1_goods": 0,
+            "station1_fraction": 0,
+            "station1_rating": 175,
+            "station1_speed": 130,
+            "station1_status": 2,
+            "station2_id": 3,
+            "station2_tile": 5662,
+            "station2_owner": 0,
+            "station2_town": 0,
+            "station2_goods": 0,
+            "station2_fraction": 0,
+            "station2_rating": 175,
+            "station2_speed": 80,
+            "station2_status": 0,
+            "station3_id": 4,
+            "station3_tile": 2540,
+            "station3_owner": 0,
+            "station3_town": 1,
+            "station3_goods": 0,
+            "station3_fraction": 0,
+            "station3_rating": 175,
+            "station3_speed": 0,
+            "station3_status": 1,
+            "source": 0,
+            "carry": 800,
+            "consumed": 408466,
+            "packet0_units": 39,
+            "packet0_source": 1,
+            "packet0_source_type": 0,
+            "packet0_station": 1,
+            "packet0_age": 3,
+            "packet0_purpose": 0
+          }
+        },
+        {
+          "log": {
+            "path": "logs/tubes/crate-files/20261018-041255-fee47d75f6/continued.log",
+            "bytes": 4079,
+            "sha256": "bec7daf49dd0480e63d7d921d92ea785237b4da6b76dca9c5a16d5c0fbf59e7a"
+          },
+          "assertions": 208,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-0.sav",
+            "bytes": 11568,
+            "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-041255-fee47d75f6/saves/crate-useful-2-0-step.sav",
+            "bytes": 11660,
+            "sha256": "2547aa648ffb579f13f5d066d6d11f2eade5903249e5fca90f11a800a958ba19"
+          },
+          "action": "step",
+          "observed_snapshot": {
+            "cargo5_weight": 8,
+            "cargo5_multiplier": 512,
+            "cargo5_payment": 6144,
+            "cargo5_acceptance": 3,
+            "cargo7_weight": 16,
+            "cargo7_multiplier": 256,
+            "cargo7_payment": 5005,
+            "cargo7_acceptance": 0,
+            "running_train_price": 3900,
+            "utility": 10449060526698474979,
+            "binding": 2947021426311322076,
+            "invoice": 16859060073014920552,
+            "tick": 5460,
+            "calendar": 721354,
+            "calendar_fraction": 0,
+            "calendar_year": 1975,
+            "calendar_month": 0,
+            "economy": 721427,
+            "economy_fraction": 58,
+            "economy_year": 1975,
+            "economy_month": 2,
+            "economy_days": 14,
+            "random0": 187233087,
+            "random1": 3610627658,
+            "vehicles": 5,
+            "packets": 1,
+            "part0_id": 0,
+            "part0_first": 0,
+            "part0_engine": 260,
+            "part0_owner": 0,
+            "part0_cargo": 1,
+            "part0_units": 0,
+            "part0_tile": 5390,
+            "part0_layer": 1,
+            "part0_x": 232,
+            "part0_y": 1352,
+            "part0_z": 0,
+            "part0_direction": 5,
+            "part0_track": 1,
+            "part0_speed": 80,
+            "part0_subspeed": 192,
+            "part0_progress": 65,
+            "part0_status": 9,
+            "part0_flags": 0,
+            "part0_order": 2,
+            "part0_destination": 1,
+            "part0_order_index": 3,
+            "part0_dest_tile": 1312,
+            "part0_profit": 18446744073709530273,
+            "part1_id": 1,
+            "part1_first": 0,
+            "part1_engine": 261,
+            "part1_owner": 0,
+            "part1_cargo": 5,
+            "part1_units": 0,
+            "part1_tile": 5390,
+            "part1_layer": 1,
+            "part1_x": 224,
+            "part1_y": 1352,
+            "part1_z": 0,
+            "part1_direction": 5,
+            "part1_track": 1,
+            "part1_speed": 0,
+            "part1_subspeed": 0,
+            "part1_progress": 0,
+            "part1_status": 8,
+            "part1_flags": 0,
+            "part1_order": 0,
+            "part1_destination": 0,
+            "part1_order_index": 0,
+            "part1_dest_tile": 4294967295,
+            "part1_profit": 0,
+            "part2_id": 2,
+            "part2_first": 2,
+            "part2_engine": 267,
+            "part2_owner": 0,
+            "part2_cargo": 5,
+            "part2_units": 39,
+            "part2_tile": 5642,
+            "part2_layer": 1,
+            "part2_x": 161,
+            "part2_y": 1416,
+            "part2_z": 0,
+            "part2_direction": 5,
+            "part2_track": 1,
+            "part2_speed": 118,
+            "part2_subspeed": 189,
+            "part2_progress": 107,
+            "part2_status": 8,
+            "part2_flags": 0,
+            "part2_order": 1,
+            "part2_destination": 3,
+            "part2_order_index": 1,
+            "part2_dest_tile": 5662,
+            "part2_profit": 18446744073709533539,
+            "part3_id": 3,
+            "part3_first": 3,
+            "part3_engine": 260,
+            "part3_owner": 0,
+            "part3_cargo": 1,
+            "part3_units": 0,
+            "part3_tile": 1831,
+            "part3_layer": 0,
+            "part3_x": 630,
+            "part3_y": 462,
+            "part3_z": 0,
+            "part3_direction": 0,
+            "part3_track": 32,
+            "part3_speed": 80,
+            "part3_subspeed": 48,
+            "part3_progress": 18,
+            "part3_status": 8,
+            "part3_flags": 128,
+            "part3_order": 2,
+            "part3_destination": 5,
+            "part3_order_index": 2,
+            "part3_dest_tile": 5914,
+            "part3_profit": 18446744073709530221,
+            "part4_id": 4,
+            "part4_first": 3,
+            "part4_engine": 261,
+            "part4_owner": 0,
+            "part4_cargo": 5,
+            "part4_units": 0,
+            "part4_tile": 1895,
+            "part4_layer": 0,
+            "part4_x": 632,
+            "part4_y": 470,
+            "part4_z": 0,
+            "part4_direction": 7,
+            "part4_track": 2,
+            "part4_speed": 0,
+            "part4_subspeed": 0,
+            "part4_progress": 0,
+            "part4_status": 8,
+            "part4_flags": 0,
+            "part4_order": 0,
+            "part4_destination": 0,
+            "part4_order_index": 0,
+            "part4_dest_tile": 4294967295,
+            "part4_profit": 0,
+            "cash": 412747,
+            "current_income": 426,
+            "current_expenses": 18446744073709551149,
+            "current_goods": 0,
+            "current_wood": 39,
+            "quarters": 0,
+            "total_income": 426,
+            "total_delivered": 0,
+            "town": 1,
+            "town_xy": 2928,
+            "town_houses": 29,
+            "town_population": 1286,
+            "industry0_id": 0,
+            "industry0_type": 3,
+            "industry0_tile": 903,
+            "industry0_width": 5,
+            "industry0_height": 5,
+            "industry0_cargo": 7,
+            "industry0_waiting": 0,
+            "industry0_rate": 13,
+            "industry0_produced": 0,
+            "industry0_transported": 0,
+            "industry1_id": 1,
+            "industry1_type": 2,
+            "industry1_tile": 986,
+            "industry1_width": 3,
+            "industry1_height": 3,
+            "industry1_cargo": 5,
+            "industry1_waiting": 0,
+            "industry1_rate": 0,
+            "industry1_produced": 0,
+            "industry1_transported": 0,
+            "station0_id": 1,
+            "station0_tile": 1306,
+            "station0_owner": 0,
+            "station0_town": 0,
+            "station0_goods": 0,
+            "station0_fraction": 0,
+            "station0_rating": 255,
+            "station0_speed": 80,
+            "station0_status": 2,
+            "station1_id": 2,
+            "station1_tile": 5384,
+            "station1_owner": 0,
+            "station1_town": 0,
+            "station1_goods": 0,
+            "station1_fraction": 0,
+            "station1_rating": 175,
+            "station1_speed": 130,
+            "station1_status": 2,
+            "station2_id": 3,
+            "station2_tile": 5662,
+            "station2_owner": 0,
+            "station2_town": 0,
+            "station2_goods": 0,
+            "station2_fraction": 0,
+            "station2_rating": 175,
+            "station2_speed": 80,
+            "station2_status": 0,
+            "station3_id": 4,
+            "station3_tile": 2540,
+            "station3_owner": 0,
+            "station3_town": 1,
+            "station3_goods": 0,
+            "station3_fraction": 0,
+            "station3_rating": 175,
+            "station3_speed": 0,
+            "station3_status": 1,
+            "source": 0,
+            "carry": 800,
+            "consumed": 408466,
+            "packet0_units": 39,
+            "packet0_source": 1,
+            "packet0_source_type": 0,
+            "packet0_station": 1,
+            "packet0_age": 3,
+            "packet0_purpose": 0
+          }
+        }
+      ],
+      "uninterrupted_baseline": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040314-5fcb47ae85/saves/crate-useful-2-1.sav",
+        "bytes": 11564,
+        "sha256": "99de0ea16febb1c7111845a84fb1d9d9839a87c4effd59b9a90d60dfcef7ba29"
+      },
+      "next_step": {
+        "complete_chunks_exact": 125,
+        "native_load_events": [
+          {
+            "action": "Load",
+            "baseline_tick": 5460,
+            "resumed_tick": 5459,
+            "other_bytes_exact": true
+          }
+        ]
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/capsule-art/20261018-041303-a953e5fcd8/reports/tube-capsule-art-RelWithDebInfo-body-0.json",
+        "bytes": 4168,
+        "sha256": "d00bff714555e15cdca0c5f1ffbe41eba2de893a37d99b25c1a6fbdd4cb5817a"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md13CB; actual native capsule packet/service/source presentation; prepared unit-test floor/cargo is not useful-route acceptance",
+      "configuration": "RelWithDebInfo",
+      "focus": "body",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/capsule-art/20261018-041303-a953e5fcd8/body.log",
+          "bytes": 194,
+          "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+        },
+        "assertions": 4498,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42973184,
+        "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_capsule_sprite_checks.py",
+        "bytes": 10744,
+        "sha256": "6cd91851adfd36de53b92148159029bdb7f6cd1a0fe20dee78afef621e34eb72"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_model.h",
+          "bytes": 4988,
+          "sha256": "f6f1ad3b871c929bb8eacc59cc410a028165c386e010cb53be5612b438897775"
+        },
+        {
+          "path": "src/transport_tube_engine.cpp",
+          "bytes": 11633,
+          "sha256": "6505605986828a218e14acf335a0ecb92a17b31f65580910839b5a9f4145fdb5"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/transport_tube_vehicle_sprite.cpp",
+          "bytes": 10510,
+          "sha256": "8fee3b12ab84171b2f37cdde4bdee89befb8c61d8f46643795d6e4ffa052d153"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/guideway-art/20261018-041304-1ca740eedc/reports/tube-guideway-art-RelWithDebInfo-geometry-0.json",
+        "bytes": 6617,
+        "sha256": "15bebe3873eca45515132ac5c96d30b3fb1f7500e28eb4f1462628b0d8b8004f"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md Group13B; actual native guideway presentation; prepared fixture floor is not paid bootstrap",
+      "configuration": "RelWithDebInfo",
+      "focus": "geometry",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/guideway-art/20261018-041304-1ca740eedc/geometry.log",
+          "bytes": 199,
+          "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+        },
+        "assertions": 2694,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42973184,
+        "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_sprite_checks.py",
+        "bytes": 11278,
+        "sha256": "83cf92cae09081a8795da4eef22fd70f48b9eb44880283c5dfbb2625ee556ca8"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_sprite.cpp",
+          "bytes": 8586,
+          "sha256": "a061302500fb06e01c6a930defd14a8ffd6dc23fe2adb6e25adb91ae92b5b252"
+        },
+        {
+          "path": "src/rail_cmd.cpp",
+          "bytes": 136709,
+          "sha256": "5b80b82bb572f4a232afb4fff9c8f7dbd9a9c4e258805821cb19521ecb68aeb4"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_topology.cpp",
+          "bytes": 14177,
+          "sha256": "be6a963eede5d1694b515f8bc646874f47e2990b9feb8f152f14583eab87212c"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/pbs.h",
+          "bytes": 2623,
+          "sha256": "e2f8c5012338c32f3986a8aa1e5a09e63c7f199d25046022f0bb87635a7d2edc"
+        },
+        {
+          "path": "src/pbs.cpp",
+          "bytes": 20015,
+          "sha256": "35fd96d500ff0b5617c97f1606361df72503a2275211c2ab32cc64c94e29bca5"
+        },
+        {
+          "path": "src/rail_map.h",
+          "bytes": 20829,
+          "sha256": "14851579902d735c001a6e9baeaf97ba13e6b9e95cef01f007a07cc819a11db4"
+        },
+        {
+          "path": "src/transport_tube_geothermal.h",
+          "bytes": 7123,
+          "sha256": "f625d28344aff1343fd87a57f54eb607e55bbb400884978149d51e053e24aee9"
+        },
+        {
+          "path": "src/transport_tube_geothermal.cpp",
+          "bytes": 20312,
+          "sha256": "d4dbcd29f4eb6a7245fbf309e09a7c0377f96c3bc79b48c407007d73dc1457c0"
+        },
+        {
+          "path": "src/utility_power.h",
+          "bytes": 48371,
+          "sha256": "e8b1ef6502f729a51241be3e494486f84393c7eb550e1a27f27748c034db2e2d"
+        },
+        {
+          "path": "src/utility_power.cpp",
+          "bytes": 220979,
+          "sha256": "39c545295ac1c02a5e236d03fed23c0cd36e144e50384ed53d63948bb963dcca"
+        },
+        {
+          "path": "src/multilayer_state.cpp",
+          "bytes": 32891,
+          "sha256": "9c065e85fd7a359a7349b7587d3af214d0ffa1079367d53b219c270a53ab1600"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/transport_tube_vehicle_sl.cpp",
+          "bytes": 11738,
+          "sha256": "cd4831ee261a5431153827f48604668969ff0335f9d13cfe64267bd5243437e5"
+        },
+        {
+          "path": "src/saveload/transport_tube_geothermal_sl.cpp",
+          "bytes": 13283,
+          "sha256": "810d253fb5ba6b1ee5628123362b35026e4856f633291487cad4b22079f5092f"
+        },
+        {
+          "path": "src/saveload/map_sl.cpp",
+          "bytes": 11944,
+          "sha256": "8175f46f8af2acc57cf8fb087692a7dc33e07ce6ba2a6c862784802724a4039a"
+        },
+        {
+          "path": "src/saveload/saveload.h",
+          "bytes": 91824,
+          "sha256": "07a93e01c4af28af68a1138feec99d08aba3851569f8ad3bbe58062b39d9e865"
+        },
+        {
+          "path": "src/geothermal_generator.cpp",
+          "bytes": 38587,
+          "sha256": "fa8cfe026e4d75a1c63f379a9c9c2f3eeacf799d8a59bd773dbd640058002005"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite.cpp",
+          "bytes": 9414,
+          "sha256": "5685ed1dd38a7db91301df76c9d13ffe5ff021d555864768488afb88b4f00ef9"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/table/palettes.h",
+          "bytes": 8616,
+          "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/geothermal_tube_work_fixture.h",
+          "bytes": 3392,
+          "sha256": "587afa4aaa4084d18f7c2a02737e312fab6908d19793545ecb8b4a94a1f605fc"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-route/20261018-041305-804f4d7c7f/reports/crate-useful-RelWithDebInfo.json",
+        "bytes": 4436,
+        "sha256": "6f3822807c2133d0da11e363dc78148763db8861003c5f4f3b574e9b72c293c0"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CBB.1; actual1975 original Goods, Surface/Underground conventional feed, paid layer-local Crate and conventional Surface town receipt/empty returns",
+      "configuration": "RelWithDebInfo",
+      "native": {
+        "log": {
+          "path": "logs/tubes/crate-route/20261018-041305-804f4d7c7f/crate.log",
+          "bytes": 585,
+          "sha256": "99a524e73815b6a5f68650adb721ef9211c94e87f5164899beffa93a68c21db8"
+        },
+        "assertions": 52439,
+        "cases": 1
+      },
+      "route": {
+        "delivered": 39,
+        "income": 844,
+        "consumed_j": 1187878,
+        "route_ticks": 3510,
+        "final_tick": 7827,
+        "native_quarter_history": 1
+      },
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_checks.py",
+        "bytes": 3564,
+        "sha256": "66d73a0b25cc1731c33f7206cb9d0107e4caf4aa46641006f0a2fb2df09b7ec9"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42973184,
+        "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/multilayer/goods_source_checks.py",
+          "bytes": 3169,
+          "sha256": "86b385ccfc394779d4059a17fb7c9ff124c7431d47e1f931555de169a8f1ac97"
+        }
+      ],
+      "source_receipt": {
+        "path": "logs/tubes/goods-source/20261018-native-01/verification-2.json",
+        "bytes": 10301,
+        "sha256": "5885ed12ed02ce80fafb0325102ef4df307c25286ba29eca0b18da7461cbf33c"
+      },
+      "fixture_classification": "Prepared completed machinery, generated funded town, excavated floor and commissioned native portals remain explicit inputs. Every Wood/Goods unit is earned by original production and physical native orders/loading; source train retirement is an actual empty-depot sale. No arrival, order skip, stock or purpose rewrite. Ordinary files/runtime silhouette and actual TBM/bootstrap remain separate."
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041306-fd8633ec24/reports/crate-useful-files-RelWithDebInfo-step-2.json",
+        "bytes": 26209,
+        "sha256": "9e6b473e867be254db5dfa45d946a0add697c3b10cf807acdd9ece33bd859a31"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15CC.1; ordinary Crate application reload/full-native continuation with original town/packet/history owners",
+      "configuration": "RelWithDebInfo",
+      "phase": "step",
+      "case": 2,
+      "controller": {
+        "path": "src/tests/multilayer/crate_useful_files.py",
+        "bytes": 10709,
+        "sha256": "042c7e03eeb1928a9885792839e3e47bd6338d5a88707c4752a326afc9dfd015"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42973184,
+        "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+      },
+      "sources": [
+        {
+          "path": "src/tests/tube_goods_source.cpp",
+          "bytes": 5472,
+          "sha256": "91c2bb2f35d3a67646be25314486056eababdf7095d35acb040ac3a521e56a46"
+        },
+        {
+          "path": "src/tests/tube_goods_source_fixture.h",
+          "bytes": 19851,
+          "sha256": "6014d52bd023d6e4c49f8fa6ab7ca601428d02f064d9d8f9daed9d8a7e086dc9"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20989,
+          "sha256": "ed9cc04bb9ef9c83b6310b1a89d82661b9e44de2a95f6f2744b81f81923ea7e8"
+        },
+        {
+          "path": "src/industry_cmd.cpp",
+          "bytes": 150661,
+          "sha256": "e03db616af93d8cf731ddc0491b5da549e69dce1b718161d7b0cab33134e9fae"
+        },
+        {
+          "path": "src/table/build_industry.h",
+          "bytes": 76628,
+          "sha256": "907132c3b31ed9e6b784de4ce46c5569bacf9d6c5b77089c9e080b1127c1655d"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/town_cmd.cpp",
+          "bytes": 159194,
+          "sha256": "0cf6d81e708a2fc441260ce146a48fcd534803c67ae41480bd54e9683cee2a8d"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_routes.cpp",
+          "bytes": 27758,
+          "sha256": "07242ee8cb9965e091e14bb39c5ed345b4f7266e0db5cb6ffd7834b7606fbe2b"
+        },
+        {
+          "path": "src/tests/crate_useful_world_fixture.h",
+          "bytes": 10226,
+          "sha256": "dbb4d7a43bb79b1dd0370753488ba4add785a1ba1c1f4a90176aa59bc5d093fb"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/vehicle_sl.cpp",
+          "bytes": 64313,
+          "sha256": "6db99340d5935853609196039c2b0190257513a7c2711a5ba10dee0b4575f1a4"
+        },
+        {
+          "path": "src/saveload/town_sl.cpp",
+          "bytes": 23256,
+          "sha256": "8ef0745c39501bfba305d8e85374c859d932e53e2522ea7204d8e82b4d562613"
+        },
+        {
+          "path": "src/saveload/company_sl.cpp",
+          "bytes": 30411,
+          "sha256": "dc5b6675a25cd75d57b991f3561d3c0b642771644ee12258775729bbf9f357eb"
+        },
+        {
+          "path": "src/saveload/cargopacket_sl.cpp",
+          "bytes": 11095,
+          "sha256": "c14a2ff58483dcda162185c047decbcc896a65cc6443040b14a93640069d20a1"
+        },
+        {
+          "path": "src/tests/transport_tube_crate_load.cpp",
+          "bytes": 16928,
+          "sha256": "752cf5af63786b2b1bbaa84b721d86dd16963f14b580e17dd37523319a48982f"
+        }
+      ],
+      "writer": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/reports/crate-useful-files-Debug-write.json",
+        "bytes": 89346,
+        "sha256": "1ac55e3584a3005259fd093639e702689b746683bcafe0f41d08e367692bd6a9"
+      },
+      "checkpoint": {
+        "scene": 2,
+        "step": 0,
+        "tick": 5459,
+        "parts": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "references": [
+          0,
+          1,
+          1,
+          1,
+          2,
+          3,
+          4,
+          0
+        ],
+        "snapshot": {
+          "cargo5_weight": 8,
+          "cargo5_multiplier": 512,
+          "cargo5_payment": 6144,
+          "cargo5_acceptance": 3,
+          "cargo7_weight": 16,
+          "cargo7_multiplier": 256,
+          "cargo7_payment": 5005,
+          "cargo7_acceptance": 0,
+          "running_train_price": 3900,
+          "utility": 2964575448378799111,
+          "binding": 4773088978699579070,
+          "invoice": 18182467305183935406,
+          "tick": 5459,
+          "calendar": 721354,
+          "calendar_fraction": 0,
+          "calendar_year": 1975,
+          "calendar_month": 0,
+          "economy": 721427,
+          "economy_fraction": 57,
+          "economy_year": 1975,
+          "economy_month": 2,
+          "economy_days": 14,
+          "random0": 187233087,
+          "random1": 3610627658,
+          "vehicles": 5,
+          "packets": 1,
+          "part0_id": 0,
+          "part0_first": 0,
+          "part0_engine": 260,
+          "part0_owner": 0,
+          "part0_cargo": 1,
+          "part0_units": 0,
+          "part0_tile": 5390,
+          "part0_layer": 1,
+          "part0_x": 231,
+          "part0_y": 1352,
+          "part0_z": 0,
+          "part0_direction": 5,
+          "part0_track": 1,
+          "part0_speed": 80,
+          "part0_subspeed": 12,
+          "part0_progress": 137,
+          "part0_status": 8,
+          "part0_flags": 0,
+          "part0_order": 2,
+          "part0_destination": 1,
+          "part0_order_index": 3,
+          "part0_dest_tile": 1312,
+          "part0_profit": 18446744073709530273,
+          "part1_id": 1,
+          "part1_first": 0,
+          "part1_engine": 261,
+          "part1_owner": 0,
+          "part1_cargo": 5,
+          "part1_units": 0,
+          "part1_tile": 5389,
+          "part1_layer": 1,
+          "part1_x": 223,
+          "part1_y": 1352,
+          "part1_z": 0,
+          "part1_direction": 5,
+          "part1_track": 1,
+          "part1_speed": 0,
+          "part1_subspeed": 0,
+          "part1_progress": 0,
+          "part1_status": 8,
+          "part1_flags": 0,
+          "part1_order": 0,
+          "part1_destination": 0,
+          "part1_order_index": 0,
+          "part1_dest_tile": 4294967295,
+          "part1_profit": 0,
+          "part2_id": 2,
+          "part2_first": 2,
+          "part2_engine": 267,
+          "part2_owner": 0,
+          "part2_cargo": 5,
+          "part2_units": 39,
+          "part2_tile": 5642,
+          "part2_layer": 1,
+          "part2_x": 160,
+          "part2_y": 1416,
+          "part2_z": 0,
+          "part2_direction": 5,
+          "part2_track": 1,
+          "part2_speed": 117,
+          "part2_subspeed": 144,
+          "part2_progress": 123,
+          "part2_status": 8,
+          "part2_flags": 0,
+          "part2_order": 1,
+          "part2_destination": 3,
+          "part2_order_index": 1,
+          "part2_dest_tile": 5662,
+          "part2_profit": 18446744073709533539,
+          "part3_id": 3,
+          "part3_first": 3,
+          "part3_engine": 260,
+          "part3_owner": 0,
+          "part3_cargo": 1,
+          "part3_units": 0,
+          "part3_tile": 1831,
+          "part3_layer": 0,
+          "part3_x": 631,
+          "part3_y": 463,
+          "part3_z": 0,
+          "part3_direction": 0,
+          "part3_track": 32,
+          "part3_speed": 80,
+          "part3_subspeed": 124,
+          "part3_progress": 154,
+          "part3_status": 8,
+          "part3_flags": 128,
+          "part3_order": 2,
+          "part3_destination": 5,
+          "part3_order_index": 2,
+          "part3_dest_tile": 5914,
+          "part3_profit": 18446744073709530221,
+          "part4_id": 4,
+          "part4_first": 3,
+          "part4_engine": 261,
+          "part4_owner": 0,
+          "part4_cargo": 5,
+          "part4_units": 0,
+          "part4_tile": 1895,
+          "part4_layer": 0,
+          "part4_x": 632,
+          "part4_y": 471,
+          "part4_z": 0,
+          "part4_direction": 7,
+          "part4_track": 2,
+          "part4_speed": 0,
+          "part4_subspeed": 0,
+          "part4_progress": 0,
+          "part4_status": 8,
+          "part4_flags": 0,
+          "part4_order": 0,
+          "part4_destination": 0,
+          "part4_order_index": 0,
+          "part4_dest_tile": 4294967295,
+          "part4_profit": 0,
+          "cash": 412747,
+          "current_income": 426,
+          "current_expenses": 18446744073709551149,
+          "current_goods": 0,
+          "current_wood": 39,
+          "quarters": 0,
+          "total_income": 426,
+          "total_delivered": 0,
+          "town": 1,
+          "town_xy": 2928,
+          "town_houses": 29,
+          "town_population": 1286,
+          "industry0_id": 0,
+          "industry0_type": 3,
+          "industry0_tile": 903,
+          "industry0_width": 5,
+          "industry0_height": 5,
+          "industry0_cargo": 7,
+          "industry0_waiting": 0,
+          "industry0_rate": 13,
+          "industry0_produced": 0,
+          "industry0_transported": 0,
+          "industry1_id": 1,
+          "industry1_type": 2,
+          "industry1_tile": 986,
+          "industry1_width": 3,
+          "industry1_height": 3,
+          "industry1_cargo": 5,
+          "industry1_waiting": 0,
+          "industry1_rate": 0,
+          "industry1_produced": 0,
+          "industry1_transported": 0,
+          "station0_id": 1,
+          "station0_tile": 1306,
+          "station0_owner": 0,
+          "station0_town": 0,
+          "station0_goods": 0,
+          "station0_fraction": 0,
+          "station0_rating": 255,
+          "station0_speed": 80,
+          "station0_status": 2,
+          "station1_id": 2,
+          "station1_tile": 5384,
+          "station1_owner": 0,
+          "station1_town": 0,
+          "station1_goods": 0,
+          "station1_fraction": 0,
+          "station1_rating": 175,
+          "station1_speed": 130,
+          "station1_status": 2,
+          "station2_id": 3,
+          "station2_tile": 5662,
+          "station2_owner": 0,
+          "station2_town": 0,
+          "station2_goods": 0,
+          "station2_fraction": 0,
+          "station2_rating": 175,
+          "station2_speed": 80,
+          "station2_status": 0,
+          "station3_id": 4,
+          "station3_tile": 2540,
+          "station3_owner": 0,
+          "station3_town": 1,
+          "station3_goods": 0,
+          "station3_fraction": 0,
+          "station3_rating": 175,
+          "station3_speed": 0,
+          "station3_status": 1,
+          "source": 0,
+          "carry": 825,
+          "consumed": 408063,
+          "packet0_units": 39,
+          "packet0_source": 1,
+          "packet0_source_type": 0,
+          "packet0_station": 1,
+          "packet0_age": 3,
+          "packet0_purpose": 0
+        },
+        "input": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-0.sav",
+          "bytes": 11568,
+          "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+        }
+      },
+      "native": [
+        {
+          "log": {
+            "path": "logs/tubes/crate-files/20261018-041306-fd8633ec24/baseline.log",
+            "bytes": 4085,
+            "sha256": "1f5e8dcdb544f0fcc0a2d929b75858a6895938e03b1a0c831f3b510c05e3b0c6"
+          },
+          "assertions": 204,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-1.sav",
+            "bytes": 11564,
+            "sha256": "99de0ea16febb1c7111845a84fb1d9d9839a87c4effd59b9a90d60dfcef7ba29"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-041306-fd8633ec24/saves/crate-useful-2-1-inspect.sav",
+            "bytes": 11660,
+            "sha256": "649d982d438587c3e7a4125bde2a3d90ae0a1fc62daa0e18c254506709cf3034"
+          },
+          "action": "inspect",
+          "observed_snapshot": {
+            "cargo5_weight": 8,
+            "cargo5_multiplier": 512,
+            "cargo5_payment": 6144,
+            "cargo5_acceptance": 3,
+            "cargo7_weight": 16,
+            "cargo7_multiplier": 256,
+            "cargo7_payment": 5005,
+            "cargo7_acceptance": 0,
+            "running_train_price": 3900,
+            "utility": 10449060526698474979,
+            "binding": 2947021426311322076,
+            "invoice": 16859060073014920552,
+            "tick": 5460,
+            "calendar": 721354,
+            "calendar_fraction": 0,
+            "calendar_year": 1975,
+            "calendar_month": 0,
+            "economy": 721427,
+            "economy_fraction": 58,
+            "economy_year": 1975,
+            "economy_month": 2,
+            "economy_days": 14,
+            "random0": 187233087,
+            "random1": 3610627658,
+            "vehicles": 5,
+            "packets": 1,
+            "part0_id": 0,
+            "part0_first": 0,
+            "part0_engine": 260,
+            "part0_owner": 0,
+            "part0_cargo": 1,
+            "part0_units": 0,
+            "part0_tile": 5390,
+            "part0_layer": 1,
+            "part0_x": 232,
+            "part0_y": 1352,
+            "part0_z": 0,
+            "part0_direction": 5,
+            "part0_track": 1,
+            "part0_speed": 80,
+            "part0_subspeed": 192,
+            "part0_progress": 65,
+            "part0_status": 9,
+            "part0_flags": 0,
+            "part0_order": 2,
+            "part0_destination": 1,
+            "part0_order_index": 3,
+            "part0_dest_tile": 1312,
+            "part0_profit": 18446744073709530273,
+            "part1_id": 1,
+            "part1_first": 0,
+            "part1_engine": 261,
+            "part1_owner": 0,
+            "part1_cargo": 5,
+            "part1_units": 0,
+            "part1_tile": 5390,
+            "part1_layer": 1,
+            "part1_x": 224,
+            "part1_y": 1352,
+            "part1_z": 0,
+            "part1_direction": 5,
+            "part1_track": 1,
+            "part1_speed": 0,
+            "part1_subspeed": 0,
+            "part1_progress": 0,
+            "part1_status": 8,
+            "part1_flags": 0,
+            "part1_order": 0,
+            "part1_destination": 0,
+            "part1_order_index": 0,
+            "part1_dest_tile": 4294967295,
+            "part1_profit": 0,
+            "part2_id": 2,
+            "part2_first": 2,
+            "part2_engine": 267,
+            "part2_owner": 0,
+            "part2_cargo": 5,
+            "part2_units": 39,
+            "part2_tile": 5642,
+            "part2_layer": 1,
+            "part2_x": 161,
+            "part2_y": 1416,
+            "part2_z": 0,
+            "part2_direction": 5,
+            "part2_track": 1,
+            "part2_speed": 118,
+            "part2_subspeed": 189,
+            "part2_progress": 107,
+            "part2_status": 8,
+            "part2_flags": 0,
+            "part2_order": 1,
+            "part2_destination": 3,
+            "part2_order_index": 1,
+            "part2_dest_tile": 5662,
+            "part2_profit": 18446744073709533539,
+            "part3_id": 3,
+            "part3_first": 3,
+            "part3_engine": 260,
+            "part3_owner": 0,
+            "part3_cargo": 1,
+            "part3_units": 0,
+            "part3_tile": 1831,
+            "part3_layer": 0,
+            "part3_x": 630,
+            "part3_y": 462,
+            "part3_z": 0,
+            "part3_direction": 0,
+            "part3_track": 32,
+            "part3_speed": 80,
+            "part3_subspeed": 48,
+            "part3_progress": 18,
+            "part3_status": 8,
+            "part3_flags": 128,
+            "part3_order": 2,
+            "part3_destination": 5,
+            "part3_order_index": 2,
+            "part3_dest_tile": 5914,
+            "part3_profit": 18446744073709530221,
+            "part4_id": 4,
+            "part4_first": 3,
+            "part4_engine": 261,
+            "part4_owner": 0,
+            "part4_cargo": 5,
+            "part4_units": 0,
+            "part4_tile": 1895,
+            "part4_layer": 0,
+            "part4_x": 632,
+            "part4_y": 470,
+            "part4_z": 0,
+            "part4_direction": 7,
+            "part4_track": 2,
+            "part4_speed": 0,
+            "part4_subspeed": 0,
+            "part4_progress": 0,
+            "part4_status": 8,
+            "part4_flags": 0,
+            "part4_order": 0,
+            "part4_destination": 0,
+            "part4_order_index": 0,
+            "part4_dest_tile": 4294967295,
+            "part4_profit": 0,
+            "cash": 412747,
+            "current_income": 426,
+            "current_expenses": 18446744073709551149,
+            "current_goods": 0,
+            "current_wood": 39,
+            "quarters": 0,
+            "total_income": 426,
+            "total_delivered": 0,
+            "town": 1,
+            "town_xy": 2928,
+            "town_houses": 29,
+            "town_population": 1286,
+            "industry0_id": 0,
+            "industry0_type": 3,
+            "industry0_tile": 903,
+            "industry0_width": 5,
+            "industry0_height": 5,
+            "industry0_cargo": 7,
+            "industry0_waiting": 0,
+            "industry0_rate": 13,
+            "industry0_produced": 0,
+            "industry0_transported": 0,
+            "industry1_id": 1,
+            "industry1_type": 2,
+            "industry1_tile": 986,
+            "industry1_width": 3,
+            "industry1_height": 3,
+            "industry1_cargo": 5,
+            "industry1_waiting": 0,
+            "industry1_rate": 0,
+            "industry1_produced": 0,
+            "industry1_transported": 0,
+            "station0_id": 1,
+            "station0_tile": 1306,
+            "station0_owner": 0,
+            "station0_town": 0,
+            "station0_goods": 0,
+            "station0_fraction": 0,
+            "station0_rating": 255,
+            "station0_speed": 80,
+            "station0_status": 2,
+            "station1_id": 2,
+            "station1_tile": 5384,
+            "station1_owner": 0,
+            "station1_town": 0,
+            "station1_goods": 0,
+            "station1_fraction": 0,
+            "station1_rating": 175,
+            "station1_speed": 130,
+            "station1_status": 2,
+            "station2_id": 3,
+            "station2_tile": 5662,
+            "station2_owner": 0,
+            "station2_town": 0,
+            "station2_goods": 0,
+            "station2_fraction": 0,
+            "station2_rating": 175,
+            "station2_speed": 80,
+            "station2_status": 0,
+            "station3_id": 4,
+            "station3_tile": 2540,
+            "station3_owner": 0,
+            "station3_town": 1,
+            "station3_goods": 0,
+            "station3_fraction": 0,
+            "station3_rating": 175,
+            "station3_speed": 0,
+            "station3_status": 1,
+            "source": 0,
+            "carry": 800,
+            "consumed": 408466,
+            "packet0_units": 39,
+            "packet0_source": 1,
+            "packet0_source_type": 0,
+            "packet0_station": 1,
+            "packet0_age": 3,
+            "packet0_purpose": 0
+          }
+        },
+        {
+          "log": {
+            "path": "logs/tubes/crate-files/20261018-041306-fd8633ec24/continued.log",
+            "bytes": 4079,
+            "sha256": "1505992ecdb930fda55915b62a0961edca6a981466dbc42c727cab10b60ac4c1"
+          },
+          "assertions": 208,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-0.sav",
+            "bytes": 11568,
+            "sha256": "d60df69dc6c03cbe2f344da65714517a0fda253a2f1b65f089a8e93dc87da9b5"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/crate-files/20261018-041306-fd8633ec24/saves/crate-useful-2-0-step.sav",
+            "bytes": 11660,
+            "sha256": "2547aa648ffb579f13f5d066d6d11f2eade5903249e5fca90f11a800a958ba19"
+          },
+          "action": "step",
+          "observed_snapshot": {
+            "cargo5_weight": 8,
+            "cargo5_multiplier": 512,
+            "cargo5_payment": 6144,
+            "cargo5_acceptance": 3,
+            "cargo7_weight": 16,
+            "cargo7_multiplier": 256,
+            "cargo7_payment": 5005,
+            "cargo7_acceptance": 0,
+            "running_train_price": 3900,
+            "utility": 10449060526698474979,
+            "binding": 2947021426311322076,
+            "invoice": 16859060073014920552,
+            "tick": 5460,
+            "calendar": 721354,
+            "calendar_fraction": 0,
+            "calendar_year": 1975,
+            "calendar_month": 0,
+            "economy": 721427,
+            "economy_fraction": 58,
+            "economy_year": 1975,
+            "economy_month": 2,
+            "economy_days": 14,
+            "random0": 187233087,
+            "random1": 3610627658,
+            "vehicles": 5,
+            "packets": 1,
+            "part0_id": 0,
+            "part0_first": 0,
+            "part0_engine": 260,
+            "part0_owner": 0,
+            "part0_cargo": 1,
+            "part0_units": 0,
+            "part0_tile": 5390,
+            "part0_layer": 1,
+            "part0_x": 232,
+            "part0_y": 1352,
+            "part0_z": 0,
+            "part0_direction": 5,
+            "part0_track": 1,
+            "part0_speed": 80,
+            "part0_subspeed": 192,
+            "part0_progress": 65,
+            "part0_status": 9,
+            "part0_flags": 0,
+            "part0_order": 2,
+            "part0_destination": 1,
+            "part0_order_index": 3,
+            "part0_dest_tile": 1312,
+            "part0_profit": 18446744073709530273,
+            "part1_id": 1,
+            "part1_first": 0,
+            "part1_engine": 261,
+            "part1_owner": 0,
+            "part1_cargo": 5,
+            "part1_units": 0,
+            "part1_tile": 5390,
+            "part1_layer": 1,
+            "part1_x": 224,
+            "part1_y": 1352,
+            "part1_z": 0,
+            "part1_direction": 5,
+            "part1_track": 1,
+            "part1_speed": 0,
+            "part1_subspeed": 0,
+            "part1_progress": 0,
+            "part1_status": 8,
+            "part1_flags": 0,
+            "part1_order": 0,
+            "part1_destination": 0,
+            "part1_order_index": 0,
+            "part1_dest_tile": 4294967295,
+            "part1_profit": 0,
+            "part2_id": 2,
+            "part2_first": 2,
+            "part2_engine": 267,
+            "part2_owner": 0,
+            "part2_cargo": 5,
+            "part2_units": 39,
+            "part2_tile": 5642,
+            "part2_layer": 1,
+            "part2_x": 161,
+            "part2_y": 1416,
+            "part2_z": 0,
+            "part2_direction": 5,
+            "part2_track": 1,
+            "part2_speed": 118,
+            "part2_subspeed": 189,
+            "part2_progress": 107,
+            "part2_status": 8,
+            "part2_flags": 0,
+            "part2_order": 1,
+            "part2_destination": 3,
+            "part2_order_index": 1,
+            "part2_dest_tile": 5662,
+            "part2_profit": 18446744073709533539,
+            "part3_id": 3,
+            "part3_first": 3,
+            "part3_engine": 260,
+            "part3_owner": 0,
+            "part3_cargo": 1,
+            "part3_units": 0,
+            "part3_tile": 1831,
+            "part3_layer": 0,
+            "part3_x": 630,
+            "part3_y": 462,
+            "part3_z": 0,
+            "part3_direction": 0,
+            "part3_track": 32,
+            "part3_speed": 80,
+            "part3_subspeed": 48,
+            "part3_progress": 18,
+            "part3_status": 8,
+            "part3_flags": 128,
+            "part3_order": 2,
+            "part3_destination": 5,
+            "part3_order_index": 2,
+            "part3_dest_tile": 5914,
+            "part3_profit": 18446744073709530221,
+            "part4_id": 4,
+            "part4_first": 3,
+            "part4_engine": 261,
+            "part4_owner": 0,
+            "part4_cargo": 5,
+            "part4_units": 0,
+            "part4_tile": 1895,
+            "part4_layer": 0,
+            "part4_x": 632,
+            "part4_y": 470,
+            "part4_z": 0,
+            "part4_direction": 7,
+            "part4_track": 2,
+            "part4_speed": 0,
+            "part4_subspeed": 0,
+            "part4_progress": 0,
+            "part4_status": 8,
+            "part4_flags": 0,
+            "part4_order": 0,
+            "part4_destination": 0,
+            "part4_order_index": 0,
+            "part4_dest_tile": 4294967295,
+            "part4_profit": 0,
+            "cash": 412747,
+            "current_income": 426,
+            "current_expenses": 18446744073709551149,
+            "current_goods": 0,
+            "current_wood": 39,
+            "quarters": 0,
+            "total_income": 426,
+            "total_delivered": 0,
+            "town": 1,
+            "town_xy": 2928,
+            "town_houses": 29,
+            "town_population": 1286,
+            "industry0_id": 0,
+            "industry0_type": 3,
+            "industry0_tile": 903,
+            "industry0_width": 5,
+            "industry0_height": 5,
+            "industry0_cargo": 7,
+            "industry0_waiting": 0,
+            "industry0_rate": 13,
+            "industry0_produced": 0,
+            "industry0_transported": 0,
+            "industry1_id": 1,
+            "industry1_type": 2,
+            "industry1_tile": 986,
+            "industry1_width": 3,
+            "industry1_height": 3,
+            "industry1_cargo": 5,
+            "industry1_waiting": 0,
+            "industry1_rate": 0,
+            "industry1_produced": 0,
+            "industry1_transported": 0,
+            "station0_id": 1,
+            "station0_tile": 1306,
+            "station0_owner": 0,
+            "station0_town": 0,
+            "station0_goods": 0,
+            "station0_fraction": 0,
+            "station0_rating": 255,
+            "station0_speed": 80,
+            "station0_status": 2,
+            "station1_id": 2,
+            "station1_tile": 5384,
+            "station1_owner": 0,
+            "station1_town": 0,
+            "station1_goods": 0,
+            "station1_fraction": 0,
+            "station1_rating": 175,
+            "station1_speed": 130,
+            "station1_status": 2,
+            "station2_id": 3,
+            "station2_tile": 5662,
+            "station2_owner": 0,
+            "station2_town": 0,
+            "station2_goods": 0,
+            "station2_fraction": 0,
+            "station2_rating": 175,
+            "station2_speed": 80,
+            "station2_status": 0,
+            "station3_id": 4,
+            "station3_tile": 2540,
+            "station3_owner": 0,
+            "station3_town": 1,
+            "station3_goods": 0,
+            "station3_fraction": 0,
+            "station3_rating": 175,
+            "station3_speed": 0,
+            "station3_status": 1,
+            "source": 0,
+            "carry": 800,
+            "consumed": 408466,
+            "packet0_units": 39,
+            "packet0_source": 1,
+            "packet0_source_type": 0,
+            "packet0_station": 1,
+            "packet0_age": 3,
+            "packet0_purpose": 0
+          }
+        }
+      ],
+      "uninterrupted_baseline": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-040312-4a9058f7e8/saves/crate-useful-2-1.sav",
+        "bytes": 11564,
+        "sha256": "99de0ea16febb1c7111845a84fb1d9d9839a87c4effd59b9a90d60dfcef7ba29"
+      },
+      "next_step": {
+        "complete_chunks_exact": 125,
+        "native_load_events": [
+          {
+            "action": "Load",
+            "baseline_tick": 5460,
+            "resumed_tick": 5459,
+            "other_bytes_exact": true
+          }
+        ]
+      }
+    }
+  ],
+  "complete_world_pairs": [
+    {
+      "boundary": "before",
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-before.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-raster-before.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "complete_chunks_exact": 126
+    },
+    {
+      "boundary": "after",
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-after.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-raster-after.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "complete_chunks_exact": 126
+    },
+    {
+      "boundary": "output",
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-useful-2-0-raster.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/saves/crate-useful-2-0-raster.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "complete_chunks_exact": 126
+    }
+  ],
+  "cross_build_frames": [
+    {
+      "zoom": 1,
+      "repeat": 0,
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-1-0.png",
+        "bytes": 40440,
+        "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-1-0.png",
+        "bytes": 40440,
+        "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+      },
+      "rgb_sha256": "23141f87815625202a5cc57ee8e31c30da7f6f536c344c7efc9bf9157408b6f8",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 1,
+      "repeat": 1,
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-1-1.png",
+        "bytes": 40440,
+        "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-1-1.png",
+        "bytes": 40440,
+        "sha256": "91d1ad17f71daf12c0f1c88f5881b6642a034a4192e9c1dacc14784156238294"
+      },
+      "rgb_sha256": "23141f87815625202a5cc57ee8e31c30da7f6f536c344c7efc9bf9157408b6f8",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 2,
+      "repeat": 0,
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-2-0.png",
+        "bytes": 42088,
+        "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-2-0.png",
+        "bytes": 42088,
+        "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+      },
+      "rgb_sha256": "ccc6f315dd40dddbbde5b45e57426f6a4ad62227de268e558ca9a0188408a4b2",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 2,
+      "repeat": 1,
+      "left": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/images/tube-travel-5-zoom-2-1.png",
+        "bytes": 42088,
+        "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041230-bbe2157e64/images/tube-travel-5-zoom-2-1.png",
+        "bytes": 42088,
+        "sha256": "47778536d05e10e252f085baf08f42e7d074d641cb6407ee0b311a962a7f3f4a"
+      },
+      "rgb_sha256": "ccc6f315dd40dddbbde5b45e57426f6a4ad62227de268e558ca9a0188408a4b2",
+      "pixels_exact": true
+    }
+  ],
+  "exact_visible_hull_pixels": 2380,
+  "exact_occluding_rim_pixels": 10,
+  "exact_identities_verified": 107,
+  "builds": [
+    {
+      "path": "logs/tubes/crate-files/20261018-native-01/debug-test-build-12.log",
+      "bytes": 1338,
+      "sha256": "bc19ac8160060b2ac781c8fd7e46f866072995d855c6f9bea0b9a238b5f409c0"
+    },
+    {
+      "path": "logs/tubes/crate-files/20261018-native-01/optimized-test-build-2.log",
+      "bytes": 1410,
+      "sha256": "f70bfdb8bcc1896880f214e36d7723b3eebaa6710d4799edf308a2188ec2750c"
+    },
+    {
+      "path": "logs/tubes/crate-files/20261018-native-01/debug-game-build-2.log",
+      "bytes": 1364,
+      "sha256": "293bf1464f200172ced85c673f2c286247d5e768a96cff639605844b102a5cf2"
+    },
+    {
+      "path": "logs/tubes/crate-files/20261018-native-01/optimized-game-build-2.log",
+      "bytes": 1436,
+      "sha256": "ea8fc181a3d1675489984e79035b459674181278e831758aca36c662cb6ad2b1"
+    }
+  ],
+  "native_version": 434,
+  "packed_art": {
+    "path": "media/baseset/openttd.grf",
+    "bytes": 14353223,
+    "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+  },
+  "binaries": [
+    {
+      "path": "build/Debug/openttd.exe",
+      "bytes": 52044800,
+      "sha256": "8ecacc7dc66c123a73f1e63e8b7ae49f67d7fc9769c56e8b21294cac38c45d65"
+    },
+    {
+      "path": "build/Debug/openttd_test.exe",
+      "bytes": 91079680,
+      "sha256": "6374303f96ac84de738c575bb525d928993a333cc7ac65392272ec2625c0e7d4"
+    },
+    {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "bytes": 14237184,
+      "sha256": "25ebe300883fd8138e059cbc290fa3825f149daddac755d97f26bdbf10a5ce0c"
+    },
+    {
+      "path": "build/RelWithDebInfo/openttd_test.exe",
+      "bytes": 42973184,
+      "sha256": "771a72c92c6d12369ed6cbfdc2aa9e56895877543eee527aa8cbaf4007bc1714"
+    }
+  ],
+  "file_receipt": {
+    "path": "logs/tubes/crate-files/20261018-native-01/verification.json",
+    "bytes": 972597,
+    "sha256": "34eaf3f165d8b4c2b712c619c5481b94b0fdc3c0288a03f96d937b5a01f99457"
+  },
+  "producer_receipt": {
+    "path": "logs/tubes/crate-route/20261018-native-01/verification.json",
+    "bytes": 42587,
+    "sha256": "1d58ae27a4a7ef37cb2d2564e791c6f813d82e0a8e53bdd4ced89ad7cf3c424f"
+  },
+  "fixture_classification": "Prepared excavated floor, completed original machinery, native generated town and commissioned conventional shafts remain explicit boundary inputs. Actual1975 Forest/Wood/Sawmill production earns39 original Goods, conveyed through conventional feed, layer-local Crate and conventional Surface town delivery. Native tariffs/recurring costs match saved inflation. All five original parts, packets, source industries, town and company history remain native-owned. Rendering earns no work and changes no original owner.",
+  "remaining": "Original15.2 retains the three later introduction-date models and Underground/Deep conventional chain; Group16 actual TBM/bootstrap, runtime gallery and human/operator acceptance remain separate."
+}

@@ -5,6 +5,8 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md native loaded queue and cargo ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23EC explicit generated-cache continuation.
  * @file tbm_logistics_runtime.cpp Isolated real startup/loader/game-loop logistics continuation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Groups 13A/13C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
@@ -68,6 +70,7 @@ public:
 	std::unique_ptr<TBMExitReplay> exit_replay; ///< Optional Group9 loaded terminal handover; native loop retains all simulation ownership.
 	std::filesystem::path output; ///< Fresh repository-local evidence prefix, supplied by the external focused runner.
 	VehicleID hauler = VehicleID::Invalid(); ///< Actual loaded assigned front engine.
+	std::map<VehicleID, uint32_t> occupied_peers; ///< Saved peer exchange counts for the explicit ordinary occupied-FIFO case; observation grants no turn.
 	uint32_t initial_exchanges = 0; ///< Actual initial cycle count, never changed by the observer.
 	uint ticks = 0; ///< Number of real frames observed after the startup command.
 	bool started = false; ///< Startup has accepted the actual reconstructed public owners.
@@ -430,6 +433,17 @@ public:
 		REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));
 		this->hauler = assignment.hauler;
 		this->initial_exchanges = assignment.exchanges;
+		if (std::getenv("OTTD_TBM_OCCUPIED_CACHE") != nullptr) {
+			REQUIRE(assignments.size() == 2);
+			REQUIRE(first_turn != assignments.end());
+			REQUIRE(GetTBMExchangeTurn(assignment.bay)->hauler == assignment.hauler);
+			// The saved peer may wait in the same physical source, but cannot steal the original short-empty holder's next exchange.
+			for (const auto &peer : assignments) {
+				if (peer.hauler == assignment.hauler) continue;
+				REQUIRE(peer.wait == TBMHaulerWait::OccupiedBay);
+				this->occupied_peers.emplace(peer.hauler, peer.exchanges);
+			}
+		}
 		this->native_orders = std::getenv("OTTD_TBM_NATIVE_ORDERS") != nullptr;
 		this->hangar_reassigned = std::getenv("OTTD_TBM_HANGAR_REASSIGNED") != nullptr;
 		if (std::getenv("OTTD_TBM_HANGAR_RELOAD") != nullptr || this->native_orders || this->hangar_reassigned) {
@@ -609,6 +623,12 @@ public:
 		}
 		if (assignment->exchanges == this->initial_exchanges) return;
 		CHECK(assignment->exchanges == this->initial_exchanges + 1);
+		// Actual next-exchange observation must retain every saved peer's cycle count, proving native FIFO authority across loading.
+		for (const auto &[hauler, exchanges] : this->occupied_peers) {
+			const auto *peer = GetTBMExchangeAssignmentForHauler(hauler);
+			REQUIRE(peer != nullptr);
+			CHECK(peer->exchanges == exchanges);
+		}
 		this->Save("-next-exchange");
 		fmt::print("LOGISTICS_NEXT_EXCHANGE ticks={} exchanges={} phase={} wait={}\n", this->ticks,
 			assignment->exchanges, to_underlying(assignment->phase), to_underlying(assignment->wait));
@@ -640,13 +660,19 @@ TEST_CASE("Loaded source logistics reaches its next physical exchange", "[.tbm-l
 	REQUIRE(source != nullptr);
 	REQUIRE(output != nullptr);
 	const auto root = FindTestRepositoryRoot();
-	const auto validated_source = ResolveTestInputPath(source);
+	// An explicit current producer/reader invocation may own temporary saves in its bounded test cache.
+	// Retained and ordinary prior-run inputs keep the catalogue/hash resolver and cannot enter this cache-only branch.
+	const char *cache = std::getenv("OTTD_TBM_OCCUPIED_CACHE");
+	const auto cache_owner = cache == nullptr ? std::filesystem::path{} :
+		RequireTestArtifactWithin(cache, root / "test-cache/merge-supply");
+	const auto validated_source = cache == nullptr ? ResolveTestInputPath(source) : RequireTestArtifactWithin(source, cache_owner);
 	const auto source_path = validated_source.string();
 	REQUIRE(std::filesystem::is_regular_file(validated_source));
 	// The caller explicitly selects an immutable/prior-run input. Continuations
 	// belong only to this invocation's checkpoint directory, never to fixtures.
 	const auto artifacts = GetTestCaseArtifactPaths("tbm", "logistics");
-	REQUIRE(RequireTestArtifactWithin(output, artifacts.saves).parent_path() == artifacts.saves);
+	const auto output_owner = cache == nullptr ? artifacts.saves : cache_owner;
+	REQUIRE(RequireTestArtifactWithin(output, output_owner).parent_path() == output_owner);
 	LogisticsRuntimeProbe probe;
 	probe.output = output;
 	AutoRestoreBackup observer(_logistics_runtime_probe, &probe);
@@ -663,7 +689,10 @@ TEST_CASE("Loaded source logistics reaches its next physical exchange", "[.tbm-l
 	});
 	// Portal-only acceptance needs startup/reconstruction. Null video otherwise consumes its whole declared
 	// tick budget after an exit request, causing unrelated minutes of legacy traffic after the saved checkpoint.
-	const std::string_view video = std::getenv("OTTD_TBM_PORTAL_LOAD_ONLY") != nullptr ? "null:ticks=2" : "null:ticks=80000";
+	// The occupied FIFO input is already physically at its admitted source and needs only its next atomic exchange.
+	// Bound this selected observer well beyond that transition; its completion assertions still refuse a stalled case.
+	const std::string_view video = std::getenv("OTTD_TBM_PORTAL_LOAD_ONLY") != nullptr ? "null:ticks=2" :
+		cache != nullptr ? "null:ticks=2048" : "null:ticks=80000";
 	const bool release_run = std::getenv("OTTD_TBM_RELEASE_RUN") != nullptr;
 	const std::string config = GetTestRuntimeConfig(std::getenv("OTTD_M1_LOOP_ART") != nullptr || release_run ? "native-art.cfg" : "grftest.cfg").string();
 	std::vector<std::string_view> arguments = {"Debug/openttd_test.exe", "-v", video,

@@ -11,28 +11,28 @@ import os
 from pathlib import Path
 import subprocess
 
-from space_checkpoint import ROOT, CONFIGURATIONS, SpaceCheckpoint, load_checkpoint, verify_checkpoint
+from space_checkpoint import ROOT, CONFIGURATIONS, SpaceCheckpoint, SpaceFoundation, load_checkpoint
 from space_checkpoint_foundation import verify_static_result, verify_console_projection, STATIC_SOURCE_FILES as SOURCE_FILES
-from space_checkpoint_load import checked, identity, verify_load_result
+from space_checkpoint_load import checked, identity, verify_load_result, selected_checkpoint
 from artifact_paths import create_run_context
 from runner import console_executable, run_native
 
 def execute_static_check(checkpoint, configuration, application, native_reference):
     """Run the ordinary paused save seam against the explicitly selected original.
 
-    @param checkpoint Typed immutable original seal.
+    @param checkpoint Typed original seal or exact selected continuation foundation.
     @param configuration Independently linked Debug/RelWithDebInfo selection.
     @param application Actual current ordinary build image; no historical fallback.
     @param native_reference Same build/configuration's successful dedicated native-load receipt.
     @return Published ordinary static receipt identity after full current validation.
     """
-    if not isinstance(checkpoint, SpaceCheckpoint):
+    if not isinstance(checkpoint, (SpaceCheckpoint, SpaceFoundation)):
         raise TypeError("ordinary restore requires a typed original checkpoint")
     # The typed selection and explicit image must agree before any runtime is
     # reserved; the other configuration's successful load is not interchangeable.
     if configuration not in CONFIGURATIONS or checkpoint.configuration not in (None, configuration):
         raise ValueError("ordinary restore disagrees with typed configuration")
-    verify_checkpoint(checkpoint)
+    selected = selected_checkpoint(checkpoint, configuration)
     root = checkpoint.root
     native = json.loads(checked(native_reference, root).read_text(encoding="utf-8"))
     verify_load_result(native, root)
@@ -42,8 +42,10 @@ def execute_static_check(checkpoint, configuration, application, native_referenc
     application = checked(app_reference, root)
     if application.parent.name != configuration or application.name not in ("openttd.exe", "openttd"):
         raise ValueError("ordinary restore requires the selected current game image")
-    seal = json.loads(checkpoint.manifest_path.read_text(encoding="utf-8"))
-    source_reference = seal["configurations"][configuration]["save"]
+    # A merged ordinary restore consumes the qualified native441successor.
+    # Its receipt explicitly distinguishes this from loading the original440;
+    # the preceding native process binds that exact selected original instead.
+    source_reference = native["output"] if isinstance(checkpoint, SpaceFoundation) else selected["save"]
     source = checked(source_reference, root)
     sources = [identity(root / path, root) for path in SOURCE_FILES]
     context = create_run_context("space", "checkpoint-static", root=root)

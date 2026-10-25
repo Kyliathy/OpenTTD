@@ -67,6 +67,11 @@ struct SpaceManifestRecord {
 };
 /** @param supply Explicit physical compartment kind. @return Actual runtime label slot, or invalid when unsupported. */
 CargoType GetSpaceSupplyCargo(SpaceSupply supply);
+/** Resolve an immutable compartment meaning without consulting configured cargo slots.
+ * @param supply Original physical compartment kind.
+ * @return Declared cargo label, or CT_INVALID for an unsupported compartment.
+ */
+CargoLabel GetSpaceSupplyLabel(SpaceSupply supply);
 /** @param model Canonical logical hull model. @param supply Explicit physical compartment kind. @return Its frozen whole-unit capacity, without granting stock. */
 uint16_t GetSpaceSupplyCapacity(uint16_t model, SpaceSupply supply);
 /** Validate the heavy supply capability at the source-version boundary without consulting native pools.

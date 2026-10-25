@@ -6,6 +6,8 @@ This page retains the delivered layer, [geology/excavation](../../upgrades/2026-
 
 ## Layers and rules
 
+Current merged boundary,2026-10-25: the [M2O23handoff](../../upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md) records delivered face/bay operation, canonical paid supply, all five capsule consumers, geothermal/town/Spacecontention, writer441, real peers and selected native performance/art/recovery. Earlier dated component/pending statements retain their historical scope. [Storage and reconstruction](../archi-historical-debug.md) remain one authority; player camera selection still has no simulation ownership.
+
 `MapLayer` in `src/map_layer_type.h` has immutable values `Surface = 0`, `Underground = 1`, `Space = 2`, `DeepUnderground = 3`, then `End`, with `Invalid = 0xFF`. `MAX_MAP_LAYERS` is 4. Deep Underground was appended after Space so existing saved tile indices retain their meaning. Menu order is separate: Surface, Underground, Deep Underground, Outer Space, defined by `_map_layer_display_order` in `src/map_layer_gui.cpp`.
 
 | Menu order | Layer / storage value | Terrain and permitted construction |
@@ -241,6 +243,18 @@ Focused Debug evidence and actual loader artifacts are recorded in [execution no
 
 ## Code map
 
+Final merged joins retain their existing owners:
+
+| Owner | Responsibility |
+| --- | --- |
+| [`surface_supply_order.cpp`](../../../../src/surface_supply_order.cpp), [`surface_supply_merged_wire.cpp`](../../../../src/surface_supply_merged_wire.cpp) | One tagged Native/LegacyBreceipt book, full native custody, Pending-only new refunds and finite inherited rights. |
+| [`tbm_exchange.cpp`](../../../../src/tbm_exchange.cpp) | Physical face/bay admission and whole native transfer; job/train/cargo ownership stays with the original pools. |
+| [`transport_tube_fleet.cpp`](../../../../src/transport_tube_fleet.cpp), [`transport_tube_readiness.cpp`](../../../../src/transport_tube_readiness.cpp) | Existing capsule/fleet/provider roles and company-scoped terminal readiness, including dedicated cold loading. |
+| [`utility_power.cpp`](../../../../src/utility_power.cpp) | Existing common interval allocation/settlement with geothermal source publication and all Space/ground consumers; no parallel scheduler. |
+| [`multilayer_state.cpp`](../../../../src/multilayer_state.cpp) | Complete128-family canonical comparison used by save/reload and matched real peers. |
+| [`ground_sprite_assets.h`](../../../../src/table/ground_sprite_assets.h) | Exclusive native Groundbound22045; preserved M1/preview/Space/orbital/launch prefix and one public packing manifest. |
+
+
 Paths below are relative to the repository root.
 
 | Piece | Where |
@@ -300,6 +314,19 @@ Plan closure includes explicitly skipped operator/review gates; those skips are 
 
 [`The implementation handoff`](../../upgrades/2026-10/m2o23-1-come-space-h-cargo-custody.md) names the physical fields and component proof boundary. Receipt restoration is not a purchase or dispatch; actual Load/Reserve/Hub transfers record first departure once, and returned legacy stock cannot regain source eligibility. New purchases keep A's Pending-only refund rule. Group15 refunds only the recaptured exact unshipped legacy source count at its saved tariff through the native command kernel, with wallet overflow and stale requests refused before removal. Group16 retains the entire legacy prefix for the world lifetime and counts its original quantity against the original purchase-day cap, including refunded rows. Actual takeover carries that history to the successor even above its new-admission limit. Berth removal or movement of the same owned Surface sign retains original stock rights; source deletion or company loss closes them without credit before identity reuse. Native Pending settlement and launch/hub lifecycle hooks remain unchanged. Purchased native and migrated packets share permanent non-paying purpose through rating, reservations, hub moves and accepted delivery statistics. Partial Deliver-to-Transfer reassignment preserves the exact existing prefix and splits only the requested boundary; unavailable packet capacity refuses before route/action mutation. Tube transfer capacity has one owner in `transport_tube_cargo`:1024 units per actual shared station/cargo, including native reservations and (at staging) pending arrivals. The exact-destination adapter applies the same calculation only to that station's real receiving list; zero room and non-applicability are distinct. Original B file decoding, merged writing and genuine saved-world acceptance remain later merge gates; these component contracts do not reopen protected Space continuation work. Test tooling remains beside tests and rebuildable diagnostics under `test-cache/merge-supply/`, following [storage ownership](../archi-historical-debug.md#storage-ownership).
 
+## Unfinished geological work replacement
+
+Plan2 Group23C adds `ReplayExcavationRoute`, `PlanExcavationJobReplacement` and
+`ReplaceExcavationJobRemainder` to the original excavation owners. Completed cuts,
+paid cost, native cargo and finite deposits remain unchanged. Only unfinished
+claims are replaced; released unopened cells become Solid, while open floor never
+reverts. The first new cut retains partial work only if its complete geometry is
+identical. Current actual load seeds new exchange breakpoints; no second stock or
+geology owner is created. Own unfinished claims remain chargeable rock through
+`QuoteExcavationCells`; foreign jobs' entire swept clearance remains protected.
+Six focused native cases pass46224 assertions, including exact original cargo,
+cash/RNG and deposit conservation plus rebuilt-claim equality. Group23CB now connects bounded approaches and exact tunnel endpoints to native commission/extension quotes, with shared route-support and occupied-face admission. Missing permanent pieces, incompatible infrastructure and actual train blockers refuse before acceptance. Eleven focused cases pass220603 assertions. Group23CC now appends complete native command212, `ChangeTBMWork`, with a pure live quote and shared attached-spoil measurement. Revalidation binds completed cursor, geometry and participants; partial ticks remain valid, while another cut or changed work refuses. Existing phases and paid cargo remain intact; changed occupied face pieces refuse. Fifteen focused command/remainder/face-support cases pass121352 assertions. Group23D makes explicit face returns back along paid support and keeps final settlement blocked by a hauler anywhere in the corridor/pair. Native face/bay park, cancel, hangar and selected service/rejoin checks pass4 cases/142198 assertions. Claims survive a cancellation request and retire only after physical withdrawal and final disposal. Group23E proves the driven face wait survives work replacement and the original wreck/sale/occupied-exit hooks preserve native custody; its shared lifecycle/regression burst passes6 cases/213783 assertions. Group23EB adapts explicit finite harder-rock fixtures for genuinely recurring exchanges and verifies exact frozen counts, whole-project cost, completed depot storage and a fully reserved native face loop:10 focused cases/316134 assertions. Group23EC writes a fresh genuinely occupied FIFO file and runs two full native loads to the same next legal exchange, preserving engine mappings, physical vehicles, packets, work and cost owners while the waiting peer retains its count. The generated disk fixture preserves actual configured cargo dimensions and the normal default Space catalogue entry. Three isolated cases pass20272 assertions; both continuations exchange after2 actual frames and have identical resulting owners. No phase20 save dialect is activated. UI integration remains24.
+
 ## Merge face observations and activation boundary
 
 The four-plan integration route keeps completed Groups1-22D in [Plan1](../../upgrades/2026-10/m2o23-1-come-space.md), remaining domain/phase/scheduler Groups23-36 in [Plan2](../../upgrades/2026-10/m2o23-2-come-space.md), save/assets Groups37-53 in [Plan3](../../upgrades/2026-10/m2o23-3-come-space.md), and reconstruction/qualification Groups54-72 in [Plan4](../../upgrades/2026-10/m2o23-4-come-space.md). These file boundaries do not reassign native owners or expand any acceptance claim.
@@ -312,7 +339,7 @@ The four-plan integration route keeps completed Groups1-22D in [Plan1](../../upg
 
 Current focused proof covers original/appended phase identities, native reference/corridor observations, straight/corner/folded stands, invalid references, Source versus depot, held/empty returns and exact Standard/Deep clearance. The Deep case acquires actual model1 machinery,10 parts/native length80, with a5-cell hauler and16 earned cuts; declared pose/emptying/initial-floor components are not driven-route acceptance. Rebuild `openttd_tube_test` and run only the active tags `[tbm-merge-observation]`, `[tbm-face-stand]`, `[tbm-face-meeting]` or `[tbm-face-deep]`, with compact output beneath `test-cache/merge-supply/`.
 
-`AwaitFaceTransfer` is appended as identity20; original0-19 are unchanged. These groups do **not** activate its controller transitions or saved-state admission. Existing native validation still refuses that new installed phase. Whole transfer preflight/commit is implemented by21/21B; movement/portal/PBS integration is implemented by22-22D and actual phase activation remains23; original-file/merged-writer compatibility remains Plan3. No protected Space continuation or provisional Tube fleet is promoted by this component handoff.
+`AwaitFaceTransfer` is appended as identity20; original0-19 are unchanged. Plan2 Group23 now activates its native validation and phase transitions: the actual due cut chooses Face/Bay, transfer releases the cutter through any required support advance, and a lost stand returns through existing bay/withdrawal holds. The focused phase/whole-transfer burst passes6 cases/161570 assertions, including actual paid-cut entry and earned dwell. Whole transfer preflight/commit remains the21/21B owner; movement/portal/PBS remains22-22D. Group23B now proves the full Standard driven face/disposal/empty-return loop and frame-by-frame equality under actual native visible/hidden viewport selection. Its5-case focused burst, including affected existing loop cases, passes494099 assertions. Native camera positioning uses clipped refresh with mock sprite headers; this is simulation/camera proof, not raster or human visual acceptance. Original-file/merged-writer compatibility remains Plan3. No protected Space continuation or provisional Tube fleet is promoted by this component handoff.
 
 The existing `tbm_exchange` owner now exposes `DescribeTBMFaceTransfer`, `ValidateTBMFaceTransfer` and `ExecuteTBMFaceTransfer`, with the retained74-tick dwell. Pure admission requires a live loaded encounter, actual stand direction, intact stationary trains, whole Keep-only Earth/Rock stock, the hauler's actual matching empty set and conservative native split room. A refusal has no partial movement plan. Commit prepares destination vectors before shifting original packets, refreshes both native weight/acceleration/view owners, then updates the existing set/assignment once. Original wagon chains remain exact. Focused preflight/commit cases pass including a real boundary split with exact feeder shares, pool-limit/dwell refusal and empty retry. Until23 activates the new phase, these native components use an admitted loaded return and grant no installed face-wait or driven-cycle acceptance.
 
@@ -321,3 +348,169 @@ Groups22-22D connect the same native observations to movement. `IsTBMFaceTurnHol
 `GetLayerPortalMagazineExit` preserves whole-chain ingress/departure orientation. `MayTBMSupportCarry` requires native owner/class/permission, own or released support and actual cutter clearance. `IsLayerPortalOpenToNetwork` is shared by ordinary track status and signal blocks; commissioning ends keep separate local blocks while actual shaft movement updates each end. PBS uses only the exact admitted storage/stand direction. Return and post-transfer cutter holds protect departing haulers; a far exit cannot replace support while one remains inside.
 
 The existing `ObserveTBMHaulerInputs`/`StepTBMHaulerPhase`/`AdvanceTBMHauler` cycle now chooses complete face transfer or bay exchange, records the original origin visit and returns the actual emptied set. `BackUpTBMHauler` owns native braking/reversal and refuses any still-stored follower, independently of its caller. Lost-route recovery uses native two-end YAPF comparison only for an assigned running corridor leg; stored stale flags and a temporarily busy Source are not broken-line evidence. Focused headless components cover one transfer/turn, unchanged original orders/chains/provenance, capacity refusal, empty cutter clearance, partial storage and pending braking. Native access and signal cases also drive actual face path discovery and closed-pair local block changes. These component results do not certify installed face-wait operation, a complete driven disposal loop or visible/hidden continuation equality;23 must supply those proofs before the feature is declared integrated. Rebuild the selected `openttd_tube_test` target and run `[tbm-face-cycle]`, `[tbm-face-access]`, `[tbm-portal-signals]`, `[tbm-face-steering]` or `[tbm-face-turn]` only as relevant; reports remain reproducible disposable `test-cache/merge-supply/` output.
+
+
+## Cold generator machinery and retained history
+
+Merge25 installs the canonical dated Vent-Tap/Magma native definitions and paid
+whole-building construction. `geothermal_generator.h` owns original site,
+Industry, controller and paid-work history; `Industry::accepted` alone owns
+arrived materials. Funding213 consumes an active cold reservation and settles
+capital once. Planning214 and cancellation215 reserve/retire geometry without
+machinery, materials or energy. Cancelled/consumed site IDs remain historical;
+demolition never restores a consumed bill, capital or natural geology.
+
+The26 implementation extends native demolition/takeover and adds detached
+construction validation; its focused9-case/948-assertion burst passes. Removal refuses
+stored cargo, takeover preserves work, and abandonment suspends further work.
+`CaptureGeothermalGenerators`, `ValidateGeothermalGenerators`,
+`StageLoadedGeothermalGenerators` and `AcceptLoadedGeothermalGenerators` transfer
+the complete family without repair or a second inventory. Existing live bindings
+also protect site/controller lineage when an Industry pool ID is reused.
+`GetGeothermalGeneratorPort` and `HasGeothermalGeneratorInstalledPorts` inspect
+the original declared boundary and separately paid Heat/electrical cells; neither
+query installs a link or allocates an account.
+
+This cold handoff issues no generator utility identities. Groups27-30 retain
+atomic conversion, first account acquisition, coupled retirement, physical
+service and scheduling. Group29 must extend the construction lifecycle/staging
+checks to those actual issued utility roles. Plan3 retains original-writer
+dialects, same-file decoding, chunk registration, copied previews and real save
+round-trips; detached component staging grants none of that acceptance. Current
+focused build/test recipes and disposable `test-cache/merge-supply/` reports are
+recorded in [the merge execution record](../../upgrades/2026-10/m2o23-2-come-space-a-execution.md).
+
+
+Merge27 appends the shared conversion-only source role and original Heat-input,
+ratio, ceiling, percent carry and bounded lifetime-source attribution to the
+existing utility producer. `RegisterUtilityHeatConversionProducer` creates no
+energy. `PrepareUtilityHeatConversion` acquires a complete detached validated
+after-state and returns a pure field-wise sealed request/result. Ordinary rate
+publication and standalone consumption of a bound input cannot bypass the
+coupled settlement. The13-case/585-assertion draft/typed-Heat burst passes.
+Group28 adds `CommitUtilityHeatConversion`: exact sequence/seal/results are
+rederived before one complete participant invoice, followed only by a validated
+no-throw state move. Its14-case/603-assertion transaction burst passes, including
+fractional carry, mixed original sources, stale/repeated/refused proposals and
+recursive mutation. Merge29 adds actual native generator registration and service through the routed
+physical Heat facade, using ready funded machinery, separately purchased ports
+and cardinal paths. Once-issued partial input/output identities survive retries;
+whole native service/carry commits with the shared conversion. Demolition retires
+both original utility roles while retaining consumed history, and detached native
+validation checks the original model/carry/roles. The operating13-case/6667-assertion
+burst and separate Magma329-assertion case pass. These use explicit native component
+opportunities; the production scheduler remains with34-35, local-feed/Tube retirement
+notifications with their30/33 owners, and current-writer persistence with Plan3.
+
+
+Merge30 implements paid same-layer native electrical feeds and explicit geothermal
+town connections through the shared utility owner. A local feed names the original
+completed generator, its original output reservation, purchased cardinal cable,
+and an actual owned Tube depot/platform. The attachment has no independent energy
+or watt budget. Town command216 selects actual generator, ordered one/two paid
+risers, occupied Surface terminal and native town; one whole candidate either
+publishes all reference identities or refuses unchanged. Recovery preserves the
+original town account and unchanged route edges, expires only unused superseded
+rights, and retains spent flow. Missing/foreign terminals and demolished original
+machinery revoke eligibility before native pool reuse. Custom GS growth suppresses
+native requests and effects. These APIs do not own another balance or tick driver;
+production scheduling remains34-35 and Tube provider lifecycle remains33. Focused
+component results and rebuild commands are recorded in the merge execution record;
+Plan3 retains current-file transport and copied-preview acceptance.
+
+The30focused component burst passes18cases/22878assertions, including original
+source replacement with live unused grants, terminal ownership loss, custom GS
+suspension and pure recovery isolation. The native sign-index rebuild is fixture
+cleanup; no production viewport authority is introduced.
+
+
+Merge31 consolidates all five native capsule models under `TubeVehicleDefinition`,
+`GetTubeVehicleDefinition` and the single `InitialiseTubeEngineDefinitions`
+installer. Geometry/energy/cargo/package/mapping/pool checks precede both saved-slot
+reconstruction and fresh allocation; model9/local0x8009is unchanged. NewGRF polishing
+calls `InitialiseTubeContentDefinitions` independently of saved Tube object presence.
+A prototype-era load may append four definition-only EIDS rows while retaining
+original IDs, packets and RNG. The old provisional tuning files remain dated,
+uncompiled evidence. The focused11-case/1140-assertion burst passes. Group32and42
+retain loaded-capacity and actual legacy-file checks: selected model13capacity80
+cannot discard an original96-unit hull's packets or retained native capacity.
+
+
+Merge32 routes capsule dates/layers/labels through the existing logical capability
+policy and preflights retained packets/reservations against the operation's target
+capacity before refit/renewal preview or temporary allocation. Native cache passes
+preserve an existing greater capsule `cargo_cap` while loaded; non-capacity passes
+preserve its saved field even empty. Empty refit uses the delivered definition.
+Canonical startup/monthly/saved Engine publication has no ordinary preview-year
+offset and preserves unrelated history. Real capsule chains cannot substitute for
+the TBM's mandatory conventional wagon/Surface-origin hauler, including staged
+assignments. The focused10-case/1865-assertion burst passes; declared96-unit native
+field/packet inputs are component proof, with actual historical-file acceptance42.
+
+
+Merge33 adds `transport_tube_geothermal` as a bounded reference owner for original
+native generator/output, one shared forwarding root, paid cable and actual inlet
+incarnation. Connection/closure create no electrical publication or second balance.
+Original generator/inlet loss revokes permission before native reuse; company
+ownership traverses only retained resource components anchored by current live
+rights, preserving connected closed history and excluding unrelated old CompanyID
+tombstones. The source/ownership11-case/4588-assertion burst passes. Provider bindings
+and six complete command bodies remain33B; actual file/candidate preview remains
+Plan3 and the sole production scheduler remains34-35.
+
+
+Merge33B adds original geothermal source/feed fields to native capsule bindings,
+whole bind/switch preflight, original-inlet guideway components and scoped retirement.
+One saved demand fraction moves to the new binding; historical bindings relinquish
+it. Geothermal work uses original imported energy and native service already paid
+at conversion; external supply retains its lease/tariff owner. Six complete typed
+commands append217-222with End223. External legacy binding digests remain unchanged
+when new fields are absent. The focused17-case/6389-assertion burst passes, including
+loaded packet preservation, real original service/history, unused rights, both
+switch directions, same-output distinct inlets and native stop flags. Explicit
+component source/allocation opportunities and declared saved fraction input leave
+the sole production scheduler/driven proof with34-35and actual file dialects with
+Plan3. No second energy, inventory or tick owner is introduced.
+
+
+Merge34 integrates source publication in the existing `PrepareTubePowerTick`,
+borrowing optional complete physical Heat demands and running the original
+`RunGeothermalGenerators` before electrical allocation. The placeholder empty Heat
+closure is removed; the generator owner alone closes Heat. The sole guard includes
+retained plants and town subscriptions for source-loss expiry. Portable Core work,
+original tick/pause/mode guards and all four Space appenders remain. The focused
+6-case/1227-assertion publication burst passes, including both real plants without
+capsules, duplicate/refused rotation and native orbital-only publication without
+Heat.35retains forwarding demand/import/town settlement and combined driven proof.
+
+
+Merge35 completes the existing common demand/settlement pass: actual capsule
+phase/load demand, one capped root request per geothermal inlet association,
+town plus all four Space appenders, one electrical allocation, whole original
+path imports sorted by destination ConsumerID, then native town effects.
+AdvanceTubePowerTick authorizes native movement/repair exactly once; the original
+VehicleServiceInDepot now accepts that native authorization as well as the paid
+external participant. Automatic unpaid repair remains refused. Actual mixed-world
+contention verifies Vent source shortage, Magma shared cable capacity, native
+repair/manual stops, town25% benefit, Assembly work and fractional processor work,
+with exact accounting/cash/work equality after reversing valid binding rows.
+Construction floor, receiver packets, consumed orbital frames and nonzero unit
+price baselines are disclosed inputs; this does not certify native save dialects,
+paid bootstrap, protected Space progression or human raster acceptance.
+
+
+Merge36 normalizes fully validated external-service and capsule-binding transports
+by original producer/consumer identity before acceptance; captures and explicit
+field digests never treat table insertion order as synchronized authority.
+Generator maps, conversion origins, original provider references and utility
+lineage retain their existing canonical owners. Portal/company events no longer
+expire every unrelated Tube reservation: exact source retirement and actual tile
+notifications close only affected descendants. Integrated native cable repair,
+town pair/generator loss, takeover/slot reuse and current-interval budget exhaustion
+preserve consumed history and native custody. Natural vents remain renewable.
+A128-interval actual Deep/Space camera replay matches every original accounting,
+work, native pose, cargo, cash and RNG frame; clipped unit drawing provides no
+raster qualification. Plan2handoff/public interfaces and focused rebuild commands
+are recorded in m2o23-2-come-space-a-execution.md. File dialects/writers and original
+saved-world activation remain Plan3; publication/final qualification remain their
+later gates. Protected original media, source epochs and Space seals stay intact.

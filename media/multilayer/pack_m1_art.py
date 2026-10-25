@@ -119,6 +119,14 @@ def selected_ranges(public, scope):
         elif packed["namespace"] == "native_map_layer_extension":
             offset = packed["offset"]
         else:
+            # Later published scopes seal this prefix, including their original
+            # preview/reserved gap. A fresh M1 selection cannot reclaim that gap
+            # or force Space/Ground IDs to move; a new family needs a later scope.
+            if packed.get("native_offset") is None:
+                later = [other["packed"].get("native_offset") for other in public["assets"]
+                         if other["asset_id"] not in selected]
+                if any(offset is not None and offset >= cursor for offset in later):
+                    raise ValueError("M1 append enters a sealed published prefix; use an explicit later scope")
             offset = cursor
             cursor += count
         if packed["namespace"] == "native_map_layer_extension":

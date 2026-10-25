@@ -1,5 +1,7 @@
 # R2MLVS3MP - Portal and TBM execution master plan
 
+**Current merged dispatch,2026-10-25.** The [four-plan M2O23handoff](m2o23-4-come-space-b-integration-handoff.md) records delivered technical integration of the original TBM/portal, Tube/geothermal and Spaceowners, with genuine paid originals, real peers and isolated recovery. Its current evidence supersedes the older merge-readiness cursor below. Dated child/master checklists retain their original feature/human scope; outstanding overall art/refreshed-demo feedback is not inferred from technical completion. No temporary model-switch pause remains. [Storage authority](../../architecture/archi-historical-debug.md).
+
 Owner: [R2MLVS parent](r2mlvs-multilayer-vehicles-and-structures.md). Targets: complete [r2mlvs3](r2mlvs3-sealed-portals-and-deep-rail.md) and [r2mlvs4](r2mlvs4-tunnel-boring-machines.md), including their late integrations and acceptance. Related architecture: [map layers](../../architecture/map-layers/archi-map-layers.md). Planning snapshot: 2026-10-05. Execution audit: [2026-10-06 completion review](../../../zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-n-completion-audit.md); native foundations are delivered, but this master is not fully executed.
 
 Planning continuation note: Context has compacted 1 times while executing this group. This count belongs to creation and validation of the master document, not execution of the implementation groups below.

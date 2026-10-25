@@ -7,6 +7,8 @@
 /**
  * @file tbm_projects_gui.cpp Compact native browser of actual owned excavation projects.
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 4 (wait and cargo lines, release prefix, New-area routing), Group 7 (named obstruction), Group 12 (Change work area)
+ * @see docs/zz-reach2/upgrades/2026-10/r2df2-face-exchange-and-demo-acceptance.md Group 6 (face hauler wording)
  * @see docs/zz-reach2/architecture/gui/archi-gui.md
  */
 
@@ -63,6 +65,8 @@ std::optional<std::string> GetTBMVehicleStatus(const Train &front)
 	if (*problem != INVALID_STRING_ID) return GetString(STR_TBM_VEHICLE_WAIT_VEL, speed, *problem);
 	if (const auto *project = GetTBMProjectForCutter(front.index); project != nullptr) {
 		if (IsTBMStored(project->phase)) return GetString(STR_TBM_VEHICLE_WORK_VEL, speed, GetTBMPhaseString(project->phase));
+		// r2df task 7.5: name the train or tile in the cutter's way when one can be found.
+		if (const auto text = GetTBMObstructionText(*project); text.has_value()) return GetString(STR_TBM_VEHICLE_WAIT_VEL_TEXT, speed, *text);
 		const auto state = GetTBMWorkState(project->id);
 		if (state.blocked != TBMBlockedReason::None) return GetString(STR_TBM_VEHICLE_WAIT_VEL, speed, GetTBMHoldString(state.blocked));
 		return GetString(STR_TBM_VEHICLE_WORK_VEL, speed, GetTBMPhaseString(project->phase));
@@ -74,7 +78,92 @@ std::optional<std::string> GetTBMVehicleStatus(const Train &front)
 	// loaded outbound leg keeps the ordinary station destination when present.
 	if ((assignment->phase == TBMHaulerPhase::VisitOrigin || assignment->phase == TBMHaulerPhase::DisposeOrTransfer) &&
 		front.current_order.IsType(OT_GOTO_STATION)) return std::nullopt;
-	return GetString(STR_TBM_VEHICLE_WORK_VEL, speed, GetTBMHaulerPhaseString(assignment->phase));
+	return GetString(STR_TBM_VEHICLE_WORK_VEL, speed, GetTBMHaulerPhaseString(*assignment));
+}
+
+/** @copydoc CanPlanTBMProjectExtension */
+bool CanPlanTBMProjectExtension(const TBMProject &project)
+{
+	const Train *train = Train::GetIfValid(project.cutter);
+	const auto *job = GetExcavationJob(project.job);
+	// Final delivery/return must not be paused by a request that cannot extend already completed work; a lost or
+	// foreign machine needs actual recovery first.
+	return train != nullptr && train->owner == _local_company && job != nullptr && !IsTBMProjectFinished(project.phase) && !IsTBMParking(project.phase) &&
+		job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled;
+}
+
+/** @copydoc CanChangeTBMWork */
+bool CanChangeTBMWork(const TBMProject &project)
+{
+	const Train *train = Train::GetIfValid(project.cutter);
+	const auto *job = GetExcavationJob(project.job);
+	// Its own live machine, with a completed cut to keep and planned cuts still to replace; finished work and a project
+	// being released have no remainder. Working, paused, returning and parked projects all qualify, without a pause.
+	return train != nullptr && train->owner == _local_company && job != nullptr && !IsTBMProjectFinished(project.phase) && !IsTBMFinishing(project.phase) &&
+		job->state != ExcavationJobState::Completed && job->state != ExcavationJobState::Cancelled && job->cursor > 0;
+}
+
+/** @copydoc PauseAndPlanTBMProjectExtension */
+bool PauseAndPlanTBMProjectExtension(TBMProjectID id)
+{
+	const auto *project = GetTBMProject(id);
+	if (project == nullptr || project->company != _local_company || !CanPlanTBMProjectExtension(*project)) return false;
+	// Pausing uses the same synchronized action as the portal controls; the palette grants no private work/cursor
+	// mutation authority. An already paused project goes straight to planning.
+	if (project->blocked != TBMBlockedReason::Paused && !Command<Commands::ControlTBMProject>::Post(STR_ERROR_TBM_EXTEND_FAILED, id, TBMProjectAction::Pause)) return false;
+	PlanUndergroundProjectExtension(id);
+	return true;
+}
+
+/**
+ * The haulers serving a project, in accepted request order.
+ * @param id Project.
+ * @return Their front engines.
+ */
+static std::vector<VehicleID> GetTBMProjectHaulers(TBMProjectID id)
+{
+	std::vector<VehicleID> haulers;
+	// Existing accepted request order determines the displayed hauler order; the view allocates no assignment.
+	for (const auto &assignment : CaptureTBMExchangeAssignments()) {
+		if (assignment.project == id) haulers.push_back(assignment.hauler);
+	}
+	return haulers;
+}
+
+/** @copydoc GetTBMProjectCargoLines */
+std::vector<std::string> GetTBMProjectCargoLines(const TBMProject &project)
+{
+	std::vector<std::string> lines;
+	// R4: what the cutter and each hauler actually carry, separate from what the machine waits for.
+	if (const Train *cutter = Train::GetIfValid(project.cutter); cutter != nullptr) {
+		const TBMSpoilLoad spoil = SumTBMCutterSpoil(*cutter, project);
+		lines.push_back(GetString(STR_TBM_PROJECT_LIST_CARRYING, spoil.earth_loaded_t, spoil.earth_capacity_t, spoil.rock_loaded_t, spoil.rock_capacity_t));
+	}
+	const auto haulers = GetTBMProjectHaulers(project.id);
+	if (haulers.empty()) lines.push_back(GetString(STR_TBM_PROJECT_LIST_NO_HAULER));
+	// One line per hauler, in accepted request order; a hauler that no longer exists has nothing to show.
+	for (VehicleID id : haulers) {
+		const Train *hauler = Train::GetIfValid(id);
+		if (hauler == nullptr) continue;
+		const TBMSpoilLoad spoil = SumTrainSpoil(*hauler);
+		lines.push_back(GetString(STR_TBM_PROJECT_LIST_HAULER_CARRYING, GetString(STR_VEHICLE_NAME, id),
+			spoil.earth_loaded_t, spoil.earth_capacity_t, spoil.rock_loaded_t, spoil.rock_capacity_t));
+	}
+	return lines;
+}
+
+/** @copydoc GetTBMProjectReleaseLine */
+std::string GetTBMProjectReleaseLine(TBMProjectID id)
+{
+	// R6: this is the requirement of Finish/cancel and release only, so it is labelled as such and never reads as a
+	// gate for the other actions.
+	const StringID reason = GetTBMProjectReleaseProblem(id);
+	if (reason == INVALID_STRING_ID) return GetString(STR_TBM_PROJECT_RELEASE_READY);
+	std::string requirement = GetString(reason);
+	const auto blocker = GetTBMProjectSettlementBlocker(id);
+	// Haulage settlement names the vehicle still holding spoil or the bay, so the player knows what to wait for.
+	if (reason == STR_ERROR_TBM_RELEASE_HAULAGE && blocker.has_value() && Vehicle::IsValidID(*blocker)) requirement = GetString(STR_VEHICLE_NAME, *blocker) + ": " + requirement;
+	return GetString(STR_TBM_PROJECT_RELEASE_REQUIREMENT, requirement);
 }
 
 static constexpr int TBM_MENU_RETURN_BAY = INT_MAX - 1; ///< Transient UI action, outside the actual map tile range.
@@ -136,8 +225,18 @@ struct TBMProjectsWindow : Window {
 	std::vector<TBMProjectID> rows; ///< Derived stable IDs only, never copied saved controllers or progress.
 	TBMProjectID selected{UINT32_MAX}; ///< Actual selected row; retirement/company change revalidates it.
 	Scrollbar *vscroll = nullptr; ///< Existing native scroll owner.
+	uint hauler_lines = 1; ///< Hauler cargo lines every row reserves: the most haulers any listed project has, at least one.
 	/** @param elapsed Unused presentation periods; repainting does not advance simulation. */
-	const IntervalTimer<TimerWindow> refresh = {std::chrono::seconds(1), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
+	const IntervalTimer<TimerWindow> refresh = {std::chrono::seconds(1), [this]([[maybe_unused]] auto elapsed) {
+		// Rows share one height, so a project gaining or losing a hauler re-lays the whole list.
+		const uint lines = this->CountHaulerLines();
+		if (lines == this->hauler_lines) {
+			this->SetDirty();
+			return;
+		}
+		this->hauler_lines = lines;
+		this->ReInit();
+	}};
 
 	/** @param desc Native widget definition. @param layer Actual work plane, independent of later camera changes. */
 	TBMProjectsWindow(WindowDesc &desc, MapLayer layer) : Window(desc), layer(layer)
@@ -145,11 +244,25 @@ struct TBMProjectsWindow : Window {
 		this->CreateNestedTree();
 		this->vscroll = this->GetScrollbar(WID_TP_SCROLL);
 		this->RebuildRows();
+		this->hauler_lines = this->CountHaulerLines();
 		this->FinishInitNested(layer);
 	}
 
-	/** @return A name plus two wrapped lines each for progress and holds, with native separation. */
-	uint RowHeight() const { return 5 * GetCharacterHeight(FontSize::Normal) + WidgetDimensions::scaled.vsep_normal; }
+	/**
+	 * A row: the name, two wrapped lines each for progress and the wait, the cutter's cargo line and one cargo line
+	 * per hauler, with native separation.
+	 * @return Height of every row in pixels.
+	 */
+	uint RowHeight() const { return (6 + this->hauler_lines) * GetCharacterHeight(FontSize::Normal) + WidgetDimensions::scaled.vsep_normal; }
+
+	/** @return The most haulers serving any listed project, at least one so "No hauler assigned" has its line. */
+	uint CountHaulerLines() const
+	{
+		size_t lines = 1;
+		// Every row reserves the busiest project's hauler count, so cargo text cannot overlap adjacent projects.
+		for (TBMProjectID id : this->rows) lines = std::max(lines, GetTBMProjectHaulers(id).size());
+		return static_cast<uint>(lines);
+	}
 
 	/** Rebuild presentation IDs from actual same-company, same-layer jobs; retired/foreign rows cannot retain actionable selection. */
 	void RebuildRows()
@@ -224,11 +337,8 @@ struct TBMProjectsWindow : Window {
 		this->SetWidgetDisabledState(WID_TP_PARK, project == nullptr || ControlTBMProject(project->id, TBMProjectAction::ReturnAndPark, false) != TBMProjectError::None); // Only currently admitted owner/machine/bay combinations may request parking.
 		this->SetWidgetDisabledState(WID_TP_RESUME, project == nullptr || ControlTBMProject(project->id, TBMProjectAction::Resume, false) != TBMProjectError::None); // Resume belongs to explicitly paused or actually parked work.
 		this->SetWidgetDisabledState(WID_TP_RELEASE, project == nullptr || ControlTBMProject(project->id, TBMProjectAction::Retire, false) != TBMProjectError::None);
-		const auto *job = project == nullptr ? nullptr : GetExcavationJob(project->job);
-		// Final delivery/return must not be paused by a button that cannot extend
-		// already completed work; lost/foreign machinery needs actual recovery.
-		this->SetWidgetDisabledState(WID_TP_EXTEND, project == nullptr || train == nullptr || train->owner != _local_company || job == nullptr ||
-			IsTBMProjectFinished(project->phase) || IsTBMParking(project->phase) || job->state == ExcavationJobState::Completed || job->state == ExcavationJobState::Cancelled);
+		this->SetWidgetDisabledState(WID_TP_EXTEND, project == nullptr || !CanPlanTBMProjectExtension(*project));
+		this->SetWidgetDisabledState(WID_TP_CHANGE, project == nullptr || !CanChangeTBMWork(*project));
 		this->DrawWidgets();
 	}
 
@@ -238,11 +348,8 @@ struct TBMProjectsWindow : Window {
 		if (widget == WID_TP_RELEASE_REASON) {
 			const auto *project = GetTBMProject(this->selected);
 			if (project == nullptr) return;
-			const StringID reason = GetTBMProjectReleaseProblem(project->id);
-			std::string message = GetString(reason == INVALID_STRING_ID ? STR_PORTAL_STEP_RETIRE : reason);
-			const auto blocker = GetTBMProjectSettlementBlocker(project->id);
-			if (reason == STR_ERROR_TBM_RELEASE_HAULAGE && blocker.has_value() && Vehicle::IsValidID(*blocker)) message = GetString(STR_VEHICLE_NAME, *blocker) + ": " + message;
-			DrawStringMultiLine(rect.Shrink(WidgetDimensions::scaled.framerect), message, TextColour::Black);
+			// The error texts carry their own colour, which the forced black overrides.
+			DrawStringMultiLine(rect.Shrink(WidgetDimensions::scaled.framerect), GetTBMProjectReleaseLine(project->id), ExtendedTextColour{TextColour::Black, {ExtendedTextColourFlag::Forced}});
 			return;
 		}
 		if (widget != WID_TP_LIST) return;
@@ -267,8 +374,13 @@ struct TBMProjectsWindow : Window {
 			DrawStringMultiLine(area.left, area.right, top + line_height, top + 3 * line_height - 1,
 				GetString(STR_TBM_PROJECT_LIST_PROGRESS, GetTBMPhaseString(project->phase), job->cursor, job->route.size()), colour);
 			const auto state = GetTBMWorkState(project->id);
-			const auto hold = state.blocked == TBMBlockedReason::None ? GetString(STR_PORTAL_PROJECT_NO_HOLD) : GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(state.blocked));
-			DrawStringMultiLine(area.left, area.right, top + 3 * line_height, top + 5 * line_height - 1, hold, colour);
+			DrawStringMultiLine(area.left, area.right, top + 3 * line_height, top + 5 * line_height - 1, GetTBMWaitLine(*project, state.blocked), colour);
+			// The cutter's line, then one line per hauler; the row reserves as many lines as the busiest project needs.
+			int line_top = top + 5 * line_height;
+			for (const std::string &line : GetTBMProjectCargoLines(*project)) {
+				DrawString(area.left, area.right, line_top, line, colour);
+				line_top += line_height;
+			}
 		}
 	}
 
@@ -325,12 +437,10 @@ struct TBMProjectsWindow : Window {
 				Command<Commands::ControlTBMProject>::Post(STR_ERROR_CAN_T_CONTROL_TBM_PROJECT, project->id, TBMProjectAction::Retire);
 				break;
 			case WID_TP_EXTEND:
-				// Pausing uses the same synchronized action as the portal controls;
-				// the palette grants no private work/cursor mutation authority.
-				if (project->blocked != TBMBlockedReason::Paused) {
-					if (!Command<Commands::ControlTBMProject>::Post(STR_ERROR_TBM_EXTEND_FAILED, project->id, TBMProjectAction::Pause)) break;
-				}
-				PlanUndergroundProjectExtension(project->id);
+				PauseAndPlanTBMProjectExtension(project->id);
+				break;
+			case WID_TP_CHANGE:
+				PlanUndergroundProjectWorkChange(project->id); // No pause: the machine keeps working while the player plans.
 				break;
 			default: break;
 		}
@@ -356,7 +466,10 @@ static constexpr std::initializer_list<NWidgetPart> _tbm_projects_widgets = {
 		NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_TP_CENTRE), SetStringTip(STR_TBM_PROJECT_CENTRE, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
 		NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_TP_CONTROLS), SetStringTip(STR_TBM_PROJECT_CONTROLS, STR_UNDERGROUND_PROJECT_TOOLTIP), SetFill(1, 0),
 	EndContainer(),
-	NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_TP_EXTEND), SetStringTip(STR_TBM_PROJECT_PAUSE_EXTEND, STR_TBM_PROJECT_EXTEND_TOOLTIP), SetFill(1, 0),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_TP_EXTEND), SetStringTip(STR_TBM_PROJECT_PAUSE_EXTEND, STR_TBM_PROJECT_EXTEND_TOOLTIP), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::Grey, WID_TP_CHANGE), SetStringTip(STR_TBM_PROJECT_CHANGE_WORK, STR_TBM_PROJECT_CHANGE_WORK_TOOLTIP), SetFill(1, 0),
+	EndContainer(),
 	NWidget(WWT_PANEL, Colours::Grey), SetFill(1, 0),
 		NWidget(WWT_TEXT, Colours::Invalid, WID_TP_PARK_DESTINATION), SetStringTip(STR_TBM_PARK_DESTINATION), SetFill(1, 0),
 	EndContainer(),

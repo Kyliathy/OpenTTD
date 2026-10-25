@@ -3,7 +3,7 @@
 @file surface_gateway_core_ledger.py
 @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group15CB.
 Native SPSTjob packet lists alone own deliveries; metadata owns no extra stock.
-Current440 retains the exact438 SPSTlayout, verified against its live writer.
+Current440/441 retain the exact438 SPSTlayout, verified against the live writer.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0; pure reader ownership.
 """
 from pathlib import Path
@@ -16,10 +16,14 @@ from space_saved_state import structures as LAYOUT
 
 
 def blueprint(path, allow_construction=False):
-    """@param path Actual440 native original world. @param allow_construction Explicit later real work/frame/activation consumer; the default stays Steel-only and unworked.
+    """@param path Actual440 original or441merged world. @param allow_construction Explicit later real work/frame/activation consumer; the default stays Steel-only and unworked.
     @return Sole actual paid Core/job and exclusive packet refs, or None before purchase.
     """
-    version, raw = read_stream(path); assert version == 440
+    version, raw = read_stream(path)
+    # The merged envelope adds other owners but preserves every SPSTfield.
+    # Admit that explicit format without rewriting its version or relaxing any
+    # paid Core, consumed-material, generation or queue constraint below.
+    assert version in (440, 441)
     # This selects the unchanged SPSTfield layout, not a different source
     # version: no original save header or byte is rewritten to emulate history.
     records, _ = LAYOUT(raw, 438)

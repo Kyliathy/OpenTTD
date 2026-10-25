@@ -93,7 +93,7 @@ static SaveWireFacts Donor(uint16_t version)
 	return facts;
 }
 
-/** Build the future merged detached contract without enabling a save writer.
+/** Build the explicit merged detached contract independently of serialization.
  * @return Complete merged facts whose new supply/CAPA validators have admitted their own schemas.
  */
 static SaveWireFacts Merged()
@@ -111,6 +111,7 @@ static SaveWireFacts Merged()
 	facts.marker_schema = MERGED_SAVE_LINEAGE_SCHEMA;
 	facts.marker_writer_version = MERGED_SAVE_LINEAGE_VERSION;
 	facts.merged_supply_valid = facts.merged_cargo_valid = true;
+	facts.merged_supply_next_id = 1;
 	return facts;
 }
 
@@ -255,7 +256,7 @@ TEST_CASE("Save lineage rejects malformed A transport and future capability gues
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Destination(440)), static_cast<SaveCapability>(255)));
 }
 
-/** A future marker grants only the fully supplied merged transport, never serialization permission. */
+/** The explicit marker grants only the fully supplied merged transport, never gameplay ownership. */
 TEST_CASE("Save lineage validates the reserved merged marker and complete family boundary", "[save-lineage]")
 {
 	auto facts = Merged();
@@ -274,4 +275,12 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 	facts = Merged(); facts.merged_cargo_valid = false; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); Evidence(facts, SaveLineageFamily::GeneratorRows) = {}; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.feature_flags = 0x01000000; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	// Issuance history can outlive terminal rows. Neither an omitted marker nor
+	// a fabricated paid-history bit may replace the actual canonical frontier.
+	facts = Merged(); facts.merged_supply_next_id = 2; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts.feature_flags |= 1U << 23; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
+	facts.merged_supply_next_id = 1; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.merged_supply_next_id = 0; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.feature_flags |= 1U << 27; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+
 }

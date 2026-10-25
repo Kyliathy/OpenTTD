@@ -8,6 +8,8 @@
 /** @file station_cmd.cpp Handling of station tiles. @see docs/zz-reach2/architecture/landscape/station-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
+#include "geothermal_conduit_sprite.h"
 #include "launch_center.h"
 #include "launch_site.h"
 #include "launch_operations.h"
@@ -1599,6 +1601,7 @@ CommandCost CmdBuildRailStation(DoCommandFlags flags, TileIndex tile_org, RailTy
 				SetCustomStationSpecIndex(tile, *specindex);
 				SetStationTileRandomBits(tile, GB(Random(), 0, 4));
 				SetAnimationFrame(tile, 0);
+				RegisterTubeFacilityArtAnimation(tile); // Only committed built geometry joins native display animation; estimates remain pure.
 
 				if (statspec != nullptr) {
 					uint32_t platinfo = GetPlatformInfo(*it + to_underlying(axis), numtracks, plat_len, i, j, false);
@@ -3441,6 +3444,7 @@ static void DrawTile_Station(TileInfo *ti)
 		DrawLaunchFacilityTile(*ti);
 		return;
 	}
+	const auto tube_art = GetTubeFacilityArt(ti->tile, TimerGameTick::counter);
 	const NewGRFSpriteLayout *layout = nullptr;
 	SpriteLayoutProcessor processor; // owns heap, borrowed by tmp_layout and t
 	DrawTileSpriteSpan tmp_layout;
@@ -3616,6 +3620,22 @@ static void DrawTile_Station(TileInfo *ti)
 		}
 	}
 
+	DrawTubeConduitGround(ti->tile); // Installed original wires remain beneath all platform/building parts.
+	DrawGeothermalConduitGround(ti->tile);
+	// Whole authored tube platform backs retain the original ground anchor and
+	// native building transparency. Their low near ledge sorts separately below;
+	// custom and conventional facilities continue through their existing layouts.
+	if (tube_art && !IsInvisibilitySet(TransparencyOption::Buildings)) {
+		SpriteID back = tube_art->sprites.back;
+		const bool transparent = IsTransparencySet(TransparencyOption::Buildings);
+		if (transparent) SetBit(back, PALETTE_MODIFIER_TRANSPARENT);
+		DrawGroundSprite(back, transparent ? PALETTE_TO_TRANSPARENT : PAL_NONE);
+		// The existing optional native reservation cue remains above the packed
+		// back. It marks actual reservation ownership, never a source work grant.
+		if (_game_mode != GameMode::Menu && _settings_client.gui.show_track_reservation && HasStationReservation(ti->tile)) {
+			DrawGroundSprite(GetRailStationAxis(ti->tile) == Axis::X ? rti->base_sprites.single_x : rti->base_sprites.single_y, PALETTE_CRASH);
+		}
+	}
 	if (HasStationRail(ti->tile) && HasRailCatenaryDrawn(GetRailType(ti->tile))) DrawRailCatenary(ti);
 
 	if (IsAnyRoadStop(ti->tile)) {
@@ -3685,18 +3705,24 @@ static void DrawTile_Station(TileInfo *ti)
 		total_offset = 0;
 	}
 
-	// Plan14 Group79FG: native default rock-layer parents keep their exact
-	// bounds/order/roof glass. Ground, overlays and custom/Space/tube layouts
-	// above retain their existing drawing and admission owners.
-	const auto native_ground_layout = GetGroundStationTileLayout(ti->tile, TimerGameTick::counter);
-	DrawTileSpriteSpan native_ground_view;
-	if (native_ground_layout) {
-		native_ground_view = native_ground_layout->View();
-		t = &native_ground_view;
-		total_offset = 0; // Selected source IDs are absolute after native ground/overlay drawing.
-		relocation = 0;
+	if (tube_art) {
+		if (!IsInvisibilitySet(TransparencyOption::Buildings)) {
+			AddSortableSpriteToDraw(tube_art->sprites.front, PAL_NONE, *ti, tube_art->front_bounds, IsTransparencySet(TransparencyOption::Buildings));
+		}
+	} else {
+		// Plan14 Group79FG: native default rock-layer parents keep their exact
+		// bounds/order/roof glass. Ground, overlays and custom/Space/tube layouts
+		// above retain their existing drawing and admission owners.
+		const auto native_ground_layout = GetGroundStationTileLayout(ti->tile, TimerGameTick::counter);
+		DrawTileSpriteSpan native_ground_view;
+		if (native_ground_layout) {
+			native_ground_view = native_ground_layout->View();
+			t = &native_ground_view;
+			total_offset = 0; // Selected source IDs are absolute after native ground/overlay drawing.
+			relocation = 0;
+		}
+		DrawRailTileSeq(ti, t, TransparencyOption::Buildings, total_offset, relocation, palette);
 	}
-	DrawRailTileSeq(ti, t, TransparencyOption::Buildings, total_offset, relocation, palette);
 	DrawBridgeMiddle(ti, GetStationBlockedPillars(bridgeable_info, GetStationGfx(ti->tile)));
 }
 
@@ -3915,6 +3941,9 @@ static TrackStatus GetTileTrackStatus_Station(TileIndex tile, TransportType mode
 /** @copydoc TileLoopProc */
 static void TileLoop_Station(TileIndex tile)
 {
+	// Existing bounded tile visits refresh derived source-expiry lamps without advancing power or scanning the map.
+	if (GetTubeConduitArt(tile).has_value()) MarkTileDirtyByTile(tile);
+	RegisterTubeFacilityArtAnimation(tile);
 	if (GetStationType(tile) == StationType::LaunchCenter) return;
 	auto *st = BaseStation::GetByTile(tile);
 	switch (GetStationType(tile)) {
@@ -3990,6 +4019,7 @@ static void TileLoop_Station(TileIndex tile)
 /** @copydoc AnimateTileProc */
 static void AnimateTile_Station(TileIndex tile)
 {
+	if (AnimateTubeFacilityArt(tile)) return;
 	if (HasStationRail(tile)) {
 		AnimateStationTile(tile);
 		return;

@@ -33,9 +33,12 @@ class PackingCandidateTests(unittest.TestCase):
     def setUpClass(cls):
         """Select nine actual source manifests from the explicitly requested invocation.
 
+        @param cls Active explicitly selected candidate check.
         @return None; missing prerequisites fail without searching old proof trees.
         """
-        cls.context = RunContext(ROOT, "multilayer-art", "m1-derived-inputs", RUN_ID)
+        # Candidate checks own separate outputs and cannot overwrite a supplier
+        # manifest while the enclosing current recipe is still consuming it.
+        cls.context = RunContext(ROOT, "multilayer-art", "m1-packing-check", RUN_ID)
         if not (ROOT / "mlm/runtime/.runs" / RUN_ID).is_dir():
             raise ValueError("packing checks require an explicitly reserved source invocation")
         data = json.loads((ROOT / "mlm/review-producers.json").read_text(encoding="utf-8"))
@@ -50,6 +53,7 @@ class PackingCandidateTests(unittest.TestCase):
     def test_actual_packing_is_repeatable_without_old_cache_or_publication(self):
         """Compare current candidates twice to existing independent shipping bytes.
 
+        @param self Active explicitly selected candidate check.
         @return None; only selected generated data/reports are written.
         """
         public = (ROOT / "media/multilayer/contracts/multilayer_sprite_manifest.json").read_bytes()
@@ -74,6 +78,7 @@ class PackingCandidateTests(unittest.TestCase):
     def test_missing_changed_foreign_sources_and_encoder_refuse(self):
         """Refuse incomplete sources, a stale identity, another run and wrong encoder.
 
+        @param self Active explicitly selected candidate check.
         @return None; intentional faults change only in-memory selection records.
         """
         changed = copy.deepcopy(self.manifests)

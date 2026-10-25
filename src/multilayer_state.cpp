@@ -28,6 +28,8 @@
 #include "utility_power.h"
 #include "transport_tube.h"
 #include "geothermal_collector.h"
+#include "geothermal_generator.h"
+#include "transport_tube_geothermal.h"
 #include "geothermal_riser.h"
 #include "geothermal_heat.h"
 
@@ -50,7 +52,7 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	if (profile == nullptr) return MultiLayerStateError::UnsupportedProfile;
 	if (schema.profile.version != profile->version) return MultiLayerStateError::UnsupportedProfile;
 	// Only delivered feature descriptors are recognized; Classic cannot hide geological authority behind metadata.
-	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS | MULTILAYER_FEATURE_ASTEROIDS | MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS | MULTILAYER_FEATURE_SURFACE_HANDLING)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
+	if ((schema.feature_flags & ~(MULTILAYER_FEATURE_GEOLOGY | MULTILAYER_FEATURE_VENTS | MULTILAYER_FEATURE_EXCAVATION_JOBS | MULTILAYER_FEATURE_EXCAVATION_PASSES | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_TBM_PROJECTS | MULTILAYER_FEATURE_SPOIL_RECEIVERS | MULTILAYER_FEATURE_TBM_EXCHANGE | MULTILAYER_FEATURE_MINES | MULTILAYER_FEATURE_PROCESSORS | MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_VEHICLES | MULTILAYER_FEATURE_GEOTHERMAL_SITES | MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS | MULTILAYER_FEATURE_UTILITY_HEAT | MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS | MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES | MULTILAYER_FEATURE_GEOTHERMAL_RISERS | MULTILAYER_FEATURE_ASTEROIDS | MULTILAYER_FEATURE_LAUNCH_CENTERS | MULTILAYER_FEATURE_LAUNCH_HUBS | MULTILAYER_FEATURE_SURFACE_HANDLING | MULTILAYER_FEATURE_SURFACE_SUPPLIES | MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS | MULTILAYER_FEATURE_HEAT_CONVERSIONS | MULTILAYER_FEATURE_TUBE_GEOTHERMAL)) != 0 || (schema.feature_flags != 0 && schema.profile.id == MultiLayerGameplayProfileID::Classic)) return MultiLayerStateError::UnsupportedFeatures;
 	// Retired riser machinery still owns paid native construction on excavated
 	// floor. Its original portal may legitimately be gone, and no energy ledger
 	// is required until the separate operating exporter actually exists.
@@ -63,6 +65,10 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	// Heat and electricity share native identities/accounting. A heat feature
 	// cannot claim balances or roles while omitting that sole utility authority.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_UTILITY_HEAT) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_UTILITY_POWER) == 0) return MultiLayerStateError::UnsupportedFeatures;
+	// Exact conversion preserves both numerical domains in the sole utility
+	// owner; original electrical output cannot omit its retained Heat history.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_HEAT_CONVERSIONS) != 0 &&
+		(schema.feature_flags & (MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_UTILITY_HEAT)) != (MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_UTILITY_HEAT)) return MultiLayerStateError::UnsupportedFeatures;
 	// Installed local cells need the shared identity owner and actual geology;
 	// metadata cannot promote a geometry-only declaration into a paid path.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS) != 0 &&
@@ -75,13 +81,23 @@ MultiLayerStateError ValidateMultiLayerStateReferences(const MultiLayerStateSche
 	// or natural source; metadata grants no implicit paid machinery or stock.
 	const uint32_t collector_owners = site_owners | MULTILAYER_FEATURE_GEOTHERMAL_SITES;
 	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS) != 0 && (schema.feature_flags & collector_owners) != collector_owners) return MultiLayerStateError::UnsupportedFeatures;
+	// Paid powerhouse construction retains its consumed original blueprint
+	// and geology without implying any installed energy or operating source.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS) != 0 && (schema.feature_flags & collector_owners) != collector_owners) return MultiLayerStateError::UnsupportedFeatures;
+	// Retired geothermal inlet history may outlive its original plant. Shared
+	// conversion and geology remain mandatory; a live plant is checked per row.
+	const uint32_t geothermal_tube_owners = MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_HEAT_CONVERSIONS | MULTILAYER_FEATURE_GEOLOGY;
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_GEOTHERMAL) != 0 &&
+		(schema.feature_flags & geothermal_tube_owners) != geothermal_tube_owners) return MultiLayerStateError::UnsupportedFeatures;
 	// A physical paid inlet cannot exist without the same save's electrical,
 	// commissioned portal and excavated floor authorities.
 	const uint32_t tube_owners = MULTILAYER_FEATURE_UTILITY_POWER | MULTILAYER_FEATURE_PORTAL_WORK | MULTILAYER_FEATURE_GEOLOGY;
 	if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_POWER) != 0 && (schema.feature_flags & tube_owners) != tube_owners) return MultiLayerStateError::UnsupportedFeatures;
 	// A capsule reservation resolves its own installed service; a standalone
 	// binding bit cannot manufacture either physical or electrical authority.
-	if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_VEHICLES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_TUBE_POWER) == 0) return MultiLayerStateError::UnsupportedFeatures;
+	// Each row resolves its exact external service or geothermal provider below.
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_VEHICLES) != 0 &&
+		(schema.feature_flags & (MULTILAYER_FEATURE_TUBE_POWER | MULTILAYER_FEATURE_TUBE_GEOTHERMAL)) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Every finite binding references existing geology; a mine flag cannot manufacture reserve authority on load.
 	if ((schema.feature_flags & MULTILAYER_FEATURE_MINES) != 0 && (schema.feature_flags & MULTILAYER_FEATURE_GEOLOGY) == 0) return MultiLayerStateError::UnsupportedFeatures;
 	// Natural vent geometry depends on the delivered rock-plane owner; a standalone bit cannot fabricate a usable thermal field.
@@ -127,6 +143,7 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (GetNextLaunchCenterGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_CENTERS;
 	if (GetNextLaunchHubMemberGeneration() != 1) schema.feature_flags |= MULTILAYER_FEATURE_LAUNCH_HUBS;
 	if (GetNextSurfaceHandlingID() != 1) schema.feature_flags |= MULTILAYER_FEATURE_SURFACE_HANDLING;
+	if (GetNextSurfaceSupplyOrderID() != 1) schema.feature_flags |= MULTILAYER_FEATURE_SURFACE_SUPPLIES; // Retained canonical issuance history survives pruning of terminal rows.
 	schema.profile = GetCurrentMultiLayerProfileSelection();
 	schema.geology_seed = _multilayer_geology_seed;
 	schema.orbital_seed = _multilayer_orbital_seed;
@@ -138,11 +155,14 @@ MultiLayerStateSchema CaptureMultiLayerStateSchema()
 	if (!CaptureLayerMines().empty()) schema.feature_flags |= MULTILAYER_FEATURE_MINES; // Physical bindings live and die with their industries; reserves keep their geological owner.
 	if (!CaptureLayerProcessors().empty()) schema.feature_flags |= MULTILAYER_FEATURE_PROCESSORS; // Choice/work/history belong to actual processors, independently of geology.
 	if (HasUtilityPowerState()) schema.feature_flags |= MULTILAYER_FEATURE_UTILITY_POWER; // Retained source/epoch identity survives zero supply and source retirement.
+	if (HasUtilityHeatConversionState()) schema.feature_flags |= MULTILAYER_FEATURE_HEAT_CONVERSIONS; // Conversion provenance remains an extension of the sole shared producer.
 	if (HasUtilityHeatState()) schema.feature_flags |= MULTILAYER_FEATURE_UTILITY_HEAT; // Actual typed heat identity/phase history resides in the same native utility owner.
 	if (HasUtilityLocalLinks()) schema.feature_flags |= MULTILAYER_FEATURE_LOCAL_UTILITY_LINKS; // Retained paid physical identities share the utility issuer, with no generated energy implied.
 	if (!CaptureGeothermalHeatConsumers().empty()) schema.feature_flags |= MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES; // Retained physical ports cannot silently lose their exact source-slice paths on reload.
+	if (!CaptureTubeGeothermalPowerState().sources.empty()) schema.feature_flags |= MULTILAYER_FEATURE_TUBE_GEOTHERMAL; // Retired original source incarnations keep their own identity history.
 	if (!CaptureTubePowerConnections().empty()) schema.feature_flags |= MULTILAYER_FEATURE_TUBE_POWER; // Invoice history survives closing a service; joules stay in UtilityRoot.
 	if (!CaptureTubePowerVehicles().empty()) schema.feature_flags |= MULTILAYER_FEATURE_TUBE_VEHICLES; // Retired bindings retain ledger lineage and cannot adopt reused pool IDs.
+	if (!CaptureGeothermalGenerators().empty()) schema.feature_flags |= MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS; // Unfinished paid construction and retired work remain history even when no plant needs an operating interval.
 	if (!CaptureGeothermalCollectors().empty()) schema.feature_flags |= MULTILAYER_FEATURE_GEOTHERMAL_COLLECTORS; // Actual construction survives shortages/abandonment without copying native input stock or source capacity.
 	if (!CaptureGeothermalRisers().empty()) schema.feature_flags |= MULTILAYER_FEATURE_GEOTHERMAL_RISERS; // Retained original-housing loss/work survives demolition and empty energy state without inventing a live portal.
 	if (!CaptureGeothermalSiteClaims().empty()) schema.feature_flags |= MULTILAYER_FEATURE_GEOTHERMAL_SITES; // Cancelled cold identities persist without claiming finished construction or energy.
@@ -183,6 +203,9 @@ void ResetMultiLayerStateSchema()
 	ResetUtilityPowerState();
 	ResetTubePowerState();
 	ResetGeothermalCollectors(); // Constructed bindings cannot survive into another native industry pool or natural source owner.
+	ResetGeothermalGeneratorLoadStaging();
+	ResetTubeGeothermalPowerLoadStaging();
+	ResetGeothermalGenerators(); // Paid work cannot survive replacement of its original Industry pool/world.
 	ResetGeothermalRisers(); // Paid machinery and portal incarnations cannot leak across native worlds or profiles.
 	ResetGeothermalSiteClaims(); // Cold geometry reservations cannot survive into another world, profile or geological source family.
 }
@@ -325,11 +348,8 @@ std::optional<uint64_t> ComputeMultiLayerStateDigest(const MultiLayerStateSchema
 	return digest;
 }
 
-/**
- * Add profile/schema/seed/policy fields to the existing desync log without simulation mutation.
- * @param schema Actual validated metadata snapshot.
- */
-void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
+/** @copydoc ComputeLiveMultiLayerStateDigest */
+std::optional<uint64_t> ComputeLiveMultiLayerStateDigest(const MultiLayerStateSchema &schema)
 {
 	const std::array geology_fields = {MultiLayerCanonicalField{1, 8, ComputeGeologyStateDigest(GetGeologyWorldState())}};
 	const std::array portal_fields = {MultiLayerCanonicalField{1, 8, ComputeLayerPortalWorkDigest()}};
@@ -378,7 +398,24 @@ void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
 	if ((schema.feature_flags & MULTILAYER_FEATURE_LAUNCH_HUBS) != 0) records.push_back({MultiLayerCanonicalKind::LaunchHubRoot, 0, hub_fields});
 	const std::array handling_fields = {MultiLayerCanonicalField{1, 8, ComputeSurfaceHandlingDigest()}};
 	if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_HANDLING) != 0) records.push_back({MultiLayerCanonicalKind::SurfaceHandlingRoot, 0, handling_fields});
-	const auto digest = ComputeMultiLayerStateDigest(schema, records);
+	// Appended roots reuse the reserved owner identities and their existing
+	// field-wise diagnostics. Conversion remains in UtilityRoot; manufacturing,
+	// recipes and contained work remain in SpaceVehicleRoot/SpaceStructureRoot.
+	const std::array supply_fields = {MultiLayerCanonicalField{1, 8, ComputeSurfaceSupplyOrderDigest(CaptureSurfaceSupplyOrders())}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0) records.push_back({MultiLayerCanonicalKind::SurfaceSupplyRoot, 0, supply_fields});
+	const std::array generator_fields = {MultiLayerCanonicalField{1, 8, ComputeGeothermalGeneratorDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS) != 0) records.push_back({MultiLayerCanonicalKind::GeothermalGeneratorRoot, 0, generator_fields});
+	const std::array source_fields = {MultiLayerCanonicalField{1, 8, ComputeTubeGeothermalPowerDigest()}};
+	if ((schema.feature_flags & MULTILAYER_FEATURE_TUBE_GEOTHERMAL) != 0) records.push_back({MultiLayerCanonicalKind::TubeGeothermalRoot, 0, source_fields});
+	const std::array packet_fields = {MultiLayerCanonicalField{1, 8, CargoPacket::ComputePoolDigest()}};
+	records.push_back({MultiLayerCanonicalKind::CargoPacketRoot, 0, packet_fields});
+	return ComputeMultiLayerStateDigest(schema, records);
+}
+
+/** @copydoc LogMultiLayerStateDiagnostics */
+void LogMultiLayerStateDiagnostics(const MultiLayerStateSchema &schema)
+{
+	const auto digest = ComputeLiveMultiLayerStateDigest(schema);
 	if (!digest) return;
 	Debug(Facility::Desync, Severity::Info, "MLVS_STATE schema={} profile={} version={} legacy={} editor={} geology_seed={} orbital_seed={} digest={:016X}", schema.schema_version, to_underlying(schema.profile.id), schema.profile.version, schema.profile.legacy, schema.profile.editor_override, schema.geology_seed, schema.orbital_seed, *digest);
 }

@@ -8,6 +8,7 @@
 /** @file clear_cmd.cpp Commands related to clear tiles. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlm6-layer-graphics-assets.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
 #include "bridge.h"
 #include "command_func.h"
 #include "clear_map.h"
@@ -342,6 +343,8 @@ static void TileLoopClearDesert(TileIndex tile)
 /** @copydoc TileLoopProc */
 static void TileLoop_Clear(TileIndex tile)
 {
+	// Existing bounded tile visits refresh derived source-expiry lamps without advancing power or scanning the map.
+	if (GetTubeConduitArt(tile).has_value()) MarkTileDirtyByTile(tile);
 	//No climate, growth or ambient sound off the surface. Bedrock stays rock.
 	if (!MultiLayerMap::GetRules(tile).has_climate) return;
 

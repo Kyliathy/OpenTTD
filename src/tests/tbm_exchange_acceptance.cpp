@@ -47,6 +47,7 @@ static TBMWagonSetID ReleaseAt(TBMExchangeLoadRig &rig, TBMHaulerWait wait)
 /** Cancelling the assignment in any hold keeps every wagon and tonne; where the cause is gone, a new one recovers. */
 TEST_CASE("Releasing a hauler in every reachable hold keeps its wagons and spoil", "[tbm-exchange-acceptance]")
 {
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed}; // Explicit finite seam makes the declared overflow/mid-route exchange physically necessary.
 	TBMExchangeLoadRig rig;
 
 	/**
@@ -125,6 +126,7 @@ TEST_CASE("Releasing a hauler waiting for an occupied bay keeps its empties", "[
 /** A hauler with too few empties for the rest of the route waits NoEmpties at a mid-route exchange, and nothing moves. */
 TEST_CASE("A hauler short of empties waits for them at a mid-route exchange", "[tbm-exchange-acceptance]")
 {
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed}; // Explicit finite seam makes the declared overflow/mid-route exchange physically necessary.
 	// The bend's diagonal cuts overflow one load, so its first breakpoint comes before the last cut.
 	TBMExchangeRig rig({DirDiff::Same, DirDiff::Right45, DirDiff::Right45});
 	rig.MakeOriginStationTile();
@@ -176,6 +178,7 @@ static std::vector<VehicleID> Sorted(std::vector<VehicleID> chain)
 /** Two complete cycles move only the same wagon units between the trains, and the receivers account for every tonne. */
 TEST_CASE("Two full cycles return the same wagons and dispose of every tonne", "[tbm-exchange-acceptance]")
 {
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed}; // Explicit finite seam makes the declared overflow/mid-route exchange physically necessary.
 	AutoRestoreBackup<uint8_t> indicators{_settings_client.gui.loading_indicators, uint8_t{0}}; // No filling text effect without a GUI.
 	// A straight cut after the pocket opens little new ground; the bend's diagonal cuts overflow one load of the cutter's wagons.
 	SpoilReceiverRig rig({DirDiff::Same, DirDiff::Right45, DirDiff::Right45});

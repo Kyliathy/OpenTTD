@@ -4,9 +4,13 @@
 add_subdirectory(compat)
 
 add_files(
+    save_envelope.h
+    save_envelope.cpp
     # Pure parallel-lineage policy; archi-savegame.md and m2o23-1-come-space.md Groups5/9B.
     save_lineage.cpp
+    save_lineage_sl.cpp
     save_lineage.h
+    save_framing.h
     afterload.cpp
     space_order_sl.cpp
     space_production_sl.cpp
@@ -46,6 +50,10 @@ add_files(
     layer_processor_sl.cpp
     tbm_exchange_sl.cpp
     utility_power_sl.cpp
+    # Original donor machinery/conversion adapters: archi-savegame.md, m2o23-3 Group43.
+    utility_conversion_sl.cpp
+    geothermal_generator_sl.cpp
+    transport_tube_geothermal_sl.cpp
     # Physical paid tube invoices: r2mlvs17-underground-transport-tubes.md Group5.
     transport_tube_power_sl.cpp
     transport_tube_vehicle_sl.cpp

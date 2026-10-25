@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 import unittest
 
-from artifact_paths import RunContext, contained, repository_root
+from artifact_paths import RunContext, contained, identifier, repository_root
 from source_input_guard import no_old_proofs
 
 ROOT = repository_root()
@@ -24,6 +24,7 @@ from evidence import identity
 
 RUN_ID = None
 SOURCES_ONLY = False
+RECIPE = "ground-derived-inputs"
 
 
 class GroundPackingCandidates(unittest.TestCase):
@@ -36,7 +37,7 @@ class GroundPackingCandidates(unittest.TestCase):
         @param cls Active explicitly selected current-run packing checks.
         @return None; no latest-run lookup or earlier workstation receipt is accepted.
         """
-        path = ROOT / "mlm/reviews/rebuild/ground-derived-inputs" / RUN_ID / "reports/rebuild.json"
+        path = ROOT / "mlm/reviews/rebuild" / RECIPE / RUN_ID / "reports/rebuild.json"
         state = json.loads(path.read_text(encoding="utf-8"))
         # Normal acceptance requires a complete recipe. Explicit source-only
         # debugging may exercise a failed packing leaf's verified suppliers,
@@ -160,10 +161,12 @@ class GroundPackingCandidates(unittest.TestCase):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--recipe", type=identifier, default="ground-derived-inputs", help="Explicit completed graph owning the Ground suppliers; no latest-run lookup.")
     parser.add_argument("--case", choices=("all", "repeat", "refusals"), default="all")
     parser.add_argument("--sources-only", action="store_true", help="Debug verified suppliers from an incomplete packing run; never accepts that recipe")
     arguments = parser.parse_args()
     RUN_ID = arguments.run_id
+    RECIPE = arguments.recipe
     SOURCES_ONLY = arguments.sources_only
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(GroundPackingCandidates)
     if arguments.case != "all":

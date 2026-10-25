@@ -61,6 +61,8 @@
 #include "../utility_power.h"
 #include "../transport_tube.h"
 #include "../geothermal_collector.h"
+#include "../geothermal_generator.h"
+#include "../transport_tube_geothermal.h"
 #include "../geothermal_riser.h"
 #include "../surface_supply_order_runtime.h"
 #include "../geothermal_heat.h"
@@ -73,6 +75,8 @@
 #include "saveload_filter.h"
 #include "saveload_func.h"
 #include "saveload_internal.h"
+#include "save_framing.h"
+#include "save_envelope.h"
 
 #include <atomic>
 #ifdef __EMSCRIPTEN__
@@ -237,9 +241,99 @@ struct SaveLoadParams {
 	std::string extra_msg;               ///< the error message
 
 	bool saveinprogress;                 ///< Whether there is currently a save in progress.
+	std::optional<SaveLineageResult> lineage; ///< Accepted original interpretation, owned only by the current DoLoad scope.
 };
 
 static SaveLoadParams _sl; ///< Parameters used for/at saveload.
+
+/** @copydoc GetLoadCapabilities */
+std::optional<SaveLineageResult> GetLoadCapabilities()
+{
+	return _sl.lineage;
+}
+
+/** Identify the exact A feature denoted by an unchanged post-fork A version enumerator.
+ * @param boundary Original destination-A version name, never a donor's conflicting numeric alias.
+ * @return Its explicit A capability, or no mapping for shared/future version boundaries.
+ */
+static std::optional<SaveCapability> DestinationVersionCapability(SaveLoadVersion boundary)
+{
+	switch (boundary) {
+		case SaveLoadVersion::OrbitalAssemblyFacilities: return SaveCapability::OrbitalAssemblyFacilities;
+		case SaveLoadVersion::OrbitalManufacturingReservations: return SaveCapability::OrbitalManufacturingReservations;
+		case SaveLoadVersion::OrbitalManufacturingMaterialization: return SaveCapability::OrbitalManufacturingMaterialization;
+		case SaveLoadVersion::OrbitalManufacturingClones: return SaveCapability::OrbitalManufacturingClones;
+		case SaveLoadVersion::SpaceReplacementSettlement: return SaveCapability::SpaceReplacementSettlement;
+		case SaveLoadVersion::SpaceOrderedActions: return SaveCapability::SpaceOrderedActions;
+		case SaveLoadVersion::SpaceHeavyMinerCommissioning: return SaveCapability::SpaceHeavyMinerCommissioning;
+		case SaveLoadVersion::SpaceHeavyMinerMissions: return SaveCapability::SpaceHeavyMinerMissions;
+		case SaveLoadVersion::SpaceHeavyMinerSupplies: return SaveCapability::SpaceHeavyMinerSupplies;
+		case SaveLoadVersion::SpaceHeavyMinerDescents: return SaveCapability::SpaceHeavyMinerDescents;
+		case SaveLoadVersion::SpaceHeavyMinerOnboardServices: return SaveCapability::SpaceHeavyMinerOnboardServices;
+		case SaveLoadVersion::SpaceHeavyMinerContainedServices: return SaveCapability::SpaceHeavyMinerContainedServices;
+		case SaveLoadVersion::SpaceCargoDimensions: return SaveCapability::SpaceCargoDimensions;
+		case SaveLoadVersion::OrbitalRecipeProcessing: return SaveCapability::OrbitalRecipeProcessing;
+		case SaveLoadVersion::CompanySupplyPackets: return SaveCapability::CompanySupplyPackets;
+		case SaveLoadVersion::SurfaceSupplyOrders: return SaveCapability::SurfaceSupplyOrdersA;
+		default: return std::nullopt;
+	}
+}
+
+/** @copydoc SlHasSaveCapability */
+bool SlHasSaveCapability(SaveCapability capability)
+{
+	if (_sl.lineage) return HasSaveCapability(*_sl.lineage, capability);
+	// Outside a load, serialization and synthetic pointer cleanup describe the
+	// current writer, never the dialect/version of a previously copied candidate.
+	const auto writer_version = to_underlying(SAVEGAME_VERSION);
+	const auto dialect = writer_version == MERGED_SAVE_LINEAGE_VERSION ? SaveDialect::Merged : SaveDialect::DestinationA;
+	return HasSaveCapability({SaveLineageStatus::Accepted, dialect, writer_version}, capability);
+}
+
+/** @copydoc IsSavegameVersionBefore */
+bool IsSavegameVersionBefore(SaveLoadVersion major, uint8_t minor)
+{
+	// The destination enum's425-440 names denote A features. An admitted B save
+	// retains its actual numeric version but cannot activate those foreign layouts.
+	if (_sl.lineage) {
+		if (const auto capability = DestinationVersionCapability(major)) {
+			if (!HasSaveCapability(*_sl.lineage, *capability)) return true;
+		}
+	}
+	// Shared history and original minor-version distinctions keep their native
+	// numeric semantics; no global or whole-world virtual version is installed.
+	return _sl_version < major || (minor > 0 && _sl_version == major && _sl_minor_version < minor);
+}
+
+/** @copydoc IsSavegameVersionBeforeOrAt */
+bool IsSavegameVersionBeforeOrAt(SaveLoadVersion major)
+{
+	// Inclusive A boundaries end just before their next explicit feature. B's
+	// frozen Space prefix remains older than every such A addition, even at the
+	// same number; pre-fork repair gates keep their original numeric semantics.
+	if (_sl.lineage && DestinationVersionCapability(major)) {
+		const auto next = static_cast<SaveLoadVersion>(to_underlying(major) + 1);
+		return IsSavegameVersionBefore(next);
+	}
+	return _sl_version <= major;
+}
+
+/** One serial native attempt retains lineage through both chunk dispatch and afterload, then revokes it on every exit. */
+class ScopedLoadLineage final {
+public:
+	/** Start with no retained choice from an earlier successful or refused load. */
+	ScopedLoadLineage() { _sl.lineage.reset(); }
+	/** Success, refusal and exception paths all revoke this attempt's capabilities. */
+	~ScopedLoadLineage() { _sl.lineage.reset(); }
+	/** Bind only a successful detached classification before native dispatch.
+	 * @param result Accepted same-file original interpretation; no version renumbering occurs.
+	 */
+	void Bind(const SaveLineageResult &result)
+	{
+		assert(result.status == SaveLineageStatus::Accepted);
+		_sl.lineage = result;
+	}
+};
 
 /**
  * Allow scalar feature-reference validators to skip cleanup's synthetic current-version/nulling pass.
@@ -259,6 +353,7 @@ bool SlIsFixingPointers()
 static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 {
 	/* These define the chunks */
+	extern const ChunkHandlerTable _save_lineage_chunk_handlers;
 	extern const ChunkHandlerTable _gamelog_chunk_handlers;
 	extern const ChunkHandlerTable _map_chunk_handlers;
 	extern const ChunkHandlerTable _misc_chunk_handlers;
@@ -282,6 +377,9 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 	extern const ChunkHandlerTable _layer_mine_chunk_handlers;
 	extern const ChunkHandlerTable _layer_processor_chunk_handlers;
 	extern const ChunkHandlerTable _tbm_exchange_chunk_handlers;
+	extern const ChunkHandlerTable _utility_conversion_chunk_handlers;
+	extern const ChunkHandlerTable _geothermal_generator_chunk_handlers;
+	extern const ChunkHandlerTable _tube_geothermal_chunk_handlers;
 	extern const ChunkHandlerTable _utility_power_chunk_handlers;
 	extern const ChunkHandlerTable _tube_power_chunk_handlers;
 	extern const ChunkHandlerTable _tube_vehicle_chunk_handlers;
@@ -325,6 +423,7 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 
 	/** List of all chunks in a savegame. */
 	static const ChunkHandlerTable _chunk_handler_tables[] = {
+		_save_lineage_chunk_handlers,
 		_gamelog_chunk_handlers,
 		_map_chunk_handlers,
 		_misc_chunk_handlers,
@@ -348,6 +447,9 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 		_layer_mine_chunk_handlers,
 		_layer_processor_chunk_handlers,
 		_tbm_exchange_chunk_handlers,
+		_utility_conversion_chunk_handlers,
+		_geothermal_generator_chunk_handlers,
+		_tube_geothermal_chunk_handlers,
 		_utility_power_chunk_handlers,
 		_tube_power_chunk_handlers,
 		_tube_vehicle_chunk_handlers,
@@ -408,6 +510,9 @@ static const std::vector<ChunkHandlerRef> &ChunkHandlers()
 static void SlNullPointers()
 {
 	_sl.action = SaveLoadAction::Null;
+	// Failure cleanup describes the current in-memory schema rather than the
+	// refused original wire dialect; no original capability survives into it.
+	_sl.lineage.reset();
 
 	/* We don't want any savegame conversion code to run
 	 * during NULLing; especially those that try to get
@@ -563,38 +668,16 @@ static inline ChunkId SlReadChunkId()
 	return label;
 }
 
-/**
- * Read in the header descriptor of an object or an array.
- * If the highest bit is set (7), then the index is bigger than 127
- * elements, so use the next byte to read in the real value.
- * The actual value is then both bytes added with the first shifted
- * 8 bits to the left, and dropping the highest bit (which only indicated a big index).
- * x = ((x & 0x7F) << 8) + SlReadByte();
- * @return Return the value of the index
+/** Read the original prefix-width quantity shared by native array lengths and sparse indices.
+ * @return Exact unsigned quantity; native reporting retains ordinary full-load failure semantics.
  */
 static uint SlReadSimpleGamma()
 {
-	uint i = SlReadByte();
-	if (HasBit(i, 7)) {
-		i &= ~0x80;
-		if (HasBit(i, 6)) {
-			i &= ~0x40;
-			if (HasBit(i, 5)) {
-				i &= ~0x20;
-				if (HasBit(i, 4)) {
-					i &= ~0x10;
-					if (HasBit(i, 3)) {
-						SlErrorCorrupt("Unsupported gamma");
-					}
-					i = SlReadByte(); // 32 bits only.
-				}
-				i = (i << 8) | SlReadByte();
-			}
-			i = (i << 8) | SlReadByte();
-		}
-		i = (i << 8) | SlReadByte();
+	try {
+		return ReadSaveGamma(SlReadByte);
+	} catch (const SaveFramingError &error) {
+		SlErrorCorrupt(error.what());
 	}
-	return i;
 }
 
 /**
@@ -678,7 +761,7 @@ static inline uint SlGetArrayLength(size_t length)
  * This is essentially \c VarFileType, but with a bit denoting that the type has a field length and a value denoting end-of-table.
  */
 struct SavegameFileType {
-	static constexpr uint8_t HAS_FIELD_LENGTH_BIT = 4; ///< Set this bit to denote the type has a field length.
+	static constexpr uint8_t HAS_FIELD_LENGTH_BIT = SAVE_TABLE_FIELD_LENGTH_BIT; ///< Shared original table type/length bit allocation.
 	uint8_t storage{}; ///< Actual storage of the file type.
 
 	/** Create an end-of-table marker. */
@@ -700,7 +783,7 @@ struct SavegameFileType {
 	 * Is this the end-of-table marker?
 	 * @return \c true iff this is an end-of-table marker.
 	 */
-	constexpr bool IsEnd() const { return storage == 0; }
+	constexpr bool IsEnd() const { return DecodeSaveTableField(this->storage).terminal; }
 
 	/**
 	 * Does this field have a length?
@@ -709,7 +792,7 @@ struct SavegameFileType {
 	constexpr bool HasFieldLength() const
 	{
 		assert(!this->IsEnd());
-		return HasBit(storage, HAS_FIELD_LENGTH_BIT);
+		return DecodeSaveTableField(this->storage).has_length;
 	}
 
 	/**
@@ -719,7 +802,7 @@ struct SavegameFileType {
 	constexpr VarFileType Type() const
 	{
 		assert(!this->IsEnd());
-		return static_cast<VarFileType>(GB(storage, 0, HAS_FIELD_LENGTH_BIT));
+		return static_cast<VarFileType>(DecodeSaveTableField(this->storage).primitive);
 	}
 };
 
@@ -838,21 +921,25 @@ static size_t _next_offs;
  */
 int SlIterateArray()
 {
-	/* After reading in the whole array inside the loop
-	 * we must have read in all the data, so we must be at end of current block. */
+	// A prior row must be consumed in full before another native identity can
+	// start; short/overread payloads would attach later vehicle/cargo fields to
+	// the wrong serialized owner rather than merely skip display data.
 	if (_next_offs != 0 && _sl.reader->GetSize() != _next_offs) {
 		SlErrorCorruptFmt("Invalid chunk size iterating array - expected to be at position {}, actually at {}", _next_offs, _sl.reader->GetSize());
 	}
 
+	// Preserve each original ordinal, including empty contiguous entries; only
+	// the explicit family terminator ends this owner's serialized identity set.
 	for (;;) {
-		uint length = SlReadArrayLength();
-		if (length == 0) {
+		const auto row = DecodeSaveArrayRow(SlReadArrayLength());
+		if (row.terminal) {
 			assert(!_sl.expect_table_header);
 			_next_offs = 0;
 			return -1;
 		}
 
-		_sl.obj_len = --length;
+		const uint length = row.payload_bytes;
+		_sl.obj_len = length;
 		_next_offs = _sl.reader->GetSize() + length;
 
 		if (_sl.expect_table_header) {
@@ -965,6 +1052,12 @@ static void SlCopyBytes(void *ptr, size_t length)
 size_t SlGetFieldLength()
 {
 	return _sl.obj_len;
+}
+
+/** @copydoc SlGetChunkType */
+ChunkType SlGetChunkType()
+{
+	return _sl.chunk_type;
 }
 
 /**
@@ -1757,14 +1850,15 @@ static void SlVector(void *vector, VarType conv)
 	}
 }
 
-/**
- * Are we going to save this object or not?
- * @param sld The save-load configuration for a single variable.
- * @return \c true iff the version of the current save game is within the range of the configuration.
- */
-static inline bool SlIsObjectValidInSavegame(const SaveLoad &sld)
+/** @copydoc SlIsObjectValidInSavegame */
+bool SlIsObjectValidInSavegame(const SaveLoad &sld)
 {
-	return (_sl_version >= sld.version_from && _sl_version < sld.version_to);
+	// Branch-only columns require their own explicit capability, including empty
+	// TABLE headers. A colliding numeric interval cannot expose a default value.
+	if (sld.required_capability && !SlHasSaveCapability(*sld.required_capability)) return false;
+	// Both endpoints use the same original-feature semantics as scalar decoders;
+	// fixing only the handler's if-statements would leave its TABLE layout wrong.
+	return !IsSavegameVersionBefore(sld.version_from) && IsSavegameVersionBefore(sld.version_to);
 }
 
 /**
@@ -2297,7 +2391,7 @@ static void SlLoadChunk(const ChunkHandler &ch)
 
 	_sl.chunk_type = static_cast<ChunkType>(m & to_underlying(ChunkType::FileTypeMask));
 	_sl.obj_len = 0;
-	_sl.expect_table_header = (_sl.chunk_type == ChunkType::Table || _sl.chunk_type == ChunkType::SparseTable);
+	_sl.expect_table_header = SaveChunkHasTableHeader(m);
 
 	/* The header should always be at the start. Read the length; the
 	 * Load() should as first action process the header. */
@@ -2319,8 +2413,7 @@ static void SlLoadChunk(const ChunkHandler &ch)
 			break;
 		case ChunkType::Riff: {
 			/* Read length */
-			size_t len = (SlReadByte() << 16) | ((m >> 4) << 24);
-			len += SlReadUint16();
+			const size_t len = ReadSaveRiffLength(m, SlReadByte);
 			_sl.obj_len = len;
 			size_t start_pos = _sl.reader->GetSize();
 			size_t endoffs = start_pos + len;
@@ -2350,7 +2443,7 @@ static void SlLoadCheckChunk(const ChunkHandler &ch)
 
 	_sl.chunk_type = static_cast<ChunkType>(m & to_underlying(ChunkType::FileTypeMask));
 	_sl.obj_len = 0;
-	_sl.expect_table_header = (_sl.chunk_type == ChunkType::Table || _sl.chunk_type == ChunkType::SparseTable);
+	_sl.expect_table_header = SaveChunkHasTableHeader(m);
 
 	/* The header should always be at the start. Read the length; the
 	 * LoadCheck() should as first action process the header. */
@@ -2370,8 +2463,7 @@ static void SlLoadCheckChunk(const ChunkHandler &ch)
 			break;
 		case ChunkType::Riff: {
 			/* Read length */
-			size_t len = (SlReadByte() << 16) | ((m >> 4) << 24);
-			len += SlReadUint16();
+			const size_t len = ReadSaveRiffLength(m, SlReadByte);
 			_sl.obj_len = len;
 			size_t start_pos = _sl.reader->GetSize();
 			size_t endoffs = start_pos + len;
@@ -2403,7 +2495,7 @@ static void SlSaveChunk(const ChunkHandler &ch)
 	Debug(Facility::Sl, Severity::Warning, "Saving chunk {}", ch.GetName());
 
 	_sl.chunk_type = ch.type;
-	_sl.expect_table_header = (_sl.chunk_type == ChunkType::Table || _sl.chunk_type == ChunkType::SparseTable);
+	_sl.expect_table_header = SaveChunkHasTableHeader(to_underlying(ch.type));
 
 	_sl.need_length = (_sl.expect_table_header || _sl.chunk_type == ChunkType::Riff) ? NeedLength::WantLength : NeedLength::None;
 
@@ -2564,6 +2656,35 @@ struct FileWriter : SaveFilter {
 	}
 };
 
+/** Explicit codec failure ownership; detached preflight must never invoke native pointer cleanup. */
+struct SaveCodecErrors {
+	bool detached = false; ///< True only for a private preflight decoder, never inferred from global action.
+	/** Report a codec failure through the caller's explicit error domain.
+	 * @param message Existing native localized error identifier.
+	 * @param detail Optional original decoder diagnostic.
+	 * @throws SaveFramingError Detached failure without touching native save/load state.
+	 */
+	[[noreturn]] void Fail(StringID message, const std::string &detail = {}) const
+	{
+		if (this->detached) throw SaveFramingError(detail.empty() ? "Invalid compressed save stream" : detail.c_str());
+		SlError(message, detail);
+	}
+	/** Preserve native corruption reporting while keeping inspection outside native cleanup.
+	 * @param detail Original invalid-wire diagnostic.
+	 */
+	[[noreturn]] void Corrupt(const std::string &detail) const
+	{
+		if (this->detached) throw SaveFramingError(detail.c_str());
+		SlErrorCorrupt(detail);
+	}
+};
+
+/** @copydoc CreateSaveFileReader */
+std::shared_ptr<LoadFilter> CreateSaveFileReader(FileHandle &&file)
+{
+	return std::make_shared<FileReader>(std::move(file));
+}
+
 /*******************************************
  ********** START OF LZO CODE **************
  *******************************************/
@@ -2575,15 +2696,24 @@ static const uint LZO_BUFFER_SIZE = 8192;
 
 /** Filter using LZO compression. */
 struct LZOLoadFilter : LoadFilter {
+	SaveCodecErrors errors; ///< Explicit native or detached error ownership.
+	bool ancient_byte_order; ///< Captured original version, never re-read from a running world.
 	/**
 	 * Initialise this filter.
 	 * @param chain The next filter in this chain.
+	 * @param errors Explicit failure policy; native callers retain ordinary save/load errors.
+	 * @param version Original version selecting historical pre-envelope byte order.
 	 */
-	LZOLoadFilter(std::shared_ptr<LoadFilter> chain) : LoadFilter(std::move(chain))
+	LZOLoadFilter(std::shared_ptr<LoadFilter> chain, SaveCodecErrors errors = {}, SaveLoadVersion version = _sl_version) : LoadFilter(std::move(chain)), errors(errors), ancient_byte_order(version == SaveLoadVersion::MinVersion)
 	{
-		if (lzo_init() != LZO_E_OK) SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
+		if (lzo_init() != LZO_E_OK) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
 	}
 
+	/** Decode through the explicit failure domain.
+	 * @param buf Caller-owned destination buffer.
+	 * @param ssize Destination capacity, at least one native block for LZO.
+	 * @return Actual decoded bytes, or zero only after a complete compressed stream.
+	 */
 	size_t Read(uint8_t *buf, size_t ssize) override
 	{
 		assert(ssize >= LZO_BUFFER_SIZE);
@@ -2595,27 +2725,32 @@ struct LZOLoadFilter : LoadFilter {
 		lzo_uint len = ssize;
 
 		/* Read header*/
-		if (this->chain->Read((uint8_t*)tmp, sizeof(tmp)) != sizeof(tmp)) SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE, "File read failed");
+		const size_t header_bytes = this->chain->Read(reinterpret_cast<uint8_t *>(tmp), sizeof(tmp));
+		// A complete final block may end at EOF; a partial block header is never a valid terminator.
+		// Only the detached scanner probes for EOF after the chunk terminator;
+		// an ordinary native request still requires its original complete block.
+		if (header_bytes == 0 && this->errors.detached) return 0;
+		if (header_bytes != sizeof(tmp)) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE, "File read failed");
 
 		/* Check if size is bad */
 		((uint32_t*)out)[0] = size = tmp[1];
 
-		if (_sl_version != SaveLoadVersion::MinVersion) {
+		if (!this->ancient_byte_order) {
 			tmp[0] = TO_BE32(tmp[0]);
 			size = TO_BE32(size);
 		}
 
-		if (size >= sizeof(out)) SlErrorCorrupt("Inconsistent size");
+		if (size > sizeof(out) - sizeof(uint32_t)) this->errors.Corrupt("Inconsistent size");
 
 		/* Read block */
-		if (this->chain->Read(out + sizeof(uint32_t), size) != size) SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
+		if (this->chain->Read(out + sizeof(uint32_t), size) != size) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
 
 		/* Verify checksum */
-		if (tmp[0] != lzo_adler32(0, out, size + sizeof(uint32_t))) SlErrorCorrupt("Bad checksum");
+		if (tmp[0] != lzo_adler32(0, out, size + sizeof(uint32_t))) this->errors.Corrupt("Bad checksum");
 
 		/* Decompress */
 		int ret = lzo1x_decompress_safe(out + sizeof(uint32_t) * 1, size, buf, &len, nullptr);
-		if (ret != LZO_E_OK) SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
+		if (ret != LZO_E_OK) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
 		return len;
 	}
 };
@@ -2700,16 +2835,18 @@ struct NoCompSaveFilter : SaveFilter {
 
 /** Filter using Zlib compression. */
 struct ZlibLoadFilter : LoadFilter {
+	SaveCodecErrors errors; ///< Explicit native or detached error ownership.
 	z_stream z{}; ///< Stream state we are reading from.
 	uint8_t fread_buf[MEMORY_CHUNK_SIZE]; ///< Buffer for reading from the file.
 
 	/**
 	 * Initialise this filter.
 	 * @param chain The next filter in this chain.
+	 * @param errors Explicit failure policy; native callers retain ordinary save/load errors.
 	 */
-	ZlibLoadFilter(std::shared_ptr<LoadFilter> chain) : LoadFilter(std::move(chain))
+	ZlibLoadFilter(std::shared_ptr<LoadFilter> chain, SaveCodecErrors errors = {}) : LoadFilter(std::move(chain)), errors(errors)
 	{
-		if (inflateInit(&this->z) != Z_OK) SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
+		if (inflateInit(&this->z) != Z_OK) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
 	}
 
 	/** Clean everything up. */
@@ -2718,6 +2855,11 @@ struct ZlibLoadFilter : LoadFilter {
 		inflateEnd(&this->z);
 	}
 
+	/** Decode through the explicit failure domain.
+	 * @param buf Caller-owned destination buffer.
+	 * @param size Destination capacity, at least one native block for LZO.
+	 * @return Actual decoded bytes, or zero only after a complete compressed stream.
+	 */
 	size_t Read(uint8_t *buf, size_t size) override
 	{
 		this->z.next_out  = buf;
@@ -2730,11 +2872,12 @@ struct ZlibLoadFilter : LoadFilter {
 				this->z.avail_in = static_cast<uint>(this->chain->Read(this->fread_buf, sizeof(this->fread_buf)));
 			}
 
-			/* inflate the data */
+			/* A decoder must consume input or produce output on every continuation; malformed streams cannot monopolize preflight. */
+			const auto before_in = this->z.avail_in, before_out = this->z.avail_out;
 			int r = inflate(&this->z, 0);
 			if (r == Z_STREAM_END) break;
 
-			if (r != Z_OK) SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "inflate() failed");
+			if (r != Z_OK || (before_in == this->z.avail_in && before_out == this->z.avail_out)) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "inflate() failed");
 		} while (this->z.avail_out != 0);
 
 		return size - this->z.avail_out;
@@ -2826,17 +2969,19 @@ static const lzma_stream _lzma_init = LZMA_STREAM_INIT;
 
 /** Filter without any compression. */
 struct LZMALoadFilter : LoadFilter {
+	SaveCodecErrors errors; ///< Explicit native or detached error ownership.
 	lzma_stream lzma;                  ///< Stream state that we are reading from.
 	uint8_t fread_buf[MEMORY_CHUNK_SIZE]; ///< Buffer for reading from the file.
 
 	/**
 	 * Initialise this filter.
 	 * @param chain The next filter in this chain.
+	 * @param errors Explicit failure policy; native callers retain ordinary save/load errors.
 	 */
-	LZMALoadFilter(std::shared_ptr<LoadFilter> chain) : LoadFilter(std::move(chain)), lzma(_lzma_init)
+	LZMALoadFilter(std::shared_ptr<LoadFilter> chain, SaveCodecErrors errors = {}) : LoadFilter(std::move(chain)), errors(errors), lzma(_lzma_init)
 	{
 		/* Allow saves up to 256 MB uncompressed */
-		if (lzma_auto_decoder(&this->lzma, 1 << 28, 0) != LZMA_OK) SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
+		if (lzma_auto_decoder(&this->lzma, 1 << 28, 0) != LZMA_OK) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "cannot initialize decompressor");
 	}
 
 	/** Clean everything up. */
@@ -2845,6 +2990,11 @@ struct LZMALoadFilter : LoadFilter {
 		lzma_end(&this->lzma);
 	}
 
+	/** Decode through the explicit failure domain.
+	 * @param buf Caller-owned destination buffer.
+	 * @param size Destination capacity, at least one native block for LZO.
+	 * @return Actual decoded bytes, or zero only after a complete compressed stream.
+	 */
 	size_t Read(uint8_t *buf, size_t size) override
 	{
 		this->lzma.next_out  = buf;
@@ -2857,10 +3007,11 @@ struct LZMALoadFilter : LoadFilter {
 				this->lzma.avail_in = this->chain->Read(this->fread_buf, sizeof(this->fread_buf));
 			}
 
-			/* inflate the data */
+			/* Require actual decoder progress so malformed compressed streams cannot monopolize preflight. */
+			const auto before_in = this->lzma.avail_in, before_out = this->lzma.avail_out;
 			lzma_ret r = lzma_code(&this->lzma, LZMA_RUN);
 			if (r == LZMA_STREAM_END) break;
-			if (r != LZMA_OK) SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "liblzma returned error code");
+			if (r != LZMA_OK || (before_in == this->lzma.avail_in && before_out == this->lzma.avail_out)) this->errors.Fail(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, "liblzma returned error code");
 		} while (this->lzma.avail_out != 0);
 
 		return size - this->lzma.avail_out;
@@ -2982,6 +3133,24 @@ static const SaveLoadFormat _saveload_formats[] = {
 	{nullptr, nullptr, "lzma", SAVEGAME_TAG_LZMA, 0, 0, 0},
 #endif
 };
+
+/** @copydoc CreateSaveInspectionDecoder */
+std::shared_ptr<LoadFilter> CreateSaveInspectionDecoder(std::shared_ptr<LoadFilter> raw, const std::array<uint8_t, 4> &tag, uint16_t version)
+{
+	SaveLoadFormatTag original{};
+	std::ranges::copy(tag, original.begin());
+	if (original == SAVEGAME_TAG_NONE) return std::make_shared<NoCompLoadFilter>(std::move(raw));
+#ifdef WITH_LZO
+	if (original == SAVEGAME_TAG_LZO) return std::make_shared<LZOLoadFilter>(std::move(raw), SaveCodecErrors{true}, static_cast<SaveLoadVersion>(version));
+#endif
+#ifdef WITH_ZLIB
+	if (original == SAVEGAME_TAG_ZLIB) return std::make_shared<ZlibLoadFilter>(std::move(raw), SaveCodecErrors{true});
+#endif
+#ifdef WITH_LIBLZMA
+	if (original == SAVEGAME_TAG_LZMA) return std::make_shared<LZMALoadFilter>(std::move(raw), SaveCodecErrors{true});
+#endif
+	throw SaveFramingError("Unsupported save compression identifier");
+}
 
 /**
  * Return the savegameformat of the game. Whether it was created with ZLIB compression
@@ -3284,36 +3453,87 @@ static const SaveLoadFormat *DetermineSaveLoadFormat(SaveLoadFormatTag tag, uint
 	return fmt;
 }
 
+/** Report a refusal before native world mutation without invoking SlError's pointer cleanup.
+ * @param load_check Route the diagnostic to copied preview as well as the ordinary error owner.
+ * @param message Existing localized save/load error identifier.
+ * @param detail Optional bounded parser/classifier diagnostic.
+ * @return Error, explicitly preserving the existing live world rather than requesting ReInit.
+ */
+static SaveLoadResult ReportSavePreflightRefusal(bool load_check, StringID message, const std::string &detail = {})
+{
+	_sl.error_str = message; _sl.extra_msg = detail;
+	if (load_check) {
+		// An unreadable or refused next file cannot retain the preceding preview's
+		// valid-looking paid receipts, utility grants or provider references.
+		_load_check_data.Clear(); _load_check_data.checkable = true;
+		_load_check_data.error = message; _load_check_data.error_msg = detail;
+	}
+	ClearSaveLoadState();
+	return SaveLoadResult::Error;
+}
+
+/** Discard a refused copied candidate while retaining its useful native diagnostic.
+ * No live owner is reset: preview errors never initialize or partially install a world.
+ */
+static void DiscardFailedLoadCheckData()
+{
+	const auto error = _load_check_data.error; const auto message = _load_check_data.error_msg;
+	_load_check_data.Clear(); _load_check_data.checkable = true;
+	_load_check_data.error = error; _load_check_data.error_msg = message;
+}
+
 /**
  * Actually perform the loading of a "non-old" savegame.
  * @param reader     The filter to read the savegame from.
  * @param load_check Whether to perform the checking ("preview") or actually load the game.
- * @return Return the result of the action. #SaveLoadResult::Ok or #SaveLoadResult::ReInit ("unload" the game)
+ * @param origin Optional exact-digest legacy origin for this attempt only.
+ * @return Ok on success, Error for nonmutating preflight/copied refusal, or ReInit for a later native full-load failure.
  */
-static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check)
+static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check, const std::optional<SaveOriginHint> &origin)
 {
-	_sl.lf = std::move(reader);
+	ScopedLoadLineage lineage;
+	const auto raw = std::move(reader);
+	_sl.lf = raw;
 
 	if (load_check) {
-		/* Clear previous check data */
 		_load_check_data.Clear();
-		/* Mark SL_LOAD_CHECK as supported for this savegame. */
 		_load_check_data.checkable = true;
 	}
 
 	SaveLoadFormatTag tag{};
-	if (_sl.lf->Read(tag.data(), tag.size()) != tag.size()) SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
-
-	uint32_t version;
-	if (_sl.lf->Read(reinterpret_cast<uint8_t*>(&version), sizeof(version)) != sizeof(version)) SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
-
-	/* see if we have any loader for this type. */
-	const SaveLoadFormat *fmt = DetermineSaveLoadFormat(tag, version);
-
-	/* loader for this savegame type is not implemented? */
-	if (fmt->init_load == nullptr) {
-		SlError(STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR, fmt::format("Loader for '{}' is not available.", fmt->name));
+	uint32_t version = 0;
+	SaveWireFacts facts;
+	SaveLineageResult capabilities;
+	try {
+		if (raw == nullptr) throw SaveFramingError("Missing original save reader");
+		raw->Reset();
+		std::array<uint8_t, 8> original_header{};
+		if (raw->Read(original_header.data(), original_header.size()) != original_header.size()) throw SaveFramingError("Truncated save envelope");
+		facts = InspectSaveWireFacts(raw, {}, true);
+		capabilities = ClassifySaveDialect(facts, origin);
+		if (capabilities.status == SaveLineageStatus::Ambiguous) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_AMBIGUOUS_LINEAGE);
+		if (capabilities.status == SaveLineageStatus::Unsupported) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
+		if (capabilities.status != SaveLineageStatus::Accepted) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Required original branch transport is missing or inconsistent");
+		if (facts.original_version > to_underlying(SAVEGAME_VERSION)) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
+		// Native patchpack reservations remain unsupported even if their outer
+		// framing is readable; preflight refusal must not null the running world's pointers.
+		if (facts.original_version >= to_underlying(SaveLoadVersion::StartPatchpacks) && facts.original_version <= to_underlying(SaveLoadVersion::EndPatchpacks)) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_PATCHPACK);
+		std::array<uint8_t, 8> replay_header{};
+		if (raw->Read(replay_header.data(), replay_header.size()) != replay_header.size() || replay_header != original_header) throw SaveFramingError("Original save envelope changed before replay"); // Fresh native dispatch must retain exactly the inspected envelope, never a remembered version/tag.
+		std::copy_n(replay_header.begin(), 4, tag.begin());
+		std::copy_n(replay_header.data() + 4, sizeof(version), reinterpret_cast<uint8_t *>(&version));
+	} catch (const std::exception &error) {
+		return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, error.what());
+	} catch (...) {
+		return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Original save preflight failed");
 	}
+
+	// Only admitted bytes reach the original format/version owner. It retains
+	// ancient headerless LZO handling and every original numeric version. The raw
+	// source is at byte8 (or reset by its ancient fallback), with no reused codec.
+	const SaveLoadFormat *fmt = DetermineSaveLoadFormat(tag, version);
+	if (fmt->init_load == nullptr) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Original save decoder is unavailable");
+	lineage.Bind(capabilities);
 
 	_sl.lf = fmt->init_load(_sl.lf);
 	_sl.reader = std::make_unique<ReadBuffer>(_sl.lf);
@@ -3408,6 +3628,8 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		ValidateGeothermalCollectorLoadPreview();
 		ValidateGeothermalRiserLoadPreview();
 		ValidateGeothermalHeatRouteLoadPreview();
+		ValidateGeothermalGeneratorLoadPreview();
+		ValidateTubeGeothermalPowerLoadPreview();
 		// New-version previews require every bounded geology family, even for explicit inactive Classic/legacy terrain.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::GeologyExcavation)) {
 			if (!_load_check_data.geology_header_present || !_load_check_data.geology_deposits_present || !_load_check_data.geology_spans_present) SlErrorCorrupt("Missing required geology preview chunks");
@@ -3453,16 +3675,19 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 /**
  * Load the game using a (reader) filter.
  * @param reader   The filter to read the savegame from.
- * @return Return the result of the action. #SaveLoadResult::Ok or #SaveLoadResult::ReInit ("unload" the game)
+ * @param origin Optional explicit legacy interpretation bound to the entire original byte stream.
+ * @param load_check Parse the copied preview through the same network/filter boundary without initializing the live world.
+ * @return Ok on success, Error for nonmutating preflight/copied refusal, or ReInit for a later native full-load failure.
  */
-SaveLoadResult LoadWithFilter(std::shared_ptr<LoadFilter> reader)
+SaveLoadResult LoadWithFilter(std::shared_ptr<LoadFilter> reader, const std::optional<SaveOriginHint> &origin, bool load_check)
 {
 	try {
-		_sl.action = SaveLoadAction::Load;
-		return DoLoad(std::move(reader), false);
+		_sl.action = load_check ? SaveLoadAction::LoadCheck : SaveLoadAction::Load;
+		return DoLoad(std::move(reader), load_check, origin);
 	} catch (...) {
+		if (load_check) DiscardFailedLoadCheckData();
 		ClearSaveLoadState();
-		return SaveLoadResult::ReInit;
+		return load_check ? SaveLoadResult::Error : SaveLoadResult::ReInit;
 	}
 }
 
@@ -3474,9 +3699,10 @@ SaveLoadResult LoadWithFilter(std::shared_ptr<LoadFilter> reader)
  * @param dft The type of file to save or load.
  * @param sb The sub directory to save the savegame in
  * @param threaded True when threaded saving is allowed
+ * @param origin Optional exact-original legacy origin, ignored for saving.
  * @return Return the result of the action. #SaveLoadResult::Ok, #SaveLoadResult::Error, or #SaveLoadResult::ReInit ("unload" the game)
  */
-SaveLoadResult SaveOrLoad(std::string_view filename, SaveLoadOperation fop, DetailedFileType dft, Subdirectory sb, bool threaded)
+SaveLoadResult SaveOrLoad(std::string_view filename, SaveLoadOperation fop, DetailedFileType dft, Subdirectory sb, bool threaded, const std::optional<SaveOriginHint> &origin)
 {
 	/* An instance of saving is already active, so don't go saving again */
 	if (_sl.saveinprogress && fop == SaveLoadOperation::Save && dft == DetailedFileType::GameFile && threaded) {
@@ -3536,7 +3762,10 @@ SaveLoadResult SaveOrLoad(std::string_view filename, SaveLoadOperation fop, Deta
 		if (!fh.has_value() && fop != SaveLoadOperation::Save) fh = FioFOpenFile(filename, "rb", Subdirectory::Scenario);
 
 		if (!fh.has_value()) {
-			SlError(fop == SaveLoadOperation::Save ? STR_GAME_SAVELOAD_ERROR_FILE_NOT_WRITEABLE : STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
+			// An unreadable input has not initialized or partially loaded a world;
+			// report Error without invoking native pointer cleanup or requesting ReInit.
+			if (fop != SaveLoadOperation::Save) return ReportSavePreflightRefusal(fop == SaveLoadOperation::Check, STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE);
+			SlError(STR_GAME_SAVELOAD_ERROR_FILE_NOT_WRITEABLE);
 		}
 
 		if (fop == SaveLoadOperation::Save) { // SAVE game
@@ -3549,9 +3778,10 @@ SaveLoadResult SaveOrLoad(std::string_view filename, SaveLoadOperation fop, Deta
 		/* LOAD game */
 		assert(fop == SaveLoadOperation::Load || fop == SaveLoadOperation::Check);
 		Debug(Facility::Desync, Severity::Error, "load: {}", filename);
-		return DoLoad(std::make_shared<FileReader>(std::move(*fh)), fop == SaveLoadOperation::Check);
+		return DoLoad(CreateSaveFileReader(std::move(*fh)), fop == SaveLoadOperation::Check, origin);
 	} catch (...) {
 		/* This code may be executed both for old and new save games. */
+		if (fop == SaveLoadOperation::Check) DiscardFailedLoadCheckData();
 		ClearSaveLoadState();
 
 		if (fop != SaveLoadOperation::Check) Debug(Facility::Sl, Severity::Critical, "{} {}", GetSaveLoadErrorType().GetDecodedString(), GetSaveLoadErrorMessage().GetDecodedString());

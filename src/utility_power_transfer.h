@@ -4,6 +4,7 @@
  * @file utility_power_transfer.h Whole paid electrical path preparation and once-only shared-owner settlement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group8C
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group6BCB atomic recipient admission
  */
 
 #ifndef UTILITY_POWER_TRANSFER_H
@@ -13,7 +14,7 @@
 
 /** Original paid transition preceded by its exact installed local electrical inlet; these references create no physical or energy owner. */
 struct UtilityTransferLeg {
-	UtilityLinkID edge{UINT32_MAX}; ///< Existing original paid riser, never a generic one-hop fallback.
+	UtilityLinkID edge{UINT32_MAX}; ///< Existing original paid riser or explicit terminal local feed, never a generic one-hop fallback.
 	std::vector<UtilityLinkID> cells; ///< Ordered installed cable, including the sending source/arriving housing and exact machinery port.
 	/** @param other Candidate physical leg. @return Equality of original edge and complete ordered inlet references. */
 	bool operator==(const UtilityTransferLeg &other) const = default;
@@ -51,5 +52,48 @@ UtilityPathTransferOffer GetUtilityPathTransferOffer(const UtilityPathTransferRe
 UtilityPathTransferProposal PrepareUtilityPathTransfer(const UtilityPathTransferRequest &request);
 /** @param proposal Exact previously prepared request. @return One atomic original-source-preserving transfer/sequence receipt, or unchanged failure; no intermediate consumer grant or generation event is created. */
 UtilityMutationReceipt CommitUtilityPathTransfer(const UtilityPathTransferProposal &proposal);
+
+/**
+ * Register a reference-only local inlet without generating or transferring electricity.
+ * @param generator Original completed native powerhouse whose sole output funds the forwarding reservation.
+ * @param source Existing Deep forwarding consumer, exclusively linked to that original output.
+ * @param destination Existing unlinked Deep TubeWork consumer at the recipient inlet.
+ * @param inlet Actual owned native tube depot or loading platform with installed electrical cable.
+ * @param execute False validates and predicts the nonreused identity without changing any owner.
+ * @return Original local-feed identity, or absence on complete admission failure.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs12-solar-farms-mirrors-and-eti.md Group9C
+ */
+std::optional<UtilityLinkID> RegisterGeothermalLocalFeed(IndustryID generator, UtilityConsumerID source,
+	UtilityConsumerID destination, TileIndex inlet, bool execute = true);
+
+/** Original recipient and feed identities acquired together by the sole shared owner; this is neither generation nor a grant. */
+struct UtilityLocalFeedRecipient {
+	UtilityConsumerID consumer{UINT32_MAX}; ///< Actual unlinked Deep TubeWork request, never a forwarding proxy producer.
+	UtilityLinkID feed{UINT32_MAX}; ///< Original plant/root/inlet attachment, with no independent watt or energy allowance.
+};
+
+/**
+ * Acquire a complete original-source recipient without publishing a half-registered consumer on refusal.
+ * @param generator Actual completed dated native generator whose original output supplies the root.
+ * @param supply Existing same-company original Deep forwarding reservation.
+ * @param inlet Actual owned native tube depot/platform reached through purchased electrical cells.
+ * @param capacity_j Bounded shared request ceiling for the actual work consumer, never an offered/generated amount.
+ * @param execute False predicts both identities without changing issuers, receipts, quantities, money or RNG.
+ * @return Both original existing-format identities, or unchanged refusal; execution publishes one complete shared registration.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group6BCB
+ */
+std::optional<UtilityLocalFeedRecipient> RegisterGeothermalLocalFeedRecipient(IndustryID generator, UtilityConsumerID supply,
+	TileIndex inlet, uint64_t capacity_j, bool execute = true);
+
+/** @param consumer Original actual unlinked TubeWork recipient being lost. @param feed Its original terminal feed identity, never an arbitrary source/root. Native lifecycle closes only this recipient/feed and unused original promises, preserving its source and siblings even at the terminal receipt boundary. */
+void InvalidateUtilityLocalFeedRecipient(UtilityConsumerID consumer, UtilityLinkID feed);
+
+/** @param tile Actual changed native transport tile. Retire only original local-feed attachments whose recipient no longer exists; spent shared history is retained before a replacement may acquire a new identity. */
+void InvalidateUtilityLocalFeedInlets(TileIndex tile);
+
+/** @param supply Original owned Deep TubeWork forwarding reservation. @param execute False checks whole closure without mutation. @return Retire only its local feeds and unused root/descendant rights in one shared operation; the original producer and other users remain intact. Foreign physical roles refuse unchanged. */
+UtilityPowerError RetireUtilityLocalFeedSupply(UtilityConsumerID supply, bool execute = true);
+/** @param supply Original Deep TubeWork forwarding reservation owned by the physical source being lost. Nonrefusible lifecycle cleanup expires only its local feeds and unused promises, preserving spent history even at the terminal sequence boundary. */
+void InvalidateUtilityLocalFeedSupply(UtilityConsumerID supply);
 
 #endif /* UTILITY_POWER_TRANSFER_H */

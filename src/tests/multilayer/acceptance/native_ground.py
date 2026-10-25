@@ -20,12 +20,10 @@ import time
 ROOT = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(ROOT / "src/tests/multilayer/support"))
 from artifact_paths import resolve_input_path
-from runner import current_run_context
+from runner import current_run_context, run_native
 CONTEXT = current_run_context("acceptance", "native-ground")
 sys.path.insert(0, str(ROOT / "src/tests"))
-from tbm_logistics_save_fixture import owned_chunks, saved_table
-from geology_generation_fixture import read_stream
-from geology_save_fixture import chunks
+from savegame_tables import complete_world, read_stream, chunks, saved_owner_table
 
 SCHEMA_VERSION = 2
 PRODUCERS = {
@@ -69,11 +67,11 @@ def repository_path(value, require_file=False):
     if not path.is_relative_to(ROOT):
         raise EvidenceError("artifact escapes repository: " + str(path))
     # Saved inputs may use stable migration keys, but never an implicit latest run.
-    if require_file and path.suffix == ".sav" and not path.is_file():
+    if require_file and path.suffix in (".sav", ".scn"):
         try:
-            path = resolve_input_path(path)
-        except ValueError:
-            pass
+            path = resolve_input_path(path, ROOT)
+        except ValueError as error:
+            raise EvidenceError("required artifact missing or changed: " + str(path)) from error
     if require_file and not path.is_file():
         raise EvidenceError("required artifact missing: " + str(path))
     return path
@@ -90,63 +88,55 @@ def file_identity(path):
     return {"path": path.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
 
 
-def capture_ledger(runtime_artifacts):
+def capture_ledger(runtime_artifacts, complete_native=True):
     """Decode actual native saved owners, preserving their sole quantity/identity authority.
 
     @param runtime_artifacts Existing native saves emitted by the actual loader/game loop.
+    @param complete_native Explicit donor-compatible complete comparison flag; partial current ledgers are refused.
     @return Actual owner byte hashes and decoded sparse pool tables; absent/unsupported transport refuses.
     """
+    if complete_native is not True:
+        raise EvidenceError("partial current owner ledgers are not acceptance evidence")
     ledgers = []
     # A complete ground record includes geometry, actual packets/vehicles,
     # invoices and work queues together; a hand-written expected balance cannot
     # substitute for any missing physical owner.
     for artifact in runtime_artifacts:
         path = repository_path(artifact, True)
-        version, owners = owned_chunks(path)
-        _, stream = read_stream(path)
-        records = chunks(stream)
-        names = {record["name"] for record in records}
-        if (b"UPLH" in names) != (b"UPLD" in names):
-            raise EvidenceError("partial utility transport: " + str(path))
-        for record in records:
-            if record["name"] in (b"UPLH", b"UPLD"):
-                owners[record["name"]] = record["raw"]
-        tables = {}
-        # These public serialized tables expose each real pool ID and stock;
-        # opaque packed-map/header chunks remain exact bytes rather than a
-        # second gameplay registry invented by the runner.
-        for name in (b"VEHS", b"CAPA", b"PLYR", b"TBMP", b"TBXA", b"SPRR", b"LPWK"):
-            tables[name.decode("ascii")] = saved_table(path, name)
+        version, owners, tables = complete_world(path)
+        channels = {}
+        # These independently named wire observations expose cargo, cash,
+        # energy and clocks/RNG beside the full owner digest. No native hash or
+        # current output supplies an expected value, and no subsystem is omitted.
+        for category, names in dict(cargo=(b"CAPA", b"VEHS", b"INDY", b"STNN"), cash=(b"PLYR",),
+                                    energy=(b"UPLH", b"UPLD", b"UCVH", b"UCVD"),
+                                    clocks=(b"DATE", b"ECMY"), rng=(b"SRND",)).items():
+            channels[category] = {name.decode("ascii"): dict(sha256=hashlib.sha256(owners[name]).hexdigest(),
+                                  fields=tables.get(name)) for name in names if name in owners}
         ledgers.append({"artifact": file_identity(path), "save_version": version,
                         "owners": {name.decode("ascii"): {"sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
-                                   for name, raw in sorted(owners.items())}, "tables": tables})
+                                   for name, raw in sorted(owners.items())},
+                        "tables": {name.decode("ascii"): values for name, values in tables.items()},
+                        "independent_channels": channels, "comparison": "complete_native_owners_no_normalization"})
     if not ledgers:
         raise EvidenceError("no actual runtime save artifacts")
     return ledgers
 
 
-def compare_state_digest(reference, replay):
+def compare_state_digest(reference, replay, complete_native=True):
     """Compare complete actual serialized owner state including the saved clocks.
 
     @param reference Actual reference save at the agreed simulation boundary.
     @param replay Actual independently loaded/replayed save at that same boundary.
+    @param complete_native Explicit donor-compatible complete comparison flag; partial acceptance is refused.
     @return Canonical owner digest on exact equality; this is not host/client join evidence.
     """
-    left_version, left = owned_chunks(repository_path(reference, True))
-    right_version, right = owned_chunks(repository_path(replay, True))
+    if complete_native is not True:
+        raise EvidenceError("partial current owner comparisons are not acceptance evidence")
+    left_version, left, unused_left = complete_world(repository_path(reference, True))
+    right_version, right, unused_right = complete_world(repository_path(replay, True))
     if left_version != right_version:
         raise EvidenceError("different save transport versions")
-    left_records = chunks(read_stream(repository_path(reference, True))[1])
-    right_records = chunks(read_stream(repository_path(replay, True))[1])
-    # Electricity must participate when present; an otherwise matching ground
-    # snapshot cannot hide a changed grant or missing utility owner.
-    for target, records in ((left, left_records), (right, right_records)):
-        names = {record["name"] for record in records}
-        if (b"UPLH" in names) != (b"UPLD" in names):
-            raise EvidenceError("partial utility transport in digest input")
-        for record in records:
-            if record["name"] in (b"UPLH", b"UPLD"):
-                target[record["name"]] = record["raw"]
     differences = sorted(name.decode("ascii") for name in left.keys() | right.keys() if left.get(name) != right.get(name))
     if differences:
         raise EvidenceError("owner/clock mismatch: " + ", ".join(differences))
@@ -178,14 +168,14 @@ def execute_command(argv, cwd, log, timeout_seconds=110, environment=None):
     started = time.perf_counter()
     try:
         with log.open("wb") as sink:
-            result = subprocess.run([str(argument) for argument in argv], cwd=cwd, env=CONTEXT.environment(environment),
+            result = run_native(CONTEXT, argv, native_producer=__file__, cwd=cwd, env=environment,
                                     stdout=sink, stderr=subprocess.STDOUT, timeout=timeout_seconds,
                                     creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0, check=False)
     except subprocess.TimeoutExpired as error:
         raise EvidenceError("command timed out; evidence: " + str(log)) from error
     record = {"argv": [str(argument) for argument in argv], "cwd": cwd.relative_to(ROOT).as_posix(),
               "exit_status": result.returncode, "timeout_seconds": timeout_seconds,
-              "wall_seconds": time.perf_counter() - started, "log": file_identity(log)}
+              "wall_seconds": time.perf_counter() - started, "log": file_identity(log), "native_report": result.native_report}
     if result.returncode != 0:
         raise EvidenceError("command failed with status " + str(result.returncode) + "; evidence: " + str(log))
     return record

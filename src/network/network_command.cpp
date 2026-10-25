@@ -27,6 +27,9 @@
 #include "../group_cmd.h"
 #include "../industry_cmd.h"
 #include "../geothermal_utility_cmd.h"
+#include "../geothermal_service_cmd.h"
+#include "../transport_tube_cmd.h"
+#include "../geothermal_site_cmd.h" // The same original-site traits must govern synchronized network and local dispatch.
 #include "../space_vehicle_cmd.h"
 #include "../launch_center_cmd.h"
 #include "../space_structure_cmd.h"

@@ -10,6 +10,7 @@
  */
 
 #include "../stdafx.h"
+#include "../transport_tube.h"
 
 #include "saveload.h"
 #include "saveload_error.hpp"
@@ -150,6 +151,11 @@ void CopyTempEngineData()
 		e->name                = se->name;
 		RestoreUnstartedSpaceEngine(*e);
 	}
+	// Appended canonical capsules have no original ENGNrow. Apply the existing
+	// exact-date publication owner after restoring ALL saved history, including
+	// those new definitions, so their first successor and subsequent reload agree.
+	// This changes no reliability, hidden preference, vehicle, invoice or RNG state.
+	for (Engine *e : Engine::Iterate()) RestoreTubeEngineIntroduction(*e);
 
 	ResetTempEngineData();
 }

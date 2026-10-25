@@ -23,8 +23,9 @@ enum class ConstructionPreviewTile : uint8_t { None, Floor, WorkingSpace, Uncove
  * @param working_space Actual additional swept approach/turn cells from the canonical planner.
  * @param uncovered Requested cells the planner could not cover; refusal remains with the command owner.
  * @param route Canonical successive cutter centres; displayed in order starting at1, without planning or reserving work.
+ * @param blocked Actual refused location, drawn as uncovered with a "!" label; INVALID_TILE for accepted plans.
  */
-void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered = {}, std::span<const TileIndex> route = {});
+void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered = {}, std::span<const TileIndex> route = {}, TileIndex blocked = INVALID_TILE);
 
 /** Clear derived overlays when the cursor is cancelled, replaced or its viewport switches layers. */
 void ClearConstructionPreview();

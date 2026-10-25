@@ -44,19 +44,27 @@ class SourceReviewChecks(unittest.TestCase):
         """
         payload = dict(path="generated.bin", sha256="0" * 64)
         manifest = dict(path="source.json", sha256="1" * 64)
+        candidate = dict(path="candidate.grf", sha256="3" * 64)
+        checksum = dict(path="candidate.grf.hash", sha256="4" * 64)
         native = dict(family="space", configuration="Debug", run_id="source-check", expected_payload=payload,
                       expected_manifest=manifest, application=dict(path="Debug/test.exe", sha256="2" * 64),
+                      actual_candidate=candidate, candidate_checksum=checksum,
                       tag="[.space-packed-art-load]", assertions=2, marker="original decoder marker")
         binding = dict(role="expected_sprites", family="space", configuration="Debug", **payload, source_manifest=manifest)
         process = dict(exit_status=0, input_integrity_passed=True, configuration="Debug", run_id="source-check",
                        executable=native["application"], argv=["test.exe", native["tag"], "--reporter", "console", "--durations", "yes"],
-                       inputs=[payload], bound_inputs=[binding])
+                       inputs=[payload, candidate, checksum], bound_inputs=[binding])
         text = "All tests passed (2 assertions in 1 test case)\noriginal decoder marker\n"
+        # This detached positive control checks only the exact process-input
+        # layout; the native loader owner separately verifies real opened bytes.
+        review.validate_native_process(native, process, text)
         # Faults are independent: failed exit, changed image/configuration,
         # unrelated case, missing source input and broken closing integrity.
         for key, value in (("exit_status", 1), ("configuration", "RelWithDebInfo"),
                            ("executable", {}), ("argv", ["test.exe", "[space-art]"]),
-                           ("inputs", []), ("bound_inputs", []), ("input_integrity_passed", False)):
+                           ("inputs", []), ("inputs", [payload]), ("inputs", [payload, candidate]),
+                           ("inputs", [payload, checksum]), ("inputs", [payload, candidate, checksum, manifest]),
+                           ("bound_inputs", []), ("input_integrity_passed", False)):
             damaged = copy.deepcopy(process)
             damaged[key] = value
             with self.subTest(field=key), self.assertRaisesRegex(ValueError, "process/source/terminal"):
@@ -110,25 +118,25 @@ class SourceReviewChecks(unittest.TestCase):
         """
         cache = review.ROOT / "test-cache/cleanup"
         cache.mkdir(parents=True, exist_ok=True)
-        with tempfile.TemporaryDirectory(prefix="selector-consumer-", dir=cache) as temporary:
-            root = Path(temporary)
-            path = root / "mlm/reviews/negative.json"
-            path.parent.mkdir(parents=True)
-            base = dict(_documentation="Owner: r2fc-file-cleanup3.md19B; synthetic refusal metadata only.",
-                        kind="native_source_selector_result", complete=True, source_selectors_verified=True,
-                        family="launch", configuration="Debug", paid_world_loaded=False,
-                        viewport_captured=False, publishes_source=False)
-            # Every independent altered scope must refuse before selecting an
-            # actual build or loading a historical saved world for its viewport.
-            for key, value in (("kind", "selected_space_source"), ("complete", False),
-                               ("source_selectors_verified", False), ("family", "orbital"),
-                               ("configuration", "RelWithDebInfo"), ("paid_world_loaded", True),
-                               ("viewport_captured", True), ("publishes_source", True)):
-                path.write_text(json.dumps(dict(base, **{key: value})), encoding="utf-8")
-                reference = dict(path=path.relative_to(root).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
-                with patch.object(review, "selected_recipe", side_effect=AssertionError("wrong scope selected current build")):
-                    with self.subTest(field=key), self.assertRaisesRegex(ValueError, "exact current source-selector"):
-                        review.checked_result(reference, "launch", "Debug", root)
+        # Persistent owned refusal fixtures avoid recursive cleanup of any repository path.
+        root = Path(tempfile.mkdtemp(prefix="selector-consumer-", dir=cache))
+        path = root / "mlm/reviews/negative.json"
+        path.parent.mkdir(parents=True)
+        base = dict(_documentation="Owner: r2fc-file-cleanup3.md19B; synthetic refusal metadata only.",
+                    kind="native_source_selector_result", complete=True, source_selectors_verified=True,
+                    family="launch", configuration="Debug", paid_world_loaded=False,
+                    viewport_captured=False, publishes_source=False)
+        # Every independent altered scope must refuse before selecting an
+        # actual build or loading a historical saved world for its viewport.
+        for key, value in (("kind", "selected_space_source"), ("complete", False),
+                           ("source_selectors_verified", False), ("family", "orbital"),
+                           ("configuration", "RelWithDebInfo"), ("paid_world_loaded", True),
+                           ("viewport_captured", True), ("publishes_source", True)):
+            path.write_text(json.dumps(dict(base, **{key: value})), encoding="utf-8")
+            reference = dict(path=path.relative_to(root).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            with patch.object(review, "selected_recipe", side_effect=AssertionError("wrong scope selected current build")):
+                with self.subTest(field=key), self.assertRaisesRegex(ValueError, "exact current source-selector"):
+                    review.checked_result(reference, "launch", "Debug", root)
 
 
 if __name__ == "__main__":

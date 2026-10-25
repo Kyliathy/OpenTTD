@@ -322,3 +322,33 @@ bool SurfaceSupplyCustodyCheck::ObserveAllocated(CargoPacketID packet)
 	this->previous_packet = packet; ++this->allocated_packets;
 	return true;
 }
+
+
+/** @copydoc ComputeSurfaceSupplyOrderDigest */
+uint64_t ComputeSurfaceSupplyOrderDigest(const SurfaceSupplyOrderSnapshot &snapshot)
+{
+	uint64_t digest = 14695981039346656037ULL;
+	/** @param value Explicit scalar bits; fixed eight-byte encoding excludes compiler layout and host byte order. */
+	const auto field = [&digest](uint64_t value) {
+		for (uint8_t byte = 0; byte < 8; ++byte) { digest ^= value & 0xFF; digest *= 1099511628211ULL; value >>= 8; }
+	};
+	field(snapshot.next_id); field(snapshot.records.size());
+	// Issued order and explicit variant tags retain paid history after dispatch,
+	// cancellation or loss; unavailable Bpayer/inflation facts stay unavailable.
+	for (const auto &record : snapshot.records) {
+		field(record.id); field(record.owner.base()); field(record.origin.base());
+		for (const auto byte : record.label) field(byte);
+		field(record.quantity); field(static_cast<uint32_t>(record.purchase_day.base()));
+		if (const auto *native = record.Native()) {
+			field(1); field(native->purchaser.base()); field(native->origin_x); field(native->origin_y);
+			field(static_cast<uint64_t>(native->cost)); field(native->inflation_prices); field(static_cast<uint32_t>(native->purchase_year.base()));
+			field(native->packet_buyer); field(to_underlying(native->state)); field(native->issued_packet.base());
+		} else if (const auto *legacy = record.Legacy()) {
+			field(2); field(static_cast<uint64_t>(legacy->unit_price)); field(static_cast<uint32_t>(legacy->calendar_date));
+			field(legacy->refunded); field(legacy->dispatched); field(legacy->closed);
+		} else {
+			field(0); // An invalid detached variant cannot impersonate either admitted paid receipt era in diagnostics.
+		}
+	}
+	return digest;
+}

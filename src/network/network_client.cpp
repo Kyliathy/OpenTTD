@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file network_client.cpp Client part of the network protocol. */
+/** @file network_client.cpp Client part of the network protocol.
+ * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ */
 
 #include "../stdafx.h"
 #include "network_gui.h"
@@ -35,54 +37,13 @@
 
 #include "table/strings.h"
 
+#include "core/packet_reader.h"
+
 #include "../safeguards.h"
 
 /* This file handles all the client-commands */
 
-/** Read some packets, and when do use that data as initial load filter. */
-struct PacketReader : LoadFilter {
-	using Buffer = std::deque<uint8_t>; ///< The underlying buffer type that's being use.
 
-	Buffer buffer; ///< Buffer with the raw save game data.
-	Buffer::const_iterator iterator; ///< Buffer we're going to write to/read from.
-	size_t read_bytes = 0; ///< The total number of read bytes.
-
-	/** Initialise everything. */
-	PacketReader() : LoadFilter(nullptr)
-	{
-	}
-
-	/**
-	 * Add a packet to this buffer.
-	 * @param p The packet to add.
-	 */
-	void AddPacket(Packet &p)
-	{
-		assert(this->read_bytes == 0);
-		p.TransferOut([this](std::span<const uint8_t> source) {
-			std::ranges::copy(source, std::back_inserter(this->buffer));
-			return source.size();
-		});
-	}
-
-	size_t Read(uint8_t *rbuf, size_t size) override
-	{
-		/* Limit the amount to read to whatever we still have. */
-		size_t read_size = std::min(this->buffer.size() - this->read_bytes, size);
-
-		std::copy_n(this->iterator, read_size, rbuf);
-		std::advance(this->iterator, read_size);
-		this->read_bytes += read_size;
-
-		return read_size;
-	}
-
-	void Reset() override
-	{
-		this->read_bytes = 0;
-		this->iterator = this->buffer.cbegin();
-	}
-};
 
 
 /**

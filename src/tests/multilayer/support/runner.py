@@ -11,11 +11,13 @@ import os
 import hashlib
 from pathlib import Path
 import subprocess
+import signal
 import json
 import sys
 import uuid
 
 from artifact_paths import contained, create_run_context, resolve_input_path
+from owned_process_tree import close_owned_job, launch_owned_process
 
 _invocation = None
 
@@ -201,7 +203,9 @@ def native_command(context, command):
     # structured, so paths and shell metacharacters are never evaluated as code.
     for index in range(len(result) - 1):
         value = Path(result[index + 1])
-        if result[index] == "-c":
+        # Only a named native config is a configuration input. Python helper
+        # -c code shares this spelling and must retain its structured argument.
+        if result[index] == "-c" and value.suffix.lower() == ".cfg":
             # A caller-created process config already has the correct owner;
             # otherwise copy the named repository template into this home.
             if value.is_absolute() and value.resolve().is_relative_to(context.runtime_dir):
@@ -265,6 +269,83 @@ def _retain_transcripts(context, result, starts, process_id):
     return retained
 
 
+def stop_owned_process_tree(child):
+    """Stop only the supplied live process tree and reap its exact root handle.
+
+    @param child Popen root created by this invocation, never a discovered process name.
+    @return Whether the root has been reaped; already completed roots remain untouched.
+    """
+    close_owned_job(child)
+    if child.poll() is not None:
+        child.wait(timeout=15)
+        return True
+    if os.name == "nt":
+        try:
+            subprocess.run(["taskkill.exe", "/PID", str(child.pid), "/T", "/F"], check=False,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                           creationflags=subprocess.CREATE_NO_WINDOW, timeout=15)
+        except (OSError, subprocess.TimeoutExpired):
+            # The exact root handle remains ours if the platform tree utility
+            # is unavailable; its fallback kill and wait must still complete.
+            pass
+    elif getattr(child, "artifact_owned_session", False):
+        # Only a session created for this exact root may receive a group signal;
+        # caller/system process groups can never become a cleanup target.
+        try:
+            os.killpg(child.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    if child.poll() is None:
+        child.kill()
+    child.wait(timeout=15)
+    return True
+
+
+def _run_owned_process(arguments, options):
+    """Communicate with one owned child while retaining timeout output and descendants.
+
+    @param arguments Structured already-contained native executable/argument sequence.
+    @param options Original subprocess.run options; caller failure policy is applied after evidence.
+    @return CompletedProcess with timeout/root-reaping observations, never a native success claim.
+    """
+    options = dict(options)
+    timeout = options.pop("timeout", None)
+    incoming = options.pop("input", None)
+    options.pop("check", None)
+    if options.pop("capture_output", False):
+        # Captured and externally supplied streams are different evidence owners;
+        # conflicting requests must refuse before a child acquires either one.
+        if options.get("stdout") is not None or options.get("stderr") is not None:
+            raise ValueError("stdout/stderr cannot be combined with capture_output")
+        options.update(stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if incoming is not None:
+        if options.get("stdin") is not None:
+            raise ValueError("stdin cannot be combined with input")
+        options["stdin"] = subprocess.PIPE
+    if os.name != "nt":
+        options.setdefault("start_new_session", True)
+    child = launch_owned_process(arguments, **options)
+    timed_out = False
+    try:
+        try:
+            stdout, stderr = child.communicate(incoming, timeout=timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            stop_owned_process_tree(child)
+            stdout, stderr = child.communicate(timeout=15)
+    finally:
+        # Interruptions and communication failures cannot leave this invocation's
+        # native descendants alive or terminate an unrelated application instead.
+        close_owned_job(child)
+        if child.poll() is None:
+            stop_owned_process_tree(child)
+        child.wait(timeout=15)
+    result = subprocess.CompletedProcess(arguments, child.returncode, stdout, stderr)
+    result.timed_out = timed_out
+    result.root_reaped = child.poll() is not None
+    return result
+
+
 def run_native(context, command, *, native_producer=None, **kwargs):
     """Run one bounded native child with explicit artifact and runtime ownership.
 
@@ -291,10 +372,19 @@ def run_native(context, command, *, native_producer=None, **kwargs):
     if os.name == "nt" and "creationflags" not in options:
         options["creationflags"] = subprocess.CREATE_NO_WINDOW
     arguments = native_command(context, command)
+    executable = Path(arguments[0]).resolve()
+    initial_image = None
+    if executable.is_file() and executable.is_relative_to(context.root):
+        initial_image = {"path": executable.relative_to(context.root).as_posix(),
+                         "sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
+    writer = context.root / producer_name
+    initial_writer = hashlib.sha256(writer.read_bytes()).hexdigest() if writer.is_file() else None
     configurations = [name for name in ("Debug", "RelWithDebInfo") if name in Path(arguments[0]).parts]
     configuration = configurations[0] if len(configurations) == 1 else options["env"].get("OTTD_TEST_CONFIGURATION", "unknown")
-    from sprite_native_inputs import observe_expected_payload
+    from sprite_native_inputs import observe_expected_payload, observe_candidate_baseset
     bound_input = observe_expected_payload(context, options["env"], configuration)
+    bound_candidate = observe_candidate_baseset(context, options["env"], configuration)
+    bound_inputs = [row for row in (bound_input, bound_candidate) if row is not None]
     # One invocation may contain several serial observers. Snapshot current
     # output identities so this process does not claim an earlier child's frames
     # or saves merely because they share the invocation identifier.
@@ -303,7 +393,7 @@ def run_native(context, command, *, native_producer=None, **kwargs):
     before = {path: (path.stat().st_size, path.stat().st_mtime_ns) for path in existing if path.is_file()}
     process_id = uuid.uuid4().hex
     transcript_starts = _transcript_starts(context, options)
-    result = subprocess.run(arguments, **options)
+    result = _run_owned_process(arguments, options)
     transcripts = _retain_transcripts(context, result, transcript_starts, process_id)
     engine_captures = collect_native_screenshots(context)
     inputs = []
@@ -317,6 +407,8 @@ def run_native(context, command, *, native_producer=None, **kwargs):
             inputs.append(resolve_input_path(arguments[index + 1], root=context.root))
     if bound_input is not None:
         inputs.append(context.root / bound_input["path"])
+    if bound_candidate is not None:
+        inputs.extend(context.root / row["path"] for row in (bound_candidate, bound_candidate["checksum_source"]))
     # Native observers also write machine-readable scene/owner observations.
     # Snapshot them before publishing our own process record, avoiding recursion
     # while binding only files created/changed during this actual child.
@@ -325,26 +417,44 @@ def run_native(context, command, *, native_producer=None, **kwargs):
     produced = [path for path in candidates if path.is_file() and
                 before.get(path) != (path.stat().st_size, path.stat().st_mtime_ns)]
     report = context.write_report("native-" + process_id + ".json", producer_name,
-                                  produced, sorted(set(inputs)), configuration)
+                                  produced, sorted(path for path in set(inputs) if path.is_file()), configuration)
     record = json.loads(report.read_text(encoding="utf-8"))
     if native_producer is not None:
         record["entrypoint"] = entrypoint_name
     record.update(argv=arguments, exit_status=result.returncode,
+                  timed_out=result.timed_out, root_reaped=result.root_reaped,
                   runtime=context.runtime_dir.relative_to(context.root).as_posix(),
                   transcripts=[dict(path=path.relative_to(context.root).as_posix(),
                                     sha256=hashlib.sha256(path.read_bytes()).hexdigest()) for path in transcripts])
-    executable = Path(arguments[0]).resolve()
     # Native executable identity belongs to this build/run. Shell launchers
     # emit their own child report, so no installed tool is mistaken for the game.
-    if executable.is_file() and executable.is_relative_to(context.root):
-        record["executable"] = {"path": executable.relative_to(context.root).as_posix(),
-                                "sha256": hashlib.sha256(executable.read_bytes()).hexdigest()}
     integrity_error = None
-    if bound_input is not None:
-        record["bound_inputs"] = [bound_input]
+    if initial_image is not None:
+        record["executable"] = initial_image
+        closing_image = hashlib.sha256(executable.read_bytes()).hexdigest() if executable.is_file() else None
+        if closing_image != initial_image["sha256"]:
+            integrity_error = ValueError("native executable changed during execution")
+            record["closing_executable_sha256"] = closing_image
+    if initial_writer is not None:
+        record["producer_source"] = {"path": producer_name, "sha256": initial_writer}
+        closing_writer = hashlib.sha256(writer.read_bytes()).hexdigest() if writer.is_file() else None
+        if closing_writer != initial_writer:
+            integrity_error = ValueError("native producer source changed during execution")
+    if bound_inputs:
+        record["bound_inputs"] = bound_inputs
+        # Bound source identities describe bytes observed before launch even
+        # if a faulty child rewrites/removes one. Preserve that failed process
+        # and its transcripts instead of losing evidence while hashing a missing file.
+        opening = [{key: row[key] for key in ("path", "sha256")} for row in bound_inputs]
+        if bound_candidate is not None:
+            opening.append(bound_candidate["checksum_source"])
+        expected_paths = {row["path"] for row in opening}
+        record["inputs"] = [row for row in record["inputs"] if row["path"] not in expected_paths] + opening
         try:
             if observe_expected_payload(context, options["env"], configuration) != bound_input:
                 raise ValueError("sprite native input changed during execution")
+            if observe_candidate_baseset(context, options["env"], configuration) != bound_candidate:
+                raise ValueError("candidate GRF input changed during execution")
         except (ValueError, OSError) as error:
             integrity_error = error
         # Preserve the actual child/process transcript even when a source input
@@ -352,11 +462,27 @@ def run_native(context, command, *, native_producer=None, **kwargs):
         record["input_integrity_passed"] = integrity_error is None
         if integrity_error is not None:
             record["input_integrity_error"] = str(integrity_error)
+    elif initial_image is not None or initial_writer is not None:
+        # Non-sprite observers also bind their actual launch image and writer.
+        # Missing expected pixels never permits source/executable drift to pass.
+        record["input_integrity_passed"] = integrity_error is None
+        if integrity_error is not None:
+            record["input_integrity_error"] = str(integrity_error)
     report.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     result.native_report = dict(path=report.relative_to(context.root).as_posix(),
                                 sha256=hashlib.sha256(report.read_bytes()).hexdigest())
     if integrity_error is not None:
-        raise ValueError("sprite native input changed during execution; see " + str(report)) from integrity_error
+        raise ValueError("native input or executable changed during execution; see " + str(report)) from integrity_error
+    # Timeout and check=True failures retain the same required transcript/input
+    # record as successful children before preserving the caller's exception policy.
+    if result.timed_out:
+        error = subprocess.TimeoutExpired(arguments, options.get("timeout"), output=result.stdout, stderr=result.stderr)
+        error.native_report = result.native_report
+        raise error
+    if options.get("check", False) and result.returncode:
+        error = subprocess.CalledProcessError(result.returncode, arguments, output=result.stdout, stderr=result.stderr)
+        error.native_report = result.native_report
+        raise error
     return result
 
 
@@ -372,4 +498,8 @@ def start_native(context, command, **kwargs):
     options["env"] = context.environment(options.get("env"))
     if os.name == "nt" and "creationflags" not in options:
         options["creationflags"] = subprocess.CREATE_NO_WINDOW
-    return subprocess.Popen(native_command(context, command), **options)
+    if os.name != "nt":
+        options.setdefault("start_new_session", True)
+    child = subprocess.Popen(native_command(context, command), **options)
+    child.artifact_owned_session = os.name != "nt" and options.get("start_new_session", False)
+    return child

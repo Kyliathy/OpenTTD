@@ -153,6 +153,35 @@ static MultiLayerProfileError CheckProfileCombination(MultiLayerGameplayProfileI
 	return MultiLayerProfileError::None;
 }
 
+/** @copydoc GetLegacyMultiLayerCargoLabels */
+std::optional<std::array<CargoLabel, NUM_CARGO>> GetLegacyMultiLayerCargoLabels(MultiLayerGameplayProfileID id, uint16_t version,
+	LandscapeType landscape, const GRFConfigList &candidate)
+{
+	const auto *profile = GetMultiLayerContentProfile(id);
+	std::array<CargoLabel, NUM_CARGO> labels; labels.fill(CT_INVALID);
+	// Original vanilla Classic has no required package/CDIM mapping. Its
+	// explicit climate still resolves the unchanged native twelve slots;
+	// arbitrary external GRFs cannot borrow that baseline as their definitions.
+	if (id == MultiLayerGameplayProfileID::Classic) {
+		if (version != 0) return std::nullopt;
+		for (const auto &entry : candidate) {
+			if (!entry->flags.Test(GRFConfigFlag::System)) return std::nullopt;
+		}
+		for (CargoType cargo{0}; cargo < NUM_ORIGINAL_CARGO; ++cargo) labels[cargo] = GetDefaultCargoLabel(landscape, cargo);
+		return labels;
+	}
+	// Only the exact supported original profile/package can recover pre-CDIM
+	// definitions. Another climate, revision or external GRF changes slot meaning.
+	if (id != MultiLayerGameplayProfileID::MultilayerIndustry || profile == nullptr || version != profile->version ||
+		CheckProfileCombination(id, landscape, candidate) != MultiLayerProfileError::None ||
+		CheckMultiLayerContentPackageIdentity(*profile->required_content, candidate, false) != MultiLayerContentIdentityError::None) return std::nullopt;
+	// Native baseline slots are unchanged by the pinned definition package;
+	// appended meanings come directly from the very generator that emits Action0.
+	for (CargoType cargo{0}; cargo < NUM_ORIGINAL_CARGO; ++cargo) labels[cargo] = GetDefaultCargoLabel(landscape, cargo);
+	for (size_t offset = 0; offset < std::size(_multilayer_defined_cargo_labels); ++offset) labels[NUM_ORIGINAL_CARGO + offset] = _multilayer_defined_cargo_labels[offset];
+	return labels;
+}
+
 /**
  * Add the distributed first-party package to a supported new-world candidate.
  * @param id Requested stable identity.

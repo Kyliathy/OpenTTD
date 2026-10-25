@@ -1,0 +1,175 @@
+{
+  "_documentation": "r2mlvs17-underground-transport-tubes.md6BCC; actual434 source/provider binding transport; native powered work and switching remain later",
+  "configuration": "Debug",
+  "phase": "write",
+  "binary": {
+    "path": "build/Debug/openttd_test.exe",
+    "bytes": 88345088,
+    "sha256": "4ffc78bdc968ab67f798b85cf98a70c14de5d6b1141bde7c5e98fa19da66c640"
+  },
+  "controller": {
+    "path": "src/tests/multilayer/utilities/geothermal_tube_binding_files.py",
+    "bytes": 15676,
+    "sha256": "41f8a0ffbf390d9561bdb8e2a7812886767bf11195ebb8b5607c62f7e912be57"
+  },
+  "sources": [
+    {
+      "path": "src/transport_tube.h",
+      "bytes": 29248,
+      "sha256": "4dbe5fe24dcf98563849395fc583a1cad6b221dd39a81a93723abf79096524cf"
+    },
+    {
+      "path": "src/transport_tube_geothermal.h",
+      "bytes": 6915,
+      "sha256": "1b58f9359f43aebfa88da7687791e0efd771385cf5238e70a99849b733265dbe"
+    },
+    {
+      "path": "src/transport_tube_geothermal.cpp",
+      "bytes": 20169,
+      "sha256": "9ac0a4cd115d495b145650d5febf5cf6fc9e06ff242fe5c2146a3bd957d013a1"
+    },
+    {
+      "path": "src/transport_tube_runtime.cpp",
+      "bytes": 29014,
+      "sha256": "67a581ce2334f6510e2f437dacd7ee6c43783d5810c6e7e21f4c99fa4a8886cd"
+    },
+    {
+      "path": "src/transport_tube_topology.cpp",
+      "bytes": 13982,
+      "sha256": "7e841e7d69dfc75f0250072a0d81463c75785230ec415cf950a5f4fb0b4e9941"
+    },
+    {
+      "path": "src/transport_tube_power.cpp",
+      "bytes": 25198,
+      "sha256": "1bde5ed219c35cea3ce4020a1f8dec315ab5aa7c52b0fef724d63a66b5e208b9"
+    },
+    {
+      "path": "src/utility_power.cpp",
+      "bytes": 219343,
+      "sha256": "fa53f8641f8f954cf224e4b37ae92073f7aef2d117ee377d9d0989f7f200d170"
+    },
+    {
+      "path": "src/utility_power_transfer.h",
+      "bytes": 8185,
+      "sha256": "4589e270010db8539a1c54e1cd3cb5ecd46f750854c17f39ddff85a7ffd450fc"
+    },
+    {
+      "path": "src/saveload/transport_tube_vehicle_sl.cpp",
+      "bytes": 11738,
+      "sha256": "cd4831ee261a5431153827f48604668969ff0335f9d13cfe64267bd5243437e5"
+    },
+    {
+      "path": "src/multilayer_state.cpp",
+      "bytes": 32891,
+      "sha256": "9c065e85fd7a359a7349b7587d3af214d0ffa1079367d53b219c270a53ab1600"
+    },
+    {
+      "path": "src/saveload/afterload.cpp",
+      "bytes": 140534,
+      "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+    },
+    {
+      "path": "src/saveload/vehicle_sl.cpp",
+      "bytes": 64313,
+      "sha256": "6db99340d5935853609196039c2b0190257513a7c2711a5ba10dee0b4575f1a4"
+    },
+    {
+      "path": "src/saveload/saveload.cpp",
+      "bytes": 123645,
+      "sha256": "ca336e417cabc8ed3bcdf9e8205f1efb3f838363f4c4afc81a8695c6856d6ff4"
+    },
+    {
+      "path": "src/saveload/saveload.h",
+      "bytes": 91824,
+      "sha256": "07a93e01c4af28af68a1138feec99d08aba3851569f8ad3bbe58062b39d9e865"
+    },
+    {
+      "path": "src/tests/geothermal_tube_capsule_fixture.h",
+      "bytes": 5476,
+      "sha256": "6673e603ac03b5edc790ecdcd59a066eacceeb85208e3de44f50f7cadcb9ded5"
+    },
+    {
+      "path": "src/tests/transport_tube_geothermal_binding.cpp",
+      "bytes": 10039,
+      "sha256": "61ea2b6d23527cbdefaca059b0fdf66e2c52823ed5db13976aeaeee063455dda"
+    },
+    {
+      "path": "src/tests/transport_tube_geothermal_binding_load.cpp",
+      "bytes": 11852,
+      "sha256": "71649e9e080ebad0650fccc787875f3937ae599e7abd22d5f19826cd31f81686"
+    }
+  ],
+  "native": [
+    {
+      "log": {
+        "path": "logs/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/writer.log",
+        "bytes": 1568,
+        "sha256": "e32b0686a8987338a8b3fb02325ed43b9f5f911ffb06d700559f495ee31ebf84"
+      },
+      "assertions": 439,
+      "cases": 1
+    }
+  ],
+  "checkpoints": [
+    {
+      "phase": 0,
+      "source": 11201646932754522183,
+      "binding": 10091070655414295539,
+      "utility": 8316024357212336743,
+      "native": 9314727249995429156,
+      "input": {
+        "path": "mlm/reviews/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/saves/geothermal-binding-0.sav",
+        "bytes": 10072,
+        "sha256": "7faf83329345cf6e7aa37725fbfbbf1c9852845ed3fc36009034d20809dc06d8"
+      }
+    },
+    {
+      "phase": 1,
+      "source": 11003422609687943657,
+      "binding": 10091070655414295539,
+      "utility": 150203052249769259,
+      "native": 9314727249995429156,
+      "input": {
+        "path": "mlm/reviews/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/saves/geothermal-binding-1.sav",
+        "bytes": 10056,
+        "sha256": "dca71f4eb41ead39cf8cb8c3707a0fd12f8e60e1ae9bb27de614877718f51784"
+      }
+    },
+    {
+      "phase": 2,
+      "source": 11003422609687943657,
+      "binding": 10091070655414295539,
+      "utility": 13829544844826648597,
+      "native": 12161962213042174405,
+      "input": {
+        "path": "mlm/reviews/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/saves/geothermal-binding-2.sav",
+        "bytes": 9912,
+        "sha256": "632e9bcab23408417d9d34ca9012c72240345d94e5b2b3c1776c34f7d9058980"
+      }
+    },
+    {
+      "phase": 3,
+      "source": 11003422609687943657,
+      "binding": 10036555753969236982,
+      "utility": 14510072775060173445,
+      "native": 12161962213042174405,
+      "input": {
+        "path": "mlm/reviews/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/saves/geothermal-binding-3.sav",
+        "bytes": 9916,
+        "sha256": "a4ac5b275a4a78f7d07664127ae42d6c7ffe1dcca44d3c95519848ed20444039"
+      }
+    },
+    {
+      "phase": 4,
+      "source": 1186270139086341545,
+      "binding": 13845044304421099219,
+      "utility": 6886643160045785695,
+      "native": 12161962213042174405,
+      "input": {
+        "path": "mlm/reviews/tubes/geothermal-bindings/20261017-183312-1b5d7d4a28/saves/geothermal-binding-4.sav",
+        "bytes": 9932,
+        "sha256": "d72b1a438c5572f6354af66992eb0f63773713eabdce16a221419929e768a111"
+      }
+    }
+  ]
+}

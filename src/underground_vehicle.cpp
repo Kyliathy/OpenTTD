@@ -8,6 +8,7 @@
 
 #include "stdafx.h"
 #include "underground_vehicle.h"
+#include "transport_tube.h"
 #include "engine_base.h"
 #include "tbm.h"
 #include "table/strings.h"
@@ -63,7 +64,10 @@ const LayerVehicleCapability *GetUndergroundEngineCapability(EngineID engine)
 /** @copydoc CheckUndergroundVehicleCapability */
 CommandCost CheckUndergroundVehicleCapability(EngineID engine, MapLayer layer, CargoType cargo)
 {
+	const auto tube = GetTubeVehicleCapability(engine);
 	const auto *capability = GetUndergroundEngineCapability(engine);
+	// Native capsules share the existing profile/date/layer/cargo policy, so purchase lists and commands cannot disagree.
+	if (capability == nullptr && tube.has_value()) capability = tube->catalogue;
 	if (capability == nullptr) return CommandCost();
 	const auto &selection = GetCurrentMultiLayerProfileSelection();
 	const auto *profile = GetMultiLayerContentProfile(selection.id);

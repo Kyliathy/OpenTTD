@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
+/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (per-layer hotkeys) */
 
 #include "stdafx.h"
 #include "core/geometry_func.hpp"
@@ -20,6 +20,7 @@
 #include "dropdown_func.h"
 #include "house.h"
 #include "vehicle_gui.h"
+#include "vehiclelist.h"
 #include "rail_gui.h"
 #include "road.h"
 #include "road_gui.h"
@@ -2145,6 +2146,94 @@ static ToolbarButtonProc * const _toolbar_button_procs[] = {
 //One click handler per toolbar widget, including the switch button.
 static_assert(std::size(_toolbar_button_procs) == static_cast<size_t>(WID_TN_END));
 
+/** Identity of the window a toolbar hotkey opens or raises: its class and number. */
+using HotkeyWindow = std::pair<WindowClass, WindowNumber>;
+
+/**
+ * D10 toggle: when the window a toolbar hotkey opens is already as far in front as it can go, the hotkey closes it
+ * instead of raising it again. A window covered by one it can be raised above is raised as before; windows that
+ * always stay above it (the game options over the small map, for instance) do not stop the toggle.
+ * @param target Window the hotkey opens or raises; nothing for an action that never closes a window.
+ * @return Whether the window was closed, which replaces the hotkey's usual action.
+ */
+static bool ToggleHotkeyWindow(const std::optional<HotkeyWindow> &target)
+{
+	// Only enabled user preferences and actions with a specific existing window may replace raising with closing.
+	if (!_settings_client.gui.hotkey_toggles_window || !target.has_value()) return false;
+	Window *w = FindWindowById(target->first, target->second);
+	// A window that is not open yet opens, and one that can still come further forward is raised, as before.
+	if (w == nullptr || !IsWindowRaisedAsFarAsPossible(w)) return false;
+	w->Close();
+	return true;
+}
+
+/**
+ * Window a build toolbar hotkey shows, unless the open toolbar shows another rail or road type: then the key
+ * switches the toolbar to the remembered type rather than closing it.
+ * @param transport Transport the toolbar builds (its window number).
+ * @param shown Whether the open toolbar already shows the type the key asks for.
+ * @return The toolbar's identity, or nothing when the key switches type.
+ */
+static std::optional<HotkeyWindow> GetBuildToolbarHotkeyWindow(TransportType transport, bool shown)
+{
+	if (!shown) return std::nullopt;
+	return HotkeyWindow{WindowClass::BuildToolbar, transport};
+}
+
+/**
+ * Window that a game-toolbar hotkey opens or raises, for the D10 toggle. Pause, fast-forward, zoom, screenshots,
+ * layer selection, the land-info tool, new extra viewports, league tables, script debug and the grouped vehicle
+ * lists never close a window through their key.
+ * @param hotkey Main-toolbar hotkey.
+ * @return The window's identity, or nothing when the key never toggles.
+ */
+static std::optional<HotkeyWindow> GetMainToolbarHotkeyWindow(int hotkey)
+{
+	switch (hotkey) {
+		case MTHK_SETTINGS: return HotkeyWindow{WindowClass::GameOptions, GameOptionsWindowNumber::GameOptions};
+		case MTHK_SAVEGAME:
+		case MTHK_LOADGAME: return HotkeyWindow{WindowClass::SaveLoad, 0};
+		case MTHK_SMALLMAP: return HotkeyWindow{WindowClass::SmallMap, 0};
+		case MTHK_TOWNDIRECTORY: return HotkeyWindow{WindowClass::TownDirectory, 0};
+		case MTHK_SUBSIDIES: return HotkeyWindow{WindowClass::SubsidyList, 0};
+		case MTHK_STATIONS: return HotkeyWindow{WindowClass::StationList, _local_company};
+		case MTHK_FINANCES: return HotkeyWindow{WindowClass::Finances, _local_company};
+		case MTHK_COMPANIES: return HotkeyWindow{WindowClass::Company, _local_company};
+		case MTHK_STORY: return HotkeyWindow{WindowClass::StoryBook, _local_company};
+		case MTHK_GOAL: return HotkeyWindow{WindowClass::GoalList, _local_company};
+		case MTHK_GRAPHS: return HotkeyWindow{WindowClass::OperatingProfitGraph, 0};
+		case MTHK_INDUSTRIES: return HotkeyWindow{WindowClass::BuildIndustry, 0};
+		case MTHK_TRAIN_LIST:
+		case MTHK_ROADVEH_LIST:
+		case MTHK_SHIP_LIST:
+		case MTHK_AIRCRAFT_LIST: {
+			static constexpr VehicleType types[] = {VehicleType::Train, VehicleType::Road, VehicleType::Ship, VehicleType::Aircraft};
+			const VehicleType type = types[hotkey - MTHK_TRAIN_LIST];
+			// The key opens the grouped list instead when the advanced list is chosen; that view keeps its old behaviour.
+			if ((_settings_client.gui.advanced_vehicle_list > 0) != _ctrl_pressed) return std::nullopt;
+			const VehicleListIdentifier list(VehicleListType::Company, type, _local_company, _local_company.base());
+			return HotkeyWindow{GetWindowClassForVehicleType(type), list.ToWindowNumber()};
+		}
+		case MTHK_BUILD_RAIL: return GetBuildToolbarHotkeyWindow(TransportType::Rail, GetBuildRailToolbarRailType() == _last_built_railtype);
+		case MTHK_BUILD_ROAD: return GetBuildToolbarHotkeyWindow(TransportType::Road, GetBuildRoadToolbarRoadType() == _last_built_roadtype);
+		case MTHK_BUILD_TRAM: return GetBuildToolbarHotkeyWindow(TransportType::Road, GetBuildRoadToolbarRoadType() == _last_built_tramtype);
+		case MTHK_BUILD_DOCKS: return HotkeyWindow{WindowClass::BuildToolbar, TransportType::Water};
+		case MTHK_BUILD_AIRPORT: {
+			// On a rock layer the same key opens that layer's underground construction palette.
+			const MapLayer layer = GetMainWindow()->viewport->layer;
+			if (IsUndergroundConstructionLayer(layer)) return HotkeyWindow{WindowClass::UndergroundConstruction, layer};
+			return HotkeyWindow{WindowClass::BuildToolbar, TransportType::Air};
+		}
+		case MTHK_BUILD_TREES: return HotkeyWindow{WindowClass::BuildTrees, 0};
+		case MTHK_MUSIC: return HotkeyWindow{WindowClass::Music, 0};
+		case MTHK_CHEATS: return HotkeyWindow{WindowClass::Cheat, 0};
+		case MTHK_TERRAFORM: return HotkeyWindow{WindowClass::ScenarioGenerateLandscape, 0};
+		case MTHK_CLIENT_LIST: return HotkeyWindow{WindowClass::NetworkClientList, 0};
+		case MTHK_SIGN_LIST: return HotkeyWindow{WindowClass::SignList, 0};
+		default: return std::nullopt;
+	}
+}
+
 /** Main toolbar. */
 struct MainToolbarWindow : Window {
 	/** @param desc Main or split toolbar's shared widget description. */
@@ -2196,8 +2285,11 @@ struct MainToolbarWindow : Window {
 	}
 
 	/** @param hotkey Configured main-toolbar action. @return Whether this toolbar handled the shortcut. */
+	/** @param hotkey Native toolbar action selected by the key dispatcher. @return Whether this toolbar handled the action. */
 	EventState OnHotkey(int hotkey) override
 	{
+		// D10: a window's own key closes it again while it is the front-most closable window.
+		if (ToggleHotkeyWindow(GetMainToolbarHotkeyWindow(hotkey))) return EventState::Handled;
 		CallBackFunction cbf = CallBackFunction::None;
 		switch (hotkey) {
 			case MTHK_PAUSE: ToolbarPauseClick(this); break;
@@ -2212,6 +2304,13 @@ struct MainToolbarWindow : Window {
 					CycleMainViewportLayer();
 					SndClickBeep();
 				}
+				break;
+			case MTHK_SHOW_MAP_LAYER_1:
+			case MTHK_SHOW_MAP_LAYER_2:
+			case MTHK_SHOW_MAP_LAYER_3:
+			case MTHK_SHOW_MAP_LAYER_4:
+				// D2: Alt+1..4 pick a layer in display order while the layer button is usable; an unallocated layer is ignored.
+				if (!this->IsWidgetDisabled(WID_TN_MAP_LAYER) && ShowMainViewportLayerInDisplayOrder(hotkey - MTHK_SHOW_MAP_LAYER_1)) SndClickBeep();
 				break;
 			case MTHK_TOWNDIRECTORY: ShowTownDirectory(); break;
 			case MTHK_SUBSIDIES: ShowSubsidiesList(); break;
@@ -2328,6 +2427,11 @@ struct MainToolbarWindow : Window {
 		Hotkey({WKC_F4, 'M'}, "smallmap", MTHK_SMALLMAP),
 		//N is free. L is terraform, M is the small map and V opens an extra view.
 		Hotkey('N', "cycle_map_layer", MTHK_CYCLE_MAP_LAYER),
+		//D2: one key per layer in GUI display order. The Debug-only global Alt+0/1/2 moved to Ctrl+Alt.
+		Hotkey(WKC_ALT | '1', "show_map_layer_surface", MTHK_SHOW_MAP_LAYER_1),
+		Hotkey(WKC_ALT | '2', "show_map_layer_underground", MTHK_SHOW_MAP_LAYER_2),
+		Hotkey(WKC_ALT | '3', "show_map_layer_deep_underground", MTHK_SHOW_MAP_LAYER_3),
+		Hotkey(WKC_ALT | '4', "show_map_layer_space", MTHK_SHOW_MAP_LAYER_4),
 		Hotkey(WKC_F5, "town_list", MTHK_TOWNDIRECTORY),
 		Hotkey(WKC_F6, "subsidies", MTHK_SUBSIDIES),
 		Hotkey(WKC_F7, "station_list", MTHK_STATIONS),
@@ -2541,6 +2645,10 @@ enum class MainToolbarEditorHotkeys : int32_t {
 	GenerateTown, ///< Open town generation window.
 	BuildRoad, ///< Open toolbar window with tools for building roads.
 	BuildTram, ///< Open toolbar window with tools for building tramways.
+	ShowMapLayer1, ///< Show the first layer in GUI display order (Surface); r2df decision D2.
+	ShowMapLayer2, ///< Show the second layer in GUI display order (Underground).
+	ShowMapLayer3, ///< Show the third layer in GUI display order (Deep Underground).
+	ShowMapLayer4, ///< Show the fourth layer in GUI display order (Outer Space).
 };
 
 /** Editor construction entry respects the viewed layer while mutation stays in feature commands. */
@@ -2631,8 +2739,31 @@ struct ScenarioEditorToolbarWindow : Window {
 		SndClickBeep();
 	}
 
+	/**
+	 * Window that a scenario-editor hotkey opens or raises, for the D10 toggle; the editor's build palettes,
+	 * placement tools, screenshots, zoom and layer keys never close a window through their key.
+	 * @param hotkey Editor toolbar hotkey.
+	 * @return The window's identity, or nothing when the key never toggles.
+	 */
+	static std::optional<HotkeyWindow> GetEditorHotkeyWindow(int hotkey)
+	{
+		switch (MainToolbarEditorHotkeys(hotkey)) {
+			case MainToolbarEditorHotkeys::Settings: return HotkeyWindow{WindowClass::GameOptions, GameOptionsWindowNumber::GameOptions};
+			case MainToolbarEditorHotkeys::SaveGame: return HotkeyWindow{WindowClass::SaveLoad, 0};
+			case MainToolbarEditorHotkeys::Music: return HotkeyWindow{WindowClass::Music, 0};
+			case MainToolbarEditorHotkeys::SmallMap: return HotkeyWindow{WindowClass::SmallMap, 0};
+			case MainToolbarEditorHotkeys::GenerateTown: return HotkeyWindow{WindowClass::FoundTown, 0};
+			case MainToolbarEditorHotkeys::GenerateIndustry: return HotkeyWindow{WindowClass::BuildIndustry, 0};
+			case MainToolbarEditorHotkeys::BuildTrees: return HotkeyWindow{WindowClass::BuildTrees, 0};
+			default: return std::nullopt;
+		}
+	}
+
+	/** @param hotkey Native toolbar action selected by the key dispatcher. @return Whether this toolbar handled the action. */
 	EventState OnHotkey(int hotkey) override
 	{
+		// D10: a window's own key closes it again while it is the front-most closable window.
+		if (ToggleHotkeyWindow(GetEditorHotkeyWindow(hotkey))) return EventState::Handled;
 		if (IsSpecialHotkey(hotkey)) {
 			CallBackFunction cbf = CallBackFunction::None;
 			switch (MainToolbarEditorHotkeys(hotkey)) {
@@ -2650,6 +2781,16 @@ struct ScenarioEditorToolbarWindow : Window {
 				case MainToolbarEditorHotkeys::GenerateTown: ShowFoundTownWindow(); break;
 				case MainToolbarEditorHotkeys::BuildRoad: ShowBuildRoadScenToolbar(_last_built_roadtype); break;
 				case MainToolbarEditorHotkeys::BuildTram: ShowBuildRoadScenToolbar(_last_built_tramtype); break;
+				case MainToolbarEditorHotkeys::ShowMapLayer1:
+				case MainToolbarEditorHotkeys::ShowMapLayer2:
+				case MainToolbarEditorHotkeys::ShowMapLayer3:
+				case MainToolbarEditorHotkeys::ShowMapLayer4:
+					// D2 in the editor: the same per-layer selection as the game toolbar, while its layer button is usable.
+					if (!this->IsWidgetDisabled(WID_TE_MAP_LAYER) &&
+							ShowMainViewportLayerInDisplayOrder(hotkey - to_underlying(MainToolbarEditorHotkeys::ShowMapLayer1))) {
+						SndClickBeep();
+					}
+					break;
 				default: return EventState::NotHandled;
 			}
 			if (cbf != CallBackFunction::None) _last_started_action = cbf;
@@ -2762,6 +2903,10 @@ struct ScenarioEditorToolbarWindow : Window {
 		Hotkey('L', "terraform", MainToolbarEditorHotkeys::Terraform),
 		Hotkey('M', "smallmap", MainToolbarEditorHotkeys::SmallMap),
 		Hotkey(0, "cycle_map_layer", MainToolbarEditorHotkeys::CycleMapLayer),
+		Hotkey(WKC_ALT | '1', "show_map_layer_surface", MainToolbarEditorHotkeys::ShowMapLayer1),
+		Hotkey(WKC_ALT | '2', "show_map_layer_underground", MainToolbarEditorHotkeys::ShowMapLayer2),
+		Hotkey(WKC_ALT | '3', "show_map_layer_deep_underground", MainToolbarEditorHotkeys::ShowMapLayer3),
+		Hotkey(WKC_ALT | '4', "show_map_layer_space", MainToolbarEditorHotkeys::ShowMapLayer4),
 		Hotkey('V', "extra_viewport", MainToolbarEditorHotkeys::ExtraViewport),
 	}};
 };

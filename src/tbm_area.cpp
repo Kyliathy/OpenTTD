@@ -7,6 +7,8 @@
 /**
  * @file tbm_area.cpp Read-only project area preview through the canonical geology planner (no second planner).
  * Shows passes, turn envelope, hardness, both spoil quantities and support cost before any command accepts the area.
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md physical working-space ownership.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB bounded approaches.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 4 (preview) and 5 (actual-consist adapter)
  */
 
@@ -15,6 +17,7 @@
 #include "tbm_area_preview.h"
 #include "map_func.h"
 #include "train.h"
+#include "table/strings.h"
 
 #include "safeguards.h"
 
@@ -23,9 +26,11 @@
  * @param anchor Existing housing or accepted route endpoint.
  * @param floor Canonical requested corridor centres or rectangular floor.
  * @param previous_work Existing authorization retained for a live job's approach and tail.
+ * @param joined Whether the working domain must already be one connected piece. A floor away from its housing is not
+ *               joined until an approach links them (r2df Group 9), so the approach builder asks for the cells only.
  * @return Floor and complete bounded working domain; no rock or claims change.
  */
-static ExcavationOutline MakeTBMOutlineWithRing(TileIndex anchor, const std::vector<TileIndex> &floor, std::span<const TileIndex> previous_work)
+static ExcavationOutline MakeTBMOutlineWithRing(TileIndex anchor, const std::vector<TileIndex> &floor, std::span<const TileIndex> previous_work, bool joined = true)
 {
 	const MapLayer layer = GetTileLayer(anchor);
 	auto result = NormalizeExcavationOutline(layer, floor);
@@ -45,15 +50,29 @@ static ExcavationOutline MakeTBMOutlineWithRing(TileIndex anchor, const std::vec
 	}
 	std::ranges::sort(work);
 	work.erase(std::unique(work.begin(), work.end()), work.end());
-	const auto accepted = NormalizeExcavationOutline(layer, work);
-	if (accepted.error != ExcavationError::None) return accepted;
-	result.authorized_tiles = accepted.requested_tiles;
+	if (joined) {
+		const auto accepted = NormalizeExcavationOutline(layer, work);
+		if (accepted.error != ExcavationError::None) return accepted;
+		result.authorized_tiles = accepted.requested_tiles;
+	} else {
+		// Canonical cells only: the approach joins the pieces, and AuthorizeExcavationOutline checks the joined whole.
+		if (work.size() > MAX_EXCAVATION_JOB_TILES) return {ExcavationError::Limit, work.front()};
+		result.authorized_tiles = std::move(work);
+	}
 	std::ranges::set_difference(result.authorized_tiles, result.requested_tiles, std::back_inserter(result.extra_tiles));
 	return result;
 }
 
-/** @copydoc MakeTBMWorkOutline */
-ExcavationOutline MakeTBMWorkOutline(TileIndex anchor, TileIndex area_start, TileIndex area_end, std::span<const TileIndex> previous_work)
+/**
+ * Form the rectangle's floor and ring around the floor and the anchor.
+ * @param anchor Original rock-side housing, excluded from requested final-use floor.
+ * @param area_start First explicit floor corner on the anchor's layer.
+ * @param area_end Opposite floor corner.
+ * @param previous_work Already accepted work retained when extending an existing job.
+ * @param joined Whether the working domain must already be one connected piece.
+ * @return Canonical floor/working outline or refusal.
+ */
+static ExcavationOutline MakeTBMWorkCells(TileIndex anchor, TileIndex area_start, TileIndex area_end, std::span<const TileIndex> previous_work, bool joined)
 {
 	// A rectangle cannot cross a stacked-map boundary or acquire permission
 	// from a camera layer different from its actual commissioning housing.
@@ -72,10 +91,83 @@ ExcavationOutline MakeTBMWorkOutline(TileIndex anchor, TileIndex area_start, Til
 			if (tile != anchor) floor.push_back(tile);
 		}
 	}
-	return MakeTBMOutlineWithRing(anchor, floor, previous_work);
+	return MakeTBMOutlineWithRing(anchor, floor, previous_work, joined);
 }
 
-/** @copydoc MakeTBMTunnelOutline */
+/** @copydoc MakeTBMWorkOutline */
+ExcavationOutline MakeTBMWorkOutline(TileIndex anchor, TileIndex area_start, TileIndex area_end, std::span<const TileIndex> previous_work)
+{
+	return MakeTBMWorkCells(anchor, area_start, area_end, previous_work, true);
+}
+
+/** @copydoc SummarizeTBMApproach */
+TBMApproachSummary SummarizeTBMApproach(std::span<const ExcavationCutGeometry> route, std::span<const TileIndex> extra_tiles, uint16_t model_id, ExcavationJobID own_job)
+{
+	TBMApproachSummary summary;
+	if (extra_tiles.empty()) return summary;
+	// A cut that sweeps any extra cell uses the approach; each cell is counted once however many cuts sweep it.
+	for (const auto &cut : route) {
+		bool uses = false;
+		for (TileIndex tile : cut.swept_tiles) {
+			if (!std::ranges::binary_search(extra_tiles, tile)) continue;
+			summary.tiles.push_back(tile);
+			uses = true;
+		}
+		if (uses) ++summary.cuts;
+	}
+	std::ranges::sort(summary.tiles);
+	summary.tiles.erase(std::unique(summary.tiles.begin(), summary.tiles.end()), summary.tiles.end());
+	if (!summary.tiles.empty()) summary.estimate = QuoteExcavationCells(summary.tiles, model_id, own_job);
+	return summary;
+}
+
+/** @copydoc GetTBMApproachRefusal */
+StringID GetTBMApproachRefusal(ExcavationError error, TileIndex tile)
+{
+	switch (error) {
+		case ExcavationError::InvalidTile: return STR_ERROR_TBM_APPROACH_MAP_EDGE; // Only the map's edge refuses a cut's cells as invalid.
+		case ExcavationError::Conflict:
+			// A planning conflict is a building or another company's seam; open rock with a conflict is the seam.
+			return IsValidTile(tile) && IsTileType(tile, TileType::Clear) ? STR_ERROR_TBM_APPROACH_OTHER_WORK : STR_ERROR_TBM_APPROACH_BUILDING;
+		case ExcavationError::ActiveCut:
+		case ExcavationError::InvalidOwner: return STR_ERROR_TBM_APPROACH_OTHER_WORK;
+		case ExcavationError::Limit: return STR_ERROR_TBM_APPROACH_TOO_FAR;
+		default: return STR_ERROR_TBM_COMMISSION_ROUTE;
+	}
+}
+
+/** @copydoc MakeTBMWorkOutlineWithApproach */
+ExcavationOutline MakeTBMWorkOutlineWithApproach(const ExcavationPlanningPose &start, bool solid_start, uint16_t model_id, ExcavationJobID continuing_job,
+	TileIndex ring_anchor, TileIndex area_start, TileIndex area_end, std::span<const TileIndex> previous_work, ExcavationApproachProposal &approach, uint32_t kept_cuts)
+{
+	approach = {};
+	approach.end = start;
+	auto base = MakeTBMWorkCells(ring_anchor, area_start, area_end, previous_work, false);
+	if (base.error != ExcavationError::None) return base;
+	approach = PlanExcavationApproach(start, base, model_id, {}, continuing_job, solid_start, false, kept_cuts);
+	if (approach.error != ExcavationError::None) {
+		// Keep the requested floor, so the refused quote can still say how much of it was reachable.
+		base.error = approach.error;
+		base.failure_tile = approach.failure_tile;
+		return base;
+	}
+	// Floor, ring, housing and earlier work, plus the approach and turning cells, as one connected canonical domain. Like
+	// MakeTBMWorkOutline this quotes nothing: earlier work may be mid-cut, and the commission quotes its own extra cells.
+	std::vector<TileIndex> work = base.authorized_tiles;
+	work.insert(work.end(), approach.extra_tiles.begin(), approach.extra_tiles.end());
+	const auto joined = NormalizeExcavationOutline(base.layer, work);
+	if (joined.error != ExcavationError::None) {
+		base.error = joined.error;
+		base.failure_tile = joined.failure_tile;
+		return base;
+	}
+	base.authorized_tiles = joined.requested_tiles;
+	base.extra_tiles.clear();
+	std::ranges::set_difference(base.authorized_tiles, base.requested_tiles, std::back_inserter(base.extra_tiles));
+	return base;
+}
+
+/** @copydoc MakeTBMTunnelOutline(TileIndex, Direction, TileIndex, std::span<const TileIndex>) */
 ExcavationOutline MakeTBMTunnelOutline(TileIndex start, Direction heading, TileIndex end, std::span<const TileIndex> previous_work)
 {
 	// A straight route retains the actual heading and plane; clicking behind
@@ -105,6 +197,52 @@ ExcavationOutline MakeTBMTunnelOutline(TileIndex start, Direction heading, TileI
 	std::ranges::sort(work);
 	work.erase(std::unique(work.begin(), work.end()), work.end());
 	const auto accepted = NormalizeExcavationOutline(result.layer, work);
+	if (accepted.error != ExcavationError::None) return accepted;
+	result.authorized_tiles = accepted.requested_tiles;
+	std::ranges::set_difference(result.authorized_tiles, result.requested_tiles, std::back_inserter(result.extra_tiles));
+	return result;
+}
+
+/** @copydoc MakeTBMTunnelOutline(const ExcavationPlanningPose &, bool, uint16_t, ExcavationJobID, TileIndex, std::span<const TileIndex>, ExcavationApproachProposal &, uint32_t) */
+ExcavationOutline MakeTBMTunnelOutline(const ExcavationPlanningPose &start, bool solid_start, uint16_t model_id, ExcavationJobID continuing_job,
+	TileIndex end, std::span<const TileIndex> previous_work, ExcavationApproachProposal &approach, uint32_t kept_cuts)
+{
+	approach = {};
+	approach.end = start;
+	if (!IsValidTile(start.position) || !IsValidTile(end) || !IsValidDirection(start.heading)) return {ExcavationError::InvalidTile};
+	const MapLayer layer = GetTileLayer(start.position);
+	if (GetTileLayer(end) != layer) return {ExcavationError::MixedLayers};
+	const int dx = int(TileX(end)) - int(TileX(start.position)), dy = int(TilePlaneY(end)) - int(TilePlaneY(start.position));
+	const int steps = std::max(std::abs(dx), std::abs(dy));
+	const auto delta = TileIndexDiffCByDir(start.heading);
+	// An end exactly ahead keeps the straight centreline and its own work ring.
+	if (steps != 0 && dx == steps * delta.x && dy == steps * delta.y) return MakeTBMTunnelOutline(start.position, start.heading, end, previous_work);
+	if (steps == 0) return {ExcavationError::IllegalTurn};
+	if (steps > 64 || previous_work.size() > MAX_EXCAVATION_JOB_TILES) return {ExcavationError::Limit}; // The same extent as a straight tunnel.
+	// An angled tunnel: the cutter centre reaches the end through an exact-goal approach of advancing 45-degree bends.
+	// Its cutter centres become the requested floor and its complete sweeps the work, as the straight builder does.
+	ExcavationOutline target;
+	target.layer = layer;
+	target.requested_tiles = {end};
+	target.authorized_tiles.assign(previous_work.begin(), previous_work.end());
+	approach = PlanExcavationApproach(start, target, model_id, {}, continuing_job, solid_start, true, kept_cuts);
+	if (approach.error != ExcavationError::None) {
+		ExcavationOutline refused = target;
+		refused.error = approach.error;
+		refused.failure_tile = approach.failure_tile;
+		return refused;
+	}
+	std::vector<TileIndex> floor;
+	std::vector<TileIndex> work(previous_work.begin(), previous_work.end());
+	for (const auto &cut : approach.route) {
+		floor.push_back(cut.cutter_position);
+		work.insert(work.end(), cut.swept_tiles.begin(), cut.swept_tiles.end());
+	}
+	auto result = NormalizeExcavationOutline(layer, floor);
+	if (result.error != ExcavationError::None) return result;
+	std::ranges::sort(work);
+	work.erase(std::unique(work.begin(), work.end()), work.end());
+	const auto accepted = NormalizeExcavationOutline(layer, work);
 	if (accepted.error != ExcavationError::None) return accepted;
 	result.authorized_tiles = accepted.requested_tiles;
 	std::ranges::set_difference(result.authorized_tiles, result.requested_tiles, std::back_inserter(result.extra_tiles));

@@ -5,6 +5,7 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md native cargo/command ownership.
  * @file tbm_controls.h What a player can do at a rail portal pair and with its boring project, for the portal window
  * (R2MLVS3MP master 7.9). One query derives the offered controls and the next step from the commands' own checks, so
  * the window never offers a step the commands would refuse.
@@ -75,6 +76,34 @@ struct TBMPairControls {
 	std::vector<TileIndex> convertible; ///< Released temporary track of the company, ready for conversion.
 	bool connect = false; ///< The pair can be connected for ordinary trains now.
 };
+
+/** Earth and Rock aboard one train and the room for them, in tonnes; a derived view, never saved. */
+struct TBMSpoilLoad {
+	uint64_t earth_loaded_t = 0; ///< Earth packets aboard.
+	uint64_t earth_capacity_t = 0; ///< Capacity of the parts carrying Earth.
+	uint64_t rock_loaded_t = 0; ///< Rock packets aboard.
+	uint64_t rock_capacity_t = 0; ///< Capacity of the parts carrying Rock.
+	uint8_t earth_hoppers = 0; ///< Attached Earth hopper units (cutter only).
+	uint8_t rock_hoppers = 0; ///< Attached Rock hopper units (cutter only).
+};
+
+/**
+ * Sum the spoil a project's cutter carries, by the consist role of each attached hopper unit. Pure and cheap
+ * enough for a list repaint: it runs no command estimate.
+ * @param cutter The project's cutter front.
+ * @param project The project the cutter works for.
+ * @return Loads and capacities of the attached Earth and Rock hoppers.
+ */
+TBMSpoilLoad SumTBMCutterSpoil(const Train &cutter, const TBMProject &project);
+
+
+/**
+ * Sum the Earth and Rock aboard any train, such as a hauler, by the cargo of each part. Pure.
+ * @param front Train front.
+ * @return Loads and capacities of its Earth and Rock parts; other cargo is ignored.
+ */
+TBMSpoilLoad SumTrainSpoil(const Train &front);
+
 
 /**
  * Collect what a company can do at a pair now and the next step it should take. The checks are the commands' own

@@ -18,6 +18,7 @@
 #include "space_replacement.h"
 #include "underground_vehicle.h"
 #include "transport_tube.h"
+#include "transport_tube_model.h"
 #include "roadveh.h"
 #include "news_func.h"
 #include "airport.h"
@@ -453,6 +454,8 @@ static std::tuple<CommandCost, uint, uint16_t, CargoArray> RefitVehicle(Vehicle 
 			if (CommandCost capability = CheckUndergroundVehicleCapability(part->engine_type, GetTileLayer(part->tile), new_cargo_type); capability.Failed()) return { capability, 0, 0, {} };
 			if (part->type == VehicleType::Train) {
 				if (CommandCost tube = CheckTubeVehicleAdmission(part->engine_type, part->tile, new_cargo_type); tube.Failed()) return {tube, 0, 0, {}};
+				// Retained packets and reservations must fit the actual refit bound before previews can relabel or truncate native custody.
+				if (CommandCost custody = CheckTubeVehicleCargoChange(*Train::From(part), part->engine_type, new_cargo_type, part->refit_cap); custody.Failed()) return {custody, 0, 0, {}};
 			}
 			compatible_cargo_target = true;
 		}

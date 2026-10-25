@@ -237,6 +237,12 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 		}
 
 		uint16_t new_cap = e_u->DetermineCapacity(u);
+		// Loaded legacy capsules retain their saved native hold until empty. A
+		// new smaller definition cannot turn afterload/cache rebuilding into stock
+		// loss; explicit refit/replacement already preflights the new target bound.
+		// Non-capacity cache passes preserve the original saved field even empty.
+		if (GetTubeVehicleCapability(u->engine_type).has_value() && u->cargo_cap > new_cap &&
+			(!allowed_changes.Test(ConsistChangeFlag::Capacity) || u->cargo.TotalCount() != 0)) new_cap = u->cargo_cap;
 		if (allowed_changes.Test(ConsistChangeFlag::Capacity)) {
 			/* Update vehicle capacity. */
 			if (u->cargo.TotalCount() > new_cap) u->cargo.Truncate(u->cargo.TotalCount() - new_cap);

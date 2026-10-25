@@ -15,7 +15,6 @@
 #include "stdafx.h"
 #include "transport_tube.h"
 #include "transport_tube_model.h"
-#include "transport_tube_fleet.h"
 #include "multilayer_bootstrap.h"
 #include "engine_base.h"
 #include "rail.h"
@@ -25,8 +24,23 @@
 
 #include "safeguards.h"
 
-static constexpr uint16_t TUBE_PROTOTYPE_MODEL = 9; ///< Retained single-model producer entry point; the full fleet uses the same installer.
 static constexpr uint16_t TUBE_ENGINE_LOCAL_BASE = 0x8000; ///< Existing append-only native EIDS namespace shared with canonical ground model identities.
+
+/** First-party native tuning; model9 stays byte-compatible with the delivered prototype. Energy remains in multilayer_bootstrap.cpp. */
+static constexpr TubeVehicleDefinition _tube_definitions[] = {
+	{9, 100, 1000, 20, 60, 120, 100},
+	{10, 130, 1100, 18, 40, 150, 110},
+	{11, 90, 1000, 28, 48, 180, 140},
+	{12, 90, 950, 45, 24, 220, 160},
+	{13, 70, 1500, 48, 80, 240, 220},
+};
+
+/** @copydoc GetTubeVehicleDefinition */
+const TubeVehicleDefinition *GetTubeVehicleDefinition(uint16_t model_id)
+{
+	const auto found = std::ranges::find(_tube_definitions, model_id, &TubeVehicleDefinition::model_id);
+	return found == std::end(_tube_definitions) ? nullptr : &*found;
+}
 
 /** @copydoc GetTubeVehicleGeometry */
 std::optional<TubeVehicleGeometry> GetTubeVehicleGeometry(uint16_t model_id)
@@ -69,14 +83,30 @@ std::optional<TubeVehicleCapability> GetTubeVehicleCapability(EngineID engine)
 	return TubeVehicleCapability{engine, geometry->catalogue, GetTubeRailType()};
 }
 
+/** @copydoc RestoreTubeEngineIntroduction */
+void RestoreTubeEngineIntroduction(Engine &engine)
+{
+	const auto capability = GetTubeVehicleCapability(engine.index);
+	if (!capability) return;
+	engine.intro_date = TimerGameCalendar::ConvertYMDToDate(capability->catalogue->introduction_year, 0, 1);
+	// Older saves can retain an ordinary randomized capsule date and a pending
+	// publication flag. Canonical native originals have no exclusive preview:
+	// once their actual launch date has arrived, publish that existing definition
+	// for all companies without recreating vehicles, aging or world quantities.
+	if (TimerGameCalendar::date >= engine.intro_date && !engine.flags.Test(EngineFlag::Available)) {
+		engine.flags.Reset(EngineFlag::ExclusivePreview).Set(EngineFlag::Available);
+		engine.company_avail.Set();
+	}
+}
+
 /**
  * Apply already admitted native coefficients to the actual EIDS definition.
  * @param engine Existing or newly allocated real definition, exclusively owned by this model's native mapping.
  * @param geometry Borrowed canonical capability and native physical-part contract.
- * @param tuning Frozen original per-model coefficients; labels/dates/energy retain their original owners.
+ * @param tuning Selected delivered per-model coefficients; labels/dates/energy retain their original owners.
  * @param tube Previously admitted dedicated native railtype.
  */
-static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geometry, const TubeVehicleTuning &tuning, RailType tube)
+static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geometry, const TubeVehicleDefinition &tuning, RailType tube)
 {
 	const auto &capability = *geometry.catalogue;
 	engine.info.base_intro = TimerGameCalendar::ConvertYMDToDate(capability.introduction_year, 0, 1);
@@ -89,8 +119,8 @@ static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geome
 	// Exact cargo labels retain the mandatory physical TBM spoil leg; broad
 	// classes are not an alternate commissioning or disposal route.
 	for (const auto label : capability.cargo_labels) engine.info.refit_mask.Set(GetCargoTypeByLabel(label));
-	engine.info.load_amount = tuning.load_amount;
-	engine.info.refit_cost = tuning.refit_cost;
+	engine.info.load_amount = 8;
+	engine.info.refit_cost = 10;
 	engine.info.misc_flags.Set(EngineMiscFlag::NoDefaultCargoMultiplier);
 	engine.info.extra_flags.Set({ExtraEngineFlag::NoNews, ExtraEngineFlag::NoPreview});
 	engine.info.string_id = STR_JUST_RAW_STRING;
@@ -110,14 +140,14 @@ static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geome
 	// Distinct payload/speed/mass/handling coefficients use native acceleration
 	// and economy. Electrical work still requires its independent paid grant.
 	rail.max_speed = tuning.max_speed;
-	rail.power = tuning.power_hp;
-	rail.weight = tuning.weight_t;
+	rail.power = tuning.traction_hp;
+	rail.weight = tuning.empty_weight_t;
 	rail.capacity = static_cast<uint8_t>(tuning.capacity);
-	rail.tractive_effort = tuning.tractive_effort;
+	rail.tractive_effort = 0x80;
 	rail.air_drag = 8;
 	rail.running_cost = tuning.running_factor;
 	rail.running_cost_class = Price::RunningTrainElectric;
-	rail.cost_factor = tuning.price_factor;
+	rail.cost_factor = tuning.purchase_factor;
 	rail.image_index = 0;
 	engine.original_image_index = rail.image_index;
 }
@@ -125,7 +155,7 @@ static void ApplyTubeDefinition(Engine &engine, const TubeVehicleGeometry &geome
 /** A completely preflighted native model; this temporary plan owns no saved identity, cargo or utility quantity. */
 struct TubeDefinitionPlan {
 	TubeVehicleGeometry geometry; ///< Borrowed canonical model and physical-part contract.
-	const TubeVehicleTuning *tuning; ///< Borrowed immutable native coefficients.
+	const TubeVehicleDefinition *tuning; ///< Borrowed immutable native coefficients.
 	EngineID id; ///< Existing persisted EIDS slot, or Invalid until the ordinary engine pool allocates one.
 	Engine *engine; ///< Actual existing/new definition, never a private replacement pool.
 };
@@ -133,7 +163,7 @@ struct TubeDefinitionPlan {
 /**
  * Preflight the entire requested native definition set before its first publication.
  * @param activated Exact current native content/cargo package.
- * @param models Bounded canonical logical models, either the retained prototype or the full five-design fleet.
+ * @param models Complete canonical five-design catalogue in stable model order.
  * @return Complete installation or unchanged prerequisite/collision/capacity refusal.
  */
 static bool InitialiseTubeModels(const GRFConfigList &activated, std::span<const uint16_t> models)
@@ -151,7 +181,7 @@ static bool InitialiseTubeModels(const GRFConfigList &activated, std::span<const
 	// cargo or foreign persisted slot must not leave earlier models installed.
 	for (const uint16_t model : models) {
 		const auto geometry = GetTubeVehicleGeometry(model);
-		const auto *tuning = GetTubeVehicleTuning(model);
+		const auto *tuning = GetTubeVehicleDefinition(model);
 		if (!geometry.has_value() || tuning == nullptr || tuning->capacity > UINT8_MAX) return false; // Native part capacity and canonical domain must fit before publication.
 		const auto energy = GetMultiLayerTubeEnergyModels();
 		if (std::ranges::find(energy, model, &MultiLayerTubeEnergyModel::model_id) == energy.end()) return false;
@@ -193,19 +223,19 @@ static bool InitialiseTubeModels(const GRFConfigList &activated, std::span<const
 /** @copydoc InitialiseTubeEngineDefinitions */
 bool InitialiseTubeEngineDefinitions(const GRFConfigList &activated)
 {
-	return InitialiseTubeModels(activated, std::array<uint16_t, 1>{TUBE_PROTOTYPE_MODEL});
+	std::array<uint16_t, std::size(_tube_definitions)> models;
+	// The sole frozen definition table determines family size and ordering;
+	// every requested identity is still checked against canonical geometry,
+	// cargo and energy before either allocation pass can publish an engine.
+	std::ranges::transform(_tube_definitions, models.begin(), &TubeVehicleDefinition::model_id);
+	return InitialiseTubeModels(activated, models);
 }
 
-/** @copydoc InitialiseTubeFleetDefinitions */
-bool InitialiseTubeFleetDefinitions(const GRFConfigList &activated)
+/** @copydoc InitialiseTubeContentDefinitions */
+bool InitialiseTubeContentDefinitions(const GRFConfigList &activated)
 {
-	std::vector<uint16_t> models;
-	// Borrow the sole logical catalogue's model set/order. Native coefficients
-	// cannot accidentally install an ordinary/Space design or invent a sixth role.
-	for (const auto &capability : GetMultiLayerVehicleCapabilities()) {
-		if (capability.transport == MultiLayerVehicleTransport::Tube) models.push_back(capability.model_id);
-	}
-	return InitialiseTubeModels(activated, models);
+	if (InitialiseTubeRailType(activated) == INVALID_RAILTYPE) return false;
+	return InitialiseTubeEngineDefinitions(activated);
 }
 
 /** @copydoc CanTubeTrainEnterTile */

@@ -65,6 +65,7 @@ struct SaveWireFacts {
 	uint32_t marker_magic = 0; ///< Original MLLN payload magic, never supplied by the running build's identity.
 	uint16_t marker_schema = 0; ///< Original MLLN payload schema.
 	uint16_t marker_writer_version = 0; ///< Marker must agree with the unchanged outer envelope.
+	uint64_t merged_supply_next_id = 0; ///< Canonical merged issuer frontier; history may outlive pruned terminal rows.
 	bool merged_supply_valid = false; ///< Set only by Group44's canonical tagged-supply transport validator; legacy SSOR decoding cannot set it.
 	bool merged_cargo_valid = false; ///< Set only by the canonical merged CAPA descriptor validator after Group12/44.
 

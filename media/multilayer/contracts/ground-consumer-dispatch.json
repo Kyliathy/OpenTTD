@@ -1,5 +1,5 @@
 {
-  "_documentation": "@file ground-consumer-dispatch.json. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79F. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md. Read-only dispatch inventory; source shapes and native producer behavior are qualified by their owning implementation groups, not this catalogue.",
+  "_documentation": "@file ground-consumer-dispatch.json. @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79F. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint10.4D. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md. Read-only dispatch inventory; source shapes and native producer behavior are qualified by their owning implementation groups, not this catalogue. M2O23-3 Group51 records actual current Tube/geothermal callback chains; current_bound is source integration, not pixel or useful-route acceptance.",
   "schema_version": 1,
   "source_scope": {
     "path": "media/multilayer/ground-pack-scope.json",
@@ -957,7 +957,7 @@
       ],
       "native_offset": 14183,
       "sprite_count": 144,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -970,7 +970,28 @@
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeTrainSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerTrainSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeTrainSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::VehicleModel09"
     },
     {
       "asset_id": "purchase.model-09",
@@ -989,7 +1010,7 @@
       ],
       "native_offset": 14327,
       "sprite_count": 2,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -998,11 +1019,32 @@
         "GetTubeEngine"
       ],
       "draw_owner": "src/train_cmd.cpp",
-      "draw_symbol": "Train::GetImage",
+      "draw_symbol": "GetRailIcon",
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeEnginePurchaseSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerEnginePurchaseSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeEnginePurchaseSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::PurchaseModel09"
     },
     {
       "asset_id": "vehicle.model-10",
@@ -1035,7 +1077,7 @@
       ],
       "native_offset": 14329,
       "sprite_count": 144,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1048,7 +1090,28 @@
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeTrainSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerTrainSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeTrainSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::VehicleModel10"
     },
     {
       "asset_id": "purchase.model-10",
@@ -1067,7 +1130,7 @@
       ],
       "native_offset": 14473,
       "sprite_count": 2,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1076,11 +1139,32 @@
         "GetTubeEngine"
       ],
       "draw_owner": "src/train_cmd.cpp",
-      "draw_symbol": "Train::GetImage",
+      "draw_symbol": "GetRailIcon",
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeEnginePurchaseSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerEnginePurchaseSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeEnginePurchaseSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::PurchaseModel10"
     },
     {
       "asset_id": "vehicle.model-11",
@@ -1113,7 +1197,7 @@
       ],
       "native_offset": 14475,
       "sprite_count": 144,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1126,7 +1210,28 @@
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeTrainSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerTrainSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeTrainSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::VehicleModel11"
     },
     {
       "asset_id": "purchase.model-11",
@@ -1145,7 +1250,7 @@
       ],
       "native_offset": 14619,
       "sprite_count": 2,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1154,11 +1259,32 @@
         "GetTubeEngine"
       ],
       "draw_owner": "src/train_cmd.cpp",
-      "draw_symbol": "Train::GetImage",
+      "draw_symbol": "GetRailIcon",
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeEnginePurchaseSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerEnginePurchaseSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeEnginePurchaseSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::PurchaseModel11"
     },
     {
       "asset_id": "vehicle.model-12",
@@ -1191,7 +1317,7 @@
       ],
       "native_offset": 14621,
       "sprite_count": 144,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1204,7 +1330,28 @@
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeTrainSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerTrainSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeTrainSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::VehicleModel12"
     },
     {
       "asset_id": "purchase.model-12",
@@ -1223,7 +1370,7 @@
       ],
       "native_offset": 14765,
       "sprite_count": 2,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1232,11 +1379,32 @@
         "GetTubeEngine"
       ],
       "draw_owner": "src/train_cmd.cpp",
-      "draw_symbol": "Train::GetImage",
+      "draw_symbol": "GetRailIcon",
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeEnginePurchaseSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerEnginePurchaseSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeEnginePurchaseSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::PurchaseModel12"
     },
     {
       "asset_id": "vehicle.model-13",
@@ -1269,7 +1437,7 @@
       ],
       "native_offset": 14767,
       "sprite_count": 144,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1282,7 +1450,28 @@
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeTrainSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "Train::GetImage"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerTrainSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeTrainSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::VehicleModel13"
     },
     {
       "asset_id": "purchase.model-13",
@@ -1301,7 +1490,7 @@
       ],
       "native_offset": 14911,
       "sprite_count": 2,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1310,11 +1499,32 @@
         "GetTubeEngine"
       ],
       "draw_owner": "src/train_cmd.cpp",
-      "draw_symbol": "Train::GetImage",
+      "draw_symbol": "GetRailIcon",
       "producer_tests": [
         "[transport-tube-model]"
       ],
-      "reason": "Dated definitions, operating holds/power and actual terminal route remain owning tube tasks."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "binding_source": "src/transport_tube_vehicle_sprite.cpp",
+      "binding_symbol": "GetTubeEnginePurchaseSprite",
+      "native_chain": [
+        {
+          "source": "src/train_cmd.cpp",
+          "symbol": "GetRailIcon"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerEnginePurchaseSprite"
+        },
+        {
+          "source": "src/transport_tube_vehicle_sprite.cpp",
+          "symbol": "GetTubeEnginePurchaseSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::PurchaseModel13"
     },
     {
       "asset_id": "facility.rail-station",
@@ -1426,7 +1636,7 @@
       ],
       "native_offset": 15713,
       "sprite_count": 256,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1435,7 +1645,26 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/station_cmd.cpp",
+      "draw_symbol": "DrawTile_Station",
+      "binding_source": "src/transport_tube_facility_sprite.cpp",
+      "binding_symbol": "GetTubeFacilityArt",
+      "native_chain": [
+        {
+          "source": "src/station_cmd.cpp",
+          "symbol": "DrawTile_Station"
+        },
+        {
+          "source": "src/transport_tube_facility_sprite.cpp",
+          "symbol": "GetTubeFacilityArt"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityTubeTerminal"
     },
     {
       "asset_id": "facility.tube-service",
@@ -1460,7 +1689,7 @@
       ],
       "native_offset": 15969,
       "sprite_count": 128,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1469,7 +1698,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_facility_sprite.cpp",
+      "binding_symbol": "GetTubeFacilityArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerRailDepotSprite"
+        },
+        {
+          "source": "src/transport_tube_facility_sprite.cpp",
+          "symbol": "GetTubeFacilityArt"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityTubeService"
     },
     {
       "asset_id": "facility.tube-interchange",
@@ -1492,7 +1744,7 @@
       ],
       "native_offset": 16097,
       "sprite_count": 256,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1501,7 +1753,26 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/station_cmd.cpp",
+      "draw_symbol": "DrawTile_Station",
+      "binding_source": "src/transport_tube_facility_sprite.cpp",
+      "binding_symbol": "GetTubeFacilityArt",
+      "native_chain": [
+        {
+          "source": "src/station_cmd.cpp",
+          "symbol": "DrawTile_Station"
+        },
+        {
+          "source": "src/transport_tube_facility_sprite.cpp",
+          "symbol": "GetTubeFacilityArt"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityTubeInterchange"
     },
     {
       "asset_id": "facility.vent-collector",
@@ -1563,12 +1834,35 @@
       ],
       "native_offset": 16353,
       "sprite_count": 2560,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "binding_source": "src/geothermal_sprite.cpp",
+      "binding_symbol": "GetGeothermalGeneratorSprite",
+      "native_chain": [
+        {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerIndustrySprite"
+        },
+        {
+          "source": "src/geothermal_sprite.cpp",
+          "symbol": "GetGeothermalGeneratorSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityVentPowerhouse"
     },
     {
       "asset_id": "facility.magma-powerhouse",
@@ -1594,12 +1888,35 @@
       ],
       "native_offset": 18913,
       "sprite_count": 2560,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "binding_source": "src/geothermal_sprite.cpp",
+      "binding_symbol": "GetGeothermalGeneratorSprite",
+      "native_chain": [
+        {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerIndustrySprite"
+        },
+        {
+          "source": "src/geothermal_sprite.cpp",
+          "symbol": "GetGeothermalGeneratorSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityMagmaPowerhouse"
     },
     {
       "asset_id": "facility.utility-riser",
@@ -1621,12 +1938,35 @@
       ],
       "native_offset": 21473,
       "sprite_count": 128,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/industry_cmd.cpp",
+      "draw_symbol": "DrawTile_Industry",
+      "binding_source": "src/geothermal_riser_sprite.cpp",
+      "binding_symbol": "GetGeothermalRiserSprite",
+      "native_chain": [
+        {
+          "source": "src/industry_cmd.cpp",
+          "symbol": "DrawTile_Industry"
+        },
+        {
+          "source": "src/multilayer_sprite.cpp",
+          "symbol": "GetMultiLayerIndustrySprite"
+        },
+        {
+          "source": "src/geothermal_riser_sprite.cpp",
+          "symbol": "GetGeothermalRiserSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::FacilityUtilityRiser"
     },
     {
       "asset_id": "geothermal.vent",
@@ -1646,12 +1986,35 @@
       ],
       "native_offset": 21601,
       "sprite_count": 12,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/viewport.cpp",
+      "draw_symbol": "DrawTileSelection",
+      "binding_source": "src/geothermal_gui.cpp",
+      "binding_symbol": "UndergroundGeothermalControls::GetSurveySprite",
+      "native_chain": [
+        {
+          "source": "src/viewport.cpp",
+          "symbol": "DrawTileSelection"
+        },
+        {
+          "source": "src/underground_gui.cpp",
+          "symbol": "GetUndergroundGeothermalSurveyOverlaySprite"
+        },
+        {
+          "source": "src/geothermal_gui.cpp",
+          "symbol": "UndergroundGeothermalControls::GetSurveySprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::GeothermalVent"
     },
     {
       "asset_id": "geothermal.conduit",
@@ -1674,12 +2037,35 @@
       ],
       "native_offset": 21613,
       "sprite_count": 24,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/viewport.cpp",
+      "draw_symbol": "ViewportAddLandscape",
+      "binding_source": "src/geothermal_conduit_sprite.cpp",
+      "binding_symbol": "GetGeothermalConduitArt",
+      "native_chain": [
+        {
+          "source": "src/viewport.cpp",
+          "symbol": "ViewportAddLandscape"
+        },
+        {
+          "source": "src/geothermal_conduit_sprite.cpp",
+          "symbol": "DrawGeothermalConduitGround"
+        },
+        {
+          "source": "src/geothermal_conduit_sprite.cpp",
+          "symbol": "GetGeothermalConduitArt"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::GeothermalConduit"
     },
     {
       "asset_id": "tube.straight",
@@ -1701,7 +2087,7 @@
       ],
       "native_offset": 21637,
       "sprite_count": 12,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1710,7 +2096,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_sprite.cpp",
+      "binding_symbol": "GetTubeGuidewayArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "GetTubeGuidewayArt"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "AppendTubeGuidewayPart"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeStraight"
     },
     {
       "asset_id": "tube.bend45",
@@ -1734,7 +2143,7 @@
       ],
       "native_offset": 21649,
       "sprite_count": 24,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1743,7 +2152,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_sprite.cpp",
+      "binding_symbol": "GetTubeGuidewayArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "GetTubeGuidewayArt"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "AppendTubeGuidewayPart"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeBend45"
     },
     {
       "asset_id": "tube.junction",
@@ -1764,7 +2196,7 @@
       ],
       "native_offset": 21673,
       "sprite_count": 324,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1773,7 +2205,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_sprite.cpp",
+      "binding_symbol": "GetTubeGuidewayArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "GetTubeGuidewayArt"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "AppendTubeGuidewayPart"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeJunction"
     },
     {
       "asset_id": "tube.end",
@@ -1797,7 +2252,7 @@
       ],
       "native_offset": 21997,
       "sprite_count": 24,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1806,7 +2261,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_sprite.cpp",
+      "binding_symbol": "GetTubeGuidewayArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "GetTubeGuidewayArt"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "AppendTubeGuidewayPart"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeEnd"
     },
     {
       "asset_id": "tube.crossing",
@@ -1827,7 +2305,7 @@
       ],
       "native_offset": 22021,
       "sprite_count": 6,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1836,7 +2314,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/rail_cmd.cpp",
+      "draw_symbol": "DrawTile_Rail",
+      "binding_source": "src/transport_tube_sprite.cpp",
+      "binding_symbol": "GetTubeGuidewayArt",
+      "native_chain": [
+        {
+          "source": "src/rail_cmd.cpp",
+          "symbol": "DrawTile_Rail"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "GetTubeGuidewayArt"
+        },
+        {
+          "source": "src/transport_tube_sprite.cpp",
+          "symbol": "AppendTubeGuidewayPart"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeCrossing"
     },
     {
       "asset_id": "tube.conduit",
@@ -1859,7 +2360,7 @@
       ],
       "native_offset": 22027,
       "sprite_count": 12,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1868,7 +2369,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/viewport.cpp",
+      "draw_symbol": "ViewportAddLandscape",
+      "binding_source": "src/transport_tube_conduit_sprite.cpp",
+      "binding_symbol": "GetTubeConduitArt",
+      "native_chain": [
+        {
+          "source": "src/viewport.cpp",
+          "symbol": "ViewportAddLandscape"
+        },
+        {
+          "source": "src/transport_tube_conduit_sprite.cpp",
+          "symbol": "DrawTubeConduitGround"
+        },
+        {
+          "source": "src/transport_tube_conduit_sprite.cpp",
+          "symbol": "GetTubeConduitArt"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::TubeConduit"
     },
     {
       "asset_id": "control.tube",
@@ -1888,7 +2412,7 @@
       ],
       "native_offset": 22039,
       "sprite_count": 3,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan17 Groups9-15",
       "master": "10.5-10.7",
       "owner": "src/transport_tube.h",
@@ -1897,7 +2421,30 @@
         "GetTubeRailType",
         "CheckTubeConstruction"
       ],
-      "reason": "Actual tube terminal/operating/control/foreground producers remain their master checkpoints; no new widget is invented by art."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/underground_gui.cpp",
+      "draw_symbol": "GetUndergroundConstructionWidgetSprite",
+      "binding_source": "src/ground_sprite.h",
+      "binding_symbol": "GetGroundControlSprite",
+      "native_chain": [
+        {
+          "source": "src/underground_gui.cpp",
+          "symbol": "GetUndergroundConstructionWidgetSprite"
+        },
+        {
+          "source": "src/underground_gui.cpp",
+          "symbol": "GetWidgetIcon"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundControlSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::ControlTube"
     },
     {
       "asset_id": "control.geothermal",
@@ -1917,12 +2464,35 @@
       ],
       "native_offset": 22042,
       "sprite_count": 3,
-      "dispatch": "later_owner",
+      "dispatch": "current_bound",
       "group": "Plan18 Groups8/13-17; related Plan7 tools",
       "master": "10.6-10.8",
       "owner": "src/geothermal.h",
       "symbols": [],
-      "reason": "Operating generator/riser/utility, natural visibility and actual control producers remain their exact later master checkpoints."
+      "reason": "Merged native selector is connected; original source geometry and gameplay owners remain authoritative. Raster/route acceptance remains Plan4.",
+      "draw_owner": "src/underground_gui.cpp",
+      "draw_symbol": "GetUndergroundConstructionWidgetSprite",
+      "binding_source": "src/ground_sprite.h",
+      "binding_symbol": "GetGroundControlSprite",
+      "native_chain": [
+        {
+          "source": "src/underground_gui.cpp",
+          "symbol": "GetUndergroundConstructionWidgetSprite"
+        },
+        {
+          "source": "src/underground_gui.cpp",
+          "symbol": "GetWidgetIcon"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundControlSprite"
+        },
+        {
+          "source": "src/ground_sprite.h",
+          "symbol": "GetGroundSprite"
+        }
+      ],
+      "asset_marker": "GroundSpriteFamily::ControlGeothermal"
     }
   ],
   "behavior_verified": false,

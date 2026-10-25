@@ -7,14 +7,18 @@
 import json
 from pathlib import Path
 import struct
+import sys
 
 from ground_pack_check_support import ROOT, handoff
 from tools.ground_payload_binding import reference
+
+sys.path.insert(0, str(ROOT / "src/tests"))
 
 # Historical callers are migrated/guarded separately; the current entry point
 # never chooses a before snapshot or reads this old diagnostic location.
 BASELINE = "logs/graphics/selected-ground-consumers/20261021-types-01/before.json"
 POSE_SHA256 = "1a07fe173fa21124c603586c3695df2405151c6d66263c90e4cab7e5c594ff89"
+FAMILIES_SHA256 = "0ffed19f65958151caed5798ef561ec5dd36a4bc03d815a3c1bd66704472a302"
 
 
 def preserved(relative):
@@ -38,7 +42,7 @@ def preserved(relative):
 
 
 def verify_consumer_inputs(request, root):
-    """Close the independently retained tuple domain and unchanged current/later dispatch boundary.
+    """Close original tuple coverage and independently verify the implemented native ownership boundary.
 
     @param request Registered Ground selector request with exact retained fixture/dispatch roles.
     @param root Explicit checkout owning immutable source expectations and current native processes.
@@ -46,6 +50,7 @@ def verify_consumer_inputs(request, root):
     """
     from artifact_rebuild import identity
     from artifact_paths import contained
+    from merge_renderer_binding_checks import verify, verify_imported
     inputs = request["inputs"]
     contract = json.loads((root / inputs["consumer-expectations"]["path"]).read_text(encoding="utf-8"))
     expected = {key: contract["fixture"][key] for key in ("path", "sha256")}
@@ -69,16 +74,45 @@ def verify_consumer_inputs(request, root):
         raise ValueError("Ground consumer dispatch contract changed")
     dispatch = json.loads(dispatch_path.read_text(encoding="utf-8"))
     counts = {name: sum(row["dispatch"] == name for row in dispatch["families"]) for name in contract["dispatch_counts"]}
-    # Source completeness cannot promote twenty-six explicitly deferred owners
-    # into current drawing, operations, useful-route or human acceptance.
-    if counts != contract["dispatch_counts"] or len(dispatch["families"]) != 50:
+    family_path = contained(root / inputs["family-ownership"]["path"], root / "src/tests/fixtures/graphics")
+    # Group8 froze source identities before native integration. Neither changed
+    # dispatch metadata nor its truthful new checksum may invent another family.
+    if identity(family_path, root) != inputs["family-ownership"] or inputs["family-ownership"]["sha256"] != FAMILIES_SHA256:
+        raise ValueError("Ground consumer requires independently frozen family ownership")
+    originals = {row["asset_id"]: row for row in json.loads(family_path.read_text(encoding="utf-8"))["families"]}
+    ground = {key for key, row in originals.items() if row["destination_packer"] == "ground"}
+    conventional = {key for key in ground if originals[key]["destination_draw_contract"].get("binding_header", "").startswith("src/ground_")}
+    existing = {"vehicle.model-04", "purchase.model-04", "facility.vent-collector"}
+    current = {row["asset_id"]: row for row in dispatch["families"]}
+    # Keep the original21/3/26 partition as historical fact. Group51's actual
+    # callbacks, rather than a rewritten baseline, qualify the26new native owners.
+    if (contract["dispatch_counts"] != dict(current_bound=21, current_existing=3, later_owner=26)
+            or counts != dict(current_bound=47, current_existing=3, later_owner=0)
+            or len(dispatch["families"]) != 50 or len(current) != 50
+            or set(current) != ground | existing or len(ground) != 47 or len(conventional) != 21):
         raise ValueError("Ground consumer current/later ownership partition changed")
-    for row in dispatch["families"]:
-        if row["dispatch"] == "later_owner":
-            if not all(row.get(key) for key in ("group", "master", "reason")):
-                raise ValueError("Ground deferred owner lost its explicit unfinished dispatch")
+    bindings = []
+    # Each original family must retain its own offset, pose extent and native
+    # namespace. A count-preserving swap between Ground and M1 is still invalid.
+    for asset, row in current.items():
+        original = originals[asset]
+        expected_dispatch = "current_existing" if asset in existing else "current_bound"
+        expected_packer = "m1" if asset in existing else "ground"
+        if (row["dispatch"] != expected_dispatch or original["destination_packer"] != expected_packer
+                or row["native_offset"] != original["A_binding"]["native_offset"]
+                or row["sprite_count"] != original["A_binding"]["sprite_count"]):
+            raise ValueError("Ground consumer family ownership or original pose extent changed")
+        if asset in conventional:
+            if any(row.get(key) != value for key, value in original["destination_draw_contract"].items()):
+                raise ValueError("Ground conventional drawing contract changed")
+            bindings.append(verify(row, root))
+        elif asset in ground:
+            if not row.get("native_chain"):
+                raise ValueError("Ground imported owner has no connected native callback chain")
+            bindings.append(verify_imported(row, original, root))
     return dict(source_families=47, source_poses=14254, native_start=7791, native_end_exclusive=22045,
-                dispatch_families=50, dispatch_counts=counts, viewport_claimed=False,
+                dispatch_families=50, dispatch_counts=counts, historical_dispatch_counts=contract["dispatch_counts"],
+                live_native_bindings=bindings, imported_native_families=len(ground - conventional), viewport_claimed=False,
                 later_operating_claimed=False, whole_underground_complete=False)
 
 

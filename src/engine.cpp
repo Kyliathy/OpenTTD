@@ -13,6 +13,7 @@
 #include "stdafx.h"
 #include "space_mining_tuning.h"
 #include "underground_vehicle.h"
+#include "transport_tube.h"
 #include "space_vehicle.h"
 #include "core/container_func.hpp"
 #include "company_func.h"
@@ -794,7 +795,7 @@ void StartupOneEngine(Engine *e, const TimerGameCalendar::YearMonthDay &aging_ym
 	 * Note: TTDP uses fixed 1922 */
 	e->intro_date = ei->base_intro <= TimerGameCalendar::ConvertYMDToDate(_settings_game.game_creation.starting_year + 2, 0, 1) ? ei->base_intro : (TimerGameCalendar::Date)GB(r, 0, 9) + ei->base_intro;
 	// Native ground freight has published exact calendar dates; ordinary random introduction offsets cannot postpone the sealed 1980 transport handoff.
-	if (e->type == VehicleType::Space || GetUndergroundEngineCapability(e->index) != nullptr) e->intro_date = ei->base_intro;
+	if (e->type == VehicleType::Space || GetUndergroundEngineCapability(e->index) != nullptr || GetTubeVehicleCapability(e->index).has_value()) e->intro_date = ei->base_intro;
 	if (e->intro_date <= TimerGameCalendar::date) {
 		TimerGameCalendar::YearMonthDay intro_ymd = TimerGameCalendar::ConvertDateToYMD(e->intro_date);
 		int aging_months = aging_ymd.year.base() * 12 + aging_ymd.month;
@@ -1224,6 +1225,13 @@ void CalendarEnginesMonthlyLoop()
 
 			/* Do not introduce invalid engines */
 			if (!e->IsEnabled()) continue;
+
+			// Native capsule dates are public catalogue launches; a running world
+			// publishes them on that date without the ordinary exclusive preview year.
+			if (GetTubeVehicleCapability(e->index).has_value() && !e->flags.Test(EngineFlag::Available) && TimerGameCalendar::date >= e->info.base_intro) {
+				NewVehicleAvailable(e);
+				continue;
+			}
 
 			if (!e->flags.Test(EngineFlag::Available) && TimerGameCalendar::date >= (e->intro_date + CalendarTime::DAYS_IN_YEAR)) {
 				/* Introduce it to all companies */

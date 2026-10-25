@@ -1,5 +1,7 @@
 # R2MLVS12 - Solar Farms, Mirrors and Energy Transition Industries
 
+**Merged implementation,2026-10-25.** Existing Space/solar consumers retain the common utility owner while imported geothermal and Tube demand joins its single allocation/settlement pass. [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) records same-world contention and real peers; it does not complete future mirror/ETIchains. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

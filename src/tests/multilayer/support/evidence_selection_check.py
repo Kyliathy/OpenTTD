@@ -10,7 +10,7 @@ from functools import partial
 import json
 from pathlib import Path
 import sys
-import tempfile
+import uuid
 import unittest
 from unittest.mock import patch
 
@@ -27,13 +27,12 @@ class EvidenceSelectionTests(unittest.TestCase):
     def setUp(self):
         """Allocate a synthetic source/run tree inside the permitted scratch owner.
 
-        @return None; register cleanup only for this test's newly created tree.
+        @return None; fixtures persist in test-cache without recursive cleanup.
         """
         scratch = ROOT / "test-cache/cleanup/evidence-selection"
         scratch.mkdir(parents=True, exist_ok=True)
-        self.temporary = tempfile.TemporaryDirectory(dir=scratch)
-        self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name)
+        self.root = scratch / uuid.uuid4().hex
+        self.root.mkdir()
         self.context = RunContext(self.root, "art", "selected", "unit-selection")
         self.producer = "src/tests/capture_fixture.py"
         self.writer = "src/tests/capture_fixture.cpp"
@@ -82,7 +81,7 @@ class EvidenceSelectionTests(unittest.TestCase):
     def bytes(self, relative, data):
         """Write only a newly allocated synthetic test artifact.
 
-        @param relative Path beneath this test's TemporaryDirectory.
+        @param relative Path beneath this test's persistent generated fixture root.
         @param data Explicit independent fixture bytes.
         @return Concrete fixture path.
         """
@@ -119,7 +118,7 @@ class EvidenceSelectionTests(unittest.TestCase):
 
         @return None; actual required evidence, selected output roles and source stay bound.
         """
-        self.diagnostic.unlink()
+        self.diagnostic.rename(self.diagnostic.with_suffix(".absent"))
         self.assertEqual(bind_capture(self.context, self.raw_path, "Debug"), self.capture)
         selected = self.selection()
         self.assertEqual(selected.report("capture"), self.capture)
@@ -136,7 +135,7 @@ class EvidenceSelectionTests(unittest.TestCase):
         self.terminal.write_bytes(b"changed required evidence")
         with self.assertRaises(AssertionError):
             self.selection().report("capture")
-        self.terminal.unlink()
+        self.terminal.rename(self.terminal.with_suffix(".absent"))
         with self.assertRaises(FileNotFoundError):
             self.selection().report("capture")
         self.terminal.write_bytes(original)
@@ -216,7 +215,7 @@ class EvidenceSelectionTests(unittest.TestCase):
         report["native_processes"] = [process]
         report["frames"][0]["conversion"] = identity(ledger, self.root)
         self.selection().validate_capture(report)
-        self.diagnostic.unlink()
+        self.diagnostic.rename(self.diagnostic.with_suffix(".absent"))
         converted = bind_capture(self.context, self.raw_path, "Debug")
         self.assertEqual(converted["native_processes"], [process])
         self.selection().validate_capture(converted)

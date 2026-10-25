@@ -21,6 +21,7 @@
 #include "dropdown_func.h"
 #include "gfx_func.h"
 #include "tilehighlight_func.h"
+#include "smallmap_gui.h"
 
 #include "table/sprites.h"
 #include "table/strings.h"
@@ -229,11 +230,27 @@ void SetViewportLayer(Window *w, MapLayer layer)
 
 	vp->layer = layer;
 	w->SetDirty();
+	// Every main-view layer action updates the small map; independent extra viewports must not redirect it.
+	// A test-owned viewport can exist without a main window, so use the optional lookup rather than GetMainWindow.
+	if (old != layer && w == FindWindowById(WindowClass::MainWindow, 0)) {
+		InvalidateWindowClassesData(WindowClass::SmallMap, SMALLMAP_INVALIDATE_MAIN_VIEW_LAYER);
+	}
 	//Both the game toolbar and the scenario editor toolbar use this class.
 	InvalidateWindowData(WindowClass::MainToolbar, 0);
 	//Build toolbars refresh their buttons. Since FD-7 the portal buttons depend on the layer count only.
 	InvalidateWindowData(WindowClass::BuildToolbar, 0);
 	InvalidateWindowData(WindowClass::ScenarioBuildToolbar, 0);
+}
+
+/** @copydoc ShowMainViewportLayerInDisplayOrder */
+bool ShowMainViewportLayerInDisplayOrder(uint display_index)
+{
+	// A key for a layer this game never allocated does nothing, as the layer dropdown never offers it.
+	if (display_index >= std::size(_map_layer_display_order)) return false;
+	const MapLayer layer = _map_layer_display_order[display_index];
+	if (!MultiLayerMap::IsValidLayer(layer)) return false;
+	SetViewportLayer(GetMainWindow(), layer);
+	return true;
 }
 
 /** Cycle the main viewport to the next map layer. */

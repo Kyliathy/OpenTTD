@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file rail_gui.h Functions/types etc. related to the rail GUI. */
+/** @file rail_gui.h Functions/types etc. related to the rail GUI. @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 (hotkey toggle) */
 
 #ifndef RAIL_GUI_H
 #define RAIL_GUI_H
@@ -14,6 +14,12 @@
 #include "dropdown_type.h"
 
 struct Window *ShowBuildRailToolbar(RailType railtype);
+
+/**
+ * Rail type the build-rail toolbar shows, so a toolbar hotkey can tell switching the type from closing the toolbar.
+ * @return The current toolbar's rail type (the last one opened).
+ */
+RailType GetBuildRailToolbarRailType();
 void ReinitGuiAfterToggleElrail(bool disable);
 void ResetSignalVariant(int32_t = 0);
 void InitializeSignalGui();

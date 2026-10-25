@@ -49,7 +49,7 @@ private:
 
 	Source source{Source::Invalid, SourceType::Industry}; ///< Source of the cargo
 	uint64_t company_supply_order = 0; ///< Optional exact legacy receipt ID; zero includes valid non-paying A CompanySupply without any refund link.
-	bool company_supply_shipped = false; ///< Original first-departure evidence, permanent across splits, return and buyer retirement.
+	uint8_t company_supply_shipped = 0; ///< Literal original0/1 departure evidence; retain malformed bytes until transport validation, never coerce them to bool.
 
 #ifdef WITH_ASSERT
 	bool in_vehicle = false; ///< NOSAVE: Whether this cargo is in a vehicle or not.
@@ -65,11 +65,20 @@ private:
 	friend class HubCargoTransfer;
 	/** We want this to be saved, right? */
 	friend SaveLoadTable GetCargoPacketDesc();
+	/** The sole afterload receipt owner may normalize original B purpose only after the complete shared custody check succeeds.
+	 * @param family_required Whether the original source requires its complete paid-history family.
+	 * @return Whole original-book admission; a refusal performs no packet-purpose normalization.
+	 */
+	friend bool AcceptLoadedSurfaceSupplyOrders(bool family_required);
 public:
+	/** @return Portable digest of every actual saved packet scalar, including permanent purpose, U64receipt link and literal departure; excludes pointers and debug-only custody caches. */
+	static uint64_t ComputePoolDigest();
 	/** @return Exact optional uint64 legacy receipt link; zero never changes the source's permanent paying/non-paying purpose. */
 	uint64_t GetCompanySupplyOrder() const { return this->company_supply_order; }
 	/** @return Whether these exact linked units have already left refundable original-source custody. */
 	bool HasCompanySupplyShipped() const { return this->company_supply_shipped; }
+	/** @return Literal original departure scalar for transport validation before any boolean interpretation; valid live packets hold only0/1. */
+	uint8_t GetCompanySupplyShippedWire() const { return this->company_supply_shipped; }
 	/** Restore original packet evidence once, before complete same-file custody validation or native publication.
 	 * @param order Exact nonzero historical receipt identity, losslessly widened from B; never a newly purchased native right.
 	 * @param shipped Original saved departure flag, not a new dispatch event or inferred current location.

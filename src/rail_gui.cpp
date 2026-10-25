@@ -1066,6 +1066,12 @@ static WindowDesc _build_rail_desc(
 );
 
 
+/** @copydoc GetBuildRailToolbarRailType */
+RailType GetBuildRailToolbarRailType()
+{
+	return _cur_railtype;
+}
+
 /**
  * Open the build rail toolbar window for a specific rail type.
  *

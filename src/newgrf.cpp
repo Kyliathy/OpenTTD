@@ -19,12 +19,14 @@
 #include "tbm.h"
 #include "underground_vehicle.h"
 #include "transport_tube.h"
+#include "transport_tube_model.h"
 #include "multilayer_state.h"
 #include "spoil_receiver.h"
 #include "multilayer_industry.h"
 #include "layer_industry_processor.h"
 #include "geothermal.h"
 #include "geothermal_riser.h"
+#include "geothermal_generator.h"
 #include "bridge.h"
 #include "string_func.h"
 #include "town.h"
@@ -1762,19 +1764,17 @@ static void AfterLoadGRFs()
 	InitialiseTBMEngineDefinitions(_grfconfig); // Exact activated native definitions use existing EIDS identity after ordinary GRF polishing.
 	InitialiseUndergroundEngineDefinitions(_grfconfig);
 	InitialiseSpaceEngineDefinition(); // Conventional native freight extends the same EIDS owner after exact cargo activation, without replacing original engines.
-	// Restore delivered paid inlets' canonical hidden guideways and any saved
-	// prototype EIDS references. New-world construction/fleet activation remains
-	// with Plan17's later controls; save restoration cannot substitute ordinary rail.
-	const auto *tube_metadata = GetPendingMultiLayerStateSchema();
-	if (tube_metadata != nullptr && (tube_metadata->feature_flags & MULTILAYER_FEATURE_TUBE_POWER) != 0) {
-		InitialiseTubeRailType(_grfconfig);
-		InitialiseTubeEngineDefinitions(_grfconfig);
-	}
+	// Native definition installation is content-scoped, independent of saved
+	// vehicles or a previous Tube-power feature flag. An original prototype load
+	// may append four definition-only EIDS rows; original IDs, cargo and RNG stay
+	// with their existing owners, and availability/power still require admission.
+	InitialiseTubeContentDefinitions(_grfconfig);
 	// The Surface spoil receivers are native industries in the same package scope (r2mlvs5 Group 8); the build list is sorted again to show them.
 	if (InitialiseSpoilReceiverDefinitions(_grfconfig)) SortIndustryTypes();
 	if (InitialiseLayerMineDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native catalogue reuses saved IIDS/TIDS; installation creates no geological reserve.
 	if (InitialiseLayerProcessorDefinitions(_grfconfig)) SortIndustryTypes(); // Material factories use published all-input recipes, never inherited independent-input multipliers.
 	if (InitialiseGeothermalCollectorDefinitions(_grfconfig)) SortIndustryTypes(); // Exact native collector catalogue restores IIDS/TIDS only; cold claims and paid construction remain independent owners.
+	if (InitialiseGeothermalGeneratorDefinitions(_grfconfig)) SortIndustryTypes(); // Restore exact dated definitions only; no funding, stock or operating accounts.
 	if (InitialiseGeothermalRiserDefinitions(_grfconfig)) SortIndustryTypes(); // Install only exact native definitions; original-portal funding and actual material/work remain separate command participants.
 }
 

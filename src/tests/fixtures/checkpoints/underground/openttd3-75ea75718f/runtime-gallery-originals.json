@@ -1,0 +1,502 @@
+{
+  "_documentation": "Owner: archi-historical-debug.md; r2mlvs14-remaining-assets-and-runtime-integration.md. Immutable already-visible original cargo shipments; no fresh native or human approval claim.",
+  "capsules": {
+    "mole": {
+      "model": 9,
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/5b9a7ae72b474d60-mole-raster-after.sav",
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "original_source": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-before.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "historical_acceptance": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/01fd0ec36cdee3b4-mole-raster-acceptance.json",
+        "sha256": "01fd0ec36cdee3b46bbeb90d6ddbd154c6baf7b5f47de798a40b8169ae58ae03"
+      },
+      "historical_raster": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/f7cec2f59a1687a2-mole-raster-original.json",
+        "sha256": "f7cec2f59a1687a213809340436d807b90b94e81fb40be461e40a840bed080be"
+      },
+      "original_view": {
+        "model": 9,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14255,
+        "tile": 4811,
+        "mask": 1,
+        "track": 1,
+        "speed": 100,
+        "tick": 589,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-before.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-after.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+            "bytes": 350951,
+            "sha256": "7d7b059945660a153e76ba88b2f25bdc8f05c6346963addf0fa5752b897d9400"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-authored.png",
+            "bytes": 8034,
+            "sha256": "634a9503dd676632b52d0d3df9d806c651455b7d87840692fc1afe2c2770509f"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 109,
+              "visible_pixels": 108,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 109,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 53
+            },
+            {
+              "zoom": 1,
+              "source_points": 109,
+              "visible_pixels": 432,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 436,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 212
+            }
+          ]
+        }
+      },
+      "classification": "Prepared excavated floor, completed machinery and commissioned portals remain explicit boundary inputs. Actual1970 Coal reaches CFMT fuel intake, without a Copper co-input or metal-output claim. Positive fixture prices verify debits, not balance. Rendering earns no work and changes no original owner."
+    },
+    "crate": {
+      "model": 10,
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/f29a13b9b5f7cce0-crate-raster-after.sav",
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "original_source": {
+        "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-before.sav",
+        "bytes": 11664,
+        "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+      },
+      "historical_acceptance": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/1eccc847047f0acf-crate-raster-acceptance.json",
+        "sha256": "1eccc847047f0acf7bdc81b799438bb1cb78d3d915982d91c292aeb5ad0d9326"
+      },
+      "historical_raster": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/43b98a8e09ba6816-crate-raster-original.json",
+        "sha256": "43b98a8e09ba681691fa99f6d3b4dc80910a0f83540bdb3424501e6fab241e16"
+      },
+      "original_view": {
+        "model": 10,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14401,
+        "tile": 5642,
+        "mask": 1,
+        "track": 1,
+        "speed": 124,
+        "tick": 5465,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-before.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/crate-files/20261018-041224-82170090c4/saves/crate-raster-after.sav",
+          "bytes": 11664,
+          "sha256": "f29a13b9b5f7cce0cd804b8bd151db3a6f7c2e5fe8c5199c1fafe29637e735c4"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-source-manifest.json",
+            "bytes": 593602,
+            "sha256": "24c2fe024ace696d97d9dec434851e1e1183bb8da38418ab79769daee76f4d0f"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/crate-authored.png",
+            "bytes": 10497,
+            "sha256": "415c1a97d4405076d77bd6db7c6ba9654eef9ae0196a61c70fe62fb4890a8550"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 239,
+              "visible_pixels": 238,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 239,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 155
+            },
+            {
+              "zoom": 1,
+              "source_points": 239,
+              "visible_pixels": 952,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 956,
+              "interior_source_points": 155,
+              "interior_visible_pixels": 620
+            }
+          ]
+        }
+      },
+      "classification": "Prepared excavated floor, completed original machinery, native generated town and commissioned conventional shafts remain explicit boundary inputs. Actual1975 Forest/Wood/Sawmill production earns39 original Goods, conveyed through conventional feed, layer-local Crate and conventional Surface town delivery. Native tariffs/recurring costs match saved inflation. All five original parts, packets, source industries, town and company history remain native-owned. Rendering earns no work and changes no original owner."
+    },
+    "cistern": {
+      "model": 11,
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/8739d3e3e6ad68bb-cistern-raster-after.sav",
+        "sha256": "8739d3e3e6ad68bbbf1bd49d30a2aa6a51ce4219c7e8345afb6e23e435d9147e"
+      },
+      "original_source": {
+        "path": "mlm/reviews/tubes/cistern-files/20261018-072208-f25f424615/saves/cistern-raster-before.sav",
+        "bytes": 15212,
+        "sha256": "8739d3e3e6ad68bbbf1bd49d30a2aa6a51ce4219c7e8345afb6e23e435d9147e"
+      },
+      "historical_acceptance": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/7e7644befeafaf86-cistern-raster-acceptance.json",
+        "sha256": "7e7644befeafaf8606da5f7fa7bd89d47c03e27c87b6469ae24e2e86e4c8e462"
+      },
+      "historical_raster": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/85fc6ca9ad95c228-cistern-raster-original.json",
+        "sha256": "85fc6ca9ad95c22840b8e9bc02e773ebfb9a5afc191865a1bb7c4538f9d04e85"
+      },
+      "original_view": {
+        "model": 11,
+        "view": 5,
+        "direction": 5,
+        "frame": 0,
+        "sprite": 14539,
+        "tile": 5644,
+        "mask": 1,
+        "track": 1,
+        "speed": 90,
+        "tick": 6900,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/cistern-files/20261018-072208-f25f424615/saves/cistern-raster-before.sav",
+          "bytes": 15212,
+          "sha256": "8739d3e3e6ad68bbbf1bd49d30a2aa6a51ce4219c7e8345afb6e23e435d9147e"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/cistern-files/20261018-072208-f25f424615/saves/cistern-raster-after.sav",
+          "bytes": 15212,
+          "sha256": "8739d3e3e6ad68bbbf1bd49d30a2aa6a51ce4219c7e8345afb6e23e435d9147e"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/cistern-source-manifest.json",
+            "bytes": 315230,
+            "sha256": "ef21e40ca2f663cc1a36c2e3cbcf371b5b8d69d65e02b603e3c493cbfd7ee19b"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/cistern-authored.png",
+            "bytes": 8364,
+            "sha256": "21e8bda7b67252d1746d02fea4e7a403edce2af95264930a5efabcdb8b1e9af1"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 273,
+              "visible_pixels": 268,
+              "occluded_by_original_rim_pixels": 5,
+              "exact_pixels": 273,
+              "interior_source_points": 188,
+              "interior_visible_pixels": 188
+            },
+            {
+              "zoom": 1,
+              "source_points": 273,
+              "visible_pixels": 1072,
+              "occluded_by_original_rim_pixels": 20,
+              "exact_pixels": 1092,
+              "interior_source_points": 188,
+              "interior_visible_pixels": 752
+            }
+          ]
+        }
+      },
+      "classification": "Prepared floor/machinery/Connected shafts and saved multi-industry option remain boundaries. Actual original raw production/CHEM manufacture, conventional liquid feed, local paid Cistern and conventional Surface PCHM intake/output retain all nine original parts, four industries, six stations, raw histories/reserve/unused Oil, packets and native current/old accounts. The accepted loaded20CHEM capsule earns its clear inspection point through the complete shared native driver. Pure rendering/picking changes no original owner; original art/pixel bounds remain unchanged."
+    },
+    "shield": {
+      "model": 12,
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/a9f15f870159a070-shield-raster-after.sav",
+        "sha256": "a9f15f870159a070c4ca4d8ea071436e9e667bb7d7668a09999e043e1e014f28"
+      },
+      "original_source": {
+        "path": "mlm/reviews/tubes/shield-files/20261018-085212-c3deaf157e/saves/shield-raster-before.sav",
+        "bytes": 14452,
+        "sha256": "a9f15f870159a070c4ca4d8ea071436e9e667bb7d7668a09999e043e1e014f28"
+      },
+      "historical_acceptance": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/55604bdd99e0782e-shield-raster-acceptance.json",
+        "sha256": "55604bdd99e0782ea2304a68f8aef6a2e0519e36bd711b7e663a140d9289846e"
+      },
+      "historical_raster": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/3dca27bbe55d5e26-shield-raster-original.json",
+        "sha256": "3dca27bbe55d5e26a392ed60ca64e0b50c800f374d5f2dcba829562b88ad651f"
+      },
+      "original_view": {
+        "model": 12,
+        "state": 2,
+        "view": 5,
+        "direction": 5,
+        "frame": 0,
+        "sprite": 14701,
+        "tile": 5644,
+        "mask": 1,
+        "track": 1,
+        "speed": 90,
+        "tick": 4210,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/shield-files/20261018-085212-c3deaf157e/saves/shield-raster-before.sav",
+          "bytes": 14452,
+          "sha256": "a9f15f870159a070c4ca4d8ea071436e9e667bb7d7668a09999e043e1e014f28"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/shield-files/20261018-085212-c3deaf157e/saves/shield-raster-after.sav",
+          "bytes": 14452,
+          "sha256": "a9f15f870159a070c4ca4d8ea071436e9e667bb7d7668a09999e043e1e014f28"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/shield-source-manifest.json",
+            "bytes": 313956,
+            "sha256": "5cb7d3a64f93e53bd5be39cbd7c44d1e8cfc823a38a76545c868f9d4ed4c387f"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/shield-authored.png",
+            "bytes": 8472,
+            "sha256": "fdb99ba79edc2fd9241c6af06887571036b93cacc5059b3b662b887db9262d9c"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 259,
+              "visible_pixels": 259,
+              "occluded_by_original_rim_pixels": 0,
+              "exact_pixels": 259,
+              "interior_source_points": 176,
+              "interior_visible_pixels": 176
+            },
+            {
+              "zoom": 1,
+              "source_points": 259,
+              "visible_pixels": 1036,
+              "occluded_by_original_rim_pixels": 0,
+              "exact_pixels": 1036,
+              "interior_source_points": 176,
+              "interior_visible_pixels": 704
+            }
+          ]
+        }
+      },
+      "classification": "Prepared floor/machinery/Connected shafts remain boundaries. Actual original finite Deep RARE extraction/dispatch, conventional Deep-Underground feed, local paid Shield and conventional Surface ELEC intake retain all five original parts, two industries, four stations, finite reserve/real waiting inventory/packets and native current/old accounts. RFMT remains absent and Electronics output0. The accepted loaded24RARE capsule earns its clear inspection point through the complete shared native source/dispatch driver. Pure rendering/picking changes no original owner; original art/pixel bounds remain unchanged."
+    },
+    "forge": {
+      "model": 13,
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/5a1a6d81e2bbab0c-forge-raster-after.sav",
+        "sha256": "5a1a6d81e2bbab0c49a6714b582d5c8cc0e9fffb94945206b132d6bb619d72e4"
+      },
+      "original_source": {
+        "path": "mlm/reviews/tubes/forge-files/20261018-112416-c42f0487dd/saves/forge-raster-before.sav",
+        "bytes": 15040,
+        "sha256": "5a1a6d81e2bbab0c49a6714b582d5c8cc0e9fffb94945206b132d6bb619d72e4"
+      },
+      "historical_acceptance": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/702d5c16efd02cad-forge-raster-acceptance.json",
+        "sha256": "702d5c16efd02cadcaffaaedaf7e5afe098af67bc642ca2104620f1d5e7c1d25"
+      },
+      "historical_raster": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/de1a8b557706730c-forge-raster-original.json",
+        "sha256": "de1a8b557706730c763a2962c14f0df46893974a7dac57d24efb70ac7e751dc4"
+      },
+      "original_view": {
+        "model": 13,
+        "state": 1,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14839,
+        "tile": 5644,
+        "mask": 1,
+        "track": 1,
+        "speed": 70,
+        "tick": 14012,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/forge-files/20261018-112416-c42f0487dd/saves/forge-raster-before.sav",
+          "bytes": 15040,
+          "sha256": "5a1a6d81e2bbab0c49a6714b582d5c8cc0e9fffb94945206b132d6bb619d72e4"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/forge-files/20261018-112416-c42f0487dd/saves/forge-raster-after.sav",
+          "bytes": 15040,
+          "sha256": "5a1a6d81e2bbab0c49a6714b582d5c8cc0e9fffb94945206b132d6bb619d72e4"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/forge-source-manifest.json",
+            "bytes": 728822,
+            "sha256": "c10252b70b701bbc038c9c5f3a9ced7fafc7705ec8d1b924b42fd3fec06396f2"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/forge-authored.png",
+            "bytes": 13752,
+            "sha256": "926d6ef10013f99eaede950028db55223788034ede03b616e8e61241737fa088"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 281,
+              "visible_pixels": 279,
+              "occluded_by_original_rim_pixels": 2,
+              "exact_pixels": 281,
+              "interior_source_points": 152,
+              "interior_visible_pixels": 152
+            },
+            {
+              "zoom": 1,
+              "source_points": 281,
+              "visible_pixels": 1116,
+              "occluded_by_original_rim_pixels": 8,
+              "exact_pixels": 1124,
+              "interior_source_points": 152,
+              "interior_visible_pixels": 608
+            }
+          ]
+        }
+      },
+      "classification": "Prepared floor/machinery/Connected shafts remain boundaries. Actual original finite CORE/Coal extraction/dispatch, native CFMT32RFMT/112unusedCoal, conventional Surface-Underground feed, local paid Forge and conventional Surface ELEC intake retain all nine train parts and genuine saved effects, four industries, five stations, both reserves/real waiting inventory/packets and native current/old accounts. RARE absent means Electronics output0. The actual partially loaded32RFMT/80capacity capsule earns its clear inspection point through the complete shared native source/dispatch driver. Pure rendering/picking changes no original owner; original art/pixel bounds remain unchanged."
+    }
+  }
+}

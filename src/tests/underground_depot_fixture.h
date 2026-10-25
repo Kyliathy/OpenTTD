@@ -5,6 +5,7 @@
  */
 
 /**
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md paid support admission.
  * @file underground_depot_fixture.h Paid native chamber and separate connected haulage route for recurring depot exchange.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 13B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, Group 7BB
@@ -20,6 +21,7 @@
 #include "../rail_cmd.h"
 #include "../layer_portal_cmd.h"
 #include "../tbm_area_preview.h"
+#include "../signal_func.h"
 
 /** Declare medium native prices and unit inflation before the world invoices its actual initial logistics. */
 class NativeDepotEconomy {
@@ -173,12 +175,32 @@ public:
 		CHECK(CaptureTBMProjects().empty());
 	}
 
+	/** Fund only the missing permanent pieces of a fully planned further route through native rail commands.
+	 * A support-piece refusal still carries geometry for ordinary funded construction; unrelated refusals grant no work.
+	 */
+	void FundFurtherRoute()
+	{
+		const auto consist = GetDefaultTBMConsist(MapLayer::Underground);
+		const auto quote = PreviewTBMCommissionArea(_current_company, this->world.portal, this->first.model_id, consist.earth_wagons, consist.rock_wagons,
+			this->world.origin->index, this->world.site, TileAddWrap(this->world.site, 2, 18), false);
+		// Only a complete route refused for an ordinary fundable piece may supply this construction proposal.
+		if (quote.purchase.Failed()) REQUIRE(quote.purchase.GetErrorMessage() == STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE);
+		const auto &route = quote.purchase.Succeeded() ? quote.request.proposal : quote.area.proposal;
+		std::vector<size_t> ends;
+		const auto path = GetTBMWorkRailPath(route, route.route.size(), ends);
+		REQUIRE(ends.size() == route.route.size());
+		this->BuildRailPath(path, true); // Actual paid existing-floor construction; solid future cells remain for the cutter.
+	}
+
 	/**
 	 * Fund the cutter's safe return branch and assign a further southern cut to its actual retained machine.
 	 * @return Actual new project identity, bound to the same source pair and native underground depot.
 	 */
 	TBMProjectID StartFurther()
 	{
+		// Current Soft yields fit one load. Declare finite Mixed rock only on untouched, deposit-free future cells
+		// so this recurring scenario needs multiple exchanges while preserving every paid old cut and reserve.
+		this->world.AppendRockSeam(GeologyHardness::Mixed, this->world.site, TileAddWrap(this->world.site, 2, 18));
 		const uint x = TileX(this->world.rock), y = TilePlaneY(this->world.rock);
 		// The cutter returns from the southern faces into the eastern junction below the full straight depot approach.
 		// The hauler's separate eastern lane joins there before the active cutter corridor, rather than passing its work face.
@@ -187,14 +209,9 @@ public:
 			TileXYL(x + 2, y + 6, MapLayer::Underground), TileXYL(x + 2, y + 5, MapLayer::Underground),
 			TileXYL(x + 2, y + 4, MapLayer::Underground), this->depot});
 		const auto consist = GetDefaultTBMConsist(MapLayer::Underground);
-		const auto quote = PreviewTBMCommissionArea(_current_company, this->world.portal, this->first.model_id, consist.earth_wagons, consist.rock_wagons,
-			this->world.origin->index, this->world.site, TileAddWrap(this->world.site, 2, 18), false);
-		REQUIRE(quote.purchase.Succeeded());
-		std::vector<size_t> ends;
-		const auto path = GetTBMWorkRailPath(quote.request.proposal, quote.request.proposal.route.size(), ends);
-		REQUIRE(ends.size() == quote.request.proposal.route.size());
-		// Funding the next route's exact existing-floor pieces is ordinary construction, not an unpaid support mutation inside cutting.
-		this->BuildRailPath(path, true);
+		this->FundFurtherRoute();
+		REQUIRE(PreviewTBMCommissionArea(_current_company, this->world.portal, this->first.model_id, consist.earth_wagons, consist.rock_wagons,
+			this->world.origin->index, this->world.site, TileAddWrap(this->world.site, 2, 18), false).purchase.Succeeded());
 		this->Do<Commands::CommissionTBM>(this->world.portal, this->first.model_id, consist.earth_wagons, consist.rock_wagons,
 			this->world.origin->index, this->world.site, TileAddWrap(this->world.site, 2, 18), false);
 		const auto projects = CaptureTBMProjects();
@@ -212,7 +229,7 @@ public:
 	 * Drive only native whole-world frames until an actual consumer checkpoint.
 	 * @param done Read-only condition on the real project/assignment/physical trains.
 	 * @param limit Most physical frames allowed for this focused checkpoint.
-	 * @param observe Optional read-only custody/receipt observer after each complete native frame.
+	 * @param observe Optional post-frame custody observer and supported player repair commands; no private owner mutation.
 	 * @return Frames actually driven; absence of native progress fails with current physical state.
 	 */
 	uint DriveUntil(const std::function<bool()> &done, uint limit = 50000, const std::function<void()> &observe = {})
@@ -221,8 +238,15 @@ public:
 		// A single native frame owns work, physical trains, station disposal and company allowance. No observer
 		// changes a phase, position, packet or private order to compensate for a missing depot consumer.
 		while (!done() && frames < limit) {
+			// Fixture construction/repair can queue native signal updates outside
+			// the application command dispatcher. Drain that same owner before a
+			// train makes depot admission; stale queued work is not a rail failure.
+			UpdateSignalsInBuffer();
 			this->world.Tick();
 			if (observe) observe();
+			// Complete public repair callbacks at their normal command boundary
+			// before the next frame or retained wait snapshot observes the track.
+			UpdateSignalsInBuffer();
 			REQUIRE_FALSE(Train::Get(this->first.cutter)->vehstatus.Test(VehState::Crashed));
 			REQUIRE_FALSE(this->world.hauler->vehstatus.Test(VehState::Crashed));
 			REQUIRE_FALSE(_pause_mode.Test(PauseMode::Error));

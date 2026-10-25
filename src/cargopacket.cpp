@@ -1024,3 +1024,26 @@ bool StationCargoList::RemoveUnshippedCompanySupply(uint64_t order, uint16_t exp
 	}
 	return true;
 }
+
+
+/** @copydoc CargoPacket::ComputePoolDigest */
+uint64_t CargoPacket::ComputePoolDigest()
+{
+	uint64_t digest = 14695981039346656037ULL;
+	/** @param value Actual saved scalar bits; fixed bytes preserve native identity without hashing addresses or struct padding. */
+	const auto field = [&digest](uint64_t value) {
+		for (uint8_t byte = 0; byte < 8; ++byte) { digest ^= value & 0xFF; digest *= 1099511628211ULL; value >>= 8; }
+	};
+	field(CargoPacket::GetNumItems());
+	// Every native fragment participates independently, including ordinary
+	// freight and Space/private containers; equal totals cannot conceal a changed
+	// original purpose, lost transfer credit, receipt truncation or renewed age.
+	for (const auto *packet : CargoPacket::Iterate()) {
+		field(packet->index.base()); field(packet->count); field(packet->periods_in_transit);
+		field(static_cast<uint64_t>(packet->feeder_share)); field(packet->source_xy.base()); field(packet->first_station.base());
+		field(to_underlying(packet->source.type)); field(packet->source.id);
+		field(static_cast<uint16_t>(packet->travelled.x)); field(static_cast<uint16_t>(packet->travelled.y));
+		field(packet->company_supply_order); field(packet->company_supply_shipped);
+	}
+	return digest;
+}

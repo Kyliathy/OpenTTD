@@ -135,8 +135,12 @@ TEST_CASE("Straight TBM commissioning binds intent and exact cutter endpoint", "
 	CHECK(rig.rig.Digest() == before);
 	CHECK(Command<Commands::ConfirmTBMCommission>::Do(DoCommandFlag::Execute, rig.portal, 0, 2, 2, origin,
 		rig.rock, rig.end, quote.fingerprint, ExcavationPlanIntent::Area).Failed());
-	CHECK(PreviewTBMCommissionArea(_current_company, rig.portal, 0, 2, 2, origin, rig.rock,
-		TileAddWrap(rig.end, 1, 1), false, ExcavationPlanIntent::StraightTunnel).purchase.Failed());
+	// Off-axis endpoints now use the delivered bounded approach planner; their distinct reviewed route must still bind confirmation.
+	const TileIndex off_axis = TileAddWrap(rig.end, 1, 1);
+	const auto angled = PreviewTBMCommissionArea(_current_company, rig.portal, 0, 2, 2, origin, rig.rock, off_axis, false, ExcavationPlanIntent::StraightTunnel);
+	REQUIRE(angled.purchase.Succeeded());
+	CHECK(angled.area.plan.end.position == off_axis);
+	CHECK(angled.fingerprint != quote.fingerprint);
 	CHECK(rig.rig.Digest() == before);
 	REQUIRE(Command<Commands::ConfirmTBMCommission>::Do(DoCommandFlag::Execute, rig.portal, 0, 2, 2, origin,
 		rig.rock, rig.end, quote.fingerprint, ExcavationPlanIntent::StraightTunnel).Succeeded());

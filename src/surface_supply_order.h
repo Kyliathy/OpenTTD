@@ -84,6 +84,12 @@ struct SurfaceSupplyOrderSnapshot {
 	bool operator==(const SurfaceSupplyOrderSnapshot &other) const = default;
 };
 
+/** Fingerprint the sole admitted tagged book, preserving unavailable legacy facts structurally.
+ * @param snapshot Complete canonical receipt history in issued-identity order.
+ * @return Portable field-wise diagnostic over issuer, common facts and the exact Native/LegacyBvariant; physical stock remains in the packet owner.
+ */
+uint64_t ComputeSurfaceSupplyOrderDigest(const SurfaceSupplyOrderSnapshot &snapshot);
+
 /** Candidate-owned station facts; full/copy adapters must read original native fields rather than borrow the running world's station. */
 struct SurfaceSupplyStationView {
 	StationID station = StationID::Invalid(); ///< Actual normal-station identity, excluding waypoints.

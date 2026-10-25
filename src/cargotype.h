@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file cargotype.h Types/functions related to cargoes. */
+/** @file cargotype.h Native cargo definitions and detached original climate labels.
+ * @see docs/zz-reach2/architecture/savegame/archi-savegame.md candidate-owned cargo meanings.
+ */
 
 #ifndef CARGOTYPE_H
 #define CARGOTYPE_H
@@ -209,6 +211,12 @@ extern CargoTypes _cargo_mask;
 extern CargoTypes _standard_cargo_mask;
 
 void SetupCargoForClimate(LandscapeType l);
+/** Resolve the original climate definition without reading or changing activated cargo slots.
+ * @param landscape Candidate file's explicit climate.
+ * @param cargo Original baseline slot, bounded to the native twelve-slot envelope.
+ * @return Immutable native label, or CT_INVALID for an unsupported/void slot.
+ */
+CargoLabel GetDefaultCargoLabel(LandscapeType landscape, CargoType cargo);
 bool IsDefaultCargo(CargoType cargo_type);
 void BuildCargoLabelMap();
 

@@ -1,0 +1,2403 @@
+{
+  "_documentation": "r2mlvs17-underground-transport-tubes.md15BC.2; actual useful1970 Mole opposite-reader pixels/picking and complete native purity; closes15B.1 with pinned ordinary file proof",
+  "controller": {
+    "path": "src/tests/multilayer/mole_useful_raster_report.py",
+    "bytes": 12175,
+    "sha256": "fe3aa0c119dff04ff06146c364c8954b9d1ad981caf48f1c3e6c037e207db8af"
+  },
+  "summary": {
+    "Debug": {
+      "cases": 6,
+      "assertions": 28778
+    },
+    "RelWithDebInfo": {
+      "cases": 6,
+      "assertions": 28778
+    }
+  },
+  "native_cases": 12,
+  "native_assertions": 57556,
+  "records": [
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/reports/mole-useful-raster-Debug.json",
+        "bytes": 11899,
+        "sha256": "f7cec2f59a1687a213809340436d807b90b94e81fb40be461e40a840bed080be"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BC.2; original useful-route20-unit Mole earns native moving inspection, exact packed pixels/layer picking and pure complete worlds; other models/bootstrap remain separate",
+      "configuration": "Debug",
+      "focus": "raster",
+      "native": {
+        "log": {
+          "path": "logs/tubes/useful-files/20261018-023525-d03714187e/mole-raster.log",
+          "bytes": 1190,
+          "sha256": "fd96dd1b1a8c2b969864813ac9b5a89eceb0faeaff9d05a3db08b22e94fdacac"
+        },
+        "assertions": 370,
+        "cases": 1,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        },
+        "output": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-useful-0-0-raster.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "action": "raster"
+      },
+      "writer": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/reports/mole-useful-files-RelWithDebInfo-write.json",
+        "bytes": 12186,
+        "sha256": "ef7f43514276b1cf2e2b3d8c2c9b56db133e3a2ce93fd6fdf686ee35aa6b60d1"
+      },
+      "checkpoint": {
+        "scene": 0,
+        "step": 0,
+        "utility": 2523203887446877892,
+        "binding": 4192622586854501871,
+        "invoice": 12214476399326758251,
+        "capsule": 0,
+        "freight": 1,
+        "wagon": 2,
+        "packet": 0,
+        "mine": 0,
+        "factory": 1,
+        "origin": 0,
+        "interchange": 1,
+        "destination": 2,
+        "source": 0,
+        "tick": 561,
+        "carry": 550,
+        "cap_count": 20,
+        "wagon_count": 0,
+        "factory_wait": 0,
+        "income": 0,
+        "delivered": 0,
+        "calendar": 719528,
+        "calendar_fraction": 0,
+        "economy": 719535,
+        "economy_fraction": 43,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        }
+      },
+      "view": {
+        "model": 9,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14255,
+        "tile": 4811,
+        "mask": 1,
+        "track": 1,
+        "speed": 100,
+        "tick": 589,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-before.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-after.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "rims": [
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 32,
+            "dy": -16,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 0,
+            "dy": 0,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": -32,
+            "dy": 16,
+            "front": 23697
+          }
+        ],
+        "frames": [
+          {
+            "zoom": 1,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-1-0.png",
+              "bytes": 44356,
+              "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+            }
+          },
+          {
+            "zoom": 1,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-1-1.png",
+              "bytes": 44356,
+              "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-2-0.png",
+              "bytes": 39100,
+              "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-2-1.png",
+              "bytes": 39100,
+              "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+            }
+          }
+        ],
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+            "bytes": 350951,
+            "sha256": "7d7b059945660a153e76ba88b2f25bdc8f05c6346963addf0fa5752b897d9400"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-authored.png",
+            "bytes": 8034,
+            "sha256": "634a9503dd676632b52d0d3df9d806c651455b7d87840692fc1afe2c2770509f"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 109,
+              "visible_pixels": 108,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 109,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 53
+            },
+            {
+              "zoom": 1,
+              "source_points": 109,
+              "visible_pixels": 432,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 436,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 212
+            }
+          ]
+        }
+      },
+      "native_steps": 28,
+      "start_tick": 561,
+      "end_tick": 589,
+      "consumed_j": 10080,
+      "controller": {
+        "path": "src/tests/multilayer/mole_useful_raster.py",
+        "bytes": 5592,
+        "sha256": "30b530fc616e712ab684215814b72b6cc7174939153c34204061aabe527b2683"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 90625536,
+        "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_load.cpp",
+          "bytes": 16660,
+          "sha256": "0603358197ad5610c90f4053cc308022fe6edb297a9f59a5a16037760645c3ec"
+        },
+        {
+          "path": "src/tests/mine_fixture.h",
+          "bytes": 6556,
+          "sha256": "1ba25fbf4575b59a6b278d246b252d30440dc2bb629c3a43d7f9c30e09d959ef"
+        },
+        {
+          "path": "src/tests/excavation_fixture.h",
+          "bytes": 15301,
+          "sha256": "59153c370498b76e493bf836e8b938d5df6f8363204182ff639db40389b61c89"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/tests/multilayer/tube_travel_sprite_checks.py",
+          "bytes": 14931,
+          "sha256": "9bf4c41404c18cd7ff90c9aaae2a1d39ee30db457d1ff456196b286966eeba43"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      },
+      "file_receipt": {
+        "path": "logs/tubes/useful-files/20261018-native-01/mole-files-verification.json",
+        "bytes": 199869,
+        "sha256": "66152ddaf28dc50f2febbaf5eebb917d158c5c2a388456ac5f17b501cf53fde5"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/reports/mole-useful-raster-RelWithDebInfo.json",
+        "bytes": 11908,
+        "sha256": "36f1b25a108d06021b09bf429fc086f38832221952a52343eec6919a5111dedd"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BC.2; original useful-route20-unit Mole earns native moving inspection, exact packed pixels/layer picking and pure complete worlds; other models/bootstrap remain separate",
+      "configuration": "RelWithDebInfo",
+      "focus": "raster",
+      "native": {
+        "log": {
+          "path": "logs/tubes/useful-files/20261018-023909-d322629df1/mole-raster.log",
+          "bytes": 1190,
+          "sha256": "68f085938bfefd6e8868fd218ba67f32642dcfa3c6a0a69adbc9997e22a33072"
+        },
+        "assertions": 370,
+        "cases": 1,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        },
+        "output": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-useful-0-0-raster.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "action": "raster"
+      },
+      "writer": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/reports/mole-useful-files-Debug-write.json",
+        "bytes": 12168,
+        "sha256": "4926afb5fcd3f98669a2e83f10239f2f155ad4cf241cba5f2844cafe59a583dd"
+      },
+      "checkpoint": {
+        "scene": 0,
+        "step": 0,
+        "utility": 2523203887446877892,
+        "binding": 4192622586854501871,
+        "invoice": 12214476399326758251,
+        "capsule": 0,
+        "freight": 1,
+        "wagon": 2,
+        "packet": 0,
+        "mine": 0,
+        "factory": 1,
+        "origin": 0,
+        "interchange": 1,
+        "destination": 2,
+        "source": 0,
+        "tick": 561,
+        "carry": 550,
+        "cap_count": 20,
+        "wagon_count": 0,
+        "factory_wait": 0,
+        "income": 0,
+        "delivered": 0,
+        "calendar": 719528,
+        "calendar_fraction": 0,
+        "economy": 719535,
+        "economy_fraction": 43,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        }
+      },
+      "view": {
+        "model": 9,
+        "view": 5,
+        "direction": 5,
+        "frame": 1,
+        "sprite": 14255,
+        "tile": 4811,
+        "mask": 1,
+        "track": 1,
+        "speed": 100,
+        "tick": 589,
+        "dx": 8,
+        "dy": -6,
+        "before": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-raster-before.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "after": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-raster-after.sav",
+          "bytes": 10852,
+          "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+        },
+        "complete_chunks_exact": 126,
+        "native_picking": true,
+        "wrong_layer_refused": true,
+        "rims": [
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 32,
+            "dy": -16,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": 0,
+            "dy": 0,
+            "front": 23697
+          },
+          {
+            "mask": 1,
+            "energized": 1,
+            "dx": -32,
+            "dy": 16,
+            "front": 23697
+          }
+        ],
+        "frames": [
+          {
+            "zoom": 1,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-1-0.png",
+              "bytes": 44356,
+              "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+            }
+          },
+          {
+            "zoom": 1,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-1-1.png",
+              "bytes": 44356,
+              "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 0,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-2-0.png",
+              "bytes": 39100,
+              "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+            }
+          },
+          {
+            "zoom": 2,
+            "repeat": 1,
+            "file": {
+              "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-2-1.png",
+              "bytes": 39100,
+              "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+            }
+          }
+        ],
+        "packed_pixels": {
+          "manifest": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-source-manifest.json",
+            "bytes": 350951,
+            "sha256": "7d7b059945660a153e76ba88b2f25bdc8f05c6346963addf0fa5752b897d9400"
+          },
+          "atlas": {
+            "path": "logs/proofs/mlm/native-art/ground/mole-authored.png",
+            "bytes": 8034,
+            "sha256": "634a9503dd676632b52d0d3df9d806c651455b7d87840692fc1afe2c2770509f"
+          },
+          "palette": {
+            "path": "src/table/palettes.h",
+            "bytes": 8616,
+            "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+          },
+          "foreground_sources": [
+            {
+              "manifest": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-atlas-manifest.json",
+                "bytes": 13654,
+                "sha256": "790cb553756562da07c26d712b9c18a5fe9512e836d19aef2036423ace16a866"
+              },
+              "atlas": {
+                "path": "logs/proofs/mlm/native-art/ground/tube-straight-authored.png",
+                "bytes": 2279,
+                "sha256": "b84f5f863a306b32d86ca47e597d5e016c360b57d349570665040691683f3b92"
+              }
+            }
+          ],
+          "matches": [
+            {
+              "zoom": 2,
+              "source_points": 109,
+              "visible_pixels": 108,
+              "occluded_by_original_rim_pixels": 1,
+              "exact_pixels": 109,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 53
+            },
+            {
+              "zoom": 1,
+              "source_points": 109,
+              "visible_pixels": 432,
+              "occluded_by_original_rim_pixels": 4,
+              "exact_pixels": 436,
+              "interior_source_points": 53,
+              "interior_visible_pixels": 212
+            }
+          ]
+        }
+      },
+      "native_steps": 28,
+      "start_tick": 561,
+      "end_tick": 589,
+      "consumed_j": 10080,
+      "controller": {
+        "path": "src/tests/multilayer/mole_useful_raster.py",
+        "bytes": 5592,
+        "sha256": "30b530fc616e712ab684215814b72b6cc7174939153c34204061aabe527b2683"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42751488,
+        "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_load.cpp",
+          "bytes": 16660,
+          "sha256": "0603358197ad5610c90f4053cc308022fe6edb297a9f59a5a16037760645c3ec"
+        },
+        {
+          "path": "src/tests/mine_fixture.h",
+          "bytes": 6556,
+          "sha256": "1ba25fbf4575b59a6b278d246b252d30440dc2bb629c3a43d7f9c30e09d959ef"
+        },
+        {
+          "path": "src/tests/excavation_fixture.h",
+          "bytes": 15301,
+          "sha256": "59153c370498b76e493bf836e8b938d5df6f8363204182ff639db40389b61c89"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/tests/multilayer/tube_travel_sprite_checks.py",
+          "bytes": 14931,
+          "sha256": "9bf4c41404c18cd7ff90c9aaae2a1d39ee30db457d1ff456196b286966eeba43"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      },
+      "file_receipt": {
+        "path": "logs/tubes/useful-files/20261018-native-01/mole-files-verification.json",
+        "bytes": 199869,
+        "sha256": "66152ddaf28dc50f2febbaf5eebb917d158c5c2a388456ac5f17b501cf53fde5"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/capsule-art/20261018-023653-4412dd7257/reports/tube-capsule-art-Debug-body-0.json",
+        "bytes": 4150,
+        "sha256": "12936732a31045ebd1ff535606db7011ba9ed369ffa5c6a221cbed4b89bb1283"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md13CB; actual native capsule packet/service/source presentation; prepared unit-test floor/cargo is not useful-route acceptance",
+      "configuration": "Debug",
+      "focus": "body",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/capsule-art/20261018-023653-4412dd7257/body.log",
+          "bytes": 194,
+          "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+        },
+        "assertions": 4498,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 90625536,
+        "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_capsule_sprite_checks.py",
+        "bytes": 10744,
+        "sha256": "6cd91851adfd36de53b92148159029bdb7f6cd1a0fe20dee78afef621e34eb72"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_model.h",
+          "bytes": 4988,
+          "sha256": "f6f1ad3b871c929bb8eacc59cc410a028165c386e010cb53be5612b438897775"
+        },
+        {
+          "path": "src/transport_tube_engine.cpp",
+          "bytes": 11633,
+          "sha256": "6505605986828a218e14acf335a0ecb92a17b31f65580910839b5a9f4145fdb5"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/transport_tube_vehicle_sprite.cpp",
+          "bytes": 10510,
+          "sha256": "8fee3b12ab84171b2f37cdde4bdee89befb8c61d8f46643795d6e4ffa052d153"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/guideway-art/20261018-023655-993f13482c/reports/tube-guideway-art-Debug-geometry-0.json",
+        "bytes": 6599,
+        "sha256": "b3d2166c98c666a22ce58708b8431f2e5baa1274fa748fa5c587b113db3a89d4"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md Group13B; actual native guideway presentation; prepared fixture floor is not paid bootstrap",
+      "configuration": "Debug",
+      "focus": "geometry",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/guideway-art/20261018-023655-993f13482c/geometry.log",
+          "bytes": 199,
+          "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+        },
+        "assertions": 2694,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 90625536,
+        "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_sprite_checks.py",
+        "bytes": 11278,
+        "sha256": "83cf92cae09081a8795da4eef22fd70f48b9eb44880283c5dfbb2625ee556ca8"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_sprite.cpp",
+          "bytes": 8586,
+          "sha256": "a061302500fb06e01c6a930defd14a8ffd6dc23fe2adb6e25adb91ae92b5b252"
+        },
+        {
+          "path": "src/rail_cmd.cpp",
+          "bytes": 136709,
+          "sha256": "5b80b82bb572f4a232afb4fff9c8f7dbd9a9c4e258805821cb19521ecb68aeb4"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_topology.cpp",
+          "bytes": 14177,
+          "sha256": "be6a963eede5d1694b515f8bc646874f47e2990b9feb8f152f14583eab87212c"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/pbs.h",
+          "bytes": 2623,
+          "sha256": "e2f8c5012338c32f3986a8aa1e5a09e63c7f199d25046022f0bb87635a7d2edc"
+        },
+        {
+          "path": "src/pbs.cpp",
+          "bytes": 20015,
+          "sha256": "35fd96d500ff0b5617c97f1606361df72503a2275211c2ab32cc64c94e29bca5"
+        },
+        {
+          "path": "src/rail_map.h",
+          "bytes": 20829,
+          "sha256": "14851579902d735c001a6e9baeaf97ba13e6b9e95cef01f007a07cc819a11db4"
+        },
+        {
+          "path": "src/transport_tube_geothermal.h",
+          "bytes": 7123,
+          "sha256": "f625d28344aff1343fd87a57f54eb607e55bbb400884978149d51e053e24aee9"
+        },
+        {
+          "path": "src/transport_tube_geothermal.cpp",
+          "bytes": 20312,
+          "sha256": "d4dbcd29f4eb6a7245fbf309e09a7c0377f96c3bc79b48c407007d73dc1457c0"
+        },
+        {
+          "path": "src/utility_power.h",
+          "bytes": 48371,
+          "sha256": "e8b1ef6502f729a51241be3e494486f84393c7eb550e1a27f27748c034db2e2d"
+        },
+        {
+          "path": "src/utility_power.cpp",
+          "bytes": 220979,
+          "sha256": "39c545295ac1c02a5e236d03fed23c0cd36e144e50384ed53d63948bb963dcca"
+        },
+        {
+          "path": "src/multilayer_state.cpp",
+          "bytes": 32891,
+          "sha256": "9c065e85fd7a359a7349b7587d3af214d0ffa1079367d53b219c270a53ab1600"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/transport_tube_vehicle_sl.cpp",
+          "bytes": 11738,
+          "sha256": "cd4831ee261a5431153827f48604668969ff0335f9d13cfe64267bd5243437e5"
+        },
+        {
+          "path": "src/saveload/transport_tube_geothermal_sl.cpp",
+          "bytes": 13283,
+          "sha256": "810d253fb5ba6b1ee5628123362b35026e4856f633291487cad4b22079f5092f"
+        },
+        {
+          "path": "src/saveload/map_sl.cpp",
+          "bytes": 11944,
+          "sha256": "8175f46f8af2acc57cf8fb087692a7dc33e07ce6ba2a6c862784802724a4039a"
+        },
+        {
+          "path": "src/saveload/saveload.h",
+          "bytes": 91824,
+          "sha256": "07a93e01c4af28af68a1138feec99d08aba3851569f8ad3bbe58062b39d9e865"
+        },
+        {
+          "path": "src/geothermal_generator.cpp",
+          "bytes": 38587,
+          "sha256": "fa8cfe026e4d75a1c63f379a9c9c2f3eeacf799d8a59bd773dbd640058002005"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite.cpp",
+          "bytes": 9414,
+          "sha256": "5685ed1dd38a7db91301df76c9d13ffe5ff021d555864768488afb88b4f00ef9"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/table/palettes.h",
+          "bytes": 8616,
+          "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/geothermal_tube_work_fixture.h",
+          "bytes": 3392,
+          "sha256": "587afa4aaa4084d18f7c2a02737e312fab6908d19793545ecb8b4a94a1f605fc"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-routes/20261018-023656-75034b1c48/reports/tube-useful-Debug-mole.json",
+        "bytes": 4587,
+        "sha256": "f48b9b29c12bbfd3dab8418a0d834ac864979aef0b8f3a32fb9ada62a432da8d"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BB; actual focused producer; local arrival and prepared-input limitations remain disclosed until autonomous-route acceptance",
+      "configuration": "Debug",
+      "focus": "mole",
+      "native": {
+        "log": {
+          "path": "logs/tubes/useful-routes/20261018-023656-75034b1c48/mole.log",
+          "bytes": 784,
+          "sha256": "6725bd3dc9613354e82452932f40f20dd9fd37b954a8ff229f1aa209bfb8a268"
+        },
+        "assertions": 20721,
+        "cases": 1
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_useful_route_checks.py",
+        "bytes": 3773,
+        "sha256": "300ba04fd3a87ccc2ebecf39d730378c5d6a7a4291edbebd34609a12d5b76a69"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 90625536,
+        "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "route": {
+        "original_packets": 1,
+        "income": 55,
+        "consumed_j": 683997,
+        "route_ticks": 2330,
+        "final_tick": 2848
+      },
+      "cargo_transitions": [
+        [
+          491,
+          0,
+          20,
+          0,
+          0,
+          0
+        ],
+        [
+          783,
+          0,
+          0,
+          20,
+          0,
+          0
+        ],
+        [
+          1655,
+          0,
+          0,
+          0,
+          20,
+          0
+        ],
+        [
+          2039,
+          0,
+          0,
+          0,
+          0,
+          20
+        ]
+      ]
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023658-0bac522c8b/reports/mole-useful-files-Debug-step-0.json",
+        "bytes": 7869,
+        "sha256": "0d2a3385e263a8fd71a765d29bfcf7d463ef9a95841273fa972a9ffac348d875"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BC; ordinary useful Mole repeated/full-native continuation; source/bootstrap boundaries remain disclosed",
+      "configuration": "Debug",
+      "phase": "step",
+      "case": 0,
+      "controller": {
+        "path": "src/tests/multilayer/mole_useful_files.py",
+        "bytes": 8646,
+        "sha256": "b167ab4c966423412850de6aaba32c4f645a925c884969cc96fc4dfd6ed23add"
+      },
+      "binary": {
+        "path": "build/Debug/openttd_test.exe",
+        "bytes": 90625536,
+        "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_load.cpp",
+          "bytes": 16660,
+          "sha256": "0603358197ad5610c90f4053cc308022fe6edb297a9f59a5a16037760645c3ec"
+        },
+        {
+          "path": "src/tests/mine_fixture.h",
+          "bytes": 6556,
+          "sha256": "1ba25fbf4575b59a6b278d246b252d30440dc2bb629c3a43d7f9c30e09d959ef"
+        },
+        {
+          "path": "src/tests/excavation_fixture.h",
+          "bytes": 15301,
+          "sha256": "59153c370498b76e493bf836e8b938d5df6f8363204182ff639db40389b61c89"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        }
+      ],
+      "writer": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/reports/mole-useful-files-RelWithDebInfo-write.json",
+        "bytes": 12186,
+        "sha256": "ef7f43514276b1cf2e2b3d8c2c9b56db133e3a2ce93fd6fdf686ee35aa6b60d1"
+      },
+      "checkpoint": {
+        "scene": 0,
+        "step": 0,
+        "utility": 2523203887446877892,
+        "binding": 4192622586854501871,
+        "invoice": 12214476399326758251,
+        "capsule": 0,
+        "freight": 1,
+        "wagon": 2,
+        "packet": 0,
+        "mine": 0,
+        "factory": 1,
+        "origin": 0,
+        "interchange": 1,
+        "destination": 2,
+        "source": 0,
+        "tick": 561,
+        "carry": 550,
+        "cap_count": 20,
+        "wagon_count": 0,
+        "factory_wait": 0,
+        "income": 0,
+        "delivered": 0,
+        "calendar": 719528,
+        "calendar_fraction": 0,
+        "economy": 719535,
+        "economy_fraction": 43,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        }
+      },
+      "native": [
+        {
+          "log": {
+            "path": "logs/tubes/useful-files/20261018-023658-0bac522c8b/baseline.log",
+            "bytes": 512,
+            "sha256": "d00dc6bd2194174d445378435ca8860db0b7664e9a6d8eab4ebfba61c2e1c9ae"
+          },
+          "assertions": 245,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-1.sav",
+            "bytes": 10444,
+            "sha256": "78aa7e140da450dfd5f8f750f6cc60bac7348bafd7662796cce6652e31550ff5"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-023658-0bac522c8b/saves/mole-useful-0-1-inspect.sav",
+            "bytes": 10864,
+            "sha256": "affacadddb0a2f1ab5137cb338631389d449b5e94e01f0cb222905ee807fe99a"
+          },
+          "action": "inspect"
+        },
+        {
+          "log": {
+            "path": "logs/tubes/useful-files/20261018-023658-0bac522c8b/continued.log",
+            "bytes": 506,
+            "sha256": "976b15f37d1c2749acd9d80ebe54880f84a4070df0dcca94b07e573acffa6e0f"
+          },
+          "assertions": 250,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-0.sav",
+            "bytes": 10444,
+            "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-023658-0bac522c8b/saves/mole-useful-0-0-step.sav",
+            "bytes": 10864,
+            "sha256": "4de3edfd776e77f474c03810ea1d7b62a479e176bd85a9baad536f59a8d4c371"
+          },
+          "action": "step"
+        }
+      ],
+      "uninterrupted_baseline": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022818-454b155c6d/saves/mole-useful-0-1.sav",
+        "bytes": 10444,
+        "sha256": "78aa7e140da450dfd5f8f750f6cc60bac7348bafd7662796cce6652e31550ff5"
+      },
+      "next_step": {
+        "complete_chunks_exact": 125,
+        "native_load_events": [
+          {
+            "action": "Load",
+            "baseline_tick": 562,
+            "resumed_tick": 561,
+            "other_bytes_exact": true
+          }
+        ]
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/capsule-art/20261018-023912-f224896669/reports/tube-capsule-art-RelWithDebInfo-body-0.json",
+        "bytes": 4168,
+        "sha256": "8b6c2765ebed820f218b902d592990d6be65468e68ac1e2602a81bff0a68920b"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md13CB; actual native capsule packet/service/source presentation; prepared unit-test floor/cargo is not useful-route acceptance",
+      "configuration": "RelWithDebInfo",
+      "focus": "body",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/capsule-art/20261018-023912-f224896669/body.log",
+          "bytes": 194,
+          "sha256": "bd9577dbcec470a2932b8a00ea3ee39352e15493246e9894dc9c9d0317510b71"
+        },
+        "assertions": 4498,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42751488,
+        "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_capsule_sprite_checks.py",
+        "bytes": 10744,
+        "sha256": "6cd91851adfd36de53b92148159029bdb7f6cd1a0fe20dee78afef621e34eb72"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_vehicle_sprite.cpp",
+          "bytes": 4522,
+          "sha256": "22988bf9bb3f697cecacab7cf4f6fea52a78fffec6726b54c67fc35114ae9856"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_model.h",
+          "bytes": 4988,
+          "sha256": "f6f1ad3b871c929bb8eacc59cc410a028165c386e010cb53be5612b438897775"
+        },
+        {
+          "path": "src/transport_tube_engine.cpp",
+          "bytes": 11633,
+          "sha256": "6505605986828a218e14acf335a0ecb92a17b31f65580910839b5a9f4145fdb5"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/tests/transport_tube_vehicle_sprite.cpp",
+          "bytes": 10510,
+          "sha256": "8fee3b12ab84171b2f37cdde4bdee89befb8c61d8f46643795d6e4ffa052d153"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/guideway-art/20261018-023913-948ed5b67a/reports/tube-guideway-art-RelWithDebInfo-geometry-0.json",
+        "bytes": 6617,
+        "sha256": "7759bcce2e33e1f27bf517e33ba589662c26b2809972c5a7d859704047eea15a"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md Group13B; actual native guideway presentation; prepared fixture floor is not paid bootstrap",
+      "configuration": "RelWithDebInfo",
+      "focus": "geometry",
+      "case": 0,
+      "native": {
+        "log": {
+          "path": "logs/tubes/guideway-art/20261018-023913-948ed5b67a/geometry.log",
+          "bytes": 199,
+          "sha256": "7882843d7e1bb6036af7c354eac93897c188c4af838e689b19d5ed54557ad35a"
+        },
+        "assertions": 2694,
+        "cases": 1
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42751488,
+        "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_sprite_checks.py",
+        "bytes": 11278,
+        "sha256": "83cf92cae09081a8795da4eef22fd70f48b9eb44880283c5dfbb2625ee556ca8"
+      },
+      "sources": [
+        {
+          "path": "src/transport_tube_sprite.h",
+          "bytes": 6717,
+          "sha256": "2e76a1e7d146ec94c93263b4fa8ad17a926e0098bd881863ef69c78cc25e2a55"
+        },
+        {
+          "path": "src/transport_tube_sprite.cpp",
+          "bytes": 8586,
+          "sha256": "a061302500fb06e01c6a930defd14a8ffd6dc23fe2adb6e25adb91ae92b5b252"
+        },
+        {
+          "path": "src/rail_cmd.cpp",
+          "bytes": 136709,
+          "sha256": "5b80b82bb572f4a232afb4fff9c8f7dbd9a9c4e258805821cb19521ecb68aeb4"
+        },
+        {
+          "path": "src/multilayer_sprite.h",
+          "bytes": 12043,
+          "sha256": "137a615a023d4bfc0a7b6937625d3e669faee1b24d90a2d3bdf2276ec2301393"
+        },
+        {
+          "path": "src/multilayer_sprite.cpp",
+          "bytes": 24856,
+          "sha256": "63294984f4c9f4e5ca0aa9c6b1b3aec2a1026df2b939be57436aa51ba8acbe44"
+        },
+        {
+          "path": "src/table/multilayer_sprite_assets.h",
+          "bytes": 9659,
+          "sha256": "5406532171c5d35a799c14508d8dbea25464cd59d94f958d8c9439626e8046b0"
+        },
+        {
+          "path": "src/transport_tube.h",
+          "bytes": 31906,
+          "sha256": "4a36d2eba4927771e39af60bf30027ca68f97db807a435f040e9cc38736a008d"
+        },
+        {
+          "path": "src/transport_tube_topology.cpp",
+          "bytes": 14177,
+          "sha256": "be6a963eede5d1694b515f8bc646874f47e2990b9feb8f152f14583eab87212c"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/pbs.h",
+          "bytes": 2623,
+          "sha256": "e2f8c5012338c32f3986a8aa1e5a09e63c7f199d25046022f0bb87635a7d2edc"
+        },
+        {
+          "path": "src/pbs.cpp",
+          "bytes": 20015,
+          "sha256": "35fd96d500ff0b5617c97f1606361df72503a2275211c2ab32cc64c94e29bca5"
+        },
+        {
+          "path": "src/rail_map.h",
+          "bytes": 20829,
+          "sha256": "14851579902d735c001a6e9baeaf97ba13e6b9e95cef01f007a07cc819a11db4"
+        },
+        {
+          "path": "src/transport_tube_geothermal.h",
+          "bytes": 7123,
+          "sha256": "f625d28344aff1343fd87a57f54eb607e55bbb400884978149d51e053e24aee9"
+        },
+        {
+          "path": "src/transport_tube_geothermal.cpp",
+          "bytes": 20312,
+          "sha256": "d4dbcd29f4eb6a7245fbf309e09a7c0377f96c3bc79b48c407007d73dc1457c0"
+        },
+        {
+          "path": "src/utility_power.h",
+          "bytes": 48371,
+          "sha256": "e8b1ef6502f729a51241be3e494486f84393c7eb550e1a27f27748c034db2e2d"
+        },
+        {
+          "path": "src/utility_power.cpp",
+          "bytes": 220979,
+          "sha256": "39c545295ac1c02a5e236d03fed23c0cd36e144e50384ed53d63948bb963dcca"
+        },
+        {
+          "path": "src/multilayer_state.cpp",
+          "bytes": 32891,
+          "sha256": "9c065e85fd7a359a7349b7587d3af214d0ffa1079367d53b219c270a53ab1600"
+        },
+        {
+          "path": "src/saveload/afterload.cpp",
+          "bytes": 140534,
+          "sha256": "a5777a6627ba4d2e002ab5a6b2716926b2910e52d9db83edb40bc9b875808007"
+        },
+        {
+          "path": "src/saveload/transport_tube_vehicle_sl.cpp",
+          "bytes": 11738,
+          "sha256": "cd4831ee261a5431153827f48604668969ff0335f9d13cfe64267bd5243437e5"
+        },
+        {
+          "path": "src/saveload/transport_tube_geothermal_sl.cpp",
+          "bytes": 13283,
+          "sha256": "810d253fb5ba6b1ee5628123362b35026e4856f633291487cad4b22079f5092f"
+        },
+        {
+          "path": "src/saveload/map_sl.cpp",
+          "bytes": 11944,
+          "sha256": "8175f46f8af2acc57cf8fb087692a7dc33e07ce6ba2a6c862784802724a4039a"
+        },
+        {
+          "path": "src/saveload/saveload.h",
+          "bytes": 91824,
+          "sha256": "07a93e01c4af28af68a1138feec99d08aba3851569f8ad3bbe58062b39d9e865"
+        },
+        {
+          "path": "src/geothermal_generator.cpp",
+          "bytes": 38587,
+          "sha256": "fa8cfe026e4d75a1c63f379a9c9c2f3eeacf799d8a59bd773dbd640058002005"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite.cpp",
+          "bytes": 9414,
+          "sha256": "5685ed1dd38a7db91301df76c9d13ffe5ff021d555864768488afb88b4f00ef9"
+        },
+        {
+          "path": "src/tests/transport_tube_sprite_load.cpp",
+          "bytes": 14450,
+          "sha256": "2aa6922d788add82af569afc3b30a4260f79e9c319bb03011f3e595535e456e7"
+        },
+        {
+          "path": "src/table/palettes.h",
+          "bytes": 8616,
+          "sha256": "77da0117f40872c3681c46f04576ec6c67a1ccc551332e715673c08b9e6b02f3"
+        },
+        {
+          "path": "src/tests/native_art_render_fixture.h",
+          "bytes": 7800,
+          "sha256": "bc9aee0a81af14920b6c44abdb89e11069f9c23d6e01bd3ebd654cabb2a9dbd0"
+        },
+        {
+          "path": "src/tests/transport_tube_fixture.h",
+          "bytes": 4846,
+          "sha256": "821afd66e8148e6aab89cad732a47aa141aebe3d673e878f699923ab4137da3f"
+        },
+        {
+          "path": "src/tests/transport_tube_meter_fixture.h",
+          "bytes": 3610,
+          "sha256": "fe0b44295cd1b03c1516167a8195797b5934742bdac43004e5ae2fb014c23c6e"
+        },
+        {
+          "path": "src/tests/geothermal_tube_work_fixture.h",
+          "bytes": 3392,
+          "sha256": "587afa4aaa4084d18f7c2a02737e312fab6908d19793545ecb8b4a94a1f605fc"
+        },
+        {
+          "path": "src/CMakeLists.txt",
+          "bytes": 20808,
+          "sha256": "d697763469a82ca32bc9086107ddf2d7a69ef7e17a6770adc70376097d7629d2"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "packed_art": {
+        "path": "media/baseset/openttd.grf",
+        "bytes": 14353223,
+        "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+      }
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-routes/20261018-023914-f5201e4e25/reports/tube-useful-RelWithDebInfo-mole.json",
+        "bytes": 4605,
+        "sha256": "3bdc4072e23c6ae63dfa22515b5d73b9eb65177909fa166e8c3859c4a4509a47"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BB; actual focused producer; local arrival and prepared-input limitations remain disclosed until autonomous-route acceptance",
+      "configuration": "RelWithDebInfo",
+      "focus": "mole",
+      "native": {
+        "log": {
+          "path": "logs/tubes/useful-routes/20261018-023914-f5201e4e25/mole.log",
+          "bytes": 784,
+          "sha256": "6725bd3dc9613354e82452932f40f20dd9fd37b954a8ff229f1aa209bfb8a268"
+        },
+        "assertions": 20721,
+        "cases": 1
+      },
+      "controller": {
+        "path": "src/tests/multilayer/tube_useful_route_checks.py",
+        "bytes": 3773,
+        "sha256": "300ba04fd3a87ccc2ebecf39d730378c5d6a7a4291edbebd34609a12d5b76a69"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42751488,
+        "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        }
+      ],
+      "route": {
+        "original_packets": 1,
+        "income": 55,
+        "consumed_j": 683997,
+        "route_ticks": 2330,
+        "final_tick": 2848
+      },
+      "cargo_transitions": [
+        [
+          491,
+          0,
+          20,
+          0,
+          0,
+          0
+        ],
+        [
+          783,
+          0,
+          0,
+          20,
+          0,
+          0
+        ],
+        [
+          1655,
+          0,
+          0,
+          0,
+          20,
+          0
+        ],
+        [
+          2039,
+          0,
+          0,
+          0,
+          0,
+          20
+        ]
+      ]
+    },
+    {
+      "report": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023915-6792f35b4f/reports/mole-useful-files-RelWithDebInfo-step-0.json",
+        "bytes": 7878,
+        "sha256": "520e468b5cfea5dda7d249b5ff9a28bce329cd65085fd0bd5b4ef1fa2cab5bf6"
+      },
+      "_documentation": "r2mlvs17-underground-transport-tubes.md15BC; ordinary useful Mole repeated/full-native continuation; source/bootstrap boundaries remain disclosed",
+      "configuration": "RelWithDebInfo",
+      "phase": "step",
+      "case": 0,
+      "controller": {
+        "path": "src/tests/multilayer/mole_useful_files.py",
+        "bytes": 8646,
+        "sha256": "b167ab4c966423412850de6aaba32c4f645a925c884969cc96fc4dfd6ed23add"
+      },
+      "binary": {
+        "path": "build/RelWithDebInfo/openttd_test.exe",
+        "bytes": 42751488,
+        "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+      },
+      "sources": [
+        {
+          "path": "src/tests/transport_tube_interchange.cpp",
+          "bytes": 35492,
+          "sha256": "1264e1e7190bbb44ce1cef7ed0160e0c6a96b11e4e1cb4568f30ec572c66dd88"
+        },
+        {
+          "path": "src/tests/layer_mine_production.cpp",
+          "bytes": 5658,
+          "sha256": "4cb0196dd1ff2a9cb1b386ff32d9681c19e9aacf471a5e46908ecdf1fa3bb5fd"
+        },
+        {
+          "path": "src/tests/layer_processor.cpp",
+          "bytes": 6532,
+          "sha256": "911839d0a095d9d726f20d7fa601bc77f4317caa476fb0b495296c53e98e1a72"
+        },
+        {
+          "path": "src/multilayer_industry.h",
+          "bytes": 21985,
+          "sha256": "996a2504d1e3ee81319bcd696ae94a39c22e2fbd4b20ce661c75754bcd11bd7b"
+        },
+        {
+          "path": "src/layer_industry_mine.cpp",
+          "bytes": 23103,
+          "sha256": "0d1b3665acee0e60273ee30369663b6f919a7a3aaa5d11498dd718bd2d42a614"
+        },
+        {
+          "path": "src/layer_industry_processor.cpp",
+          "bytes": 26789,
+          "sha256": "bebfaae9a90b9bbce8792cd8cd50f7b914d989ebd29ce53879a67d3f9cd0e480"
+        },
+        {
+          "path": "src/multilayer_recipe.cpp",
+          "bytes": 18251,
+          "sha256": "8a3ddf006a8739181db9d0dd0bddb6e3d016e61c213cb0f2acb121e676e63f57"
+        },
+        {
+          "path": "src/multilayer_vehicle_catalogue.cpp",
+          "bytes": 9330,
+          "sha256": "00d57539a476c03fe828f225e9719d71fdbb2bafa3affd3f350bf512fdeccfd4"
+        },
+        {
+          "path": "src/transport_tube_power.cpp",
+          "bytes": 26859,
+          "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+        },
+        {
+          "path": "src/transport_tube_runtime.cpp",
+          "bytes": 35927,
+          "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+        },
+        {
+          "path": "src/economy.cpp",
+          "bytes": 88471,
+          "sha256": "8e05f708c74fe3863ce2022e56db72329377aefc2c0854694fe8e71f2e541106"
+        },
+        {
+          "path": "src/train_cmd.cpp",
+          "bytes": 207467,
+          "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+        },
+        {
+          "path": "src/vehicle.cpp",
+          "bytes": 128774,
+          "sha256": "b506c0c0626e89f4ff848124628ccdca304e18bd880f96e81dd16245defd0754"
+        },
+        {
+          "path": "src/command.cpp",
+          "bytes": 16668,
+          "sha256": "99c9ff0dcef87e2f6821958e585cadde8f1dca503b93ab0c7dfaa31196eda578"
+        },
+        {
+          "path": "src/timer/timer_game_calendar.cpp",
+          "bytes": 7118,
+          "sha256": "08e95f8823ca408c28fe7a3fa7558ce8d70593976510c083a6960d808fdca77a"
+        },
+        {
+          "path": "src/timer/timer_game_economy.cpp",
+          "bytes": 7792,
+          "sha256": "71e6324bfdc9bd7720b43428ab750402352345bb1da087220455b280ac208f85"
+        },
+        {
+          "path": "src/timer/timer_game_tick.cpp",
+          "bytes": 2395,
+          "sha256": "cacc3b716268e27d0ed5fa86a7f2b6bf8e0385b0a643de0aa8dd91167f4ea573"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_routes.cpp",
+          "bytes": 35216,
+          "sha256": "24127d814d1778198a908038c5099abb345238674223cbb83d12afe8db40466d"
+        },
+        {
+          "path": "src/tests/CMakeLists.txt",
+          "bytes": 20499,
+          "sha256": "40bce38c04f4795730810e12b67d10fe1aecebcbff761b33ee8c61655c08c790"
+        },
+        {
+          "path": "src/tests/tube_useful_tick_fixture.h",
+          "bytes": 1372,
+          "sha256": "0b6169cad763ac6efb1e4dc738b78db3025c815dec6e1d56ce2143cc711a2ab7"
+        },
+        {
+          "path": "src/tests/transport_tube_useful_load.cpp",
+          "bytes": 16660,
+          "sha256": "0603358197ad5610c90f4053cc308022fe6edb297a9f59a5a16037760645c3ec"
+        },
+        {
+          "path": "src/tests/mine_fixture.h",
+          "bytes": 6556,
+          "sha256": "1ba25fbf4575b59a6b278d246b252d30440dc2bb629c3a43d7f9c30e09d959ef"
+        },
+        {
+          "path": "src/tests/excavation_fixture.h",
+          "bytes": 15301,
+          "sha256": "59153c370498b76e493bf836e8b938d5df6f8363204182ff639db40389b61c89"
+        },
+        {
+          "path": "src/tests/layer_save_fixture.h",
+          "bytes": 2912,
+          "sha256": "c33ed72cae32461a6013a155d689d28aa09b97dc323d7003fa6d71c7c9628f09"
+        }
+      ],
+      "writer": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/reports/mole-useful-files-Debug-write.json",
+        "bytes": 12168,
+        "sha256": "4926afb5fcd3f98669a2e83f10239f2f155ad4cf241cba5f2844cafe59a583dd"
+      },
+      "checkpoint": {
+        "scene": 0,
+        "step": 0,
+        "utility": 2523203887446877892,
+        "binding": 4192622586854501871,
+        "invoice": 12214476399326758251,
+        "capsule": 0,
+        "freight": 1,
+        "wagon": 2,
+        "packet": 0,
+        "mine": 0,
+        "factory": 1,
+        "origin": 0,
+        "interchange": 1,
+        "destination": 2,
+        "source": 0,
+        "tick": 561,
+        "carry": 550,
+        "cap_count": 20,
+        "wagon_count": 0,
+        "factory_wait": 0,
+        "income": 0,
+        "delivered": 0,
+        "calendar": 719528,
+        "calendar_fraction": 0,
+        "economy": 719535,
+        "economy_fraction": 43,
+        "input": {
+          "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-0.sav",
+          "bytes": 10444,
+          "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+        }
+      },
+      "native": [
+        {
+          "log": {
+            "path": "logs/tubes/useful-files/20261018-023915-6792f35b4f/baseline.log",
+            "bytes": 512,
+            "sha256": "21a8ecbdd69e944b021fb50176ab65dc72c570ac29f49c35a737ae15560cee2c"
+          },
+          "assertions": 245,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-1.sav",
+            "bytes": 10444,
+            "sha256": "78aa7e140da450dfd5f8f750f6cc60bac7348bafd7662796cce6652e31550ff5"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-023915-6792f35b4f/saves/mole-useful-0-1-inspect.sav",
+            "bytes": 10864,
+            "sha256": "affacadddb0a2f1ab5137cb338631389d449b5e94e01f0cb222905ee807fe99a"
+          },
+          "action": "inspect"
+        },
+        {
+          "log": {
+            "path": "logs/tubes/useful-files/20261018-023915-6792f35b4f/continued.log",
+            "bytes": 506,
+            "sha256": "e0da8bd66ed2d9ae7992a77a2f3aca6b7a2c7a5933e88150ad2d4b70ff9bf4ce"
+          },
+          "assertions": 250,
+          "cases": 1,
+          "input": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-0.sav",
+            "bytes": 10444,
+            "sha256": "a292047e46b97f97718d597a88bcdf042fcfeb64447857108bbf57a122aa0565"
+          },
+          "output": {
+            "path": "mlm/reviews/tubes/useful-files/20261018-023915-6792f35b4f/saves/mole-useful-0-0-step.sav",
+            "bytes": 10864,
+            "sha256": "4de3edfd776e77f474c03810ea1d7b62a479e176bd85a9baad536f59a8d4c371"
+          },
+          "action": "step"
+        }
+      ],
+      "uninterrupted_baseline": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-022410-5d64b615d5/saves/mole-useful-0-1.sav",
+        "bytes": 10444,
+        "sha256": "78aa7e140da450dfd5f8f750f6cc60bac7348bafd7662796cce6652e31550ff5"
+      },
+      "next_step": {
+        "complete_chunks_exact": 125,
+        "native_load_events": [
+          {
+            "action": "Load",
+            "baseline_tick": 562,
+            "resumed_tick": 561,
+            "other_bytes_exact": true
+          }
+        ]
+      }
+    }
+  ],
+  "complete_world_pairs": [
+    {
+      "boundary": "before",
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-before.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-raster-before.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "complete_chunks_exact": 126
+    },
+    {
+      "boundary": "after",
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-raster-after.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-raster-after.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "complete_chunks_exact": 126
+    },
+    {
+      "boundary": "output",
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/saves/mole-useful-0-0-raster.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/saves/mole-useful-0-0-raster.sav",
+        "bytes": 10852,
+        "sha256": "5b9a7ae72b474d603aeb2ce059fc8b46f5c6b0cbfa467765a47bf9d70b93b525"
+      },
+      "complete_chunks_exact": 126
+    }
+  ],
+  "cross_build_frames": [
+    {
+      "zoom": 1,
+      "repeat": 0,
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-1-0.png",
+        "bytes": 44356,
+        "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-1-0.png",
+        "bytes": 44356,
+        "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+      },
+      "rgb_sha256": "21cad9aa97f8638d3430ef44362e799ba6b9dc8eb384d5b11a853b2eb81ce09c",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 1,
+      "repeat": 1,
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-1-1.png",
+        "bytes": 44356,
+        "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-1-1.png",
+        "bytes": 44356,
+        "sha256": "e1d7cf9c3b17665abb304f0561c71fd99ea437eaaba4628db4cc677ae82401ef"
+      },
+      "rgb_sha256": "21cad9aa97f8638d3430ef44362e799ba6b9dc8eb384d5b11a853b2eb81ce09c",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 2,
+      "repeat": 0,
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-2-0.png",
+        "bytes": 39100,
+        "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-2-0.png",
+        "bytes": 39100,
+        "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+      },
+      "rgb_sha256": "a1a52d9a14925bf870124810021da651ed3b8bf94341d4eef23ef117df50d959",
+      "pixels_exact": true
+    },
+    {
+      "zoom": 2,
+      "repeat": 1,
+      "left": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023525-d03714187e/images/tube-travel-5-zoom-2-1.png",
+        "bytes": 39100,
+        "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+      },
+      "right": {
+        "path": "mlm/reviews/tubes/useful-files/20261018-023909-d322629df1/images/tube-travel-5-zoom-2-1.png",
+        "bytes": 39100,
+        "sha256": "df88f4affc3f168c23f95329294d0f24a1c30bd6e4ebaaac767c77446abd5e23"
+      },
+      "rgb_sha256": "a1a52d9a14925bf870124810021da651ed3b8bf94341d4eef23ef117df50d959",
+      "pixels_exact": true
+    }
+  ],
+  "exact_visible_hull_pixels": 1080,
+  "exact_occluding_rim_pixels": 10,
+  "exact_identities_verified": 108,
+  "builds": [
+    {
+      "path": "logs/tubes/useful-files/20261018-native-01/debug-test-build-5.log",
+      "bytes": 1340,
+      "sha256": "ebccb2d16870cc88bd549781a4d103a81ce351c9fa9bf050879c05187419a239"
+    },
+    {
+      "path": "logs/tubes/useful-files/20261018-native-01/optimized-test-build-2.log",
+      "bytes": 1412,
+      "sha256": "89464e5563b79d1b38f2193535defb2c60e21f4faa1c6ce206f04d81deadf9dc"
+    },
+    {
+      "path": "logs/tubes/useful-files/20261018-native-01/debug-game-build-2.log",
+      "bytes": 1364,
+      "sha256": "293bf1464f200172ced85c673f2c286247d5e768a96cff639605844b102a5cf2"
+    },
+    {
+      "path": "logs/tubes/useful-files/20261018-native-01/optimized-game-build-2.log",
+      "bytes": 1436,
+      "sha256": "ea8fc181a3d1675489984e79035b459674181278e831758aca36c662cb6ad2b1"
+    }
+  ],
+  "native_version": 434,
+  "packed_art": {
+    "path": "media/baseset/openttd.grf",
+    "bytes": 14353223,
+    "sha256": "6d3d2dc0e9e8ede6c07931a6fc446573af48f90fca5d65122e252ea827efc92a"
+  },
+  "binaries": [
+    {
+      "path": "build/Debug/openttd.exe",
+      "bytes": 52044800,
+      "sha256": "8ecacc7dc66c123a73f1e63e8b7ae49f67d7fc9769c56e8b21294cac38c45d65"
+    },
+    {
+      "path": "build/Debug/openttd_test.exe",
+      "bytes": 90625536,
+      "sha256": "eafec5a30f3c2994ac6550355f76878766feabc400830051c6f9b3550c58072d"
+    },
+    {
+      "path": "build/RelWithDebInfo/openttd.exe",
+      "bytes": 14237184,
+      "sha256": "25ebe300883fd8138e059cbc290fa3825f149daddac755d97f26bdbf10a5ce0c"
+    },
+    {
+      "path": "build/RelWithDebInfo/openttd_test.exe",
+      "bytes": 42751488,
+      "sha256": "9a4aae886405cc3c95df69acfb288de078c1b9e0ff0b86fe576933a06760ec46"
+    }
+  ],
+  "file_receipt": {
+    "path": "logs/tubes/useful-files/20261018-native-01/mole-files-verification.json",
+    "bytes": 199869,
+    "sha256": "66152ddaf28dc50f2febbaf5eebb917d158c5c2a388456ac5f17b501cf53fde5"
+  },
+  "producer_receipt": {
+    "path": "logs/tubes/useful-routes/20261018-native-01/mole-producer-verification.json",
+    "bytes": 44879,
+    "sha256": "396fb9b8bcddef3672b19136da527772688ac210a8f0c35ec9ae3e048916e29b"
+  },
+  "fixture_classification": "Prepared excavated floor, completed machinery and commissioned portals remain explicit boundary inputs. Actual1970 Coal reaches CFMT fuel intake, without a Copper co-input or metal-output claim. Positive fixture prices verify debits, not balance. Rendering earns no work and changes no original owner.",
+  "remaining": "Original15.2 retains the other four introduction-date models and Underground/Deep conventional chain; Group16 actual TBM/bootstrap, runtime gallery and human/operator acceptance remain separate."
+}

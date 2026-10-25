@@ -263,6 +263,16 @@ enum class MultiLayerProfileError : uint8_t {
  */
 const MultiLayerGameplayProfile *GetMultiLayerContentProfile(MultiLayerGameplayProfileID id);
 
+/** Resolve legacy cargo meanings from the candidate's exact immutable definition identity.
+ * @param id Original saved profile; Industry requires its exact pinned package, Classic permits unchanged native baseline definitions only.
+ * @param version Original saved profile revision.
+ * @param landscape Original saved climate; Industry permits Temperate only, vanilla Classic uses its original native climate.
+ * @param candidate This file's resolved NGRF entries, including exact package digest/version and system entries.
+ * @return Original slots projected from the same package producer and native climate definitions, or no mapping for unsupported content. Never reads live CargoSpec.
+ */
+std::optional<std::array<CargoLabel, NUM_CARGO>> GetLegacyMultiLayerCargoLabels(MultiLayerGameplayProfileID id, uint16_t version,
+	LandscapeType landscape, const GRFConfigList &candidate);
+
 /**
  * Check Deep access from an explicit saved policy and a typed calendar date.
  * This read-only predicate does not select a camera, inspect a frame counter, or

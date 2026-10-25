@@ -12,6 +12,7 @@
 #include "../timer/timer_game_tick.h"
 #include "../fios.h"
 #include "../saveload/saveload.h"
+#include "../saveload/surface_supply_order_preview.h"
 #include "../safeguards.h"
 
 extern SaveLoadVersion _sl_version; ///< Native framework candidate era, explicitly scoped/restored for direct copied-validator component checks.
@@ -419,10 +420,18 @@ TEST_CASE("Copied Surface order references use their own geometry time and compa
 	_load_check_data.native_map_dimensions_present = true; _load_check_data.map_size_x = 128; _load_check_data.map_size_y = 64; _load_check_data.map_layers = 4;
 	_load_check_data.native_economy_date_present = true; _load_check_data.native_economy_date = transport.saved_day;
 	_load_check_data.gameplay_profile_id = to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry);
+	// Explicit empty copied owners remain mandatory evidence. The remapped
+	// saved cargo definition is independent of the active world's CargoSpec slots.
+	_load_check_data.gameplay_profile_version = 1;
+	_load_check_data.native_cargo_packets_present = true;
+	_load_check_data.native_vehicle_cargo_present = true;
+	_load_check_data.native_station_cargo_present = true;
+	_load_check_data.native_cargo_dimensions_present = true;
+	_load_check_data.native_cargo_dimension_rows.push_back({CargoType{40}, CargoLabel{"STEL"}, 8});
 	_load_check_data.companies[_current_company.base()] = std::make_unique<CompanyProperties>();
 	_load_check_data.native_station_owner_rows.push_back({rig.station, _current_company, TileIndex{3880}, StationFacility::Train});
 	const auto cash = Company::Get(_current_company)->money; const auto packets = CargoPacket::GetNumItems(); const auto random = _random;
-	const auto fault = GENERATE(0, 1, 2, 3, 4, 5, 6, 7, 8);
+	const auto fault = GENERATE(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
 	switch (fault) {
 		case 1: _load_check_data.native_map_dimensions_present = false; break;
 		case 2: _load_check_data.native_economy_date_present = false; break;
@@ -432,9 +441,14 @@ TEST_CASE("Copied Surface order references use their own geometry time and compa
 		case 6: _load_check_data.native_station_owner_rows[0].tile = TileIndex{12072}; break;
 		case 7: _load_check_data.native_station_owner_rows[0].facilities = StationFacility::BusStop; break;
 		case 8: _load_check_data.surface_supply_orders_present = false; break;
+		case 9: _load_check_data.native_cargo_packets_present = false; break;
+		case 10: _load_check_data.native_vehicle_cargo_present = false; break;
+		case 11: _load_check_data.native_station_cargo_present = false; break;
 	}
-	if (fault == 0) { CHECK_NOTHROW(ValidateSurfaceSupplyOrderLoadPreview()); }
-	else { CHECK_THROWS(ValidateSurfaceSupplyOrderLoadPreview()); }
+	// This component supplies detached copied facts, not an active framework
+	// LoadCheck action. Inspect the original validator's reason without invoking
+	// full-load failure cleanup against the unrelated installed pending book.
+	CHECK(GetSurfaceSupplyOrderLoadPreviewError().has_value() == (fault != 0));
 	CHECK(GetNextSurfaceSupplyOrderID() == 2); CHECK(GetSurfaceSupplyOrderDayUsage(_current_company, CargoLabel{"STEL"}) == 2);
 	CHECK(Company::Get(_current_company)->money == cash); CHECK(CargoPacket::GetNumItems() == packets);
 	CHECK(_random.state[0] == random.state[0]); CHECK(_random.state[1] == random.state[1]);

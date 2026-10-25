@@ -447,6 +447,17 @@ enum class Commands : uint8_t {
 	PlaceSurfaceSupplyOrder, ///< Canonical monotonic paid Surface intent; original A209 tuple remains unchanged.
 	CancelSurfaceSupplyOrder, ///< Native Pending-only cancellation; original A210 tuple remains unchanged.
 	CancelLegacySurfaceSupplyOrder, ///< M2O23 revision2 append211: exact legacy source count, settled only by the original command kernel.
+	ChangeTBMWork, ///< M2O23 revision2 append212: replace only unfinished native TBM cuts after a reviewed quote.
+	BuildGeothermalGenerator, ///< Revision2 identity213: paid native machinery from its original cold reservation.
+	PlanGeothermalSite, ///< Revision2 identity214: reserve excavated geometry without machinery or stock.
+	CancelGeothermalSite, ///< Revision2 identity215: retire only an owned active cold reservation, retaining its history.
+	ConnectGeothermalTownService, ///< Revision2 identity216: connect/recover actual paid machinery and its real Surface recipient.
+	ConnectTubePower, ///< complete paid external inlet; revision2append217 preserves all prior commands
+	CloseTubePower, ///< close original external inlet without refunding consumed energy
+	SetTubeVehiclePower, ///< initial external bind or explicit held-capsule reconnect
+	ConnectTubeGeothermalPower, ///< original native generator/output to paid inlet; revision2append220
+	CloseTubeGeothermalPower, ///< close original native inlet and unused forwarding rights
+	SetTubeVehicleGeothermalPower, ///< initial native bind or explicit held-capsule provider switch
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

@@ -12,6 +12,7 @@
 
 #include "stdafx.h"
 #include "transport_tube.h"
+#include "table/strings.h"
 #include "rail.h"
 #include "multilayer_content.h"
 
@@ -47,6 +48,13 @@ RailType InitialiseTubeRailType(const GRFConfigList &activated)
 	if (type == INVALID_RAILTYPE) return type;
 	auto &info = *const_cast<RailTypeInfo *>(GetRailTypeInfo(type));
 	info.native_tube = true;
+	// Existing construction and purchase windows must name this selected native
+	// domain as Tubes; fallback guideway artwork conveys no conventional-rail role.
+	info.strings.toolbar_caption = STR_TUBE_CONSTRUCTION_CAPTION;
+	info.strings.menu_text = STR_TUBE_MENU;
+	info.strings.build_caption = STR_TUBE_BUY_CAPSULES;
+	info.strings.replace_text = STR_TUBE_MENU;
+	info.strings.new_loco = STR_TUBE_CAPSULE;
 	info.powered_railtypes = RailTypes{type};
 	info.compatible_railtypes = RailTypes{type};
 	info.introduces_railtypes = RailTypes{type};
@@ -59,6 +67,6 @@ RailType InitialiseTubeRailType(const GRFConfigList &activated)
 	// Tube guideways admit straight and traversed 45-degree steps. A direct sharp
 	// 90-degree step remains unavailable even when ordinary rail allows it; TBM cutting geometry has its own owner.
 	info.flags.Set(RailTypeFlag::Disallow90Deg);
-	info.flags.Set(RailTypeFlag::Hidden); // Construction/UI activation waits for actual admission and capsule separation.
+	info.flags.Set(RailTypeFlag::Hidden); // Ordinary rail menus hide this separate domain; its dedicated controls retain actual native admission.
 	return type;
 }

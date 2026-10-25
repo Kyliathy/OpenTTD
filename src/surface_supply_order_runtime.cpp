@@ -5,6 +5,7 @@
  */
 #include "stdafx.h"
 #include "surface_supply_order_runtime.h"
+#include "surface_supply_order_wire.h"
 #include "surface_supply_cmd.h"
 #include "company_base.h"
 #include "company_func.h"
@@ -20,6 +21,9 @@
 struct SurfaceSupplyLoadCandidate {
 	SurfaceSupplyOrderSnapshot snapshot; ///< Candidate's bounded commitment/history transport, not usable stock.
 	TimerGameEconomy::Date saved_day{0}; ///< Family's original stamp, independent of reconstructed native time.
+	std::optional<LegacyBSupplyTransport> legacy_b; ///< Original B scalars; the one candidate cannot also contain an A/canonical wire family.
+	bool legacy_b_rows_present = false; ///< Empty TABLE presence remains distinct from no rows component at all.
+	bool legacy_a_wire = false; ///< Original A440 bytes require their detached adapter; canonical tagged staging retains its existing contract.
 };
 
 /** Independent original MAPS evidence; this is transport provenance, not another map/geometry authority. */
@@ -32,6 +36,8 @@ static SurfaceSupplyOrderSnapshot supply_orders; ///< Sole installed native comm
 static std::optional<SurfaceSupplyLoadCandidate> supply_candidate; ///< One unpublished full-file family, never a shadow inventory.
 static std::optional<TimerGameEconomy::Date> supply_loaded_day; ///< Actual independently decoded full DATE evidence, cleared between files.
 static std::optional<SurfaceSupplyLoadedMap> supply_loaded_map; ///< Actual full MAPS evidence; defaults/current map alone cannot validate an absent source family.
+static bool supply_loaded_legacy_b_packet_fields = false; ///< Actual original CAPA purpose/link/shipped fields, independent of paid book staging and complete native custody.
+static std::optional<bool> supply_loaded_legacy_b_history; ///< Actual original MLMD declaration; absence is not the false value of a complete empty history.
 
 /** Refresh existing native presentation after a real receipt transition.
  * @param owner Current company whose station-list and company-wide allowance views changed.
@@ -55,18 +61,18 @@ static std::optional<SurfaceSupplyPacketFacts> NativeSurfaceSupplyPacketFacts(Ca
 	return SurfaceSupplyPacketFacts{id, packet->Count(), packet->GetSource(), packet->GetFeederShare(), packet->GetCompanySupplyOrder(), packet->HasCompanySupplyShipped()};
 }
 
-/** Join a complete candidate book to the currently reconstructed original native owners without publishing or repairing anything.
- * @param snapshot Whole admitted transport or current installed native metadata.
- * @return Complete actual-reference agreement; a missing/foreign/wrong-layer receiver supplies no pending right.
+/** Capture actual reconstructed native reference facts without converting any receipt or changing its owner.
+ * @param stations Receives the original sorted native station views and keeps the returned span alive.
+ * @return Read-only native context; load callers must first admit independent same-file MAPS/DATE observations.
  */
-static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot &snapshot)
+static SurfaceSupplyRecordContext CaptureNativeSurfaceSupplyRecordContext(std::vector<SurfaceSupplyStationView> &stations)
 {
 	SurfaceSupplyRecordContext context;
 	context.profile = GetCurrentMultiLayerProfileSelection().id;
 	context.width = Map::SizeX(); context.height = Map::SizeY();
 	// Actual native company existence grants only pending ownership. Original retired payer/terminal history stays historical and cannot borrow a new company's slot as a refund right.
 	for (const auto *company : Company::Iterate()) context.companies[company->index.base()] = true;
-	std::vector<SurfaceSupplyStationView> stations;
+	stations.clear();
 	stations.reserve(Station::GetNumItems());
 	// Read the original normal-station pool through the map/layer owners; neither selected camera nor matching coordinates in another layer may validate the receiving freight facility.
 	for (const auto *station : Station::Iterate()) {
@@ -74,7 +80,25 @@ static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot
 			GetTileLayer(station->xy), station->facilities.Any({StationFacility::Train, StationFacility::TruckStop})});
 	}
 	context.stations = stations;
-	SurfaceSupplyCustodyCheck check(snapshot, context, NativeSurfaceSupplyPacketFacts, CargoPacket::GetNumItems());
+	return context;
+}
+
+/** Join a complete candidate book to the currently reconstructed original native owners without publishing or repairing anything.
+ * @param snapshot Whole admitted transport or current installed native metadata.
+ * @param legacy_b True only for an admitted original B candidate; project raw paid purpose read-only before complete custody validation.
+ * @return Complete actual-reference agreement; a missing/foreign/wrong-layer receiver supplies no pending right.
+ */
+static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot &snapshot, bool legacy_b = false)
+{
+	std::vector<SurfaceSupplyStationView> stations;
+	const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
+	/** @param id Exact actual allocated identity. @return Stable same-file scalars, optionally projected from original B purpose; this never mutates the packet. */
+	const auto lookup = [&](CargoPacketID id) -> std::optional<SurfaceSupplyPacketFacts> {
+		auto facts = NativeSurfaceSupplyPacketFacts(id);
+		if (!facts) return std::nullopt;
+		return legacy_b ? ProjectLegacyBSupplyPacket(*facts, snapshot) : facts;
+	};
+	SurfaceSupplyCustodyCheck check(snapshot, context, lookup, CargoPacket::GetNumItems());
 	/** Bind actual physical owner facts to the same original packet lookup.
 	 * @param packet Actual fragment held by this visited native container.
 	 * @param cargo Container's resolved native cargo slot.
@@ -94,7 +118,7 @@ static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot
 }
 
 /** @copydoc ResetSurfaceSupplyOrderLoadStaging */
-void ResetSurfaceSupplyOrderLoadStaging() { supply_candidate.reset(); supply_loaded_day.reset(); supply_loaded_map.reset(); }
+void ResetSurfaceSupplyOrderLoadStaging() { supply_candidate.reset(); supply_loaded_day.reset(); supply_loaded_map.reset(); supply_loaded_legacy_b_packet_fields = false; supply_loaded_legacy_b_history.reset(); }
 
 /** @copydoc ResetSurfaceSupplyOrders */
 void ResetSurfaceSupplyOrders() { supply_orders = {}; ResetSurfaceSupplyOrderLoadStaging(); }
@@ -252,7 +276,7 @@ void ChangeSurfaceSupplyOrderCompanyOwnership(CompanyID old_owner, CompanyID new
 }
 
 /** @copydoc StageLoadedSurfaceSupplyOrders */
-bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day)
+bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day, bool legacy_a_wire)
 {
 	// Duplicate, oversized or identity-less transport cannot replace the installed owner or hide a previously staged native family.
 	if (supply_candidate || snapshot.records.size() > MAX_LEGACY_SURFACE_SUPPLY_RECORDS || snapshot.next_id == 0) return false;
@@ -262,7 +286,53 @@ bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGa
 	for (const auto &record : snapshot.records) {
 		if (record.Native() != nullptr && ++native_records > MAX_SURFACE_SUPPLY_RECORDS) return false;
 	}
-	supply_candidate = SurfaceSupplyLoadCandidate{std::move(snapshot), saved_day};
+	supply_candidate = SurfaceSupplyLoadCandidate{std::move(snapshot), saved_day, std::nullopt, false, legacy_a_wire};
+	return true;
+}
+
+/** @copydoc StageLoadedLegacyBSupplyHeader */
+bool StageLoadedLegacyBSupplyHeader(uint32_t schema, uint32_t count, uint32_t next_order)
+{
+	// The original dense frontier bounds both retained history and future IDs;
+	// neither a malformed header nor a second wire dialect can replace it.
+	if (schema != 1 || count > MAX_LEGACY_SURFACE_SUPPLY_RECORDS || next_order != count + 1) return false;
+	if (supply_candidate && (!supply_candidate->legacy_b || supply_candidate->legacy_b->schema != 0)) return false;
+	// A reversed component order is safe only when its independently staged
+	// complete TABLE cardinality agrees with this original header.
+	if (supply_candidate && supply_candidate->legacy_b_rows_present && supply_candidate->legacy_b->orders.size() != count) return false;
+	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->legacy_b.emplace(); }
+	auto &original = *supply_candidate->legacy_b;
+	original.schema = schema; original.count = count; original.next_order = next_order;
+	return true;
+}
+
+/** @copydoc StageLoadedLegacyBSupplyRows */
+bool StageLoadedLegacyBSupplyRows(std::vector<LegacyBSupplyOrderWire> rows)
+{
+	if (rows.size() > MAX_LEGACY_SURFACE_SUPPLY_RECORDS) return false;
+	// Even an empty TABLE is one unique source component; mixing it with A or
+	// accepting duplicate rows could replace historical refund/cap evidence.
+	if (supply_candidate && (!supply_candidate->legacy_b || supply_candidate->legacy_b_rows_present)) return false;
+	if (supply_candidate && supply_candidate->legacy_b->schema != 0 && supply_candidate->legacy_b->count != rows.size()) return false; // Independently decoded counts must agree before moving any unpublished rows.
+	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->legacy_b.emplace(); }
+	supply_candidate->legacy_b->orders = std::move(rows);
+	supply_candidate->legacy_b_rows_present = true;
+	return true;
+}
+
+/** @copydoc ObserveLoadedLegacyBSupplyPacketFields */
+bool ObserveLoadedLegacyBSupplyPacketFields()
+{
+	if (supply_loaded_legacy_b_packet_fields) return false;
+	supply_loaded_legacy_b_packet_fields = true;
+	return true;
+}
+
+/** @copydoc ObserveLoadedLegacyBSupplyHistory */
+bool ObserveLoadedLegacyBSupplyHistory(bool present)
+{
+	if (supply_loaded_legacy_b_history.has_value()) return false;
+	supply_loaded_legacy_b_history = present;
 	return true;
 }
 
@@ -293,12 +363,47 @@ bool AcceptLoadedSurfaceSupplyOrders(bool family_required)
 		// Genuine older files gain no procurement history, reservation, expense or seed packet; migration installs only the empty private book.
 		supply_orders = {}; ResetSurfaceSupplyOrderLoadStaging(); return true;
 	}
-	// The family stamp and actual same-file DATE must agree with reconstructed native economy time. A current world/calendar default cannot replace absent or changed original day evidence.
-	if (!supply_loaded_day || *supply_loaded_day != supply_candidate->saved_day || *supply_loaded_day != TimerGameEconomy::date) return false;
-	// A paid right must join the original allocated storage geometry too; initialized defaults cannot substitute for a candidate that omitted or changed its MAPS owner.
+	// Both legacy dialects require actual DATE and MAPS evidence before any
+	// reconstructed owner or initialized clock may participate in conversion.
+	if (!supply_loaded_day || *supply_loaded_day != TimerGameEconomy::date) return false;
 	if (!supply_loaded_map || supply_loaded_map->width != Map::SizeX() || supply_loaded_map->height != Map::SizeY() || supply_loaded_map->layers > Map::LayerCount()) return false;
+	if (supply_candidate->legacy_b) {
+		// B has no serialized family clock stamp. Its exact original header and
+		// TABLE join the independently read DATE, never a guessed live-world day.
+		if (supply_candidate->legacy_b->schema != 1 || !supply_candidate->legacy_b_rows_present) return false;
+		// Retained closed history still counts. An absent/changed original
+		// metadata bit cannot erase a complete paid book or invent a fresh one.
+		if (!supply_loaded_legacy_b_history || *supply_loaded_legacy_b_history != (supply_candidate->legacy_b->next_order != 1)) return false;
+		std::vector<SurfaceSupplyStationView> stations;
+		const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
+		auto converted = ConvertLegacyBSupply(*supply_candidate->legacy_b, context);
+		if (!converted) return false;
+		supply_candidate->snapshot = std::move(*converted);
+		supply_candidate->saved_day = *supply_loaded_day;
+	} else if (supply_candidate->legacy_a_wire) {
+		std::vector<SurfaceSupplyStationView> stations;
+		const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
+		auto converted = ConvertLegacyASupply({supply_candidate->snapshot, supply_candidate->saved_day}, context);
+		if (!converted) return false;
+		supply_candidate->snapshot = std::move(*converted);
+	}
+	// A's serialized family stamp must equal DATE; B's canonical staging clock
+	// comes only from its independently admitted original DATE observation.
+	if (*supply_loaded_day != supply_candidate->saved_day) return false;
+	// Even a fully dispatched/empty legacy book cannot drop CAPA's permanent
+	// non-paying purpose or its exact optional original order/shipped fields.
+	if (supply_candidate->legacy_b && !supply_loaded_legacy_b_packet_fields) return false;
 	// Native MAPS reconstruction may initialize missing planes up to MAX_MAP_LAYERS; this preserves the original Surface and never treats new empty planes as serialized receiving stations.
-	if (!ValidateNativeSurfaceSupplySnapshot(supply_candidate->snapshot)) return false;
+	if (!ValidateNativeSurfaceSupplySnapshot(supply_candidate->snapshot, supply_candidate->legacy_b.has_value())) return false;
+	if (supply_candidate->legacy_b) {
+		// Every raw purpose, exact legacy link, actual owner/label and finite
+		// quantity has passed the WHOLE shared join. Only now perform no-fail
+		// scalar normalization; ordinary same-label stock remains unchanged and
+		// no buyer, packet, dispatch counter, refund or second inventory is created.
+		for (auto *packet : CargoPacket::Iterate()) {
+			if (packet->GetCompanySupplyOrder() != 0) packet->source = {Source::Invalid, SourceType::CompanySupply};
+		}
+	}
 	supply_orders = std::move(supply_candidate->snapshot);
 	ResetSurfaceSupplyOrderLoadStaging(); return true;
 }

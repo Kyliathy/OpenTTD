@@ -6,6 +6,7 @@ The existing producer catalogue supplies family/producer/scope assignments.
 Independent pre-adaptation payload identities remain immutable regression facts.
 """
 
+import argparse
 import hashlib
 import importlib
 import json
@@ -14,7 +15,7 @@ import sys
 
 from artifact_paths import RunContext, contained, identifier, repository_root
 from artifact_rebuild import identity
-from artifact_recipes import load_catalogue
+from artifact_recipes import load_catalogue, recipe_order
 
 ROOT = repository_root()
 FACTS = ROOT / "src/tests/fixtures/graphics/expected-sprite-facts.json"
@@ -211,3 +212,152 @@ def execute_stage(request, root):
         return dict(checks=["exact selected original packing/source/shipping identities verified"])
     prefixes = {key.removesuffix("-prefix"): value for key, value in request["inputs"].items() if key.endswith("-prefix")}
     return produce(family, context, reference, prefixes)
+
+
+def checked_expectation_bundle(reference, context):
+    """Validate the complete pure handoff without granting native acceptance.
+
+    @param reference Exact current merged expectation bundle path/hash.
+    @param context Explicit consuming invocation sharing the source run.
+    @return Checked bundle with five original protocols and ten configuration bindings.
+    """
+    path = selected_path(reference, context, "reports")
+    bundle = json.loads(path.read_text(encoding="utf-8"))
+    families = set(load_facts())
+    # Source generation cannot acquire a native pass, another run or a new
+    # family merely by presenting plausible binary bytes and a complete flag.
+    if (bundle.get("kind") != "selected_merged_sprite_expectations" or bundle.get("schema_version") != 1
+            or bundle.get("run_id") != context.run_id or bundle.get("native_loading_verified") is not False
+            or bundle.get("publishes_source") is not False or set(bundle.get("families", {})) != families
+            or bundle.get("adapter") != identity(Path(__file__), ROOT)
+            or bundle.get("source_policy") != identity(FACTS, ROOT)):
+        raise ValueError("merged expectation family/invocation/source policy changed")
+    required = bundle.get("required_source_evidence")
+    if not required:
+        raise ValueError("merged expectations are missing required source evidence")
+    proof = json.loads(selected_path(required, context, "evidence").read_text(encoding="utf-8"))
+    if (proof.get("kind") != "selected_source_expectation_evidence" or proof.get("run_id") != context.run_id
+            or proof.get("native_loading_verified") is not False or proof.get("source_result") != bundle["source_result"]
+            or proof.get("candidate_manifest") != bundle["candidate_manifest"] or proof.get("source_policy") != bundle["source_policy"]
+            or proof.get("families") != bundle["families"]):
+        raise ValueError("required source evidence disagrees with the selected expectations")
+    state = json.loads(selected_path(bundle["source_result"], context, "reports").read_text(encoding="utf-8"))
+    candidate = json.loads(selected_path(bundle["candidate_manifest"], context, "reports").read_text(encoding="utf-8"))
+    # The actual GRF is a separate input, never an expected-pixel supplier.
+    # Its exact completed source witness stays attached across this phase.
+    if (state.get("complete") is not True or state.get("status") != "verified" or state.get("run_id") != context.run_id
+            or state["nodes"]["merged-art-candidates"]["outputs"]["manifest"] != bundle["candidate_manifest"]
+            or candidate["candidate"] != bundle["actual_candidate"] or candidate["checksum"] != bundle["actual_checksum"]):
+        raise ValueError("merged expectation actual candidate/source witness changed")
+    selected_path(bundle["actual_candidate"], context, "data")
+    selected_path(bundle["actual_checksum"], context, "data")
+    for family, result in bundle["families"].items():
+        actual = checked_payload(family, result["manifest"], context)
+        if identity(actual, ROOT) != result["expected_payload"]:
+            raise ValueError("merged source payload differs from its typed family report")
+    from sprite_native_inputs import bind_expected_payload, observe_expected_payload
+    if set(bundle.get("input_bindings", {})) != {"Debug", "RelWithDebInfo"}:
+        raise ValueError("merged expectation configuration bindings are incomplete")
+    # Each build configuration owns its own process binding even though these
+    # independently verified original source bytes can be reused by both builds.
+    for configuration, selected in bundle["input_bindings"].items():
+        if set(selected) != families:
+            raise ValueError("merged expectation configuration family coverage changed")
+        for family, observed in selected.items():
+            environment = bind_expected_payload(context, family, configuration, bundle["families"][family]["manifest"])
+            if observe_expected_payload(context, environment, configuration) != observed:
+                raise ValueError("merged expectation configuration/input binding changed")
+    return bundle
+
+
+def produce_from_candidates(candidate_reference, source_result):
+    """Continue verified source packing through the existing expectation producers.
+
+    @param candidate_reference Exact current Group52 candidate manifest identity.
+    @param source_result Exact completed supplying recipe ledger identity, never a latest-run search.
+    @return Current expectation bundle with separate source payload and actual GRF roles.
+    """
+    candidate_path = contained(ROOT / candidate_reference["path"], ROOT / "mlm/reviews")
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    run_id = identifier(candidate["run_id"])
+    context = RunContext(ROOT, "multilayer-art", "merged-sprite-expectations", run_id)
+    selected_path(candidate_reference, context, "reports")
+    state_path = selected_path(source_result, context, "reports")
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    # Only the completed actual candidate graph may supply this phase. A copied
+    # manifest or an incomplete source attempt cannot become native input proof.
+    if (candidate.get("kind") != "selected_merged_art_candidates" or candidate.get("publishes_source") is not False
+            or candidate.get("native_proof") is not False or state.get("complete") is not True
+            or state.get("status") != "verified" or state.get("run_id") != run_id):
+        raise ValueError("merged expectations require the completed explicit candidate source graph")
+    if state["nodes"]["merged-art-candidates"]["outputs"]["manifest"] != candidate_reference:
+        raise ValueError("candidate manifest differs from its completed source supplier")
+    selected_path(candidate["candidate"], context, "data")
+    selected_path(candidate["checksum"], context, "data")
+    recipes = {row["id"]: row for row in load_catalogue(ROOT)["recipes"]}
+    results = {}
+    # Existing recipe edges order the actual prefix protocols. Reuse these
+    # exact current packing reports instead of regenerating the source graph or
+    # introducing another family catalogue, decoder or expectation algorithm.
+    for name in recipe_order("ground-expected-payload", recipes):
+        if not name.endswith("-expected-payload"):
+            continue
+        declaration = recipes[name]
+        family = declaration["original_parameters"]["family"]
+        packing_name = recipe_family(family) + "-derived-inputs"
+        supplier = state["nodes"][packing_name]
+        reference = candidate["suppliers"][recipe_family(family)]["manifest"]
+        if supplier["status"] != "verified" or supplier["outputs"]["manifest"] != reference:
+            raise ValueError("expectation packing supplier is incomplete or changed: " + packing_name)
+        prefixes = {}
+        for requirement in declaration["requires"]:
+            if requirement["as"].endswith("-prefix"):
+                prefix_family = recipes[requirement["recipe"]]["original_parameters"]["family"]
+                prefixes[prefix_family] = results[prefix_family]["manifest"]
+        current = RunContext(ROOT, declaration["feature"], declaration["scenario"], run_id)
+        results[family] = produce(family, current, reference, prefixes)
+        print(f"{family}: {results[family]['record_count']} independent source records", flush=True)
+    if set(results) != set(load_facts()):
+        raise ValueError("existing expectation graph omitted an original protocol family")
+    from sprite_native_inputs import bind_expected_payload, observe_expected_payload
+    bindings = {}
+    # Identical source bytes support both configurations, but each actual
+    # native process still receives its own exact configuration/family binding.
+    for configuration in ("Debug", "RelWithDebInfo"):
+        bindings[configuration] = {}
+        for family, result in results.items():
+            environment = bind_expected_payload(context, family, configuration, result["manifest"])
+            bindings[configuration][family] = observe_expected_payload(context, environment, configuration)
+    bundle = dict(_documentation=__doc__, schema_version=1, kind="selected_merged_sprite_expectations",
+                  run_id=run_id, source_result=source_result, candidate_manifest=candidate_reference,
+                  adapter=identity(Path(__file__), ROOT),
+                  actual_candidate=candidate["candidate"], actual_checksum=candidate["checksum"], families=results,
+                  input_bindings=bindings, source_policy=identity(FACTS, ROOT),
+                  required_native_terminals="Not produced by source generation; native decoder/viewport owners must supply them.",
+                  native_loading_verified=False, publishes_source=False)
+    evidence = dict(_documentation=__doc__, kind="selected_source_expectation_evidence", run_id=run_id,
+                    candidate_manifest=candidate_reference, source_result=source_result,
+                    source_policy=bundle["source_policy"], families=results, native_loading_verified=False)
+    context.evidence.mkdir(parents=True, exist_ok=True)
+    proof = context.evidence / "source-generation.json"
+    proof.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+    bundle["required_source_evidence"] = identity(proof, ROOT)
+    context.reports.mkdir(parents=True, exist_ok=True)
+    output = context.reports / "expectations.json"
+    output.write_text(json.dumps(bundle, indent=2) + "\n", encoding="utf-8")
+    checked_expectation_bundle(identity(output, ROOT), context)
+    return identity(output, ROOT)
+
+
+def main():
+    """Continue one explicit completed candidate run without reserving or publishing another source graph."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--candidates", type=Path, required=True, help="Exact current candidate manifest.")
+    parser.add_argument("--source-result", type=Path, required=True, help="Exact completed supplying recipe ledger.")
+    arguments = parser.parse_args()
+    result = produce_from_candidates(identity(arguments.candidates.resolve(), ROOT), identity(arguments.source_result.resolve(), ROOT))
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    main()

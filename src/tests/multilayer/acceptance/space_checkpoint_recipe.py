@@ -10,7 +10,7 @@ from contextlib import contextmanager
 import json
 import os
 
-from space_checkpoint import CONFIGURATIONS, load_checkpoint, verify_checkpoint
+from space_checkpoint import CONFIGURATIONS, load_foundation, verify_foundation
 from artifact_paths import RunContext, contained
 from space_checkpoint_load import checked, identity, execute_load_check
 from space_checkpoint_static import execute_static_check
@@ -55,8 +55,8 @@ def execute_stage(request, root):
     if request["stage"] not in ("prepare", "verify") or request["configuration"] not in CONFIGURATIONS or request["paid_work_authorized"] is not False or request["publishes_source"] is not False:
         raise ValueError("Space recovery requires explicit zero-tick recipe scope")
     configuration = request["configuration"]
-    checkpoint = load_checkpoint(checked(request["inputs"]["checkpoint-contract"], root), configuration, root)
-    verify_checkpoint(checkpoint)
+    checkpoint = load_foundation(checked(request["inputs"]["selected-foundation"], root), configuration, root)
+    verify_foundation(checkpoint)
     build_reference = request["build"]["result"]
     build = read(build_reference, root)
     validate_build_document(build, read(build["source_epoch"], root), read(build["tool_profile"], root), configuration, root, True)
@@ -78,14 +78,14 @@ def execute_stage(request, root):
             stream.write(("\n# " + label + "; @see r2fc-file-cleanup3.md15\n").encode("utf-8"))
             stream.write(checked(reference, root).read_bytes())
     manifest = dict(_documentation=__doc__, schema_version=1, kind="space_checkpoint_recipe_result", complete=True,
-        configuration=configuration, seal=dict(path=checkpoint.manifest_path.relative_to(root).as_posix(), sha256=checkpoint.sha256),
+        configuration=configuration, foundation=request['inputs']['selected-foundation'],
         source=native_document["source"], native_result=native, ordinary_result=ordinary,
         build_result=build_reference, terminal_sources=terminal_sources,
         evidence=identity(transcript, root), gameplay_ticks_executed=0, authorization_granted=False)
     target = contained(root / request["outputs"]["manifest"], context.reports)
     with target.open("x", encoding="utf-8") as stream:
         stream.write(json.dumps(manifest, indent=2) + "\n")
-    return dict(checks=["actual dedicated native load preserved all121families and gameplay clocks",
+    return dict(checks=["actual dedicated native load preserved all128merged families and gameplay clocks",
                         "actual ordinary static restore matched independent owner/material state",
                         "original save hashes and closed financial scope remained unchanged"],
                 native_result=native, ordinary_result=ordinary, gameplay_ticks_executed=0)

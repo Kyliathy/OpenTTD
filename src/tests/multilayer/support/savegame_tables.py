@@ -3,8 +3,9 @@
 @file savegame_tables.py Sole owner of the existing logistics/geology decoder primitives.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group8.0.
 @see docs/zz-reach2/architecture/savegame/archi-savegame.md.
-Functions are moved without executable AST changes; native fixture entry points
-re-export them. Saved named schemas, not this helper, own gameplay field meanings.
+Native fixture entry points re-export this one decoder. Saved named schemas,
+not this helper, own gameplay field meanings. Plan4 Group56 binds complete
+original/merged ledgers without excluding clocks, ordinary owners or custody.
 """
 
 from pathlib import Path
@@ -21,7 +22,7 @@ WIDTHS = {1: 1, 2: 1, 3: 2, 4: 2, 5: 4, 6: 4, 7: 8, 8: 8, 9: 2}
 def chunks(stream):
     """Collect immutable raw chunks and their payloads/rows for narrowly owned fixture mutations.
 
-    @param stream Actual decompressed 372 save bytes.
+    @param stream Actual decompressed original or merged save bytes.
     @return Ordered dictionaries; unknown ordinary chunks retain their original exact transport.
     """
     reader = Reader(stream)
@@ -31,6 +32,8 @@ def chunks(stream):
         start = reader.pos
         name = reader.take(4)
         if name == bytes(4):
+            if reader.pos != len(stream):
+                raise ValueError("trailing bytes after native save terminator")
             return result
         mode = reader.byte()
         kind = mode & 15
@@ -50,13 +53,16 @@ def chunks(stream):
         result.append({"name": name, "kind": kind, "raw": stream[start:reader.pos], "payload": payload, "rows": rows})
 
 
-def table_header(reader):
+def table_header(reader, depth=0):
     """Decode the writer's named fields and recursively appended struct headers.
 
     @param reader Bounded actual table header reader.
+    @param depth Actual nested schema depth; bounded before recursion to refuse malformed headers.
     @return Ordered field descriptors, including the actual nested schema.
     """
-    fields = []
+    if depth > 64:
+        raise ValueError("native table nesting exceeds the bounded reader")
+    fields, names = [], set()
     # Every nested schema follows the complete parent header, as in SlTableHeader;
     # interpreting nesting inline would assign unrelated bytes to vehicle fields.
     while True:
@@ -64,10 +70,15 @@ def table_header(reader):
         if kind == 0:
             break
         name = reader.take(reader.gamma()).decode("utf-8")
+        # A repeated/unknown schema field could overwrite custody or clock
+        # observations while leaving a partial diagnostic apparently equal.
+        if name in names or not 1 <= (kind & 15) <= 11 or kind & ~31:
+            raise ValueError("duplicate or unsupported native table field")
+        names.add(name)
         fields.append([name, kind, None])
     for field in fields:
         if field[1] & 15 == 11:
-            field[2] = table_header(reader)
+            field[2] = table_header(reader, depth + 1)
     return fields
 
 
@@ -88,14 +99,22 @@ def table_record(reader, fields, prefix=""):
         if primitive == 11:
             count = reader.gamma()
             values[key + ".count"] = count
-            for index in range(count):
-                values.update(table_record(reader, nested, f"{key}[{index}]."))
+            # Nonempty objects consume at least one encoded byte. Empty
+            # historical schemas retain only their count, avoiding an unbounded
+            # no-op walk without dropping any saved field.
+            if nested:
+                if count > len(reader.data) - reader.pos:
+                    raise ValueError("nested table count exceeds the bounded row")
+                for index in range(count):
+                    values.update(table_record(reader, nested, f"{key}[{index}]."))
         elif primitive == 10:
             values[key] = reader.take(reader.gamma()).hex()
         else:
             count = reader.gamma() if kind & 16 else 1
             width = WIDTHS[primitive]
             signed = primitive in (1, 3, 5, 7)
+            if count > (len(reader.data) - reader.pos) // width:
+                raise ValueError("native numeric array exceeds the bounded row")
             items = [int.from_bytes(reader.take(width), "big", signed=signed) for _ in range(count)]
             values[key] = items if kind & 16 else items[0]
     return values
@@ -108,20 +127,45 @@ def saved_table(path, name):
     @param name Four-byte owner chunk label.
     @return Object identity to fully decoded fields, without changing any input.
     """
-    version, stream = read_stream(path)
-    assert version >= 375, "named table inspection requires the delivered native portal table format"
-    chunk = next(chunk for chunk in chunks(stream) if chunk["name"] == name)
-    assert chunk["kind"] in (3, 4), "owner must be a current table"
-    header_reader = Reader(chunk["rows"][0])
-    fields = table_header(header_reader)
-    assert header_reader.pos == len(header_reader.data), "table header not fully decoded"
+    return saved_owner_table(path, name)
+
+
+def decode_table(chunk):
+    """Decode a complete named table once, preserving dense holes and sparse identity.
+
+    @param chunk Already framed native owner with original name/kind/rows.
+    @return Original pool IDs mapped to every named/nested field; no live lookup or normalization.
+    """
+    # Missing/wrong framing cannot turn an absent header into an empty accepted
+    # owner; every named pool must carry its own original schema first.
+    if chunk["kind"] not in (3, 4) or not chunk["rows"]:
+        raise ValueError("named owner requires a TABLE header")
+    header = Reader(chunk["rows"][0])
+    fields = table_header(header)
+    if header.pos != len(header.data):
+        raise ValueError("native table header was not fully decoded")
     result = {}
-    # Sparse tables carry their real pool IDs in each row; dense tables use row order.
+    # A retired dense slot still consumes its original ordinal. Sparse tables
+    # must carry an explicit unique ID and cannot disguise absence as a hole.
     for index, row in enumerate(chunk["rows"][1:]):
+        if not row:
+            if chunk["kind"] != 3:
+                raise ValueError("empty sparse row has no original identity")
+            continue
         reader = Reader(row)
-        identity = reader.gamma() if chunk["kind"] == 4 else index
-        result[identity] = table_record(reader, fields)
-        assert reader.pos == len(row), (name, identity, "row not fully decoded")
+        owner = reader.gamma() if chunk["kind"] == 4 else index
+        if owner in result:
+            raise ValueError("duplicate native sparse owner identity")
+        result[owner] = table_record(reader, fields)
+        if reader.pos != len(row):
+            # SaveReal_AIPL/SaveReal_GSDT append the script VM's own wire data
+            # after their named header fields (ai_sl.cpp/game_sl.cpp). Preserve
+            # every such byte explicitly; no other owner may hide an unknown tail.
+            if chunk["name"] not in (b"AIPL", b"GSDT"):
+                raise ValueError("native table row was not fully decoded: " + chunk["name"].decode("ascii"))
+            if "$native_script_tail" in result[owner]:
+                raise ValueError("script schema collides with explicit opaque native tail")
+            result[owner]["$native_script_tail"] = reader.take(len(row) - reader.pos).hex()
     return result
 
 
@@ -149,6 +193,58 @@ def owned_chunks(path):
     return version, owners
 
 
+def merged_world_chunks(path):
+    """Read the complete independently specified merged family set, including empty and ordinary owners.
+
+    @param path Actual new441save; original A/B files retain their own separate readers.
+    @return Unique name to exact raw transport, requiring every original-derived family and its exact framing kind.
+    Counts121/126remain dated original observations. This compares explicit names
+    and kinds against the fixture derived from unchanged originals plus allocated
+    marker/tagged-wire decisions, never a list generated from a current output.
+    No whole owner (including VIEW, GLOG, RNG, packets or accounts) is excluded.
+    """
+    import json
+    contract = json.loads((ROOT / "src/tests/fixtures/saveload/merged-family-set.json").read_text(encoding="utf-8"))
+    assert contract["schema"] == 1
+    version, stream = read_stream(path)
+    assert version == contract["merged_version"]
+    rows = chunks(stream)
+    owners = {row["name"].decode("ascii"): row for row in rows}
+    assert len(owners) == len(rows), "duplicate merged owner"
+    assert owners.keys() == contract["families"].keys(), "incomplete or unknown merged family set"
+    # Exact original framing remains part of each owner's contract. An empty
+    # replacement TABLEcannot stand in for a required RIFF or missing paid history.
+    for name, kind in contract["families"].items():
+        assert owners[name]["kind"] == kind, (name, "changed merged framing")
+    return {name.encode("ascii"): row["raw"] for name, row in owners.items()}
+
+
+def compare_merged_worlds(first, second):
+    """Require exact bytes for every independently required merged owner after native reconstruction.
+
+    @param first Actual first441successor; cannot define the expected family set.
+    @param second Actual second save of the same admitted paused world.
+    @return Explicit compared names; no field or whole family is normalized or excluded.
+    """
+    before, after = merged_world_chunks(first), merged_world_chunks(second)
+    changed = [name.decode("ascii") for name in before if before[name] != after[name]]
+    assert not changed, ("merged owner bytes changed", changed)
+    return sorted(name.decode("ascii") for name in before)
+
+
+def first_tick_worlds(prefix):
+    """Compare the actual first native ticks from an original and its merged reload, without normalizing any owner.
+
+    @param prefix Invocation-owned native output prefix; no retained original is written.
+    @return Exact before/direct/reloaded paths and all independently required compared names, for the calling producer's identity receipt.
+    """
+    before = Path(str(prefix) + ".tick-before.sav")
+    direct = Path(str(prefix) + ".tick-direct.sav")
+    reloaded = Path(str(prefix) + ".tick-reloaded.sav")
+    merged_world_chunks(before)
+    return dict(before=before, direct=direct, reloaded=reloaded, families=compare_merged_worlds(direct, reloaded))
+
+
 def saved_owner_table(path, name):
     """Decode current live owners with the original freight reader's dense holes.
 
@@ -159,19 +255,27 @@ def saved_owner_table(path, name):
     version, stream = read_stream(path)
     assert version >= 375
     chunk, = [row for row in chunks(stream) if row["name"] == name]
-    assert chunk["kind"] in (3, 4)
-    header = Reader(chunk["rows"][0])
-    fields = table_header(header)
-    assert header.pos == len(header.data)
-    result = {}
-    # Retired dense-pool entries still consume a native identity. Skipping
-    # their empty payload must preserve the identities of all surviving owners.
-    for index, row in enumerate(chunk["rows"][1:]):
-        if not row:
-            assert chunk["kind"] == 3
-            continue
-        reader = Reader(row)
-        owner = reader.gamma() if chunk["kind"] == 4 else index
-        result[owner] = table_record(reader, fields)
-        assert reader.pos == len(row)
-    return result
+    return decode_table(chunk)
+
+
+def complete_world(path):
+    """Observe every actual original/merged owner and complete named tables without gameplay side effects.
+
+    @param path Actual immutable original or invocation-owned native successor.
+    @return Version, exact raw owner map and fully decoded TABLE map; no owner omissions or normalization.
+    """
+    import json
+    version, stream = read_stream(path)
+    rows = chunks(stream)
+    owners = {row["name"]: row for row in rows}
+    if len(owners) != len(rows):
+        raise ValueError("duplicate complete-world owner")
+    if version == 441:
+        contract = json.loads((ROOT / "src/tests/fixtures/saveload/merged-family-set.json").read_text(encoding="utf-8"))
+        expected = {name.encode("ascii"): kind for name, kind in contract["families"].items()}
+        # The independent original-derived family set, not a current output's
+        # count, defines merged completeness and framing, including empty owners.
+        if contract["merged_version"] != version or {name: row["kind"] for name, row in owners.items()} != expected:
+            raise ValueError("incomplete or changed merged family set/framing")
+    tables = {name: decode_table(row) for name, row in owners.items() if row["kind"] in (3, 4)}
+    return version, {name: row["raw"] for name, row in owners.items()}, tables

@@ -39,19 +39,19 @@
  * looking only at the X-coordinate.
  *
  * \verbatim
- *        ╳        *
- *       ╱ ╲       *
- *      ╳ 0 ╳      *
- *     ╱ ╲ ╱ ╲     *
- *    ╳-1 ╳ 1 ╳    *
- *   ╱ ╲ ╱ ╲ ╱ ╲   *
- *  ╳-2 ╳ 0 ╳ 2 ╳  *
- *   ╲ ╱ ╲ ╱ ╲ ╱   *
- *    ╳-1 ╳ 1 ╳    *
- *     ╲ ╱ ╲ ╱     *
- *      ╳ 0 ╳      *
- *       ╲ ╱       *
- *        ╳        *
+ *        Ã¢â€¢Â³        *
+ *       Ã¢â€¢Â± Ã¢â€¢Â²       *
+ *      Ã¢â€¢Â³ 0 Ã¢â€¢Â³      *
+ *     Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â²     *
+ *    Ã¢â€¢Â³-1 Ã¢â€¢Â³ 1 Ã¢â€¢Â³    *
+ *   Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â²   *
+ *  Ã¢â€¢Â³-2 Ã¢â€¢Â³ 0 Ã¢â€¢Â³ 2 Ã¢â€¢Â³  *
+ *   Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â±   *
+ *    Ã¢â€¢Â³-1 Ã¢â€¢Â³ 1 Ã¢â€¢Â³    *
+ *     Ã¢â€¢Â² Ã¢â€¢Â± Ã¢â€¢Â² Ã¢â€¢Â±     *
+ *      Ã¢â€¢Â³ 0 Ã¢â€¢Â³      *
+ *       Ã¢â€¢Â² Ã¢â€¢Â±       *
+ *        Ã¢â€¢Â³        *
  * \endverbatim
  *
  *
@@ -61,6 +61,8 @@
  */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
+#include "geothermal_conduit_sprite.h"
 #include "launch_center.h"
 #include "asteroid.h"
 #include "core/backup_type.hpp"
@@ -1084,7 +1086,7 @@ void ClearConstructionPreview()
 }
 
 /** @copydoc SetConstructionPreview */
-void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered, std::span<const TileIndex> route)
+void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std::span<const TileIndex> working_space, std::span<const TileIndex> uncovered, std::span<const TileIndex> route, TileIndex blocked)
 {
 	// Only the current cursor window may replace derived geometry; a stale window cannot overwrite another tool.
 	if (owner == nullptr || _thd.GetCallbackWnd() != owner) return;
@@ -1093,6 +1095,8 @@ void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std
 	// Normalize each producer-derived role for bounded binary lookups during actual tile rendering.
 	for (size_t i = 0; i < roles.size(); ++i) {
 		_construction_preview_tiles[i].assign(roles[i].begin(), roles[i].end());
+		// A refusal can stop outside the requested floor; mark the actual blocked cell as uncovered too.
+		if (i == 2 && IsValidTile(blocked)) _construction_preview_tiles[i].push_back(blocked);
 		std::ranges::sort(_construction_preview_tiles[i]);
 		auto duplicates = std::ranges::unique(_construction_preview_tiles[i]);
 		_construction_preview_tiles[i].erase(duplicates.begin(), duplicates.end());
@@ -1104,6 +1108,11 @@ void SetConstructionPreview(Window *owner, std::span<const TileIndex> floor, std
 		auto &label = _construction_preview_route[route[index]];
 		if (!label.empty()) label += ",";
 		label += fmt::format("{}", index + 1);
+	}
+	// Keep ordered route visits and append the quote's refusal marker, including when both share a cell.
+	if (IsValidTile(blocked)) {
+		auto &label = _construction_preview_route[blocked];
+		label += label.empty() ? "!" : ",!";
 	}
 	MarkWholeScreenDirty();
 }
@@ -1248,6 +1257,10 @@ static void DrawTileSelection(const TileInfo *ti)
 	// excavates a cell or surveys it in saved state. Center its 20px source cell
 	// inside the ordinary 64x32 tile diamond, preserving the packed crop anchor.
 	if (const auto marker = GetUndergroundSurveyOverlaySprite(ti->tile)) DrawGroundSprite(*marker, PAL_NONE, nullptr, -10, 6);
+	// The complete vent picture retains its native tile anchor; the older small
+	// mineral icon alone uses the centering offset above. Neither reveals a field
+	// after the actual survey cursor closes or changes its physical layer.
+	if (const auto vent = GetUndergroundGeothermalSurveyOverlaySprite(ti->tile)) DrawGroundSprite(*vent, PAL_NONE);
 	if (const auto label = GetConstructionPreviewRouteLabel(ti->tile); !label.empty()) {
 		// Number canonical cutter visits in screen space like native map signs.
 		// These derived labels explain the route; rendering never advances it.
@@ -1452,6 +1465,10 @@ static void ViewportAddLandscape()
 				_vd.last_foundation_child[FoundationPart::Halftile] = LAST_CHILD_NONE;
 
 				_tile_type_procs[tile_type]->draw_tile_proc(&_cur_ti);
+				// Native road, rail and station owners insert wires before their buildings; other floors use this generic stage to avoid double drawing.
+				if (tile_type != TileType::Railway && tile_type != TileType::Road && tile_type != TileType::Station) DrawTubeConduitGround(_cur_ti.tile);
+				// Industry and portal bodies also own their electrical ground stage; generic floors alone receive this overlay after native terrain.
+				if (tile_type != TileType::Railway && tile_type != TileType::Road && tile_type != TileType::Station && tile_type != TileType::Industry && tile_type != TileType::LayerPortal) DrawGeothermalConduitGround(_cur_ti.tile);
 				if (_cur_ti.tile != INVALID_TILE) DrawTileSelection(&_cur_ti);
 			}
 		}
@@ -3797,6 +3814,17 @@ void ResetObjectToPlace()
 {
 	SetObjectToPlace(SPR_CURSOR_MOUSE, PAL_NONE, HT_NONE, WindowClass::MainWindow, 0);
 }
+
+/** @copydoc IsObjectPlacementActive */
+bool IsObjectPlacementActive()
+{
+	// ResetObjectToPlace leaves no highlight, no special mouse mode and the main window as the click owner; anything
+	// else means a tool, a drag or a window is still waiting for the player's placement.
+	if (_thd.place_mode != HT_NONE || _special_mouse_mode != SpecialMouseMode::None) return true;
+	const Window *owner = _thd.GetCallbackWnd();
+	return owner != nullptr && owner->window_class != WindowClass::MainWindow;
+}
+
 
 Point GetViewportStationMiddle(const Viewport &vp, const Station *st)
 {

@@ -30,6 +30,9 @@
 #include "transport_tube.h"
 #include "geothermal_site_wire.h"
 #include "geothermal_collector_wire.h"
+#include "geothermal_generator_wire.h"
+#include "utility_power_conversion_wire.h"
+#include "transport_tube_geothermal.h"
 #include "geothermal_riser_wire.h"
 #include "layer_portal_work_wire.h"
 #include "excavation.h"
@@ -91,6 +94,15 @@ struct NativeCargoPacketPreview {
 	uint16_t quantity = 0; ///< Original positive whole units; native containers retain the sole gameplay ownership.
 	Source source{Source::Invalid, SourceType::Industry}; ///< Candidate file's original provenance/purpose; never inherited from the open world.
 	Money feeder_share{0}; ///< Original virtual transfer credit; bought company supplies must retain zero.
+	uint64_t company_supply_order = 0; ///< Original optional order link, widened exactly; allocation alone supplies no refund authority.
+	uint8_t company_supply_shipped = 0; ///< Literal original departure byte, checked before any boolean interpretation.
+};
+
+/** Same-file physical container reference with its own saved cargo ordinal and station identity; no packet or live inventory is owned here. */
+struct NativeCargoOwnerPreview {
+	uint32_t reference = 0; ///< Actual native encoded packet index+1, zero is invalid.
+	CargoType cargo = INVALID_CARGO; ///< Original owner slot, resolved only through this candidate's definition evidence.
+	StationID station = StationID::Invalid(); ///< Actual goods queue, or Invalid for every carrier/job.
 };
 
 /** Same-file configured cargo dimensions; detached metadata cannot allocate cargo or replace a loaded CargoSpec. */
@@ -113,7 +125,11 @@ struct NativeStationOwnerPreview {
 /** Detached whole-file preview transport; copied identities and authority cannot mutate or supply owners from the current playable world. */
 struct LoadCheckData {
 	bool surface_supply_orders_present = false; ///< This exact file supplied the required current order family, including a legitimate empty book.
+	bool legacy_a_supply_wire = false; ///< Original A440 RIFF transport requires the detached A adapter; canonical tagged previews retain their separate contract.
 	SurfaceSupplyOrderTransport surface_supply_orders; ///< Detached complete commitments/history only; preview never activates refunds, orders or stock.
+	std::array<bool, 2> legacy_b_supply_present{}; ///< Same-file original SSOH header and SSOR TABLE presence, including an empty paid-history book.
+	LegacyBSupplyTransport legacy_b_supply; ///< Original bounded B scalars, awaiting same-file conversion and complete packet custody; never live rights.
+	bool legacy_b_supply_packet_fields_present = false; ///< This copied CAPA actually supplied original order/shipped/purpose scalars; book staging alone cannot validate paid packet custody.
 	bool native_map_dimensions_present = false; ///< Original MAPS row, never default/previous-file geometry.
 	bool native_economy_date_present = false; ///< Original DATE economy_date field, not calendar/live time.
 	TimerGameEconomy::Date native_economy_date{0}; ///< Same-file native economy day for exact current allowance/reference joins.
@@ -129,6 +145,7 @@ struct LoadCheckData {
 	bool native_vehicle_cargo_present = false, native_station_cargo_present = false; ///< Complete same-file native family reads, including legitimate empty tables; never inherited from a previous preview.
 	std::vector<uint32_t> native_ordinary_vehicle_cargo_refs; ///< Original ordinary carrier references encoded as native ID+1; copied metadata creates no hull, cargo or reservation.
 	std::vector<uint32_t> native_station_cargo_refs; ///< Original normal-station stock references encoded as native ID+1, across all cargo and next-hop buckets.
+	std::vector<NativeCargoOwnerPreview> native_cargo_owner_rows; ///< Complete ordinary station/vehicle references with original slot/queue evidence, separate from aggregate exclusivity views.
 	bool space_transitions_present = false;
 	std::vector<SpaceTransitionRecord> space_transition_rows;
 	bool space_pods_present = false;
@@ -205,6 +222,15 @@ struct LoadCheckData {
 	std::array<bool, 4> tbm_exchange_present{}; ///< Independent exchange header, assignment, set and set-wagon table preview presence.
 	std::array<uint32_t, 5> tbm_exchange_header{}; ///< Copied assignment count and cursor, set count and cursor, and set-wagon row count.
 	std::array<uint32_t, 3> tbm_exchange_rows{}; ///< Copied assignment, set and set-wagon row counts.
+	std::array<bool, 2> utility_conversion_present{}; ///< Independent original B428 header/table presence.
+	std::array<uint64_t, 4> utility_conversion_header{}; ///< Exact schema/source/origin/epoch transport.
+	std::vector<UtilityHeatConversionWire> utility_conversion_rows; ///< Candidate conversion scalars; never live energy.
+	std::array<bool, 2> tube_geothermal_present{}; ///< Independent original B433 source family presence.
+	uint32_t tube_geothermal_expected = 0; ///< Bounded source history cardinality.
+	TubeGeothermalPowerState tube_geothermal_state; ///< Candidate physical/shared references, without balances.
+	std::array<bool, 2> geothermal_generator_present{}; ///< Independent original B427 machinery family presence.
+	uint32_t geothermal_generator_expected = 0; ///< Bounded original construction cardinality.
+	std::vector<GeothermalGeneratorWire> geothermal_generator_rows; ///< Exact copied construction/service receipts.
 	std::array<bool, 2> utility_power_present{}; ///< Independent header/table preview; Plan 12 Group 7B.
 	std::array<uint64_t, 14> utility_power_header{}; ///< Copied utility identity/phase/counts, committed local topology and403 shared slice cursor; no live geometry is borrowed.
 	std::array<uint32_t, 5> utility_power_rows{}; ///< Copied source/consumer/connection/share/directed-link counts.

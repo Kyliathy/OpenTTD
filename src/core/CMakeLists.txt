@@ -1,3 +1,4 @@
+# Shared original byte identity: docs/zz-reach2/architecture/savegame/archi-savegame.md.
 add_files(
     alloc_type.hpp
     backup_type.hpp
@@ -19,6 +20,7 @@ add_files(
     math_func.hpp
     multimap.hpp
     overflowsafe_type.hpp
+    sha256.hpp
     pool_func.cpp
     pool_func.hpp
     pool_type.hpp

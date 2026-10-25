@@ -18,6 +18,7 @@
 #include "cargo_source_sl.h"
 #include "../space.h"
 #include "../fios.h"
+#include "../surface_supply_order_runtime.h"
 #include "compat/cargopacket_sl_compat.h"
 
 #include "../vehicle_base.h"
@@ -146,6 +147,13 @@ SaveLoadTable GetCargoPacketDesc()
 		SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(CargoPacket, feeder_share)),
 		SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(CargoPacket, source.type), SaveLoadVersion::RemoveSubsidyStationBinding),
 		SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(CargoPacket, source.id), SaveLoadVersion::RemoveSubsidyStationBinding),
+		// Original B links are U32; reserve the upper boundary before merged441
+		// introduces canonical U64 under the same key. A439/440 never wrote these fields.
+		SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+		SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+		// Merged canonical links retain U64identities and literal0/1departure bytes.
+		SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+		SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
 		SaveLoad::Variable<VarFileType::I16>("travelled.x", SLE_OBJECT_ADDRESS(CargoPacket, travelled.x), SaveLoadVersion::CargoTravelled),
 		SaveLoad::Variable<VarFileType::I16>("travelled.y", SLE_OBJECT_ADDRESS(CargoPacket, travelled.y), SaveLoadVersion::CargoTravelled),
 	};
@@ -160,7 +168,13 @@ static void CheckCargoPacketSourceFields(const std::vector<SaveLoad> &desc)
 	if (IsSavegameVersionBefore(SaveLoadVersion::TableChunks)) return;
 	// Table-era packets already serialize all four fields. Refusing an omission prevents either loading mode from inventing paying provenance or silently dropping a bought packet's credit.
 	for (const std::string_view field : {"count", "source_type", "source_id", "feeder_share"}) {
-		if (std::ranges::find(desc, field, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native cargo packet quantity/source/credit field");
+		if (std::ranges::count(desc, field, &SaveLoad::name) != 1) SlErrorCorrupt("Missing/duplicate native cargo packet quantity/source/credit field");
+	}
+	// A missing paid-purpose column is material evidence even for an empty
+	// book/table. A's original wire has no such columns and cannot impersonate B.
+	for (const std::string_view field : {"company_supply_order", "company_supply_shipped"}) {
+		const auto count = std::ranges::count(desc, field, &SaveLoad::name);
+		if (count != (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB) ? 1 : 0)) SlErrorCorrupt("Missing/contradictory supply packet field");
 	}
 }
 
@@ -188,14 +202,25 @@ struct CAPAChunkHandler : ChunkHandler {
 		CheckCargoPacketSourceFields(slt);
 
 		int index;
+		int previous_index = -1;
 
 		// Native source identities reconstruct before container pointer fixing, preserving the original packet pool rather than issuing replacement cargo.
 		while ((index = SlIterateArray()) != -1) {
+			// Original identities must be bounded and strictly unique BEFORE
+			// native allocation; corruption cannot crash a pool assertion or
+			// replace another fragment's paid provenance/custody evidence.
+			if (index <= previous_index || static_cast<uint32_t>(index) >= CargoPacketID::End().base()) SlErrorCorrupt("Invalid native cargo packet identity");
+			previous_index = index;
 			CargoPacket *cp = CargoPacket::CreateAtIndex(CargoPacketID(index));
 			SlObject(cp, slt);
+			if (cp->Count() == 0) SlErrorCorrupt("Empty native cargo packet quantity");
 			// The candidate file's own era, provenance and feeder credit decide admission; no live company or cargo lookup can convert bought supplies into paying freight.
 			if (!IsValidCargoPacketSource(cp->GetSource(), cp->GetFeederShare(), _sl_version)) SlErrorCorrupt("Invalid cargo source type/identity/credit");
+			// Preserve original B's invalid-Industry purpose until its whole-file
+			// receipt/custody proof; an invalid departure byte cannot become true.
+			if (cp->GetCompanySupplyShippedWire() > 1 || (cp->GetCompanySupplyOrder() == 0 && cp->HasCompanySupplyShipped())) SlErrorCorrupt("Invalid original supply departure/link");
 		}
+		if (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB) && !ObserveLoadedLegacyBSupplyPacketFields()) SlErrorCorrupt("Repeated original supply packet fields"); // Complete CAPA evidence is unique; a second family cannot replace provenance from the first.
 	}
 	/** Copy this file's original packet quantities/purpose/credit without allocating live cargo.
 	 * @param length Framework chunk extent; pre-table sources retain their original skipped preview.
@@ -209,6 +234,11 @@ struct CAPAChunkHandler : ChunkHandler {
 			SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.type)),
 			SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.id)),
 			SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, feeder_share)),
+			SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+			SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+			// Merged canonical links retain U64identities and literal0/1departure bytes.
+			SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+			SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
 		};
 		const auto desc = SlTableHeader(preview);
 		CheckCargoPacketSourceFields(desc);
@@ -219,9 +249,13 @@ struct CAPAChunkHandler : ChunkHandler {
 			// Bounded positive original quantities and strictly issued index order prevent an absent, duplicate or weightless fake packet from validating a descent reference.
 			if (row.packet >= CargoPacketID::End() || row.quantity == 0 || rows.size() >= CargoPacketID::End().base() || (!rows.empty() && row.packet <= rows.back().packet)) SlErrorCorrupt("Invalid copied native cargo packet identity/quantity");
 			if (!IsValidCargoPacketSource(row.source, row.feeder_share, _sl_version)) SlErrorCorrupt("Invalid copied cargo source type/identity/credit");
+			// Shipped-without-link or a nonliteral boolean cannot be repaired from
+			// whichever container happens to own the packet in this save.
+			if (row.company_supply_shipped > 1 || (row.company_supply_order == 0 && row.company_supply_shipped != 0)) SlErrorCorrupt("Invalid copied supply departure/link");
 			rows.push_back(row);
 		}
 		_load_check_data.native_cargo_packets_present = true;
+		_load_check_data.legacy_b_supply_packet_fields_present = SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB);
 	}
 };
 

@@ -56,8 +56,23 @@ static std::array<CargoLabel, 12> _climate_dependent_cargo_labels;
 static std::array<CargoLabel, 32> _climate_independent_cargo_labels;
 
 /**
- * Set up the default cargo types for the given landscape type.
- * @param l Landscape
+ * Resolve immutable original climate definitions without activating a world.
+ * @param landscape Candidate file's own climate.
+ * @param cargo Original native baseline slot.
+ * @return Original label or CT_INVALID; no activated CargoSpec or live configuration is read.
+ */
+CargoLabel GetDefaultCargoLabel(LandscapeType landscape, CargoType cargo)
+{
+	// A detached candidate must name a real climate and baseline slot; an
+	// out-of-domain ordinal cannot borrow an activated cargo meaning.
+	if (to_underlying(landscape) >= std::size(_default_climate_cargo) || cargo >= NUM_ORIGINAL_CARGO) return CT_INVALID;
+	const auto &original = _default_climate_cargo[to_underlying(landscape)][cargo];
+	if (const auto *label = std::get_if<CargoLabel>(&original)) return *label;
+	return _default_cargo[std::get<int>(original)].label;
+}
+
+/** Set up actual activated definitions for a new world.
+ * @param l Native world climate; detached inspection uses GetDefaultCargoLabel instead.
  */
 void SetupCargoForClimate(LandscapeType l)
 {

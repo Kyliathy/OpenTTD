@@ -22,7 +22,7 @@ import uuid
 from artifact_paths import (RunContext, contained, create_run_context, identifier,
                             repository_root, resolve_input_path)
 from artifact_inventory import file_identity
-from artifact_recipes import load_catalogue, recipe_order, validate_recipes
+from artifact_recipes import load_catalogue, recipe_order, validate_selection
 
 DISPATCHER = "src/tests/multilayer/support/artifact_recipe_stage.py"
 BUILD_PROFILE = "src/tests/fixtures/config/multilayer/native-build-profile.json"
@@ -143,7 +143,11 @@ def load_recipe(name, configuration=None, root=None):
     @return Validated selected closure, missing/pending details and execution eligibility.
     """
     root = repository_root(root)
-    recipes = validate_recipes(load_catalogue(root), root)
+    # A selected reconstruction validates its exact dependency closure. Reading
+    # unrelated providers/originals can make a small cold-input check depend on
+    # other feature caches or exceed its bounded workflow; duplicate IDs remain
+    # globally rejected by the existing selected declaration owner.
+    recipes = validate_selection(load_catalogue(root), name, root)
     order = recipe_order(name, recipes)
     if configuration not in (None, "Debug", "RelWithDebInfo"):
         raise ValueError("unsupported recipe configuration")

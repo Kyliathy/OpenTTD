@@ -231,6 +231,15 @@ add_test_files(
     tbm_planning_commands.cpp
     tbm_planning_seed.cpp
     tbm_planning_refusals.cpp
+    # Native map and construction presentation: archi-map-layers.md; m2o23-2 Group24.
+    layer_construction_controls.cpp
+    # Read-only presentation and synchronized planning/window actions: archi-gui.md; m2o23-2 Group24B.
+    tbm_status_presentation.cpp
+    tbm_work_change_window.cpp
+    tbm_face_status.cpp
+    # Actual pending-settings/accepted-policy boundary: archi-map-layers.md; m2o23-2 Group24C.
+    newgame_layer_policy.cpp
+    window_hotkey_toggle.cpp
     tbm_commission.cpp
     tbm_commission_fixture.h
     tbm_economics.cpp
@@ -244,6 +253,7 @@ add_test_files(
     tbm_parking.cpp
     tbm_release.cpp
     tbm_hangar.cpp
+    tbm_hangar_service.cpp
     tbm_exit.cpp
     tbm_feedback_haul_fixture.h
     native_art_loop_fixture.h
@@ -298,6 +308,19 @@ add_test_files(
     tbm_face_cycle.cpp
     # Native installed phase activation: archi-map-layers.md; m2o23-2-come-space.md Group23.
     tbm_face_controller.cpp
+    tbm_face_controller_loop.cpp
+    tbm_remainder.cpp
+    tbm_change_work.cpp
+    excavation_approach.cpp
+    tbm_approach.cpp
+    tbm_obstruction.cpp
+    tbm_face_support.cpp
+    tbm_face_lifecycle.cpp
+    tbm_face_regression.cpp
+    tbm_reserved_loop.cpp
+    excavation_claim_fixture.h
+    tbm_face_loop_watch.h
+    tbm_source_loop_fixture.h
     portal_signal_boundary.cpp
     tbm_exchange_bay.cpp
     tbm_exchange_proposal.cpp
@@ -391,6 +414,7 @@ add_test_files(
     # Actual native restore/codec/copy references, no procurement: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_order_owner.cpp
     surface_supply_order_wire.cpp
+    surface_supply_merged_wire.cpp
     # Complete native file/preview boundaries over retained worlds: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_order_native.cpp
     # Paid conventional carrier/collector/riser receipts: r2mlvs6 Group13CD.
@@ -438,11 +462,44 @@ add_test_files(
     transport_tube_prototype.cpp
     # Physical source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10B.
     transport_tube_model.cpp
+    transport_tube_definitions.cpp
+    transport_tube_admission.cpp
+    transport_tube_geothermal.cpp
+    transport_tube_geothermal_binding.cpp
+    transport_tube_commands.cpp
+    # Native merged peer gate and exact supply codec: archi-commands.md; m2o23-3 Group47.
+    merged_command_compatibility.cpp
+    transport_tube_provider_switch.cpp
+    utility_scheduler_publication.cpp
+    utility_scheduler_contention.cpp
+    utility_scheduler_lifecycle.cpp
+    utility_scheduler_visibility.cpp
+    utility_controls_window.cpp
+    save_envelope_identity.cpp
+    save_envelope_framing.cpp
+    save_envelope_inspection.cpp
+    save_envelope_originals.cpp
+    save_envelope_adversarial.cpp
+    save_lineage_preflight.cpp
+    # Original native Space branch/receipt qualification: archi-savegame.md; m2o23-3 Group42.
+    space_lineage_native.cpp
+    machinery_lineage_native.cpp
+    save_first_tick_fixture.cpp
+    transport_tube_calendar.cpp
     transport_tube_fixture.h
     transport_tube_construction.cpp
     transport_tube_reservations.cpp
     # Native junction source geometry: docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group47D
     transport_tube_art_geometry.cpp
+    # Pure imported native art selectors: archi-map-layers.md; m2o23-3 Group51.
+    transport_tube_sprite.cpp
+    transport_tube_vehicle_sprite.cpp
+    transport_tube_facility_sprite.cpp
+    transport_tube_conduit_sprite.cpp
+    geothermal_generator_sprite.cpp
+    geothermal_riser_sprite.cpp
+    geothermal_conduit_sprite.cpp
+
     transport_tube_power_fixture.h
     transport_tube_power.cpp
     transport_tube_power_load.cpp
@@ -460,7 +517,21 @@ add_test_files(
     geothermal_site.cpp
     geothermal_site_load.cpp
     geothermal_definitions.cpp
+    # Paid native generator construction/canonical delivery: archi-map-layers.md; m2o23-2 Group25.
+    utility_heat_conversion.cpp
+    utility_heat_conversion_draft.cpp
+    utility_heat_conversion_fixture.h
+    geothermal_generator_operating.cpp
+    utility_power_local_feed.cpp
+    geothermal_town_service.cpp
+    geothermal_town_recovery.cpp
+    geothermal_generator_operating_fixture.h
+    geothermal_generator_lifecycle.cpp
+    geothermal_generator.cpp
+    geothermal_generator_magma.cpp
+    geothermal_generator_delivery.cpp
     geothermal_generator_geometry.cpp
+    geothermal_generator_fixture.h
     geothermal_collector_fixture.h
     geothermal_collector.cpp
     geothermal_heat.cpp

@@ -17,7 +17,8 @@ from types import SimpleNamespace
 from space_checkpoint import (ROOT, CONFIGURATIONS, POLICY, SCOPE, FoundationKind, SpaceCheckpoint,
                               SpaceFoundation, _publish_bytes, load_checkpoint, verify_checkpoint)
 from space_checkpoint_load import (SOURCE_FILES, TAG, PHASE, compare_loaded_saves, compare_revision,
-                                   terminal_fields, identity, checked, verify_load_result)
+                                   terminal_fields, identity, checked, verify_load_result, selected_checkpoint,
+                                   checkpoint_observation)
 from artifact_inventory import checked_path, file_identity
 from artifact_paths import RunContext, identifier
 from savegame_tables import saved_owner_table as table
@@ -66,8 +67,13 @@ def validate_build_document(document, epoch, profile, configuration, root, curre
     """
     # A build must have executed successfully under an explicit configuration;
     # neither a portable profile alone nor yesterday's cached EXE is a build result.
-    if set(document) != BUILD_FIELDS or document["kind"] != "native_build_result" or type(document["schema_version"]) is not int or document["schema_version"] != 1 or document["complete"] is not True or document["configuration"] != configuration:
+    if set(document) not in (BUILD_FIELDS, BUILD_FIELDS | {"workers"}) or document["kind"] != "native_build_result" or type(document["schema_version"]) is not int or document["schema_version"] != 1 or document["complete"] is not True or document["configuration"] != configuration:
         raise ValueError("invalid current native build result")
+    # Historical sealed builds predate the explicit worker observation. Fresh
+    # merged publication must carry the one/two-worker pressure contract; old
+    # receipts keep their exact original fields and never become current proof.
+    if (current and "workers" not in document) or ("workers" in document and (type(document["workers"]) is not int or document["workers"] not in (1, 2))):
+        raise ValueError("current native build needs its bounded actual compiler worker count")
     if not set(required_targets) <= document["targets"].keys():
         raise ValueError("checkpoint build lacks a required selected target")
     if not document["steps"] or any(step["exit_status"] != 0 for step in document["steps"]):
@@ -115,18 +121,24 @@ def compare_static_saves(source, output, expected, native):
     restored_version, restored = chunks(output)
     # Static recovery preserves this exact save-format/owner closure. A partial
     # or migrated world needs another contract rather than a successful cash check.
-    if version != 440 or restored_version != 440 or len(original) != 121 or original.keys() != restored.keys():
+    # Current merged saves keep all128declared families. Historical sealed440
+    # observations retain their original121-family contract unchanged.
+    if version not in (440, 441) or restored_version != version or len(original) != (128 if version == 441 else 121) or original.keys() != restored.keys():
         raise ValueError("ordinary checkpoint changed version/family closure")
+    if version == 441:
+        from savegame_tables import merged_world_chunks
+        merged_world_chunks(source)
+        merged_world_chunks(output)
     # Metadata is checked separately above/below; every other physical family
     # remains byte-exact, including native stock, body, packet and terrain owners.
     for name, raw in original.items():
         if name not in (b"DATE", b"GLOG") and restored[name] != raw:
             raise ValueError(f"ordinary checkpoint changed family: {name!r}")
     appended = compare_revision(source, output, native)
-    actual = json.loads(json.dumps(observe(output)))
+    actual = checkpoint_observation(output)
     if actual != expected:
         raise ValueError("ordinary loaded owners disagree with independent checkpoint")
-    return dict(chunk_families=121, clocks=dict(source=first[0], output=last[0]),
+    return dict(chunk_families=len(original), clocks=dict(source=first[0], output=last[0]),
                 appended_load_revision=appended, observed=actual, gameplay_ticks_executed=0)
 
 
@@ -176,15 +188,17 @@ def verify_static_result(document, checkpoint, native_reference):
     # legacy advance/replay receipt merely because its process exited successfully.
     if set(document) != STATIC_FIELDS or type(document["schema_version"]) is not int or document["schema_version"] != 1 or document["kind"] != "ordinary_space_checkpoint_restore" or document["complete"] is not True or document["phase"] != "ordinary-static" or type(document["gameplay_ticks_executed"]) is not int or document["gameplay_ticks_executed"] != 0:
         raise ValueError("invalid ordinary static checkpoint receipt")
-    seal = json.loads(checkpoint.manifest_path.read_text(encoding="utf-8"))
     configuration = document["configuration"]
-    selected = seal["configurations"][configuration]
+    selected = selected_checkpoint(checkpoint, configuration)
+    native_result = read(native_reference, root)
+    source_reference = native_result["output"] if isinstance(checkpoint, SpaceFoundation) else selected["save"]
     # All three identities select the same original/configuration and already
     # checked native build; another successful restore cannot substitute for it.
-    if document["seal"] != dict(path=checkpoint.manifest_path.relative_to(root).as_posix(), sha256=checkpoint.sha256) or document["source"] != selected["save"] or document["native_load"] != native_reference:
+    if document["seal"] != dict(path=checkpoint.manifest_path.relative_to(root).as_posix(), sha256=checkpoint.sha256) or document["source"] != source_reference or document["native_load"] != native_reference:
         raise ValueError("ordinary restore selected a different seal/source/native build")
-    native_result = read(native_reference, root)
     verify_load_result(native_result, root)
+    if native_result["seal"] != document["seal"]:
+        raise ValueError("ordinary/native selected foundations differ")
     if native_result["configuration"] != configuration:
         raise ValueError("ordinary/native configuration mismatch")
     native = terminal_fields(checked(native_result["terminal"], root).read_text(encoding="utf-8", errors="replace"))
@@ -215,7 +229,7 @@ def verify_static_result(document, checkpoint, native_reference):
         raise ValueError("ordinary restore lacks its explicit source owner identities")
     for reference in document["source_files"]:
         checked(reference, root)
-    expected = read(selected["expected_observation"], root)["observation"]
+    expected = selected["expected"]
     facts = compare_static_saves(source, output, expected, native)
     facts["projection"] = projection
     # Closing hashes reject a build/source/output writer changing any authority
@@ -223,6 +237,48 @@ def verify_static_result(document, checkpoint, native_reference):
     for reference in [document[field] for field in ("source", "application", "console_application", "output", "terminal", "native_process")] + document["source_files"]:
         checked(reference, root)
     return facts
+
+
+def qualify_selected_foundation(foundation, native_results, ordinary_results, build_results, destination):
+    """Bind the selected successor's paused migration to both current merged builds.
+
+    @param foundation Typed exact continuation, never an inferred latest save.
+    @param native_results Configuration-to-actual-native-load receipt identities.
+    @param ordinary_results Configuration-to-actual-ordinary441restore identities.
+    @param build_results Configuration-to-current selected build identities.
+    @param destination New run-owned qualification JSON, outside original fixtures.
+    @return Exact published qualification identity, granting no gameplay authority.
+    """
+    if not isinstance(foundation, SpaceFoundation):
+        raise TypeError("selected qualification requires a typed continuation")
+    original = verify_foundation(foundation)
+    root = foundation.root
+    target, context = _destination(destination, root)
+    if any(set(rows) != set(CONFIGURATIONS) for rows in (native_results, ordinary_results, build_results)):
+        raise ValueError("selected qualification requires both current configurations")
+    rows = {}
+    # Each configuration must use its actual newly built callback and ordinary
+    # image. One successful world cannot stand in for the independently linked pair.
+    for configuration in CONFIGURATIONS:
+        native = read(native_results[configuration], root)
+        native_facts = verify_load_result(native, root)
+        ordinary = read(ordinary_results[configuration], root)
+        ordinary_facts = verify_static_result(ordinary, foundation, native_results[configuration])
+        build = read(build_results[configuration], root)
+        validate_build_document(build, read(build["source_epoch"], root), read(build["tool_profile"], root), configuration, root, True)
+        if native["application"] != build["targets"]["openttd_surface_capital_test"] or ordinary["application"] != build["targets"]["openttd"]:
+            raise ValueError("selected qualification used different current images")
+        rows[configuration] = dict(native_result=native_results[configuration], ordinary_result=ordinary_results[configuration],
+            build_result=build_results[configuration], source=native["source"], output=ordinary["output"],
+            native_facts=native_facts, ordinary_facts=ordinary_facts)
+    document = dict(_documentation=__doc__, schema_version=1, kind="merged_space_foundation_qualification",
+        complete=True, foundation=identity(foundation.manifest_path, root), configurations=rows,
+        next_task=original["next_task"], closed_scope=original["closed_scope"], financial_policy=original["financial_policy"],
+        gameplay_ticks_executed=0, authorization_granted=False, completes_next_task=False)
+    # Rechecking the selected original protects its seal/dispatch from incidental
+    # changes during observation. Publication creates only this separate report.
+    verify_foundation(foundation)
+    return _publish_bytes(target, (json.dumps(document, indent=2) + "\n").encode(), root)
 
 
 def _shape(document):

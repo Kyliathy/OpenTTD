@@ -1,0 +1,734 @@
+{
+  "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCB;retained actual Standard machinery accepts canonical seven-bend irregular proposal;no new cut yet",
+  "controller": {
+    "path": "src/tests/multilayer/normal_ground_irregular_report.py",
+    "bytes": 9912,
+    "sha256": "1f95b9f7ac2ed618e6343eb2312bd294e315056e17ea564198effd238d4d6f55"
+  },
+  "deep_work_handoff": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/deep-work-verification.json",
+    "bytes": 1421664,
+    "sha256": "bbfd942ca5a9c0057aa4d21d5f984d54f310556d7f379e607f39e885b27c90a0"
+  },
+  "original_machinery": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/standard-machinery-verification.json",
+    "bytes": 22971,
+    "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+  },
+  "records": {
+    "Debug": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-181947-b858c67205/reports/normal-irregular-Debug.json",
+        "bytes": 6617,
+        "sha256": "267eb65376d64528569f41d588e0f58125a2cdd6a998c04830dc6a1f6d8d79c9"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCB;canonical irregular proposal reuses actual paid native participants;no new cut",
+        "configuration": "Debug",
+        "classification": "normal_start_irregular_readiness",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_irregular.py",
+          "bytes": 7190,
+          "sha256": "c4b74061610969241abc5df0413f6ee59e559a55c5115aec71e198cef355d981"
+        },
+        "binary": {
+          "path": "build/Debug/openttd_test.exe",
+          "bytes": 79334912,
+          "sha256": "ac3c091060223c63a04312d16f4335690acefd8d8a983022a7865569b0cfea3d"
+        },
+        "deep_work_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/deep-work-verification.json",
+          "bytes": 1421664,
+          "sha256": "bbfd942ca5a9c0057aa4d21d5f984d54f310556d7f379e607f39e885b27c90a0"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142822-35ee6ce6db/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "bd639f2278abec9a20369537e430672c3bf7173b71a42be61a7cd3b656054196"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-deep-work/20261019-180147-2742dd2843/saves/boring-progress.sav",
+          "bytes": 44236,
+          "sha256": "0bd9089afd228c0b81460b17f23a4b17d0687f61847fc87d8c3f0a8338feef8e"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-181947-b858c67205/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-181947-b858c67205/main/scripts/game_start.scr",
+          "bytes": 107,
+          "sha256": "7a6fec4024e5b2fa2f49ebb4f9e70d8abf004ff7ca7ab3a67e405c477e362d6f"
+        },
+        "ready": {
+          "project": 2,
+          "job": 2,
+          "cutter": 38,
+          "hauler": 33,
+          "portal": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 25570,
+          "last": 25830,
+          "bends": 7,
+          "attempts": 4,
+          "original_forbid90": 1,
+          "forbid90": 1,
+          "opening_cash": 264341,
+          "cash": 264251,
+          "loan": 300000,
+          "tick": 1275657,
+          "solid": 31640,
+          "excavating": 40,
+          "excavated": 72
+        },
+        "quotes": [
+          {
+            "attempt": 0,
+            "first": 25957,
+            "last": 26475,
+            "ok": 0,
+            "error": 4257,
+            "failure": 4294967295,
+            "purchase": 0,
+            "earth": 0,
+            "rock": 0,
+            "support": 0,
+            "forbid90": 1
+          },
+          {
+            "attempt": 1,
+            "first": 25957,
+            "last": 26475,
+            "ok": 0,
+            "error": 4265,
+            "failure": 26469,
+            "purchase": 0,
+            "earth": 0,
+            "rock": 0,
+            "support": 0,
+            "forbid90": 1
+          },
+          {
+            "attempt": 2,
+            "first": 25570,
+            "last": 25830,
+            "ok": 0,
+            "error": 4267,
+            "failure": 25439,
+            "purchase": 0,
+            "earth": 120,
+            "rock": 240,
+            "support": 40,
+            "forbid90": 1
+          },
+          {
+            "attempt": 3,
+            "first": 25570,
+            "last": 25830,
+            "ok": 1,
+            "error": 65535,
+            "failure": 4294967295,
+            "purchase": 0,
+            "earth": 120,
+            "rock": 240,
+            "support": 40,
+            "forbid90": 1
+          }
+        ],
+        "invoices": [
+          {
+            "action": "retire_settled_deep",
+            "cost": 0,
+            "cash": 264341
+          },
+          {
+            "action": "reseal_standard_source",
+            "cost": 0,
+            "cash": 264341
+          },
+          {
+            "action": "irregular_source_clear",
+            "cost": 15,
+            "cash": 264326
+          },
+          {
+            "action": "irregular_support_piece",
+            "cost": 75,
+            "cash": 264251
+          },
+          {
+            "action": "reuse_standard",
+            "cost": 0,
+            "cash": 264251
+          },
+          {
+            "action": "irregular_assign",
+            "cost": 0,
+            "cash": 264251
+          },
+          {
+            "action": "pause_irregular",
+            "cost": 0,
+            "cash": 264251
+          }
+        ],
+        "capital_paid": 90,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-181947-b858c67205/saves/irregular-ready.sav",
+            "bytes": 45180,
+            "sha256": "d42daf5a449dbc0142660bae5f071e3b6dae7b153700bd1ea9ddd1cf953c6da7"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-181947-b858c67205/saves/irregular-ready-repeat.sav",
+            "bytes": 45180,
+            "sha256": "d42daf5a449dbc0142660bae5f071e3b6dae7b153700bd1ea9ddd1cf953c6da7"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-irregular/20261019-181947-b858c67205/irregular-Debug.log",
+            "bytes": 1507,
+            "sha256": "82d833cc213b5411b748ac2e488bfbb9e4968eca0ae9933acce411545c50ec8f"
+          },
+          "assertions": 71,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_irregular_fixture.h",
+            "bytes": 10973,
+            "sha256": "c48cf68e2d954ff2c9f4de30ef209c8a4d583eb1d28ff99ed99e771128e6d5f5"
+          },
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 36399,
+            "sha256": "d58e52950de879b61f09c17648bd53e7187e9d467d65a5e4675e65e01819b781"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/tbm_acquisition.cpp",
+            "bytes": 23483,
+            "sha256": "3ee6dc3e68cc9b63f2a46adc7d2a55d785fbe4bde5c5eebb88b719780ecca59e"
+          },
+          {
+            "path": "src/tbm_area.cpp",
+            "bytes": 19315,
+            "sha256": "24895dd306a65a72884a067a44657b815497f3c55dc2b43421b07bb917024f42"
+          },
+          {
+            "path": "src/tbm_support.cpp",
+            "bytes": 63539,
+            "sha256": "ef76d34ffbd8980909fa2d724a78052171ab95c9d12694af12d2b6351d8b87fa"
+          },
+          {
+            "path": "src/layer_portal_work.cpp",
+            "bytes": 57638,
+            "sha256": "c379ed4749c3b16d6a2a09e38f23c40649be3d1d547cdb3feba9c699c66767c1"
+          },
+          {
+            "path": "src/settings.cpp",
+            "bytes": 74684,
+            "sha256": "be5cccd8f009c64e12b2e16c236d17942d951c23ee2c945bae31adefecdeddf9"
+          },
+          {
+            "path": "src/settings_cmd.h",
+            "bytes": 1251,
+            "sha256": "4fb278fbd73cd83a6ae18c6013c84500cc6560d6e1aa68deaef085fe534494da"
+          }
+        ],
+        "remaining": "6DCC actual irregular paid work;6DCD useful final conversion;6DD native recovery/files;6DE genuine S1/S2 publication."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-181947-b858c67205/saves/irregular-ready.sav",
+        "bytes": 45180,
+        "sha256": "d42daf5a449dbc0142660bae5f071e3b6dae7b153700bd1ea9ddd1cf953c6da7"
+      },
+      "ready": {
+        "project": 2,
+        "job": 2,
+        "cutter": 38,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25570,
+        "last": 25830,
+        "bends": 7,
+        "attempts": 4,
+        "original_forbid90": 1,
+        "forbid90": 1,
+        "opening_cash": 264341,
+        "cash": 264251,
+        "loan": 300000,
+        "tick": 1275657,
+        "solid": 31640,
+        "excavating": 40,
+        "excavated": 72
+      },
+      "quote": {
+        "attempt": 3,
+        "first": 25570,
+        "last": 25830,
+        "ok": 1,
+        "error": 65535,
+        "failure": 4294967295,
+        "purchase": 0,
+        "earth": 120,
+        "rock": 240,
+        "support": 40,
+        "forbid90": 1
+      },
+      "project": {
+        "id": 2,
+        "job": 2,
+        "company": 0,
+        "cutter": 38,
+        "model": 0,
+        "parts": 2,
+        "part0": 38,
+        "part1": 39,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 8671,
+        "exchange": 8671,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 2,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 0,
+        "anchor": 25055,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 15,
+        "authorized": 61,
+        "routes": 13
+      },
+      "assignment": {
+        "id": 2,
+        "project": 2,
+        "hauler": 33,
+        "bay": 8671,
+        "set": 4,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 4,
+        "project": 2,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 4
+      },
+      "geology": {
+        "header": "0002000100000080000000800000000c000020000000000c00000030010001198e6743cf223c36",
+        "width": 128,
+        "height": 128,
+        "hardness_version": 1,
+        "hardness_seed": 1841522838576708662,
+        "layers": {
+          "underground": {
+            "solid": 16308,
+            "excavating": 40,
+            "excavated": 36,
+            "reserved": 0
+          },
+          "deep": {
+            "solid": 16348,
+            "excavating": 0,
+            "excavated": 36,
+            "reserved": 0
+          }
+        }
+      }
+    },
+    "RelWithDebInfo": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-182428-ab0958d4f2/reports/normal-irregular-RelWithDebInfo.json",
+        "bytes": 6295,
+        "sha256": "ac9a2b96b2c33d307c7ab0d1a987b78485f09d1f15cc314ba13c4a42f5256aa8"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCB;canonical irregular proposal reuses actual paid native participants;no new cut",
+        "configuration": "RelWithDebInfo",
+        "classification": "normal_start_irregular_readiness",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_irregular.py",
+          "bytes": 7190,
+          "sha256": "c4b74061610969241abc5df0413f6ee59e559a55c5115aec71e198cef355d981"
+        },
+        "binary": {
+          "path": "build/RelWithDebInfo/openttd_test.exe",
+          "bytes": 37330432,
+          "sha256": "3af6f7a93088a6e05a4d598f7fef5b5bb85b7f1056747810189f698e71b0cab8"
+        },
+        "deep_work_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/deep-work-verification.json",
+          "bytes": 1421664,
+          "sha256": "bbfd942ca5a9c0057aa4d21d5f984d54f310556d7f379e607f39e885b27c90a0"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142954-e7679b13e9/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "1b2bda1a96cba833f7e1e847bc99c57ce53f3447fb761a94f749aede7540680e"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-deep-work/20261019-180453-c39cf1b59e/saves/boring-progress.sav",
+          "bytes": 43724,
+          "sha256": "eba997fc5b351c932f9f67998180fff85f1dd86c780c9db5fb485b7946d6cd6b"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-182428-ab0958d4f2/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-182428-ab0958d4f2/main/scripts/game_start.scr",
+          "bytes": 107,
+          "sha256": "7a6fec4024e5b2fa2f49ebb4f9e70d8abf004ff7ca7ab3a67e405c477e362d6f"
+        },
+        "ready": {
+          "project": 2,
+          "job": 2,
+          "cutter": 48,
+          "hauler": 33,
+          "portal": 8671,
+          "origin": 10,
+          "depot": 7391,
+          "first": 25570,
+          "last": 25830,
+          "bends": 7,
+          "attempts": 3,
+          "original_forbid90": 1,
+          "forbid90": 1,
+          "opening_cash": 266957,
+          "cash": 266882,
+          "loan": 300000,
+          "tick": 1268022,
+          "solid": 31640,
+          "excavating": 40,
+          "excavated": 72
+        },
+        "quotes": [
+          {
+            "attempt": 0,
+            "first": 25957,
+            "last": 26475,
+            "ok": 0,
+            "error": 4265,
+            "failure": 26469,
+            "purchase": 0,
+            "earth": 0,
+            "rock": 0,
+            "support": 0,
+            "forbid90": 1
+          },
+          {
+            "attempt": 1,
+            "first": 25570,
+            "last": 25830,
+            "ok": 0,
+            "error": 4267,
+            "failure": 25439,
+            "purchase": 0,
+            "earth": 120,
+            "rock": 240,
+            "support": 40,
+            "forbid90": 1
+          },
+          {
+            "attempt": 2,
+            "first": 25570,
+            "last": 25830,
+            "ok": 1,
+            "error": 65535,
+            "failure": 4294967295,
+            "purchase": 0,
+            "earth": 120,
+            "rock": 240,
+            "support": 40,
+            "forbid90": 1
+          }
+        ],
+        "invoices": [
+          {
+            "action": "retire_settled_deep",
+            "cost": 0,
+            "cash": 266957
+          },
+          {
+            "action": "reseal_standard_source",
+            "cost": 0,
+            "cash": 266957
+          },
+          {
+            "action": "irregular_support_piece",
+            "cost": 75,
+            "cash": 266882
+          },
+          {
+            "action": "reuse_standard",
+            "cost": 0,
+            "cash": 266882
+          },
+          {
+            "action": "irregular_assign",
+            "cost": 0,
+            "cash": 266882
+          },
+          {
+            "action": "pause_irregular",
+            "cost": 0,
+            "cash": 266882
+          }
+        ],
+        "capital_paid": 75,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-182428-ab0958d4f2/saves/irregular-ready.sav",
+            "bytes": 44660,
+            "sha256": "ce5775ebf0a27f2508862f17008b4b6ee78eaff2ac3647cd3469266e6ff61e1f"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-182428-ab0958d4f2/saves/irregular-ready-repeat.sav",
+            "bytes": 44660,
+            "sha256": "ce5775ebf0a27f2508862f17008b4b6ee78eaff2ac3647cd3469266e6ff61e1f"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-irregular/20261019-182428-ab0958d4f2/irregular-RelWithDebInfo.log",
+            "bytes": 1287,
+            "sha256": "70adf642570dba0396105d256cceeca3b9be93e7c405f95ce3068dcc4d3377eb"
+          },
+          "assertions": 66,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_irregular_fixture.h",
+            "bytes": 10973,
+            "sha256": "c48cf68e2d954ff2c9f4de30ef209c8a4d583eb1d28ff99ed99e771128e6d5f5"
+          },
+          {
+            "path": "src/tests/normal_ground_machinery_fixture.h",
+            "bytes": 9567,
+            "sha256": "25d55a4bfd5f594e761281107aa1783c1bde766496a8fb18d28e947cb344f956"
+          },
+          {
+            "path": "src/tests/tbm_reuse.cpp",
+            "bytes": 36399,
+            "sha256": "d58e52950de879b61f09c17648bd53e7187e9d467d65a5e4675e65e01819b781"
+          },
+          {
+            "path": "src/tbm_commission.cpp",
+            "bytes": 16919,
+            "sha256": "c7f016835e661e631d67d04b12e8ff451c3119bd44c68e1c027ad4482f7808bb"
+          },
+          {
+            "path": "src/tbm_acquisition.cpp",
+            "bytes": 23483,
+            "sha256": "3ee6dc3e68cc9b63f2a46adc7d2a55d785fbe4bde5c5eebb88b719780ecca59e"
+          },
+          {
+            "path": "src/tbm_area.cpp",
+            "bytes": 19315,
+            "sha256": "24895dd306a65a72884a067a44657b815497f3c55dc2b43421b07bb917024f42"
+          },
+          {
+            "path": "src/tbm_support.cpp",
+            "bytes": 63539,
+            "sha256": "ef76d34ffbd8980909fa2d724a78052171ab95c9d12694af12d2b6351d8b87fa"
+          },
+          {
+            "path": "src/layer_portal_work.cpp",
+            "bytes": 57638,
+            "sha256": "c379ed4749c3b16d6a2a09e38f23c40649be3d1d547cdb3feba9c699c66767c1"
+          },
+          {
+            "path": "src/settings.cpp",
+            "bytes": 74684,
+            "sha256": "be5cccd8f009c64e12b2e16c236d17942d951c23ee2c945bae31adefecdeddf9"
+          },
+          {
+            "path": "src/settings_cmd.h",
+            "bytes": 1251,
+            "sha256": "4fb278fbd73cd83a6ae18c6013c84500cc6560d6e1aa68deaef085fe534494da"
+          }
+        ],
+        "remaining": "6DCC actual irregular paid work;6DCD useful final conversion;6DD native recovery/files;6DE genuine S1/S2 publication."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-182428-ab0958d4f2/saves/irregular-ready.sav",
+        "bytes": 44660,
+        "sha256": "ce5775ebf0a27f2508862f17008b4b6ee78eaff2ac3647cd3469266e6ff61e1f"
+      },
+      "ready": {
+        "project": 2,
+        "job": 2,
+        "cutter": 48,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25570,
+        "last": 25830,
+        "bends": 7,
+        "attempts": 3,
+        "original_forbid90": 1,
+        "forbid90": 1,
+        "opening_cash": 266957,
+        "cash": 266882,
+        "loan": 300000,
+        "tick": 1268022,
+        "solid": 31640,
+        "excavating": 40,
+        "excavated": 72
+      },
+      "quote": {
+        "attempt": 2,
+        "first": 25570,
+        "last": 25830,
+        "ok": 1,
+        "error": 65535,
+        "failure": 4294967295,
+        "purchase": 0,
+        "earth": 120,
+        "rock": 240,
+        "support": 40,
+        "forbid90": 1
+      },
+      "project": {
+        "id": 2,
+        "job": 2,
+        "company": 0,
+        "cutter": 48,
+        "model": 0,
+        "parts": 2,
+        "part0": 48,
+        "part1": 49,
+        "part2": 1048575,
+        "part3": 1048575,
+        "heading": 3,
+        "origin": 10,
+        "portal": 8671,
+        "exchange": 8671,
+        "phase": 0,
+        "blocked": 17,
+        "phase_ticks": 0,
+        "work_remainder": 0,
+        "active_ticks": 0,
+        "idle_ticks": 0,
+        "cost_remainder": 0,
+        "revision": 2
+      },
+      "job": {
+        "id": 2,
+        "company": 0,
+        "cutter": 1048575,
+        "origin": 10,
+        "model": 0,
+        "anchor": 25055,
+        "state": 1,
+        "reason": 0,
+        "cursor": 0,
+        "partial": 0,
+        "revision": 1,
+        "earth": 0,
+        "rock": 0,
+        "cost": 0,
+        "requested": 15,
+        "authorized": 61,
+        "routes": 13
+      },
+      "assignment": {
+        "id": 2,
+        "project": 2,
+        "hauler": 33,
+        "bay": 8671,
+        "set": 4,
+        "phase": 0,
+        "wait": 0,
+        "phase_ticks": 0,
+        "exchanges": 0,
+        "revision": 1
+      },
+      "set": {
+        "id": 4,
+        "project": 2,
+        "state": 3,
+        "visited": 0,
+        "revision": 1,
+        "wagons": 4
+      },
+      "geology": {
+        "header": "0002000100000080000000800000000c000020000000000c00000030010001198e6743cf223c36",
+        "width": 128,
+        "height": 128,
+        "hardness_version": 1,
+        "hardness_seed": 1841522838576708662,
+        "layers": {
+          "underground": {
+            "solid": 16308,
+            "excavating": 40,
+            "excavated": 36,
+            "reserved": 0
+          },
+          "deep": {
+            "solid": 16348,
+            "excavating": 0,
+            "excavated": 36,
+            "reserved": 0
+          }
+        }
+      }
+    }
+  },
+  "classification": "normal_start_irregular_readiness",
+  "bootstrap_claim": false,
+  "native_cases": 2,
+  "native_assertions": 137,
+  "pure_pairs": 2,
+  "complete_chunks_equal": 126,
+  "ignored_chunks": [],
+  "remaining": "6DCC actual irregular paid work;6DCD useful final conversion;6DD native recovery/files;6DE genuine S1/S2 publication."
+}

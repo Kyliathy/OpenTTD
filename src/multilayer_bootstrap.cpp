@@ -4,22 +4,31 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_bootstrap.cpp First-build ledgers with paid supplies before Deep technology. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
+/** @file multilayer_bootstrap.cpp First-build ledgers with paid supplies before Deep technology. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md; r2mlvs18-geothermal-energy-and-industry.md Groups8C/8E (dated generator terms). */
 
 #include "stdafx.h"
 #include "multilayer_bootstrap.h"
+#include "geothermal_generator_geometry.h"
 
 #include "safeguards.h"
 
 static constexpr MultiLayerRecipeCargo _collector_inputs[] = {{CargoLabel{"STEL"}, 8}, {CargoLabel{"RFMT"}, 4}, {CargoLabel{"ELEC"}, 2}};
 static constexpr MultiLayerRecipeCargo _powerhouse_inputs[] = {{CargoLabel{"STEL"}, 12}, {CargoLabel{"RFMT"}, 8}, {CargoLabel{"ELEC"}, 4}, {CargoLabel{"BATY"}, 2}};
 static constexpr MultiLayerRecipeCargo _riser_inputs[] = {{CargoLabel{"STEL"}, 4}, {CargoLabel{"RFMT"}, 4}, {CargoLabel{"ELEC"}, 2}, {CargoLabel{"BATY"}, 2}};
+static constexpr MultiLayerRecipeCargo _magma_inputs[] = {{CargoLabel{"STEL"}, 24}, {CargoLabel{"RFMT"}, 16}, {CargoLabel{"ELEC"}, 8}, {CargoLabel{"BATY"}, 4}};
 
 /** Frozen per-facility split of the existing first-geothermal480,000 capital/material ledger. */
 static const MultiLayerGeothermalConstruction _geothermal_construction[] = {
 	{MultiLayerGeothermalConstructionKind::Collector, 3, 3, 180000, 296, TimerGameCalendar::Year{1980}, _collector_inputs},
 	{MultiLayerGeothermalConstructionKind::Powerhouse, 4, 4, 180000, 592, TimerGameCalendar::Year{1980}, _powerhouse_inputs},
 	{MultiLayerGeothermalConstructionKind::Riser, 2, 2, 120000, 296, TimerGameCalendar::Year{1980}, _riser_inputs, 200000},
+	{MultiLayerGeothermalConstructionKind::MagmaPowerhouse, 4, 4, 360000, 888, TimerGameCalendar::Year{2000}, _magma_inputs},
+};
+
+/** Frozen dated operating models share the same original thermal budget; no metadata query creates source, inventory or native identities. */
+static constexpr MultiLayerGeothermalGeneratorTerms _geothermal_generator_terms[] = {
+	{GeothermalGeneratorModel::VentTap, MultiLayerGeothermalConstructionKind::Powerhouse, 1000000, 150000, 15, 20},
+	{GeothermalGeneratorModel::MagmaLoop, MultiLayerGeothermalConstructionKind::MagmaPowerhouse, 1000000, 350000, 35, 35},
 };
 
 /** @copydoc GetMultiLayerGeothermalConstruction */
@@ -27,6 +36,20 @@ const MultiLayerGeothermalConstruction *GetMultiLayerGeothermalConstruction(Mult
 {
 	const auto found = std::ranges::find(_geothermal_construction, kind, &MultiLayerGeothermalConstruction::kind);
 	return found == std::end(_geothermal_construction) ? nullptr : &*found;
+}
+
+/** @copydoc GetMultiLayerGeothermalGeneratorTerms */
+const MultiLayerGeothermalGeneratorTerms *GetMultiLayerGeothermalGeneratorTerms(GeothermalGeneratorModel model)
+{
+	const auto found = std::ranges::find(_geothermal_generator_terms, model, &MultiLayerGeothermalGeneratorTerms::model);
+	return found == std::end(_geothermal_generator_terms) ? nullptr : &*found;
+}
+
+/** @copydoc GetMultiLayerGeothermalGeneratorModel */
+std::optional<GeothermalGeneratorModel> GetMultiLayerGeothermalGeneratorModel(MultiLayerGeothermalConstructionKind construction)
+{
+	const auto found = std::ranges::find(_geothermal_generator_terms, construction, &MultiLayerGeothermalGeneratorTerms::construction);
+	return found == std::end(_geothermal_generator_terms) ? std::nullopt : std::optional{found->model};
 }
 
 static const MultiLayerSurfaceSupply _surface_supplies[] = {

@@ -232,6 +232,13 @@ UtilityMutationReceipt ConsumeGeothermalHeat(UtilityGrantID grant, uint64_t quan
 	GeothermalRoutedParticipant routed(participant); return CommitUtilityMutation(proposal, &routed);
 }
 
+/** @copydoc ConvertGeothermalHeat */
+UtilityHeatConversionReceipt ConvertGeothermalHeat(const UtilityHeatConversionProposal &proposal, GeothermalHeatParticipant &participant)
+{
+	GeothermalRoutedParticipant routed(participant);
+	return CommitUtilityHeatConversion(proposal, routed);
+}
+
 /** @copydoc CaptureGeothermalHeatConsumers */
 std::vector<GeothermalHeatConsumerBinding> CaptureGeothermalHeatConsumers()
 {

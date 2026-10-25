@@ -1,5 +1,7 @@
 # R2MLVS15 - Savegame, Determinism and Lifecycle
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) binds writer441, explicit original capabilities, tagged supply/custody,128-family load/reload and actual peer snapshots. Both original lineages remain preserved; current qualification does not require archived executables. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

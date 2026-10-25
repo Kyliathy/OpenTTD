@@ -1,6 +1,6 @@
 # R2MLVS17 - Underground Transport Tubes
 
-Storage/recovery: [historical debugging architecture](../../architecture/archi-historical-debug.md) and [R2FC2](r2fc2-file-cleanup3.md); these do not resume paused Tube feature work.
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) integrates the five dated capsule consumers, native terminal/fleet/provider controls, real freight/recovery and complete runtime artwork. A's original provisional checkpoint remains distinct from qualified donor-derived worlds. Storage/recovery stays with the [historical debugging architecture](../../architecture/archi-historical-debug.md) and [R2FC2](r2fc2-file-cleanup3.md); no temporary merge pause remains active.
 
 ## Global Mandatory Reading
 

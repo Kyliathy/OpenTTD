@@ -1,4 +1,4 @@
-"""Rebuild bounded M1 source/packing candidates without publishing source status.
+"""Rebuild bounded source/packing candidates and join native GRF bytes without publishing.
 
 @file regenerate_art_sources.py Actual original converters supply every candidate.
 @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Group17.
@@ -14,7 +14,10 @@ import importlib
 import json
 import os
 from pathlib import Path
+import shutil
+import subprocess
 import sys
+import uuid
 
 import PIL
 import convert_m1_art as base
@@ -294,6 +297,125 @@ def produce(stage, context, source_manifests=None, dependencies=None):
                 source_files=len(before), publishes_source=False)
 
 
+def candidate_encoder_tools():
+    """Discover actual encoder tools through PATH and enforce original graphics pins.
+
+    @return Actual executable paths, versions and content hashes; no machine path is retained in source.
+    """
+    scope = check_tools()
+    tools = {}
+    # Actual binary probes, rather than old build-cache strings, establish the
+    # encoder pair used for these bytes. Missing tools name their exact supplier.
+    for name, arguments in (("cmake", ["--version"]), ("grfcodec", ["-v"]),
+                            ("nforenum", ["--version"]), ("grfid", ["--version"])):
+        executable = shutil.which(name)
+        if executable is None:
+            raise ValueError("candidate GRF requires PATH tool: " + name)
+        probe = subprocess.run([executable, *arguments], capture_output=True, text=True, timeout=10)
+        version = (probe.stdout + probe.stderr).strip()
+        # GRFID has no consistent version option; its paired binary identity is
+        # recorded, while the real checksum invocation must succeed below.
+        if name in ("grfcodec", "nforenum") and scope["toolchain"][name] not in version:
+            raise ValueError("candidate encoder differs from pinned version: " + name)
+        path = Path(executable).resolve()
+        tools[name] = {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "version": version}
+    return tools
+
+
+def produce_candidate_grf(context, manifests):
+    """Join five current packing suppliers using the existing CMake GRF owner.
+
+    @param context Explicit disposable candidate invocation, never canonical media.
+    @param manifests Exact M1/Space/orbital/launch/Ground packing report identities from this run.
+    @return Source/tool/output identities and two independently encoded equal candidates.
+    """
+    families = ("m1", "space", "orbital", "launch", "ground")
+    if set(manifests) != set(families):
+        raise ValueError("candidate GRF requires exactly five current packing suppliers")
+    tools = candidate_encoder_tools()
+    before = source_snapshot("ground")
+    native = base.ROOT / "media/baseset/openttd"
+    protected = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in native.iterdir() if path.suffix in (".png", ".nfo")}
+    protected.update({path: hashlib.sha256(path.read_bytes()).hexdigest() for path in
+                      (base.ROOT / "media/baseset/openttd.grf", base.ROOT / "media/baseset/openttd.grf.hash")})
+    selected, suppliers = {}, {}
+    # Every family supplies its current PNG/NFO/header under the selected run.
+    # Reports cannot substitute canonical media or another run's old products.
+    for family in families:
+        reference = manifests[family]
+        path = contained(base.ROOT / reference["path"], base.ROOT / "mlm/reviews")
+        parts = path.relative_to(base.ROOT / "mlm/reviews").parts
+        if len(parts) != 5 or parts[1] != family + "-derived-inputs" or parts[2] != context.run_id or parts[3] != "reports":
+            raise ValueError("candidate packing supplier has a foreign family/run/role: " + family)
+        if identity(path) != reference:
+            raise ValueError("candidate packing supplier changed: " + family)
+        document = json.loads(path.read_text(encoding="utf-8"))
+        scope = json.loads((base.ROOT / f"media/multilayer/{family}-pack-scope.json").read_text(encoding="utf-8"))
+        suppliers[family] = dict(manifest=reference, files={})
+        for role in ("png", "nfo", "header"):
+            candidate = contained(path.parent.parent / "data" / Path(scope[role]).name, path.parent.parent / "data")
+            actual = identity(candidate)
+            recorded = document.get(role)
+            if recorded is None:
+                recorded = next((row for row in document["outputs"] if row["path"] == actual["path"]), None)
+            if recorded is None or recorded["sha256"] != actual["sha256"]:
+                raise ValueError("candidate packing output identity changed: " + family + "/" + role)
+            suppliers[family]["files"][role] = actual
+            if role != "header":
+                selected[candidate.name] = candidate
+    encoded = []
+    context.data.mkdir(parents=True, exist_ok=True)
+    try:
+        # Both encodes use fresh isolated workspaces and the same original CMake
+        # script. No cached GRF, decoder output or canonical destination participates.
+        for repeat in range(2):
+            workspace = context.data / ("encoder-" + str(repeat + 1) + "-" + uuid.uuid4().hex)
+            source = workspace / "openttd"
+            sprites = workspace / "sprites"
+            source.mkdir(parents=True); sprites.mkdir()
+            for original in protected:
+                if original.parent != native:
+                    continue
+                actual = selected.get(original.name, original)
+                shutil.copyfile(actual, source / original.name)
+                if original.suffix == ".png":
+                    shutil.copyfile(actual, sprites / original.name)
+            output = workspace / "candidate.grf"
+            command = [tools["cmake"]["path"], "-DGRF_SOURCE_FOLDER=" + str(source), "-DGRF_BINARY_FILE=" + str(output),
+                       *["-D" + name.upper() + "_EXECUTABLE=" + tools[name]["path"] for name in ("grfcodec", "nforenum", "grfid")],
+                       "-P", str(base.ROOT / "cmake/scripts/CreateGRF.cmake")]
+            terminal = context.evidence / f"encoder-{repeat + 1}.txt"
+            terminal.parent.mkdir(parents=True, exist_ok=True)
+            with terminal.open("w", encoding="utf-8") as stream:
+                child = subprocess.run(command, cwd=workspace, stdout=stream, stderr=subprocess.STDOUT, timeout=110)
+            if child.returncode != 0:
+                raise ValueError("candidate CMake GRF encoder failed; see " + str(terminal))
+            encoded.append(dict(grf=identity(output), checksum=identity(Path(str(output) + ".hash")), terminal=identity(terminal)))
+        if encoded[0]["grf"]["sha256"] != encoded[1]["grf"]["sha256"] or encoded[0]["checksum"]["sha256"] != encoded[1]["checksum"]["sha256"]:
+            raise ValueError("repeated candidate GRF/hash bytes differ")
+        # This merge changes native ownership, not selected pixels or offsets.
+        # Original shipping bytes therefore remain an independent exact check.
+        if encoded[0]["grf"]["sha256"] != protected[base.ROOT / "media/baseset/openttd.grf"]:
+            raise ValueError("candidate GRF differs from independently retained shipping bytes")
+        for role, name in (("grf", "openttd.grf"), ("checksum", "openttd.grf.hash")):
+            shutil.copyfile(base.ROOT / encoded[0][role]["path"], context.data / name)
+        report = dict(_documentation=__doc__, schema_version=1, kind="selected_merged_art_candidates", run_id=context.run_id,
+                      suppliers=suppliers, tools=tools, encoder=identity(base.ROOT / "cmake/scripts/CreateGRF.cmake"), repeats=encoded,
+                      candidate=identity(context.data / "openttd.grf"), checksum=identity(context.data / "openttd.grf.hash"),
+                      protected_files=len(before) + len(protected), deterministic=True, publishes_source=False, native_proof=False,
+                      checks=["all five existing source/packing suppliers are current and exact",
+                              "existing CMake encoder produced two identical candidate GRF/hash pairs",
+                              "independent original shipping GRF bytes match; originals and canonical media remain unchanged"])
+        write_document(context.reports / "candidates.json", report)
+    finally:
+        # Success and failure preserve authored media, public status, canonical
+        # shipping art and scope headers alike; disposable encoding grants no publication.
+        for path, expected in {**before, **protected}.items():
+            if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+                raise ValueError("candidate encoding changed immutable input: " + str(path))
+    return report
+
+
 def execute_stage(request, root):
     """Adapt the existing selected recipe executor to original M1 source producers.
 
@@ -307,6 +429,12 @@ def execute_stage(request, root):
     if request["publishes_source"] is not False or request["paid_work_authorized"] is not False:
         raise ValueError("source recipe cannot publish or perform paid work")
     check_tools()
+    if request["recipe"] == "merged-art-candidates":
+        if request["stage"] == "prepare":
+            candidate_encoder_tools()
+            return dict(checks=["pinned existing encoder tools and explicit current packing suppliers admitted"])
+        context = RunContext(root, request["feature"], request["scenario"], request["run_id"])
+        return produce_candidate_grf(context, {row["as"]: request["inputs"][row["as"]] for row in request["declaration"]["requires"]})
     if request["stage"] == "prepare":
         return dict(checks=["original pinned encoders and explicit selected source roots verified"])
     stage = "packing" if request["recipe"] == "m1-derived-inputs" else request["declaration"]["original_parameters"]["stage"]

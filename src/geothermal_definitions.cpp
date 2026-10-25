@@ -5,13 +5,14 @@
  */
 
 /**
- * @file geothermal_definitions.cpp Canonical collector/riser IIDS/TIDS and explicit input-only capability before paid native construction.
- * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups1B/5B
+ * @file geothermal_definitions.cpp Canonical collector/riser/powerhouse IIDS/TIDS and explicit input-only capability before paid native construction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups1B/5B/8C/8E
  */
 
 #include "stdafx.h"
 #include "geothermal.h"
 #include "geothermal_riser.h"
+#include "geothermal_generator.h"
 #include "multilayer_industry.h"
 #include "multilayer_content_identity.h"
 #include "industrytype.h"
@@ -116,8 +117,8 @@ const LayerIndustryCapability *GetGeothermalCollectorIndustryCapability(Industry
 	return &capability;
 }
 
-/** @param activated Exact admitted package. @param kind Frozen construction family. @param local_id Reserved native industry/tile family. @param name Localized facility name. @return Complete canonical definition registration or unchanged preflight refusal; no actual facility is funded. */
-static bool InitialiseGeothermalConstructionDefinition(const GRFConfigList &activated, MultiLayerGeothermalConstructionKind kind, uint16_t local_id, StringID name)
+/** @param activated Exact admitted package. @param kind Frozen construction family. @param local_id Reserved native industry/tile family. @param name Localized facility name. @param execute False validates the complete family's actual shared capacity/occupants without any mapping/spec write. @return Complete canonical definition registration or unchanged preflight refusal; no actual facility is funded. */
+static bool InitialiseGeothermalConstructionDefinition(const GRFConfigList &activated, MultiLayerGeothermalConstructionKind kind, uint16_t local_id, StringID name, bool execute = true)
 {
 	const auto &required = *GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content;
 	if (CheckMultiLayerContentIdentity(required, activated) != MultiLayerContentIdentityError::None) return false;
@@ -153,6 +154,7 @@ static bool InitialiseGeothermalConstructionDefinition(const GRFConfigList &acti
 	if (original.layouts.empty()) return false;
 	const auto &art = original.layouts.front();
 	if (art.empty()) return false;
+	if (!execute) return true;
 	IndustryTileLayout layout;
 	// Native tile definitions expose exactly the real accepted input meanings;
 	// inherited Surface smoke/farms/production and automatic graphics effects
@@ -199,6 +201,62 @@ bool InitialiseGeothermalCollectorDefinitions(const GRFConfigList &activated)
 bool InitialiseGeothermalRiserDefinitions(const GRFConfigList &activated)
 {
 	return InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::Riser, GEOTHERMAL_RISER_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_RISER);
+}
+
+/** @copydoc InitialiseGeothermalGeneratorDefinitions */
+bool InitialiseGeothermalGeneratorDefinitions(const GRFConfigList &activated)
+{
+	const std::array<uint16_t, 2> locals{GEOTHERMAL_POWERHOUSE_LOCAL_ID, GEOTHERMAL_MAGMA_LOCAL_ID};
+	const std::array models{GeothermalGeneratorModel::VentTap, GeothermalGeneratorModel::MagmaLoop};
+	std::vector<uint16_t> tiles;
+	// Both complete dated families must fit together. Independent one-family
+	// checks would wrongly accept the same final free slot twice and leave a
+	// partial registration or overwrite saved mappings after the first write.
+	for (size_t index = 0; index < locals.size(); ++index) {
+		const auto *operating = GetMultiLayerGeothermalGeneratorTerms(models[index]);
+		if (operating == nullptr) return false;
+		const auto *terms = GetMultiLayerGeothermalConstruction(operating->construction);
+		const auto geometry = GetGeothermalGeneratorGeometry(models[index]);
+		// Changed content cannot stretch already frozen source geometry or let
+		// a smaller combined capacity estimate authorize a partial larger family.
+		if (terms == nullptr || !geometry.has_value() || terms->width != geometry->width || terms->height != geometry->height) return false;
+		for (uint16_t position = 0; position < terms->width * terms->height; ++position) tiles.push_back(locals[index] + position);
+	}
+	if (!HasGeothermalMappingCapacity(_industry_mngr, locals, IT_INVALID) || !HasGeothermalMappingCapacity(_industile_mngr, tiles, INVALID_INDUSTRYTILE) ||
+		!InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::Powerhouse, GEOTHERMAL_POWERHOUSE_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_POWERHOUSE, false) ||
+		!InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::MagmaPowerhouse, GEOTHERMAL_MAGMA_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_MAGMA, false)) return false;
+	return InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::Powerhouse, GEOTHERMAL_POWERHOUSE_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_POWERHOUSE) &&
+		InitialiseGeothermalConstructionDefinition(activated, MultiLayerGeothermalConstructionKind::MagmaPowerhouse, GEOTHERMAL_MAGMA_LOCAL_ID, STR_INDUSTRY_NAME_GEOTHERMAL_MAGMA);
+}
+
+/** @copydoc IsGeothermalGeneratorDefinition */
+bool IsGeothermalGeneratorDefinition(IndustryType type)
+{
+	// The two original IIDS/TIDS families retain distinct immutable identities;
+	// a generic industry or a first-model mapping cannot impersonate the other.
+	return IsGeothermalConstructionDefinition(type, MultiLayerGeothermalConstructionKind::Powerhouse, GEOTHERMAL_POWERHOUSE_LOCAL_ID) ||
+		IsGeothermalConstructionDefinition(type, MultiLayerGeothermalConstructionKind::MagmaPowerhouse, GEOTHERMAL_MAGMA_LOCAL_ID);
+}
+
+/** @copydoc GetGeothermalGeneratorIndustryType */
+IndustryType GetGeothermalGeneratorIndustryType(GeothermalGeneratorModel model)
+{
+	const auto *terms = GetMultiLayerGeothermalGeneratorTerms(model);
+	if (terms == nullptr) return IT_INVALID;
+	const auto local = model == GeothermalGeneratorModel::VentTap ? GEOTHERMAL_POWERHOUSE_LOCAL_ID : GEOTHERMAL_MAGMA_LOCAL_ID;
+	const auto type = _industry_mngr.GetID(local, GeothermalDefinitionGrfID());
+	return IsGeothermalConstructionDefinition(type, terms->construction, local) ? type : IT_INVALID;
+}
+
+/** @copydoc GetGeothermalGeneratorIndustryCapability */
+const LayerIndustryCapability *GetGeothermalGeneratorIndustryCapability(IndustryType type)
+{
+	if (!IsGeothermalGeneratorDefinition(type)) return nullptr;
+	static const LayerIndustryCapability capability{{MapLayer::DeepUnderground}, CT_INVALID, {},
+		GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::Powerhouse)->introduction_year, 0, 1, "facility.vent-powerhouse"};
+	static const LayerIndustryCapability magma{{MapLayer::DeepUnderground}, CT_INVALID, {},
+		GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind::MagmaPowerhouse)->introduction_year, 0, 1, "facility.magma-powerhouse"};
+	return type == GetGeothermalGeneratorIndustryType(GeothermalGeneratorModel::MagmaLoop) ? &magma : &capability;
 }
 
 /** @copydoc GetGeothermalRiserIndustryType */

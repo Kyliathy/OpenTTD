@@ -11,7 +11,10 @@
  */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
 #include "transport_tube.h"
+#include "transport_tube_geothermal.h"
+#include "utility_power_transfer.h"
 #include "multilayer_bootstrap.h"
 #include "company_base.h"
 #include "company_func.h"
@@ -132,6 +135,7 @@ TubePowerResult ConnectTubeExternalPower(TileIndex portal, TileIndex interchange
 		_tube_power.reserve(_tube_power.size() + 1); // Finish fallible physical storage acquisition before ledger identity publication.
 		if (RegisterUtilityPowerProducer(connection.owner, GetTileLayer(portal), UtilityGenerationKind::External) != source) return {TubePowerError::Ledger};
 		_tube_power.push_back(std::move(connection));
+		ResetTubeConduitArtCache();
 		SubtractMoneyFromCompany(_current_company, CommandCost(ExpensesType::Other, Money{terms.lease_per_day}));
 	}
 	return {TubePowerError::None, *source};
@@ -245,11 +249,15 @@ TubePowerError CloseTubeExternalPower(UtilityProducerID producer, bool execute)
 /** @copydoc CaptureTubePowerConnections */
 std::vector<TubePowerConnection> CaptureTubePowerConnections() { return _tube_power; }
 
+/** @copydoc GetTubePowerConnections */
+std::span<const TubePowerConnection> GetTubePowerConnections() { return _tube_power; }
+
 /** @copydoc ResetTubePowerState */
 void ResetTubePowerState()
 {
 	_tube_power.clear(); _pending_tube_power.reset(); _tube_power_committing = false;
 	ResetTubePowerVehicles();
+	ResetTubeGeothermalPowerState();
 	ResetTubePowerTopology();
 	ResetTubePowerLoadStaging();
 }
@@ -312,7 +320,10 @@ bool AcceptLoadedTubePowerConnections()
 {
 	if (!_pending_tube_power.has_value()) return true;
 	if (ValidateTubePowerConnections(*_pending_tube_power, GetCurrentMultiLayerProfileSelection()) != TubePowerError::None) return false;
-	_tube_power = std::move(*_pending_tube_power); _pending_tube_power.reset(); return true;
+	// Original producer identity fixes canonical physical history; table row
+	// order cannot change publication priority, captures or synchronized hashes.
+	std::ranges::sort(*_pending_tube_power, {}, &TubePowerConnection::producer);
+	_tube_power = std::move(*_pending_tube_power); _pending_tube_power.reset(); ResetTubeConduitArtCache(); return true;
 }
 
 /** @copydoc ComputeTubePowerDigest */
@@ -324,8 +335,8 @@ uint64_t ComputeTubePowerDigest()
 		for (uint byte = 0; byte < 8; ++byte) { hash ^= value & 0xFF; hash *= 1099511628211ULL; value >>= 8; }
 	};
 	field(_tube_power.size());
-	// Saved source ordering and every invoice/path field distinguish physical
-	// contract history from a different rendered or reconstructed power network.
+	// Stable producer identity order and every original invoice/path field
+	// distinguish physical history from another rendered or rebuilt network.
 	for (const auto &row : _tube_power) {
 		field(row.producer.base()); field(row.owner.base()); field(row.portal.base()); field(row.interchange.base());
 		field(row.portal_revision); field(static_cast<uint32_t>(row.lease_day)); field(row.usage_remainder_j); field(row.invoiced_money); field(row.active);
@@ -370,13 +381,17 @@ void InvalidateTubePowerForPortal(TileIndex portal)
 		const auto changed = GetLayerPortalPairKey(portal);
 		if (pair.has_value() && changed.has_value() && pair == changed) RetirePhysicalTubePower(connection);
 	}
-	InvalidateTubePowerTopology(INVALID_TILE);
+	// A commissioning shaft is not Tube guideway. Retiring its exact original
+	// sources already expires their descendants; unrelated native circuits keep
+	// their current offers and need no global topology notification.
 }
 
 /** @copydoc InvalidateTubePowerForTile */
 void InvalidateTubePowerForTile(TileIndex tile)
 {
 	if (tile == INVALID_TILE) return;
+	InvalidateTubeGeothermalSourcesForTile(tile); // Original inlet loss revokes source/root permission before replacement facility reuse.
+	InvalidateUtilityLocalFeedInlets(tile); // Expire native recipient attachments before replacement can inherit this address.
 	// Inspect only bounded registered footprints. An unrelated ordinary
 	// track mutation cannot retire a distant valid paid inlet.
 	for (auto &connection : _tube_power) {
@@ -394,6 +409,9 @@ void ChangeTubePowerCompanyOwnership(Owner old_owner, [[maybe_unused]] Owner new
 	// A takeover/removal cannot give a reused pool identity another capsule's
 	// stale offer. Retire actual bindings while native companies/vehicles still
 	// exist; the common ledger has already applied its exact lineage policy.
+	// Native geothermal sources have already retired their forwarding rights;
+	// a surviving native hull retains only its powerless binding/carry so the
+	// buyer can explicitly recover it against a freshly issued physical source.
 	for (const auto &binding : bindings) {
 		const auto *connection = GetTubePowerConnection(binding.source);
 		if (binding.active && connection != nullptr && connection->owner == old_owner) RetireTubePowerVehicle(binding.vehicle);
@@ -404,5 +422,7 @@ void ChangeTubePowerCompanyOwnership(Owner old_owner, [[maybe_unused]] Owner new
 		const auto *source = GetUtilityPowerProducer(connection.producer);
 		if (source != nullptr) connection.owner = source->owner;
 	}
-	InvalidateTubePowerTopology(INVALID_TILE);
+	// Original source retirement closes only this company's descendants.
+	// Native tile-owner changes notify their actual guideway components;
+	// another company's prepared reservation must survive this event.
 }

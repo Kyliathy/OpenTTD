@@ -42,7 +42,10 @@ TEST_CASE("Complete native standard and Deep projects retain their full paid cos
 	const auto *job = GetExcavationJob(project.job);
 	REQUIRE(job != nullptr);
 	REQUIRE(job->state == ExcavationJobState::Completed);
-	REQUIRE(GetTBMExchangeAssignmentForHauler(world.hauler->index)->exchanges > 1);
+	// Current yields choose the exchange count: every frozen breakpoint, including final disposal, must execute exactly once.
+	REQUIRE(job->pass_terms.has_value());
+	REQUIRE(GetTBMExchangeAssignmentForHauler(world.hauler->index)->exchanges == job->pass_terms->exchange_after.size());
+	REQUIRE(GetTBMExchangeAssignmentForHauler(world.hauler->index)->exchanges >= 1);
 
 	// Flush only genuine accrued balances through their existing owners; the last partial day must be in the project invoice.
 	ChargeTBMProjectCosts(project_id);

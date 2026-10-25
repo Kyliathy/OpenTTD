@@ -325,6 +325,72 @@ def stage_transfer(destination, root=None):
                 required_inputs=required, save_exports=exports)
 
 
+def stage_selected_recovery(destination, references, current_build, root=None):
+    """Stage declared durable inputs and one current build for bounded cold recovery.
+
+    @param destination New project-owned test-cache directory; never reused or cleaned.
+    @param references Exact source/input identities required by the selected recipes.
+    @param current_build Fresh selected native-build report identity, not a historical image.
+    @param root Source checkout containing the declared inputs and current build.
+    @return Exact staged payload manifest; no Git metadata or earlier review tree is copied.
+    """
+    from artifact_rebuild import identity
+    from native_build import verify_source_epoch
+    root = repository_root(root)
+    target = checked_path(destination, root)
+    # The rehearsal is an explicitly isolated disposable owner. Reusing any
+    # existing tree could silently admit an older generated prerequisite.
+    if not target.is_relative_to(root / 'test-cache') or target.exists():
+        raise ValueError('selected recovery requires a fresh project test-cache destination')
+    for parent in target.parents:
+        if parent.exists():
+            _ordinary(parent)
+    build_path = checked_path(current_build['path'], root)
+    if identity(build_path, root) != current_build:
+        raise ValueError('selected current build report changed')
+    build = json.loads(build_path.read_text(encoding='utf-8'))
+    # Only a successful current build supplies executable bytes. Historical
+    # image identities nested in retained facts never join this allowed set.
+    if build.get('kind') != 'native_build_result' or build.get('complete') is not True:
+        raise ValueError('selected recovery requires a completed current native build')
+    epoch_path = checked_path(build['source_epoch']['path'], root)
+    epoch = json.loads(epoch_path.read_text(encoding='utf-8'))
+    verify_source_epoch(epoch, root, build['tool_profile']['path'])
+    generated = [current_build, build['source_epoch'], build['tool_profile'], *build['targets'].values()]
+    allowed_generated = {row['path']: row for row in generated}
+    payload = {}
+    # Exact source epochs and durable input declarations form the transferred
+    # closure. An arbitrary logs/review/cache file cannot enter through a caller.
+    for reference in [*references, *generated]:
+        relative = reference['path']
+        path = checked_path(relative, root)
+        _ordinary(path)
+        disposable = relative.split('/')[0] in ('build', 'logs', 'test-cache') or relative.startswith(('mlm/reviews/', 'mlm/runtime/'))
+        if disposable and allowed_generated.get(relative) != reference:
+            raise ValueError('undeclared earlier generated recovery input: ' + relative)
+        if '.git' in Path(relative).parts:
+            raise ValueError('selected recovery never writes Git metadata')
+        if identity(path, root) != reference:
+            raise ValueError('selected recovery input changed: ' + relative)
+        payload[relative] = reference
+    target.mkdir(parents=True)
+    # Copy each exact admitted file separately. No links, recursive deletion,
+    # directory overlay or inherited working-tree cache is used.
+    for relative, reference in sorted(payload.items()):
+        source = checked_path(relative, root)
+        output = checked_path(target / relative, root)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, output)
+        if file_identity(output)[0] != reference['sha256']:
+            raise ValueError('selected staged recovery bytes differ: ' + relative)
+    manifest = dict(_documentation=__doc__, kind='selected_cold_recovery_transfer',
+        files=list(payload.values()), current_build=current_build, old_workstation_reviews_available=False,
+        historical_executables_copied=False, git_metadata_copied=False)
+    (target / '.selected-recovery-manifest.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    return dict(root=target.relative_to(root).as_posix(), files=len(payload),
+        manifest=identity(target / '.selected-recovery-manifest.json', root))
+
+
 def create_transfer_archive(archive, root=None):
     """Create a verified ZIP64 package with a manifest and external checksum.
 

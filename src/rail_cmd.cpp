@@ -8,6 +8,8 @@
 /** @file rail_cmd.cpp Handling of rail tiles. @see docs/zz-reach2/architecture/landscape/rail-tiles.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md */
 
 #include "stdafx.h"
+#include "transport_tube_sprite.h"
+#include "geothermal_conduit_sprite.h"
 #include "multilayer_sprite.h"
 #include "timer/timer_game_tick.h"
 #include "bridge.h"
@@ -40,6 +42,8 @@
 #include "landscape_cmd.h"
 #include "tbm.h"
 #include "transport_tube.h"
+#include "transport_tube_facility_sprite.h"
+#include "animated_tile_func.h"
 #include "tbm_exchange.h"
 
 #include "table/strings.h"
@@ -1070,6 +1074,7 @@ CommandCost CmdBuildTrainDepot(DoCommandFlags flags, TileIndex tile, RailType ra
 			Depot *d = Depot::Create(tile);
 
 			MakeRailDepot(tile, _current_company, d->index, dir, railtype);
+			RegisterTubeFacilityArtAnimation(tile);
 			MakeDefaultName(d);
 
 			Company::Get(_current_company)->infrastructure.rail[railtype]++;
@@ -2620,11 +2625,32 @@ static void DrawTile_Rail(TileInfo *ti)
 	if (IsPlainRail(ti->tile)) {
 		TrackBits rails = GetTrackBits(ti->tile);
 
-		DrawTrackBits(ti, rails);
-
-		if (_display_opt.Test(DisplayOption::FullDetail)) DrawTrackDetails(ti, rti, pal);
-
-		if (HasRailCatenaryDrawn(GetRailType(ti->tile))) DrawRailCatenary(ti);
+		if (const auto tube = GetTubeGuidewayArt(ti->tile)) {
+			DrawGroundSprite(GetMultiLayerTerrainSprite(ti->tile).value_or(SPR_FLAT_GRASS_TILE), PAL_NONE);
+			DrawTubeConduitGround(ti->tile);
+			DrawGeothermalConduitGround(ti->tile);
+			// Packed complete casings lie beneath vehicles. Their exact aligned
+			// near-rim subsets use the native sorter, preserving authored capsule
+			// apertures without adding ordinary sleepers, fences or catenary.
+			for (uint8_t index = 0; index < tube->count; ++index) {
+				DrawGroundSprite(tube->parts[index].back, PAL_NONE);
+				AddSortableSpriteToDraw(tube->parts[index].front, PAL_NONE, *ti, tube->parts[index].front_bounds);
+			}
+			// Keep the existing optional reservation cue on exactly the native
+			// reserved segments. Flat tube casings add no reservation or route;
+			// their deferred near rims still sort above this ground-only overlay.
+			if (_game_mode != GameMode::Menu && _settings_client.gui.show_track_reservation) {
+				const std::array sprites{rti->base_sprites.single_x, rti->base_sprites.single_y, rti->base_sprites.single_n,
+					rti->base_sprites.single_s, rti->base_sprites.single_w, rti->base_sprites.single_e};
+				for (Track track : GetRailReservationTrackBits(ti->tile) & rails) DrawGroundSprite(sprites[static_cast<size_t>(track)], PALETTE_CRASH);
+			}
+		} else {
+			DrawTrackBits(ti, rails);
+			DrawTubeConduitGround(ti->tile);
+			DrawGeothermalConduitGround(ti->tile);
+			if (_display_opt.Test(DisplayOption::FullDetail)) DrawTrackDetails(ti, rti, pal);
+			if (HasRailCatenaryDrawn(GetRailType(ti->tile))) DrawRailCatenary(ti);
+		}
 
 		if (HasSignals(ti->tile)) DrawSignals(ti->tile, rails, rti);
 
@@ -2666,6 +2692,8 @@ static void DrawTile_Rail(TileInfo *ti)
 		}
 
 		DrawGroundSprite(image, GroundSpritePaletteTransform(image, PAL_NONE, pal));
+		DrawTubeConduitGround(ti->tile); // Original ground wires precede the depot building, never its foreground or capsule.
+		DrawGeothermalConduitGround(ti->tile);
 		const int depot_sprite = GetCustomRailSprite(rti, ti->tile, RailSpriteType::Depot);
 		// A railtype that supplies its own depot retains that resolver. Selected
 		// native service art replaces only the ordinary depot building graphics.
@@ -2811,9 +2839,20 @@ static Foundation GetFoundation_Rail(TileIndex tile, Slope tileh)
 	return IsPlainRail(tile) ? GetRailFoundation(tileh, GetTrackBits(tile)) : FlatteningFoundation(tileh);
 }
 
+/** Refresh only the original tube facility display owner; converted ordinary rail retires its old animation registration.
+ * @param tile Actual native animated rail cell, revalidated without moving cargo or consuming power/RNG.
+ */
+static void AnimateTile_Rail(TileIndex tile)
+{
+	if (!AnimateTubeFacilityArt(tile)) DeleteAnimatedTile(tile);
+}
+
 /** @copydoc TileLoopProc */
 static void TileLoop_Rail(TileIndex tile)
 {
+	// Conventional rails may carry paid external corridors too; bounded visits repaint source expiry without changing routing.
+	if (GetTubeConduitArt(tile).has_value()) MarkTileDirtyByTile(tile);
+	RegisterTubeFacilityArtAnimation(tile); // Existing bounded visits recover missing old-file display entries without a whole-map scan or another gameplay clock.
 	//Off the surface the ground stays barren. Snow, desert and fences are climate.
 	if (!MultiLayerMap::GetRules(tile).has_climate) {
 		if (GetRailGroundType(tile) != RailGroundType::Barren) {
@@ -3380,6 +3419,7 @@ extern const TileTypeProcs _tile_type_rail_procs = {
 	.get_tile_desc_proc = GetTileDesc_Rail,
 	.get_tile_track_status_proc = GetTileTrackStatus_Rail,
 	.click_tile_proc = ClickTile_Rail,
+	.animate_tile_proc = AnimateTile_Rail,
 	.tile_loop_proc = TileLoop_Rail,
 	.change_tile_owner_proc = ChangeTileOwner_Rail,
 	.vehicle_enter_tile_proc = VehicleEnterTile_Rail,

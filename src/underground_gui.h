@@ -13,14 +13,16 @@
 #include "tile_type.h"
 #include "gfx_type.h"
 #include "window_type.h"
+#include "vehicle_type.h"
+#include "company_type.h"
 
 struct Window;
 
 /**
  * Open the construction interface for an explicitly requested rock layer.
  * @param layer Initial tool/menu layer, independent of any later camera switch.
- * @param policy Accepted profile snapshot used for display; commands revalidate the live owner.
- * @return The actual window, or nullptr for an invalid layer/profile.
+ * @param policy Industry profile snapshot that must still match the live accepted policy; commands revalidate construction separately.
+ * @return The actual window, or nullptr for a non-rock/unallocated layer, Classic, legacy or stale profile.
  */
 Window *ShowUndergroundConstructionToolbar(MapLayer layer, const MultiLayerProfileSelection &policy);
 
@@ -46,11 +48,25 @@ std::vector<const LayerVehicleCapability *> BuildUndergroundVehicleFilter(MapLay
 	const MultiLayerProfileSelection &policy, TimerGameCalendar::Date date, UndergroundFleetKind kind);
 
 /**
+ * Inspect actual owned capsule fronts for the explicit rock-plane fleet control.
+ * @param layer Actual native vehicle layer, never a camera projection.
+ * @param company Explicit actual company; absent/foreign identities convey no permission.
+ * @return Native vehicle identities in pool order; no fleet, packet or electrical registry is created.
+ */
+std::vector<VehicleID> BuildUndergroundTubeFleetFilter(MapLayer layer, CompanyID company);
+
+/**
  * Query a resource marker only while the real survey window owns the placement cursor.
  * @param tile Explicit world tile being rendered, independent of the current main-camera layer.
  * @return Native public/free seam marker, or no overlay for another tool, layer or locked context.
  */
 std::optional<SpriteID> GetUndergroundSurveyOverlaySprite(TileIndex tile);
+
+/** Query a tile-aligned natural vent only while its actual survey cursor is armed.
+ * @param tile Explicit physical cell; camera and mineral-icon offsets supply no geometry.
+ * @return Existing Ground vent pose, or absence outside the live unlocked survey.
+ */
+std::optional<SpriteID> GetUndergroundGeothermalSurveyOverlaySprite(TileIndex tile);
 
 /**
  * Inspect the actual underground control/row presentation using its live window state.

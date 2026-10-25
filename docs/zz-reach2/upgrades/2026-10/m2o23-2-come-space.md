@@ -53,21 +53,23 @@ The user requested this four-plan partition on2026-10-23 after completion of22D.
 | Plan | Owned groups | Current state |
 | --- | --- | --- |
 | [M2O23-1](m2o23-1-come-space.md) | 1-22D, including completed suffix batches | Complete:40 groups,160/160 tasks. |
-| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Open:18 groups,0/61 tasks (Group23 split into23-23E). |
-| [M2O23-3](m2o23-3-come-space.md) | 37-53 | Open:17 groups,0/74 tasks. |
-| [M2O23-4](m2o23-4-come-space.md) | 54-72 | Open:19 groups,0/82 tasks. |
+| [M2O23-2](m2o23-2-come-space.md) | 23-36 | Complete:27 groups,65/65 tasks. |
+| [M2O23-3](m2o23-3-come-space.md) | 37-53 | Complete:19 groups,74/74 tasks. |
+| [M2O23-4](m2o23-4-come-space.md) | 54-72, including61B/65B | Complete:21 groups,82/82 tasks. |
+
+**Four-plan closure,2026-10-25:** all107groups/381tasks are complete. The [final integration handoff](m2o23-4-come-space-b-integration-handoff.md) records current qualification, preservation and separate human/Spacefeature scope.
 
 The former second plan was renamed by the user to M2O23-3 before this partition; its Groups54-72 now continue in M2O23-4. Finish each plan's owned groups and public handoff before its successor. Completion of Plan1 is the completed foundation checkpoint; the full merge requires Plans2-4 and the final Completion Conditions in Plan4. Splitting documentation performs no gameplay task and authorizes no additional saved-world ticks or spending.
 
 ## Continuation boundary and prerequisite handoff
 
-This file owns the61 tasks (including the explicit23B driven-acceptance split) in Groups23-36 moved from [completed Plan1](m2o23-1-come-space.md). Continue at23.1 after a user-directed resume. [The22D handover](m2o23-1-come-space-i-handover.md) identifies tested movement/hold/transfer contracts and fixture traps. Group23 is refined into sequential23,23B,23C,23D and23E batches: phase activation, driven acceptance, replanning, lifecycle settlement and regressions. The split preserves every original obligation and performs no implementation task.
+This file owns the65 tasks (including the explicit23B and23C prerequisite splits) in Groups23-36 moved from [completed Plan1](m2o23-1-come-space.md). Current continuation is35; completed23/23B/23C/23CB/23CC/23D/23E/23EB/23EC/24/24B/24C/24D/24E/25/26/27/28/29/30/31/32/33/33B/34 evidence is in this plan's execution record. [The22D handover](m2o23-1-come-space-i-handover.md) identifies tested movement/hold/transfer contracts and fixture traps. Group23 is refined into sequential23,23B,23C,23D and23E batches: phase activation, driven acceptance, replanning, lifecycle settlement and regressions. The split preserves every original obligation and performs no implementation task.
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
 Entry gate: Plan1 must provide its completed evidence plus live `GetTBMMeetingKind`, `IsTBMReadyForFaceTransfer`, `ExecuteTBMFaceTransfer`, directed `GetTBMHaulerSteeringTarget`, portal/support/PBS callbacks, native hauler step/backing, `CmdPlaceSurfaceSupplyOrder`, `CmdCancelLegacySurfaceSupplyOrder` and native cargo custody. Verify exact public declarations and relevant focused results, then apply each Area's narrower gate. Stop dependent phase/purchase/provider mutation if a contract is absent; read-only source/argument comparison may continue. Never bypass the existing phase validator, native followers, canonical receipt book or utility allocator with fixture placement, a private donor store or invented stock.
 
-The new phase remains uninstalled at entry. Completed loaded-return components are not a fully driven installed wait/disposal loop or visible/hidden equality proof. Keep those Group23 obligations intact. Finish36's public interface handoff before starting [Plan3 Group37](m2o23-3-come-space.md#group-37---wire-canonical-supply-geothermal-and-tube-controls).
+At entry the new phase was uninstalled. Groups23-23B now activate it and prove the complete Standard native wait/disposal/empty-return loop under visible/hidden camera selection. See the [current execution record](m2o23-2-come-space-a-execution.md); earlier loaded-return components alone did not close those obligations. Finish36's public interface handoff before starting [Plan3 Group37](m2o23-3-come-space.md#group-37---wire-canonical-supply-geothermal-and-tube-controls).
 
 ## Execution boundaries
 
@@ -95,7 +97,9 @@ The original comparison remains in [Plan1](m2o23-1-come-space.md#conflict-decisi
 
 ## Implementation tasks
 
-The refined plan has18 difficulty batches and61 tasks. Checkboxes and the execution record track current evidence.
+**Continuing at30,2026-10-24.** Tasks29.1-29.4 are complete and checked. Continue sequentially through all merge plans; no pause is pending. The full Plans2-4 objective remains active and incomplete. [Current execution record](m2o23-2-come-space-a-execution.md); [historical handover](m2o23-2-come-space-b-handover.md).
+
+The refined plan has26 difficulty batches and65 tasks. Checkboxes and the execution record track current evidence.
 
 Code sketches are conceptual unless labelled as existing exports. Proposed helpers belong to the named existing owner. Verify prior exports before dependent work; an absent prerequisite stops only its dependent tasks, with safe independent work and forbidden shortcuts stated by the Area entry gate. Mandatory reading is non-transitive; do not preload future Areas. Native checks genuinely deferred until the merged target is buildable must be recorded and closed in [Plan4 Group60](m2o23-4-come-space.md#group-60---run-focused-domain-decoder-and-ordinary-world-checks). Existing focused native passes remain evidence and must not be relabelled as deferred.
 
@@ -121,7 +125,7 @@ Entry gate:22D must publish tested native movement/hold/transfer contracts. Veri
 Required prior output: Groups22-22D make the native movement/hold/transfer contract consistent.
 
 {{HARD}}
-- [ ] 23.1 Integrate `AwaitFaceTransfer` edges in the existing phase machine: exchange due chooses Face/Bay, transferred cutter advances onto new support before boring, and invalidated stands return safely. Repeat21/21B's transfer case through an actually installed native face-wait phase; component placement does not close Group23B's driven acceptance.
+- [X] 23.1 Integrate `AwaitFaceTransfer` edges in the existing phase machine: exchange due chooses Face/Bay, transferred cutter advances onto new support before boring, and invalidated stands return safely. Repeat21/21B's transfer case through an actually installed native face-wait phase; component placement does not close Group23B's driven acceptance.
 
 ### Group 23B - Drive installed face-wait logistics
 
@@ -130,24 +134,58 @@ Required prior output: Groups22-22D make the native movement/hold/transfer contr
 Required prior output:23.1 activates and validates the original controller phase.
 
 {{HARD}}
-- [ ] 23B.1 Close22D's full loaded/empty face-wait cycle and hidden-camera comparison through actual native transitions, origin delivery and empty return. Port the donor controller-loop observations without substituting fixture placement for runtime motion.
+- [X] 23B.1 Close22D's full loaded/empty face-wait cycle and hidden-camera comparison through actual native transitions, origin delivery and empty return. Port the donor controller-loop observations without substituting fixture placement for runtime motion.
 
 ### Local Mandatory Reading - Unfinished work replanning
 
 _Applies to Group23C._ Read the Global section and only the current local owners after compaction.
 
-- `src/tbm_project.cpp`: live `ValidateTBMProject`, extension/replanning quotes and command commit; compare donor `ChangeTBMWork` at the pinned B checkout.
-- `src/tbm_replanning.h`, `src/tbm_support.cpp`: actual support ownership and unfinished-route admission.
-- [Sequential command identities](m2o23-1-come-space-d-identities.md#sequential-allocation-revision-2026-10-23): command212 follows implemented211; register only its complete body.
+- `src/excavation.cpp`: live `AppendExcavationJob` and donor `ReplaceExcavationJobRemainder` own atomic job/claim replacement.
+- `src/excavation_route.cpp`, `src/excavation_cut.cpp`, `src/excavation.h`: existing continuation planner, paid-cell quote and donor prefix replay/remainder contracts.
+- Donor `src/tests/tbm_change_work.cpp`: geological-owner cases before the player-command/UI cases; retain completed work, original claims, stock and costs.
 
 Entry gate:23B's driven loop must pass before replanning mutation. Preserve paid completed cuts, original geology and material custody.
 
-### Group 23C - Replan only unfinished work
+### Group 23C - Preserve the geological remainder owner
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
 {{HARD}}
-- [ ] 23.2 Port `ChangeTBMWork`, area/route obstruction and unfinished-remainder planning without altering paid completed cuts, geology or consumed materials.
+- [X] 23C.1 Import native prefix replay, own-claim quoting, remainder planning and atomic geological replacement. Prove completed cuts, paid materials, cargo, cash, cursor and original job identity remain, with unchanged refusals and retained partial work only for an identical next cut.
+
+### Local Mandatory Reading - Replanning approach and support
+
+_Applies to Group23CB._
+
+- `src/excavation_route.cpp`: donor bounded `PlanExcavationApproach`, exact-goal search and obstruction explanation; preserve live planner budgets and deterministic ordering.
+- `src/tbm_area.cpp`, `src/tbm_area_preview.h`, `src/tbm_support.cpp`, `src/tbm.h`: approach summaries, actual paid support classification, route blocker and occupied-face support preflight.
+- Donor `src/tests/excavation_approach.cpp` and support portions of `src/tests/tbm_obstruction.cpp`: focused actual geometry/refusal evidence.
+
+Entry gate:23C's original geological owner must pass. No caller may create open floor, ignore occupied support or erase consumed materials to make a route fit.
+
+### Group 23CB - Validate approaches and support for new work
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+
+{{HARD}}
+- [X] 23CB.1 Integrate bounded approach/exact-goal planning and real route/face support obstruction checks through existing owners; test owned released support, incompatible pieces, foreign claims and occupied face refusals.
+
+### Local Mandatory Reading - Player work-change command
+
+_Applies to Group23CC._
+
+- `src/tbm_project.cpp`, `src/tbm_replanning.h`: live `ValidateTBMProject`, extension quotes and donor `PreviewTBMWorkChange`/`CmdChangeTBMWork`.
+- `src/tbm_cmd.h` and [sequential identities](m2o23-1-come-space-d-identities.md#sequential-allocation-revision-2026-10-23): complete command212 follows implemented211.
+- Donor `src/tests/tbm_change_work.cpp`: command/stale-quote/cargo/partial-work checks; UI widget integration remains24.
+
+Entry gate:23C/23CB must provide their tested original-owner APIs. Do not register a command stub or bypass actual support/cargo admission.
+
+### Group 23CC - Replan only unfinished work through the native command
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+
+{{HARD}}
+- [X] 23.2 Port `ChangeTBMWork`, area/route obstruction and unfinished-remainder planning without altering paid completed cuts, geology or consumed materials.
 
 ### Local Mandatory Reading - Lifecycle and regression closure
 
@@ -157,21 +195,59 @@ _Applies to Groups23D-23E._ Read the Global section and only the current local o
 - `src/tbm_hangar.cpp`, `src/tbm_exchange.cpp`: native service/withdrawal, hauler holds and final spoil settlement.
 - `src/tbm.h`, `src/tbm_exchange.h`: current lifecycle and transfer exports; donor focused lifecycle/source-loss tests selected by Group9's path map.
 
-Entry gate:23C must expose the complete replanning command. Claims remain occupied until actual withdrawal and final haulage settlement; save dialect activation remains later work.
+Entry gate:23CC must expose the complete replanning command. Claims remain occupied until actual withdrawal and final haulage settlement; save dialect activation remains later work.
 
 ### Group 23D - Settle interrupted work and held haulers
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
 {{HARD}}
-- [ ] 23.3 Reconcile cancel/park/hangar/service requests with held haulers and final spoil settlement; claims retire only after actual withdrawal and haulage completion.
+- [X] 23.3 Reconcile cancel/park/hangar/service requests with held haulers and final spoil settlement; claims retire only after actual withdrawal and haulage completion.
 
-### Group 23E - Close affected logistics regressions
+### Local Mandatory Reading - Native face regressions
 
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+_Applies to Group23E._ The earlier Lifecycle and regression closure block also governs the existing native owners.
+
+- `src/tests/tbm_face_lifecycle.cpp`, `src/tests/tbm_source_loop_fixture.h`, `src/tests/tbm_face_loop_watch.h`: tested driven lifecycle and actual paid/custody observations.
+- Donor `src/tests/tbm_face_lifecycle.cpp`: remaining work-change, far-exit and stopped/crashed/sale-refusal cases only.
+- `src/tbm_support.cpp`: `CheckTBMExitHandover` and `FindTBMObstruction`; `src/tbm_exchange.cpp`: native settlement and source-loss hooks.
+
+23E is split before implementation into23E native face regressions and23EB recurring/ordinary occupied-file checks. Separate runtime and fixture prerequisites need different bounded reading and test bursts; original23.4 remains23EB and includes the23E prerequisite result.
+
+### Group 23E - Close native face regressions
 
 {{HARD}}
-- [ ] 23.4 Port focused source-loss, replan, occupied-file and recurring logistics cases; persistence for the new phase is deliberately handled by later dialect groups.
+- [X] 23E.1 Port the remaining native face work-change, occupied far-exit and stopped/crashed/sale-refusal regressions, preserving actual cargo and native source-loss recovery.
+
+### Local Mandatory Reading - Recurring and occupied-file regressions
+
+_Applies to Group23EB._
+
+- `src/tests/underground_depot_fixture.h`, donor same path: exact paid route funding, recurring exchange terms and declared hardness setup.
+- Donor `src/tests/tbm_depot_workflow.cpp`, `src/tests/tbm_logistics_queue.cpp`, `src/tests/tbm_reserved_loop.cpp`: affected recurring, occupied ordinary-file and reservation cases.
+- `src/tests/layer_save_fixture.h`, `src/saveload/tbm_sl.cpp`: current ordinary-file ownership/restore boundary; new phase dialect is reserved for Plan3.
+
+Entry gate:23E native face regressions must pass. A fixture may fund a refused missing rail piece through its original command, but cannot suppress preflight, fake another cut, inject spoil or write phase20 through an unimplemented save dialect.
+
+### Group 23EB - Close recurring and reservation regressions
+
+{{HARD}}
+- [X] 23EB.1 Adapt explicit finite rock scenarios, exact frozen exchange counts and the native recurring/reservation cases; keep paid floor and native disposal as the sole proof.
+
+### Local Mandatory Reading - Ordinary occupied-file regression
+
+_Applies to Group23EC._
+
+- `src/tests/tbm_logistics_queue.cpp`, pinned donor same path: genuinely occupied FIFO source turn and its ordinary file writer.
+- `src/tests/tbm_logistics_runtime.cpp`, `src/tests/tbm_logistics_save_fixture.py`, `src/tests/layer_save_fixture.h`: actual ordinary-file reader, unchanged queue assertions and bounded producer/consumer recipe.
+- `src/saveload/tbm_sl.cpp`: current original-owner phase/field validation; phase20 dialect activation remains Plan3.
+
+23EB's finite fixture and native loops are a separate prerequisite burst before the occupied-file producer/reader. Original23.4 remains23EC; no task is discarded. Generated files and loader reports must use declared disposable cache locations and preserve original input hashes.
+
+### Group 23EC - Close ordinary occupied-file regression
+
+{{HARD}}
+- [X] 23.4 Port focused source-loss, replan, occupied-file and recurring logistics cases, using the23E native results and current original-owner save boundary; persistence for the new phase is deliberately handled by later dialect groups.
 
 ### Local Mandatory Reading - Native player controls
 
@@ -179,21 +255,78 @@ _Applies to Group24._ Read the Global section and only the current local owners 
 
 - `src/tbm_controls.h`, `src/tbm_controls.cpp` and pinned B `src/tbm_controls.h`: `TBMPlayerStep` and `TBMPairControls` derive the actual lifecycle.
 - `src/tbm.h`, `src/tbm_exchange.h`: completed23-23E interfaces; presentation owns no work state, stock, timer or route.
+- `src/smallmap_gui.cpp`, `src/construction_preview.h`, `src/layer_portal_gui.cpp`, `src/underground_gui.cpp`, `src/toolbar_gui.cpp` and pinned donor deltas: current24.1 map/preview/toolbar callers only; preserve A Space navigation.
 
-Entry gate:23E's actual controller behavior must be complete before UI integration; preserve Space navigation and view-independent simulation.
+Entry gate:23EC's affected regression closure and23E's actual controller behavior must be complete before UI integration; preserve Space navigation and view-independent simulation.
 
-### Group 24 - Bring bounded demo and map-interface fixes
+Context has compacted 1 times while executing this group.
 
-**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+### Group 24 - Bring map and construction controls
 
-Required prior output: Groups 20-23 provide the actual controller behavior shown by the UI.
+Required prior output: completed Groups20-23EC provide the actual controller behavior shown by the UI.
+
+Group24 is split before implementation into sequential24/24B/24C/24D/24E, retaining every original task and checkbox. Each owner has a bounded mandatory block; original task24.4 remains the final widget/string and focused GUI audit after required registrations land with their callers.
+
+Task24.1 owns minimap following/legends, blocked construction overlays and the existing portal/toolbar default-selection boundary. The donor's new work-change action, approach/cost advice and finished-project release prompt belong to24B's planning-feedback integration; its Tube/geothermal controls retain their later feature owners. Do not overlay the shared donor palette wholesale.
 
 {{MEDIUM}}
-- [ ] 24.1 Port layer-aware minimap, portal/construction preview, toolbar/default TBM selection while retaining A's Space navigation and inspection.
-- [ ] 24.2 Reconcile hotkey/window toggling, order-problem guidance and planning feedback using native controller views; view changes cannot advance work.
-- [ ] 24.3 Port new-game settings synchronization and profile/date-aware availability. Classic/disabled worlds must not acquire underground content implicitly.
-- [ ] 24.4 Merge widget/string registrations without duplicate keys and adapt focused GUI/planning/feedback checks.
-- [ ] 24.5 Update the underground walkthrough to actual controls and mark visual feedback as pending until the later native gallery review.
+- [X] 24.1 Port layer-aware minimap, portal/construction preview, toolbar/default TBM selection while retaining A's Space navigation and inspection.
+
+### Local Mandatory Reading - Native advice and window actions
+
+_Applies to Group24B._
+
+- `src/tbm_controls.cpp`, `src/tbm_gui.h`, `src/layer_portal_gui.cpp`, `src/tbm_projects_gui.cpp`: derive quantities, obstruction advice and work-change eligibility from actual controller/cargo owners.
+- `src/underground_gui.cpp`, `src/tbm_replanning.h`, `src/tbm_cmd.h` and pinned donor deltas: integrate the completed native work-change command, approach/refusal/cost feedback and finished-project release prompt through existing command owners; exclude later Tube/geothermal controls.
+- `src/toolbar_gui.cpp`, `src/rail_gui.cpp`, `src/road_gui.cpp`, `src/map_layer_gui.cpp`: native hotkey/window toggling and current-layer context; preserve A's Space actions.
+- `src/tests/tbm_advice.cpp` and pinned donor `src/tests/tbm_status_presentation.cpp` (new destination test when imported): actionable advice and pure controller projections.
+
+### Group 24B - Integrate native advice and window actions
+
+{{MEDIUM}}
+- [X] 24.2 Reconcile hotkey/window toggling, order-problem guidance and planning feedback using native controller views; view changes cannot advance work.
+
+### Local Mandatory Reading - New-game content availability
+
+_Applies to Group24C._
+
+- `src/multilayer_bootstrap.cpp`, `src/multilayer_bootstrap.h`, `src/settings_type.h`: selected profile/date defaults and actual activation boundary.
+- `src/fios_gui.cpp`, `src/settingentry_gui.cpp`, pinned donor equivalents: current new-game settings synchronization, with Classic/disabled refusal retained.
+- `src/tbm_model.cpp`, `src/layer_portal_gui.cpp`: actual profile/date-aware model/default selection (`tbm.cpp` was a stale path); no UI permission may override command admission.
+- `src/openttd.cpp::MakeNewgameSettingsLive`, `src/genworld_gui.cpp::StartGeneratingLandscape`, `src/genworld.cpp::GenerateWorld`, `src/multilayer_content.cpp::PrepareMultiLayerProfileContent` / `ActivateMultiLayerProfile`: actual pending-settings copy and definition-validation/activation boundary. The bootstrap donor delta is later generator content, not new-game synchronization.
+
+### Group 24C - Synchronize new-game content availability
+
+{{MEDIUM}}
+- [X] 24.3 Port new-game settings synchronization and profile/date-aware availability. Classic/disabled worlds must not acquire underground content implicitly.
+
+### Local Mandatory Reading - Widget/string and GUI audit
+
+_Applies to Group24D._
+
+- `src/widgets/underground_widget.h`, `src/lang/english.txt`: actual registrations and caller parameter shapes from24-24C.
+- Pinned donor focused planning/refusal/feedback/window cases selected by implemented APIs; source epochs remain unchanged.
+- `src/tests/layer_window_fixture.h`, existing focused build target: native window event dispatch and read-only camera/controller evidence.
+
+### Group 24D - Audit registrations and GUI regressions
+
+{{MEDIUM}}
+- [X] 24.4 Merge widget/string registrations without duplicate keys and adapt focused GUI/planning/feedback checks.
+
+### Local Mandatory Reading - Actual underground walkthrough
+
+_Applies to Group24E._
+
+- Completed24-24D controls and focused results in this plan's execution record.
+- Destination walkthrough and pinned donor walkthrough sections describing these actual controls, located through the retained path dispositions.
+- Architecture's gallery acceptance boundary: functional UI checks do not qualify final rendered assets or human visual feedback.
+
+Context has compacted 1 times while executing this group.
+
+### Group 24E - Update the actual underground walkthrough
+
+{{MEDIUM}}
+- [X] 24.5 Update the underground walkthrough to actual controls and mark visual feedback as pending until the later native gallery review.
 
 ### Area Mandatory Reading - Generator machinery and original lifecycle
 
@@ -214,10 +347,10 @@ Entry gate: Groups 10-19 must expose canonical paid supply/cargo paths. Check `C
 Required prior output: Canonical supply and cargo APIs from Groups 14-19.
 
 {{HARD}}
-- [ ] 25.1 Import generator definitions and site/service command declarations using the revision2 identities; keep canonical content/date/model ownership. Register complete implemented generator/site command bodies213-215 in their selected order as they land in25-26; declaration of the later town-service command does not register its trait before30.
-- [ ] 25.2 Port cold geometry reservation and actual Industry binding with whole owner/claim/material preflight. Include the delivered dated magma variant.
-- [ ] 25.3 Connect generator input room and receipt to native Industry stock and canonical purchased delivery; retain full material bill, paid construction opportunities and no output before completion.
-- [ ] 25.4 Add targeted funding/estimate/refusal/locked-work tests with real native owners; defer operating conversion to its own later batch.
+- [X] 25.1 Import generator definitions and site/service command declarations using the revision2 identities; keep canonical content/date/model ownership. Register complete implemented generator/site command bodies213-215 in their selected order as they land in25-26; declaration of the later town-service command does not register its trait before30.
+- [X] 25.2 Port cold geometry reservation and actual Industry binding with whole owner/claim/material preflight. Include the delivered dated magma variant.
+- [X] 25.3 Connect generator input room and receipt to native Industry stock and canonical purchased delivery; retain full material bill, paid construction opportunities and no output before completion.
+- [X] 25.4 Add targeted funding/estimate/refusal/locked-work tests with real native owners; defer operating conversion to its own later batch.
 
 ### Group 26 - Preserve generator removal and reference history
 
@@ -226,10 +359,10 @@ Required prior output: Canonical supply and cargo APIs from Groups 14-19.
 Required prior output: Group 25 owns actual machinery and input stock.
 
 {{MEDIUM}}
-- [ ] 26.1 Port cold-site cancellation, Industry clear/removal and company lifecycle notifications without refunding consumed construction or restoring depleted geology.
-- [ ] 26.2 Keep shared utility IDs and natural-source claims retired on loss; validate source/industry/pool reuse against original ownership.
-- [ ] 26.3 Import detached generator capture/staging/validation helpers and component refusal tests. Do not yet interpret conflicting save numbers.
-- [ ] 26.4 Document the exact generator exports ready for conversion/scheduling and the later persistence obligations.
+- [X] 26.1 Port cold-site cancellation, Industry clear/removal and company lifecycle notifications without refunding consumed construction or restoring depleted geology.
+- [X] 26.2 Keep shared utility IDs and natural-source claims retired on loss; validate source/industry/pool reuse against original ownership. This cold stage issues no generator utility IDs; extend coupled-account retirement/staging when29 first acquires them.
+- [X] 26.3 Import detached generator capture/staging/validation helpers and component refusal tests. Do not yet interpret conflicting save numbers.
+- [X] 26.4 Document the exact generator exports ready for conversion/scheduling and the later persistence obligations.
 
 ### Area Mandatory Reading - Pure heat conversion and atomic settlement
 
@@ -250,10 +383,10 @@ Entry gate: Group 25 must supply physical machinery references; A's `UtilityMuta
 Required prior output: Group 26 provides generator references; existing shared utility state remains the sole balance owner.
 
 {{HARD}}
-- [ ] 27.1 Port conversion-specific fields/roles into the existing `UtilityPowerState` and immutable producer definition; retain original IDs and bounded original-source attribution.
-- [ ] 27.2 Implement exact integer heat→electricity calculation with remainder, rate ceiling, lifetime overflow and source-domain checks using the existing arithmetic helpers.
-- [ ] 27.3 Build the detached after-state and acquire all necessary vector storage before any physical participant invoice/work. Preserve consumed/reserved/transferred slice accounting.
-- [ ] 27.4 Add pure refusal cases for wrong role/owner, stale interval, insufficient grant, output already published, output allocation already closed, invalid duration and attribution bound exhaustion.
+- [X] 27.1 Port conversion-specific fields/roles into the existing `UtilityPowerState` and immutable producer definition; retain original IDs and bounded original-source attribution.
+- [X] 27.2 Implement exact integer heat→electricity calculation with remainder, rate ceiling, lifetime overflow and source-domain checks using the existing arithmetic helpers.
+- [X] 27.3 Build the detached after-state and acquire all necessary vector storage before any physical participant invoice/work. Preserve consumed/reserved/transferred slice accounting. Expose pure sealed preparation here for the draft/refusal checks;28 retains exact commit comparison and the complete committing transaction.
+- [X] 27.4 Add pure refusal cases for wrong role/owner, stale interval, insufficient grant, output already published, output allocation already closed, invalid duration and attribution bound exhaustion.
 
 ### Group 28 - Port the sealed whole conversion transaction
 
@@ -271,11 +404,11 @@ flowchart LR
 ```
 
 {{HARD}}
-- [ ] 28.1 Port the field-wise seal and exact proposal-result comparison; no raw struct hashing, pointer identity or padding enters the seal.
-- [ ] 28.2 Rebuild the draft at commit and recheck owner, operation sequence, heat input, electric output, loss and carry. Reject duplicate/reentrant/stale use unchanged.
-- [ ] 28.3 Validate participant domain/role and its complete invoice/work admission; call its noexcept whole commit once, then move the already allocated after-state into the original utility owner.
-- [ ] 28.4 Test participant refusal, recursive mutation attempt, stale proposal and repeated commit; compare both energy domains, money, service counters and operation sequence.
-- [ ] 28.5 Retain the existing APIs `PrepareUtilityHeatConversion`/`CommitUtilityHeatConversion` for runtime callers; no alternate conversion entry point owns stock.
+- [X] 28.1 Port the field-wise seal and exact proposal-result comparison; no raw struct hashing, pointer identity or padding enters the seal.
+- [X] 28.2 Rebuild the draft at commit and recheck owner, operation sequence, heat input, electric output, loss and carry. Reject duplicate/reentrant/stale use unchanged.
+- [X] 28.3 Validate participant domain/role and its complete invoice/work admission; call its noexcept whole commit once, then move the already allocated after-state into the original utility owner.
+- [X] 28.4 Test participant refusal, recursive mutation attempt, stale proposal and repeated commit; compare both energy domains, money, service counters and operation sequence.
+- [X] 28.5 Retain the existing APIs `PrepareUtilityHeatConversion`/`CommitUtilityHeatConversion` for runtime callers; no alternate conversion entry point owns stock.
 
 ### Area Mandatory Reading - Operating generators and paid utility service paths
 
@@ -296,10 +429,12 @@ Entry gate: Group 28 must expose the conversion transaction and Group 26 must ow
 Required prior output: Groups 26 and 28 provide real machinery and atomic conversion.
 
 {{HARD}}
-- [ ] 29.1 Port generator demand/participant acquisition and service-money checks, issuing original heat-consumer/output identities once in native Industry order.
-- [ ] 29.2 Integrate `RunGeothermalGenerators` so absent Heat/generators is a no-op, repeated closed intervals refuse and participant storage stays stable while demand records hold references.
-- [ ] 29.3 Keep generator conversion in its original shared participant path, preserving partial registration retry, service fraction and real material/finance ownership.
-- [ ] 29.4 Add service-shortage, incomplete original port, registered-input/missing-output retry and no-Heat orbital-only cases. Global scheduler wiring remains later.
+- [X] 29.1 Port generator demand/participant acquisition and service-money checks, issuing original heat-consumer/output identities once in native Industry order.
+- [X] 29.2 Integrate `RunGeothermalGenerators` so absent Heat/generators is a no-op, repeated closed intervals refuse and participant storage stays stable while demand records hold references.
+- [X] 29.3 Keep generator conversion in its original shared participant path, preserving partial registration retry, service fraction and real material/finance ownership. Extend26's removal/staging checks to the newly issued original coupled utility roles and retired IDs.
+- [X] 29.4 Add service-shortage, incomplete original port, registered-input/missing-output retry and no-Heat orbital-only cases. Global scheduler wiring remains later.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 30 - Connect operating generators and real service paths
 
@@ -308,10 +443,10 @@ Required prior output: Groups 26 and 28 provide real machinery and atomic conver
 Required prior output: Groups 28 and 29 provide real operating sources and atomic conversion.
 
 {{HARD}}
-- [ ] 30.1 Port paid same-layer electrical feed registration with exact real generator, local-cell, port, company and source-domain preflight.
-- [ ] 30.2 Port riser/town terminal connection and forwarding-root APIs while keeping original link/utility identities and town/custom-GS policy.
-- [ ] 30.3 Reconcile link removal, terminal loss and original machinery references without proximity fallback, free service or duplicate energy accounts.
-- [ ] 30.4 Add pure admission/command/lifecycle cases for absent cable, changed owner, source loss and suspended town effect; do not wire a second tick driver.
+- [X] 30.1 Port paid same-layer electrical feed registration with exact real generator, local-cell, port, company and source-domain preflight.
+- [X] 30.2 Port riser/town terminal connection and forwarding-root APIs while keeping original link/utility identities and town/custom-GS policy.
+- [X] 30.3 Reconcile link removal, terminal loss and original machinery references without proximity fallback, free service or duplicate energy accounts. When paid local feeds first land, extend29's coupled retirement notification before output eligibility is erased; later Tube inlets retain the corresponding33 hook.
+- [X] 30.4 Add pure admission/command/lifecycle cases for absent cable, changed owner, source loss and suspended town effect; do not wire a second tick driver.
 
 ### Area Mandatory Reading - Fleet definitions and provider bindings
 
@@ -334,10 +469,10 @@ Entry gate: Group 7 must fix model/EIDS decisions and Groups 18/30 must expose c
 Required prior output: Group 7 froze the canonical model map and Group 9 registered the source family.
 
 {{HARD}}
-- [ ] 31.1 Choose one native definition/installer implementation from the Group 7 decision; keep A's useful geometry checks and remove duplicate activation paths from CMake/callers.
-- [ ] 31.2 Preflight all five models, cargo labels, package identity, duplicate persisted slots and pool capacity before creating any engine.
-- [ ] 31.3 Fill already reserved missing EngineIDs before allocating fresh IDs, then configure the models in deterministic catalogue order. Keep model 9/local `0x8009` unchanged.
-- [ ] 31.4 Adapt the five-model, late-missing-cargo, duplicate-EIDS and persisted-hole tests; retain provisional A sources as dated evidence rather than active tuning. Record any required definition-only EIDS append on legacy loads; existing engine/vehicle IDs, cargo and RNG must remain unchanged.
+- [X] 31.1 Choose one native definition/installer implementation from the Group 7 decision; keep A's useful geometry checks and remove duplicate activation paths from CMake/callers.
+- [X] 31.2 Preflight all five models, cargo labels, package identity, duplicate persisted slots and pool capacity before creating any engine.
+- [X] 31.3 Fill already reserved missing EngineIDs before allocating fresh IDs, then configure the models in deterministic catalogue order. Keep model 9/local `0x8009` unchanged.
+- [X] 31.4 Adapt the five-model, late-missing-cargo, duplicate-EIDS and persisted-hole tests; retain provisional A sources as dated evidence rather than active tuning. Record any required definition-only EIDS append on legacy loads; existing engine/vehicle IDs, cargo and RNG must remain unchanged.
 
 ### Group 32 - Integrate purchase, refit and replacement admission
 
@@ -346,10 +481,10 @@ Required prior output: Group 7 froze the canonical model map and Group 9 registe
 Required prior output: Group 31 supplies complete EIDS definitions and Group 18 supplies stock admission.
 
 {{HARD}}
-- [ ] 32.1 Route build/refit/autoreplace/train callers through the single capability and cargo-change APIs, keeping canonical profile/date/layer and tube-versus-ordinary-rail rules.
-- [ ] 32.2 Check actual retained cargo label and operation-specific target capacity before temporary vehicles, charge or truncation. A loaded provisional 96-capacity carrier cannot silently shrink to 80 and discard units.
-- [ ] 32.3 Preserve native engine introduction/restoration and consist cache updates after successful changes; registration alone grants no powered movement.
-- [ ] 32.4 Add loaded/empty refit, replacement refusal, saved model 9 identity, late-date and hidden-layer admission cases.
+- [X] 32.1 Route build/refit/autoreplace/train callers through the single capability and cargo-change APIs, keeping canonical profile/date/layer and tube-versus-ordinary-rail rules.
+- [X] 32.2 Check actual retained cargo label and operation-specific target capacity before temporary vehicles, charge or truncation. A loaded provisional 96-capacity carrier cannot silently shrink to 80 and discard units.
+- [X] 32.3 Preserve native engine introduction/restoration and consist cache updates after successful changes; registration alone grants no powered movement.
+- [X] 32.4 Add loaded/empty refit, replacement refusal, saved model 9 identity, late-date and hidden-layer admission cases.
 
 ### Group 33 - Port geothermal sources and explicit provider switching
 
@@ -358,16 +493,36 @@ Required prior output: Group 31 supplies complete EIDS definitions and Group 18 
 Required prior output: Groups 30 and 32 provide real machinery paths and capsule admission.
 
 {{HARD}}
-- [ ] 33.1 Port the original geothermal inlet/source owner and paid path admission, retaining generator/root/port/cable identities without stored duplicate energy quantities.
-- [ ] 33.2 Integrate initial external/geothermal binds and explicit reconnect/switch commands for real held capsules. Preflight the new path before retiring the old usable binding. Append the implemented external trio217-219 before the geothermal trio220-222 from the revision2 contract; preserve all earlier command values and register every actual body exactly once.
-- [ ] 33.3 Preserve consumed history and release only original unused rights; switching or failed reconnect cannot reset fractional demand carry or grant a free invoice.
-- [ ] 33.4 Add missing-generator/path, foreign-owner, stale-source, manual-stop and repeated-switch cases. Expose ready binding APIs before the common scheduler is edited.
+- [X] 33.1 Port the original geothermal inlet/source owner and paid path admission, retaining generator/root/port/cable identities without stored duplicate energy quantities.
+### Area Mandatory Reading - Explicit capsule provider bindings
+
+_Applies to Group33B. This sequential split retains original33.2-33.4task IDs and all obligations._
+
+Entry gate:33must provide original source/root ownership and32must provide actual
+held-capsule cargo/capacity admission. Verify these live APIs before registering
+commands.34-35still own production scheduler activation.
+
+| File name | Sections | Description |
+| --- | --- | --- |
+| [Native provider transitions](../../../../../OpenTTD3/src/transport_tube_runtime.cpp) | `BindTubePowerVehicle`, `ReconnectTubePowerVehicle`, `BindTubeGeothermalPowerVehicle`, `ReconnectTubeGeothermalPowerVehicle`, `RetireTubePowerVehicle` | Preflight whole actual custody/path before retiring old rights; preserve fractional carry and manual stops. |
+| [Complete typed commands](../../../../../OpenTTD3/src/transport_tube_cmd.h) | External and geothermal connect/bind/reconnect traits | Register actual complete bodies217-219then220-222, preserving the revision2contract and earlier prefix. |
+| [Original source owner](../../../../src/transport_tube_geothermal.h) | Public connection, path, retirement and validation exports | One original native generator/root/inlet incarnation, with no private balance. |
+| [Frozen identities and custody](m2o23-1-come-space-d-identities.md) | `Delivered capsule coefficients and one installer` | Preserve native EIDS, packets and operation-specific loaded capacity admission. |
+
+### Group 33B - Bind and switch actual held capsule providers
+
+Required prior output:33original source ownership and32native held-cargo admission.
+
+{{HARD}}
+- [X] 33.2 Integrate initial external/geothermal binds and explicit reconnect/switch commands for real held capsules. Preflight the new path before retiring the old usable binding. Append the implemented external trio217-219 before the geothermal trio220-222 from the revision2 contract; preserve all earlier command values and register every actual body exactly once.
+- [X] 33.3 Preserve consumed history and release only original unused rights; switching or failed reconnect cannot reset fractional demand carry or grant a free invoice.
+- [X] 33.4 Add missing-generator/path, foreign-owner, stale-source, manual-stop and repeated-switch cases. Expose ready binding APIs before the common scheduler is edited.
 
 ### Area Mandatory Reading - One synchronized publication and allocation pass
 
 _Applies to Groups 34-36._
 
-Entry gate: Groups 28, 30 and 33 must provide the conversion/generator/provider interfaces, and A's orbital manufacturing/recipe appenders must remain present. Verify definitions and focused contracts; stop scheduler activation if absent. Static ordering analysis may continue. Do not call two tick drivers, close Heat twice, omit A's newer appenders or add a private consumer allocation.
+Entry gate: Groups 28, 30, 33 and 33B must provide the conversion/generator/provider interfaces, and A's orbital manufacturing/recipe appenders must remain present. Verify definitions and focused contracts; stop scheduler activation if absent. Static ordering analysis may continue. Do not call two tick drivers, close Heat twice, omit A's newer appenders or add a private consumer allocation.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
@@ -380,7 +535,7 @@ Entry gate: Groups 28, 30 and 33 must provide the conversion/generator/provider 
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
-Required prior output: Group 33 supplies all provider records; Groups 28-30 supply the Heat owner.
+Required prior output: Groups 33/33B supply all source/provider APIs; Groups 28-30 supply the Heat owner.
 
 ```mermaid
 flowchart TD
@@ -395,11 +550,13 @@ flowchart TD
 ```
 
 {{HARD}}
-- [ ] 34.1 Keep one `PrepareTubePowerTick` entry with existing executing/prepared-tick/pause/game-mode guards and the portable orbital construction opportunity.
-- [ ] 34.2 Extend the no-work fast path to include retained generator/town service state so source-loss recovery still runs; preserve orbital-only worlds without initializing an unwanted Heat domain.
-- [ ] 34.3 Rotate the utility interval once; set the prepared-tick guard only after successful rotation. Publish collector/orbital offers and run generators before electrical allocation.
-- [ ] 34.4 Remove A's old empty `AllocateUtilityHeat(interval,{})` placeholder once `RunGeothermalGenerators` owns the Heat closure; publish each installed external tube source once under its real company.
-- [ ] 34.5 Add duplicate-call, paused, source-free, failed-rotation, orbital-only and completed-generator-without-capsules cases.
+- [X] 34.1 Keep one `PrepareTubePowerTick` entry with existing executing/prepared-tick/pause/game-mode guards and the portable orbital construction opportunity.
+- [X] 34.2 Extend the no-work fast path to include retained generator/town service state so source-loss recovery still runs; preserve orbital-only worlds without initializing an unwanted Heat domain.
+- [X] 34.3 Rotate the utility interval once; set the prepared-tick guard only after successful rotation. Publish collector/orbital offers and run generators before electrical allocation.
+- [X] 34.4 Remove A's old empty `AllocateUtilityHeat(interval,{})` placeholder once `RunGeothermalGenerators` owns the Heat closure; publish each installed external tube source once under its real company.
+- [X] 34.5 Add duplicate-call, paused, source-free, failed-rotation, orbital-only and completed-generator-without-capsules cases.
+
+Context has compacted 1 times while executing this group.
 
 ### Group 35 - Merge demand and deterministic downstream settlement
 
@@ -419,11 +576,11 @@ if (AllocateUtilityPower(interval, requests) != UtilityPowerError::None) return;
 ```
 
 {{HARD}}
-- [ ] 35.1 Gather actual capsule demand without moving cargo, updating work or clearing manual stops. Sum geothermal forwarding-root demand once per source with checked capacity limits.
-- [ ] 35.2 Append town, orbital service, orbital construction, orbital manufacturing and orbital recipe requests before the single electrical allocation. Preserve A's idle/full-buffer no-demand checks.
-- [ ] 35.3 After successful allocation, sort original geothermal path imports by destination ConsumerID, perform whole transfers through existing lineage APIs, then run town services once.
-- [ ] 35.4 Retain original native `AdvanceTubePowerTick`/participant settlement and fractional carry; neither provider mode may duplicate an already executed tick.
-- [ ] 35.5 Add short-grant/path-capacity contention with tube, town and orbital work; compare exact joules, cash, work and operation counters under reordered transport rows.
+- [X] 35.1 Gather actual capsule demand without moving cargo, updating work or clearing manual stops. Sum geothermal forwarding-root demand once per source with checked capacity limits.
+- [X] 35.2 Append town, orbital service, orbital construction, orbital manufacturing and orbital recipe requests before the single electrical allocation. Preserve A's idle/full-buffer no-demand checks.
+- [X] 35.3 After successful allocation, sort original geothermal path imports by destination ConsumerID, perform whole transfers through existing lineage APIs, then run town services once.
+- [X] 35.4 Retain original native `AdvanceTubePowerTick`/participant settlement and fractional carry; neither provider mode may duplicate an already executed tick.
+- [X] 35.5 Add short-grant/path-capacity contention with tube, town and orbital work; compare exact joules, cash, work and operation counters under reordered transport rows.
 
 ### Group 36 - Close provider loss, topology and deterministic state coverage
 
@@ -432,10 +589,10 @@ if (AllocateUtilityPower(interval, requests) != UtilityPowerError::None) return;
 Required prior output: Groups 34-35 supply the final single-pass execution order.
 
 {{HARD}}
-- [ ] 36.1 Reconcile link/riser/portal/source removal and company transitions across external tubes, geothermal tubes, town services and A's orbital users.
-- [ ] 36.2 Invalidate only affected physical paths, preserve consumed/original-source history and retire nonreused references. Auto power waits remain distinct from manual player stops.
-- [ ] 36.3 Extend existing canonical state/reference/digest exports with generator/conversion/provider fields in fixed field/identity order; never hash pointers or transport insertion order.
-- [ ] 36.4 Add power loss/reconnect, depletion, owner reuse and visible/hidden interval equivalence cases. Keep load-dialect interpretation for the save batches.
+- [X] 36.1 Reconcile link/riser/portal/source removal and company transitions across external tubes, geothermal tubes, town services and A's orbital users.
+- [X] 36.2 Invalidate only affected physical paths, preserve consumed/original-source history and retire nonreused references. Auto power waits remain distinct from manual player stops.
+- [X] 36.3 Extend existing canonical state/reference/digest exports with generator/conversion/provider fields in fixed field/identity order; never hash pointers or transport insertion order.
+- [X] 36.4 Add power loss/reconnect, interval-budget depletion (natural vents are renewable), owner reuse and visible/hidden interval equivalence cases. Keep load-dialect interpretation for the save batches.
 
 ## Plan2 handoff
 

@@ -28,7 +28,7 @@ TEST_CASE("Tube capsule prototype is self propelled and retains canonical engine
 	const auto engine = GetTubeEngine(9);
 	const auto count = Engine::GetNumItems();
 	REQUIRE(engine != EngineID::Invalid());
-	CHECK(GetTubeEngine(10) == EngineID::Invalid());
+	CHECK(GetTubeEngine(10) != EngineID::Invalid());
 	CHECK(InitialiseTubeEngineDefinitions(world.ActivatedContent()));
 	CHECK(Engine::GetNumItems() == count);
 	CHECK(GetTubeEngine(9) == engine);

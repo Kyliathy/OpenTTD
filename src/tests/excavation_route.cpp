@@ -9,6 +9,7 @@
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "excavation_fixture.h"
+#include "ground_job_fixture.h"
 #include "../road.h"
 #include "../road_cmd.h"
 
@@ -145,4 +146,54 @@ TEST_CASE("Excavation route refuses occupied advancing clearance unchanged", "[e
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before);
 	CHECK(_random.state[0] == rng.state[0]);
 	CHECK(_random.state[1] == rng.state[1]);
+}
+
+/** Fixed-domain real planning with128optional remote native reservations;never publish the preview's proposed floor. */
+TEST_CASE("Ground route planning exposes repeated dense-world query samples", "[.ground-route-performance]")
+{
+	const uint width = GroundJobArgument("OTTD_GROUND_STRESS_AXIS"), count = GroundJobArgument("OTTD_GROUND_STRESS_JOBS");
+	REQUIRE((count == 0 || count == 128));
+	const char *choice = std::getenv("OTTD_GROUND_STRESS_ROUTE"); REQUIRE(choice != nullptr);
+	const std::string_view scenario{choice}; REQUIRE((scenario == "straight" || scenario == "irregular" || scenario == "limited" || scenario == "blocked"));
+	RouteFixture fixture; PrepareGroundJobs(fixture.world, width, count);
+	fixture.start = {TileXYL(20, 20, MapLayer::Underground), Direction::SW,
+		{TileXYL(20, 20, MapLayer::Underground), TileXYL(19, 20, MapLayer::Underground), TileXYL(18, 20, MapLayer::Underground)}};
+	std::vector<TileIndex> floor;
+	for (int y = 19; y <= 21; ++y) for (int x = 19; x <= 21; ++x) floor.push_back(TileXYL(x, y, MapLayer::Underground));
+	floor.push_back(TileXYL(18, 20, MapLayer::Underground)); fixture.world.Open(floor);
+	std::vector<TileIndex> requested{TileXYL(27, 20, MapLayer::Underground)};
+	if (scenario == "irregular") requested = {TileXYL(24, 19, MapLayer::Underground), TileXYL(25, 19, MapLayer::Underground),
+		TileXYL(24, 20, MapLayer::Underground), TileXYL(25, 20, MapLayer::Underground), TileXYL(26, 21, MapLayer::Underground), TileXYL(27, 21, MapLayer::Underground)};
+	auto outline = fixture.Outline(requested);
+	if (scenario == "blocked") {
+		std::vector<TileIndex> tight;
+		for (int x = 18; x <= 27; ++x) tight.push_back(TileXYL(x, 20, MapLayer::Underground));
+		outline = AuthorizeExcavationOutline(NormalizeExcavationOutline(MapLayer::Underground, requested), tight, 0);
+	}
+	REQUIRE(outline.error == ExcavationError::None);
+	const ExcavationPlanningLimits limits = scenario == "limited" ? ExcavationPlanningLimits{1, 1, 1, 1} : ExcavationPlanningLimits{};
+	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState()); const auto rng = _random;
+	const auto reference = PlanExcavationRoute(outline, fixture.start, 0, limits);
+	if (scenario == "limited") REQUIRE(reference.error == ExcavationError::Limit);
+	else if (scenario == "blocked") REQUIRE(reference.error == ExcavationError::OutsideAuthorization);
+	else REQUIRE(reference.error == ExcavationError::None);
+	// Warm one interval, then repeat the same readonly native query for five measured intervals.
+	for (uint interval = 0; interval < 6; ++interval) {
+		for (uint round = 0; round < 16; ++round) {
+			const auto begin = GroundJobNow(); const auto proposal = PlanExcavationRoute(outline, fixture.start, 0, limits); const auto elapsed = GroundJobNow() - begin;
+			REQUIRE(proposal.error == reference.error); CHECK(proposal.failure_tile == reference.failure_tile); CHECK(proposal.partial == reference.partial);
+			CHECK(proposal.expansions == reference.expansions); CHECK(proposal.covered_targets == reference.covered_targets); CHECK(proposal.remaining_targets == reference.remaining_targets);
+			CHECK(proposal.estimate == reference.estimate); CHECK(proposal.end.position == reference.end.position); CHECK(proposal.end.heading == reference.end.heading);
+			CHECK(proposal.end.history == reference.end.history); REQUIRE(proposal.route.size() == reference.route.size());
+			for (size_t i = 0; i < proposal.route.size(); ++i) {
+				CHECK(proposal.route[i].cutter_position == reference.route[i].cutter_position); CHECK(proposal.route[i].heading == reference.route[i].heading);
+				CHECK(proposal.route[i].swept_tiles == reference.route[i].swept_tiles); CHECK(proposal.route[i].support_tiles == reference.route[i].support_tiles);
+			}
+			if (interval != 0) fmt::print("GROUND_ROUTE_SAMPLE index={} ns={} expansions={} segments={}\n", (interval - 1) * 16 + round, elapsed, proposal.expansions, proposal.route.size());
+		}
+	}
+	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before); CHECK(_random.state[0] == rng.state[0]); CHECK(_random.state[1] == rng.state[1]);
+	fmt::print("GROUND_ROUTE_COMPLETE width={} jobs={} scenario={} warmup=1 intervals=5 rounds=16 samples=80 requested={} authorized={} expansions={} segments={} partial={} result={} pure=1 terrain_bytes={} job_payload_estimate={}\n",
+		width, count, scenario, outline.requested_tiles.size(), outline.authorized_tiles.size(), reference.expansions, reference.route.size(), reference.partial ? 1 : 0,
+		to_underlying(reference.error), GetGeologyWorldState().terrain.StorageBytes(), GroundJobPayload());
 }

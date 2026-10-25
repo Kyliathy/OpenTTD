@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.h Stuff related to the (main) toolbar. */
+/** @file toolbar_gui.h Stuff related to the (main) toolbar. @see docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (per-layer hotkeys) */
 
 #ifndef TOOLBAR_GUI_H
 #define TOOLBAR_GUI_H
@@ -13,6 +13,7 @@
 #include "rail_type.h"
 #include "road_type.h"
 
+/** Actions of the game's main toolbar that the "maintoolbar" hotkey list can trigger. */
 enum MainToolbarHotkeys : int32_t {
 	MTHK_PAUSE,
 	MTHK_FASTFORWARD,
@@ -54,7 +55,11 @@ enum MainToolbarHotkeys : int32_t {
 	MTHK_EXTRA_VIEWPORT,
 	MTHK_CLIENT_LIST,
 	MTHK_SIGN_LIST,
-	MTHK_CYCLE_MAP_LAYER
+	MTHK_CYCLE_MAP_LAYER,
+	MTHK_SHOW_MAP_LAYER_1, ///< Show the first layer in GUI display order (Surface); r2df decision D2.
+	MTHK_SHOW_MAP_LAYER_2, ///< Show the second layer in GUI display order (Underground).
+	MTHK_SHOW_MAP_LAYER_3, ///< Show the third layer in GUI display order (Deep Underground).
+	MTHK_SHOW_MAP_LAYER_4, ///< Show the fourth layer in GUI display order (Outer Space).
 };
 
 void AllocateToolbar();

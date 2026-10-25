@@ -14,6 +14,7 @@
 #include "../core/backup_type.hpp"
 #include <array>
 
+#include "ground_render_camera_fixture.h"
 #include "../safeguards.h"
 
 /** Actual native command creates incomplete sixteen-cell machinery for source construction checks. */
@@ -203,4 +204,14 @@ TEST_CASE("Selected processor sprites refuse invalid Classic unbound and unsuppo
 	REQUIRE(RestoreMultiLayerProfileSelection(policy, LandscapeType::Temperate, rig.ActivatedContent()) == MultiLayerProfileError::None);
 	ReleaseLayerProcessorIndustry(rig.industry->index);
 	CHECK_FALSE(GetGroundProcessorSprite(tile, false, 0));
+}
+
+/** Actual main/extra cameras and hidden-building presentation preserve the physical source owner and its live state. */
+TEST_CASE("Merged processor selection retains each actual campus across cameras", "[merged-ground-camera]")
+{
+	PrepareGroundRenderCameraLanguage();
+	const auto primary = GENERATE(MultiLayerRecipeID{"CFMT"}, MultiLayerRecipeID{"CHEM"}, MultiLayerRecipeID{"BATT"}, MultiLayerRecipeID{"ELEC"}); ProcessorRig rig(primary);
+	/** @return Actual public consumer identities at the unchanged visual phase; no raster or earned work is claimed. */
+	const auto query = [&] { const auto tile = rig.industry->location.tile; return std::vector<SpriteID>{GetMultiLayerIndustrySprite(tile, false, 24).value(), GetMultiLayerIndustrySprite(tile, true, 24).value()}; };
+	CheckGroundRenderCameraPurity(query);
 }

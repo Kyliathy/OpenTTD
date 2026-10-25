@@ -88,6 +88,14 @@ void SetViewportLayer(Window *w, MapLayer layer);
 void CycleMainViewportLayer();
 
 /**
+ * Show one layer, chosen by its place in the GUI display order, in the main viewport (the per-layer hotkeys).
+ * @param display_index 0 for Surface, 1 Underground, 2 Deep Underground, 3 Outer Space.
+ * @return Whether that layer is allocated in this game; an unallocated layer is ignored.
+ * @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md decision D2
+ */
+bool ShowMainViewportLayerInDisplayOrder(uint display_index);
+
+/**
  * Open native portal status and validated connection controls for either housing.
  * @param tile Actual clicked endpoint; window identity derives from its canonical reciprocal pair.
  */

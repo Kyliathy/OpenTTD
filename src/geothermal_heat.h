@@ -92,6 +92,8 @@ GeothermalHeatAllocation PrepareVentHeatAllocation(uint64_t interval, std::span<
 UtilityPowerError AllocateVentHeat(uint64_t interval, std::span<const GeothermalHeatDemand> demands, bool execute = true);
 /** @param grant Exact current native consumer/epoch. @param quantity_j Positive whole feasible use. @param participant Actual full work/input/output/auxiliary benefit. @return Atomic whole use and native source settlement or unchanged refusal; removed paths cannot authorize retained unused heat. */
 UtilityMutationReceipt ConsumeGeothermalHeat(UtilityGrantID grant, uint64_t quantity_j, GeothermalHeatParticipant &participant);
+/** @param proposal Exact prepared shared conversion. @param participant Actual complete generator service owner. @return Atomic conversion after revalidating original live physical routes; utility quantities retain their shared owner. */
+UtilityHeatConversionReceipt ConvertGeothermalHeat(const UtilityHeatConversionProposal &proposal, GeothermalHeatParticipant &participant);
 /** @return Bounded saved physical bindings in stable shared consumer order; no copied account quantities. */
 std::vector<GeothermalHeatConsumerBinding> CaptureGeothermalHeatConsumers();
 /** @return Exact current saved source-slice path references; source/grant/use/carry retain the native utility owner. */

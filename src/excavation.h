@@ -781,9 +781,10 @@ ExcavationOutline AuthorizeExcavationOutline(const ExcavationOutline &outline, s
  * Quote arbitrary bounded new working cells through the same frozen hardness terms as actual cuts.
  * @param tiles Complete canonical rock cells being previewed; open cells cost/yield nothing.
  * @param model_id Immutable TBM design whose layer/hardness capability must apply.
+ * @param own_job Validated continuing job whose still-unopened claims are quoted as rock; invalid for a fresh plan.
  * @return Read-only whole-cell support/spoil/work estimate or zero-quantity refusal; no claim or inventory is created.
  */
-ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id);
+ExcavationCutResult QuoteExcavationCells(std::span<const TileIndex> tiles, uint16_t model_id, ExcavationJobID own_job = ExcavationJobID{UINT32_MAX});
 
 /**
  * Cutting difficulty of one rock cell, by the same rule quotes and cuts use (frozen deposit hardness, else saved regional/legacy rock).
@@ -830,6 +831,22 @@ struct ExcavationRouteProposal {
 	std::vector<TileIndex> remaining_targets; ///< Explicit unresolved floor.
 	ExcavationCutResult estimate; ///< Whole proposal's independent spoil/support/time, recomputed at execution.
 	ExcavationPlanningPose end; ///< Actual proposed final pose/history.
+	ExcavationFootprintResult blocker; ///< Nearest actual obstruction after a failed target search; excludes the proposed domain edge.
+};
+
+/**
+ * Read-only working space a requested floor needs beyond its existing authorization: the approach from the start pose
+ * and the turning space a 3x3 cutter needs at the floor. Its cells stay proposals until the player confirms the quote.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ */
+struct ExcavationApproachProposal {
+	ExcavationError error = ExcavationError::None; ///< None, Limit, or the first geometry/ownership refusal.
+	TileIndex failure_tile = INVALID_TILE; ///< Stable failing tile for the preview.
+	std::vector<ExcavationCutGeometry> route; ///< Legal cuts from the start that use these cells; empty when none are needed.
+	std::vector<TileIndex> extra_tiles; ///< Canonical swept cells of that route outside the existing authorization.
+	ExcavationPlanningPose end; ///< Pose after the route: on the goal for an exact goal; the start when no cells are needed.
+	uint32_t expansions = 0; ///< Deterministic budget consumed.
 };
 
 /**
@@ -853,6 +870,18 @@ ExcavationPlanningStep AdvanceExcavationPlanningPose(const ExcavationPlanningPos
 ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, const ExcavationPlanningPose &start, uint16_t model_id, const ExcavationPlanningLimits &limits = {}, ExcavationPlanIntent intent = ExcavationPlanIntent::Area, TileIndex tunnel_end = INVALID_TILE);
 
 /**
+ * Replay the first accepted cuts of a job from its commissioning anchor, as its consist drove them.
+ * @param job Accepted job.
+ * @param planning_points Measured consist history length (3..16).
+ * @param cuts Number of accepted cuts to replay, at most the route's length: all of them for the route's end, the
+ *             completed ones for the last completed cut.
+ * @return The pose after those cuts (in next) and the last replayed cut, or InvalidRoute at the first cut the replay
+ *         does not reproduce exactly. Reads only.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23C
+ */
+ExcavationPlanningStep ReplayExcavationRoute(const ExcavationJob &job, uint8_t planning_points, size_t cuts);
+
+/**
  * Preview additional work after an actual owned job's complete accepted route.
  * Existing accepted sweeps form virtual future floor only; this never opens or releases a cell.
  * @param job Actual unfinished geological identity; foreign/closed/malformed jobs refuse.
@@ -867,6 +896,31 @@ ExcavationRouteProposal PlanExcavationRoute(const ExcavationOutline &outline, co
 ExcavationRouteProposal PlanExcavationJobExtension(ExcavationJobID job, const ExcavationOutline &outline, uint8_t planning_points, const ExcavationPlanningLimits &limits = {}, ExcavationPlanIntent intent = ExcavationPlanIntent::Area, TileIndex tunnel_end = INVALID_TILE);
 
 /**
+ * Find the working space beyond the existing authorization that a floor needs, as a pure, bounded proposal.
+ * Area: when the existing authorization already lets the planner cover the whole floor, nothing is needed. Otherwise
+ * the floor is covered inside a box around the start and the floor, grown by a fixed margin, and every swept cell of
+ * that route outside the existing authorization is returned: the approach and the turning space.
+ * Exact goal: the cutter centre must reach the requested cell nearest the start (a tunnel end); the cells of that path
+ * outside the existing authorization are returned.
+ * Claims, terrain, funds and Random() are unchanged; the same structures, claims, seams and active cuts as in
+ * PlanExcavationRoute refuse inside the wider box.
+ * @param start Supported cutter pose: a housing (solid or open), an accepted route's end, or the last completed cut.
+ * @param target Requested floor and its existing authorization (floor, ring, housing and earlier work). The
+ *               authorization may still be in pieces, a floor away from its housing; the approach joins them.
+ * @param model_id Immutable TBM layer/hardness capability.
+ * @param limits Deterministic search limits, the same bounds as PlanExcavationRoute.
+ * @param continuing_job Unfinished job of this company whose accepted cuts precede the new work, or an invalid ID.
+ * @param solid_start Whether the start may be an unopened portal housing; its portal then decides, as for a route.
+ * @param exact_goal Whether the cutter centre must reach the goal (tunnel) rather than cover the floor (area).
+ * @param kept_cuts How many of the continuing job's accepted cuts precede the new work: all of them (the default) for
+ *                  an extension, the completed ones for a remainder replacement (r2df task 12.4), whose dropped cuts
+ *                  are then neither open floor nor free claims. Zero refuses as InvalidRoute.
+ * @return The cells and the route proving them, the start when nothing is needed, or a refusal with its failing tile.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB
+ */
+ExcavationApproachProposal PlanExcavationApproach(const ExcavationPlanningPose &start, const ExcavationOutline &target, uint16_t model_id, const ExcavationPlanningLimits &limits, ExcavationJobID continuing_job, bool solid_start, bool exact_goal, uint32_t kept_cuts = UINT32_MAX);
+
+/**
  * Append canonical additional cuts to an unchanged unfinished job, retaining every existing work and exchange quantity.
  * The caller's TBM owner must also validate its actual consist, paused controller and physical support layout.
  * @param job Actual owned geological identity; no new ID is allocated.
@@ -879,6 +933,53 @@ ExcavationRouteProposal PlanExcavationJobExtension(ExcavationJobID job, const Ex
  */
 ExcavationJobResult AppendExcavationJob(ExcavationJobID job, uint64_t expected_revision, const ExcavationOutline &outline,
 	std::span<const ExcavationCutGeometry> route, bool execute);
+
+/** Spoil already aboard the cutter's wagons, measured by the TBM owner; it seeds the first new exchange breakpoint. */
+struct ExcavationLoadStart {
+	uint64_t earth_t = 0; ///< Earth aboard now.
+	uint64_t rock_t = 0; ///< Rock aboard now.
+};
+
+/**
+ * Replace the unfinished remainder of an owned job: keep every completed cut, drop the planned cuts that were not
+ * finished, and append new cuts that start where the last completed cut ended. The cutter's face approach tile
+ * (route[cursor - 1]) does not move, so nothing physical is undone and completed ground, statistics, cargo and money
+ * are untouched.
+ * Cursor rules: a job with no completed cut (cursor 0) refuses with InvalidRoute, because its first cut leaves the
+ * commissioning housing and belongs to a commission; a cursor other than expected_cursor refuses as StaleParticipant,
+ * because another cut completed since the quote; a completed or cancelled job refuses as AlreadyCompleted; an empty
+ * new route refuses with InvalidRoute.
+ * Partial work on the cut in progress is kept only when the first new cut is that same cut; otherwise it is abandoned.
+ * Cells only the dropped cuts claimed lose their claim and go back to Solid unless still unopened rock is reused by a
+ * new cut; the new cuts claim their sweeps like an append.
+ * @param job Actual owned unfinished geological identity; no new ID is allocated.
+ * @param expected_cursor Completed-cut count shown in the player's accepted quote.
+ * @param outline New requested floor and its explicitly accepted working space.
+ * @param route New advancing cuts from the last completed cut, produced by PlanExcavationJobReplacement.
+ * @param load Spoil aboard now; with no exchange due at the cursor, the first new breakpoint counts it.
+ * @param execute False performs every admission check without changing claims, terrain or progress.
+ * @return Same job identity on success, or a stable refusal with every existing state retained.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23C
+ */
+ExcavationJobResult ReplaceExcavationJobRemainder(ExcavationJobID job, uint32_t expected_cursor, const ExcavationOutline &outline,
+	std::span<const ExcavationCutGeometry> route, ExcavationLoadStart load, bool execute);
+
+/**
+ * Plan the new remainder of an owned job from the pose after its completed cuts, as a pure proposal.
+ * The planned-but-unfinished cuts are ignored: they neither count as open floor nor block the new route through their
+ * own claims, and their still-unopened cells are charged again if the new route reuses them.
+ * Refuses like PlanExcavationJobExtension, and also with InvalidRoute when no cut is completed yet (cursor 0).
+ * @param job Actual owned unfinished geological identity.
+ * @param outline New requested floor and explicitly accepted working space.
+ * @param planning_points Measured native consist history length; replay must exactly reproduce the completed sweeps.
+ * @param limits Deterministic search limits, further bounded by the saved-route capacity after the completed cuts.
+ * @param intent Area coverage or straight tunnel.
+ * @param tunnel_end Exact tunnel endpoint; ignored for area coverage.
+ * @return The new cuts and their quantities, or a stable refusal; claims, terrain and progress are unchanged.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23C
+ */
+ExcavationRouteProposal PlanExcavationJobReplacement(ExcavationJobID job, const ExcavationOutline &outline, uint8_t planning_points,
+	const ExcavationPlanningLimits &limits = {}, ExcavationPlanIntent intent = ExcavationPlanIntent::Area, TileIndex tunnel_end = INVALID_TILE);
 
 /** Complete readonly pass validation; returned terms become actual saved job input only through the reservation owner. */
 struct ExcavationPassResult {

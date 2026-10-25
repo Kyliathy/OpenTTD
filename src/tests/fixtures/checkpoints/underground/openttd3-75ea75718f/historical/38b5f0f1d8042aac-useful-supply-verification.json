@@ -1,0 +1,1835 @@
+{
+  "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCDC;actual normal-world paid Surface supply/native carriage/power readiness;useful operation remains6DCDD",
+  "controller": {
+    "path": "src/tests/multilayer/normal_ground_supply_report.py",
+    "bytes": 12620,
+    "sha256": "486d3605847a1abf7347d736e9bb4326d40f83a99775957ec204cfb25c66b37a"
+  },
+  "layout_handoff": {
+    "path": "logs/acceptance/bootstrap/20261019-native-01/modal-layout-verification.json",
+    "bytes": 34714,
+    "sha256": "adf17a20f1787d4d9cf8b516ff0afa93eda79d1f75538736db45cf25ddfa4624"
+  },
+  "receiver_interval_source": {
+    "path": "src/spoil_receiver.h",
+    "bytes": 8536,
+    "sha256": "4afca666aef6742070552431121cefd4661546982f49ef0d3dea192ff256b45b"
+  },
+  "records": {
+    "Debug": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/reports/normal-supply-Debug.json",
+        "bytes": 17091,
+        "sha256": "daea4129aa79d600bc7790f0975822358f50ca772f53b8763c4625c20ab715fd"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCDC;actual native Surface supply/machinery/power readiness;useful operation remains6DCDD",
+        "configuration": "Debug",
+        "classification": "normal_start_useful_supply",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_supply.py",
+          "bytes": 7338,
+          "sha256": "3c987aba742ee7407d8c4e982fdcb7205463d6e8c95eaa5911a35c66365d05bb"
+        },
+        "binary": {
+          "path": "build/Debug/openttd_test.exe",
+          "bytes": 79499776,
+          "sha256": "ad9b1198d1dbbe5876fedf37636836737bfc6a509b52ac8821c3b530f76ecce6"
+        },
+        "layout_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/modal-layout-verification.json",
+          "bytes": 34714,
+          "sha256": "adf17a20f1787d4d9cf8b516ff0afa93eda79d1f75538736db45cf25ddfa4624"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142822-35ee6ce6db/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "bd639f2278abec9a20369537e430672c3bf7173b71a42be61a7cd3b656054196"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-layout/20261019-192542-70684b4c07/saves/modal-layout.sav",
+          "bytes": 44884,
+          "sha256": "0207f187dedb49345c5e902b462cd2b10e65ded0e4e8e4b2d4990832bb8af6ed"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-193812-f469dc5ec4/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-193812-f469dc5ec4/main/scripts/game_start.scr",
+          "bytes": 104,
+          "sha256": "0bda8ec085c140f396c1f3536b4382124e90235934e4c627f579fb032f938361"
+        },
+        "ready": {
+          "first_tick": 1285721,
+          "tick": 1286267,
+          "opening_cash": 247337,
+          "cash": 97109,
+          "loan": 300000,
+          "carrier": 30,
+          "capsule": 72,
+          "complete": 1
+        },
+        "quote": {
+          "pieces": 83,
+          "tracks": 8984,
+          "capsule": 140625,
+          "wagon": 468,
+          "lease": 20,
+          "cash": 247206
+        },
+        "machinery": {
+          "carrier": 30,
+          "wagon": 57,
+          "capsule": 72,
+          "source": 0,
+          "cargo": 1,
+          "capacity": 64,
+          "origin": 11,
+          "destination": 12,
+          "coal_source": 0,
+          "coal_consumer": 1,
+          "orders": 6,
+          "tube_orders": 4,
+          "lease": 20
+        },
+        "parked": [
+          {
+            "vehicle": 2,
+            "tile": 5149,
+            "visited": 3,
+            "stored": 1
+          },
+          {
+            "vehicle": 33,
+            "tile": 7391,
+            "visited": 6,
+            "stored": 1
+          }
+        ],
+        "stored": [
+          {
+            "vehicle": 51,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 20,
+            "count": 0
+          },
+          {
+            "vehicle": 52,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 20,
+            "count": 0
+          },
+          {
+            "vehicle": 53,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 54,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 55,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 56,
+            "front": 51,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          }
+        ],
+        "ledger": [
+          {
+            "category": 0,
+            "cost": 8984
+          },
+          {
+            "category": 1,
+            "cost": 141093
+          },
+          {
+            "category": 2,
+            "cost": 131
+          },
+          {
+            "category": 3,
+            "cost": 0
+          },
+          {
+            "category": 4,
+            "cost": 0
+          },
+          {
+            "category": 5,
+            "cost": 0
+          },
+          {
+            "category": 6,
+            "cost": 0
+          },
+          {
+            "category": 7,
+            "cost": 0
+          },
+          {
+            "category": 8,
+            "cost": 0
+          },
+          {
+            "category": 9,
+            "cost": 0
+          },
+          {
+            "category": 10,
+            "cost": 0
+          },
+          {
+            "category": 11,
+            "cost": 0
+          },
+          {
+            "category": 12,
+            "cost": 20
+          }
+        ],
+        "invoices": [
+          {
+            "action": "modal_park_old_service",
+            "cost": 0,
+            "cash": 247337
+          },
+          {
+            "action": "modal_park_old_service",
+            "cost": 0,
+            "cash": 247337
+          },
+          {
+            "action": "modal_start_depot_trip",
+            "cost": 0,
+            "cash": 247337
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 247071
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 246936
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 246831
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 246726
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246636
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246546
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 246441
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246351
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246261
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246171
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 246081
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 245991
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 245901
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 245766
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 245661
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 245556
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 245466
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 245376
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 245271
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 245151
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 245031
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 244941
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 244836
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 244746
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 244656
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 244566
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 244446
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 244326
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 244221
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 244131
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 244026
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243936
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243846
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243756
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 243651
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243561
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243471
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243381
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 243246
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 243156
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 243036
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 242931
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 242841
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 242751
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 277,
+            "cash": 242474
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 277,
+            "cash": 242197
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 242062
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 241942
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 241807
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 241717
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 241627
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 241537
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 241432
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 241342
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 241207
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 241117
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 240982
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 240892
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 240802
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 240667
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 240532
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 240412
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 240292
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 240187
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 240082
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 239947
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 239812
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 239707
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 239587
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 239467
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 239347
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 239257
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 239152
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 239047
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238957
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238867
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238777
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238687
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238597
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238507
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 238387
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 238297
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 75,
+            "cash": 238222
+          },
+          {
+            "action": "modal_store_spoil_chain",
+            "cost": 0,
+            "cash": 238222
+          },
+          {
+            "action": "modal_vehicle",
+            "cost": 468,
+            "cash": 237754
+          },
+          {
+            "action": "modal_resource_couple",
+            "cost": 0,
+            "cash": 237754
+          },
+          {
+            "action": "modal_vehicle",
+            "cost": 140625,
+            "cash": 97129
+          },
+          {
+            "action": "modal_external_lease",
+            "cost": 20,
+            "cash": 97109
+          },
+          {
+            "action": "modal_bind_power",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_old_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 97109
+          }
+        ],
+        "capital_paid": 150097,
+        "parking_cash_delta": -131,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/saves/useful-ready.sav",
+            "bytes": 45072,
+            "sha256": "8fd3e82c35e620f1a4c5e614d8bd653354e5491a78bbedfe1313ad42090e7078"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/saves/useful-ready-repeat.sav",
+            "bytes": 45072,
+            "sha256": "8fd3e82c35e620f1a4c5e614d8bd653354e5491a78bbedfe1313ad42090e7078"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/supply-Debug.log",
+            "bytes": 9458,
+            "sha256": "7d6e5fb4ee898f37fce3588580a01bd18c8f07b6d44d13cdb814a5d8a0a332d5"
+          },
+          "assertions": 637,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "binding_boundary": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/useful-binding-boundary.log",
+          "bytes": 352,
+          "sha256": "356fabf453f14595d3067501a90381ce4fbf04c16f23f9b6eaf8996145a731d3"
+        },
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_supply_fixture.h",
+            "bytes": 15658,
+            "sha256": "88367d9fe3b35b8f5ce1fa2b9a61585f63230e81e05a7eb39fb5825e7e6e8791"
+          },
+          {
+            "path": "src/tests/normal_ground_modal.cpp",
+            "bytes": 736,
+            "sha256": "5e090c2564f55c47a40e121987527457529cb83f847d39d5b1df5d40ee5edbfb"
+          },
+          {
+            "path": "src/tests/normal_ground_freight_fixture.h",
+            "bytes": 27341,
+            "sha256": "073a4db11725df142be60488dd0c24d8d4c3e68bf157ce1a57a7d6ac2789e7b3"
+          },
+          {
+            "path": "src/tests/CMakeLists.txt",
+            "bytes": 24158,
+            "sha256": "cb787cf0af71ba13af931865c5c5188e140f4709b786e35bbfa600f4a2feb31e"
+          },
+          {
+            "path": "src/train_cmd.cpp",
+            "bytes": 207467,
+            "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+          },
+          {
+            "path": "src/order_cmd.cpp",
+            "bytes": 85516,
+            "sha256": "fec61474375ca96e72a87b9fde3635356dd6e430a5c028ffad575d785ae318a1"
+          },
+          {
+            "path": "src/transport_tube_cmd.cpp",
+            "bytes": 4926,
+            "sha256": "8ab1530adb06e884ed642dfdc87393bdb4a91f0185296c58bdfd2d4c329b48f9"
+          },
+          {
+            "path": "src/transport_tube_power.cpp",
+            "bytes": 26859,
+            "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+          },
+          {
+            "path": "src/transport_tube_runtime.cpp",
+            "bytes": 35927,
+            "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+          }
+        ],
+        "remaining": "6DCDD actual useful freight operation;6DD native recovery/files;6DE genuine acceptance."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/saves/useful-ready.sav",
+        "bytes": 45072,
+        "sha256": "8fd3e82c35e620f1a4c5e614d8bd653354e5491a78bbedfe1313ad42090e7078"
+      },
+      "ready": {
+        "first_tick": 1285721,
+        "tick": 1286267,
+        "opening_cash": 247337,
+        "cash": 97109,
+        "loan": 300000,
+        "carrier": 30,
+        "capsule": 72,
+        "complete": 1
+      },
+      "machinery": {
+        "carrier": 30,
+        "wagon": 57,
+        "capsule": 72,
+        "source": 0,
+        "cargo": 1,
+        "capacity": 64,
+        "origin": 11,
+        "destination": 12,
+        "coal_source": 0,
+        "coal_consumer": 1,
+        "orders": 6,
+        "tube_orders": 4,
+        "lease": 20
+      },
+      "retained_spoil_wagons": [
+        32,
+        34,
+        35,
+        36,
+        37,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56
+      ],
+      "receivers": {
+        "0": {
+          "industry": 13,
+          "kind": 0,
+          "mode": 0,
+          "interval_ticks": 29,
+          "interval_intake": 0,
+          "aggregate": 0,
+          "disposed": 264,
+          "crushed": 0,
+          "aggregate_made": 0,
+          "residue": 0,
+          "fees": 528,
+          "revision": 81
+        },
+        "1": {
+          "industry": 14,
+          "kind": 1,
+          "mode": 0,
+          "interval_ticks": 29,
+          "interval_intake": 0,
+          "aggregate": 882,
+          "disposed": 0,
+          "crushed": 1176,
+          "aggregate_made": 882,
+          "residue": 294,
+          "fees": 3540,
+          "revision": 222
+        }
+      },
+      "power": {
+        "kind": 0,
+        "source": 0,
+        "owner": 0,
+        "portal": 25055,
+        "interchange": 24928,
+        "revision": 8,
+        "lease_day": 740544,
+        "remainder": 0,
+        "invoice": 20,
+        "active": 1,
+        "position": 0,
+        "tile": 0
+      },
+      "binding": {
+        "consumer": 0,
+        "source": 0,
+        "vehicle": 72,
+        "remainder": 0,
+        "prepared": 18446744073709551615,
+        "consumed": 18446744073709551615,
+        "phase": 0,
+        "wait": 1,
+        "active": 1,
+        "geothermal_source": 4294967295,
+        "local_feed": 4294967295
+      }
+    },
+    "RelWithDebInfo": {
+      "report": {
+        "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193943-e0c7bb17b8/reports/normal-supply-RelWithDebInfo.json",
+        "bytes": 17125,
+        "sha256": "98fe6d54b06905d9579d5058f4a90375bc5f1d4f4c0675ca5186296145d23b24"
+      },
+      "actual": {
+        "_documentation": "r2mlvs16-integrated-acceptance-and-balance.md6DCDC;actual native Surface supply/machinery/power readiness;useful operation remains6DCDD",
+        "configuration": "RelWithDebInfo",
+        "classification": "normal_start_useful_supply",
+        "bootstrap_claim": false,
+        "controller": {
+          "path": "src/tests/multilayer/normal_ground_supply.py",
+          "bytes": 7338,
+          "sha256": "3c987aba742ee7407d8c4e982fdcb7205463d6e8c95eaa5911a35c66365d05bb"
+        },
+        "binary": {
+          "path": "build/RelWithDebInfo/openttd_test.exe",
+          "bytes": 37419520,
+          "sha256": "34675dc5c33d60612d830be2575a1b31073204fc9662b376287ae60312087933"
+        },
+        "layout_handoff": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/modal-layout-verification.json",
+          "bytes": 34714,
+          "sha256": "adf17a20f1787d4d9cf8b516ff0afa93eda79d1f75538736db45cf25ddfa4624"
+        },
+        "original_input": {
+          "path": "mlm/reviews/acceptance/normal-ground/20261019-142954-e7679b13e9/saves/normal-start.sav",
+          "bytes": 28980,
+          "sha256": "1b2bda1a96cba833f7e1e847bc99c57ce53f3447fb761a94f749aede7540680e"
+        },
+        "actual_input": {
+          "path": "mlm/reviews/acceptance/normal-ground-layout/20261019-192700-ab771dca3f/saves/modal-layout.sav",
+          "bytes": 45076,
+          "sha256": "9de37ee63ffe22b0fd353b8721139353db97b025983a921bbb40ce2c2a778ff7"
+        },
+        "config": {
+          "path": "mlm/runtime/native/20261019-193943-e0c7bb17b8/main/native-art.cfg",
+          "bytes": 240,
+          "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+        },
+        "startup": {
+          "path": "mlm/runtime/native/20261019-193943-e0c7bb17b8/main/scripts/game_start.scr",
+          "bytes": 104,
+          "sha256": "0bda8ec085c140f396c1f3536b4382124e90235934e4c627f579fb032f938361"
+        },
+        "ready": {
+          "first_tick": 1278175,
+          "tick": 1282350,
+          "opening_cash": 221434,
+          "cash": 69395,
+          "loan": 300000,
+          "carrier": 39,
+          "capsule": 32,
+          "complete": 1
+        },
+        "quote": {
+          "pieces": 83,
+          "tracks": 8969,
+          "capsule": 140625,
+          "wagon": 468,
+          "lease": 20,
+          "cash": 219477
+        },
+        "machinery": {
+          "carrier": 39,
+          "wagon": 30,
+          "capsule": 32,
+          "source": 0,
+          "cargo": 1,
+          "capacity": 64,
+          "origin": 11,
+          "destination": 12,
+          "coal_source": 0,
+          "coal_consumer": 1,
+          "orders": 6,
+          "tube_orders": 4,
+          "lease": 20
+        },
+        "parked": [
+          {
+            "vehicle": 2,
+            "tile": 5149,
+            "visited": 68,
+            "stored": 1
+          },
+          {
+            "vehicle": 33,
+            "tile": 7391,
+            "visited": 6,
+            "stored": 1
+          }
+        ],
+        "stored": [
+          {
+            "vehicle": 57,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 20,
+            "count": 0
+          },
+          {
+            "vehicle": 58,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 20,
+            "count": 0
+          },
+          {
+            "vehicle": 59,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 60,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 61,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          },
+          {
+            "vehicle": 62,
+            "front": 57,
+            "tile": 7391,
+            "cargo": 21,
+            "count": 0
+          }
+        ],
+        "ledger": [
+          {
+            "category": 0,
+            "cost": 8969
+          },
+          {
+            "category": 1,
+            "cost": 141093
+          },
+          {
+            "category": 2,
+            "cost": 907
+          },
+          {
+            "category": 3,
+            "cost": 0
+          },
+          {
+            "category": 4,
+            "cost": 0
+          },
+          {
+            "category": 5,
+            "cost": 0
+          },
+          {
+            "category": 6,
+            "cost": 0
+          },
+          {
+            "category": 7,
+            "cost": 0
+          },
+          {
+            "category": 8,
+            "cost": 0
+          },
+          {
+            "category": 9,
+            "cost": 0
+          },
+          {
+            "category": 10,
+            "cost": 0
+          },
+          {
+            "category": 11,
+            "cost": 1000
+          },
+          {
+            "category": 12,
+            "cost": 70
+          }
+        ],
+        "invoices": [
+          {
+            "action": "modal_park_old_service",
+            "cost": 0,
+            "cash": 221434
+          },
+          {
+            "action": "modal_park_old_service",
+            "cost": 0,
+            "cash": 221434
+          },
+          {
+            "action": "modal_start_depot_trip",
+            "cost": 0,
+            "cash": 221434
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 219357
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 219252
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 219147
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 219042
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 218937
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 218847
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 218757
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 218652
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 218532
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 218427
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 218337
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 218247
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 218127
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 218022
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 217932
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 217827
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 217722
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 217617
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 217527
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 217422
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 217287
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 217197
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 217092
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 217002
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 216912
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 216822
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 216687
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 216552
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 216462
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 216342
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 216207
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 216087
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 215997
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 215892
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 215802
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 215697
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 215592
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 215472
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 215382
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 215277
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 215142
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 215037
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 277,
+            "cash": 214760
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 322,
+            "cash": 214438
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 214333
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 214243
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 214138
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 214018
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213928
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213838
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213748
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213658
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213568
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213478
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 213388
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 213253
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 213133
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 213028
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 212908
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 212773
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 212668
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 212578
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 212488
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 212353
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 212263
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 212128
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 135,
+            "cash": 211993
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 120,
+            "cash": 211873
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211783
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211693
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211603
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211513
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211423
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 211318
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 105,
+            "cash": 211213
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211123
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 211033
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 210943
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 210853
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 210763
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 210673
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 90,
+            "cash": 210583
+          },
+          {
+            "action": "modal_surface_connection",
+            "cost": 75,
+            "cash": 210508
+          },
+          {
+            "action": "modal_store_spoil_chain",
+            "cost": 0,
+            "cash": 210508
+          },
+          {
+            "action": "modal_vehicle",
+            "cost": 468,
+            "cash": 210040
+          },
+          {
+            "action": "modal_resource_couple",
+            "cost": 0,
+            "cash": 210040
+          },
+          {
+            "action": "modal_vehicle",
+            "cost": 140625,
+            "cash": 69415
+          },
+          {
+            "action": "modal_external_lease",
+            "cost": 20,
+            "cash": 69395
+          },
+          {
+            "action": "modal_bind_power",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_old_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          },
+          {
+            "action": "modal_order",
+            "cost": 0,
+            "cash": 69395
+          }
+        ],
+        "capital_paid": 150082,
+        "parking_cash_delta": -1957,
+        "saves": {
+          "ready": {
+            "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193943-e0c7bb17b8/saves/useful-ready.sav",
+            "bytes": 45420,
+            "sha256": "e1f08be58cde46f673272057c0723d998fef6972b43bc24e5af6131d22d55062"
+          },
+          "repeat": {
+            "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193943-e0c7bb17b8/saves/useful-ready-repeat.sav",
+            "bytes": 45420,
+            "sha256": "e1f08be58cde46f673272057c0723d998fef6972b43bc24e5af6131d22d55062"
+          }
+        },
+        "pure_chunks_equal": 126,
+        "native": {
+          "log": {
+            "path": "logs/acceptance/normal-ground-supply/20261019-193943-e0c7bb17b8/supply-RelWithDebInfo.log",
+            "bytes": 9464,
+            "sha256": "3c55e6a77b19665fd22bf252df8203ee6df7e97aed2b7217917123ac8b70e9d1"
+          },
+          "assertions": 638,
+          "cases": 1
+        },
+        "children_reaped": true,
+        "binding_boundary": {
+          "path": "logs/acceptance/bootstrap/20261019-native-01/useful-binding-boundary.log",
+          "bytes": 352,
+          "sha256": "356fabf453f14595d3067501a90381ce4fbf04c16f23f9b6eaf8996145a731d3"
+        },
+        "sources": [
+          {
+            "path": "src/tests/normal_ground_supply_fixture.h",
+            "bytes": 15658,
+            "sha256": "88367d9fe3b35b8f5ce1fa2b9a61585f63230e81e05a7eb39fb5825e7e6e8791"
+          },
+          {
+            "path": "src/tests/normal_ground_modal.cpp",
+            "bytes": 736,
+            "sha256": "5e090c2564f55c47a40e121987527457529cb83f847d39d5b1df5d40ee5edbfb"
+          },
+          {
+            "path": "src/tests/normal_ground_freight_fixture.h",
+            "bytes": 27341,
+            "sha256": "073a4db11725df142be60488dd0c24d8d4c3e68bf157ce1a57a7d6ac2789e7b3"
+          },
+          {
+            "path": "src/tests/CMakeLists.txt",
+            "bytes": 24158,
+            "sha256": "cb787cf0af71ba13af931865c5c5188e140f4709b786e35bbfa600f4a2feb31e"
+          },
+          {
+            "path": "src/train_cmd.cpp",
+            "bytes": 207467,
+            "sha256": "05bb9c5676913610ec04c0e2a47b222d354e7fe476f41ebabb23033380c02f57"
+          },
+          {
+            "path": "src/order_cmd.cpp",
+            "bytes": 85516,
+            "sha256": "fec61474375ca96e72a87b9fde3635356dd6e430a5c028ffad575d785ae318a1"
+          },
+          {
+            "path": "src/transport_tube_cmd.cpp",
+            "bytes": 4926,
+            "sha256": "8ab1530adb06e884ed642dfdc87393bdb4a91f0185296c58bdfd2d4c329b48f9"
+          },
+          {
+            "path": "src/transport_tube_power.cpp",
+            "bytes": 26859,
+            "sha256": "7a838448087d1dbd1c551ce892916c79d867a03c0c6a0f50e3ce469a0de972f0"
+          },
+          {
+            "path": "src/transport_tube_runtime.cpp",
+            "bytes": 35927,
+            "sha256": "0469da4b7665de8a3221c72151c2d2aedcc20755f98310ba36320c44b3f422d0"
+          }
+        ],
+        "remaining": "6DCDD actual useful freight operation;6DD native recovery/files;6DE genuine acceptance."
+      },
+      "ready_input": {
+        "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193943-e0c7bb17b8/saves/useful-ready.sav",
+        "bytes": 45420,
+        "sha256": "e1f08be58cde46f673272057c0723d998fef6972b43bc24e5af6131d22d55062"
+      },
+      "ready": {
+        "first_tick": 1278175,
+        "tick": 1282350,
+        "opening_cash": 221434,
+        "cash": 69395,
+        "loan": 300000,
+        "carrier": 39,
+        "capsule": 32,
+        "complete": 1
+      },
+      "machinery": {
+        "carrier": 39,
+        "wagon": 30,
+        "capsule": 32,
+        "source": 0,
+        "cargo": 1,
+        "capacity": 64,
+        "origin": 11,
+        "destination": 12,
+        "coal_source": 0,
+        "coal_consumer": 1,
+        "orders": 6,
+        "tube_orders": 4,
+        "lease": 20
+      },
+      "retained_spoil_wagons": [
+        34,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        50,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "receivers": {
+        "0": {
+          "industry": 13,
+          "kind": 0,
+          "mode": 0,
+          "interval_ticks": 60,
+          "interval_intake": 0,
+          "aggregate": 0,
+          "disposed": 264,
+          "crushed": 0,
+          "aggregate_made": 0,
+          "residue": 0,
+          "fees": 528,
+          "revision": 81
+        },
+        "1": {
+          "industry": 14,
+          "kind": 1,
+          "mode": 0,
+          "interval_ticks": 60,
+          "interval_intake": 0,
+          "aggregate": 882,
+          "disposed": 0,
+          "crushed": 1176,
+          "aggregate_made": 882,
+          "residue": 294,
+          "fees": 3540,
+          "revision": 223
+        }
+      },
+      "power": {
+        "kind": 0,
+        "source": 0,
+        "owner": 0,
+        "portal": 25055,
+        "interchange": 24928,
+        "revision": 8,
+        "lease_day": 740491,
+        "remainder": 0,
+        "invoice": 20,
+        "active": 1,
+        "position": 0,
+        "tile": 0
+      },
+      "binding": {
+        "consumer": 0,
+        "source": 0,
+        "vehicle": 32,
+        "remainder": 0,
+        "prepared": 18446744073709551615,
+        "consumed": 18446744073709551615,
+        "phase": 0,
+        "wait": 1,
+        "active": 1,
+        "geothermal_source": 4294967295,
+        "local_feed": 4294967295
+      }
+    }
+  },
+  "classification": "normal_start_useful_supply",
+  "bootstrap_claim": false,
+  "native_cases": 2,
+  "native_assertions": 1275,
+  "pure_pairs": 2,
+  "complete_chunks_equal": 126,
+  "unchanged_owners": [
+    "GEOS",
+    "GDEP",
+    "GSPN",
+    "GVNT",
+    "EXJS",
+    "XJOB",
+    "XJRT",
+    "XJTL",
+    "XPAS",
+    "PATS",
+    "NGRF"
+  ],
+  "ignored_chunks": [],
+  "remaining": "6DCDD actual useful operation;6DD native recovery/files;6DE genuine S1/S2 acceptance."
+}

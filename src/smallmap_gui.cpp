@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file smallmap_gui.cpp GUI that shows a small map of the world with metadata like owner or height. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file smallmap_gui.cpp GUI that shows a small map of the world with metadata like owner or height. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (legend per map type, resolved height range, following the main view's layer) */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -35,6 +35,7 @@
 #include "smallmap_gui.h"
 #include "core/enum_type.hpp"
 #include "dropdown_func.h"
+#include "genworld.h"
 
 #include "widgets/smallmap_widget.h"
 
@@ -276,6 +277,38 @@ static SmallMapColourScheme _heightmap_schemes[] = {
 	{{}, _violet_map_heights,     MKCOLOUR_XXXX(PixelColour{0x81})}, ///< Violet colour scheme.
 };
 
+/** Highest height level the contour colour tables and the contour legend cover; resolved by #GetSmallMapHeightLimit. */
+static uint _smallmap_height_limit = 0;
+
+/**
+ * Height range the small map's contours describe. A generated world always stores a concrete limit, but a world
+ * built outside the generator (the multilayer demo checkpoints) can keep the "auto" value 0. The small map then
+ * resolves it the way the generator does, from the highest tile actually present on any layer, so the legend lists
+ * real heights and every tile has a colour. The game setting itself is never changed.
+ * @return The highest height level to colour and list, at least the setting's own value.
+ */
+static uint GetSmallMapHeightLimit()
+{
+	if (_settings_game.construction.map_height_limit != 0) return _settings_game.construction.map_height_limit;
+	uint highest = 0;
+	// One pass over every allocated layer: the small map can show any of them with the same colour table.
+	for (const TileIndex tile : Map::Iterate()) highest = std::max(highest, TileHeight(tile));
+	return std::max<uint>(MAP_HEIGHT_LIMIT_AUTO_MINIMUM, std::min<uint>(MAX_MAP_HEIGHT_LIMIT, highest + MAP_HEIGHT_LIMIT_AUTO_CEILING_ROOM));
+}
+
+/**
+ * Contour colour of a tile's height. The lookup is clamped to the table, so a tile raised above the covered range
+ * takes the highest colour instead of reading past the table.
+ * @param cs Colour scheme whose height table was built by the small map window.
+ * @param tile Tile whose height is coloured.
+ * @return Packed colour of that height.
+ */
+static inline uint32_t GetSmallMapHeightColour(const SmallMapColourScheme &cs, TileIndex tile)
+{
+	assert(!cs.height_colours.empty());
+	return cs.height_colours[std::min<size_t>(TileHeight(tile), cs.height_colours.size() - 1)];
+}
+
 /**
  * (Re)build the colour tables for the legends.
  */
@@ -306,12 +339,13 @@ void BuildLandLegend()
 	/* Table for delta; if max_height is less than the first column, use the second column as value. */
 	uint deltas[][2] = { { 24, 2 }, { 48, 4 }, { 72, 6 }, { 120, 10 }, { 180, 15 }, { 240, 20 }, { MAX_TILE_HEIGHT + 1, 25 }};
 	uint i = 0;
-	for (; _settings_game.construction.map_height_limit >= deltas[i][0]; i++) {
+	// Choose a readable contour interval for the resolved terrain range, including auto-height saved worlds.
+	for (; _smallmap_height_limit >= deltas[i][0]; i++) {
 		/* Nothing to do here. */
 	}
 	uint delta = deltas[i][1];
 
-	int total_entries = (_settings_game.construction.map_height_limit / delta) + 1;
+	int total_entries = (_smallmap_height_limit / delta) + 1;
 	int rows = CeilDiv(total_entries, 2);
 	int j = 0;
 
@@ -449,7 +483,7 @@ static const AndOr &GetMaskPixelsForTileType(TileIndex tile, TileType t, const E
 static inline uint32_t GetSmallMapContoursPixels(TileIndex tile, TileType t)
 {
 	const SmallMapColourScheme *cs = &_heightmap_schemes[_settings_client.gui.smallmap_land_colour];
-	return ApplyMask(cs->height_colours[TileHeight(tile)], GetMaskPixelsForTileType(tile, t, _smallmap_contours_andor));
+	return ApplyMask(GetSmallMapHeightColour(*cs, tile), GetMaskPixelsForTileType(tile, t, _smallmap_contours_andor));
 }
 
 /**
@@ -474,7 +508,7 @@ static inline uint32_t GetSmallMapVehiclesPixels(TileIndex tile, TileType t)
 static inline uint32_t GetSmallMapIndustriesPixels(TileIndex tile, TileType t)
 {
 	const SmallMapColourScheme *cs = &_heightmap_schemes[_settings_client.gui.smallmap_land_colour];
-	return ApplyMask(_smallmap_show_heightmap ? cs->height_colours[TileHeight(tile)] : cs->default_colour, GetMaskPixelsForTileType(tile, t, _smallmap_vehicles_andor));
+	return ApplyMask(_smallmap_show_heightmap ? GetSmallMapHeightColour(*cs, tile) : cs->default_colour, GetMaskPixelsForTileType(tile, t, _smallmap_vehicles_andor));
 }
 
 /**
@@ -623,7 +657,7 @@ uint32_t GetSmallMapOwnerPixels(TileIndex tile, TileType t, IncludeHeightmap inc
 		if (t == TileType::Water && !IsDryCoast(tile)) return MKCOLOUR_XXXX(PC_WATER);
 		const SmallMapColourScheme *cs = &_heightmap_schemes[_settings_client.gui.smallmap_land_colour];
 		return ((include_heightmap == IncludeHeightmap::IfEnabled && _smallmap_show_heightmap) || include_heightmap == IncludeHeightmap::Always)
-			? cs->height_colours[TileHeight(tile)] : cs->default_colour;
+			? GetSmallMapHeightColour(*cs, tile) : cs->default_colour;
 	} else if (o == OWNER_TOWN) {
 		return MKCOLOUR_XXXX(PC_DARK_RED);
 	}
@@ -649,7 +683,7 @@ protected:
 	static SmallMapType map_type; ///< Currently displayed legends.
 	static bool show_towns;       ///< Display town names in the smallmap.
 	static bool show_ind_names;   ///< Display industry names in the smallmap.
-	static int map_height_limit;  ///< Currently used/cached map height limit.
+	static int map_height_limit;  ///< Map height limit setting the colour tables were last built for (-1 before the first build).
 
 	static const uint INDUSTRY_MIN_NUMBER_OF_COLUMNS = 2; ///< Minimal number of columns in the #WID_SM_LEGEND widget for the #SmallMapType::Industries legend.
 
@@ -759,14 +793,18 @@ protected:
 	 */
 	void RebuildColourIndexIfNecessary()
 	{
-		/* Rebuild colour indices if necessary. */
-		if (SmallMapWindow::map_height_limit == _settings_game.construction.map_height_limit) return;
+		/* Rebuild colour indices if necessary. An unresolved "auto" limit (0) depends on the loaded terrain, which
+		 * the cached setting value cannot tell apart between games, so it is resolved again for every window. */
+		if (SmallMapWindow::map_height_limit == _settings_game.construction.map_height_limit && _settings_game.construction.map_height_limit != 0) return;
+		_smallmap_height_limit = GetSmallMapHeightLimit();
 
+		// All selectable schemes must describe the same resolved terrain, so changing colours cannot change height coverage.
 		for (auto &heightmap_scheme : _heightmap_schemes) {
 			/* The heights go from 0 up to and including maximum. */
-			size_t heights = _settings_game.construction.map_height_limit + 1;
+			size_t heights = _smallmap_height_limit + 1;
 			heightmap_scheme.height_colours.resize(heights);
 
+			// Map every permitted elevation to this scheme's gradient; even flat/auto worlds need a valid zero-height entry.
 			for (size_t z = 0; z < heights; z++) {
 				size_t access_index = (heightmap_scheme.height_colours_base.size() * z) / heights;
 
@@ -780,19 +818,31 @@ protected:
 	}
 
 	/**
-	 * Get the number of rows in the legend from the number of columns. Those
-	 * are at least min_number_of_fixed_rows and possibly more if there are so
-	 * many cargoes, industry types or companies that they won't fit in the
-	 * available space.
+	 * Get the number of rows in the legend of the shown map type from the number of columns. Those are at least
+	 * min_number_of_fixed_rows (the fixed layout of that type) and more when its cargoes, industry types or
+	 * companies do not fit in the available columns. Other map types never reserve rows here, so a short legend
+	 * lets the window shrink (r2df R1).
 	 * @param columns Number of columns in the legend.
-	 * @return Number of rows needed for everything to fit in.
+	 * @return Number of rows needed for everything to fit in, at least one.
 	 */
 	uint GetNumberRowsLegend(uint columns) const
 	{
-		/* Reserve one column for link colours */
-		uint num_rows_linkstats = CeilDiv(_smallmap_cargo_count, columns - 1);
-		uint num_rows_others = CeilDiv(std::max(_smallmap_industry_count, _smallmap_company_count), columns);
-		return std::max({this->min_number_of_fixed_rows, num_rows_linkstats, num_rows_others});
+		uint listed = 0;
+		switch (this->map_type) {
+			case SmallMapType::LinkStats:
+				/* Reserve one column for link colours */
+				listed = CeilDiv(_smallmap_cargo_count, columns - 1);
+				break;
+			case SmallMapType::Industries:
+				listed = CeilDiv(_smallmap_industry_count, columns);
+				break;
+			case SmallMapType::Owners:
+				listed = CeilDiv(_smallmap_company_count, columns);
+				break;
+			default:
+				break;
+		}
+		return std::max({1U, this->min_number_of_fixed_rows, listed});
 	}
 
 	/**
@@ -1521,18 +1571,26 @@ public:
 	}
 
 	/**
-	 * Center the small map on the current center of the main viewport, switching the small map to the layer that viewport shows.
+	 * Show another layer in this small map: the one place that keeps the layer button, the link overlay and the
+	 * drawing in step. Used when centring, when the main view changes layer (r2df D1) and from the own dropdown.
+	 * @param layer Allocated layer to show.
 	 */
+	void ShowLayer(MapLayer layer)
+	{
+		if (this->layer == layer) return;
+		this->layer = layer;
+		this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
+		//FD-8: the link overlay cached the stations of the old layer.
+		this->overlay->SetDirty();
+		this->SetDirty();
+	}
+
+	/** Center the small map on the main viewport and its current physical layer without changing the main view. */
 	void SmallMapCenterOnCurrentPos()
 	{
 		Window *main = GetMainWindow();
 		//M-7: the smallmap follows the main view's layer to centre on it. It never pushes its own layer onto the main view.
-		if (this->layer != main->viewport->layer) {
-			this->layer = main->viewport->layer;
-			this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
-			//FD-8: the link overlay cached the stations of the old layer.
-			this->overlay->SetDirty();
-		}
+		this->ShowLayer(main->viewport->layer);
 		const Viewport &vp = *main->viewport;
 		Point viewport_center = InverseRemapCoords2(vp.virtual_left + vp.virtual_width / 2, vp.virtual_top + vp.virtual_height / 2, false, nullptr, this->layer);
 		viewport_center.y -= static_cast<int>(to_underlying(this->layer)) * static_cast<int>(Map::SizeY()) * static_cast<int>(TILE_SIZE);
@@ -1579,11 +1637,14 @@ public:
 		}
 	}
 
+	/** Size the selected legend while keeping shared text widths stable across map modes. */
 	void OnInit() override
 	{
 		uint min_width = 0;
 		this->min_number_of_columns = INDUSTRY_MIN_NUMBER_OF_COLUMNS;
-		this->min_number_of_fixed_rows = lengthof(_linkstat_colours_in_legenda);
+		// Only the shown legend decides the height; the link-colour column belongs to the link statistics legend.
+		this->min_number_of_fixed_rows = this->map_type == SmallMapType::LinkStats ? lengthof(_linkstat_colours_in_legenda) : 0;
+		// Measure every legend for a stable shared width; only the selected legend may reserve vertical space.
 		for (SmallMapType i : EnumRange(SmallMapType::End)) {
 			uint height = 0;
 			uint num_columns = 1;
@@ -1608,7 +1669,8 @@ public:
 						str = GetString(tbl.legend);
 					}
 				} else {
-					if (tbl.col_break) {
+					// A fixed layout counts its rows per column; only the shown type's columns size the window.
+					if (tbl.col_break && i == this->map_type) {
 						this->min_number_of_fixed_rows = std::max(this->min_number_of_fixed_rows, height);
 						height = 0;
 						num_columns++;
@@ -1622,7 +1684,10 @@ public:
 				}
 				min_width = std::max(GetStringBoundingBox(str).width, min_width);
 			}
-			this->min_number_of_fixed_rows = std::max(this->min_number_of_fixed_rows, height);
+			if (i != this->map_type) continue;
+			// The industry, owner and link-statistics rows depend on the column count and come from GetNumberRowsLegend.
+			const bool listed = i == SmallMapType::Industries || i == SmallMapType::Owners || i == SmallMapType::LinkStats;
+			if (!listed) this->min_number_of_fixed_rows = std::max(this->min_number_of_fixed_rows, height);
 			this->min_number_of_columns = std::max(this->min_number_of_columns, num_columns);
 		}
 
@@ -1903,6 +1968,12 @@ public:
 				this->RebuildColourIndexIfNecessary();
 				break;
 
+			case SMALLMAP_INVALIDATE_MAIN_VIEW_LAYER:
+				// D1: every main-view layer change (hotkey, cycle, dropdown) moves the small map with it; the own
+				// dropdown may preview another layer until the next main-view change.
+				this->ShowLayer(GetMainWindow()->viewport->layer);
+				break;
+
 			default: NOT_REACHED();
 		}
 		this->SetDirty();
@@ -1917,11 +1988,7 @@ public:
 	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int click_mode) override
 	{
 		if (widget != WID_SM_MAP_LAYER) return;
-		this->layer = static_cast<MapLayer>(index);
-		this->GetWidget<NWidgetCore>(WID_SM_MAP_LAYER)->SetSprite(GetMapLayerIcon(this->layer));
-		//FD-8: the link overlay cached stations belonging to the previous Layer.
-		this->overlay->SetDirty();
-		this->SetDirty();
+		this->ShowLayer(static_cast<MapLayer>(index));
 	}
 
 	bool OnRightClick(Point, WidgetID widget) override

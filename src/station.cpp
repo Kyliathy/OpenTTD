@@ -8,6 +8,7 @@
 /** @file station.cpp Station ownership, catchment and layer-local spread. @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCD paid pending receiver loss. */
 
 #include "stdafx.h"
+#include "utility_power.h"
 #include "surface_supply_order_runtime.h"
 #include "launch_center.h"
 #include "launch_operations.h"
@@ -95,6 +96,7 @@ Station::~Station()
 		}
 		return;
 	}
+	RemoveUtilityTownServiceTerminal(this->index); // Revoke physical distribution authority before this StationID can be reused.
 	ReconcileSurfaceSupplyStation(this->index, true); // Ordinary deletion refunds only still-unshipped purchases; pool/world cleanup never credits the discarded world.
 
 	while (!this->loading_vehicles.empty()) {

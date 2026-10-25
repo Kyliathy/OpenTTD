@@ -31,13 +31,11 @@ class DependencyRoleChecks(unittest.TestCase):
         """Reserve an isolated checkout and independent retained/output payloads.
 
         @param self Active isolated test.
-        @return None; teardown owns only this reserved scratch root.
+        @return None; fixtures persist in this reserved scratch root without recursive cleanup.
         """
         cache = repository_root() / "test-cache/cleanup"
         cache.mkdir(parents=True, exist_ok=True)
-        self.temporary = tempfile.TemporaryDirectory(prefix="dependency-roles-", dir=cache)
-        self.addCleanup(self.temporary.cleanup)
-        self.root = Path(self.temporary.name)
+        self.root = Path(tempfile.mkdtemp(prefix="dependency-roles-", dir=cache))
         self.write("CMakeLists.txt", b"# @see r2fc2-file-cleanup3.md; isolated role fixture.\n")
         self.expected = self.write("src/tests/fixtures/expected.bin", b"independent expected bytes")
         self.output = self.write("mlm/reviews/fixture/current/selected/data/current.bin", b"actual current bytes")
@@ -135,6 +133,29 @@ class DependencyRoleChecks(unittest.TestCase):
         self.assertEqual(check_reference_roles(document, self.root, [reference]), 1)
         with self.assertRaisesRegex(ValueError, "unbound generated"):
             check_reference_roles(document, self.root, [reference], run_id="other")
+
+    def test_selected_cross_run_input_requires_exact_validated_supplier(self):
+        """Allow precise checked source bytes while keeping outputs in the capture run.
+
+        @param self Active isolated transport check; no native evidence is fabricated.
+        """
+        source = self.reference(self.output, "generated_prerequisite")
+        capture = self.write("mlm/reviews/fixture/current/capture/data/frame.bin", b"current capture bytes")
+        document = dict(kind="artifact_recipe_stage_result", run_id="capture",
+                        inputs=[source], outputs=[self.reference(capture)])
+        key = (source["path"], source["sha256"])
+        with self.assertRaisesRegex(ValueError, "unbound generated"):
+            check_reference_roles(document, self.root, [source])
+        self.assertEqual(check_reference_roles(document, self.root, [source], generated_runs={key: "selected"}), 2)
+        with self.assertRaisesRegex(ValueError, "unbound generated"):
+            check_reference_roles(document, self.root, [source], generated_runs={key: "different"})
+        with self.assertRaisesRegex(ValueError, "exact selected prerequisite"):
+            check_reference_roles(document, self.root, [source], generated_runs={(source["path"], "0" * 64): "selected"})
+        # Even equal approved source bytes cannot be relabelled as this run's
+        # output, preventing a capture from acquiring a source overwrite owner.
+        document["outputs"] = [self.reference(self.output)]
+        with self.assertRaisesRegex(ValueError, "unbound generated"):
+            check_reference_roles(document, self.root, [source], generated_runs={key: "selected"})
 
     def test_missing_or_corrupt_expected_input_is_never_regenerated(self):
         """Independent expectations refuse byte damage or absence without repair.

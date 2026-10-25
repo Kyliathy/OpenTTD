@@ -1,5 +1,7 @@
 # R2MLVS16 - Integrated Acceptance and Balance
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) separates four genuine paid original continuations, same-world prepared contention, five real peer pairs, seven unchanged-budget performance workloads and selected cold recovery. Their actual producing epochs remain explicit. Technical passes do not supply pending human feedback. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

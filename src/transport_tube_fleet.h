@@ -5,6 +5,8 @@
  */
 
 /**
+ * Historical provisional A source retained2026-10-23; excluded from all build targets.
+ * Active delivered definitions and the sole installer live in transport_tube_engine.cpp.
  * @file transport_tube_fleet.h Native five-capsule tuning and explicit complete-fleet installation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group10.
  * @see docs/zz-rhr/upgrades/2026-10/r2mlvs1-e-ground-and-space-budgets.md capsule tuning.

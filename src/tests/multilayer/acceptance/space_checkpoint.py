@@ -111,6 +111,20 @@ def qualify_checkpoint(checkpoint, native_results, ordinary_results, build_resul
     return qualify(checkpoint, native_results, ordinary_results, build_results, destination)
 
 
+def qualify_selected_foundation(foundation, native_results, ordinary_results, build_results, destination):
+    """Publish merged-build qualification without advancing the selected Plan11 task.
+
+    @param foundation Exact verified current continuation, retaining its original seal.
+    @param native_results Both configurations' actual zero-tick native-load results.
+    @param ordinary_results Both configurations' actual paused441ordinary restores.
+    @param build_results Both configurations' current selected build identities.
+    @param destination Explicit new current review report path.
+    @return Identity of a distinct qualification report; original dispatch is unchanged.
+    """
+    from space_checkpoint_foundation import qualify_selected_foundation as qualify
+    return qualify(foundation, native_results, ordinary_results, build_results, destination)
+
+
 def load_foundation(path, configuration=None, root=None):
     """Load an explicitly selected typed foundation without reserving a run.
 
@@ -132,6 +146,41 @@ def export_foundation(foundation, observer=None):
     """
     from space_checkpoint_foundation import export_foundation as export
     return export(foundation, observer)
+
+
+def inspect_foundation_stage(request, root):
+    """Recheck the explicitly selected durable continuation through its public read-only API.
+
+    @param request Current pure recipe request with the exact retained foundation identity.
+    @param root Source checkout containing the selected complete retained witness closure.
+    @return Actual continuation/input checks; no EXE, simulation tick, cash window or publication is authorized.
+    """
+    from artifact_paths import RunContext
+    reference = request["inputs"]["selected-foundation"]
+    path = _verified(reference, root)
+    # The selected dispatch and closed policy remain the public source owner.
+    # Neither a recipe invocation nor missing old caches may reset its next task
+    # to the older seal or reopen already consumed earning/spending windows.
+    if request["paid_work_authorized"] is not False or request["publishes_source"] is not False:
+        raise ValueError("Space input inspection is read-only and grants no paid scope")
+    foundation = load_foundation(path, root=root)
+    actual = verify_foundation(foundation)
+    if actual["next_task"] != request["declaration"]["original_parameters"]["next_task"] or actual["authorization_granted"] is not False:
+        raise ValueError("selected Space continuation dispatch/policy disagrees")
+    if request["stage"] == "prepare":
+        return dict(checks=["selected durable continuation and its complete closed witness closure verified"])
+    if request["stage"] != "verify":
+        raise ValueError("Space continuation inspection requires an explicit prepare/verify stage")
+    context = RunContext(root, request["feature"], request["scenario"], request["run_id"])
+    output = checked_path(root / request["outputs"]["manifest"], root)
+    if output.parent != context.reports:
+        raise ValueError("Space input observation is outside its selected reports owner")
+    result = dict(_documentation=__doc__, schema_version=1, kind="retained_space_continuation_inputs", run_id=context.run_id,
+                  foundation=reference, verified=actual, native_qualification=False, gameplay_ticks_executed=0,
+                  publishes_source=False)
+    with output.open("x", encoding="utf-8") as sink:
+        sink.write(json.dumps(result, indent=2) + "\n")
+    return dict(checks=["both selected retained Space worlds resolve without old executable/cache dependencies; closed task/cash/tick policy preserved"])
 
 
 def verify_foundation(foundation, observer=None):

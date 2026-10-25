@@ -8,6 +8,7 @@
 /** @file layer_portal_cmd.cpp Building, drawing and removing a pair of layer portal tiles. @see docs/zz-reach2/upgrades/2026-10/r2mlm7-layer-portal-foundation.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md, docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
 
 #include "stdafx.h"
+#include "geothermal_conduit_sprite.h"
 #include "layer_portal_cmd.h"
 #include "transport_tube.h"
 #include "multilayer_sprite.h"
@@ -145,6 +146,7 @@ static void DrawTile_LayerPortal(TileInfo *ti)
 		DiagDirection shaft = GetLayerPortalShaftDirection(ti->tile);
 		SpriteID base = GetTileLayer(ti->tile) == MapLayer::Surface ? SPR_MAP_LAYER_ROAD_TUNNEL_SURFACE : SPR_MAP_LAYER_ROAD_TUNNEL_UNDERGROUND;
 		SpriteID back = base + to_underlying(GetLayerPortalDoorDirection(ti->tile)) * 2;
+		DrawGeothermalConduitGround(ti->tile); // Installed cable precedes the whole tunnel body and never grants transfer rights.
 		DrawGroundSprite(back, PAL_NONE);
 		AddSortableSpriteToDraw(back + 1, PAL_NONE, *ti, _road_tunnel_front_bounds[shaft], false);
 		AddSortableSpriteToDraw(SPR_EMPTY_BOUNDING_BOX, PAL_NONE, *ti, _road_tunnel_rear_sep[shaft]);
@@ -168,6 +170,7 @@ static void DrawTile_LayerPortal(TileInfo *ti)
 	bool transparent = IsTransparencySet(TransparencyOption::Buildings);
 	Axis axis = DiagDirToAxis(GetLayerPortalShaftDirection(ti->tile));
 	DrawGroundSprite(SPR_FLAT_BARE_LAND, PAL_NONE);
+	DrawGeothermalConduitGround(ti->tile); // Paid ground branches remain below the housing and native vehicles.
 	//Both building parts follow the existing building transparency controls.
 	if (!invisible) {
 		SpriteID image = back;

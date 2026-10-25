@@ -175,7 +175,49 @@ def tube_history_stage(request, root):
                         "both source epochs and original media preserved; five-model work remains paused"])
 
 
+def donor_input_stage(request, root):
+    """Dispatch retained donor verification to its original canonical preservation owner.
+
+    @param request Existing exact read-only selected recipe stage.
+    @param root Acheckout holding all imported original payloads and namespaced aliases.
+    @return Actual input verification checks, never donor/current gameplay acceptance.
+    """
+    import sys
+    sys.path.insert(0, str(root / "src/tests/multilayer"))
+    from verify_donor_inputs import execute_stage
+    return execute_stage(request, root)
+
+
+def space_continuation_input_stage(request, root):
+    """Inspect the selected retained Space continuation through its existing public owner.
+
+    @param request Exact registered read-only foundation input recipe stage.
+    @param root Acheckout containing the complete exported continuation witnesses.
+    @return Real closed-policy input checks; no native process or paid work is launched.
+    """
+    import sys
+    sys.path.insert(0, str(root / "src/tests/multilayer/acceptance"))
+    from space_checkpoint import inspect_foundation_stage
+    return inspect_foundation_stage(request, root)
+
+
+def merged_ground_stage(request, root):
+    """Delegate a registered bounded recovery leaf to its actual acceptance owner.
+
+    @param request Exact selected ground recovery stage and declared input roles.
+    @param root Checkout containing current sources and preserved original worlds.
+    @return Actual selected original migration, replay, controls or timing checks.
+    """
+    sys.path.insert(0, str(root / 'src/tests/multilayer/acceptance'))
+    from merged_ground_recipe import execute_stage
+    return execute_stage(request, root)
+
+
 HANDLERS = {"space-checkpoint": space_checkpoint_stage,
+            **{"merged-ground-" + name: merged_ground_stage for name in
+               ("normal-start", "lifecycle", "useful-route", "performance")},
+            "donor-underground-inputs": donor_input_stage,
+            "space-continuation-inputs": space_continuation_input_stage,
             "state-prior-native": prior_metadata_stage,
             "tube-checkpoint": tube_history_stage,
             **{"ground-viewport-" + mode: ground_viewport_stage for mode in
@@ -189,6 +231,7 @@ HANDLERS = {"space-checkpoint": space_checkpoint_stage,
             **{"m1-source-" + stage: m1_source_stage for stage in
                ("base", "terrain", "portal", "vehicle", "purchase", "facility", "control", "hardness", "collector")},
             "m1-derived-inputs": m1_source_stage,
+            "merged-art-candidates": m1_source_stage,
             **{"space-source-" + asset: space_art_source_stage for asset in
                ("vehicle-model-15", "vehicle-model-19", "vehicle-model-20", "vehicle-model-18",
                 "asteroid-nickel", "asteroid-ice", "asteroid-rare-earth")},
@@ -212,6 +255,84 @@ HANDLERS = {"space-checkpoint": space_checkpoint_stage,
             "ground-source-geothermal-conduit": ground_art_source_stage,
             "ground-source-control-tube": ground_art_source_stage,
             "ground-derived-inputs": ground_art_source_stage}
+
+
+def validated_prerequisite_runs(request, recipe, root):
+    """Bind a fresh viewport's precise inputs to actual current supplying runs.
+
+    @param request Registered capture request with an explicit completed pure source result.
+    @param recipe Exact enabled catalogue declaration already checked by the dispatcher.
+    @param root Checkout owning the source graph, current selectors and actual images.
+    @return Exact selected prerequisite path/hash to verified supplier invocation map.
+    """
+    handler = HANDLERS.get(recipe["id"])
+    # Only the existing prepared capture owners have a separate output run.
+    # Other adapters retain the ordinary same-invocation dependency boundary.
+    if request.get("prepared_source") is None or handler not in (launch_occupied_viewport_stage, ground_viewport_stage):
+        return {}
+    from artifact_rebuild import identity, load_recipe, snapshot, verify_passed_stage
+    reference = request["prepared_source"]
+    path = contained(root / reference["path"], root / "mlm/reviews/rebuild")
+    if identity(path, root) != reference:
+        raise ValueError("prepared viewport source result changed")
+    source = json.loads(path.read_text(encoding="utf-8"))
+    # A copied old success label cannot authorize foreign generated files.
+    # Current declarations, original inputs and producing code must still match.
+    if (source.get("kind") != "artifact_rebuild_result" or source.get("complete") is not True
+            or source.get("status") != "verified" or source["signature"]["configuration"] is not None):
+        raise ValueError("prepared viewport requires a completed pure source graph")
+    supplier_run = identifier(source["run_id"])
+    expected_path = root / "mlm/reviews/rebuild" / identifier(source["signature"]["recipe"]) / supplier_run / "reports/rebuild.json"
+    if path != expected_path.resolve():
+        raise ValueError("prepared viewport source graph recipe/run changed")
+    selection = load_recipe(source["signature"]["recipe"], None, root)
+    # Native branches cannot be borrowed as source-only qualification. The
+    # actual current selector is checked independently below against its build.
+    if (not selection["executable"] or any(row["target"] is not None or row["execution"] != "pure_conversion"
+            or row["configuration_reuse"] != "source_bytes_only" for row in selection["recipes"].values())):
+        raise ValueError("prepared viewport supplier is not an executable pure source graph")
+    current = snapshot(selection, root)
+    if any(source["signature"].get(key) != value for key, value in current.items()):
+        raise ValueError("prepared viewport source graph inputs/code/declarations changed")
+    sys.path.insert(0, str(root / "src/tests/multilayer"))
+    from space_source_review import checked_result, selected_recipe
+    family = "launch" if handler is launch_occupied_viewport_stage else "ground"
+    selector_recipe = selected_recipe(family)
+    result = {}
+    # Bind each declared role to its actual producing leaf, including exact
+    # run/feature/scenario/output placement. A whole old run is never exempted.
+    for requirement in recipe["requires"]:
+        supplied = request["inputs"][requirement["as"]]
+        if requirement["as"] == "source-selector":
+            if requirement["recipe"] != selector_recipe["id"] or requirement["role"] != "manifest":
+                raise ValueError("prepared viewport source selector declaration changed")
+            selector = checked_result(supplied, family, request["configuration"], root)
+            decoder = json.loads((root / selector["decoder_prerequisite"]["path"]).read_text(encoding="utf-8"))
+            # Current selector/process/candidate checks must agree with the
+            # exact source root and current capture build, not just equal pixels.
+            if (selector["run_id"] != supplier_run or selector["build_result"] != request["build"]["result"]
+                    or decoder.get("source_generation") != reference):
+                raise ValueError("prepared viewport selector/source/build handoff disagrees")
+        else:
+            declaration = source["signature"]["declarations"].get(requirement["recipe"])
+            node = source["nodes"].get(requirement["recipe"])
+            # A source-only role must have a real passed pure leaf; neither a
+            # native result nor a hand-edited node/output can replace its supplier.
+            if (declaration is None or node is None or node["status"] != "verified"
+                    or declaration["execution"] != "pure_conversion"
+                    or declaration["configuration_reuse"] != "source_bytes_only"
+                    or node["stages"]["verify"]["status"] != "passed"):
+                raise ValueError("prepared viewport lacks a verified pure prerequisite")
+            output = next(row for row in declaration["outputs"] if row["role"] == requirement["role"])
+            expected = root / "mlm/reviews" / declaration["feature"] / declaration["scenario"] / supplier_run / output["path"].format(configuration=None)
+            if supplied != node["outputs"].get(requirement["role"]) or (root / supplied["path"]).resolve() != expected.resolve():
+                raise ValueError("prepared viewport pure prerequisite recipe/role/run changed")
+            verify_passed_stage(node["stages"]["verify"], root)
+            stage = json.loads((root / node["stages"]["verify"]["result"]["path"]).read_text(encoding="utf-8"))
+            if stage["outputs"].get(requirement["role"]) != supplied:
+                raise ValueError("prepared viewport pure prerequisite differs from its passed stage")
+        result[(supplied["path"], supplied["sha256"])] = supplier_run
+    return result
 
 
 def execute_request(path, root=None):
@@ -244,11 +365,28 @@ def execute_request(path, root=None):
     run = contained(root / "mlm/reviews" / recipe["feature"] / recipe["scenario"] / identifier(request["run_id"]), root / "mlm/reviews")
     expected_outputs = {row["role"]: (run / row["path"].format(configuration=request["configuration"])).relative_to(root).as_posix()
                         for row in recipe["outputs"]}
+    if request.get("prepared_attempt") is not None:
+        # Repeated native art observations keep earlier failures/results in
+        # their own declared role folders; only existing native art leaves own
+        # this bounded attempt namespace, never arbitrary converters/publishers.
+        from sprite_native_loader import prepared_outputs, selected_recipe
+        from artifact_paths import RunContext
+        family = recipe["original_parameters"].get("family")
+        if family is None or selected_recipe(family) != recipe:
+            raise ValueError("prepared attempt is not an existing native art leaf")
+        expected_outputs = prepared_outputs(RunContext(root, recipe["feature"], recipe["scenario"], request["run_id"]),
+                                            recipe, request["configuration"], request["prepared_attempt"])
     if request["outputs"] != expected_outputs:
         raise ValueError("recipe stage output is outside its selected recipe/run")
     prerequisites = [request["inputs"][row["as"]] for row in recipe["requires"]]
-    check_reference_roles(request, root, prerequisites, request["run_id"], verify_bytes=False)
-    for reference in [*request["inputs"].values(), *request["sources"]]:
+    supplier_runs = validated_prerequisite_runs(request, recipe, root)
+    check_reference_roles(request, root, prerequisites, request["run_id"], verify_bytes=False, generated_runs=supplier_runs)
+    witnesses = [*request["inputs"].values(), *request["sources"]]
+    # The checked source graph authorizes these precise cross-run inputs.
+    # Keep that authority byte-exact before and after the capture adapter too.
+    if supplier_runs:
+        witnesses.append(request["prepared_source"])
+    for reference in witnesses:
         if file_identity(contained(root / reference["path"], root))[0] != reference["sha256"]:
             raise ValueError("recipe stage input/source changed")
     handler = HANDLERS.get(request["recipe"])
@@ -271,7 +409,7 @@ def execute_request(path, root=None):
         raise ValueError("verification did not produce every declared output role")
     # Close actual retained/source identities after the adapter returns. A
     # publisher or concurrent edit cannot become a successful conversion proof.
-    for reference in [*request["inputs"].values(), *request["sources"]]:
+    for reference in witnesses:
         if file_identity(contained(root / reference["path"], root))[0] != reference["sha256"]:
             raise ValueError("recipe stage changed its retained input/source")
     result = dict(_documentation="Owner: r2fc-file-cleanup3.md14; actual completed adapter checks.",

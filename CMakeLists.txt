@@ -63,6 +63,7 @@ add_custom_target(tools)
 include(CompileFlags)
 compile_flags()
 
+# Both desktop Unix families use the same platform abstractions in engine code.
 if(APPLE OR UNIX)
     add_definitions(-DUNIX)
 endif()
@@ -135,6 +136,7 @@ find_package(LibLZMA)
 find_package(LZO)
 find_package(PNG)
 
+# Native/browser HTTP providers replace libcurl on these two platform families.
 if(WIN32 OR EMSCRIPTEN)
     # Windows uses WinHttp for HTTP requests.
     # Emscripten uses Javascript for HTTP requests.
@@ -178,6 +180,7 @@ if(APPLE)
     find_library(QUARTZCORE_LIBRARY QuartzCore)
 endif()
 
+# Only native graphical clients need an optional desktop OpenGL backend.
 if(NOT EMSCRIPTEN AND NOT OPTION_DEDICATED)
     find_package(OpenGL COMPONENTS OpenGL)
 endif()
@@ -195,10 +198,14 @@ check_ipo_supported(RESULT IPO_FOUND)
 
 show_options()
 
+# Unix graphical clients require a window driver and compatible text shaping;
+# dedicated servers and Cocoa clients have different platform dependencies.
 if(UNIX AND NOT APPLE AND NOT OPTION_DEDICATED)
+    # Without either supported window driver a Unix client cannot display a game.
     if(NOT SDL2_FOUND AND NOT ALLEGRO_FOUND)
         message(FATAL_ERROR "SDL2 or Allegro is required for this platform")
     endif()
+    # Shaping without ICU cannot provide the supported international text path.
     if(HARFBUZZ_FOUND AND NOT ICU_I18N_FOUND)
         message(WARNING "HarfBuzz depends on ICU i18n to function; HarfBuzz will be disabled")
     endif()
@@ -270,6 +277,8 @@ add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     src/tests/surface_supply_refund_stock.cpp
     src/tests/cargo_custody.cpp
     src/tests/surface_supply_custody_policy.cpp
+    # Same-file ordinary/Space custody remains exclusive: archi-savegame.md; m2o23-3 Group41B.
+    src/tests/heavy_joined_validation.cpp
     src/tests/surface_supply_adoption.cpp
     src/tests/surface_supply_space_custody.cpp
     src/tests/surface_supply_window.cpp
@@ -282,7 +291,9 @@ add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     src/tests/transport_tube_interchange_delivery.cpp
     src/tests/surface_supply_order_owner.cpp
     src/tests/surface_supply_order_wire.cpp
+    src/tests/surface_supply_merged_wire.cpp
     src/tests/surface_supply_order_native.cpp
+    src/tests/save_first_tick_fixture.cpp
     # Actual conventional three-plane bought-material transport: r2mlvs6 Group13CD.
     src/tests/surface_supply_delivery.cpp
     # Authentic ordinary Surface starting-world contracts: r2mlvs11 Group15BB.
@@ -379,6 +390,8 @@ add_executable(openttd_ground_consumer_test EXCLUDE_FROM_ALL
     src/tests/mock_spritecache.cpp
     src/tests/multilayer_bootstrap.cpp
     src/tests/ground_sprite_selection.cpp
+    # Actual camera/visibility independence: archi-map-layers.md; m2o23-3 Group50.
+    src/tests/ground_render_camera_fixture.cpp
     # Current actual mine geometry/status owners qualify selected source binding first: Plan14 Group79FC.
     src/tests/layer_mine_definition.cpp
     src/tests/layer_mine_presentation.cpp
@@ -415,6 +428,7 @@ add_executable(openttd_ground_viewport_test EXCLUDE_FROM_ALL
     src/tests/ground_station_runtime.cpp
     # Corrected facility packing proves the complete source/prefix through a fresh actual loader: Plan14 Group79FHCCB.
     src/tests/ground_station_offset_load.cpp
+    src/tests/merged_runtime_gallery.cpp
 )
 # Reuse the real native engine while retaining every completed application image.
 # Provider checks run before adding operating terminal/interchange consumers.
@@ -425,6 +439,62 @@ add_executable(openttd_tube_test EXCLUDE_FROM_ALL
     src/tests/mock_spritecache.cpp
     src/tests/multilayer_bootstrap.cpp
     src/tests/transport_tube_model.cpp
+    src/tests/transport_tube_definitions.cpp
+    src/tests/transport_tube_admission.cpp
+    src/tests/transport_tube_geothermal.cpp
+    src/tests/transport_tube_geothermal_binding.cpp
+    src/tests/transport_tube_commands.cpp
+    # Native merged peer gate and exact supply codec: archi-commands.md; m2o23-3 Group47.
+    src/tests/merged_command_compatibility.cpp
+    # Explicit hidden failing child only: archi-historical-debug.md; m2o23-4 Group54.
+    src/tests/native_harness_faults.cpp
+    # Pure imported native art selectors: archi-map-layers.md; m2o23-3 Group51.
+    src/tests/transport_tube_sprite.cpp
+    src/tests/transport_tube_vehicle_sprite.cpp
+    src/tests/transport_tube_facility_sprite.cpp
+    src/tests/transport_tube_conduit_sprite.cpp
+    src/tests/geothermal_generator_sprite.cpp
+    src/tests/geothermal_riser_sprite.cpp
+    src/tests/geothermal_conduit_sprite.cpp
+    src/tests/multilayer_collector_selection.cpp
+
+    src/tests/transport_tube_provider_switch.cpp
+    src/tests/utility_scheduler_publication.cpp
+    src/tests/utility_scheduler_contention.cpp
+    src/tests/utility_scheduler_lifecycle.cpp
+    src/tests/utility_scheduler_visibility.cpp
+    # Same-world canonical paid stock and loaded freight in matched native camera worlds: archi-map-layers.md; m2o23-4 Group66.
+    src/tests/utility_scheduler_paid.cpp
+    src/tests/ground_network_merge.cpp
+    src/tests/ground_performance_merge.cpp
+    src/tests/excavation_route.cpp
+    src/tests/utility_power_performance.cpp
+    # Native utility controls and retained exact-ID supply menu: archi-gui.md; m2o23-3 Group37.
+    src/tests/utility_controls_window.cpp
+    # Detached original identity and native framing: archi-savegame.md; m2o23-3 Group38.
+    src/tests/save_envelope_identity.cpp
+    src/tests/save_envelope_framing.cpp
+    src/tests/save_envelope_inspection.cpp
+    src/tests/save_envelope_originals.cpp
+    src/tests/save_envelope_adversarial.cpp
+    src/tests/save_lineage_preflight.cpp
+    # Actual original A/shared-donor Space reconstruction: archi-savegame.md; m2o23-3 Group42.
+    src/tests/space_lineage_native.cpp
+    src/tests/machinery_lineage_native.cpp
+    # Genuine retained paid-world full frames and accounting: archi-map-layers.md; m2o23-4 Group65.
+    src/tests/normal_ground_merge.cpp
+    # Genuine exported wait replay and final public conversion: archi-map-layers.md; m2o23-4 Group65B.
+    src/tests/normal_ground_recovery.cpp
+    # Existing actual depot saturation/path/capacity recovery, separately labelled component scope: r2mlvs5 Group13C.
+    src/tests/tbm_depot_stalls.cpp
+    src/tests/save_first_tick_fixture.cpp
+    src/tests/save_lineage_policy.cpp
+    src/tests/surface_supply_merged_wire.cpp
+    src/tests/surface_supply_window.cpp
+    # Existing actual external loss/recovery and unpaid debt: archi-map-layers.md; m2o23-2 Group36.
+    src/tests/transport_tube_recovery.cpp
+    src/tests/transport_tube_calendar.cpp
+    src/tests/transport_tube_prototype.cpp
     # Read-only native TBM merge prerequisites: archi-map-layers.md; m2o23-1-come-space.md Group20.
     src/tests/tbm_merge_observation.cpp
     src/tests/tbm_face_stand.cpp
@@ -438,6 +508,63 @@ add_executable(openttd_tube_test EXCLUDE_FROM_ALL
     src/tests/tbm_face_cycle.cpp
     # Native installed phase activation: archi-map-layers.md; m2o23-2-come-space.md Group23.
     src/tests/tbm_face_controller.cpp
+    src/tests/tbm_face_controller_loop.cpp
+    # Original geological remainder and completed-cut conservation: archi-map-layers.md; m2o23-2 Group23C.
+    src/tests/tbm_remainder.cpp
+    src/tests/tbm_change_work.cpp
+    src/tests/excavation_approach.cpp
+    src/tests/tbm_approach.cpp
+    src/tests/tbm_obstruction.cpp
+    src/tests/tbm_face_support.cpp
+    src/tests/tbm_face_lifecycle.cpp
+    src/tests/tbm_face_regression.cpp
+    src/tests/tbm_hangar_service.cpp
+    # Current recurring, frozen exchange-count and reservation regressions: m2o23-2 Group23EB.
+    src/tests/tbm_depot_workflow.cpp
+    src/tests/tbm_economics.cpp
+    src/tests/tbm_exchange_acceptance.cpp
+    src/tests/tbm_reserved_loop.cpp
+    # Current ordinary occupied FIFO file producer and full native loader: m2o23-2 Group23EC.
+    src/tests/tbm_logistics_queue.cpp
+    src/tests/tbm_logistics_runtime.cpp
+    # Selected service requires the original paid excavation workflow helper; filter execution to its service case.
+    src/tests/underground_workflow.cpp
+    # Native layer navigation, default cutter selection and refused previews: archi-map-layers.md; m2o23-2 Group24.
+    src/tests/layer_construction_controls.cpp
+    # Native project advice/change-work and user window actions: archi-gui.md; m2o23-2 Group24B.
+    src/tests/tbm_status_presentation.cpp
+    src/tests/tbm_work_change_window.cpp
+    src/tests/tbm_face_status.cpp
+    src/tests/window_hotkey_toggle.cpp
+    src/tests/tbm_advice.cpp
+    # Existing settings synchronization, accepted profile identity and calendar refusal: archi-map-layers.md; m2o23-2 Group24C.
+    # Paid native generator construction/canonical delivery: archi-map-layers.md; m2o23-2 Group25.
+    src/tests/utility_heat_conversion.cpp
+    src/tests/utility_heat_conversion_draft.cpp
+    # Existing typed Heat/arithmetical boundaries affected by conversion admission: archi-map-layers.md; m2o23-2 Group27.
+    src/tests/utility_heat.cpp
+    src/tests/utility_power_company.cpp
+    src/tests/multilayer_utility.cpp
+    src/tests/geothermal_generator_operating.cpp
+    src/tests/utility_power_local_feed.cpp
+    src/tests/geothermal_town_service.cpp
+    src/tests/geothermal_town_recovery.cpp
+    src/tests/geothermal_generator_lifecycle.cpp
+    src/tests/geothermal_generator.cpp
+    src/tests/geothermal_generator_magma.cpp
+    src/tests/geothermal_generator_delivery.cpp
+    src/tests/geothermal_generator_geometry.cpp
+    src/tests/newgame_layer_policy.cpp
+    # Widget/quote/planning regression audit for actual native owners: archi-gui.md; m2o23-2 Group24D.
+    src/tests/tbm_planning_commands.cpp
+    src/tests/tbm_planning_refusals.cpp
+    src/tests/underground_job_presentation.cpp
+    src/tests/multilayer_content_identity.cpp
+    src/tests/multilayer_content.cpp
+    src/tests/tbm_model.cpp
+    src/tests/underground_window.cpp
+    src/tests/underground_area.cpp
+    src/tests/tbm_movement.cpp
     src/tests/portal_signal_boundary.cpp
     src/tests/transport_tube_construction.cpp
     src/tests/transport_tube_readiness.cpp
@@ -475,6 +602,28 @@ add_executable(openttd_space_art_test EXCLUDE_FROM_ALL
     src/tests/manufacturing_materialization.cpp
     src/tests/multilayer_packed_load.cpp
 )
+# Focused Classic/A-Space contracts reuse the original tests and engine owners.
+# The monolithic 462-unit test project exceeded the protected desktop reserve;
+# this bounded selection preserves coverage without changing compiler limits.
+# Owner: archi-map-layers.md; m2o23-4-come-space.md Groups59/60.
+add_executable(openttd_merge_contract_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/multilayer_bootstrap.cpp
+    src/tests/map_layer.cpp
+    src/tests/multilayer_state.cpp
+    src/tests/space_content.cpp
+    src/tests/space_orders.cpp
+    src/tests/space_resupply.cpp
+    src/tests/space_construction.cpp
+    src/tests/orbital_module_assembly.cpp
+    src/tests/orbital_module_activation.cpp
+    src/tests/orbital_recipe_inventory.cpp
+    # Paid replacement/custody controls complete the A-Space component scope.
+    src/tests/manufacturing_replacement.cpp
+    src/tests/manufacturing_replacement-1.cpp
+)
 set_target_properties(openttd PROPERTIES OUTPUT_NAME "${BINARY_NAME}")
 # All other files are added via target_sources()
 
@@ -499,6 +648,7 @@ if(MSVC)
         set_property(TARGET openttd_ground_viewport_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_tube_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_space_art_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_merge_contract_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
      endif()
 endif()
 
@@ -540,6 +690,7 @@ target_link_libraries(openttd_ground_consumer_test PRIVATE openttd_lib)
 target_link_libraries(openttd_ground_viewport_test PRIVATE openttd_lib)
 target_link_libraries(openttd_tube_test PRIVATE openttd_lib)
 target_link_libraries(openttd_space_art_test PRIVATE openttd_lib)
+target_link_libraries(openttd_merge_contract_test PRIVATE openttd_lib)
 if(ANDROID)
     target_link_libraries(openttd_test PRIVATE log)
     target_link_libraries(openttd_surface_supply_test PRIVATE log)
@@ -550,6 +701,7 @@ if(ANDROID)
     target_link_libraries(openttd_ground_viewport_test PRIVATE log)
     target_link_libraries(openttd_tube_test PRIVATE log)
     target_link_libraries(openttd_space_art_test PRIVATE log)
+    target_link_libraries(openttd_merge_contract_test PRIVATE log)
 endif()
 
 include(Catch)
@@ -582,6 +734,7 @@ link_package(ZLIB TARGET ZLIB::ZLIB ENCOURAGED)
 link_package(LIBLZMA TARGET LibLZMA::LibLZMA ENCOURAGED)
 link_package(LZO)
 
+# Desktop non-Windows providers need libcurl and the platform dynamic loader.
 if(NOT WIN32 AND NOT EMSCRIPTEN)
     link_package(CURL ENCOURAGED)
     target_link_libraries(openttd_lib ${CMAKE_DL_LIBS})
@@ -603,6 +756,8 @@ if(NOT OPTION_DEDICATED)
     link_package(OpusFile TARGET OpusFile::opusfile)
     link_package(Soxr TARGET Soxr::soxr)
 
+    # Unix SDL loads its OpenGL provider dynamically; linking it again changes
+    # client deployment requirements without helping the selected video driver.
     if(SDL2_FOUND AND OPENGL_FOUND AND UNIX)
         # SDL2 dynamically loads OpenGL if needed, so do not link to OpenGL when
         # on Linux. For Windows, we need to link to OpenGL as we also have a win32
@@ -738,6 +893,7 @@ enable_testing()
 
 add_subdirectory(regression)
 
+# These packaged desktop distributions use Pandoc for their bundled documents.
 if(APPLE OR WIN32)
     find_package(Pandoc)
 endif()

@@ -103,7 +103,7 @@ UtilityPowerError ValidateUtilityPowerLineage(const UtilityPowerState &state, Ut
 		for (const auto id : paths[index]) {
 			if (id.base() >= state.links.size()) return UtilityPowerError::InvalidReference;
 			const auto &link = state.links[id.base()];
-			if (link.kind == UtilityLinkKind::ElectricalPortal) return UtilityPowerError::InvalidTopology; // A retained generic import keeps its genuine one-hop limit even if a later caller proposes a paid continuation.
+			if (link.kind == UtilityLinkKind::ElectricalPortal || link.kind == UtilityLinkKind::ElectricalFeed) return UtilityPowerError::InvalidTopology; // Generic imports and terminal local feeds cannot be re-exported through a later route.
 			if (!link.active && free != 0) return UtilityPowerError::InvalidQuantity;
 			if (link.kind != UtilityLinkKind::LocalCell) accounts.insert(link.destination);
 		}
@@ -134,13 +134,21 @@ UtilityPowerError ValidateUtilityPowerLineage(const UtilityPowerState &state, Ut
 					if (share.segment.size() != 1 || !paths[share.parent.base()].empty() || parent.share->parent.base() != UINT32_MAX) return UtilityPowerError::InvalidTopology; // Preserve genuine older one-hop semantics; generic imports cannot be extended or mixed into paid relay paths.
 				} else if (link.kind == UtilityLinkKind::ElectricalRiser) {
 					if (!last_cell.has_value() || !AreUtilityLineageNeighbors(*last_cell, link.source_endpoint, geometry)) return UtilityPowerError::InvalidTopology;
+				} else if (link.kind == UtilityLinkKind::ElectricalFeed) {
+					// One explicit native plant root supplies a complete local cable
+					// ending at the recipient. No imported parent or later leg is legal.
+					if (parent.share->parent.base() != UINT32_MAX || incoming.base() != UINT32_MAX || !last_cell.has_value() ||
+						*last_cell != link.destination_endpoint || id != share.segment.back() ||
+						state.links[share.segment.front().base()].source_endpoint != link.source_endpoint ||
+						producer.kind != UtilityGenerationKind::HeatConversion || parent.consumer->linked_producers.size() > 1 ||
+						(link.active && parent.consumer->linked_producers != std::vector{share.producer})) return UtilityPowerError::InvalidTopology;
 				} else return UtilityPowerError::InvalidTopology;
 				if (!IsUtilityLineageTile(link.source_endpoint, state.consumers[current.base()].meter.layer, geometry) ||
 					!IsUtilityLineageTile(link.destination_endpoint, state.consumers[link.destination.base()].meter.layer, geometry)) return UtilityPowerError::InvalidTopology; // Copied endpoint addresses must agree with their own file's explicit planes.
 				current = link.destination; expected = link.destination_endpoint; last_cell.reset(); incoming = id;
 			}
-			uint64_t limit = link.capacity_j;
-			if (link.kind != UtilityLinkKind::ElectricalPortal) {
+			uint64_t limit = link.kind == UtilityLinkKind::ElectricalFeed ? MAX_UTILITY_ACCOUNT_ENERGY_J : link.capacity_j;
+			if (link.kind != UtilityLinkKind::ElectricalPortal && link.kind != UtilityLinkKind::ElectricalFeed) {
 				const auto integrated = IntegrateUtilityGeneration(link.kind == UtilityLinkKind::LocalCell ? link.local_capacity_w : link.riser_capacity_w, producer.meter.economy_ticks, 0);
 				if (!integrated.has_value() || producer.meter.economy_ticks == 0) return UtilityPowerError::InvalidInterval; // Physical opportunity belongs to the original published synchronized window, never a caller's quote.
 				limit = integrated->energy_j;

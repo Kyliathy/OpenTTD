@@ -13,6 +13,8 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 and tasks 16.1/16.3
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, task 13.4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, shared area-control defaults
+ * @see docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md, Group 4 (wait line), Group 7 (named obstruction)
+ * @see docs/zz-reach2/upgrades/2026-10/r2df2-face-exchange-and-demo-acceptance.md Group 6 (face wait and face hauler wording)
  */
 
 #include "stdafx.h"
@@ -151,6 +153,7 @@ StringID GetTBMPhaseString(TBMPhase phase)
 		case TBMPhase::TravelToHangar: return STR_TBM_PHASE_TRAVEL_HANGAR;
 		case TBMPhase::ParkedHangar: return STR_TBM_PHASE_PARKED_HANGAR;
 		case TBMPhase::FollowOrders: return STR_TBM_PHASE_FOLLOW_ORDERS;
+		case TBMPhase::AwaitFaceTransfer: return STR_TBM_PHASE_AWAIT_FACE;
 		default: return STR_PORTAL_PHASE_CANCELLED;
 	}
 }
@@ -187,6 +190,31 @@ StringID GetTBMHoldString(TBMBlockedReason reason)
 	}
 }
 
+/** @copydoc GetTBMWaitLine */
+std::string GetTBMWaitLine(TBMPhase phase, TBMBlockedReason blocked)
+{
+	if (blocked != TBMBlockedReason::None) return GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(blocked));
+	// Parked, finished or order-following machines are not held, but they are not working either.
+	if (IsTBMStored(phase) || IsTBMProjectFinished(phase) || phase == TBMPhase::FollowOrders) return GetString(STR_PORTAL_PROJECT_IDLE);
+	return GetString(STR_PORTAL_PROJECT_NO_HOLD);
+}
+
+/** @copydoc GetTBMObstructionText */
+std::optional<std::string> GetTBMObstructionText(const TBMProject &project)
+{
+	const TBMObstruction blocker = FindTBMObstruction(project);
+	if (blocker.vehicle != VehicleID::Invalid()) return GetString(STR_TBM_HOLD_TRAIN_IN_WAY, blocker.vehicle);
+	if (IsValidTile(blocker.tile)) return GetString(STR_TBM_HOLD_TILE_IN_WAY, TileX(blocker.tile), TilePlaneY(blocker.tile));
+	return std::nullopt;
+}
+
+/** @copydoc GetTBMWaitLine(const TBMProject &, TBMBlockedReason) */
+std::string GetTBMWaitLine(const TBMProject &project, TBMBlockedReason blocked)
+{
+	if (const auto text = GetTBMObstructionText(project); text.has_value()) return GetString(STR_PORTAL_PROJECT_HOLD_TEXT, *text);
+	return GetTBMWaitLine(project.phase, blocked);
+}
+
 /**
  * @param phase Hauler cycle phase.
  * @return Its description for the hauler line.
@@ -200,6 +228,19 @@ StringID GetTBMHaulerPhaseString(TBMHaulerPhase phase)
 		case TBMHaulerPhase::VisitOrigin: return STR_PORTAL_HAULER_VISIT_ORIGIN;
 		default: return STR_PORTAL_HAULER_DISPOSE;
 	}
+}
+
+/** @copydoc GetTBMHaulerPhaseString(const TBMExchangeAssignment &) */
+StringID GetTBMHaulerPhaseString(const TBMExchangeAssignment &assignment)
+{
+	// The face turn holder serves the cutter where it stands (r2df2 task 6.1): it brings its empties to the TBM, then
+	// takes the spoil from it on the stand.
+	const TBMProject *project = GetTBMProject(assignment.project);
+	if (project != nullptr && GetTBMMeetingKind(*project) == TBMMeetingKind::Face && IsTBMFaceTurnHolder(assignment)) {
+		if (assignment.phase == TBMHaulerPhase::ReturnEmpties) return STR_PORTAL_HAULER_FACE_RETURN;
+		if (assignment.phase == TBMHaulerPhase::AwaitExchange) return STR_PORTAL_HAULER_FACE_TRANSFER;
+	}
+	return GetTBMHaulerPhaseString(assignment.phase);
 }
 
 /**
@@ -381,7 +422,7 @@ public:
 			const TBMProject &project = *c.project;
 			DrawString(tr, GetString(STR_PORTAL_PROJECT_PROGRESS, GetTBMPhaseString(project.phase), c.cuts_done, c.cuts_total));
 			tr.top += line;
-			DrawString(tr, c.work.blocked == TBMBlockedReason::None ? GetString(STR_PORTAL_PROJECT_NO_HOLD) : GetString(STR_PORTAL_PROJECT_HOLD, GetTBMHoldString(c.work.blocked)));
+			DrawString(tr, GetTBMWaitLine(project, c.work.blocked));
 			tr.top += line;
 			if (c.hardness.has_value()) {
 				DrawString(tr, GetString(STR_PORTAL_PROJECT_FACE, GetMapLayerName(GetTileLayer(c.work.face)), TileX(c.work.face), TilePlaneY(c.work.face), GetGeologyHardnessString(*c.hardness)));
@@ -405,9 +446,9 @@ public:
 			if (!c.hauler.has_value()) {
 				DrawString(tr, GetString(STR_PORTAL_HAULER_NONE, c.earth_hoppers, c.rock_hoppers, project.origin));
 			} else if (c.hauler->wait == TBMHaulerWait::None) {
-				DrawString(tr, GetString(STR_PORTAL_HAULER, c.hauler->hauler, GetTBMHaulerPhaseString(c.hauler->phase)));
+				DrawString(tr, GetString(STR_PORTAL_HAULER, c.hauler->hauler, GetTBMHaulerPhaseString(*c.hauler)));
 			} else {
-				DrawString(tr, GetString(STR_PORTAL_HAULER_WAITING, c.hauler->hauler, GetTBMHaulerPhaseString(c.hauler->phase), GetTBMHaulerWaitString(c.hauler->wait)));
+				DrawString(tr, GetString(STR_PORTAL_HAULER_WAITING, c.hauler->hauler, GetTBMHaulerPhaseString(*c.hauler), GetTBMHaulerWaitString(c.hauler->wait)));
 			}
 		} else {
 			DrawString(tr, GetString(STR_PORTAL_PROJECT_NONE));

@@ -39,7 +39,7 @@ static const SaveLoad _map_desc[] = {
  */
 static void CheckSurfaceSupplyMapFields(const std::vector<SaveLoad> &description)
 {
-	if (IsSavegameVersionBefore(SaveLoadVersion::SurfaceSupplyOrders)) return;
+	if (!SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) return; // Either original paid-supply dialect requires its own complete MAPS evidence; unrelated older files retain native behavior.
 	// Each current file must carry its own complete packed geometry; omitting a dimension/layer field cannot borrow a preceding file's static parser value.
 	for (const auto field : {"dim_x", "dim_y", "layers"}) if (std::ranges::find(description, field, &SaveLoad::name) == description.end()) SlErrorCorrupt("Missing native supply map geometry field");
 }

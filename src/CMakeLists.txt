@@ -407,19 +407,42 @@ add_files(
     transport_tube.h
     transport_tube.cpp
     transport_tube_engine.cpp
+    transport_tube_facility_sprite.cpp
+    # Native Tube/utility presentation uses A's existing Ground ranges: archi-map-layers.md; m2o23-3 Group51.
+    transport_tube_facility_sprite.h
+    transport_tube_sprite.h
+    transport_tube_sprite.cpp
+    transport_tube_vehicle_sprite.cpp
+    transport_tube_conduit_sprite.cpp
+    geothermal_sprite.h
+    geothermal_sprite.cpp
+    geothermal_riser_sprite.cpp
+    geothermal_conduit_sprite.h
+    geothermal_conduit_sprite.cpp
     # Physical capsule source contract: r2mlvs17-underground-transport-tubes.md Group10B.
     transport_tube_model.h
     transport_tube_construction.cpp
     transport_tube_power.cpp
+    # Original native geothermal inlet/root references: r2mlvs17 Groups6BBB-6BBC.
+    transport_tube_geothermal.h
+    transport_tube_geothermal.cpp
     transport_tube_runtime.cpp
+    transport_tube_cmd.h
+    transport_tube_cmd.cpp
+    # Native-backed control requests: archi-gui.md; m2o23-3 Group37.
+    transport_tube_gui.h
+    transport_tube_gui.cpp
+    geothermal_controls.h
+    geothermal_controls.cpp
+    geothermal_gui.h
+    geothermal_gui.cpp
     transport_tube_topology.cpp
     transport_tube_readiness.cpp
     # One native station packet owner and bounded transfers: r2mlvs17 Group9.
     transport_tube_cargo.h
     transport_tube_cargo.cpp
     # Five original native capsule coefficients: r2mlvs17 Group10.
-    transport_tube_fleet.h
-    transport_tube_fleet.cpp
+    # Provisional transport_tube_fleet sources remain dated evidence only; the single delivered installer is transport_tube_engine.cpp (r2mlvs17 Group10).
     # Natural-source site owner: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1.
     geothermal.h
     geothermal_type.h
@@ -427,6 +450,16 @@ add_files(
     geothermal_claim.cpp
     geothermal_site_wire.h
     geothermal_definitions.cpp
+    # Paid native machinery and cold planning: archi-map-layers.md; m2o23-2 Group25.
+    geothermal_generator.h
+    geothermal_generator.cpp
+    geothermal_generator_wire.h
+    geothermal_generator_wire.cpp
+    utility_power_conversion_wire.h
+    geothermal_site_cmd.h
+    geothermal_site_cmd.cpp
+    geothermal_service_cmd.h
+    geothermal_service_cmd.cpp
     geothermal_generator_geometry.h
     geothermal_generator_geometry.cpp
     geothermal_collector_wire.h
@@ -546,6 +579,8 @@ add_files(
     surface_supply_gui.h
     # Bounded native/full/copied original transport: r2mlvs6-mines-and-resource-chains.md Group13CCC.
     surface_supply_order_wire.cpp
+    surface_supply_merged_wire.h
+    surface_supply_merged_wire.cpp
     surface_supply_order_wire.h
     multilayer_recipe.h
     multilayer_bootstrap.cpp

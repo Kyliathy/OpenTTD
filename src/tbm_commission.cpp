@@ -8,6 +8,8 @@
  * @file tbm_commission.cpp Commissioning purchase of a boring machine at a Sealed rail portal: the one transaction
  * that acquires the consist, reserves its job, binds the pair and publishes the project, and the command that plans a
  * requested floor for the actual consist from the portal's door before buying it.
+ * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md original physical and accounting owners.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group23CB quote support/approach admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 (tasks 2.1, 2.3, 2.4)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8 (controller handoff)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 3B/3C (read-only quotes)
@@ -157,8 +159,20 @@ static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex po
 	// A straight tunnel leaves the real portal door in its accepted heading;
 	// a different start corner must not imply an unreviewed approach or turn.
 	if (intent == ExcavationPlanIntent::StraightTunnel && area_start != proof.destination) return STR_ERROR_TBM_TUNNEL_ALIGNMENT;
-	const auto outline = intent == ExcavationPlanIntent::Area ? MakeTBMWorkOutline(proof.destination, area_start, area_end) :
-		MakeTBMTunnelOutline(proof.destination, proof.exit_heading, area_end);
+	// The cutter starts in the housing with its whole measured consist. The floor gets the approach and turning space it
+	// needs as charged extra cells (r2df task 9.2).
+	const ExcavationPlanningPose start{proof.destination, proof.exit_heading, std::vector<TileIndex>(dimensions.planning_points, proof.destination)};
+	ExcavationApproachProposal approach;
+	const auto outline = intent == ExcavationPlanIntent::Area ?
+		MakeTBMWorkOutlineWithApproach(start, true, model_id, ExcavationJobID{UINT32_MAX}, proof.destination, area_start, area_end, {}, approach) :
+		MakeTBMTunnelOutline(start, true, model_id, ExcavationJobID{UINT32_MAX}, area_end, {}, approach);
+	if (approach.error != ExcavationError::None) {
+		// No legal approach: the quote names the blocking tile and why (r2df task 10.4), and none of the floor is reachable.
+		preview.error = approach.error;
+		preview.failure_tile = approach.failure_tile;
+		preview.plan.remaining_targets = outline.requested_tiles;
+		return GetTBMApproachRefusal(approach.error, approach.failure_tile);
+	}
 	if (outline.error == ExcavationError::IllegalTurn) return STR_ERROR_TBM_TUNNEL_ALIGNMENT;
 	if (outline.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_AREA;
 
@@ -166,7 +180,7 @@ static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex po
 	TBMAreaRequest area;
 	area.outline = AuthorizeExcavationOutline(outline, outline.extra_tiles, model_id);
 	if (area.outline.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_AREA;
-	area.start = {proof.destination, proof.exit_heading, std::vector<TileIndex>(dimensions.planning_points, proof.destination)};
+	area.start = start;
 	area.consist = {earth_wagons, rock_wagons};
 	area.model_id = model_id;
 	area.intent = intent;
@@ -174,11 +188,18 @@ static std::optional<StringID> PlanTBMCommission(CompanyID company, TileIndex po
 	area.company = company;
 	area.origin = origin;
 	preview = PreviewTBMArea(area);
+	preview.approach = SummarizeTBMApproach(preview.plan.route, approach.extra_tiles, model_id);
 	if (preview.consist_error != TBMAcquisitionError::None) return STR_ERROR_TBM_COMMISSION_CONSIST;
 	if (preview.error == ExcavationError::InsufficientCapacity) return STR_ERROR_TBM_COMMISSION_CONSIST; // The player needs enough independent spoil capacity, not a different floor alignment.
 	if (preview.error != ExcavationError::None) return STR_ERROR_TBM_COMMISSION_ROUTE;
 	if (preview.partial && !accept_partial) return STR_ERROR_TBM_COMMISSION_PARTIAL;
 	if (!CheckTBMSupportRailTurns(preview.proposal)) return STR_ERROR_TBM_COMMISSION_RAIL_TURNS;
+	// r2df task 7.3: the quote applies the cuts' own support rule, so it never accepts a route whose cut then waits for
+	// ever on existing track. No project owns this route yet, so only support a released project left counts as reusable.
+	if (const auto blocker = FindTBMSupportRouteBlocker(preview.proposal, TBMProjectID{UINT32_MAX}, company); blocker.tile != INVALID_TILE) {
+		preview.failure_tile = blocker.tile;
+		return blocker.fundable ? STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE : STR_ERROR_TBM_COMMISSION_SUPPORT;
+	}
 	request = base;
 	request.proposal = preview.proposal;
 	return std::nullopt;
@@ -225,7 +246,8 @@ TBMCommissionAreaPreview PreviewTBMCommissionArea(CompanyID company, TileIndex p
 		// moved or was sold. Geometry, quantities and capital are also reviewed.
 		for (uint64_t value : {uint64_t{company.base()}, uint64_t{portal.base()}, uint64_t{origin.base()}, uint64_t{model_id},
 			uint64_t{earth_wagons}, uint64_t{rock_wagons}, uint64_t{quote.request.reuse_cutter.base()}, uint64_t(quote.purchase.GetCost().base()),
-			quote.area.totals.earth_t, quote.area.totals.rock_t, quote.area.totals.work_ticks, uint64_t(quote.area.totals.cost.base())}) MixTBMQuoteFingerprint(quote.fingerprint, value);
+			quote.area.totals.earth_t, quote.area.totals.rock_t, quote.area.totals.work_ticks, uint64_t(quote.area.totals.cost.base()),
+			uint64_t{quote.area.approach.tiles.size()}, uint64_t{quote.area.approach.cuts}, uint64_t(quote.area.approach.estimate.cost.base())}) MixTBMQuoteFingerprint(quote.fingerprint, value); // r2df task 9.5: the approach is reviewed too.
 	}
 	return quote;
 }

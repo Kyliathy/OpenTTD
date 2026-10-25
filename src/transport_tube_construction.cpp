@@ -12,6 +12,10 @@
 
 #include "stdafx.h"
 #include "transport_tube.h"
+#include "transport_tube_model.h"
+#include "underground_vehicle.h"
+#include "train.h"
+#include "engine_base.h"
 #include "command_func.h"
 #include "excavation.h"
 #include "tbm.h"
@@ -66,11 +70,25 @@ CommandCost CheckTubeVehicleAdmission(EngineID engine, TileIndex tile, CargoType
 	if (capsule.has_value() != IsTubeRailType(GetTileRailType(tile))) return CommandCost(STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY);
 	if (!capsule) return {};
 	if (CommandCost ground = CheckTubeConstruction(std::array{tile}); ground.Failed()) return ground;
-	if (TimerGameCalendar::date < TimerGameCalendar::ConvertYMDToDate(capsule->catalogue->introduction_year, 0, 1)) return CommandCost(STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY);
-	// Explicit labels, not a broadened mutable refit mask, retain the capsule's
-	// physical cargo form and mandatory spoil hauling boundary.
-	if (cargo != INVALID_CARGO && (cargo >= NUM_CARGO ||
-		std::ranges::find(capsule->catalogue->cargo_labels, CargoSpec::Get(cargo)->label) == capsule->catalogue->cargo_labels.end())) return CommandCost(STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY);
+	// The shared logical capability policy also serves engine availability and
+	// purchase lists. Exact dates/labels/layers cannot drift between GUI and commands.
+	return CheckUndergroundVehicleCapability(engine, GetTileLayer(tile), cargo);
+}
+
+/** @copydoc CheckTubeVehicleCargoChange */
+CommandCost CheckTubeVehicleCargoChange(const Train &current, EngineID target, CargoType cargo, uint16_t retained_capacity)
+{
+	const auto source_capsule = GetTubeVehicleCapability(current.engine_type);
+	const auto target_capsule = GetTubeVehicleCapability(target);
+	if (source_capsule.has_value() != target_capsule.has_value()) return CommandCost(STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY);
+	if (!source_capsule) return {};
+	if (CommandCost admission = CheckTubeVehicleAdmission(target, current.tile, cargo); admission.Failed()) return admission;
+	const uint count = current.cargo.TotalCount();
+	const uint capacity = std::min<uint16_t>(Engine::Get(target)->VehInfo<RailVehicleInfo>().capacity, retained_capacity);
+	// Native capsules have one fixed full-length part and NoDefaultCargoMultiplier.
+	// Refit/replacement must preserve the actual loaded label and every reserved
+	// or carried unit, before the generic refit path could truncate or relabel it.
+	if (count != 0 && (cargo != current.cargo_type || count > capacity)) return CommandCost(STR_ERROR_UNDERGROUND_VEHICLE_CAPABILITY);
 	return {};
 }
 

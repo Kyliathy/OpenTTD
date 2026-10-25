@@ -1,0 +1,210 @@
+{
+  "_documentation": "Select exact preserved genuine paid-world inputs from immutable donor handoffs.\n\n@see docs/zz-reach2/architecture/archi-historical-debug.md\nNo new native result, expected current baseline or bootstrap approval is created.\n",
+  "classification": "retained_genuine_paid_predecessors",
+  "source_configuration": "Debug",
+  "scenarios": {
+    "standard": {
+      "historical_handoff": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/ef5789972ab288e7-standard-machinery-verification.json",
+        "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+      },
+      "original_handoff": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/standard-machinery-verification.json",
+        "sha256": "ef5789972ab288e7d94053ad36a260913502f6efcd6185004ff38474a79e1196"
+      },
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/2c616008e4980ba3-debug-debug-sealed-standard-baseline-read.sav",
+        "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+      },
+      "original_source": {
+        "path": "mlm/reviews/acceptance/normal-ground-machinery/20261019-172909-799e197f82/saves/standard-ready.sav",
+        "bytes": 42556,
+        "sha256": "2c616008e4980ba3092fe961932d4287874e55ace99e1bbadd849f9e464c402b"
+      },
+      "config": {
+        "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+        "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+      },
+      "historical_config": {
+        "path": "mlm/runtime/native/20261019-172909-799e197f82/main/native-art.cfg",
+        "bytes": 240,
+        "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+      },
+      "previous": {
+        "project": 0,
+        "job": 0,
+        "cutter": 38,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25310,
+        "last": 26336,
+        "opening_cash": 1913625,
+        "cash": 1344658,
+        "loan": 300000,
+        "tick": 1254714,
+        "original_solid": 31752,
+        "solid": 31716,
+        "reserved": 0,
+        "excavating": 36,
+        "excavated": 0
+      }
+    },
+    "deep": {
+      "historical_handoff": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/7796f578643d6bbb-deep-machinery-verification.json",
+        "sha256": "7796f578643d6bbb419d479ed6da1f38e5bcd61e2a0d6137734ec8c990a2564a"
+      },
+      "original_handoff": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/deep-machinery-verification.json",
+        "sha256": "7796f578643d6bbb419d479ed6da1f38e5bcd61e2a0d6137734ec8c990a2564a"
+      },
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/145fb15a07bf9f72-deep-ready-repeat.sav",
+        "sha256": "145fb15a07bf9f7208305431cc03bc0cef07b0021003295fc5f142c5ab497a53"
+      },
+      "original_source": {
+        "path": "mlm/reviews/acceptance/normal-ground-deep/20261019-175003-15cb0d416d/saves/deep-ready.sav",
+        "bytes": 43368,
+        "sha256": "145fb15a07bf9f7208305431cc03bc0cef07b0021003295fc5f142c5ab497a53"
+      },
+      "config": {
+        "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+        "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+      },
+      "historical_config": {
+        "path": "mlm/runtime/native/20261019-175003-15cb0d416d/main/native-art.cfg",
+        "bytes": 240,
+        "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+      },
+      "previous": {
+        "project": 1,
+        "job": 1,
+        "cutter": 49,
+        "hauler": 30,
+        "portal": 25823,
+        "target": 58591,
+        "access": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 58846,
+        "last": 59872,
+        "opening_cash": 1340266,
+        "cash": 367432,
+        "loan": 300000,
+        "tick": 1263079,
+        "original_solid": 31716,
+        "solid": 31680,
+        "excavating": 36,
+        "excavated": 36,
+        "reserved": 0,
+        "earth_wagons": 2,
+        "rock_wagons": 4
+      }
+    },
+    "irregular": {
+      "historical_handoff": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/db0f76085ab86af0-irregular-readiness-verification.json",
+        "sha256": "db0f76085ab86af039845793a8a6bcd1612126a76baff8d38504f93671c808a5"
+      },
+      "original_handoff": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/irregular-readiness-verification.json",
+        "sha256": "db0f76085ab86af039845793a8a6bcd1612126a76baff8d38504f93671c808a5"
+      },
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/d42daf5a449dbc01-debug-debug-sealed-irregular-baseline-read.sav",
+        "sha256": "d42daf5a449dbc0142660bae5f071e3b6dae7b153700bd1ea9ddd1cf953c6da7"
+      },
+      "original_source": {
+        "path": "mlm/reviews/acceptance/normal-ground-irregular/20261019-181947-b858c67205/saves/irregular-ready.sav",
+        "bytes": 45180,
+        "sha256": "d42daf5a449dbc0142660bae5f071e3b6dae7b153700bd1ea9ddd1cf953c6da7"
+      },
+      "config": {
+        "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+        "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+      },
+      "historical_config": {
+        "path": "mlm/runtime/native/20261019-181947-b858c67205/main/native-art.cfg",
+        "bytes": 240,
+        "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+      },
+      "previous": {
+        "project": 2,
+        "job": 2,
+        "cutter": 38,
+        "hauler": 33,
+        "portal": 8671,
+        "origin": 10,
+        "depot": 7391,
+        "first": 25570,
+        "last": 25830,
+        "bends": 7,
+        "attempts": 4,
+        "original_forbid90": 1,
+        "forbid90": 1,
+        "opening_cash": 264341,
+        "cash": 264251,
+        "loan": 300000,
+        "tick": 1275657,
+        "solid": 31640,
+        "excavating": 40,
+        "excavated": 72
+      }
+    },
+    "useful": {
+      "historical_handoff": {
+        "path": "src/tests/fixtures/checkpoints/underground/openttd3-75ea75718f/historical/38b5f0f1d8042aac-useful-supply-verification.json",
+        "sha256": "38b5f0f1d8042aac697f7e33b368c93ebc38c2cfdd6fe98e70a8c9efb7ddb120"
+      },
+      "original_handoff": {
+        "path": "logs/acceptance/bootstrap/20261019-native-01/useful-supply-verification.json",
+        "sha256": "38b5f0f1d8042aac697f7e33b368c93ebc38c2cfdd6fe98e70a8c9efb7ddb120"
+      },
+      "source": {
+        "path": "savegames/retained/openttd3-75ea75718f/8fd3e82c35e620f1-debug-debug-ready-useful-baseline-read.sav",
+        "sha256": "8fd3e82c35e620f1a4c5e614d8bd653354e5491a78bbedfe1313ad42090e7078"
+      },
+      "original_source": {
+        "path": "mlm/reviews/acceptance/normal-ground-supply/20261019-193812-f469dc5ec4/saves/useful-ready.sav",
+        "bytes": 45072,
+        "sha256": "8fd3e82c35e620f1a4c5e614d8bd653354e5491a78bbedfe1313ad42090e7078"
+      },
+      "config": {
+        "path": "src/tests/fixtures/config/multilayer/native-art.cfg",
+        "sha256": "396092066483e9eddf9713618ceb44eb391d124677c0be5a4bf14d417a809862"
+      },
+      "historical_config": {
+        "path": "mlm/runtime/native/20261019-193812-f469dc5ec4/main/native-art.cfg",
+        "bytes": 240,
+        "sha256": "5ad6f17f7b55f1718cd019d32aaaa5407a3b3cdc85266e236b836c77891022db"
+      },
+      "previous": {
+        "first_tick": 1285721,
+        "tick": 1286267,
+        "opening_cash": 247337,
+        "cash": 97109,
+        "loan": 300000,
+        "carrier": 30,
+        "capsule": 72,
+        "complete": 1
+      },
+      "machinery": {
+        "carrier": 30,
+        "wagon": 57,
+        "capsule": 72,
+        "source": 0,
+        "cargo": 1,
+        "capacity": 64,
+        "origin": 11,
+        "destination": 12,
+        "coal_source": 0,
+        "coal_consumer": 1,
+        "orders": 6,
+        "tube_orders": 4,
+        "lease": 20
+      }
+    }
+  }
+}

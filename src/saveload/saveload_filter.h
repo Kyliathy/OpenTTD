@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file saveload_filter.h Declaration of filters used for saving and loading savegames. */
+/** @file saveload_filter.h Declaration of filters used for saving and loading savegames.
+ * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ */
 
 #ifndef SAVELOAD_FILTER_H
 #define SAVELOAD_FILTER_H

@@ -11,7 +11,7 @@
 
 /** Ask a pure policy question without changing the installed project.
 	* @param project Original live project.
-	* @param phase Candidate native phase, including the not-yet-activated face wait.
+	* @param phase Candidate native phase, including the serialized face wait.
 	* @return Detached query input; no saved-state or controller transition occurs.
 	*/
 static TBMProject MeetingPhase(const TBMProject &project, TBMPhase phase)
@@ -36,7 +36,10 @@ TEST_CASE("Face meeting phase queries preserve empty returns and current or prev
 	 const auto query = MeetingPhase(rig.Project(), phase); const bool working = phase == TBMPhase::Bore || phase == TBMPhase::AdvanceSupport || phase == TBMPhase::AwaitFaceTransfer;
 	 CAPTURE(phase); CHECK(GetTBMMeetingKind(query) == (working ? TBMMeetingKind::Face : TBMMeetingKind::Bay)); CHECK_FALSE(IsTBMReadyForFaceTransfer(query));
 	}
-	CHECK(ValidateTBMProject(MeetingPhase(rig.Project(), TBMPhase::AwaitFaceTransfer)) == TBMProjectError::InvalidProject);
+	// The merged controller now persists the donor's face wait. Valid phase
+	// metadata still grants no transfer readiness or spoil to an empty cutter.
+	CHECK(ValidateTBMProject(MeetingPhase(rig.Project(), TBMPhase::AwaitFaceTransfer)) == TBMProjectError::None);
+	CHECK(ValidateTBMProject(MeetingPhase(rig.Project(), static_cast<TBMPhase>(UINT8_MAX))) == TBMProjectError::InvalidProject);
 	CHECK(rig.Digest() == before); CHECK(CaptureTBMProjects() == original_projects); CHECK(CaptureTBMExchangeAssignments() == original_assignments);
 	PlaceTrainOnPath(rig.front, path, face - 1, face - rig.parts);
 	CHECK(GetTBMMeetingKind(MeetingPhase(rig.Project(), TBMPhase::Bore)) == TBMMeetingKind::Face);

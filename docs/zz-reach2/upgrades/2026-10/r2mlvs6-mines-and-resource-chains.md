@@ -1,5 +1,7 @@
 # R2MLVS6 - Mines and Resource Chains
 
+**Merged implementation,2026-10-25.** [M2O23qualification](m2o23-4-come-space-b-integration-handoff.md) preserves one paid supply/cargo owner across ground, launch and orbital consumers. New refunds end at station dispatch; finite inherited donor rights remain exact. Future recipe chains and SpaceGZVEEJremain separate from this merge's accepted originals. [Storage authority](../../architecture/archi-historical-debug.md).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

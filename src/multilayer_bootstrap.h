@@ -4,12 +4,13 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file multilayer_bootstrap.h Paid Surface seeds and acyclic first-build content contracts. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
+/** @file multilayer_bootstrap.h Paid Surface seeds and acyclic first-build content contracts. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md; r2mlvs18-geothermal-energy-and-industry.md Groups8C/8E (dated generator terms). */
 
 #ifndef MULTILAYER_BOOTSTRAP_H
 #define MULTILAYER_BOOTSTRAP_H
 
 #include "multilayer_recipe.h"
+#include <optional>
 
 /** Bounded external Surface procurement; bought inventory never earns freight income. */
 struct MultiLayerSurfaceSupply {
@@ -54,7 +55,7 @@ struct MultiLayerTubePowerContract {
 	uint16_t introduction_year = 1970; ///< Calendar gate independent of Deep access and economy speed.
 };
 
-/** @return Canonical paid service contract frozen by docs/zz-rhr/upgrades/2026-10/r2mlvs1-f-utility-and-transfer-contracts.md Group19. */
+/** @return Canonical paid service contract frozen by r2mlvs1-f-utility-and-transfer-contracts.md Group19. */
 const MultiLayerTubePowerContract &GetMultiLayerTubePowerContract();
 
 /** Canonical propulsion envelope per capsule; native20-kW mandatory depot service remains the shared TubeWork contract. */
@@ -68,7 +69,7 @@ struct MultiLayerTubeEnergyModel {
 std::span<const MultiLayerTubeEnergyModel> GetMultiLayerTubeEnergyModels();
 
 /** Frozen first-utility construction families; ordinals select content, never a saved facility or utility identity. */
-enum class MultiLayerGeothermalConstructionKind : uint8_t { Collector, Powerhouse, Riser };
+enum class MultiLayerGeothermalConstructionKind : uint8_t { Collector, Powerhouse, Riser, MagmaPowerhouse };
 
 /** Canonical transported construction/work contract; a blueprint supplies none of its materials, completed work or electricity. */
 struct MultiLayerGeothermalConstruction {
@@ -84,5 +85,27 @@ struct MultiLayerGeothermalConstruction {
 
 /** @param kind First collector/powerhouse/riser family. @return Frozen Plan1 Group19 contract, or nullptr for an unknown family; no runtime construction is authorized by reading it. */
 const MultiLayerGeothermalConstruction *GetMultiLayerGeothermalConstruction(MultiLayerGeothermalConstructionKind kind);
+
+/** Existing canonical dated generator identity, defined with its frozen physical source geometry. */
+enum class GeothermalGeneratorModel : uint8_t;
+
+/** Canonical operating bounds; actual facility, stock, heat grants and electricity remain with their native owners. */
+struct MultiLayerGeothermalGeneratorTerms {
+	GeothermalGeneratorModel model; ///< Existing dated content model, never a native IndustryID.
+	MultiLayerGeothermalConstructionKind construction; ///< The one canonical transported bill and prepaid work contract.
+	uint32_t thermal_capacity_w; ///< Maximum feasible thermal demand before actual source/path/output/funds admission.
+	uint32_t electrical_capacity_w; ///< Maximum rated output; no unallocated or unfinished heat creates generation.
+	uint8_t efficiency_percent; ///< Whole percentage; native conversion retains its separate0..99 fractional numerator.
+	uint32_t service_cost_per_day; ///< Internal Money per74 active economy ticks, separate from construction capital.
+};
+
+/**
+ * Resolve delivered generator operating content without granting construction or energy rights.
+ * @param model Existing dated physical model; reading content grants no technology or funding permission.
+ * @return Immutable implemented model terms, or nullptr for absent/unknown content.
+ */
+const MultiLayerGeothermalGeneratorTerms *GetMultiLayerGeothermalGeneratorTerms(GeothermalGeneratorModel model);
+/** @param construction Original content-owned cold building family. @return Its canonical generator model, or absence for collectors/risers/unknown content; querying grants no date, construction or operating permission. */
+std::optional<GeothermalGeneratorModel> GetMultiLayerGeothermalGeneratorModel(MultiLayerGeothermalConstructionKind construction);
 
 #endif /* MULTILAYER_BOOTSTRAP_H */

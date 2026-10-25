@@ -11,6 +11,7 @@
  */
 
 #include "stdafx.h"
+#include "transport_tube_model.h"
 #include "underground_vehicle.h"
 #include "space_replacement.h"
 #include "space_purchase.h"
@@ -816,6 +817,10 @@ CommandCost CmdAutoreplaceVehicle(DoCommandFlags flags, VehicleID veh_id)
 		// Validate every proposed native replacement before constructing any temporary part of the whole chain.
 		if (e != EngineID::Invalid()) {
 			if (CommandCost capability = CheckUndergroundVehicleCapability(e, GetTileLayer(w->tile), w->cargo_type); capability.Failed()) return capability;
+			if (w->type == VehicleType::Train) {
+				// Whole-chain renewal must retain every capsule packet before allocating any temporary replacement or charging its invoice.
+				if (CommandCost custody = CheckTubeVehicleCargoChange(*Train::From(w), e, w->cargo_type); custody.Failed()) return custody;
+			}
 		}
 		any_replacements |= (e != EngineID::Invalid());
 		w = (!free_wagon && w->type == VehicleType::Train ? Train::From(w)->GetNextUnit() : nullptr);

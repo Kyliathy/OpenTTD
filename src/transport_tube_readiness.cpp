@@ -12,23 +12,33 @@
 
 #include "stdafx.h"
 #include "transport_tube.h"
+#include "transport_tube_facility_sprite.h"
+#include "excavation.h"
+#include "excavation_state.h"
 #include "station_base.h"
 #include "station_map.h"
 #include "depot_base.h"
 #include "depot_map.h"
 #include "rail_map.h"
 #include "company_base.h"
+#include "company_func.h"
+#include "core/backup_type.hpp"
 #include "multilayer_bootstrap.h"
 #include "timer/timer_game_economy.h"
 #include "safeguards.h"
 
-/** @copydoc GetTubeTerminal */
-std::optional<TubeTerminal> GetTubeTerminal(TileIndex tile, CompanyID company)
+/** @copydoc GetBuiltTubeTerminal */
+std::optional<TubeTerminal> GetBuiltTubeTerminal(TileIndex tile, CompanyID company)
 {
-	// Actual current owner, semantic tube rail and geological/calendar admission
-	// precede native pool access; coordinates and cached views confer no authority.
-	if (!IsValidTile(tile) || !Company::IsValidID(company) || GetTileOwner(tile) != company.base() ||
-		!IsTubeRailType(GetTileRailType(tile)) || CheckTubeConstruction(std::array{tile}).Failed()) return std::nullopt;
+	// Retained geometry survives a locked date, but actual profile, company,
+	// native label, rock plane and paid floor still precede native pool access.
+	// This read-only view cannot grant construction or powered service.
+	if (!IsValidTile(tile) || GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry ||
+		!Company::IsValidID(company) || GetTileOwner(tile) != company.base() || !IsTubeRailType(GetTileRailType(tile))) return std::nullopt;
+	const auto layer = GetTileLayer(tile);
+	// Saved labels cannot make a Surface/Space building into a tube terminal.
+	if (layer != MapLayer::Underground && layer != MapLayer::DeepUnderground) return std::nullopt;
+	if (GetGeologyWorldState().terrain.Get(tile) != ExcavationState::Excavated) return std::nullopt;
 	TubeTerminal view; view.tile = tile; view.owner = company; view.layer = GetTileLayer(tile); view.guideway = GetTubeRailType();
 	if (IsRailStationTile(tile)) {
 		const Station *station = Station::GetIfValid(GetStationIndex(tile));
@@ -44,6 +54,21 @@ std::optional<TubeTerminal> GetTubeTerminal(TileIndex tile, CompanyID company)
 		return std::nullopt;
 	}
 	return view;
+}
+
+/** @copydoc GetTubeTerminal */
+std::optional<TubeTerminal> GetTubeTerminal(TileIndex tile, CompanyID company)
+{
+	const auto terminal = GetBuiltTubeTerminal(tile, company);
+	if (!terminal.has_value()) return std::nullopt;
+	// Readiness belongs to the explicit, already validated facility owner.
+	// Dedicated afterload and all-company simulation have no player actor;
+	// querying their owned utility cells as that spectator falsely treats the
+	// cells as foreign. The pure construction check still enforces every real
+	// profile/date/floor rule, and this scope restores the caller's actor.
+	AutoRestoreBackup actor(_current_company, company);
+	if (CheckTubeConstruction(std::array{tile}).Failed()) return std::nullopt;
+	return terminal;
 }
 
 /** @copydoc CanTubeTerminalServeVehicle */

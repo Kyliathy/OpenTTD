@@ -142,11 +142,16 @@ def build_manifest(catalogue, package):
     forms = ",\n".join(
         f'\t{{CargoLabel{{"{cargo["label"]}"}}, MultiLayerCargoForm::{FORMS[cargo["form"]]}, "{cargo["unit"]}"}}'
         for cargo in catalogue["cargoes"])
+    # Legacy saves pin these exact package bytes rather than serializing a
+    # configured cargo map. Project the same Action0 slots for detached readers;
+    # never maintain another hand-written cargo registry or infer labels from orders.
+    defined_labels = ",\n".join(f'\tCargoLabel{{"{cargo["label"]}"}}' for cargo in catalogue["cargoes"])
     return ("/** @file multilayer_content_manifest.h Generated immutable requirements. "
             "@see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */\n"
             f'static constexpr uint16_t _multilayer_profile_version = {catalogue["profile_version"]};\n'
             f"static constexpr CargoLabel _multilayer_required_labels[] = {{\n{rows}\n}};\n"
             f"static constexpr MultiLayerCargoContract _multilayer_cargo_contracts[] = {{\n{forms}\n}};\n"
+            f"static constexpr CargoLabel _multilayer_defined_cargo_labels[] = {{\n{defined_labels}\n}};\n"
             f'static constexpr GrfID _multilayer_package_id{{"{catalogue["package_id"]}"}};\n'
             f'static constexpr uint32_t _multilayer_package_version = {catalogue["package_version"]};\n'
             f"static constexpr uint8_t _multilayer_package_digest[] = {{{digest}}};\n")

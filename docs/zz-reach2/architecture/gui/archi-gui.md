@@ -233,3 +233,26 @@ Purchase and cancellation estimates call the canonical command owner without exe
 `Configure`/`Refresh` change local layout and enabled state, including hiding a stale panel after source ownership/profile/layer changes. Paint, sizing, text and malformed callbacks cannot buy, cancel, dispatch, advance a tick or consume simulation RNG. The quantity editor consumes only its own completion; normal renaming still reaches the original parent. A pending or invalid editor blocks Buy even before the next repaint.
 
 `src/tests/surface_supply_window.cpp` exercises the actual parent callbacks with declared native worlds, generated language and the existing null video's focus callbacks. Its video loop is never run. Scoped cases cover IDs above32 bits, actual retirement while a menu is open, malformed quantity input, native delivery versus cancellation, truthful legacy history/refunds, stale displayed source counts, visibility changes and unaffected ordinary launch controls. Group15's focused refund/window pass is12 cases/802 assertions; it does not certify pixels, an operational launch fleet or original saved-world compatibility. Rebuild `openttd_surface_supply_test` in Debug, run from `build/` with `[surface-supply-refund],[surface-supply-window]`, and route compact `--out` plus process diagnostics beneath `test-cache/merge-supply/` under the [storage contract](../archi-historical-debug.md#storage-ownership).
+
+
+## Native utility control composition
+
+M2O23-3Group37composes UndergroundTubeControls and UndergroundGeothermalControls
+into the original UndergroundConstructionWindow. Each owns only transient menu
+IDs, explicit physical layer and draft geometry. Existing simulation owners retain
+all capital, stock, work, utility intervals, source incarnations and cancellation
+rights. Pure quotes are re-queried during refresh; actual actions post the original
+merged typed commands. Native Tube rail/station/depot/purchase windows obtain their
+captions from the explicit Tube RailTypeInfo. Ordinary rail identity, A's TBM tools
+and its stricter live-profile/world admission are preserved. Source/plant loss
+between selection and confirmation cannot acquire stale original-output rights.
+
+GetUtilityPowerConsumers supplies a borrowed immutable view beside the existing
+shared link query, avoiding a copied ledger during inspection. Actual paid site,
+cell, riser, provider and town controls have focused native callback/codec tests;
+existing exact-ID tagged station supply controls retain their original Pending
+and legacy cancellation rules. Repaint and inspection create no account, stock,
+work, money or simulation opportunity. New control icons and geothermal survey
+sprite hooks await the explicit delivered range/renderer batches; current text
+controls provide no raster or publication qualification. Focused rebuild/evidence
+boundaries are in m2o23-3-come-space-a-execution.md beside the merge plans.

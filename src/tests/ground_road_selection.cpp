@@ -16,6 +16,7 @@
 #include "../network/network.h"
 #include "underground_fleet_fixture.h"
 
+#include "ground_render_camera_fixture.h"
 #include "../safeguards.h"
 
 /** Real native road carrier and owned depot; inherited teardown preserves ordinary vehicle/cargo custody. */
@@ -267,4 +268,14 @@ TEST_CASE("Selected road purchases retain native engine company and calendar gua
 	CHECK_FALSE(GetMultiLayerPurchaseSprite(9, true));
 	CHECK(GetMultiLayerEnginePurchaseSprite(GetUndergroundEngine(5), true) == GetGroundSprite(GroundSpriteFamily::PurchaseModel05, {0}));
 	CHECK(GetMultiLayerEnginePurchaseSprite(GetUndergroundEngine(4), true) == GetMultiLayerSprite(MultiLayerSpriteAsset::PurchaseModel04, {0}));
+}
+
+/** Actual main/extra cameras and hidden-building presentation preserve the physical source owner and its live state. */
+TEST_CASE("Merged road freight selection retains physical cargo across cameras", "[merged-ground-camera]")
+{
+	PrepareGroundRenderCameraLanguage();
+	GroundRoadRig rig(7); rig.Load(10);
+	/** @return Actual public consumer identities at the unchanged visual phase; no raster or earned work is claimed. */
+	const auto query = [&] { return std::vector<SpriteID>{GetGroundRoadSprite(*rig.carrier, Direction::NE, 24).value()}; };
+	CheckGroundRenderCameraPurity(query);
 }

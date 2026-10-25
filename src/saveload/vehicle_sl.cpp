@@ -1326,6 +1326,9 @@ struct VEHSChunkHandler : ChunkHandler {
 				// A valid world has at most one actual container per native packet; cap copied references before extending the unpublished metadata.
 				if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - ordinary.size()) SlErrorCorrupt("Excessive ordinary cargo preview references");
 				ordinary.insert(ordinary.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+				// Each original carrier supplies its own cargo_type; no packet
+				// source, receipt label or active-world refit supplies that meaning.
+				for (const auto reference : row.cargo_packet_refs) _load_check_data.native_cargo_owner_rows.push_back({reference, row.freight_cargo, StationID::Invalid()});
 			}
 			if (row.type != VehicleType::Space) continue;
 			if (rows.size() >= MAX_SPACE_VEHICLES || (!rows.empty() && row.vehicle <= rows.back().vehicle)) SlErrorCorrupt("Invalid native Space preview count");

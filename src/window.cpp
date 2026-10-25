@@ -6,6 +6,7 @@
  */
 
 /** @file window.cpp Windowing system, widgets and events.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md native close/toggle and placement precedence.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB; disposable native facility cue observations invalidate actual map cells.
  */
 
@@ -3077,7 +3078,8 @@ static void CheckSoftLimit()
 		uint deletable_count = 0;
 		Window *last_deletable = nullptr;
 		for (Window *w : Window::IterateFromFront()) {
-			if (w->window_class == WindowClass::MainWindow || IsVitalWindow(w) || w->flags.Test(WindowFlag::Sticky)) continue;
+			// Permanent furniture and windows without a close box are never Escape targets.
+		if (w->window_class == WindowClass::MainWindow || IsVitalWindow(w) || w->flags.Test(WindowFlag::Sticky)) continue;
 
 			last_deletable = w;
 			deletable_count++;
@@ -3390,6 +3392,53 @@ void CloseNonVitalWindows()
 			w->Close();
 		}
 	}
+}
+
+/** @copydoc FindFrontmostClosableWindow */
+Window *FindFrontmostClosableWindow(bool except_sticky)
+{
+	// Front to back: the first window the player could close with its own close box, other than the game's
+	// permanent furniture; pinned windows only when the setting keeps them.
+	for (Window *w : Window::IterateFromFront()) {
+		if (w->window_class == WindowClass::MainWindow || IsVitalWindow(w) || w->window_desc.flags.Test(WindowDefaultFlag::NoClose)) continue;
+		// Respect the player's pinned-window exemption without changing z-order.
+		if (except_sticky && w->flags.Test(WindowFlag::Sticky)) continue;
+		return w;
+	}
+	return nullptr;
+}
+
+/** @copydoc IsWindowRaisedAsFarAsPossible */
+bool IsWindowRaisedAsFarAsPossible(const Window *w)
+{
+	const uint priority = GetWindowZPriority(w->window_class);
+	// Front to back down to the window itself: BringWindowToFront would move it past any window whose priority is not
+	// higher, so one such window in front means a key press still has something to raise.
+	for (const Window *v : Window::IterateFromFront()) {
+		if (v == w) return true;
+		if (GetWindowZPriority(v->window_class) <= priority) return false;
+	}
+	return false;
+}
+
+/** @copydoc CloseFrontmostClosableWindow */
+bool CloseFrontmostClosableWindow(bool except_sticky)
+{
+	Window *w = FindFrontmostClosableWindow(except_sticky);
+	if (w == nullptr) return false;
+	w->Close();
+	return true;
+}
+
+/** @copydoc CancelPlacementOrCloseWindow */
+void CancelPlacementOrCloseWindow()
+{
+	// A tool, a drag or a window waiting for a map click owns Escape; the setting "No" keeps the old behaviour.
+	if (IsObjectPlacementActive() || _settings_client.gui.escape_closes_window == EscapeCloseWindow::No) {
+		ResetObjectToPlace();
+		return;
+	}
+	CloseFrontmostClosableWindow(_settings_client.gui.escape_closes_window == EscapeCloseWindow::YesExceptSticky);
 }
 
 /**
