@@ -1,13 +1,18 @@
 #requires -Version 5.1
 <#
 .SYNOPSIS
-Preview or apply verified development cleanup, exporting saves first.
+Preview or delete disposable development output.
 .DESCRIPTION
-@file clean.ps1 Repository-contained export and deletion boundary.
+@file clean.ps1 Repository-contained development output deletion boundary.
+@see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md Current cleanup policy.
 @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Groups24-28/33.
 @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
 Dry run is the default. Every candidate path is listed with its estimated
 reclaimable space. Use -Apply to delete; -DryRun and -WhatIf override -Apply.
+Run from the repository root containing this script. Calling it from another
+directory refuses instead of cleaning a different checkout. Apply also requires
+a clean Git working tree: no staged/unstaged changes or non-ignored untracked
+files. Ignored generated output is expected. Preview permits pending changes.
 
 Selected owners are logs/ and test-cache/ payloads (keeping .gitignore routing
 metadata), every mlm/runtime/ profile, generated
@@ -15,11 +20,12 @@ mlm/reviews/ children except README.md, audited build roots and source-backed
 Python caches. Unknown root siblings, source, media, fixtures, savegames, !kit,
 OpenTTD-baseline and Git metadata stay outside the deletion set.
 
-Apply verifies durable inputs and exports discovered saves/native configs
-through the existing Python preservation owner. Before each removal it rechecks
-writers, tracked files, redirects, nested repositories, target types, complete
-file snapshots and exact retained save identities. No process is terminated.
-Unique/unclassified source material produces an explicit preservation refusal.
+Apply treats everything inside the selected output owners as disposable,
+including saves, native configs and source copies. Arrange any backups before
+running cleanup. It never reads preservation catalogues, hashes source inputs,
+exports saves or creates backups. Before each removal it rechecks writers,
+tracked files, redirects, nested repositories, target types and complete file
+snapshots. No process is terminated.
 Partial failures stop further targets and report actual removed file lengths
 and estimated distinct storage; outside hard links keep their allocation alive.
 -KeepBuildIntermediates (alias -KeepBuild) retains complete audited build roots.
@@ -40,7 +46,7 @@ Also list every path when applying. Dry runs always list all paths.
 Review all disposable development output and estimated space savings.
 .EXAMPLE
 .\clean.ps1 -Apply
-Export protected inputs and remove the verified generated targets.
+Delete the selected disposable output, including saves/configs within it.
 .EXAMPLE
 .\clean.ps1 -Apply -KeepBuildIntermediates
 Clear verified runs and diagnostics while retaining complete build trees.
@@ -117,13 +123,59 @@ function Get-CleanupFiles([string]$Path) {
 <#
  * Run structured read-only Git discovery, never a Git mutation.
  * @param Repository Intended checkout root.
- * @param Arguments Read-only rev-parse/ls-files argument array.
+ * @param Arguments Read-only rev-parse/status/ls-files argument array.
  * @return Git output lines after successful completion.
 #>
 function Invoke-CleanupGit([string]$Repository, [string[]]$Arguments) {
-    $result = @(& git -C $Repository @Arguments)
+    # Status normally may refresh the index. Disable optional locks so discovery
+    # remains read only and does not alter the caller's Git metadata.
+    $result = @(& git --no-optional-locks -C $Repository @Arguments)
     if ($LASTEXITCODE -ne 0) { throw "Read-only Git check failed: git $($Arguments -join ' ')" }
     return $result
+}
+
+<#
+ * Bind cleanup to the current filesystem directory and its actual Git root.
+ * @param Repository Expected checkout; the CLI supplies its script directory.
+ * @return Canonical current repository root after ownership validation.
+#>
+function Resolve-CleanupRepository([string]$Repository) {
+    $location = Get-Location
+    if ($location.Provider.Name -ne 'FileSystem') { throw 'Run cleanup from a filesystem repository root.' }
+    $selected = Resolve-Path -LiteralPath $Repository -ErrorAction Stop
+    if ($selected.Provider.Name -ne 'FileSystem') { throw 'Cleanup requires a filesystem repository root.' }
+    $root = [IO.Path]::GetFullPath($selected.ProviderPath).TrimEnd('\', '/')
+    $current = [IO.Path]::GetFullPath($location.ProviderPath).TrimEnd('\', '/')
+    if (-not [StringComparer]::OrdinalIgnoreCase.Equals($root, $current)) {
+        throw "Run clean.ps1 from its repository root: $root. Current directory: $current."
+    }
+    Assert-CleanupNoLinks $root
+    # Git environment overrides could validate another checkout or index while
+    # deletion still targets this directory. Require ordinary local discovery.
+    foreach ($name in @('GIT_DIR', 'GIT_WORK_TREE', 'GIT_COMMON_DIR', 'GIT_INDEX_FILE')) {
+        if ([Environment]::GetEnvironmentVariable($name)) { throw "Clear $name before cleanup; Git ownership must match the current directory." }
+    }
+    $gitRoot = @(Invoke-CleanupGit $root @('rev-parse', '--show-toplevel'))
+    # A copied script, a subdirectory or a parent Git repository must not grant
+    # deletion authority over folders which merely resemble OpenTTD output.
+    if ($gitRoot.Count -ne 1 -or [IO.Path]::GetFullPath($gitRoot[0]).TrimEnd('\', '/') -ne $root -or
+        -not (Test-Path -LiteralPath (Join-Path $root 'src') -PathType Container) -or
+        -not (Test-Path -LiteralPath (Join-Path $root 'CMakeLists.txt') -PathType Leaf)) {
+        throw 'Keep clean.ps1 at the root of the intended OpenTTD repository.'
+    }
+    return $root
+}
+
+<#
+ * Require completed Git work before discarding generated development output.
+ * @param Repository Verified current checkout; ignored output may remain present.
+ * @return None; pending tracked or non-ignored untracked work blocks deletion.
+#>
+function Assert-CleanupCleanWorktree([string]$Repository) {
+    $changes = @(Invoke-CleanupGit $Repository @('-c', 'core.fsmonitor=false', 'status', '--porcelain=v1', '--untracked-files=all', '--ignore-submodules=none'))
+    if ($changes.Count -gt 0) {
+        throw ("Cleanup requires a clean Git working tree. Resolve pending Git changes before -Apply:`n" + (($changes | Select-Object -First 12) -join "`n"))
+    }
 }
 
 <#
@@ -350,13 +402,17 @@ function Set-CleanupEstimates([object[]]$Plan, [switch]$ReuseIdentities) {
 #>
 function Assert-CleanupUntracked([object[]]$Plan, [string[]]$TrackedPaths) {
     $tracked = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
-    foreach ($path in $TrackedPaths) { [void]$tracked.Add($path.Replace('/', '\')) }
-    # Tracking is an independent safety boundary: one tracked descendant blocks
-    # its entire recursive target, regardless of generated-location conventions.
-    foreach ($entry in $Plan) {
-        foreach ($file in $entry.Files) {
-            if ($tracked.Contains($file.FullName.Replace('/', '\'))) { throw "Keep tracked file: $($file.FullName)" }
+    # Protect every tracked entry and its parents, including missing files and
+    # uninitialized submodule directories which file enumeration cannot observe.
+    foreach ($path in $TrackedPaths) {
+        $cursor = [IO.Path]::GetFullPath($path).TrimEnd('\', '/')
+        while ($cursor) {
+            [void]$tracked.Add($cursor)
+            $cursor = [IO.Path]::GetDirectoryName($cursor)
         }
+    }
+    foreach ($entry in $Plan) {
+        if ($tracked.Contains([IO.Path]::GetFullPath($entry.Path).TrimEnd('\', '/'))) { throw "Keep target containing tracked content: $($entry.Path)" }
     }
 }
 
@@ -412,36 +468,10 @@ function Show-CleanupPaths([object[]]$Plan) {
 }
 
 <#
- * Call the existing preservation owner using structured JSON and arguments.
- * @param Operation Read-only plan, explicit export apply, or final target verify.
- * @param Request Exact scopes/plan; no path becomes executable shell text.
- * @param Repository Explicit checkout containing the independently audited targets.
- * @return Decoded preservation proposal or verification facts; no scratch files.
-#>
-function Invoke-CleanupPreservation([string]$Operation, [object]$Request, [string]$Repository) {
-    $helper = Join-Path $PSScriptRoot 'src/tests/multilayer/support/artifact_preservation.py'
-    $json = ConvertTo-Json -InputObject $Request -Depth 40 -Compress
-    $previousEncoding = $OutputEncoding
-    try {
-        $OutputEncoding = New-Object Text.UTF8Encoding $false
-        $previousPreference = $ErrorActionPreference
-        try {
-            # Capture the complete structured child's refusal instead of letting
-            # PowerShell stop at the first stderr line and hide its actual cause.
-            $ErrorActionPreference = 'Continue'
-            $lines = @($json | & python -B $helper --cleanup $Operation --root $Repository 2>&1)
-            $code = $LASTEXITCODE
-        } finally { $ErrorActionPreference = $previousPreference }
-        if ($code -ne 0) { throw ("Preservation $Operation refused (exit $code): " + ($lines -join "`n")) }
-        return (($lines -join "`n") | ConvertFrom-Json)
-    } finally { $OutputEncoding = $previousEncoding }
-}
-
-<#
  * Require the exact observed target type, file set, metadata and allocations.
  * @param Entry Original target and its complete immutable snapshot.
  * @param Repository Canonical checkout rechecked immediately before removal.
- * @return None; changed/new/missing files require refreshed planning and export.
+ * @return None; changed/new/missing files require a fresh cleanup invocation.
 #>
 function Assert-CleanupEntryCurrent([object]$Entry, [string]$Repository) {
     Assert-CleanupTarget $Entry.Path $Repository
@@ -452,8 +482,10 @@ function Assert-CleanupEntryCurrent([object]$Entry, [string]$Repository) {
     # Equal path sets can hide replaced files. Compare metadata and the original
     # volume/file identities so a copied timestamp cannot conceal a type swap.
     if (($snapshot.Count -ne $Entry.Snapshot.Count) -or (($snapshot -join "`n") -cne ($Entry.Snapshot -join "`n"))) {
-        throw "Cleanup target files changed; refresh/export before deletion: $($Entry.Path)"
+        throw "Cleanup target files changed; rerun cleanup before deletion: $($Entry.Path)"
     }
+    # A replacement during cleanup must not inherit an earlier file's deletion
+    # authority, even when its path, size and timestamp match the original.
     for ($index = 0; $index -lt $current.Count; $index++) {
         if ([OttdCleanupFileIdentity]::Inspect($current[$index].FullName).Id -ne $Entry.Identities[$index].Id) {
             throw "Cleanup file identity changed: $($current[$index].FullName)"
@@ -463,19 +495,21 @@ function Assert-CleanupEntryCurrent([object]$Entry, [string]$Repository) {
 
 <#
  * Remove only the exact target whose final ownership/snapshot still agrees.
- * @param Entry Audited target after committed export and stopped-writer checks.
+ * @param Entry Audited disposable target after ownership/stopped-writer checks.
  * @param Repository Canonical checkout; no operation crosses to another shell.
  * @return None; native PowerShell errors are retained as partial-failure facts.
 #>
 function Remove-CleanupTarget([object]$Entry, [string]$Repository) {
+    $Repository = Resolve-CleanupRepository $Repository
+    Assert-CleanupCleanWorktree $Repository
     Assert-CleanupEntryCurrent $Entry $Repository
     Remove-Item -LiteralPath $Entry.Path -Recurse -Force -ErrorAction Stop
 }
 
 <#
- * Run the sole preview/export/delete pipeline on an explicitly selected checkout.
- * @param Repository Intended checkout, additionally verified by the normal CLI.
- * @param Apply Explicit export/deletion request; defaults to preview.
+ * Preview or delete output declared disposable in an explicitly selected checkout.
+ * @param Repository Intended checkout, required to equal the current directory.
+ * @param Apply Explicit deletion request; backups are the caller's responsibility.
  * @param DryRun Force preview, even when Apply is present.
  * @param KeepBuild Retain complete audited build roots.
  * @param ShowPaths Display every absolute target during apply too.
@@ -484,43 +518,36 @@ function Remove-CleanupTarget([object]$Entry, [string]$Repository) {
 function Invoke-DevelopmentCleanup {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param([string]$Repository, [switch]$Apply, [switch]$DryRun, [switch]$KeepBuild, [switch]$ShowPaths)
-    Assert-CleanupNoLinks $Repository
+    $Repository = Resolve-CleanupRepository $Repository
+    # Explicit preview switches take precedence over Apply, including empty plans.
+    $preview = -not $Apply -or $DryRun -or $WhatIfPreference
+    if (-not $preview) { Assert-CleanupCleanWorktree $Repository }
     $plan = @(Get-DevelopmentCleanupPlan $Repository $KeepBuild.IsPresent)
     if ($plan.Count -eq 0) {
         Write-Host 'Nothing to clean.'
-        return [pscustomobject]@{ Preview=(-not $Apply); Completed=@(); Failed=@(); LogicalBytes=0L; ReclaimableBytes=0L }
+        return [pscustomobject]@{ Preview=$preview; Completed=@(); Failed=@(); LogicalBytes=0L; ReclaimableBytes=0L }
     }
     $tracked = @(Invoke-CleanupGit $Repository @('-c', 'core.quotepath=false', 'ls-files') | ForEach-Object { Join-Path $Repository $_ })
     Assert-CleanupUntracked $plan $tracked
     Set-CleanupEstimates $plan
-    $scopes = @($plan | ForEach-Object { $_.Path.Substring($Repository.Length + 1).Replace('\', '/') })
-    $proposal = Invoke-CleanupPreservation 'plan' ([pscustomobject]@{ scopes=$scopes }) $Repository
-    # Explicit DryRun/WhatIf always wins over Apply. Preview creates neither save
-    # archives nor project directories and never starts a native game process.
-    $preview = -not $Apply -or $DryRun -or $WhatIfPreference
+    # Preview is read only. Both modes use filesystem ownership rather than
+    # source histories or save catalogues to decide what output is disposable.
     if ($preview -or $ShowPaths) { Show-CleanupPaths $plan }
-    Write-Host ("Protected candidates: {0}; required-input refusals: {1}." -f @($proposal.plan.observations).Count, $proposal.retained_inputs.unresolved_required_inputs)
-    if ($proposal.retained_inputs.unresolved_required_inputs -ne 0) {
-        Write-Host ("PRESERVATION REFUSAL: " + $proposal.retained_inputs.refusal)
-        if (-not $preview) { throw 'Resolve required retained inputs before cleanup.' }
-    }
     if ($preview) {
-        Write-Host 'PREVIEW ONLY. Use -Apply without -DryRun/-WhatIf to export and remove verified targets.'
-        return [pscustomobject]@{ Preview=$true; Completed=@(); Failed=@(); Plan=$plan; Preservation=$proposal }
+        Write-Host 'PREVIEW ONLY. Use -Apply without -DryRun/-WhatIf to delete the selected disposable output.'
+        return [pscustomobject]@{ Preview=$true; Completed=@(); Failed=@(); Plan=$plan }
     }
     Assert-CleanupStopped $Repository
     foreach ($entry in $plan) { Assert-CleanupEntryCurrent $entry $Repository }
-    $exports = Invoke-CleanupPreservation 'apply' ([pscustomobject]@{ plan=$proposal.plan }) $Repository
     $completed = New-Object 'System.Collections.Generic.List[object]'
     $failed = New-Object 'System.Collections.Generic.List[object]'
     $removed = New-Object 'System.Collections.Generic.List[object]'
-    # Each removal receives fresh writer, Git, redirect, type and save checks.
+    # Each removal receives fresh writer, Git, redirect, type and snapshot checks.
     # Stop after a partial failure and report actual removed files, not promises.
     foreach ($entry in $plan) {
-        if (-not $PSCmdlet.ShouldProcess($entry.Path, 'Remove verified generated output after save export')) { continue }
+        if (-not $PSCmdlet.ShouldProcess($entry.Path, 'Delete disposable output including saves and configs')) { continue }
         try {
             Assert-CleanupEntryCurrent $entry $Repository
-            $null = Invoke-CleanupPreservation 'verify' ([pscustomobject]@{ plan=$proposal.plan; scope=$entry.Path }) $Repository
             Assert-CleanupStopped $Repository
             $trackedNow = @(Invoke-CleanupGit $Repository @('-c', 'core.quotepath=false', 'ls-files') | ForEach-Object { Join-Path $Repository $_ })
             Assert-CleanupUntracked @($entry) $trackedNow
@@ -540,20 +567,12 @@ function Invoke-DevelopmentCleanup {
     foreach ($entry in $removed) { $logical += $entry.LogicalBytes; $distinct += $entry.ReclaimableBytes }
     Write-Host ("Completed targets: {0}; failed: {1}; removed lengths: {2}; estimated distinct freed: {3}." -f $completed.Count, $failed.Count, (Format-CleanupSize $logical), (Format-CleanupSize $distinct))
     foreach ($failure in $failed) { Write-Host ("FAILED: {0}: {1}" -f $failure.Path, $failure.Error) }
-    return [pscustomobject]@{ Preview=$false; Completed=@($completed.ToArray()); Failed=@($failed.ToArray()); LogicalBytes=$logical; ReclaimableBytes=$distinct; Exports=$exports }
+    return [pscustomobject]@{ Preview=$false; Completed=@($completed.ToArray()); Failed=@($failed.ToArray()); LogicalBytes=$logical; ReclaimableBytes=$distinct }
 }
 
-# Loading functions for fixture tests never executes real cleanup.
+# Loading functions for fixture tests never executes real cleanup. The public
+# pipeline validates current-directory/Git ownership even when invoked directly.
 if ($MyInvocation.InvocationName -eq '.') { return }
 $repository = [IO.Path]::GetFullPath($PSScriptRoot).TrimEnd('\', '/')
-Assert-CleanupNoLinks $repository
-$gitRoot = @(Invoke-CleanupGit $repository @('rev-parse', '--show-toplevel'))
-# Root agreement and real source markers keep a sibling, parent repository or
-# arbitrary directory from being mistaken for this checkout's generated owners.
-if ($gitRoot.Count -ne 1 -or [IO.Path]::GetFullPath($gitRoot[0]).TrimEnd('\', '/') -ne $repository -or
-    -not (Test-Path -LiteralPath (Join-Path $repository 'src') -PathType Container) -or
-    -not (Test-Path -LiteralPath (Join-Path $repository 'CMakeLists.txt') -PathType Leaf)) {
-    throw 'Keep clean.ps1 at the root of the intended OpenTTD repository.'
-}
 $result = Invoke-DevelopmentCleanup -Repository $repository -Apply:$Apply -DryRun:$DryRun -KeepBuild:$KeepBuildIntermediates -ShowPaths:$ShowPaths -WhatIf:$WhatIfPreference
 if (@($result.Failed).Count -gt 0) { throw 'Cleanup incomplete; see the completed/failed target report above.' }
