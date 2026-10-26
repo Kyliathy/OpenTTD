@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_vehicle_cmd.h Native mission and generation-bound order command contracts.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups17/23; checked policy commands retain their matching SPOR/VEHS transport.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20
  */
 #ifndef SPACE_VEHICLE_CMD_H
@@ -38,4 +39,14 @@ DEF_CMD_TRAIT(Commands::SetSpaceMissionChecked, CmdSetSpaceMissionChecked, {}, C
  */
 CommandCost CmdEditSpaceOrder(DoCommandFlags flags, VehicleID vehicle, uint64_t generation, SpaceOrderEdit edit, uint8_t index, SpaceOrderAction action, SpaceOrderTargetKind kind, uint32_t target, uint64_t target_generation);
 DEF_CMD_TRAIT(Commands::EditSpaceOrder, CmdEditSpaceOrder, {}, CommandType::VehicleManagement)
+/** Change one existing Mine instruction without restarting its physical work or changing cargo.
+ * @param flags Native query or real execution; mixed Execute/QueryCost remains pure.
+ * @param vehicle Exact owned orbital miner's native pool ID.
+ * @param generation Selected incarnation, checked again at execution.
+ * @param index Existing Mine instruction index, never an insertion or cursor reset.
+ * @param policy Bounded requested continuation policy.
+ * @return Unchanged refusal or synchronized policy edit through the original command stream;443 SPOR/VEHS preserves every resulting decision.
+ */
+CommandCost CmdSetSpaceMiningPolicy(DoCommandFlags flags, VehicleID vehicle, uint64_t generation, uint8_t index, SpaceMiningPolicy policy);
+DEF_CMD_TRAIT(Commands::SetSpaceMiningPolicy, CmdSetSpaceMiningPolicy, {}, CommandType::VehicleManagement)
 #endif

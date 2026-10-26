@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_work_cost.h Opt-in native operation measurements without simulation or resource authority.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group33; lifecycle/forecast/retry measurements remain disposable observations.
  * Normal gameplay has no observer. These disposable thread-local diagnostics are never saved, synchronized or consulted for admission.
  */
 #ifndef SPACE_WORK_COST_H
@@ -17,7 +18,8 @@ enum class SpaceWorkKind : uint8_t {
 	IndexUpdates, IndexUnlinks, IndexLinks, QueryCalls, QueryBuckets, QueryCandidates, QueryOrderTests,
 	BodyLookups, CraftTicks, AttachmentVisits, ApproachCraftVisits, ApproachOccupantChecks, ApproachTargetChecks,
 	PlannerRequests, PlannerSlots, PlannerSlotTests, PlannerOwnerTests, PlannerOrderTests,
-	StagingBodyTests, ExtractionAttempts, ExtractionUnits, End,
+	StagingBodyTests, ExtractionAttempts, ExtractionUnits,
+	ExitForecasts, InterceptForecasts, MiningSelections, RenewalAttempts, RenewalEntryCandidates, RetirementParticipants, End,
 };
 
 /** Caller-owned diagnostic totals; accumulating them creates no second gameplay ledger or persistent field owner. */

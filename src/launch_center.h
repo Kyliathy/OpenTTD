@@ -108,6 +108,15 @@ bool IsSpaceDescentReceiptValid(uint16_t model, uint16_t quantity, uint8_t unit_
  * @return Whether release can commit now; refusal preserves every owner and ledger.
  */
 bool CanReleaseOrbitalCargo(SpaceCraftRef craft, LaunchCenterRef center, SpacePodRef pod, uint16_t quantity);
+/** Query an actual positive return batch's original native admission before travelling to its receiver.
+ * @param craft Exact native hull already holding the offered freight.
+ * @param center Exact candidate owned recovery center.
+ * @param pod Actual uniquely carried paid shell, never a predicted replacement.
+ * @param quantity Positive actual units, subject to the same mass,40-unit, quota, recovery and stock gates as release.
+ * @return Whether this batch is eligible except for current drop-circle arrival. This reserves/moves nothing; CanReleaseOrbitalCargo must still admit actual release.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19.
+ */
+bool CanNavigateOrbitalCargoRelease(SpaceCraftRef craft, LaunchCenterRef center, SpacePodRef pod, uint16_t quantity);
 /**
  * Revalidate and move the offered packets once into the paid pod's saved descent owner.
  * Retains release position and exact target generation, reserves recovery headroom

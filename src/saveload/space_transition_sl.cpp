@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_transition_sl.cpp Saved native rocket round trips and independent preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group14C; candidate-only natural-body issuance join.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups10B/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CB; source-era heavy resupply admission precedes physical handover.
  */
@@ -42,7 +43,7 @@ void ValidateSpaceTransitionLoadPreview()
 	const auto &records = _load_check_data.space_transition_rows;
 	// Same-file profile/geometry, bounded phase receipts and original pad reservations must all agree before a copied preview can grant flight authority.
 	if ((!records.empty() && (_load_check_data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry) || _load_check_data.map_layers < 3)) ||
-		!ValidateSpaceTransitionRecords(records, _load_check_data.map_size_x, _load_check_data.map_size_y) || !ValidateSpaceTransitionLinks(records, _load_check_data.space_production_rows, _load_check_data.launch_operations_rows)) SlErrorCorrupt("Invalid native Space transition preview");
+		!ValidateSpaceTransitionRecords(records, _load_check_data.map_size_x, _load_check_data.map_size_y, _load_check_data.asteroid_next_body_id) || !ValidateSpaceTransitionLinks(records, _load_check_data.space_production_rows, _load_check_data.launch_operations_rows)) SlErrorCorrupt("Invalid native Space transition preview");
 	// Resolve each freight role only against this snapshot's original hull, manifest, issued target and paid module rows; preview never borrows active-world inventory.
 	for (const auto &r : records) {
 		const auto &f = r.state;

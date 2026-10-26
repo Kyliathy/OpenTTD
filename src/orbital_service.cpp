@@ -78,18 +78,18 @@ static std::optional<OrbitalServiceAssignment> ServiceSite(const SpaceVehicle &c
 	return std::nullopt;
 }
 
-/** @param site Native Core. @param craft Actual hull. @return Whether physical/ownership admission permits service work. */
-static bool ReadyCraft(const SpaceStructure &site, const SpaceVehicle &craft)
+/** @param site Native Core/Dock. @param craft Actual hull. @param require_arrival Whether current exact berth/Holding must already hold; native work always uses true. @return Whether original physical/ownership admission permits service, omitting only arrival for a distant query. */
+static bool ReadyCraft(const SpaceStructure &site, const SpaceVehicle &craft, bool require_arrival = true)
 {
 	const auto model = GetSpaceVehicleModel(craft);
 	// The original Core berth preserves historical paid service. Heavy Core and every Dock job require the exact shared admitted physical slot, so a coincident position cannot create new service rights.
-	const bool at_berth = site.state.kind == SpaceBuildKind::Core && model != SPACE_HEAVY_MINER_MODEL ? craft.position == GetSpaceStructureApproach(site.state) : GetSpaceStructureBerth(craft, site).has_value();
+	const bool at_berth = !require_arrival || (site.state.kind == SpaceBuildKind::Core && model != SPACE_HEAVY_MINER_MODEL ? craft.position == GetSpaceStructureApproach(site.state) : GetSpaceStructureBerth(craft, site).has_value());
 	return GetOrbitalModuleServiceCapacity(site.state.kind) != 0 && IsOrbitalModuleOperational(site) && craft.owner == site.state.owner &&
 		GetSpaceServiceTuning(model).has_value() && craft.construction.placement == SpacePlacement::Orbital &&
 		IsSupportedSpaceVehicleContentVersion(craft.construction.content_version, model) &&
 		at_berth && craft.manifest != nullptr &&
 		craft.manifest->service_ticks == 0 && craft.manifest->pending_returns == 0 &&
-		(model != SPACE_HEAVY_MINER_MODEL || craft.mission.phase == SpaceMissionPhase::Holding) &&
+		(!require_arrival || model != SPACE_HEAVY_MINER_MODEL || craft.mission.phase == SpaceMissionPhase::Holding) &&
 		!craft.vehstatus.Test(VehState::Stopped) && !craft.vehstatus.Test(VehState::Crashed);
 }
 
@@ -123,6 +123,62 @@ static size_t PacketCount(const StationCargoList &stock)
 	// Saved transport bounds include every next-hop bucket; quantity alone cannot admit a fragmented destination.
 	for (const auto &[hop, packets] : *stock.Packets()) { (void)hop; count += packets.size(); }
 	return count;
+}
+
+/** Share the original fresh service-start gates with navigation, without reserving parts or a consumer.
+ * @param site Actual service facility.
+ * @param craft Actual asking hull.
+ * @param berth Original bounded service slot being considered.
+ * @param tuning Immutable original bill for this actual role.
+ * @param require_arrival True for a reached command; false only omits the current berth/Holding requirement.
+ * @return Whether real job vacancy, role, history, parts and active owned power source admit this service start.
+ */
+static bool CheckOrbitalServiceStart(const SpaceStructure &site, const SpaceVehicle &craft, uint8_t berth,
+	const SpaceServiceTuning &tuning, bool require_arrival)
+{
+	// A real operational module and its actual service slot must exist before
+	// any job/parts are inspected; navigation cannot invent a second Core berth.
+	if (!site.module || berth >= GetSpaceStructureApproachCapacity(site) || !ReadyCraft(site, craft, require_arrival) || HasOrbitalServiceAssignment(craft)) return false;
+	const auto &m = *site.module; const auto &job = *m.GetServiceJobs()[berth];
+	const auto *source_site = GetOrbitalServicePowerSite(site);
+	const auto *source = source_site == nullptr ? nullptr : GetUtilityPowerProducer(source_site->module->producer);
+	// Original service ownership and monotonic receipts prevent overlap or free
+	// renewal. Only the heavy role requires exhausted allowance in this shared
+	// native gate; automatic policy separately decides whether service is due.
+	if (job.remaining_ticks != 0 || source == nullptr || !source->active || source->owner != craft.owner ||
+		(site.state.kind == SpaceBuildKind::Dock && m.consumer == UtilityConsumerID{UINT32_MAX}) ||
+		craft.manifest->services_completed == UINT64_MAX || m.services_completed == UINT64_MAX ||
+		(GetSpaceVehicleModel(craft) == SPACE_HEAVY_MINER_MODEL && craft.manifest->returns_remaining != 0)) return false;
+	// Both actual labels and original fragments must fund the whole immutable
+	// bill before navigation can regard this module as a possible service owner.
+	for (uint slot = 0; slot < tuning.inputs.size(); ++slot) {
+		const auto cargo = GetSpaceSupplyCargo(static_cast<SpaceSupply>(slot + 1));
+		if (!IsValidCargoType(cargo) || !HubCargoTransfer::CanMove(m.stock[cargo], tuning.inputs[slot])) return false;
+	}
+	return CargoPacket::CanAllocateItem(2);
+}
+
+/** @copydoc CanNavigateOrbitalService */
+bool CanNavigateOrbitalService(SpaceCraftRef craft_ref, SpaceStructureRef site_ref)
+{
+	const auto *craft = ResolveSpaceCraft(craft_ref); const auto *site = ResolveSpaceStructure(site_ref);
+	// The original same-company native owners and a real immediately eligible
+	// shared slot must exist. This query neither borrows another actor nor moves
+	// a copied hull to make the arrived service command pass.
+	if (craft == nullptr || site == nullptr || !Company::IsValidID(craft->owner) || site->state.owner != craft->owner ||
+		!CanAcquireSpaceApproach(*craft, {SpaceOrderTargetKind::Structure, site->index.base(), site->generation})) return false;
+	const auto tuning = GetSpaceServiceTuning(GetSpaceVehicleModel(*craft)); if (!tuning) return false;
+	// Each actual service berth is independent; a retained first job cannot hide
+	// an available second Dock berth or lend its reserved bill to this candidate.
+	for (uint8_t berth = 0; berth < GetSpaceStructureApproachCapacity(*site); ++berth) {
+		if (!CheckOrbitalServiceStart(*site, *craft, berth, *tuning, false)) continue;
+		if (site->module->consumer != UtilityConsumerID{UINT32_MAX}) return true;
+		const auto *source = GetOrbitalServicePowerSite(*site); assert(source != nullptr);
+		const std::array sources{source->module->producer};
+		return RegisterUtilityPowerConsumer(craft->owner, MapLayer::Space, UtilityConsumerEffect::AssemblyWork,
+			GetMultiLayerSpaceBudget().work_j_per_tick, sources, false).has_value();
+	}
+	return false;
 }
 
 /** Query original physical service gates without spending or borrowing a grant.
@@ -383,23 +439,10 @@ CommandCost CmdServiceOrbitalProbe(DoCommandFlags flags, SpaceStructureID id, ui
 	auto *craft = ResolveSpaceCraft(ref);
 	if (craft == nullptr) return CMD_ERROR;
 	const auto model = GetSpaceVehicleModel(*craft); const auto tuning = GetSpaceServiceTuning(model); if (!tuning) return CMD_ERROR;
-	// The new heavy producer renews only exhausted allowance. Historical15/19/20 jobs retain their original admission rather than being reinterpreted under a later mining policy.
-	if (model == SPACE_HEAVY_MINER_MODEL && (!craft->manifest || craft->manifest->returns_remaining != 0)) return CMD_ERROR;
 	const auto berth = site->state.kind == SpaceBuildKind::Core ? std::optional<uint8_t>{0} : GetSpaceStructureBerth(*craft, *site);
 	if (!berth) return CMD_ERROR;
+	if (!CheckOrbitalServiceStart(*site, *craft, *berth, *tuning, true)) return CMD_ERROR;
 	auto &job = *jobs[*berth]; const auto *source_site = GetOrbitalServicePowerSite(*site);
-	const auto *source = source_site == nullptr ? nullptr : GetUtilityPowerProducer(source_site->module->producer);
-	// One berth and one manifest receipt prevent onboard/Core overlap and duplicate allowance renewal.
-	if (job.remaining_ticks != 0 || craft == nullptr || !ReadyCraft(*site, *craft) || HasOrbitalServiceAssignment(*craft) ||
-		source == nullptr || !source->active || source->owner != _current_company || (site->state.kind == SpaceBuildKind::Dock && m.consumer == UtilityConsumerID{UINT32_MAX}) ||
-		craft->manifest->services_completed == UINT64_MAX || m.services_completed == UINT64_MAX) return CMD_ERROR;
-	// Reserve both actual labels before any split/registration; missing either material leaves the complete stock untouched.
-	for (uint i = 0; i < 2; ++i) {
-		const auto cargo = GetSpaceSupplyCargo(static_cast<SpaceSupply>(i + 1));
-		if (!IsValidCargoType(cargo)) return CMD_ERROR;
-		if (!HubCargoTransfer::CanMove(m.stock[cargo], tuning->inputs[i])) return CMD_ERROR;
-	}
-	if (!CargoPacket::CanAllocateItem(2)) return CMD_ERROR;
 	const std::array sources{source_site->module->producer};
 	if (m.consumer == UtilityConsumerID{UINT32_MAX}) {
 		const auto consumer = RegisterUtilityPowerConsumer(_current_company, MapLayer::Space, UtilityConsumerEffect::AssemblyWork,

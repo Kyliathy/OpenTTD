@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md */
+/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #ifndef SETTINGS_TYPE_H
 #define SETTINGS_TYPE_H
@@ -258,6 +260,7 @@ struct GUISettings {
 	uint8_t scrollwheel_multiplier; ///< how much 'wheel' per incoming event from the OS?
 	bool timetable_arrival_departure; ///< show arrivals and departures in vehicle timetables
 	RightClickClose right_click_wnd_close; ///< close window with right click
+	bool hotkey_toggles_window; ///< Close a front-most unpinned window when its opening hotkey is repeated.
 	bool toolbar_dropdown_autoselect; ///< should toolbar dropdown buttons autoselect when releasing the mouse button
 	bool pause_on_newgame; ///< whether to start new games paused or not
 	SignalGUISettings signal_gui_mode; ///< select which signal types are shown in the signal GUI

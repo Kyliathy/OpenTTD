@@ -116,7 +116,7 @@ TEST_CASE("Cargo return stops inside its explicit owned circle while Visit retai
 					for (const auto &[id, hop] : descent.packets) {
 						const auto *packet = CargoPacket::Get(id); received += packet->Count(); received_share += packet->GetFeederShare();
 						/** @param old Actual pre-release history. @return Whether this surviving original packet retains its exact immutable source/route; equal-source fragments may have different ages. */
-						auto matches = [&](const CargoReturnPacketHistory &old) { return old.id == id && old.source.id == packet->GetSource().id && old.source.type == packet->GetSource().type && old.tile == packet->GetSourceTile() && old.first == packet->GetFirstStation() && old.next == hop; };
+						auto matches = [&](const CargoReturnPacketHistory &old) { return old.id == id && old.source == packet->GetSource() && old.tile == packet->GetSourceTile() && old.first == packet->GetFirstStation() && old.next == hop; };
 						const auto old = std::find_if(history.begin(), history.end(), matches); REQUIRE(old != history.end()); CHECK(packet->GetPeriodsInTransit() >= old->age);
 					}
 					CHECK(received == 10); CHECK(received_share == share); CHECK(center->goods[miner->cargo_type].TotalCount() == 10);

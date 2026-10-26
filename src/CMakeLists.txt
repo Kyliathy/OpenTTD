@@ -1,4 +1,5 @@
 # Source registration for R2MLVS1/2/4/6/7; see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Sparse asteroid identity: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group12.
 # Final Space presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG.
 # Native orbital presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K.
 # Native cargo-rocket presentation: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J.
@@ -311,12 +312,30 @@ add_files(
     # Atomic original finite extraction: r2mlvs10-asteroids-and-mining-probes.md Group10.
     space_mining_inventory.cpp
     space_mining_inventory.h
+    # r2sff1-space-fixes-features-1.md Group18: original native automatic candidate queries.
+    space_mining_target.cpp
+    space_mining_continuation.cpp
+    space_mining_continuation.h
+    space_mining_departure.cpp
+    space_mining_departure.h
+    space_mining_state.h
+    space_mining_target.h
+    # r2sff1-space-fixes-features-1.md Group19: native return domains and receiver queries.
+    space_return_target.cpp
+    space_return_target.h
     # Shared physical mining departure: r2mlvs10-asteroids-and-mining-probes.md Group11.
     space_departure.h
     space.h
     # Disposable native work counters: r2mlvs10-asteroids-and-mining-probes.md Group21.
     space_work_cost.h
     asteroid.cpp
+    asteroid_renewal.cpp
+    asteroid_renewal.h
+    asteroid_lifecycle.h
+    # r2sff1-space-fixes-features-1.md Group12: derived live body lookup.
+    asteroid_identity.cpp
+    # r2sff1-space-fixes-features-1.md Group16: historical packet provenance.
+    asteroid_cargo.cpp
     # Body/attachment publication before native work: r2mlvs10-asteroids-and-mining-probes.md Group3.
     asteroid_motion.cpp
     # Saved initial starter access: r2mlvs10-asteroids-and-mining-probes.md Group2.

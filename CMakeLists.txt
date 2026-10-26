@@ -7,6 +7,7 @@
 # Selected underground complete native loading: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79E.
 # Current selected-ground typed/consumer boundary: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Groups79FB-H.
 # Focused tube terminal/cargo producers: docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
+# Sequential Space bug characterization: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md.
 cmake_minimum_required(VERSION 3.17)
 
 if(NOT BINARY_NAME)
@@ -253,6 +254,60 @@ include(MSVCFilters)
 add_library(openttd_lib OBJECT ${GENERATED_SOURCE_FILES})
 add_executable(openttd WIN32)
 add_executable(openttd_test)
+# Keep the active Space fixes independent of unrelated scenario compilation.
+add_executable(openttd_space_fixes_test EXCLUDE_FROM_ALL
+    src/tests/test_main.cpp
+    src/tests/mock_spritecache.cpp
+    src/tests/space_fixes_native.cpp
+    src/tests/space_construction_trace.cpp
+    src/tests/space_construction_reload.cpp
+    src/tests/space_construction_workers.cpp
+    src/tests/orbital_module_assembly.cpp
+    src/tests/test_artifact_paths.cpp
+    src/tests/asteroid_motion.cpp
+    src/tests/space_straight_motion.cpp
+    src/tests/space_attachment_safety.cpp
+    src/tests/space_departure_plan.cpp
+    src/tests/space_body_approach_safety.cpp
+    src/tests/space_approach.cpp
+    src/tests/asteroid_renewal.cpp
+    src/tests/asteroid_identity.cpp
+    # r2sff1-space-fixes-features-1.md Group33: focused native lifecycle/storage work bounds.
+    src/tests/asteroid_lifecycle_work.cpp
+    src/tests/space_spatial_membership.cpp
+    src/tests/asteroid_live_validation.cpp
+    src/tests/asteroid_preview_identity.cpp
+    src/tests/space_identity_consumers.cpp
+    src/tests/asteroid_cargo_origin.cpp
+    src/tests/asteroid_cargo_wire.cpp
+    src/tests/asteroid_field_wire.cpp
+    src/tests/asteroid_cargo_native.cpp
+    src/tests/asteroid_cargo_validation.cpp
+    src/tests/asteroid_cargo_custody.cpp
+    src/tests/heavy_joined_validation.cpp
+    src/tests/space_mining_policy.cpp
+    src/tests/space_mining_wire.cpp
+    src/tests/space_mining_target.cpp
+    src/tests/space_mining_continuation.cpp
+    # Exact native safety publication: r2sff1-space-fixes-features-1.md Group25B.
+    src/tests/space_mining_departure.cpp
+    # Released native/ownerless survey targets: r2sff1-space-fixes-features-1.md Group26.
+    src/tests/space_survey_departure.cpp
+    # Pure single-ticket replacement: r2sff1-space-fixes-features-1.md Group27.
+    src/tests/asteroid_renewal_proposal.cpp
+    # Atomic retirement and scoped real allocation faults: r2sff1-space-fixes-features-1.md Group28.
+    src/tests/asteroid_retirement.cpp
+    # Native one-body/failed-interval publication: r2sff1-space-fixes-features-1.md Group28B.
+    src/tests/asteroid_creation.cpp
+    # Sole normal lifecycle opportunity: r2sff1-space-fixes-features-1.md Group29.
+    src/tests/asteroid_lifecycle_tick.cpp
+    src/tests/asteroid_lifecycle_native.cpp
+    src/tests/allocation_failure_fixture.cpp
+    src/tests/space_mining_intercept_native.cpp
+    src/tests/space_return_target.cpp
+    src/tests/space_return_surface.cpp
+    src/tests/space_return_service.cpp
+)
 # Focused native order/persistence tests link the real engine once; shared-header changes must not require unrelated scenario compilation. Owner: r2mlvs6-mines-and-resource-chains.md Group13CCC.
 add_executable(openttd_surface_supply_test EXCLUDE_FROM_ALL
     src/tests/test_main.cpp
@@ -459,6 +514,7 @@ if(MSVC)
         set_property(TARGET openttd_lib PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set_property(TARGET openttd_space_fixes_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_surface_supply_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_surface_capital_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         set_property(TARGET openttd_processor_contract_test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -498,6 +554,7 @@ target_link_libraries(openttd
 )
 
 target_link_libraries(openttd_test PRIVATE openttd_lib)
+target_link_libraries(openttd_space_fixes_test PRIVATE openttd_lib)
 target_link_libraries(openttd_surface_supply_test PRIVATE openttd_lib)
 target_link_libraries(openttd_surface_capital_test PRIVATE openttd_lib)
 target_link_libraries(openttd_processor_contract_test PRIVATE openttd_lib)
@@ -510,6 +567,7 @@ target_link_libraries(openttd_tube_test PRIVATE openttd_lib)
 target_link_libraries(openttd_space_art_test PRIVATE openttd_lib)
 if(ANDROID)
     target_link_libraries(openttd_test PRIVATE log)
+    target_link_libraries(openttd_space_fixes_test PRIVATE log)
     target_link_libraries(openttd_surface_supply_test PRIVATE log)
     target_link_libraries(openttd_surface_capital_test PRIVATE log)
     target_link_libraries(openttd_processor_contract_test PRIVATE log)

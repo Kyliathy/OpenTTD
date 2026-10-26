@@ -43,6 +43,13 @@ bool ValidateSpaceApproachRecords(std::span<const SpaceOrderRecord> records, uin
  * @return Whether this exact physical target can be requested without disturbing a retained service job.
  */
 bool RequestSpaceApproach(SpaceVehicle &craft, SpaceOrderTarget target, bool execute);
+/** Query immediate shared-slot eligibility without saving a request or preempting an existing owner.
+ * @param craft Exact deployed native hull considering an automatic destination.
+ * @param target Original body or generation-qualified static destination.
+ * @return Whether the original native arbitration would admit this hull now, including physical occupancy and earlier requests. Later assignment must revalidate; this grants no lease or reservation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group18.
+ */
+bool CanAcquireSpaceApproach(const SpaceVehicle &craft, SpaceOrderTarget target);
 /** Release only this native hull's request; physical position, cargo and service parts remain unchanged.
  * @param craft Exact actual hull whose request is released.
  */

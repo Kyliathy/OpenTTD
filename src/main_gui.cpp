@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file main_gui.cpp Handling of the main viewport. */
+/** @file main_gui.cpp Handling of the main viewport.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #include "stdafx.h"
 #include "spritecache.h"
@@ -488,9 +490,9 @@ struct MainWindow : Window
 		Hotkey(WKC_DELETE | WKC_CTRL, "delete_all_messages", GHK_DELETE_ALL_MESSAGES),
 		Hotkey('R' | WKC_CTRL, "refresh_screen", GHK_REFRESH_SCREEN),
 #if defined(_DEBUG)
-		Hotkey('0' | WKC_ALT, "crash_game", GHK_CRASH),
-		Hotkey('1' | WKC_ALT, "money", GHK_MONEY),
-		Hotkey('2' | WKC_ALT, "update_coordinates", GHK_UPDATE_COORDS),
+		Hotkey('0' | WKC_CTRL | WKC_ALT, "crash_game", GHK_CRASH),
+		Hotkey('1' | WKC_CTRL | WKC_ALT, "money", GHK_MONEY),
+		Hotkey('2' | WKC_CTRL | WKC_ALT, "update_coordinates", GHK_UPDATE_COORDS),
 #endif
 		Hotkey('1' | WKC_CTRL, "transparency_signs", GHK_TOGGLE_TRANSPARENCY),
 		Hotkey('2' | WKC_CTRL, "transparency_trees", GHK_TOGGLE_TRANSPARENCY + 1),

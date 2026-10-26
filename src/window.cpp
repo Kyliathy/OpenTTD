@@ -7,6 +7,7 @@
 
 /** @file window.cpp Windowing system, widgets and events.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB; disposable native facility cue observations invalidate actual map cells.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
  */
 
 #include "stdafx.h"
@@ -3374,12 +3375,40 @@ void CallWindowGameTickEvent()
 	}
 }
 
-/**
- * Try to close a non-vital window.
- * Non-vital windows are windows other than the game selection, main toolbar,
- * status bar, toolbar menu, and tooltip windows. Stickied windows are also
- * considered vital.
- */
+/** @copydoc HandleWindowOpeningHotkey */
+bool HandleWindowOpeningHotkey(WindowClass cls, WindowNumber number)
+{
+	if (HasModalProgress()) return true;
+	Window *front = nullptr;
+	// Keyboard reopening must respect the same modal boundary as mouse input.
+	// Vital chrome and transient tooltips do not make an otherwise active window
+	// look covered; pinned ordinary windows still count as foreground content.
+	for (Window *window : Window::IterateFromFront()) {
+		if (window->window_desc.flags.Test(WindowDefaultFlag::Modal)) {
+			BringWindowToFrontById(window->window_class, window->window_number);
+			return true;
+		}
+		// Vital chrome and transient hints do not cover the user's active window.
+		// Other non-closable windows still count as foreground content, so a
+		// covered target is raised instead of being closed behind them.
+		if (IsVitalWindow(window) || window->window_class == WindowClass::MainWindow ||
+			window->window_class == WindowClass::ToolTips || window->window_class == WindowClass::DropdownMenu) continue;
+		if (front == nullptr) front = window;
+	}
+	Window *window = FindWindowById(cls, number);
+	if (window == nullptr) return false;
+	// Repeated shortcuts close only the active user-controlled window. Covered,
+	// pinned and non-closable windows retain their content and are raised instead.
+	if (_settings_client.gui.hotkey_toggles_window && window == front &&
+		!window->flags.Test(WindowFlag::Sticky) && !window->window_desc.flags.Test(WindowDefaultFlag::NoClose)) {
+		window->Close();
+	} else {
+		BringWindowToFrontById(cls, number);
+	}
+	return true;
+}
+
+/** Close ordinary unpinned windows, retaining each owner's close contract. */
 void CloseNonVitalWindows()
 {
 	/* Note: the container remains stable, even when deleting windows. */

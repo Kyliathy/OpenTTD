@@ -63,6 +63,8 @@ private:
 	friend class HubCargoTransfer;
 	/** We want this to be saved, right? */
 	friend SaveLoadTable GetCargoPacketDesc();
+	/** Only the original native transport installs a fully decoded version-admitted source; packet identity and all other fields remain original. */
+	friend struct CAPAChunkHandler;
 public:
 	/** Maximum number of items in a single cargo packet. */
 	static const uint16_t MAX_COUNT = UINT16_MAX;
@@ -76,6 +78,8 @@ public:
 	~CargoPacket() { }
 
 	CargoPacket *Split(uint new_size);
+	/** @param mineral Original same-file/live-body mineral validated before retirement. @return Whether this packet's exact legacy asteroid ID was upgraded in place, or an already typed origin agrees. Quantity, pool identity, credit, travel and ownership stay unchanged; ordinary/unknown/malformed sources refuse. Called by controlled migration tests now, by the matching loader in Group21. */
+	bool UpgradeLegacyAsteroidSource(CargoLabel mineral);
 	void Merge(CargoPacket *cp);
 	void Reduce(uint count);
 

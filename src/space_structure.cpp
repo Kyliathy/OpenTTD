@@ -1,5 +1,8 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_structure.cpp Native paid sites, Core activation and exclusive orbital cargo owners.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19; shared original distant/arrived freight admission.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group31C; checked receiver removal leaves a valid paused target-loss wait.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; full historical packet origin participates in semantic digests.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-8BC.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B; native processor buffers resolve actual configured cargo labels.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; processing work/connection/history follows exact native activation, freight and removal owners.
@@ -9,6 +12,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; immutable contained-job bills bound real reserved packets and survive sender loss.
  */
 #include "stdafx.h"
+#include "cargo_source_digest.h"
 #include "space_structure.h"
 #include "orbital_manufacturing.h"
 #include "orbital_recipe.h"
@@ -333,7 +337,14 @@ CommandCost CmdRemoveOrbitalModule(DoCommandFlags flags, SpaceStructureID id, ui
 			return (target.kind == SpaceOrderTargetKind::Structure || target.kind == SpaceOrderTargetKind::Blueprint) &&
 				target.id == reference.structure.base() && target.generation == reference.generation;
 		};
-		if (queue.approach && matches(queue.approach->target)) ReleaseSpaceApproach(*craft);
+		if (queue.approach && matches(queue.approach->target)) {
+			ReleaseSpaceApproach(*craft);
+			// The effective receiver of a held Mine can differ from its original
+			// instruction target. A removed request cannot retain ApproachBusy:
+			// that block requires a real request and would make an immediate paused
+			// save invalid. Historical intent stays intact for native reselection.
+			if (queue.blocked == SpaceOrderBlock::ApproachBusy) queue.blocked = SpaceOrderBlock::TargetRemoved;
+		}
 		// A current lost target stops only its own action; completed and unrelated queues retain their existing receipts and priority.
 		if (queue.cursor < queue.entries.size() && matches(queue.entries[queue.cursor].target)) {
 			queue.blocked = SpaceOrderBlock::TargetRemoved; queue.started = false; queue.timer_ticks = 0; queue.work_ticks = 0;
@@ -590,47 +601,88 @@ CommandCost CmdActivateOrbitalModule(DoCommandFlags flags, SpaceStructureID id, 
 	return CommandCost{};
 }
 
-/** @copydoc CmdMoveOrbitalFreight */
-CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID id, uint64_t generation, VehicleID vehicle, uint64_t vehicle_generation, CargoType cargo, uint16_t quantity, bool load)
+/** Share original module handling admission between distant unload queries and actual commands.
+ * @param site_ref Original resolved operational module.
+ * @param craft_ref Original resolved hull, never a copy at an invented arrival point.
+ * @param cargo Actual offered cargo type.
+ * @param quantity Positive original units.
+ * @param load True retains the existing actual loading path; distant queries only unload.
+ * @param require_arrival Whether exact current berth/position/Holding must already be established.
+ * @return Original resulting freight capacity when admitted; no packet, slot, allowance or revision changes here.
+ */
+static std::optional<uint16_t> CheckOrbitalFreightAdmission(const SpaceStructure &site_ref, const SpaceVehicle &craft_ref,
+	CargoType cargo, uint16_t quantity, bool load, bool require_arrival)
 {
-	auto *site = ResolveSpaceStructure({id, generation});
-	auto *craft = ResolveSpaceCraft({vehicle, vehicle_generation});
+	const auto *site = &site_ref; const auto *craft = &craft_ref;
 	// Physical exchange requires the exact owned operational module and an idle orbital craft at its precise approach.
-	if (site == nullptr || craft == nullptr || site->state.owner != _current_company || craft->owner != _current_company ||
+	if (site->state.owner != craft->owner ||
 		!IsOrbitalModuleOperational(*site) || craft->construction.placement != SpacePlacement::Orbital ||
-		(site->state.kind != SpaceBuildKind::Dock && craft->position != GetSpaceStructureApproach(site->state)) || craft->vehstatus.Test(VehState::Crashed) ||
+		(require_arrival && site->state.kind != SpaceBuildKind::Dock && craft->position != GetSpaceStructureApproach(site->state)) || craft->vehstatus.Test(VehState::Crashed) ||
 		(craft->manifest && craft->manifest->service_ticks != 0) || quantity == 0 || !IsValidCargoType(cargo) ||
-		(craft->cargo.TotalCount() != 0 && craft->cargo_type != cargo)) return CMD_ERROR;
+		(craft->cargo.TotalCount() != 0 && craft->cargo_type != cargo)) return std::nullopt;
 	const auto model = GetSpaceVehicleModel(*craft);
-	// Heavy mineral returns and general haulers require their actual shared berth even at a Core/processor. Existing constructor handling retains its geometry contract; a nearby craft cannot borrow another hull's admitted slot.
-	const auto berth = site->state.kind == SpaceBuildKind::Dock || model == SPACE_HEAVY_MINER_MODEL || model == 17 ? GetSpaceStructureBerth(*craft, *site) : std::optional<uint8_t>{0};
-	// A Dock's two precise admitted slots handle independently; a service job reserves only its own craft and physical berth.
-	if (!berth || site->module->GetServiceJobs()[*berth]->remaining_ticks != 0 || HasOrbitalServiceAssignment(*craft)) return CMD_ERROR;
-	auto &stock = site->module->stock[cargo];
+	if (HasOrbitalServiceAssignment(*craft)) return std::nullopt;
+	if (require_arrival) {
+		// Heavy mineral returns and haulers need their actual shared berth even
+		// at a Core; existing constructor handling retains its geometry contract.
+		const auto berth = site->state.kind == SpaceBuildKind::Dock || model == SPACE_HEAVY_MINER_MODEL || model == 17 ? GetSpaceStructureBerth(*craft, *site) : std::optional<uint8_t>{0};
+		// The chosen actual berth cannot handle freight while its original
+		// contained service job retains that physical slot and reserved parts.
+		if (!berth || site->module->GetServiceJobs()[*berth]->remaining_ticks != 0) return std::nullopt;
+	} else {
+		// A navigation-only unload may inspect the real arbitration, but cannot
+		// acquire a busy/retained service slot or authorize a distant loading job.
+		if (load || !CanAcquireSpaceApproach(*craft, {SpaceOrderTargetKind::Structure, site->index.base(), site->generation})) return std::nullopt;
+	}
+	const auto &stock = site->module->stock[cargo];
 	const auto stock_capacity = GetOrbitalModuleCargoCapacity(*site, cargo);
 	// A valid berth grants handling geometry, not another module function. Assembly has no general stock, and specialized processors exchange only their declared input/product labels.
-	if (stock_capacity == 0) return CMD_ERROR;
+	if (stock_capacity == 0) return std::nullopt;
 	const auto capacity = GetSpaceFreightCapacity(model, cargo);
 	// Each positive heavy orbital unload is one completed return batch. Pending descents already reserve their own quota; direct handling cannot spend it again or renew an exhausted allowance.
-	if (model == SPACE_HEAVY_MINER_MODEL && (!craft->manifest || craft->manifest->returns_remaining <= craft->manifest->pending_returns || craft->mission.phase != SpaceMissionPhase::Holding || capacity == 0)) return CMD_ERROR;
+	if (model == SPACE_HEAVY_MINER_MODEL && (!craft->manifest || craft->manifest->returns_remaining <= craft->manifest->pending_returns ||
+		(require_arrival && craft->mission.phase != SpaceMissionPhase::Holding) || capacity == 0)) return std::nullopt;
 	if (load) {
 		const auto label = CargoSpec::Get(cargo)->label;
 		// Constructors retain their two material labels; canonical general-freight haulers may load their own positive mass/refit allowance. Mining probes remain extraction-only, and a hauler still approaching or servicing cannot start a competing load.
 		const bool constructor = model == 20 && (label == CargoLabel{"STEL"} || label == CargoLabel{"GOOD"});
 		const bool hauler = model == 17 && capacity != 0 && craft->mission.phase == SpaceMissionPhase::Holding;
-		if (!constructor && !hauler) return CMD_ERROR;
+		if (!constructor && !hauler) return std::nullopt;
 		// Probe freight uses its own mass-bounded hold, separate from paid service/pod compartments.
-		if (craft->cargo.TotalCount() + quantity > capacity || !HubCargoTransfer::CanMove(stock, quantity)) return CMD_ERROR;
+		if (craft->cargo.TotalCount() + quantity > capacity || !HubCargoTransfer::CanMove(stock, quantity)) return std::nullopt;
 	} else {
 		// Whole destination admission preserves the freight hold when module stock is full or packets cannot move.
-		if (stock.TotalCount() + quantity > stock_capacity || !HubCargoTransfer::CanMove(craft->cargo, quantity)) return CMD_ERROR;
+		if (stock.TotalCount() + quantity > stock_capacity || !HubCargoTransfer::CanMove(craft->cargo, quantity)) return std::nullopt;
 		size_t packets = craft->cargo.Packets()->size();
 		// Conservatively preflight transport record capacity before a move; packet merging may use fewer slots, never more.
 		for (const auto &[hop, list] : *stock.Packets()) { (void)hop; packets += list.size(); }
-		if (packets > 64) return CMD_ERROR;
+		if (packets > 64) return std::nullopt;
 	}
 	// A native processing quote must retain a representable revision after any freight movement into or out of its actual packet owner.
-	if (site->module->processing && site->module->processing->revision >= UINT64_MAX - 1) return CMD_ERROR;
+	if (site->module->processing && site->module->processing->revision >= UINT64_MAX - 1) return std::nullopt;
+	return capacity;
+}
+
+/** @copydoc CanNavigateOrbitalFreightUnload */
+bool CanNavigateOrbitalFreightUnload(SpaceCraftRef craft_ref, SpaceStructureRef site_ref, uint16_t quantity)
+{
+	const auto *craft = ResolveSpaceCraft(craft_ref); const auto *site = ResolveSpaceStructure(site_ref);
+	// Exact original incarnations must exist before any actual stock or native
+	// packet list is queried; a reused ID cannot lend receiver rights.
+	if (craft == nullptr || site == nullptr) return false;
+	return CheckOrbitalFreightAdmission(*site, *craft, craft->cargo_type, quantity, false, false).has_value();
+}
+
+/** @copydoc CmdMoveOrbitalFreight */
+CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID id, uint64_t generation, VehicleID vehicle, uint64_t vehicle_generation, CargoType cargo, uint16_t quantity, bool load)
+{
+	auto *site = ResolveSpaceStructure({id, generation}); auto *craft = ResolveSpaceCraft({vehicle, vehicle_generation});
+	// Native commands still require the acting company's exact original owners;
+	// the shared navigation query grants neither that authority nor arrival.
+	if (site == nullptr || craft == nullptr || site->state.owner != _current_company || craft->owner != _current_company) return CMD_ERROR;
+	const auto capacity = CheckOrbitalFreightAdmission(*site, *craft, cargo, quantity, load, true);
+	if (!capacity) return CMD_ERROR;
+	auto &stock = site->module->stock[cargo]; const auto model = GetSpaceVehicleModel(*craft);
 	// A mixed Execute/QueryCost call remains an estimate; only the real physical transaction may move packets and spend a heavy return allowance.
 	if (flags.Test(DoCommandFlag::Execute) && !flags.Test(DoCommandFlag::QueryCost)) {
 		const bool moved = load ? HubCargoTransfer::Move(stock, craft->cargo, quantity, craft->tile) : HubCargoTransfer::Move(craft->cargo, stock, quantity, craft->tile);
@@ -639,7 +691,7 @@ CommandCost CmdMoveOrbitalFreight(DoCommandFlags flags, SpaceStructureID id, uin
 		if (site->module->processing) ++site->module->processing->revision;
 		// Quota changes only after its actual positive packet move succeeds; quotes, full receivers, stale targets and failed allocation retain the original allowance and freight.
 		if (model == SPACE_HEAVY_MINER_MODEL) --craft->manifest->returns_remaining;
-		craft->cargo_type = cargo; craft->cargo_cap = capacity; craft->MarkDirty(); MarkWholeScreenDirty();
+		craft->cargo_type = cargo; craft->cargo_cap = *capacity; craft->MarkDirty(); MarkWholeScreenDirty();
 	}
 	return CommandCost{};
 }
@@ -957,7 +1009,7 @@ uint64_t ComputeSpaceStructureDigest()
 		add(r.work_fraction); add(r.work_remainder); add(r.last_work_tick); add(r.last_work_interval);
 		for (uint i = 0; i < 2; ++i) {
 			add(r.consumed[i]); add(r.quantities[i]); add(r.inputs[i].size());
-			for (const auto &[id, hop] : r.inputs[i]) { const auto *p = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(p->Count()); add(p->GetPeriodsInTransit()); add(static_cast<int64_t>(p->GetFeederShare())); add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); add(to_underlying(p->GetSource().type)); add(p->GetSource().id); }
+			for (const auto &[id, hop] : r.inputs[i]) { const auto *p = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(p->Count()); add(p->GetPeriodsInTransit()); add(static_cast<int64_t>(p->GetFeederShare())); add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); AppendCargoSourceDigest(p->GetSource(), add); }
 		}
 		add(r.module.has_value());
 		if (r.module) {
@@ -989,7 +1041,7 @@ uint64_t ComputeSpaceStructureDigest()
 					add(job.quantities[input]); add(job.inputs[input].size());
 					for (const auto &[id, hop] : job.inputs[input]) {
 						const auto *packet = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(packet->Count()); add(packet->GetPeriodsInTransit());
-						add(static_cast<int64_t>(packet->GetFeederShare())); add(packet->GetSourceTile().base()); add(packet->GetFirstStation().base()); add(to_underlying(packet->GetSource().type)); add(packet->GetSource().id);
+						add(static_cast<int64_t>(packet->GetFeederShare())); add(packet->GetSourceTile().base()); add(packet->GetFirstStation().base()); AppendCargoSourceDigest(packet->GetSource(), add);
 					}
 				}
 			}
@@ -1002,7 +1054,7 @@ uint64_t ComputeSpaceStructureDigest()
 					add(job->quantities[i]); add(job->inputs[i].size());
 					for (const auto &[id, hop] : job->inputs[i]) {
 						const auto *p = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(p->Count()); add(p->GetPeriodsInTransit()); add(static_cast<int64_t>(p->GetFeederShare()));
-						add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); add(to_underlying(p->GetSource().type)); add(p->GetSource().id);
+						add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); AppendCargoSourceDigest(p->GetSource(), add);
 					}
 				}
 			}
@@ -1011,7 +1063,7 @@ uint64_t ComputeSpaceStructureDigest()
 				add(r.module->quantities[cargo]); add(r.module->stock[cargo].size());
 				for (const auto &[id, hop] : r.module->stock[cargo]) {
 					const auto *p = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(p->Count()); add(p->GetPeriodsInTransit()); add(static_cast<int64_t>(p->GetFeederShare()));
-					add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); add(to_underlying(p->GetSource().type)); add(p->GetSource().id);
+					add(p->GetSourceTile().base()); add(p->GetFirstStation().base()); AppendCargoSourceDigest(p->GetSource(), add);
 				}
 			}
 		}

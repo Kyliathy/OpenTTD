@@ -4,6 +4,7 @@
  * Measures native detached field/index components; Surface generation and whole-game frame rates are separate producers.
  */
 #include "../stdafx.h"
+#include "asteroid_snapshot_fixture.h"
 #include "asteroid_work_fixture.h"
 #include "../core/random_func.hpp"
 #include "../safeguards.h"
@@ -33,7 +34,7 @@ TEST_CASE("Asteroid field work follows exact populations and output sensitive na
 	CHECK(initialization.work.Get(SpaceWorkKind::IndexUpdates) == scenario.bodies); CHECK(initialization.work.Get(SpaceWorkKind::IndexLinks) == scenario.bodies);
 	constexpr uint32_t steps = 32; AsteroidWorkMeasurement motion;
 	/** Each actual field step publishes one motion and one disposable bucket update per original body, including a full clustered bucket departure. */
-	MeasureAsteroidWork(motion, [&] { for (uint32_t tick = 0; tick < steps; ++tick) { AdvanceAsteroidField(field); for (const auto &body : field.bodies) index.Update(body.id, body.motion.position); } });
+	MeasureAsteroidWork(motion, [&] { for (uint32_t tick = 0; tick < steps; ++tick) { AdvanceContainedAsteroidSnapshot(field); for (const auto &body : field.bodies) index.Update(body.id, body.motion.position); } });
 	CHECK(motion.work.Get(SpaceWorkKind::BodySteps) == uint64_t{steps} * scenario.bodies);
 	CHECK(motion.work.Get(SpaceWorkKind::IndexUpdates) == uint64_t{steps} * scenario.bodies);
 	CHECK(motion.work.Get(SpaceWorkKind::BodyLookups) == 0); CHECK(motion.work.Get(SpaceWorkKind::QueryCalls) == 0);

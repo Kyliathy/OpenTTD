@@ -748,6 +748,8 @@ struct StationAuthorityPreview {
 	TileIndex tile = INVALID_TILE; ///< Original saved base.xy; preview does not project from the active map.
 	StationFacilities base_facilities{}; ///< Actual saved base facilities; cannot be inferred from a normal-station discriminator alone.
 	std::vector<uint32_t> cargo_packet_refs; ///< Unpublished native ID+1 references across this actual station's goods/next-hop buckets.
+	CargoType current_cargo = INVALID_CARGO; ///< Current original goods-array index while decoding nested route buckets.
+	std::vector<NativeCargoReferencePreview> cargo_reference_rows; ///< Same-file packet-to-cargo meaning, never active-world CargoSpec inference.
 };
 
 /** One detached original next-hop bucket; decoding references creates no CargoPacket or station stock. */
@@ -772,6 +774,7 @@ public:
 			StationCargoBucketPreview bucket; SlObject(&bucket, this->GetLoadDescription());
 			if (bucket.references.size() > CargoPacketID::End().base() - row->cargo_packet_refs.size()) SlErrorCorrupt("Excessive native station cargo preview references");
 			row->cargo_packet_refs.insert(row->cargo_packet_refs.end(), bucket.references.begin(), bucket.references.end());
+			for (const auto reference : bucket.references) row->cargo_reference_rows.push_back({reference, row->current_cargo});
 		}
 	}
 };
@@ -787,7 +790,10 @@ public:
 		if (std::ranges::find(this->GetLoadDescription(), "cargo", &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native station goods cargo preview");
 		const auto count = SlGetStructListLength(NUM_CARGO);
 		// Empty goods slots still belong to this file's schema; only actual retained packet references enter the global copied ownership join.
-		for (size_t cargo = 0; cargo < count; ++cargo) SlObject(row, this->GetLoadDescription());
+		for (size_t cargo = 0; cargo < count; ++cargo) {
+			row->current_cargo = static_cast<CargoType>(cargo);
+			SlObject(row, this->GetLoadDescription());
+		}
 	}
 };
 
@@ -903,6 +909,11 @@ struct STNNChunkHandler : ChunkHandler {
 			// The whole copied station family may reference at most the actual packet pool bound; metadata never creates stock for missing native owners.
 			if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - cargo.size()) SlErrorCorrupt("Excessive native station-family cargo preview references");
 			cargo.insert(cargo.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+			auto &meanings = _load_check_data.native_cargo_reference_rows;
+			// Ordinary stations and carriers together can own at most one row per
+			// native packet; bound this shared copied evidence before extending it.
+			if (row.cargo_reference_rows.size() > CargoPacketID::End().base() - meanings.size()) SlErrorCorrupt("Excessive native cargo meaning references");
+			meanings.insert(meanings.end(), row.cargo_reference_rows.begin(), row.cargo_reference_rows.end());
 		}
 		_load_check_data.native_station_cargo_present = true;
 	}

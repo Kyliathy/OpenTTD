@@ -6,6 +6,7 @@
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original processor quantities and typed admission reasons.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13L; completed physical frames do not promise unsupported activation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; native composition/trajectory and retained descent presentation.
+# @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups2-3/8; bounded actions, shortcuts and construction readiness.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -396,7 +397,7 @@ STR_TOOLBAR_TOOLTIP_FORWARD                                     :{BLACK}Fast for
 STR_TOOLBAR_TOOLTIP_OPTIONS                                     :{BLACK}Options and settings
 STR_TOOLBAR_TOOLTIP_SAVE_GAME_ABANDON_GAME                      :{BLACK}Save, load or abandon game, exit program
 STR_TOOLBAR_TOOLTIP_DISPLAY_MAP                                 :{BLACK}Open map, extra viewport, cargo flow or list of signs
-STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
+STR_TOOLBAR_TOOLTIP_CYCLE_MAP_LAYER                             :{BLACK}Choose the main view's map layer. Alt+1: Surface; Alt+2: Underground; Alt+3: Deep Underground; Alt+4: Space. N cycles available layers
 STR_TOOLBAR_TOOLTIP_DISPLAY_TOWN_DIRECTORY                      :{BLACK}Open town directory or found town
 STR_TOOLBAR_TOOLTIP_DISPLAY_SUBSIDIES                           :{BLACK}Open subsidy list
 STR_TOOLBAR_TOOLTIP_DISPLAY_LIST_OF_COMPANY_STATIONS            :{BLACK}Open list of company's stations
@@ -436,7 +437,7 @@ STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_BACKWARD_TOOLTIP    :{BLACK}Move the
 STR_SCENEDIT_TOOLBAR_MOVE_THE_STARTING_DATE_FORWARD_TOOLTIP     :{BLACK}Move the starting date forward 1 year
 STR_SCENEDIT_TOOLBAR_SET_DATE_TOOLTIP                           :{BLACK}Click to enter the starting year
 STR_SCENEDIT_TOOLBAR_DISPLAY_MAP_TOWN_DIRECTORY_TOOLTIP         :{BLACK}Open map, extra viewport, sign list, or town or industry directory
-STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Choose the map layer the main view shows: surface, underground, deep underground or outer space
+STR_SCENEDIT_TOOLBAR_CYCLE_MAP_LAYER_TOOLTIP                    :{BLACK}Choose the main view's map layer. Alt+1: Surface; Alt+2: Underground; Alt+3: Deep Underground; Alt+4: Space
 STR_SCENEDIT_TOOLBAR_LANDSCAPE_GENERATION_TOOLTIP               :{BLACK}Open landscaping menu or generate a new world
 STR_SCENEDIT_TOOLBAR_TOWN_GENERATION_TOOLTIP                    :{BLACK}Build or generate towns
 STR_SCENEDIT_TOOLBAR_INDUSTRY_GENERATION_TOOLTIP                :{BLACK}Build or generate industries
@@ -544,6 +545,24 @@ STR_SPACE_ORDER_TIMED_OUT                                       :Approach timed 
 STR_SPACE_ORDER_PROGRESS                                        :Order {NUM}/{NUM}: {STRING}
 STR_SPACE_SCAN_PROGRESS                                         :Scan: {NUM}/148 working ticks
 STR_SPACE_ORDER_ROW                                             :{NUM}: {STRING} {STRING} #{NUM}
+# r2sff1-space-fixes-features-1.md Group30: native per-Mine continuation and actual destination disclosure.
+STR_SPACE_POLICY_LEGACY                                         :Follow route / home
+STR_SPACE_POLICY_RETURN                                         :Nearest receiver
+STR_SPACE_POLICY_FULL                                           :Wait until full
+STR_SPACE_POLICY_TIP                                            :{BLACK}Choose the selected Mine instruction's continuation. Wait until full seeks the same mineral. Nearest receiver returns earned cargo. Changing this choice preserves current cargo and work.
+STR_SPACE_POLICY_DETAIL                                         :Mine order {NUM} continuation: {STRING}
+STR_SPACE_POLICY_MANUAL                                         :Add or select a Mine order to choose its continuation.
+STR_SPACE_EFFECTIVE_TARGET                                      :Current destination: {STRING} #{NUM}
+STR_SPACE_EFFECTIVE_NONE                                        :No current destination
+STR_SPACE_CONT_STATUS                                           :Mining continuation: {STRING}
+STR_SPACE_CONT_DETACHING                                         :Detaching safely
+STR_SPACE_CONT_SEEK_MINERAL                                      :Seeking the same mineral
+STR_SPACE_CONT_RETURNING                                        :Returning cargo
+STR_SPACE_CONT_SERVICE                                          :Travelling for service
+STR_SPACE_CONT_WAIT_MINERAL                                      :Waiting for a same-mineral asteroid
+STR_SPACE_CONT_WAIT_RECEIVER                                     :Waiting for a compatible receiver
+STR_SPACE_CONT_WAIT_SERVICE                                      :Waiting for service
+STR_SPACE_CONT_WAIT_DEPARTURE                                    :Waiting for safe departure
 STR_SPACE_BODY_LOCATION                                         :Current plane position: {NUM}, {NUM}
 STR_SPACE_BODY_COMPOSITION                                      :Primary resource: {STRING}
 STR_SPACE_BODY_TRAJECTORY                                       :Trajectory: X {RAW_STRING}{DECIMAL}, Y {RAW_STRING}{DECIMAL}; speed {DECIMAL} plane tiles/day
@@ -1852,6 +1871,8 @@ STR_CONFIG_SETTING_RIGHT_MOUSE_BTN_EMU_CONTROL                  :Ctrl+Click
 STR_CONFIG_SETTING_RIGHT_MOUSE_BTN_EMU_OFF                      :Off
 
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE                        :Close window on right-click: {STRING2}
+STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW                         :Repeated window hotkey closes the active window: {STRING2}
+STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW_HELPTEXT                 :F2 opens Game Options, raises it when covered, and closes it when already in front. Pinned windows stay open. When disabled, F2 opens or raises the window
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_HELPTEXT               :Closes a window by right-clicking inside it. Disables the tooltip on right-click!
 ###length 3
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_NO                     :No
@@ -6043,8 +6064,30 @@ STR_SPACE_CONSTRUCTION_SITE                                     :{COMMA}. {STRIN
 STR_SPACE_CONSTRUCTION_BLUEPRINT                                :Awaiting deliveries / construction
 STR_SPACE_CONSTRUCTION_FRAME                                    :Frame construction complete
 STR_SPACE_CONSTRUCTION_CANCELLED                                :Cancelled; collect remaining inputs here
-STR_SPACE_CONSTRUCTION_STOCK                                    :Delivered: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
+STR_SPACE_CONSTRUCTION_STOCK                                    :Held at site / required: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
 STR_SPACE_CONSTRUCTION_CONSUMED                                 :Consumed: {COMMA} Steel tonnes, {COMMA} Goods crates
+STR_SPACE_BUILD_STATUS                                          :{VEHICLE}: {STRING}
+STR_SPACE_BUILD_CURRENT_ORDER                                   :Current order {NUM}: {STRING} {STRING} #{NUM}
+STR_SPACE_BUILD_QUEUE_EMPTY                                     :The builder has no orders.
+STR_SPACE_BUILD_QUEUE_FINISHED                                  :The builder has finished its orders.
+STR_SPACE_BUILD_QUEUE_TARGET                                    :Queue construction appends a job for {VEHICLE} at {STRING} #{NUM}; editing restarts its orders from the beginning.
+STR_SPACE_BUILD_CARRIED                                         :Still on the builder: {COMMA} {STRING}; delivery requires arrival at its ordered site.
+STR_SPACE_BUILD_NO_ORDER                                        :No construction instruction is current. Select the intended site and Queue construction; clear or reorder earlier instructions if needed.
+STR_SPACE_BUILD_TARGET_LOST                                     :Construction target unavailable. Choose a surviving blueprint and edit the builder's orders.
+STR_SPACE_BUILD_COMPLETE                                        :Frame construction complete.
+STR_SPACE_BUILD_TIMEOUT                                         :The approach timed out. Check the route and edit the order to retry.
+STR_SPACE_BUILD_UNAVAILABLE                                     :This hull cannot construct here. Select an owned construction probe deployed in Space.
+STR_SPACE_BUILD_STOPPED                                         :Stopped. Start the builder in its vehicle window, or explicitly edit its orders to restart it.
+STR_SPACE_BUILD_SERVICE                                         :Servicing. Finish or cancel its actual service job before changing construction orders.
+STR_SPACE_BUILD_PAUSED                                          :Paused. Resume the game to advance construction.
+STR_SPACE_BUILD_APPROACH                                        :Waiting for the site's approach. Let its occupant leave; the builder will approach when admitted.
+STR_SPACE_BUILD_TRAVEL                                          :Travelling to its ordered construction site.
+STR_SPACE_BUILD_MATERIALS                                       :Waiting for materials. Reserve the recipe from the adjacent Core, or visit the Core, load the missing cargo and queue construction.
+STR_SPACE_BUILD_CORE                                            :Waiting for an operational adjacent Core. Complete and activate the owned Core first.
+STR_SPACE_BUILD_WORKER                                          :Waiting for the Core's construction slot. Another eligible builder is working; this job keeps its materials and progress.
+STR_SPACE_BUILD_POWER                                           :Waiting for Core power. Resume its panel or wait for competing powered work to finish.
+STR_SPACE_BUILD_READY                                           :Ready to build on the next construction opportunity.
+STR_SPACE_BUILD_WORKING                                         :Constructing at its ordered site.
 STR_SPACE_CONSTRUCTION_HINT                                     :Place outside the asteroid strip. Select a site and an orbital builder, then queue construction. Cancellation retains cargo here; collect it with a nearby builder. Capital is not refunded.
 STR_SPACE_CONSTRUCTION_MISSING                                  :Waiting for construction materials
 STR_SPACE_CONSTRUCTION_BUSY                                     :Another builder has the work slot
@@ -6058,6 +6101,12 @@ STR_SPACE_CONSTRUCTION_NO_PROBE                                 :No owned orbita
 STR_SPACE_CONSTRUCTION_LOCATE                                   :Go to site
 STR_SPACE_CONSTRUCTION_CLEAR                                    :Clear builder orders
 STR_SPACE_CONSTRUCTION_SELECT                                   :Select station / module
+STR_SPACE_ACTION_CONSTRUCTION                                   :Actions: Construction
+STR_SPACE_ACTION_INVENTORY                                      :Actions: Inventory
+STR_SPACE_ACTION_SERVICE                                        :Actions: Service
+STR_SPACE_ACTION_CONNECTIONS                                    :Actions: Connections
+STR_SPACE_ACTION_MANUFACTURE                                    :Actions: Manufacture
+STR_SPACE_ACTION_BUILDER                                        :Next builder: {VEHICLE}
 STR_SPACE_MODULE_CORE                                           :Station Core
 STR_SPACE_MODULE_DOCK                                           :Dock
 STR_SPACE_MODULE_STORAGE                                        :Storage

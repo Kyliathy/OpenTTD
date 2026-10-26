@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_manifest.cpp Actual native spacecraft fuel/service custody.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19; shared original onboard admission grants no predicted parts or allowance.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups2C/8C.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1/1B; exclusive Core service and packet custody.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8B; reached Return/Service can retain its own actual onboard work.
@@ -9,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; hauler freight uses canonical cargo refits and original physical mass.
  */
 #include "stdafx.h"
+#include "cargo_source_digest.h"
 #include "space_mining_tuning.h"
 #include "space_manifest.h"
 #include "space_order_actions.h"
@@ -34,8 +36,14 @@
 /** @copydoc GetSpaceSupplyCargo */
 CargoType GetSpaceSupplyCargo(SpaceSupply supply)
 {
+	const auto label = GetSpaceSupplyLabel(supply);
+	return label ? GetCargoTypeByLabel(*label) : INVALID_CARGO;
+}
+/** @copydoc GetSpaceSupplyLabel */
+std::optional<CargoLabel> GetSpaceSupplyLabel(SpaceSupply supply)
+{
 	static constexpr CargoLabel labels[] = {CargoLabel{"PROP"}, CargoLabel{"RFMT"}, CargoLabel{"ELEC"}};
-	return supply < SpaceSupply::End ? GetCargoTypeByLabel(labels[to_underlying(supply)]) : INVALID_CARGO;
+	return supply < SpaceSupply::End ? std::optional{labels[to_underlying(supply)]} : std::nullopt;
 }
 /** @copydoc GetSpaceSupplyCapacity */
 uint16_t GetSpaceSupplyCapacity(uint16_t model, SpaceSupply supply)
@@ -308,6 +316,54 @@ CommandCost CmdCarryLaunchProbe(DoCommandFlags flags, VehicleID rocket_id, uint6
 	}
 	return CommandCost{};
 }
+/** Share original onboard service admission without assigning a temporary Holding/arrival state.
+ * @param craft Actual orbital hull and its original manifest.
+ * @param service Immutable original role bill.
+ * @param cancel True checks the existing pause operation; navigation always requests a fresh start.
+ * @param require_arrival True preserves reached/held-action admission for actual commands, false checks a pending eligible action before travel.
+ * @return Whether original parts, quota, pending returns and action ownership admit this service operation.
+ */
+static bool CheckSpaceOnboardService(const SpaceVehicle &craft, const SpaceServiceTuning &service, bool cancel, bool require_arrival)
+{
+	// Existing physical service always retains its sole native owner. Orbital
+	// navigation cannot borrow a workshop or another module's reserved berth.
+	if (!craft.manifest || craft.construction.placement != SpacePlacement::Orbital || HasOrbitalServiceAssignment(craft)) return false;
+	const auto &m = *craft.manifest; const auto &queue = craft.space_orders;
+	if (m.pending_returns != 0) return false;
+	if (require_arrival) {
+		// Only an idle queue, held Mine or physically reached owned center action
+		// can actually start/resume work; travelling cannot earn onboard service.
+		if (craft.mission.phase != SpaceMissionPhase::Holding ||
+			(queue.cursor < queue.entries.size() && !IsSpaceMiningServiceWait(queue) && !IsSpaceOnboardServiceOrder(craft))) return false;
+	} else {
+		// Planning cannot commandeer existing paused/active work or another
+		// action. A current Mine may plan its required service while still en route;
+		// a ReturnService must retain its original Surface-center domain.
+		if (m.service_ticks != 0 || cancel) return false;
+		if (queue.cursor < queue.entries.size()) {
+			const auto &order = queue.entries[queue.cursor];
+			if (order.action != SpaceOrderAction::Mine &&
+				(order.action != SpaceOrderAction::ReturnService || order.target.kind != SpaceOrderTargetKind::LaunchCenter)) return false;
+		}
+	}
+	// Pause requires real ongoing onboard work. Starting/resuming preserves the
+	// original exhausted allowance, serial and complete actual parts bill.
+	if (cancel) return m.service_ticks != 0 && !m.service_paused && m.service_location == SpaceServiceLocation::Onboard;
+	return (m.service_ticks == 0 || m.service_paused) && m.returns_remaining == 0 && m.services_completed != UINT64_MAX &&
+		m.supplies[1].AvailableCount() >= service.inputs[0] && m.supplies[2].AvailableCount() >= service.inputs[1];
+}
+
+/** @copydoc CanNavigateSpaceOnboardService */
+bool CanNavigateSpaceOnboardService(SpaceCraftRef ref)
+{
+	const auto *craft = ResolveSpaceCraft(ref);
+	// Only an actual company hull may plan work from its own physical parts;
+	// a missing or unowned identity grants no onboard service producer.
+	if (craft == nullptr || !Company::IsValidID(craft->owner)) return false;
+	const auto service = GetSpaceServiceTuning(GetSpaceVehicleModel(*craft));
+	return service && CheckSpaceOnboardService(*craft, *service, false, false);
+}
+
 /** Service through the existing Earth/onboard owner; a reserved Core job must be controlled at its own berth.
  * @param flags Estimate or execute; mixed QueryCost preserves query precedence. @param vehicle Native probe ID. @param generation Exact hull incarnation.
  * @param cancel True pauses the existing service. @return Complete service admission/control or unchanged refusal.
@@ -324,12 +380,7 @@ CommandCost CmdServiceLaunchProbe(DoCommandFlags flags, VehicleID vehicle, uint6
 	if (!service || (model == SPACE_HEAVY_MINER_MODEL && v->construction.placement != SpacePlacement::Orbital)) return CMD_ERROR;
 	auto &m = *v->manifest;
 	if (v->construction.placement == SpacePlacement::Orbital) {
-		// Only an idle queue, held Mine or physically reached owned center Return/Service may use onboard work; active travel/scan/construction cannot borrow this allowance producer.
-		if (m.pending_returns != 0 || v->mission.phase != SpaceMissionPhase::Holding ||
-			(v->space_orders.cursor < v->space_orders.entries.size() && !IsSpaceMiningServiceWait(v->space_orders) && !IsSpaceOnboardServiceOrder(*v))) return CMD_ERROR;
-		// Cancellation needs actual active onboard work; starting needs exhausted allowance and real unconsumed parts, preserving the once-only service bill.
-		if (cancel ? m.service_ticks == 0 || m.service_paused || m.service_location != SpaceServiceLocation::Onboard :
-			(m.service_ticks != 0 && !m.service_paused) || m.returns_remaining != 0 || m.services_completed == UINT64_MAX || m.supplies[1].AvailableCount() < service->inputs[0] || m.supplies[2].AvailableCount() < service->inputs[1]) return CMD_ERROR;
+		if (!CheckSpaceOnboardService(*v, *service, cancel, true)) return CMD_ERROR;
 		if (flags.Test(DoCommandFlag::Execute)) {
 			m.service_location = SpaceServiceLocation::Onboard; m.service_paused = cancel;
 			// Only a fresh accepted start establishes the original countdown; resuming preserves already earned work.
@@ -657,7 +708,7 @@ uint64_t ComputeSpaceManifestDigest()
 		add(r.pods.size()); for (const auto pod : r.pods) { add(pod.pod.base()); add(pod.generation); }
 		for (const auto &slot : r.supplies) { add(slot.size()); for (const auto &[id, hop] : slot) {
 			const auto *cp = CargoPacket::Get(id); add(id.base()); add(hop.base()); add(cp->Count()); add(cp->GetPeriodsInTransit()); add(static_cast<int64_t>(cp->GetFeederShare()));
-			add(cp->GetSourceTile().base()); add(cp->GetFirstStation().base()); add(to_underlying(cp->GetSource().type)); add(cp->GetSource().id);
+			add(cp->GetSourceTile().base()); add(cp->GetFirstStation().base()); AppendCargoSourceDigest(cp->GetSource(), add);
 		} }
 	}
 	return hash;

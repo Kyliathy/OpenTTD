@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_motion_native.cpp Isolated edge/corner save boundaries and pre-decision native lease translation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group3
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group29; the historical strip no longer reflects native motion, and direct producer calls obey pause.
  * Existing source identities and resources stay immutable. Staged motion is an
  * explicit geometry fixture, not new launch or paid mission acceptance.
  */
@@ -92,20 +93,21 @@ TEST_CASE("Native asteroid boundary fixtures retain hidden motion and actual pre
 			const auto before = GetAsteroidField();
 			const auto original = before.bodies[target.base()];
 			const uint32_t extracted = miner == nullptr ? 0 : miner->extracted_units;
-			TickAsteroidField(); // Deliberately observe the producer boundary before CallVehicleTicks can perform any work.
-			const auto &reflected = GetAsteroidField().bodies[target.base()];
-			CHECK(reflected.motion.velocity_x == -original.motion.velocity_x);
-			CHECK(reflected.motion.remainder_x == (corner ? 40 : 29));
-			if (corner) CHECK(reflected.motion.velocity_y == -original.motion.velocity_y);
+			AutoRestoreBackup running(_pause_mode, PauseModes{});
+			TickAsteroidField(); // Observe one normal unpaused producer boundary before CallVehicleTicks can perform work.
+			const auto &moved = *GetMutableAsteroidBody(target);
+			CHECK(moved.motion.velocity_x == original.motion.velocity_x);
+			CHECK(moved.motion.remainder_x == (corner ? 40 : 29));
+			if (corner) CHECK(moved.motion.velocity_y == original.motion.velocity_y);
 			if (miner != nullptr) {
-				CHECK(miner->position == SpacePoint{reflected.motion.position.x + miner->mission.attachment_offset.x,
-					reflected.motion.position.y + miner->mission.attachment_offset.y});
-				CHECK(miner->extracted_units == extracted); CHECK(reflected.remaining_reserve == original.remaining_reserve);
+				CHECK(miner->position == SpacePoint{moved.motion.position.x + miner->mission.attachment_offset.x,
+					moved.motion.position.y + miner->mission.attachment_offset.y});
+				CHECK(miner->extracted_units == extracted); CHECK(moved.remaining_reserve == original.remaining_reserve);
 			}
 			// Expected body kinematics are independent of craft work and camera; advance exactly37 actual additional simulation ticks.
 			auto expected = before;
-			for (auto &body : expected.bodies) AdvanceSpaceMotion(body.motion, expected.band);
-			AutoRestoreBackup running(_pause_mode, PauseModes{});
+			const auto bounds = *GetSpacePlaneBounds(expected.width, expected.height);
+			for (auto &body : expected.bodies) { const auto step = StepSpaceMotionStraight(body.motion, bounds); REQUIRE(step); REQUIRE_FALSE(step->crossed_edges.Any()); body.motion = step->proposed; }
 			const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(30);
 			while (GetAsteroidField().elapsed_ticks < before.elapsed_ticks + 38) {
 				REQUIRE(std::chrono::steady_clock::now() < deadline);
@@ -114,7 +116,7 @@ TEST_CASE("Native asteroid boundary fixtures retain hidden motion and actual pre
 				REQUIRE(GetAsteroidField().elapsed_ticks == tick + 1);
 				// Stable body identity and fractional motion must match the shared step even when the real mission changes phase.
 				for (size_t i = 0; i < expected.bodies.size(); ++i) {
-					AdvanceSpaceMotion(expected.bodies[i].motion, expected.band);
+					const auto step = StepSpaceMotionStraight(expected.bodies[i].motion, bounds); REQUIRE(step); REQUIRE_FALSE(step->crossed_edges.Any()); expected.bodies[i].motion = step->proposed;
 					CHECK(GetAsteroidField().bodies[i].motion == expected.bodies[i].motion);
 				}
 			}

@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_station.cpp Delivered construction, Core activation and native inventory aging.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group6; shared read-only readiness predicates.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; original unique builder progress queried for presentation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-6/10B; processor activation grants only canonical bounded recipe buffers.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10C; normal synchronized inventory callbacks also settle bounded processing work.
@@ -180,26 +181,43 @@ bool HasOrbitalConstructionInputs(const SpaceStructure &site)
 	for (uint i = 0; i < 2; ++i) if (site.job.inputs[i].AvailableCount() != d->inputs[i].quantity) return false;
 	return true;
 }
+/** @param probe Actual native hull. @return Existing physical role/running/service prerequisites, without changing any owner. */
+static OrbitalConstructionBlock ConstructionHullBlock(const SpaceVehicle &probe)
+{
+	// Only a real, supported, owned orbital builder can operate its paid tooling;
+	// a missing manifest or crashed/undeployed hull cannot borrow another role.
+	if (!Company::IsValidID(probe.owner) || GetSpaceVehicleModel(probe) != 20 ||
+		!IsSupportedSpaceVehicleContentVersion(probe.construction.content_version, 20) || !probe.manifest ||
+		probe.construction.placement != SpacePlacement::Orbital || probe.vehstatus.Test(VehState::Crashed)) return OrbitalConstructionBlock::UnavailableBuilder;
+	if (probe.vehstatus.Test(VehState::Stopped)) return OrbitalConstructionBlock::Stopped;
+	// Earth and orbital service both retain physical custody; presentation must
+	// never interpret an existing queue as permission to bypass either service.
+	if (probe.manifest->service_ticks != 0 || HasOrbitalServiceAssignment(probe)) return OrbitalConstructionBlock::ServiceHeld;
+	return OrbitalConstructionBlock::Ready;
+}
+
 /** Check the full physical builder admission, independent of blueprint material availability.
  * @param v Native builder. @param site Native target site. @return Whether owned, unstopped and precisely docked.
  */
 static bool ReadyProbe(const SpaceVehicle &v, const SpaceStructure &site)
 {
-	return Company::IsValidID(v.owner) && v.owner == site.state.owner && GetSpaceVehicleModel(v) == 20 &&
-		IsSupportedSpaceVehicleContentVersion(v.construction.content_version, 20) && v.manifest != nullptr &&
-		v.construction.placement == SpacePlacement::Orbital && !v.vehstatus.Test(VehState::Stopped) && !v.vehstatus.Test(VehState::Crashed) &&
-		v.manifest->service_ticks == 0 && !HasOrbitalServiceAssignment(v) && GetSpaceStructureBerth(v, site).has_value();
+	return ConstructionHullBlock(v) == OrbitalConstructionBlock::Ready && v.owner == site.state.owner && GetSpaceStructureBerth(v, site).has_value();
 }
-/** @param v Native builder. @return Its current, generation-qualified construction target, or nullptr. */
-static SpaceStructure *ConstructionTarget(const SpaceVehicle &v)
+/** @param v Native builder. @return Exact configured current blueprint reference, or an empty reference for another action. */
+static SpaceStructureRef ConstructionOrderTarget(const SpaceVehicle &v)
 {
 	const auto &q = v.space_orders;
-	// Finished or timed-out orders cannot acquire the construction slot implicitly.
-	if (q.cursor >= q.entries.size() || q.blocked == SpaceOrderBlock::Timeout) return nullptr;
+	if (q.cursor >= q.entries.size()) return {};
 	const auto &o = q.entries[q.cursor];
 	// Only an explicit blueprint order may work; visiting the same coordinates grants no construction right.
-	if (o.action != SpaceOrderAction::Construct || o.target.kind != SpaceOrderTargetKind::Blueprint || o.target.id >= SpaceStructureID::End().base()) return nullptr;
-	return ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(o.target.id)}, o.target.generation});
+	if (o.action != SpaceOrderAction::Construct || o.target.kind != SpaceOrderTargetKind::Blueprint || o.target.id >= SpaceStructureID::End().base()) return {};
+	return {SpaceStructureID{static_cast<uint16_t>(o.target.id)}, o.target.generation};
+}
+/** @param v Native builder. @return Its current live construction target, excluding an explicitly exhausted deadline. */
+static SpaceStructure *ConstructionTarget(const SpaceVehicle &v)
+{
+	if (v.space_orders.blocked == SpaceOrderBlock::Timeout) return nullptr;
+	return ResolveSpaceStructure(ConstructionOrderTarget(v));
 }
 
 /** Resolve the one physical builder sharing this Core's bounded construction slot.
@@ -215,6 +233,26 @@ static const SpaceVehicle *CoreConstructionProbe(const SpaceStructure &core)
 		if (GetOrbitalConstructionCore(site->state) == &core) return probe;
 	}
 	return nullptr;
+}
+
+/**
+ * Share the original deterministic worker selection between execution and presentation.
+ * @param probe Actual candidate worker; this query never assigns a slot.
+ * @param site Actual current target with its original construction owner.
+ * @return Whether the original lowest-ID/Core selection chooses this hull.
+ */
+static bool HasConstructionWorkerSlot(const SpaceVehicle &probe, const SpaceStructure &site)
+{
+	if (site.state.kind != SpaceBuildKind::Core) {
+		const auto *core = GetOrbitalConstructionCore(site.state);
+		return core != nullptr && CoreConstructionProbe(*core) == &probe;
+	}
+	// Portable Core tooling still admits one lowest-ID physical worker. Reusing
+	// this predicate prevents a status query from attributing another hull's work.
+	for (const auto *other : SpaceVehicle::Iterate()) {
+		if (other->index < probe.index && ConstructionTarget(*other) == &site && ReadyProbe(*other, site)) return false;
+	}
+	return true;
 }
 
 /** @copydoc AppendOrbitalConstructionRequests */
@@ -276,9 +314,7 @@ bool IsSpaceConstructionWorkTick(const SpaceVehicle &probe)
 	// Work needs both physical builder admission and the complete all-input material reservation.
 	if (site == nullptr || !ReadyProbe(probe, *site) || !HasOrbitalConstructionInputs(*site) || site->job.last_work_tick == TimerGameTick::counter) return false;
 	if (site->state.kind == SpaceBuildKind::Core) {
-		// Paid portable builders bootstrap a Core independently; only one precise native builder may advance its job in this opportunity.
-		for (const auto *v : SpaceVehicle::Iterate()) if (v->index < probe.index && ConstructionTarget(*v) == site && ReadyProbe(*v, *site)) return false;
-		return true;
+		return HasConstructionWorkerSlot(probe, *site);
 	}
 	const auto *core = GetOrbitalConstructionCore(site->state);
 	// Every extension competes for its Core's single physical slot and current actual grant; a disabled panel holds all material.
@@ -315,17 +351,66 @@ std::optional<uint32_t> GetSpaceConstructionVisualWork(const SpaceVehicle &probe
 	const bool committed = site->job.last_work_tick != 0 && site->job.last_work_tick == TimerGameTick::counter;
 	// A grant consumed earlier in this exact native opportunity is a real work receipt, not permission to consume it twice. Before commitment the original eligibility query remains authoritative.
 	if (!committed && !IsSpaceConstructionWorkTick(probe)) return std::nullopt;
-	if (site->state.kind == SpaceBuildKind::Core) {
-		// The same lowest-ID portable worker as native execution owns the visible step; another ready builder may not display borrowed committed work.
-		for (const auto *other : SpaceVehicle::Iterate()) {
-			if (other->index < probe.index && ConstructionTarget(*other) == site && ReadyProbe(*other, *site)) return std::nullopt;
-		}
-	} else {
-		const auto *core = GetOrbitalConstructionCore(site->state);
-		// Extension construction retains the one actual Core work slot and its selected physical builder even after the ledger grant has been spent.
-		if (core == nullptr || CoreConstructionProbe(*core) != &probe) return std::nullopt;
-	}
+	if (!HasConstructionWorkerSlot(probe, *site)) return std::nullopt;
 	return site->job.work_ticks;
+}
+
+/** @copydoc GetOrbitalConstructionReadiness */
+OrbitalConstructionReadiness GetOrbitalConstructionReadiness(const SpaceVehicle &probe)
+{
+	const auto target = ConstructionOrderTarget(probe);
+	const auto hull = ConstructionHullBlock(probe);
+	if (hull != OrbitalConstructionBlock::Ready) return {hull, target};
+	const auto &queue = probe.space_orders;
+	// A finished Construct advances the cursor immediately. Preserve an exact
+	// completed-frame explanation only when it was the last completed action;
+	// an unrelated later Visit must never borrow that historical work receipt.
+	if (target == SpaceStructureRef{} && !queue.entries.empty() && queue.cursor == queue.entries.size() && queue.blocked == SpaceOrderBlock::Completed) {
+		const auto &last = queue.entries.back();
+		if (last.action == SpaceOrderAction::Construct && last.target.kind == SpaceOrderTargetKind::Blueprint && last.target.id < SpaceStructureID::End().base()) {
+			const SpaceStructureRef completed{SpaceStructureID{static_cast<uint16_t>(last.target.id)}, last.target.generation};
+			const auto *site = ResolveSpaceStructure(completed);
+			// Completion belongs to the exact still-owned frame, never a reused slot.
+			if (site != nullptr && site->state.owner == probe.owner && site->state.phase == SpaceStructurePhase::FrameComplete) return {OrbitalConstructionBlock::Completed, completed};
+		}
+	}
+	if (target == SpaceStructureRef{}) return {OrbitalConstructionBlock::NoOrder, target};
+	if (probe.space_orders.blocked == SpaceOrderBlock::Timeout) return {OrbitalConstructionBlock::Timeout, target};
+	const auto *site = ResolveSpaceStructure(target);
+	// A retained reference is historical after cancellation/removal or ownership
+	// loss; an equal numeric ID must never supply another incarnation's readiness.
+	if (site == nullptr || site->state.owner != probe.owner || site->state.phase == SpaceStructurePhase::Cancelled) return {OrbitalConstructionBlock::TargetRemoved, target};
+	if (site->state.phase == SpaceStructurePhase::FrameComplete) return {OrbitalConstructionBlock::Completed, target};
+	// Neither an editor nor a paused game owns normal construction opportunities.
+	if (_game_mode != GameMode::Normal || _pause_mode.Any()) return {OrbitalConstructionBlock::Paused, target};
+	if (!ReadyProbe(probe, *site)) {
+		// An absent/waiting shared request is distinct from an admitted ship that
+		// still has to travel to the exact berth; coordinates alone grant neither.
+		if (!probe.space_orders.approach || probe.space_orders.approach->slot == UINT8_MAX) return {OrbitalConstructionBlock::ApproachBusy, target};
+		return {OrbitalConstructionBlock::Travelling, target};
+	}
+	if (!HasOrbitalConstructionInputs(*site)) return {OrbitalConstructionBlock::MaterialsMissing, target};
+	const auto *core = site->state.kind == SpaceBuildKind::Core ? nullptr : GetOrbitalConstructionCore(site->state);
+	// Only the first Core bootstraps independently; an extension cannot replace a
+	// missing operational anchor with its builder's portable tooling.
+	if (site->state.kind != SpaceBuildKind::Core && core == nullptr) return {OrbitalConstructionBlock::CoreUnavailable, target};
+	if (!HasConstructionWorkerSlot(probe, *site)) return {OrbitalConstructionBlock::BuilderBusy, target};
+	// A disabled source blocks the next opportunity even if a real earlier receipt
+	// remains visible in this tick. No UI query republishes that spent grant.
+	if (core != nullptr && !core->module->power_enabled) return {OrbitalConstructionBlock::PowerUnavailable, target};
+	const bool committed = site->job.last_work_tick != 0 && site->job.last_work_tick == TimerGameTick::counter;
+	if (committed) return {OrbitalConstructionBlock::Working, target};
+	// Before native preparation, all physical prerequisites may be ready without
+	// an allocation. This status is deliberately not an execution/work permit.
+	if (construction_prepared_tick != TimerGameTick::counter || (core != nullptr && GetTubePowerPreparedTick() != TimerGameTick::counter)) return {OrbitalConstructionBlock::Ready, target};
+	if (core != nullptr) {
+		AutoRestoreBackup actor(_current_company, probe.owner);
+		const auto grant = GetUtilityAllocation(core->module->assembly_consumer);
+		// Shared service/processing competition can leave no current construction
+		// grant despite an enabled panel; read the original ledger rather than watts.
+		if (!grant || grant->granted_energy_j == 0) return {OrbitalConstructionBlock::PowerUnavailable, target};
+	}
+	return {OrbitalConstructionBlock::Ready, target};
 }
 
 /** Complete physical assembly participant; the shared owner commits its exact source debit with the same saved work milestone. */

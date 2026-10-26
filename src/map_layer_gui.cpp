@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.cpp Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file map_layer_gui.cpp Names, icons and view-layer switching. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #include "stdafx.h"
 #include "map_layer_gui.h"
@@ -243,4 +245,11 @@ void CycleMainViewportLayer()
 	//The cycle length is the number of layers this game allocated (AD-7).
 	MapLayer current = main->viewport->layer;
 	SetViewportLayer(main, GetNextMapLayer(current, MultiLayerMap::GetLayerCount()));
+}
+
+/** @copydoc SelectMainViewportLayer */
+void SelectMainViewportLayer(MapLayer layer)
+{
+	if (!MultiLayerMap::IsValidLayer(layer)) return;
+	SetViewportLayer(GetMainWindow(), layer);
 }

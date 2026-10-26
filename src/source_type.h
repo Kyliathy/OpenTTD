@@ -6,6 +6,7 @@
  */
 
 /** @file source_type.h Native cargo provenance and persistent non-paying company-supply purpose.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group15; self-contained asteroid provenance, with live use gated on CAPA migration.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CB.
  */
 
@@ -13,17 +14,19 @@
 #define SOURCE_TYPE_H
 
 #include "company_type.h"
+#include "cargo_type.h"
 #include "industry_type.h"
 #include "news_type.h"
 #include "strings_type.h"
 #include "town_type.h"
+#include <optional>
 
 /** Types of cargo source and destination */
 enum class SourceType : uint8_t {
 	Industry = 0, ///< Source/destination is an industry
 	Town = 1, ///< Source/destination is a town
 	Headquarters = 2, ///< Source/destination are company headquarters
-	Asteroid = 3, ///< Stable bounded orbital body ID; never an industry/town ID.
+	Asteroid = 3, ///< Typed body/mineral origin, or explicitly legacy 16-bit transport before migration; never an industry/town ID.
 	CompanySupply = 4, ///< Bought company material; retains non-paying purpose even after the original buyer disappears.
 };
 
@@ -32,20 +35,62 @@ static_assert(sizeof(SourceID) >= sizeof(CompanyID));
 static_assert(sizeof(SourceID) >= sizeof(IndustryID));
 static_assert(sizeof(SourceID) >= sizeof(TownID));
 
+/** Immutable natural-resource provenance carried with the original packet after its body retires; no live resource owner is implied. */
+struct AsteroidCargoOrigin {
+	uint32_t body = UINT32_MAX; ///< Full issued body identity; the invalid sentinel is never a real origin.
+	CargoLabel mineral{}; ///< Stable mineral meaning, independent of runtime cargo slot configuration.
+	/** @param other Original provenance to compare. @return Full body/mineral equality and ordering for native merge admission. */
+	auto operator<=>(const AsteroidCargoOrigin &other) const = default;
+};
+
 /** Native cargo provenance; company-supply purpose remains attached until the material is consumed. */
 struct Source {
 public:
 	static constexpr SourceID Invalid = 0xFFFF; ///< Invalid/unknown index of source
 
-	SourceID id; ///< Original industry/town/company/body identity, Source::Invalid if unknown/retired.
-	SourceType type; ///< Type of \c source_id.
+	SourceID id = Source::Invalid; ///< Original 16-bit native/legacy identity; modern asteroid origins always normalize this to Invalid.
+	SourceType type = SourceType::Industry; ///< Persistent provenance/purpose; default is a canonical unknown ordinary source.
 
-	/** Default construction leaves initialization policy with the containing native owner. */
-	Source() = default;
+private:
+	std::optional<AsteroidCargoOrigin> asteroid_origin; ///< Value-owned typed provenance; only the factory can create it.
+
+public:
+
+	/** Default construction supplies canonical unknown ordinary provenance, never uninitialized identity bits. */
+	constexpr Source() = default;
 	/** @param id Original typed native identity. @param type Its persistent provenance/purpose meaning. */
-	Source(ConvertibleThroughBase auto id, SourceType type) : id(id.base()), type(type) {}
+	constexpr Source(ConvertibleThroughBase auto id, SourceType type) : id(static_cast<SourceID>(id.base())), type(type)
+	{
+		// Legacy constructors cannot wrap a wide natural-body ID onto another
+		// body. Full-width provenance must enter through the explicit factory.
+		if (type == SourceType::Asteroid && id.base() >= Source::Invalid) this->id = Source::Invalid;
+	}
 	/** @param id Original serialized identity. @param type Its persistent provenance/purpose meaning. */
-	Source(SourceID id, SourceType type) : id(id), type(type) {}
+	constexpr Source(SourceID id, SourceType type) : id(id), type(type) {}
+
+	/** @param body Exact 32-bit body identity. @param mineral Stable nonempty mineral label; field/cargo semantics are validated separately. @return Canonical typed origin, or invalid Asteroid provenance for a sentinel/empty input. This factory never resolves or creates a body. */
+	static constexpr Source FromAsteroid(uint32_t body, CargoLabel mineral)
+	{
+		Source source{Source::Invalid, SourceType::Asteroid};
+		// Missing identity or meaning cannot become a modern packet origin. The
+		// invalid result retains its natural-source domain without a fake body ID.
+		if (body == UINT32_MAX || mineral.Empty()) return source;
+		source.asteroid_origin = AsteroidCargoOrigin{body, mineral};
+		return source;
+	}
+	/** @return Whether tag, legacy scalar and private payload form one unambiguous representation; this grants no live/issued-body or cargo rights. */
+	constexpr bool IsCanonical() const noexcept
+	{
+		if (this->type > SourceType::CompanySupply) return false;
+		if (!this->asteroid_origin) return true;
+		return this->type == SourceType::Asteroid && this->id == Source::Invalid &&
+			this->asteroid_origin->body != UINT32_MAX && !this->asteroid_origin->mineral.Empty();
+	}
+	/** @return A value copy of complete typed provenance, or absence for legacy/ordinary/malformed sources. Copying avoids dangling references when CargoPacket::GetSource returns a temporary. */
+	constexpr std::optional<AsteroidCargoOrigin> GetAsteroidOrigin() const noexcept
+	{
+		return this->IsCanonical() ? this->asteroid_origin : std::nullopt;
+	}
 
 	/** @return Original company identity for headquarters or bought supplies; neither implies the company still exists. */
 	constexpr CompanyID ToCompanyID() const
@@ -59,15 +104,21 @@ public:
 	/** @return Original town identity; callers must first establish town provenance. */
 	constexpr TownID ToTownID() const { assert(this->type == SourceType::Town); return static_cast<TownID>(this->id); }
 
-	/** Retire only the original identity; loss of a buyer must never turn bought supplies into paying freight. */
-	constexpr void MakeInvalid() { this->id = Source::Invalid; }
-	/** @param index Replacement original identity, preserving its provenance/purpose meaning. */
-	constexpr void SetIndex(SourceID index) { this->id = index; }
-	/** @param index Replacement typed original identity, preserving its provenance/purpose meaning. */
-	constexpr void SetIndex(ConvertibleThroughBase auto index) { this->id = index.base(); }
+	/** Explicitly invalidate identity/payload while retaining purpose. Company loss keeps bought supplies non-paying; asteroid retirement must never call this generic invalidation because its historical cargo origin remains valid. */
+	constexpr void MakeInvalid() { this->id = Source::Invalid; this->asteroid_origin.reset(); }
+	/** @param index Replacement ordinary native identity. Asteroid sources and malformed representations are unchanged; a generic 16-bit setter cannot rewrite typed or legacy asteroid provenance. */
+	constexpr void SetIndex(SourceID index)
+	{
+		// Generic subsidy/town remapping is an ordinary-domain operation. It must
+		// neither truncate a natural origin nor repair a contradictory source tag.
+		if (this->type == SourceType::Asteroid || !this->IsCanonical()) return;
+		this->id = index;
+	}
+	/** @param index Replacement typed ordinary identity; the same domain guard as the scalar setter applies. */
+	constexpr void SetIndex(ConvertibleThroughBase auto index) { this->SetIndex(static_cast<SourceID>(index.base())); }
 
 	/** @return Whether an original identity is retained; an invalid identity does not erase a non-paying purpose. */
-	constexpr bool IsValid() const noexcept { return this->id != Source::Invalid; }
+	constexpr bool IsValid() const noexcept { return this->IsCanonical() && (this->asteroid_origin.has_value() || this->id != Source::Invalid); }
 	/** @return Whether this material was bought as company supplies and therefore cannot earn freight income/subsidies. */
 	constexpr bool IsCompanySupply() const noexcept { return this->type == SourceType::CompanySupply; }
 	/** @param source Other original provenance. @return Exact identity and purpose ordering/equality for native packet merging. */

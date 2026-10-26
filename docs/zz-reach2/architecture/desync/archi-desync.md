@@ -374,3 +374,17 @@ A network game stays in sync only while all three hold.
 2. **Same RNG draws.** Given the same `_random` words loaded from the join save, every peer must call `Random` / `RandomRange` / `Chance16` the same number of times and in the same order. `Next` then produces the same `state[0]` the server puts in the sync packet. Draws made to choose GUI text, a company face in the GUI, or an ack token go through `_interactive_random` and are not part of that packet. Script instances draw from their own saved `Randomizer`s, which were seeded from a copy of `_random`.
 
 3. **No GUI-only state in the sim.** Viewport scroll, window positions, and anything stored only in client settings must not change the next tick's world or the next `_random` draw. Economy `date_fract` and calendar `date_fract` are not GUI state: they select which vehicles run their day handlers, they are saved in the `misc` chunk, and the desync log uses the economy fraction to name a tick. Pause flags that gate `StateGameLoop` are simulation control; `AfterLoadGame` refuses to clear the network pause bits on a client for that reason.
+
+[R2SFF1 lifecycle acceptance](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md)
+also compares both complete saved renewal streams: matching global sync words
+alone cannot detect independent-stream drift immediately. Sorted original exit
+IDs determine latest metadata before a due candidate is chosen. One ordinary
+opportunity decrements an already armed timer once and closes at most one due
+attempt; first credit keeps its complete fresh interval. Camera/render cadence,
+paused callbacks and save-only operations cannot grant progress or RNG draws.
+Actual client/server frames, a late joined armed timer, local/reversed storage
+replay, typed high-ID packet history and effective targets are compared through
+full native phase saves and contiguous semantic traces. The high-ID fixture's
+declared historical prefix is distinguished from actual native birth/extraction.
+Optional work/storage diagnostics are never saved, synchronized or consulted
+for gameplay admission. See [native peer evidence](../../upgrades/2026-10/r2sff1-z-m-high-id-peers.md).

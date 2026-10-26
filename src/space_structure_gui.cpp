@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_structure_gui.cpp Native module selection, paid activation and precise Core/Dock service controls.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups2/8.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-4C/6B/7.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; shared heavy selection and immutable original reserved bills.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original recipe/input/output/work and blocked disclosures.
@@ -7,6 +8,7 @@
 #include "stdafx.h"
 #include "space_mining_tuning.h"
 #include "space_structure.h"
+#include "space_construction_gui.h"
 #include "space_approach.h"
 #include "space_structure_cmd.h"
 #include "space_vehicle.h"
@@ -31,6 +33,8 @@
 #include "timer/timer.h"
 #include "timer/timer_window.h"
 #include "table/strings.h"
+#include "widgets/space_structure_widget.h"
+#include "zoom_func.h"
 #include "safeguards.h"
 
 static constexpr std::initializer_list<NWidgetPart> widgets = {
@@ -38,67 +42,119 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),
 		NWidget(WWT_CAPTION, Colours::DarkBlue), SetStringTip(STR_SPACE_CONSTRUCTION_CAPTION),
 	EndContainer(),
-	NWidget(WWT_DROPDOWN, Colours::DarkBlue, 11), SetStringTip(STR_SPACE_CONSTRUCTION_SELECT), SetFill(1, 0),
+	NWidget(WWT_DROPDOWN, Colours::DarkBlue, WID_SC_SITE), SetStringTip(STR_SPACE_CONSTRUCTION_SELECT), SetFill(1, 0), SetResize(1, 0),
+	NWidget(WWT_DROPDOWN, Colours::DarkBlue, WID_SC_RECIPE), SetStringTip(STR_SPACE_CONSTRUCTION_SELECT), SetFill(1, 0), SetResize(1, 0),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PANEL, Colours::DarkBlue, 0), SetMinimalSize(720, 400), SetResize(1, 1), SetScrollbar(10), EndContainer(),
-		NWidget(NWID_VSCROLLBAR, Colours::DarkBlue, 10),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_BUILDER), SetStringTip(STR_SPACE_CONSTRUCTION_NEXT_PROBE, STR_SPACE_CONSTRUCTION_NEXT_PROBE), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_LOCATE), SetStringTip(STR_SPACE_CONSTRUCTION_LOCATE, STR_SPACE_CONSTRUCTION_LOCATE), SetFill(1, 0), SetResize(1, 0),
+	EndContainer(),
+	NWidget(WWT_DROPDOWN, Colours::DarkBlue, WID_SC_PAGE), SetStringTip(STR_SPACE_ACTION_CONSTRUCTION), SetFill(1, 0), SetResize(1, 0),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PANEL, Colours::DarkBlue, WID_SC_DETAILS), SetMinimalSize(320, 100), SetResize(1, 1), SetScrollbar(WID_SC_SCROLLBAR), EndContainer(),
+		NWidget(NWID_VSCROLLBAR, Colours::DarkBlue, WID_SC_SCROLLBAR),
+	EndContainer(),
+	// Each page fills the shared action area's spare rows with the same panel
+	// background; a shorter page must not expose stale pixels from the viewport.
+	NWidget(NWID_SELECTION, Colours::DarkBlue, WID_SC_ACTIONS),
+		NWidget(NWID_VERTICAL),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_PLACE), SetStringTip(STR_SPACE_CONSTRUCTION_PLACE, STR_SPACE_CONSTRUCTION_PLACE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_QUEUE), SetStringTip(STR_SPACE_CONSTRUCTION_QUEUE, STR_SPACE_CONSTRUCTION_QUEUE), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_CANCEL), SetStringTip(STR_SPACE_CONSTRUCTION_CANCEL, STR_SPACE_CONSTRUCTION_CANCEL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_CLEAR), SetStringTip(STR_SPACE_CONSTRUCTION_CLEAR, STR_SPACE_CONSTRUCTION_CLEAR), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_ACTIVATE), SetStringTip(STR_SPACE_CONSTRUCTION_ACTIVATE, STR_SPACE_CONSTRUCTION_ACTIVATE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_RESERVE), SetStringTip(STR_SPACE_CONSTRUCTION_RESERVE, STR_SPACE_CONSTRUCTION_RESERVE), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_VISIT), SetStringTip(STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_VISIT), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_LOAD_STEEL), SetStringTip(STR_SPACE_CONSTRUCTION_LOAD_STEEL, STR_SPACE_CONSTRUCTION_LOAD_STEEL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_LOAD_GOODS), SetStringTip(STR_SPACE_CONSTRUCTION_LOAD_GOODS, STR_SPACE_CONSTRUCTION_LOAD_GOODS), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_UNLOAD), SetStringTip(STR_SPACE_CONSTRUCTION_UNLOAD, STR_SPACE_CONSTRUCTION_UNLOAD), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_COLLECT_STEEL), SetStringTip(STR_SPACE_CONSTRUCTION_COLLECT_STEEL, STR_SPACE_CONSTRUCTION_COLLECT_STEEL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_COLLECT_GOODS), SetStringTip(STR_SPACE_CONSTRUCTION_COLLECT_GOODS, STR_SPACE_CONSTRUCTION_COLLECT_GOODS), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_UNLOAD_METAL), SetStringTip(STR_CORE_SERVICE_UNLOAD_METAL, STR_CORE_SERVICE_UNLOAD_METAL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_UNLOAD_ELECTRONICS), SetStringTip(STR_CORE_SERVICE_UNLOAD_ELECTRONICS, STR_CORE_SERVICE_UNLOAD_ELECTRONICS), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_LOAD_METAL), SetStringTip(STR_CORE_SERVICE_LOAD_METAL, STR_CORE_SERVICE_LOAD_METAL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_LOAD_ELECTRONICS), SetStringTip(STR_CORE_SERVICE_LOAD_ELECTRONICS, STR_CORE_SERVICE_LOAD_ELECTRONICS), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_SERVICE), SetStringTip(STR_CORE_SERVICE_NEXT, STR_CORE_SERVICE_NEXT), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_BERTH), SetStringTip(STR_SPACE_DOCK_NEXT_BERTH, STR_SPACE_DOCK_NEXT_BERTH), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_START_SERVICE), SetStringTip(STR_CORE_SERVICE_START, STR_CORE_SERVICE_START), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_CANCEL_SERVICE), SetStringTip(STR_CORE_SERVICE_CANCEL, STR_CORE_SERVICE_CANCEL), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_PAUSE_SERVICE), SetStringTip(STR_CORE_SERVICE_PAUSE, STR_CORE_SERVICE_PAUSE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_RESUME_SERVICE), SetStringTip(STR_CORE_SERVICE_RESUME, STR_CORE_SERVICE_RESUME), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_TOGGLE_PANEL), SetStringTip(STR_CORE_PANEL_TOGGLE, STR_CORE_PANEL_TOGGLE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_COMMISSION), SetStringTip(STR_CORE_SERVICE_COMMISSION, STR_CORE_SERVICE_COMMISSION), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_CONNECT), SetStringTip(STR_SPACE_DOCK_CONNECT, STR_SPACE_DOCK_CONNECT), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_SOURCE), SetStringTip(STR_SPACE_DOCK_NEXT_SOURCE, STR_SPACE_DOCK_NEXT_SOURCE), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_DISCONNECT), SetStringTip(STR_SPACE_DOCK_DISCONNECT, STR_SPACE_DOCK_DISCONNECT), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_REMOVE), SetStringTip(STR_SPACE_MODULE_REMOVE, STR_SPACE_MODULE_REMOVE), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_EVACUATE), SetStringTip(STR_SPACE_MODULE_EVACUATE, STR_SPACE_MODULE_EVACUATE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_DESTINATION), SetStringTip(STR_SPACE_MODULE_EVACUATE_NEXT, STR_SPACE_MODULE_EVACUATE_NEXT), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		EndContainer(),
+		NWidget(NWID_VERTICAL),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_MODEL), SetStringTip(STR_SPACE_MANUFACTURE_NEXT_MODEL, STR_SPACE_MANUFACTURE_NEXT_MODEL), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_NEXT_INPUT_SOURCE), SetStringTip(STR_SPACE_MANUFACTURE_NEXT_SOURCE, STR_SPACE_MANUFACTURE_NEXT_SOURCE), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(NWID_HORIZONTAL),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_QUEUE_MANUFACTURE), SetStringTip(STR_SPACE_MANUFACTURE_QUEUE, STR_SPACE_MANUFACTURE_QUEUE), SetFill(1, 0), SetResize(1, 0),
+				NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, WID_SC_CANCEL_MANUFACTURE), SetStringTip(STR_SPACE_MANUFACTURE_CANCEL, STR_SPACE_MANUFACTURE_CANCEL), SetFill(1, 0), SetResize(1, 0),
+			EndContainer(),
+			NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 1), SetResize(1, 0), EndContainer(),
+		EndContainer(),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 1), SetStringTip(STR_SPACE_CONSTRUCTION_PLACE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 2), SetStringTip(STR_SPACE_CONSTRUCTION_NEXT_PROBE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 3), SetStringTip(STR_SPACE_CONSTRUCTION_QUEUE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 7), SetStringTip(STR_SPACE_CONSTRUCTION_CLEAR), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 9), SetStringTip(STR_SPACE_ORDER_VISIT), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 4), SetStringTip(STR_SPACE_CONSTRUCTION_CANCEL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 5), SetStringTip(STR_SPACE_CONSTRUCTION_COLLECT_STEEL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 6), SetStringTip(STR_SPACE_CONSTRUCTION_COLLECT_GOODS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 8), SetStringTip(STR_SPACE_CONSTRUCTION_LOCATE), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 12), SetStringTip(STR_SPACE_CONSTRUCTION_ACTIVATE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 13), SetStringTip(STR_SPACE_CONSTRUCTION_LOAD_STEEL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 14), SetStringTip(STR_SPACE_CONSTRUCTION_LOAD_GOODS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 15), SetStringTip(STR_SPACE_CONSTRUCTION_UNLOAD), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 16), SetStringTip(STR_CORE_SERVICE_NEXT), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 17), SetStringTip(STR_CORE_SERVICE_START), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 18), SetStringTip(STR_CORE_SERVICE_PAUSE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 19), SetStringTip(STR_CORE_SERVICE_RESUME), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 20), SetStringTip(STR_CORE_SERVICE_CANCEL), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 21), SetStringTip(STR_CORE_PANEL_TOGGLE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 22), SetStringTip(STR_CORE_SERVICE_COMMISSION), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 23), SetStringTip(STR_CORE_SERVICE_UNLOAD_METAL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 24), SetStringTip(STR_CORE_SERVICE_UNLOAD_ELECTRONICS), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 25), SetStringTip(STR_CORE_SERVICE_LOAD_METAL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 26), SetStringTip(STR_CORE_SERVICE_LOAD_ELECTRONICS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 27), SetStringTip(STR_SPACE_CONSTRUCTION_RESERVE), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 28), SetStringTip(STR_SPACE_DOCK_CONNECT), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 29), SetStringTip(STR_SPACE_DOCK_NEXT_BERTH), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 30), SetStringTip(STR_SPACE_DOCK_NEXT_SOURCE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 31), SetStringTip(STR_SPACE_DOCK_DISCONNECT), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 32), SetStringTip(STR_SPACE_MODULE_REMOVE), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 33), SetStringTip(STR_SPACE_MODULE_EVACUATE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 34), SetStringTip(STR_SPACE_MODULE_EVACUATE_NEXT), SetFill(1, 0),
-	EndContainer(),
-	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 35), SetStringTip(STR_SPACE_MANUFACTURE_NEXT_MODEL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 36), SetStringTip(STR_SPACE_MANUFACTURE_NEXT_SOURCE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 37), SetStringTip(STR_SPACE_MANUFACTURE_QUEUE), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 38), SetStringTip(STR_SPACE_MANUFACTURE_CANCEL), SetFill(1, 0),
+		NWidget(WWT_PANEL, Colours::DarkBlue), SetFill(1, 0), SetResize(1, 0), EndContainer(),
+		NWidget(WWT_RESIZEBOX, Colours::DarkBlue, WID_SC_RESIZE),
 	EndContainer(),
 };
-static WindowDesc desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::SpaceConstruction, WindowClass::None, {}, widgets);
+static WindowDesc desc(WindowPosition::Automatic, "space_construction", 560, 380, WindowClass::SpaceConstruction, WindowClass::None, {}, widgets);
+/** @param page Presentation-only action category. @return Its localized visible selector label. */
+static StringID PageName(SpaceConstructionPage page)
+{
+	static constexpr StringID names[] = {STR_SPACE_ACTION_CONSTRUCTION, STR_SPACE_ACTION_INVENTORY, STR_SPACE_ACTION_SERVICE,
+		STR_SPACE_ACTION_CONNECTIONS, STR_SPACE_ACTION_MANUFACTURE};
+	return names[to_underlying(page)];
+}
 /** Resolve translated presentation without duplicating recipe quantities or construction authority.
  * @param kind Canonical static recipe. @return Translated module name, or the generic selector label.
  */
@@ -141,6 +197,62 @@ static StringID OrbitalRemovalReason(OrbitalRemovalBlock block)
 	assert(block < OrbitalRemovalBlock::End);
 	return reasons[to_underlying(block)];
 }
+/** @param reason Original owner's prerequisite. @return Parameter-free native StringID suitable for a {STRING} argument. */
+static StringID ConstructionReasonString(OrbitalConstructionBlock reason)
+{
+	static constexpr StringID reasons[] = {STR_SPACE_BUILD_NO_ORDER, STR_SPACE_BUILD_TARGET_LOST, STR_SPACE_BUILD_COMPLETE,
+		STR_SPACE_BUILD_TIMEOUT, STR_SPACE_BUILD_UNAVAILABLE, STR_SPACE_BUILD_STOPPED, STR_SPACE_BUILD_SERVICE,
+		STR_SPACE_BUILD_PAUSED, STR_SPACE_BUILD_APPROACH, STR_SPACE_BUILD_TRAVEL, STR_SPACE_BUILD_MATERIALS,
+		STR_SPACE_BUILD_CORE, STR_SPACE_BUILD_WORKER, STR_SPACE_BUILD_POWER, STR_SPACE_BUILD_READY, STR_SPACE_BUILD_WORKING};
+	static_assert(std::size(reasons) == to_underlying(OrbitalConstructionBlock::End));
+	assert(reason < OrbitalConstructionBlock::End);
+	return reasons[to_underlying(reason)];
+}
+
+/** @copydoc GetSpaceConstructionReasonText */
+std::string GetSpaceConstructionReasonText(OrbitalConstructionBlock reason) { return GetString(ConstructionReasonString(reason)); }
+
+/** @copydoc GetSpaceConstructionBuilderText */
+std::vector<std::string> GetSpaceConstructionBuilderText(const SpaceVehicle &builder)
+{
+	const auto readiness = GetOrbitalConstructionReadiness(builder);
+	std::vector<std::string> lines{GetString(STR_SPACE_BUILD_STATUS, builder.index, ConstructionReasonString(readiness.block))};
+	const auto &queue = builder.space_orders;
+	if (queue.cursor < queue.entries.size()) {
+		const auto &order = queue.entries[queue.cursor];
+		static constexpr StringID actions[] = {STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_SURVEY, STR_SPACE_ORDER_MINE, STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_ORDER_UNLOAD, STR_SPACE_ORDER_SERVICE};
+		static constexpr StringID targets[] = {STR_SPACE_TARGET_BODY, STR_SPACE_TARGET_STRUCTURE, STR_SPACE_TARGET_BLUEPRINT, STR_SPACE_TARGET_CENTER, STR_SPACE_TARGET_CRAFT};
+		const bool site = order.target.kind == SpaceOrderTargetKind::Structure || order.target.kind == SpaceOrderTargetKind::Blueprint;
+		lines.push_back(GetString(STR_SPACE_BUILD_CURRENT_ORDER, queue.cursor + 1, actions[to_underlying(order.action)], targets[to_underlying(order.target.kind)], uint64_t{order.target.id} + (site ? 1 : 0)));
+	} else {
+		// The selected window site may differ from the builder's completed job;
+		// retain that job's identity so its completion cannot be misattributed.
+		if (readiness.block == OrbitalConstructionBlock::Completed) lines.push_back(GetString(STR_SPACE_ORDER_ROW,
+			queue.entries.size(), STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_TARGET_BLUEPRINT, readiness.target.structure.base() + 1));
+		lines.push_back(GetString(queue.entries.empty() ? STR_SPACE_BUILD_QUEUE_EMPTY : STR_SPACE_BUILD_QUEUE_FINISHED));
+	}
+	return lines;
+}
+
+/** @copydoc GetSpaceConstructionMaterialText */
+std::vector<std::string> GetSpaceConstructionMaterialText(const SpaceStructure &site, const SpaceVehicle *builder)
+{
+	const auto &recipe = *GetSpaceConstructionDefinition(site.state.kind);
+	std::vector<std::string> lines;
+	if (site.state.phase == SpaceStructurePhase::FrameComplete) lines.push_back(GetString(STR_SPACE_BUILD_COMPLETE));
+	lines.push_back(GetString(STR_SPACE_CONSTRUCTION_STOCK, site.job.inputs[0].TotalCount(), recipe.inputs[0].quantity,
+		site.job.inputs[1].TotalCount(), recipe.inputs[1].quantity, site.job.work_ticks, recipe.work_ticks));
+	lines.push_back(GetString(STR_SPACE_CONSTRUCTION_CONSUMED, site.job.consumed[0], site.job.consumed[1]));
+	lines.push_back(GetString(STR_SPACE_CONSTRUCTION_REMAINING,
+		recipe.inputs[0].quantity - site.job.inputs[0].TotalCount() - site.job.consumed[0],
+		recipe.inputs[1].quantity - site.job.inputs[1].TotalCount() - site.job.consumed[1]));
+	// The site owner already combines delivered and internally reserved packets;
+	// the builder's still-carried freight is disclosed separately, never counted
+	// as another copy of either site's reservation or completion consumption.
+	if (builder != nullptr && builder->cargo.TotalCount() != 0) lines.push_back(GetString(STR_SPACE_BUILD_CARRIED, builder->cargo.TotalCount(), CargoSpec::Get(builder->cargo_type)->name));
+	return lines;
+}
+
 /** Fund Industry-style native selector; all mutations pass through synchronized commands. */
 struct SpaceConstructionWindow : Window {
 	SpaceBuildKind kind = SpaceBuildKind::Core;
@@ -150,14 +262,126 @@ struct SpaceConstructionWindow : Window {
 	uint8_t service_berth = 0; ///< Presentation-only selected contained job; native commands still identify its exact saved craft.
 	SpaceStructureRef utility_source_selection; ///< Presentation-only source proposal; only the synchronized connection command publishes it.
 	SpaceStructureRef evacuation_destination; ///< Presentation-only packet destination; quotes/selection cannot move cargo or cancel a job.
-	mutable std::vector<std::pair<SpaceStructureRef, Rect>> rows;
+	/** One wrapped display row; a site reference enables selection but grants no work. */
+	struct DisplayLine {
+		std::string text; ///< Localized read-only description.
+		TextColour colour; ///< Selection highlighting only.
+		SpaceStructureRef site; ///< Exact incarnation, or empty for a detail row.
+		int top = 0, height = 0; ///< Scroll-content pixel bounds, rebuilt on resize.
+	};
+	std::vector<DisplayLine> lines;
+	SpaceConstructionPage page = SpaceConstructionPage::Construction;
+	std::vector<SpaceStructureRef> site_choices; ///< Captured dropdown incarnations, never guessed pool IDs.
 	Scrollbar *scroll = nullptr;
 	uint16_t manufacture_model = 15; ///< Presentation-only recipe proposal; synchronized admission owns the actual job.
 	SpaceStructureRef manufacture_source; ///< Explicit adjacent inventory proposal, never an implicit packet reservation.
 	/** Refresh presentation only. @param elapsed Window intervals; never simulation work or cargo age. */
-	const IntervalTimer<TimerWindow> refresh = {std::chrono::milliseconds(250), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
+	const IntervalTimer<TimerWindow> refresh = {std::chrono::milliseconds(250), [this]([[maybe_unused]] auto elapsed) { this->RefreshPresentation(); this->SetDirty(); }};
 	/** Initialize native controls and select the first owned orbital builder. */
-	SpaceConstructionWindow() : Window(desc) { this->InitNested(0); this->scroll = this->GetScrollbar(10); this->NextBuilder(); this->NextServiceCraft(); }
+	SpaceConstructionWindow() : Window(desc) { this->InitNested(0); this->scroll = this->GetScrollbar(WID_SC_SCROLLBAR); this->NextBuilder(); this->NextServiceCraft(); this->RefreshPresentation(); }
+	/**
+	 * Bound text controls to the available screen; full labels remain in tooltips.
+	 * @param widget Native presentation/action identity.
+	 * @param size Measured minimum size, including the current font and scale.
+	 * @param padding Framework padding, already included in the measured size.
+	 * @param fill Framework fill increments, unchanged.
+	 * @param resize Framework resize increments, unchanged.
+	 */
+	void UpdateWidgetSize(WidgetID widget, Dimension &size, [[maybe_unused]] const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
+	{
+		const uint available = std::max(100, _screen.width - ScaleGUITrad(16));
+		if (widget == WID_SC_DETAILS) {
+			// Preserve a usable text viewport while allowing the fixed action rows
+			// to fit after a resolution/font change. Content remains scrollable even
+			// when large text leaves room for only a few lines at minimum size.
+			const uint minimum_text = GetCharacterHeight(FontSize::Normal) + ScaleGUITrad(8);
+			const uint share = std::max(1, (GetMainViewBottom() - GetMainViewTop()) / 8);
+			size.height = std::min(size.height, std::max(minimum_text, share));
+		}
+		// Action pairs must remain reachable with long translations and large
+		// fonts. Ellipsis affects only labels; commands keep their original IDs.
+		if (widget > WID_SC_DETAILS && widget <= WID_SC_CANCEL_MANUFACTURE && widget != WID_SC_SCROLLBAR && widget != WID_SC_RECIPE) size.width = std::min(size.width, available / 2);
+		// Fixed selectors span the complete window instead of reserving a column;
+		// their selected labels must not enlarge every action page beyond the screen.
+		if (widget == WID_SC_SITE || widget == WID_SC_PAGE || widget == WID_SC_RECIPE) size.width = std::min(size.width, available);
+	}
+	/**
+	 * Keep selected site, builder and action category visible above the scroll area.
+	 * @param widget Control whose label is requested.
+	 * @param stringid Its ordinary fallback string.
+	 * @return Localized presentation of the retained exact selection.
+	 */
+	std::string GetWidgetString(WidgetID widget, StringID stringid) const override
+	{
+		if (widget == WID_SC_PAGE) return GetString(PageName(this->page));
+		if (widget == WID_SC_SITE) {
+			const auto *site = ResolveSpaceStructure(this->selected);
+			return site == nullptr ? GetString(STR_SPACE_CONSTRUCTION_SELECT) : GetString(STR_SPACE_CONSTRUCTION_SELECTED, ModuleName(site->state.kind), site->index.base() + 1);
+		}
+		if (widget == WID_SC_NEXT_BUILDER) {
+			const auto *craft = ResolveSpaceCraft(this->builder);
+			return craft == nullptr ? GetString(stringid) : GetString(STR_SPACE_ACTION_BUILDER, craft->index);
+		}
+		return this->Window::GetWidgetString(widget, stringid);
+	}
+	/** Recompute wrapped pixel ranges and clamp scrolling after content/geometry changes. */
+	void ReflowLines()
+	{
+		if (this->scroll == nullptr) return;
+		const auto *panel = this->GetWidget<NWidgetBase>(WID_SC_DETAILS);
+		const int padding = ScaleGUITrad(4);
+		const int width = std::max(1, static_cast<int>(panel->current_x) - 2 * padding);
+		int top = 0;
+		// Wrapping belongs to layout, not painting. One pixel-based scrollbar
+		// covers every detail and site row, including unusually long translations.
+		for (auto &line : this->lines) {
+			line.top = top;
+			line.height = GetStringHeight(line.text, width) + ScaleGUITrad(2);
+			top += line.height;
+		}
+		this->scroll->SetCount(top);
+		this->scroll->SetCapacity(std::max(1, static_cast<int>(panel->current_y) - 2 * padding));
+		this->scroll->SetStepSize(GetCharacterHeight(FontSize::Normal) + ScaleGUITrad(2));
+	}
+	/** Fit restored/resized geometry between the native toolbar and status bar. */
+	void OnResize() override
+	{
+		const int available_height = GetMainViewBottom() - GetMainViewTop();
+		const int target_width = std::max<int>(this->nested_root->smallest_x, std::min<int>(this->width, _screen.width));
+		const int target_height = std::max<int>(this->nested_root->smallest_y, std::min<int>(this->height, available_height));
+		// A previous larger resolution must not strand the action pages offscreen;
+		// ResizeWindow re-enters once with the clamped dimensions, then converges.
+		if (target_width != this->width || target_height != this->height) {
+			ResizeWindow(this, target_width - this->width, target_height - this->height, false, false);
+			return;
+		}
+		this->left = std::clamp(this->left, 0, std::max(0, _screen.width - this->width));
+		this->top = std::clamp(this->top, GetMainViewTop(), std::max(GetMainViewTop(), GetMainViewBottom() - this->height));
+		this->ReflowLines();
+	}
+	/** Draw retained presentation only; refresh timers and input own layout/selection updates. */
+	void OnPaint() override { this->DrawWidgets(); }
+	/**
+	 * Draw only the visible portion of the complete wrapped content.
+	 * @param rect Native panel rectangle in window coordinates.
+	 * @param widget Widget being painted; other controls use the normal renderer.
+	 */
+	void DrawWidget(const Rect &rect, WidgetID widget) const override
+	{
+		if (widget != WID_SC_DETAILS) return;
+		const Rect inner = rect.Shrink(ScaleGUITrad(4));
+		DrawPixelInfo clipped;
+		if (!FillDrawPixelInfo(&clipped, inner)) return;
+		AutoRestoreBackup drawing(_cur_dpi, &clipped);
+		// Physical clipping keeps overflowing details out of the action controls;
+		// the saved scroll offset selects content without changing any owner.
+		for (const auto &line : this->lines) {
+			const int y = line.top - this->scroll->GetPosition();
+			if (y + line.height <= 0) continue;
+			if (y >= inner.Height()) break;
+			DrawStringMultiLine(0, inner.Width() - 1, y, y + line.height - 1, line.text, line.colour);
+		}
+	}
 	/** Cycle actual orbital probes independently of construction-builder selection. */
 	void NextServiceCraft()
 	{
@@ -228,7 +452,7 @@ struct SpaceConstructionWindow : Window {
 		this->builder = builders.empty() ? SpaceCraftRef{} : (it == builders.end() || std::next(it) == builders.end() ? builders.front() : *std::next(it));
 	}
 	/** Resolve current native identities and update command availability before drawing. */
-	void OnPaint() override
+	void RefreshPresentation()
 	{
 		const auto *current = ResolveSpaceStructure(this->selected);
 		// Removed/reused or foreign site identities cannot remain selected as actionable construction targets.
@@ -242,23 +466,23 @@ struct SpaceConstructionWindow : Window {
 		if (current_builder == nullptr || current_builder->owner != _local_company || current_builder->construction.placement != SpacePlacement::Orbital) { this->builder = {}; this->NextBuilder(); }
 		auto *site = ResolveSpaceStructure(this->selected); const auto *v = ResolveSpaceCraft(this->builder);
 		const bool owned = site != nullptr && site->state.owner == _local_company;
-		this->SetWidgetDisabledState(3, !owned || v == nullptr || v->owner != _local_company || site->state.phase != SpaceStructurePhase::Blueprint);
-		this->SetWidgetDisabledState(4, !owned || site->state.phase != SpaceStructurePhase::Blueprint);
-		this->SetWidgetDisabledState(7, v == nullptr || v->owner != _local_company);
-		this->SetWidgetDisabledState(9, !owned || v == nullptr || v->owner != _local_company);
-		this->SetWidgetDisabledState(8, site == nullptr);
+		this->SetWidgetDisabledState(WID_SC_QUEUE, !owned || v == nullptr || v->owner != _local_company || site->state.phase != SpaceStructurePhase::Blueprint);
+		this->SetWidgetDisabledState(WID_SC_CANCEL, !owned || site->state.phase != SpaceStructurePhase::Blueprint);
+		this->SetWidgetDisabledState(WID_SC_CLEAR, v == nullptr || v->owner != _local_company);
+		this->SetWidgetDisabledState(WID_SC_VISIT, !owned || v == nullptr || v->owner != _local_company);
+		this->SetWidgetDisabledState(WID_SC_LOCATE, site == nullptr);
 		// Collection is restricted to actual unconsumed cancelled stock; activation never grants a refund path.
-		for (uint i = 0; i < 2; ++i) this->SetWidgetDisabledState(5 + i, !owned || v == nullptr || site->state.phase != SpaceStructurePhase::Cancelled || site->job.inputs[i].TotalCount() == 0);
+		for (uint i = 0; i < 2; ++i) this->SetWidgetDisabledState(WID_SC_COLLECT_STEEL + i, !owned || v == nullptr || site->state.phase != SpaceStructurePhase::Cancelled || site->job.inputs[i].TotalCount() == 0);
 		bool can_activate = false;
 		if (owned) {
 			AutoRestoreBackup actor(_current_company, _local_company);
 			can_activate = CmdActivateOrbitalModule({}, site->index, site->generation).Succeeded();
 		}
-		this->SetWidgetDisabledState(12, !can_activate);
+		this->SetWidgetDisabledState(WID_SC_ACTIVATE, !can_activate);
 		const bool exchange = owned && v != nullptr && IsOrbitalModuleOperational(*site) &&
 			(site->state.kind == SpaceBuildKind::Dock ? GetSpaceStructureBerth(*v, *site).has_value() : v->position == GetSpaceStructureApproach(site->state));
 		// Module exchange is a precise approach action, independent of the launch center's twenty-tile drop circle.
-		for (uint widget = 13; widget <= 15; ++widget) this->SetWidgetDisabledState(widget, !exchange);
+		for (uint widget = WID_SC_LOAD_STEEL; widget <= WID_SC_UNLOAD; ++widget) this->SetWidgetDisabledState(widget, !exchange);
 		const auto *probe = ResolveSpaceCraft(this->service_craft);
 		// Removed/foreign service selections are refreshed without changing the contained job's retained craft reference.
 		if (probe == nullptr || probe->owner != _local_company) {
@@ -270,6 +494,7 @@ struct SpaceConstructionWindow : Window {
 			if (held) this->service_berth = selected_berth;
 		}
 		const bool operational = owned && IsOrbitalModuleOperational(*site);
+		// Changing from a Dock to a single-berth module cannot retain its second slot.
 		if (site != nullptr && this->service_berth >= GetOrbitalModuleServiceCapacity(site->state.kind)) this->service_berth = 0;
 		// Paid retained jobs remain cancellable during a dependency/power outage; selecting a berth grants no service work.
 		const bool retained = owned && site->module != nullptr && site->module->activation_ticks == 0;
@@ -281,23 +506,23 @@ struct SpaceConstructionWindow : Window {
 			const bool selected_berth = site->state.kind != SpaceBuildKind::Dock || GetSpaceStructureBerth(*probe, *site) == std::optional<uint8_t>{this->service_berth};
 			can_start = selected_berth && CmdServiceOrbitalProbe({}, site->index, site->generation, probe->index, probe->generation, OrbitalServiceControl::Start).Succeeded();
 		}
-		this->SetWidgetDisabledState(17, !can_start);
+		this->SetWidgetDisabledState(WID_SC_START_SERVICE, !can_start);
 		// Pause/resume/cancel act on the actual occupant even when a different probe is selected or the original hull was lost.
-		for (uint widget = 18; widget <= 20; ++widget) this->SetWidgetDisabledState(widget, !busy);
-		this->SetWidgetDisabledState(21, !operational || site->module->producer == UtilityProducerID{UINT32_MAX});
+		for (uint widget = WID_SC_PAUSE_SERVICE; widget <= WID_SC_CANCEL_SERVICE; ++widget) this->SetWidgetDisabledState(widget, !busy);
+		this->SetWidgetDisabledState(WID_SC_TOGGLE_PANEL, !operational || site->module->producer == UtilityProducerID{UINT32_MAX});
 		bool can_commission = false;
 		if (operational) {
 			AutoRestoreBackup actor(_current_company, _local_company);
 			can_commission = CmdCommissionOrbitalServices({}, site->index, site->generation).Succeeded();
 		}
-		this->SetWidgetDisabledState(22, !can_commission);
+		this->SetWidgetDisabledState(WID_SC_COMMISSION, !can_commission);
 		// Every part-exchange button also preflights its actual source and destination; empty/full/stopped/remote owners stay visibly disabled.
-		for (uint widget = 23; widget <= 26; ++widget) {
+		for (uint widget = WID_SC_UNLOAD_METAL; widget <= WID_SC_LOAD_ELECTRONICS; ++widget) {
 			bool allowed = false;
 			if (operational && probe != nullptr) {
 				AutoRestoreBackup actor(_current_company, _local_company);
 				allowed = CmdMoveOrbitalSupply({}, site->index, site->generation, probe->index, probe->generation,
-					static_cast<uint8_t>(1 + (widget - 23) % 2), 1, widget >= 25).Succeeded();
+					static_cast<uint8_t>(1 + (widget - WID_SC_UNLOAD_METAL) % 2), 1, widget >= WID_SC_LOAD_METAL).Succeeded();
 			}
 			this->SetWidgetDisabledState(widget, !allowed);
 		}
@@ -309,7 +534,7 @@ struct SpaceConstructionWindow : Window {
 				can_reserve = CmdReserveOrbitalModuleInputs({}, site->index, site->generation, core->index, core->generation).Succeeded();
 			}
 		}
-		this->SetWidgetDisabledState(27, !can_reserve);
+		this->SetWidgetDisabledState(WID_SC_RESERVE, !can_reserve);
 		bool can_connect = false;
 		// Source selection remains a proposal until the native command atomically publishes the original connection/consumer.
 		if (operational && (site->state.kind == SpaceBuildKind::Dock || site->state.kind == SpaceBuildKind::Assembly) && site->module->utility_source == SpaceStructureRef{}) {
@@ -320,17 +545,17 @@ struct SpaceConstructionWindow : Window {
 				can_connect = CmdConnectOrbitalServices({}, site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation).Succeeded();
 			}
 		}
-		this->SetWidgetDisabledState(28, !can_connect);
-		this->SetWidgetDisabledState(29, !retained || site->state.kind != SpaceBuildKind::Dock);
-		this->SetWidgetDisabledState(30, !can_connect);
+		this->SetWidgetDisabledState(WID_SC_CONNECT, !can_connect);
+		this->SetWidgetDisabledState(WID_SC_NEXT_BERTH, !retained || site->state.kind != SpaceBuildKind::Dock);
+		this->SetWidgetDisabledState(WID_SC_NEXT_SOURCE, !can_connect);
 		bool can_disconnect = false;
 		if (retained) {
 			AutoRestoreBackup actor(_current_company, _local_company);
 			can_disconnect = CmdDisconnectOrbitalServices({}, site->index, site->generation).Succeeded();
 		}
-		this->SetWidgetDisabledState(31, !can_disconnect);
+		this->SetWidgetDisabledState(WID_SC_DISCONNECT, !can_disconnect);
 		// Demolition uses the same whole pure admission as execution; stock, held jobs and actual occupancy cannot disappear through a UI shortcut.
-		this->SetWidgetDisabledState(32, !owned || ClassifyOrbitalModuleRemoval(*site, _local_company) != OrbitalRemovalBlock::None);
+		this->SetWidgetDisabledState(WID_SC_REMOVE, !owned || ClassifyOrbitalModuleRemoval(*site, _local_company) != OrbitalRemovalBlock::None);
 		bool can_evacuate = false;
 		if (owned) {
 			AutoRestoreBackup actor(_current_company, _local_company);
@@ -340,7 +565,7 @@ struct SpaceConstructionWindow : Window {
 				can_evacuate = CmdEvacuateOrbitalModule({}, site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation).Succeeded();
 			}
 		}
-		this->SetWidgetDisabledState(33, !can_evacuate); this->SetWidgetDisabledState(34, !can_evacuate);
+		this->SetWidgetDisabledState(WID_SC_EVACUATE, !can_evacuate); this->SetWidgetDisabledState(WID_SC_NEXT_DESTINATION, !can_evacuate);
 		const bool manufacture_owned = retained && site->state.kind == SpaceBuildKind::Assembly;
 		bool can_manufacture = false, can_cancel_manufacture = false;
 		if (manufacture_owned) {
@@ -354,19 +579,19 @@ struct SpaceConstructionWindow : Window {
 				can_cancel_manufacture = CmdCancelOrbitalManufacture({}, site->index, site->generation, this->manufacture_source.structure, this->manufacture_source.generation).Succeeded();
 			}
 		}
-		this->SetWidgetDisabledState(35, !manufacture_owned || site->module->manufacture != nullptr);
-		this->SetWidgetDisabledState(36, !manufacture_owned);
-		this->SetWidgetDisabledState(37, !can_manufacture);
-		this->SetWidgetDisabledState(38, !can_cancel_manufacture);
-		this->DrawWidgets();
+		this->SetWidgetDisabledState(WID_SC_NEXT_MODEL, !manufacture_owned || site->module->manufacture != nullptr);
+		this->SetWidgetDisabledState(WID_SC_NEXT_INPUT_SOURCE, !manufacture_owned);
+		this->SetWidgetDisabledState(WID_SC_QUEUE_MANUFACTURE, !can_manufacture);
+		this->SetWidgetDisabledState(WID_SC_CANCEL_MANUFACTURE, !can_cancel_manufacture);
+		this->RebuildLines();
+		this->ReflowLines();
 	}
-	/** @param rect Widget bounds. @param widget Native widget identity. */
-	void DrawWidget(const Rect &rect, WidgetID widget) const override
+	/** Collect localized owner queries without changing simulation or drawing. */
+	void RebuildLines()
 	{
-		if (widget != 0) return;
-		this->rows.clear(); int y = rect.top + 8; const int line = GetCharacterHeight(FontSize::Normal) + 3;
+		this->lines.clear();
 		/** @param text Translated presentation. @param colour Row colour; highlights never change gameplay ownership. */
-		auto draw = [&](const std::string &text, TextColour colour = TextColour::Black) { DrawString(rect.left + 8, rect.right - 8, y, text, colour); y += line; };
+		auto draw = [&](const std::string &text, TextColour colour = TextColour::Black) { this->lines.push_back({text, colour, {}}); };
 		const auto &d = *GetSpaceConstructionDefinition(this->kind);
 		draw(GetString(STR_SPACE_CONSTRUCTION_COST, ModuleName(this->kind), d.capital, d.inputs[0].quantity, d.inputs[1].quantity, d.work_ticks));
 		if (const auto *company = Company::GetIfValid(_local_company)) draw(GetString(STR_SPACE_CONSTRUCTION_CASH, company->money));
@@ -380,14 +605,16 @@ struct SpaceConstructionWindow : Window {
 			if (o.action == SpaceOrderAction::Construct && o.target.kind == SpaceOrderTargetKind::Blueprint && o.target.id == this->selected.structure.base() && o.target.generation == this->selected.generation) { ++assigned; break; }
 		}
 		draw(v == nullptr ? GetString(STR_SPACE_CONSTRUCTION_NO_PROBE) : GetString(STR_SPACE_CONSTRUCTION_PROBE, v->index, assigned));
+		// Show the selected builder's actual current action, even when it targets a
+		// different site. Selecting a blueprint cannot imply an existing assignment.
+		if (v != nullptr) for (const auto &line : GetSpaceConstructionBuilderText(*v)) draw(line);
+		// Only an unfinished selected site can receive another Construct action;
+		// completed/cancelled frames retain their material history without a queue hint.
+		if (site != nullptr && v != nullptr && site->state.phase == SpaceStructurePhase::Blueprint) draw(GetString(STR_SPACE_BUILD_QUEUE_TARGET, v->index, ModuleName(site->state.kind), site->index.base() + 1));
 		if (site != nullptr) {
-			const auto &recipe = *GetSpaceConstructionDefinition(site->state.kind);
 			draw(GetString(STR_SPACE_CONSTRUCTION_SELECTED, ModuleName(site->state.kind), site->index.base() + 1));
-			draw(GetString(STR_SPACE_CONSTRUCTION_STOCK, site->job.inputs[0].TotalCount(), recipe.inputs[0].quantity, site->job.inputs[1].TotalCount(), recipe.inputs[1].quantity, site->job.work_ticks, recipe.work_ticks));
-			draw(GetString(STR_SPACE_CONSTRUCTION_REMAINING,
-				recipe.inputs[0].quantity - site->job.inputs[0].TotalCount() - site->job.consumed[0],
-				recipe.inputs[1].quantity - site->job.inputs[1].TotalCount() - site->job.consumed[1]));
-			draw(GetString(STR_SPACE_CONSTRUCTION_CONSUMED, site->job.consumed[0], site->job.consumed[1]));
+			// Shared wording reads the same sole job/packet owners in both views.
+			for (const auto &line : GetSpaceConstructionMaterialText(*site, v)) draw(line);
 			const auto removal = ClassifyOrbitalModuleRemoval(*site, _local_company);
 			draw(GetString(OrbitalRemovalReason(removal)));
 			if (this->evacuation_destination != SpaceStructureRef{}) draw(GetString(STR_SPACE_MODULE_EVACUATE_DESTINATION, this->evacuation_destination.structure.base() + 1));
@@ -507,57 +734,84 @@ struct SpaceConstructionWindow : Window {
 				}
 			}
 		}
-		y = DrawStringMultiLine(rect.left + 8, rect.right - 8, y, y + line * 4, GetString(STR_SPACE_CONSTRUCTION_HINT), TextColour::Black) + line;
-		// List actual owned native sites; blueprint presence never synthesizes an operational station.
-		std::vector<const SpaceStructure *> sites; for (const auto *s : SpaceStructure::Iterate()) if (s->state.owner == _local_company) sites.push_back(s);
-		this->scroll->SetCount(static_cast<uint>(sites.size())); this->scroll->SetCapacity(std::max(1, (rect.bottom - y) / line));
+		draw(GetString(STR_SPACE_CONSTRUCTION_HINT));
 		constexpr StringID phases[] = {STR_SPACE_CONSTRUCTION_BLUEPRINT, STR_SPACE_CONSTRUCTION_FRAME, STR_SPACE_CONSTRUCTION_CANCELLED};
-		// Limit selectable rows to the viewport while retaining generation-qualified hit targets.
-		for (int i = this->scroll->GetPosition(); i < std::min<int>(static_cast<int>(sites.size()), this->scroll->GetPosition() + this->scroll->GetCapacity()); ++i) {
-			const auto *s = sites[i]; this->rows.push_back({GetSpaceStructureReference(*s), {rect.left, y, rect.right, y + line - 1}});
-			draw(GetString(STR_SPACE_CONSTRUCTION_SITE, s->index.base() + 1, ModuleName(s->state.kind), s->state.x, s->state.y, IsOrbitalModuleOperational(*s) ? STR_SPACE_CONSTRUCTION_READY : phases[to_underlying(s->state.phase)]), GetSpaceStructureReference(*s) == this->selected ? TextColour::White : TextColour::Black);
+		// Every owned site remains reachable through both the scrolled list and
+		// the fixed selector, even when selected details need multiple screens.
+		for (const auto *site : SpaceStructure::Iterate()) {
+			if (site->state.owner != _local_company) continue;
+			const auto ref = GetSpaceStructureReference(*site);
+			this->lines.push_back({GetString(STR_SPACE_CONSTRUCTION_SITE, site->index.base() + 1, ModuleName(site->state.kind), site->state.x, site->state.y,
+				IsOrbitalModuleOperational(*site) ? STR_SPACE_CONSTRUCTION_READY : phases[to_underlying(site->state.phase)]), ref == this->selected ? TextColour::White : TextColour::Black, ref});
 		}
 	}
+
 	/** @param pt Window-local pointer position. @param widget Native action identity. @param click_count Framework click count. */
 	void OnClick(Point pt, WidgetID widget, [[maybe_unused]] int click_count) override
 	{
 		auto *site = ResolveSpaceStructure(this->selected); auto *v = ResolveSpaceCraft(this->builder);
-		// Hit-testing chooses a native site reference, never a site inferred from viewport tile coordinates.
-		if (widget == 0) for (const auto &[ref, rect] : this->rows) if (pt.y >= rect.top && pt.y <= rect.bottom) this->selected = ref;
-		if (widget == 1) {
+		// Hit-testing uses the same wrapped pixel bounds as painting and retains
+		// the exact incarnation; offscreen rows cannot become click targets.
+		if (widget == WID_SC_DETAILS) {
+			const int y = pt.y - this->GetWidget<NWidgetBase>(WID_SC_DETAILS)->pos_y - ScaleGUITrad(4) + this->scroll->GetPosition();
+			for (const auto &line : this->lines) {
+				// Detail rows have no target; only a visible site's own interval selects it.
+				if (line.site != SpaceStructureRef{} && y >= line.top && y < line.top + line.height) { this->selected = line.site; break; }
+			}
+		}
+		if (widget == WID_SC_PAGE) {
+			DropDownList list;
+			// Each fixed category appears once; no hidden command depends on a page
+			// being omitted because its current site cannot execute its actions.
+			for (uint8_t page = 0; page < to_underlying(SpaceConstructionPage::End); ++page) list.push_back(MakeDropDownListStringItem(PageName(static_cast<SpaceConstructionPage>(page)), page));
+			ShowDropDownList(this, std::move(list), to_underlying(this->page), WID_SC_PAGE);
+		}
+		if (widget == WID_SC_SITE) {
+			DropDownList list;
+			// Capture each generation alongside the dropdown index so deletion and
+			// pool-slot reuse while it is open cannot silently select a new site.
+			this->site_choices.clear();
+			for (const auto *candidate : SpaceStructure::Iterate()) {
+				if (candidate->state.owner != _local_company) continue;
+				list.push_back(MakeDropDownListStringItem(GetString(STR_SPACE_CONSTRUCTION_SELECTED, ModuleName(candidate->state.kind), candidate->index.base() + 1), static_cast<int>(this->site_choices.size())));
+				this->site_choices.push_back(GetSpaceStructureReference(*candidate));
+			}
+			ShowDropDownList(this, std::move(list), -1, WID_SC_SITE);
+		}
+		if (widget == WID_SC_PLACE) {
 			const auto &d = *GetSpaceConstructionDefinition(this->kind);
 			SetObjectToPlaceWnd(SPR_CURSOR_INDUSTRY, PAL_NONE, HT_RECT, this); SetTileSelectSize(d.width, d.height);
 		}
-		if (widget == 2) this->NextBuilder();
+		if (widget == WID_SC_NEXT_BUILDER) this->NextBuilder();
 		// Commands revalidate ownership and incarnation; UI availability is only presentation, never mutation authority.
-		if (widget == 3 && site != nullptr && v != nullptr) Command<Commands::EditSpaceOrder>::Post(v->index, v->generation, SpaceOrderEdit::Insert, static_cast<uint8_t>(v->space_orders.entries.size()), SpaceOrderAction::Construct, SpaceOrderTargetKind::Blueprint, uint32_t{site->index.base()}, site->generation);
-		if (widget == 7 && v != nullptr) Command<Commands::EditSpaceOrder>::Post(v->index, v->generation, SpaceOrderEdit::Clear, uint8_t{0}, SpaceOrderAction::Visit, SpaceOrderTargetKind::Body, uint32_t{0}, uint64_t{0});
+		if (widget == WID_SC_QUEUE && site != nullptr && v != nullptr) Command<Commands::EditSpaceOrder>::Post(STR_SPACE_ORDER_FAILED, v->index, v->generation, SpaceOrderEdit::Insert, static_cast<uint8_t>(v->space_orders.entries.size()), SpaceOrderAction::Construct, SpaceOrderTargetKind::Blueprint, uint32_t{site->index.base()}, site->generation);
+		if (widget == WID_SC_CLEAR && v != nullptr) Command<Commands::EditSpaceOrder>::Post(v->index, v->generation, SpaceOrderEdit::Clear, uint8_t{0}, SpaceOrderAction::Visit, SpaceOrderTargetKind::Body, uint32_t{0}, uint64_t{0});
 		// Visiting requires both actual incarnations; a missing selected frame or craft cannot become an implicit destination.
-		if (widget == 9 && site != nullptr && v != nullptr) Command<Commands::EditSpaceOrder>::Post(v->index, v->generation, SpaceOrderEdit::Insert, static_cast<uint8_t>(v->space_orders.entries.size()), SpaceOrderAction::Visit, SpaceOrderTargetKind::Structure, uint32_t{site->index.base()}, site->generation);
+		if (widget == WID_SC_VISIT && site != nullptr && v != nullptr) Command<Commands::EditSpaceOrder>::Post(v->index, v->generation, SpaceOrderEdit::Insert, static_cast<uint8_t>(v->space_orders.entries.size()), SpaceOrderAction::Visit, SpaceOrderTargetKind::Structure, uint32_t{site->index.base()}, site->generation);
 		// Cancelling addresses only an existing selected blueprint; native admission preserves paid work and actual inputs.
-		if (widget == 4 && site != nullptr) Command<Commands::CancelSpaceBlueprint>::Post(site->index, site->generation);
+		if (widget == WID_SC_CANCEL && site != nullptr) Command<Commands::CancelSpaceBlueprint>::Post(site->index, site->generation);
 		// Returning leftover construction material requires a real frame and carrier; quantity is bounded by its physical remaining hold.
-		if ((widget == 5 || widget == 6) && site != nullptr && v != nullptr) {
-			const uint slot = widget - 5; const auto cargo = GetCargoTypeByLabel(GetSpaceConstructionDefinition(site->state.kind)->inputs[slot].label);
+		if ((widget == WID_SC_COLLECT_STEEL || widget == WID_SC_COLLECT_GOODS) && site != nullptr && v != nullptr) {
+			const uint slot = widget - WID_SC_COLLECT_STEEL; const auto cargo = GetCargoTypeByLabel(GetSpaceConstructionDefinition(site->state.kind)->inputs[slot].label);
 			const auto capacity = GetSpaceFreightCapacity(20, cargo);
 			const auto quantity = std::min<uint>(site->job.inputs[slot].TotalCount(), capacity - std::min<uint>(capacity, v->cargo.TotalCount()));
 			Command<Commands::CollectSpaceConstructionInputs>::Post(site->index, site->generation, v->index, v->generation, cargo, static_cast<uint16_t>(quantity));
 		}
-		if (widget == 11) {
+		if (widget == WID_SC_RECIPE) {
 			DropDownList list;
 			// The authoritative catalogue determines eligible static recipes; mobile hulls and mirrors have no footprint here.
 			for (const auto &definition : GetSpaceConstructionDefinitions()) {
 				if (definition.width == 0) continue;
 				list.push_back(MakeDropDownListStringItem(ModuleName(definition.kind), to_underlying(definition.kind)));
 			}
-			ShowDropDownList(this, std::move(list), to_underlying(this->kind), 11);
+			ShowDropDownList(this, std::move(list), to_underlying(this->kind), WID_SC_RECIPE);
 		}
 		// Starting activation is an explicit synchronized action on the selected paid frame.
-		if (widget == 12 && site != nullptr) Command<Commands::ActivateOrbitalModule>::Post(site->index, site->generation);
+		if (widget == WID_SC_ACTIVATE && site != nullptr) Command<Commands::ActivateOrbitalModule>::Post(site->index, site->generation);
 		// These controls move actual common construction cargo at a precise approach; no proximity transfer or payment occurs.
-		if (widget >= 13 && widget <= 15 && site != nullptr && site->module != nullptr && v != nullptr) {
-			const bool load = widget != 15;
-			const auto cargo = load ? GetCargoTypeByLabel(widget == 13 ? CargoLabel{"STEL"} : CargoLabel{"GOOD"}) : v->cargo_type;
+		if (widget >= WID_SC_LOAD_STEEL && widget <= WID_SC_UNLOAD && site != nullptr && site->module != nullptr && v != nullptr) {
+			const bool load = widget != WID_SC_UNLOAD;
+			const auto cargo = load ? GetCargoTypeByLabel(widget == WID_SC_LOAD_STEEL ? CargoLabel{"STEL"} : CargoLabel{"GOOD"}) : v->cargo_type;
 			if (IsValidCargoType(cargo)) {
 				const auto capacity = GetSpaceFreightCapacity(20, cargo);
 				const uint quantity = load ? std::min<uint>(site->module->stock[cargo].TotalCount(), capacity - std::min<uint>(capacity, v->cargo.TotalCount())) : v->cargo.TotalCount();
@@ -565,62 +819,82 @@ struct SpaceConstructionWindow : Window {
 			}
 		}
 		// Centering follows the selected native footprint and cannot invent a site from a viewport location.
-		if (widget == 8 && site != nullptr) ScrollMainWindowToTile(TileXYL(site->state.x, site->state.y, MapLayer::Space));
-		if (widget == 16) this->NextServiceCraft();
+		if (widget == WID_SC_LOCATE && site != nullptr) ScrollMainWindowToTile(TileXYL(site->state.x, site->state.y, MapLayer::Space));
+		if (widget == WID_SC_NEXT_SERVICE) this->NextServiceCraft();
 		// Service controls address the saved occupant for existing jobs, preserving cancellation after hull loss.
-		if (widget >= 17 && widget <= 20 && site != nullptr && site->module != nullptr) {
-			const auto ref = widget == 17 ? this->service_craft : site->module->GetServiceJobs()[this->service_berth]->craft;
-			Command<Commands::ServiceOrbitalProbe>::Post(site->index, site->generation, ref.vehicle, ref.generation, static_cast<OrbitalServiceControl>(widget - 17));
+		if (widget >= WID_SC_START_SERVICE && widget <= WID_SC_CANCEL_SERVICE && site != nullptr && site->module != nullptr) {
+			const auto ref = widget == WID_SC_START_SERVICE ? this->service_craft : site->module->GetServiceJobs()[this->service_berth]->craft;
+			Command<Commands::ServiceOrbitalProbe>::Post(site->index, site->generation, ref.vehicle, ref.generation, static_cast<OrbitalServiceControl>(widget - WID_SC_START_SERVICE));
 		}
 		// Panel pause addresses the selected actual module; an unfinished/missing frame cannot publish generation.
-		if (widget == 21 && site != nullptr && site->module != nullptr) Command<Commands::SetOrbitalPanelPaused>::Post(site->index, site->generation, site->module->power_enabled);
+		if (widget == WID_SC_TOGGLE_PANEL && site != nullptr && site->module != nullptr) Command<Commands::SetOrbitalPanelPaused>::Post(site->index, site->generation, site->module->power_enabled);
 		// Explicit commissioning preserves native paid-frame and original Core admission rather than granting a panel from selection.
-		if (widget == 22 && site != nullptr) Command<Commands::CommissionOrbitalServices>::Post(site->index, site->generation);
+		if (widget == WID_SC_COMMISSION && site != nullptr) Command<Commands::CommissionOrbitalServices>::Post(site->index, site->generation);
 		// Connections identify both original site generations; selected proposals never create an implicit source or utility account.
-		if (widget == 28 && site != nullptr) Command<Commands::ConnectOrbitalServices>::Post(site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation);
+		if (widget == WID_SC_CONNECT && site != nullptr) Command<Commands::ConnectOrbitalServices>::Post(site->index, site->generation, this->utility_source_selection.structure, this->utility_source_selection.generation);
 		// Only an existing Dock has two selectable service berths; Core and non-service roles cannot acquire a second job from this control.
-		if (widget == 29 && site != nullptr && site->module != nullptr && site->state.kind == SpaceBuildKind::Dock) {
+		if (widget == WID_SC_NEXT_BERTH && site != nullptr && site->module != nullptr && site->state.kind == SpaceBuildKind::Dock) {
 			this->service_berth = static_cast<uint8_t>((this->service_berth + 1) % GetOrbitalModuleServiceCapacity(site->state.kind));
 			const auto ref = site->module->GetServiceJobs()[this->service_berth]->craft;
 			// Lost occupants remain cancellable through the selected saved berth; do not replace that selection with a different live hull.
 			if (ResolveSpaceCraft(ref) != nullptr) this->service_craft = ref;
 		}
-		if (widget == 30) this->NextUtilitySource();
+		if (widget == WID_SC_NEXT_SOURCE) this->NextUtilitySource();
 		// Each selected-site lifecycle operation revalidates native dependency, inventory and connection ownership before changing anything.
-		if (widget == 31 && site != nullptr) Command<Commands::DisconnectOrbitalServices>::Post(site->index, site->generation);
+		if (widget == WID_SC_DISCONNECT && site != nullptr) Command<Commands::DisconnectOrbitalServices>::Post(site->index, site->generation);
 		// Empty removal belongs to the actual selected incarnation; retained stock or job history cannot disappear through the UI.
-		if (widget == 32 && site != nullptr) Command<Commands::RemoveOrbitalModule>::Post(site->index, site->generation);
+		if (widget == WID_SC_REMOVE && site != nullptr) Command<Commands::RemoveOrbitalModule>::Post(site->index, site->generation);
 		// Evacuation requires the explicit selected destination and whole native packet admission; choosing it grants no receiving capacity.
-		if (widget == 33 && site != nullptr) Command<Commands::EvacuateOrbitalModule>::Post(site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation);
-		if (widget == 34) this->NextEvacuationDestination();
-		if (widget == 35) {
+		if (widget == WID_SC_EVACUATE && site != nullptr) Command<Commands::EvacuateOrbitalModule>::Post(site->index, site->generation, this->evacuation_destination.structure, this->evacuation_destination.generation);
+		if (widget == WID_SC_NEXT_DESTINATION) this->NextEvacuationDestination();
+		if (widget == WID_SC_NEXT_MODEL) {
 			const std::array<uint16_t, 6> models{15, 19, 20, 16, 17, SPACE_HEAVY_MINER_MODEL};
 			const auto current = std::ranges::find(models, this->manufacture_model);
 			this->manufacture_model = current == models.end() || std::next(current) == models.end() ? models.front() : *std::next(current);
 		}
-		if (widget == 36) this->NextManufactureSource();
+		if (widget == WID_SC_NEXT_INPUT_SOURCE) this->NextManufactureSource();
 		// Queue and cancellation share the exact native packet/funds admission used by tests and later fleet consumers; GUI selection alone grants nothing.
-		if (widget == 37 && site != nullptr) Command<Commands::QueueOrbitalManufacture>::Post(site->index, site->generation, this->manufacture_source.structure, this->manufacture_source.generation, this->manufacture_model);
+		if (widget == WID_SC_QUEUE_MANUFACTURE && site != nullptr) Command<Commands::QueueOrbitalManufacture>::Post(site->index, site->generation, this->manufacture_source.structure, this->manufacture_source.generation, this->manufacture_model);
 		// Cancelling a real selected job retains its paid history and returns only still-unconsumed packets through native admission.
-		if (widget == 38 && site != nullptr) Command<Commands::CancelOrbitalManufacture>::Post(site->index, site->generation, this->manufacture_source.structure, this->manufacture_source.generation);
+		if (widget == WID_SC_CANCEL_MANUFACTURE && site != nullptr) Command<Commands::CancelOrbitalManufacture>::Post(site->index, site->generation, this->manufacture_source.structure, this->manufacture_source.generation);
 		// Only the synchronized command can turn delivered stock into this exact job's exclusive reservation.
-		if (widget == 27 && site != nullptr) {
+		if (widget == WID_SC_RESERVE && site != nullptr) {
 			if (const auto *core = GetOrbitalConstructionCore(site->state)) Command<Commands::ReserveOrbitalModuleInputs>::Post(site->index, site->generation, core->index, core->generation);
 		}
 		// Move one actual service part per click, through the same synchronized precise-exchange command as native tests.
-		if (widget >= 23 && widget <= 26 && site != nullptr) {
-			const auto ref = this->service_craft; const uint8_t supply = static_cast<uint8_t>(1 + (widget - 23) % 2);
-			Command<Commands::MoveOrbitalSupply>::Post(site->index, site->generation, ref.vehicle, ref.generation, supply, uint16_t{1}, widget >= 25);
+		if (widget >= WID_SC_UNLOAD_METAL && widget <= WID_SC_LOAD_ELECTRONICS && site != nullptr) {
+			const auto ref = this->service_craft; const uint8_t supply = static_cast<uint8_t>(1 + (widget - WID_SC_UNLOAD_METAL) % 2);
+			Command<Commands::MoveOrbitalSupply>::Post(site->index, site->generation, ref.vehicle, ref.generation, supply, uint16_t{1}, widget >= WID_SC_LOAD_METAL);
 		}
+		this->RefreshPresentation();
 		this->SetDirty();
 	}
 	/** @param widget Dropdown identity. @param index Canonical selected recipe ordinal. @param button Framework selection button. */
 	void OnDropdownSelect(WidgetID widget, int index, [[maybe_unused]] int button) override
 	{
+		// Dropdown values are presentation choices, not command authority. Refuse
+		// stale/out-of-range values before indexing or changing the active page.
+		if (widget == WID_SC_PAGE && index >= 0 && index < to_underlying(SpaceConstructionPage::End)) {
+			this->page = static_cast<SpaceConstructionPage>(index);
+			this->GetWidget<NWidgetStacked>(WID_SC_ACTIONS)->SetDisplayedPlane(index);
+			this->ReInit();
+			this->RefreshPresentation();
+			return;
+		}
+		// A captured list index is valid only within this dropdown's own identities;
+		// another site's recycled native ID must not become a selected target.
+		if (widget == WID_SC_SITE && index >= 0 && static_cast<size_t>(index) < this->site_choices.size()) {
+			const auto ref = this->site_choices[index];
+			if (ResolveSpaceStructure(ref) != nullptr) this->selected = ref;
+			this->scroll->SetPosition(0);
+			this->RefreshPresentation();
+			this->SetDirty();
+			return;
+		}
 		const auto *definition = GetSpaceConstructionDefinition(static_cast<SpaceBuildKind>(index));
 		// Only a current static catalogue entry may change the placement recipe and footprint preview.
-		if (widget != 11 || definition == nullptr || definition->width == 0) return;
-		ResetObjectToPlace(); this->kind = definition->kind; this->SetDirty();
+		if (widget != WID_SC_RECIPE || definition == nullptr || definition->width == 0) return;
+		ResetObjectToPlace(); this->kind = definition->kind; this->RefreshPresentation(); this->SetDirty();
 	}
 	/** @param pt Framework pointer position. @param tile Explicit world tile selected for the current static recipe. */
 	void OnPlaceObject([[maybe_unused]] Point pt, TileIndex tile) override { Command<Commands::BuildSpaceBlueprint>::Post(tile, this->kind); }
@@ -638,5 +912,6 @@ void ShowSpaceConstructionWindow(SpaceStructureRef site)
 	if (target != nullptr && target->state.owner == _local_company) {
 		window->selected = site; window->kind = target->state.kind;
 	}
+	window->RefreshPresentation();
 	window->SetDirty();
 }

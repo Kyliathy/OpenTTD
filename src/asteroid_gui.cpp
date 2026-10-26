@@ -4,6 +4,8 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 /** @file asteroid_gui.cpp Read-only Space viewport rendering/picking and live survey inspector.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups8/13/30; bounded disclosures, sparse-safe selection and checked Mine policy controls.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group31D; initial paid Mine and stopped-controller status retain native flags, original service owners and each role's actual bill.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; final natural-body and original passive-pod sprites.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20; generation-bound synchronized mission admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
@@ -25,8 +27,11 @@
 #include "space_manifest.h"
 #include "space_pod.h"
 #include "space_structure.h"
+#include "space_construction_gui.h"
 #include "orbital_service.h"
 #include "space_mining_tuning.h"
+#include "space_mining_continuation.h"
+#include "widgets/space_survey_widget.h"
 #include "core/backup_type.hpp"
 #include "command_func.h"
 #include "company_func.h"
@@ -107,13 +112,14 @@ void ViewportAddSpaceEntities(const DrawPixelInfo &dpi)
 	}
 	// Body appearance reads actual saved class/size and this observer's authorized knowledge. Visible-body lookup remains the existing local spatial query, never an all-body scan.
 	for (const auto id : VisibleBodies(dpi)) {
-		const auto &body = field.bodies[id.base()];
-		const Point point = SpaceWorldPoint(body.motion.position);
+		const auto *body = FindAsteroidBody(field, id);
+		if (body == nullptr) continue;
+		const Point point = SpaceWorldPoint(body->motion.position);
 		const auto pose = GetSpaceAsteroidArtPose(id, _local_company);
 		if (!pose) continue;
 		const auto sprite = ResolveSpaceSprite(*pose);
 		if (!sprite) continue;
-		const auto diameter = static_cast<uint8_t>((TILE_SIZE / 2) << to_underlying(body.size));
+		const auto diameter = static_cast<uint8_t>((TILE_SIZE / 2) << to_underlying(body->size));
 		const auto radius = static_cast<int8_t>(diameter / 2);
 		const auto negative_radius = static_cast<int8_t>(-radius);
 		AddSortableSpriteToDraw(*sprite, PAL_NONE, point.x, point.y, 0,
@@ -147,19 +153,78 @@ void RefreshSpaceViewports()
 
 static std::optional<OrbitalBodyID> _inspected_asteroid;
 static SpaceCraftRef _inspected_probe;
-/** @param v Actual inspected hull. @return Its current typed body target, then original legacy mission target, or absence. */
+/** @param v Actual inspected hull. @return Its effective live body, then an actual live original/legacy target. Retired instruction history grants no actionable selection. */
 static std::optional<OrbitalBodyID> InspectedProbeTarget(const SpaceVehicle &v)
 {
 	const auto &q = v.space_orders;
+	const auto effective = ResolveEffectiveSpaceOrderTarget(v);
+	// Same-mineral continuation owns the current destination. Its old Mine row
+	// remains history; selecting the hull must not substitute a dead original ID.
+	if (effective && effective->kind == SpaceOrderTargetKind::Body && FindAsteroidBody(GetAsteroidField(), OrbitalBodyID{effective->id}) != nullptr) return OrbitalBodyID{effective->id};
 	// Only an existing body-targeting order may redirect the inspector; module and center IDs belong to different owners.
-	if (q.cursor < q.entries.size() && q.entries[q.cursor].target.kind == SpaceOrderTargetKind::Body) return OrbitalBodyID{q.entries[q.cursor].target.id};
-	if (v.mission.target != INVALID_ORBITAL_BODY) return v.mission.target;
+	if (q.cursor < q.entries.size() && q.entries[q.cursor].target.kind == SpaceOrderTargetKind::Body && FindAsteroidBody(GetAsteroidField(), OrbitalBodyID{q.entries[q.cursor].target.id}) != nullptr) return OrbitalBodyID{q.entries[q.cursor].target.id};
+	if (FindAsteroidBody(GetAsteroidField(), v.mission.target) != nullptr) return v.mission.target;
 	return std::nullopt;
 }
 static constexpr StringID order_actions[] = {STR_SPACE_ORDER_VISIT, STR_SPACE_ORDER_SURVEY, STR_SPACE_ORDER_MINE, STR_SPACE_ORDER_CONSTRUCT, STR_SPACE_ORDER_UNLOAD, STR_SPACE_ORDER_SERVICE};
 static constexpr StringID order_targets[] = {STR_SPACE_TARGET_BODY, STR_SPACE_TARGET_STRUCTURE, STR_SPACE_TARGET_BLUEPRINT, STR_SPACE_TARGET_CENTER, STR_SPACE_TARGET_CRAFT};
-static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_SERVICE_REQUIRED, STR_SPACE_PODS_MISSING, STR_SPACE_CONSTRUCTION_MISSING, STR_SPACE_CONSTRUCTION_BUSY, STR_GRAPH_INDUSTRY_RANGE_WAITING};
+// A service block names the wait; the selected hull's actual tuning/job rows
+// disclose its bill. The old fixed one-part caption mislabels heavy service.
+static constexpr StringID order_blocks[] = {STR_SPACE_ORDER_ACTIVE, STR_SPACE_ORDER_COMPLETED, STR_SPACE_ORDER_TARGET_LOST, STR_SPACE_ORDER_FACILITY_MISSING, STR_SPACE_ORDER_HOLD_INCOMPATIBLE, STR_SPACE_ORDER_TIMED_OUT, STR_SPACE_RETURNS_PENDING, STR_SPACE_CONT_WAIT_SERVICE, STR_SPACE_PODS_MISSING, STR_SPACE_CONSTRUCTION_MISSING, STR_SPACE_CONSTRUCTION_BUSY, STR_GRAPH_INDUSTRY_RANGE_WAITING};
+static constexpr StringID mining_policies[] = {STR_SPACE_POLICY_LEGACY, STR_SPACE_POLICY_RETURN, STR_SPACE_POLICY_FULL};
 static_assert(std::size(order_blocks) == to_underlying(SpaceOrderBlock::End));
+static_assert(std::size(mining_policies) == to_underlying(SpaceMiningPolicy::End));
+
+/** @param craft Original native hull. @return Its actual mining flag/continuation/wait label, or absence when the ordinary mission phase supplies status. Reads no reserve and performs no selection/work. */
+static std::optional<StringID> MiningContinuationStatus(const SpaceVehicle &craft)
+{
+	const auto &intent = craft.mission.continuation; const auto &queue = craft.space_orders;
+	// A stopped miner retains pending detachment while its own controller is
+	// frozen; field safety still releases an unsafe lease independently. Active
+	// onboard service follows its original separate work owner while parked,
+	// so that admitted work keeps its service status instead of a false stop.
+	const bool onboard_service = craft.manifest && craft.manifest->service_ticks != 0 && !craft.manifest->service_paused && craft.manifest->service_location == SpaceServiceLocation::Onboard;
+	if (GetSpaceMiningTuning(GetSpaceVehicleModel(craft)) != nullptr && craft.vehstatus.Test(VehState::Stopped) && !onboard_service) return STR_VEHICLE_STATUS_STOPPED;
+	// An original Mine may wait for paid handling before its first admission
+	// creates continuation intent. Preserve the concrete native pending/pod/
+	// service reason in fleet and inspector rows instead of reporting Idle.
+	// Actual departure/return phases retain their movement status until waiting.
+	if ((intent.phase == MiningContinuationPhase::None || intent.phase == MiningContinuationPhase::Waiting) &&
+		queue.cursor < queue.entries.size() && queue.entries[queue.cursor].action == SpaceOrderAction::Mine) {
+		switch (queue.blocked) {
+			case SpaceOrderBlock::ReturnsPending: return STR_SPACE_RETURNS_PENDING;
+			case SpaceOrderBlock::ServiceRequired: return STR_SPACE_CONT_WAIT_SERVICE;
+			case SpaceOrderBlock::PodsMissing: return STR_SPACE_PODS_MISSING;
+			default: break;
+		}
+	}
+	// A concrete native refusal takes precedence over the broader phase. A
+	// blocked local departure must show its actual safe wait instead of travel.
+	switch (intent.waiting) {
+		case MiningContinuationWait::NoCompatibleAsteroid: return STR_SPACE_CONT_WAIT_MINERAL;
+		case MiningContinuationWait::NoReceiver: return STR_SPACE_CONT_WAIT_RECEIVER;
+		case MiningContinuationWait::ServiceUnavailable: return STR_SPACE_CONT_WAIT_SERVICE;
+		case MiningContinuationWait::DepartureBlocked: return STR_SPACE_CONT_WAIT_DEPARTURE;
+		default: break;
+	}
+	switch (intent.phase) {
+		case MiningContinuationPhase::Detaching: return STR_SPACE_CONT_DETACHING;
+		case MiningContinuationPhase::SeekMineral:
+			// The saved full-load intent remains SeekMineral after actual lease
+			// acquisition. Show the original working phase once attachment has
+			// succeeded, rather than claiming an already mining hull is seeking.
+			if (craft.mission.phase == SpaceMissionPhase::Mining) return STR_SPACE_MINING;
+			// Native extraction publishes Return when it releases a finished
+			// lease; configured departure is dispatched on the next opportunity.
+			// That saved transition is safe detachment, not another mineral search.
+			if (craft.mission.phase == SpaceMissionPhase::Return) return STR_SPACE_CONT_DETACHING;
+			return STR_SPACE_CONT_SEEK_MINERAL;
+		case MiningContinuationPhase::ReturnCargo: return STR_SPACE_CONT_RETURNING;
+		case MiningContinuationPhase::NeedService: return STR_SPACE_CONT_SERVICE;
+		case MiningContinuationPhase::Waiting: return STR_SPACE_WAITING;
+		default: return std::nullopt;
+	}
+}
 static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),
@@ -167,38 +232,124 @@ static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 		NWidget(WWT_STICKYBOX, Colours::DarkBlue),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PANEL, Colours::DarkBlue, 0), SetMinimalSize(760, 480), SetResize(1, 1), SetScrollbar(9), EndContainer(),
+		NWidget(WWT_PANEL, Colours::DarkBlue, 0), SetMinimalSize(260, 120), SetResize(1, 1), SetScrollbar(9), EndContainer(),
 		NWidget(NWID_VSCROLLBAR, Colours::DarkBlue, 9),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 4), SetStringTip(STR_SPACE_VISIT_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 3), SetStringTip(STR_SPACE_SURVEY_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 1), SetStringTip(STR_SPACE_MINE_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 2), SetStringTip(STR_SPACE_RECALL), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 10), SetStringTip(STR_LAUNCH_LOGISTICS_SERVICE), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 4), SetStringTip(STR_SPACE_VISIT_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 3), SetStringTip(STR_SPACE_SURVEY_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 1), SetStringTip(STR_SPACE_MINE_SELECTED, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
 	EndContainer(),
 	NWidget(NWID_HORIZONTAL),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 5), SetStringTip(STR_SPACE_ORDER_CLEAR, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 6), SetStringTip(STR_SPACE_ORDER_ERASE, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 7), SetStringTip(STR_SPACE_ORDER_UP, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
-		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 8), SetStringTip(STR_SPACE_ORDER_DOWN, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 2), SetStringTip(STR_SPACE_RECALL), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 10), SetStringTip(STR_LAUNCH_LOGISTICS_SERVICE), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 5), SetStringTip(STR_SPACE_ORDER_CLEAR, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 6), SetStringTip(STR_SPACE_ORDER_ERASE, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 7), SetStringTip(STR_SPACE_ORDER_UP, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 8), SetStringTip(STR_SPACE_ORDER_DOWN, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0), SetResize(1, 0),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_TEXTBTN, Colours::DarkBlue, WID_SS_POLICY_LEGACY), SetStringTip(STR_SPACE_POLICY_LEGACY, STR_SPACE_POLICY_TIP), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_TEXTBTN, Colours::DarkBlue, WID_SS_POLICY_RETURN), SetStringTip(STR_SPACE_POLICY_RETURN, STR_SPACE_POLICY_TIP), SetFill(1, 0), SetResize(1, 0),
+		NWidget(WWT_TEXTBTN, Colours::DarkBlue, WID_SS_POLICY_FULL), SetStringTip(STR_SPACE_POLICY_FULL, STR_SPACE_POLICY_TIP), SetFill(1, 0), SetResize(1, 0),
+	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PANEL, Colours::DarkBlue), SetResize(1, 0), SetFill(1, 0), EndContainer(),
+		NWidget(WWT_RESIZEBOX, Colours::DarkBlue, 11),
 	EndContainer(),
 };
-static WindowDesc _space_survey_desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::SpaceSurvey, WindowClass::None, {}, _space_survey_widgets);
+static WindowDesc _space_survey_desc(WindowPosition::Automatic, "space_inspector", 560, 380, WindowClass::SpaceSurvey, WindowClass::None, {}, _space_survey_widgets);
 /** Native fleet/body inspector with read-only disclosures and synchronized command controls. */
 struct SpaceSurveyWindow : Window {
-	mutable std::vector<std::pair<SpaceCraftRef, Rect>> probe_rows;
-	mutable std::vector<std::pair<uint8_t, Rect>> order_rows;
+	/** One wrapped row; exact hull/order identities are presentation-only hit targets. */
+	struct InspectionLine {
+		std::string text;
+		TextColour colour;
+		SpaceCraftRef craft;
+		uint8_t order = UINT8_MAX;
+		int top = 0, height = 0;
+	};
+	std::vector<InspectionLine> lines;
 	uint8_t selected_order = UINT8_MAX;
 	Scrollbar *scrollbar = nullptr;
 	/** @param elapsed Presentation refresh intervals; never simulation work or service progress. */
-	const IntervalTimer<TimerWindow> refresh = {std::chrono::milliseconds(250), [this]([[maybe_unused]] auto elapsed) { this->SetDirty(); }};
+	const IntervalTimer<TimerWindow> refresh = {std::chrono::milliseconds(250), [this]([[maybe_unused]] auto elapsed) { this->RefreshPresentation(); this->SetDirty(); }};
 	/** Initialize native controls; selection resolves actual generations on every redraw. */
-	SpaceSurveyWindow() : Window(_space_survey_desc) { this->InitNested(0); this->scrollbar = this->GetScrollbar(9); }
+	SpaceSurveyWindow() : Window(_space_survey_desc) { this->InitNested(0); this->scrollbar = this->GetScrollbar(9); this->RefreshPresentation(); }
+	/**
+	 * Keep the three action columns and text viewport within the actual client region.
+	 * @param widget Native control identity.
+	 * @param size Current measured minimum, including the scaled font.
+	 * @param padding Framework padding, already included.
+	 * @param fill Existing fill increments.
+	 * @param resize Existing resize increments.
+	 */
+	void UpdateWidgetSize(WidgetID widget, Dimension &size, [[maybe_unused]] const Dimension &padding, [[maybe_unused]] Dimension &fill, [[maybe_unused]] Dimension &resize) override
+	{
+		if (widget == 0) size.height = std::min(size.height, static_cast<uint>(std::max(GetCharacterHeight(FontSize::Normal) + ScaleGUITrad(8), (GetMainViewBottom() - GetMainViewTop()) / 8)));
+		// Long translations may ellipsize button text, but must not push any
+		// original action beyond the screen or enlarge the whole inspector.
+		const bool action = widget >= WID_SS_MINE && widget <= WID_SS_POLICY_FULL && widget != WID_SS_SCROLLBAR && widget != WID_SS_RESIZE;
+		if (action) size.width = std::min(size.width, static_cast<uint>(std::max(100, _screen.width - ScaleGUITrad(16)) / 3));
+	}
+	/** Recompute wrapped rows outside paint so scrolling and hit-testing share the same complete contents. */
+	void ReflowLines()
+	{
+		if (this->scrollbar == nullptr) return;
+		const auto *panel = this->GetWidget<NWidgetBase>(0);
+		const int width = std::max(1, static_cast<int>(panel->current_x) - ScaleGUITrad(8));
+		int top = 0;
+		// Every detail, order and hull row participates in one scroll coordinate
+		// system. A long remedy cannot cover or make later rows unreachable.
+		for (auto &line : this->lines) {
+			line.top = top;
+			line.height = GetStringHeight(line.text, width) + ScaleGUITrad(2);
+			top += line.height;
+		}
+		this->scrollbar->SetCount(top);
+		this->scrollbar->SetCapacity(std::max(1, static_cast<int>(panel->current_y) - ScaleGUITrad(8)));
+		this->scrollbar->SetStepSize(GetCharacterHeight(FontSize::Normal) + ScaleGUITrad(2));
+	}
+	/** Fit retained geometry to the current usable client and reflow the existing read-only rows. */
+	void OnResize() override
+	{
+		const int width = std::max<int>(this->nested_root->smallest_x, std::min(this->width, _screen.width));
+		const int height = std::max<int>(this->nested_root->smallest_y, std::min(this->height, GetMainViewBottom() - GetMainViewTop()));
+		// A resolution or font change must leave all actions reachable; the
+		// nested callback converges after this one bounded size correction.
+		if (width != this->width || height != this->height) { ResizeWindow(this, width - this->width, height - this->height, false, false); return; }
+		this->left = std::clamp(this->left, 0, std::max(0, _screen.width - this->width));
+		this->top = std::clamp(this->top, GetMainViewTop(), std::max(GetMainViewTop(), GetMainViewBottom() - this->height));
+		this->ReflowLines();
+	}
+	/** Draw retained presentation only; timers and input own all control/layout refreshes. */
+	void OnPaint() override { this->DrawWidgets(); }
+	/** @param rect Native panel bounds. @param widget Control being painted; only the details panel draws retained rows. */
+	void DrawWidget(const Rect &rect, WidgetID widget) const override
+	{
+		if (widget != 0) return;
+		const Rect inner = rect.Shrink(ScaleGUITrad(4));
+		DrawPixelInfo clipped;
+		if (!FillDrawPixelInfo(&clipped, inner)) return;
+		AutoRestoreBackup drawing(_cur_dpi, &clipped);
+		// Clip all text to the panel and draw only rows intersecting its current
+		// scroll page. Rendering never updates a hit target or native owner.
+		for (const auto &line : this->lines) {
+			const int y = line.top - this->scrollbar->GetPosition();
+			if (y + line.height <= 0) continue;
+			if (y >= inner.Height()) break;
+			DrawStringMultiLine(0, inner.Width() - 1, y, y + line.height - 1, line.text, line.colour);
+		}
+	}
 	/** Refresh controls from actual ownership and pure command admission without issuing gameplay mutations. */
-	void OnPaint() override
+	void RefreshPresentation()
 	{
 		AutoRestoreBackup actor(_current_company, _local_company);
+		// Retirement clears only this body's actionable presentation. Keep the
+		// original inspected hull/order and never transfer its highlight to a birth.
+		if (_inspected_asteroid && FindAsteroidBody(GetAsteroidField(), *_inspected_asteroid) == nullptr) _inspected_asteroid.reset();
 		const auto *probe = ResolveSpaceCraft(_inspected_probe);
 		const bool owned = probe != nullptr && probe->owner == _local_company && probe->construction.placement == SpacePlacement::Orbital;
 		const bool editing = owned && (!probe->manifest || probe->manifest->service_ticks == 0);
@@ -220,25 +371,57 @@ struct SpaceSurveyWindow : Window {
 		this->SetWidgetDisabledState(8, !selected || size_t{this->selected_order} + 1 >= probe->space_orders.entries.size());
 		this->SetWidgetDisabledState(10, !owned || CmdServiceLaunchProbe({}, probe->index, probe->generation,
 			probe->manifest && probe->manifest->service_ticks != 0 && !probe->manifest->service_paused).Failed());
-		this->DrawWidgets();
+		const auto mine = probe == nullptr ? std::nullopt : this->SelectedMiningOrder(*probe);
+		// Each button inspects the same exact-generation native command admission
+		// as execution. Saved policy alone supplies its lowered state; unsupported,
+		// foreign, serviced or non-Mine selections cannot optimistically enable it.
+		for (uint8_t value = 0; value < to_underlying(SpaceMiningPolicy::End); ++value) {
+			const auto policy = static_cast<SpaceMiningPolicy>(value); const WidgetID widget = WID_SS_POLICY_LEGACY + value;
+			const bool allowed = mine && CmdSetSpaceMiningPolicy({}, probe->index, probe->generation, *mine, policy).Succeeded();
+			this->SetWidgetDisabledState(widget, !allowed);
+			this->SetWidgetLoweredState(widget, mine && probe->space_orders.entries[*mine].mining_policy == policy);
+		}
+		this->RebuildLines();
+		this->ReflowLines();
+	}
+	/** @param craft Original inspected hull. @return Selected existing Mine, or the current Mine when no explicit row is selected. A selected non-Mine never silently edits a different instruction. */
+	std::optional<uint8_t> SelectedMiningOrder(const SpaceVehicle &craft) const
+	{
+		const auto &q = craft.space_orders; const auto index = this->selected_order == UINT8_MAX ? q.cursor : this->selected_order;
+		// Policy belongs to one existing instruction. Neither an empty legacy
+		// queue nor a future unrelated action can acquire mining behavior here.
+		if (index >= q.entries.size() || q.entries[index].action != SpaceOrderAction::Mine) return std::nullopt;
+		return index;
 	}
 	/** @param point Window-local hit position. @param widget Native action identity. @param count Framework click count, unused for these single actions. */
 	void OnClick(Point point, WidgetID widget, [[maybe_unused]] int count) override
 	{
 		if (widget == 0) {
-			// Hit rows retain original craft generations; only points inside their current drawn rectangles may change selection.
-			for (const auto &[ref, rect] : this->probe_rows) if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
-				_inspected_probe = ref; this->selected_order = UINT8_MAX; this->SetDirty(); return;
-			}
-			// Order hit rectangles select existing rows; clicking unused panel space cannot invent a queue entry.
-			for (const auto &[index, rect] : this->order_rows) if (point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom) {
-				this->selected_order = index; this->SetDirty(); return;
+			const auto *panel = this->GetWidget<NWidgetBase>(0);
+			const int y = point.y - panel->pos_y - ScaleGUITrad(4) + this->scrollbar->GetPosition();
+			// Hit-testing shares wrapped content coordinates with drawing. Only the
+			// clicked retained row may select a hull/order; text outside it has no action.
+			for (const auto &line : this->lines) {
+				if (y < line.top || y >= line.top + line.height) continue;
+				if (line.craft != SpaceCraftRef{}) { _inspected_probe = line.craft; this->selected_order = UINT8_MAX; }
+				else if (line.order != UINT8_MAX) this->selected_order = line.order;
+				this->RefreshPresentation(); this->SetDirty(); return;
 			}
 		}
 		const auto *probe = ResolveSpaceCraft(_inspected_probe);
 		// Only the actual locally owned deployed hull may receive commands; stale selections cannot target reused IDs or carried payloads.
 		if (probe == nullptr || probe->owner != _local_company || probe->construction.placement != SpacePlacement::Orbital) return;
 		const auto ref = _inspected_probe;
+		// Policy controls post only the checked native command and retain current
+		// work/cargo. Refresh reads the actual saved result, including any refusal;
+		// it never selects a target or updates the displayed choice optimistically.
+		if (widget >= WID_SS_POLICY_LEGACY && widget <= WID_SS_POLICY_FULL) {
+			const auto mine = this->SelectedMiningOrder(*probe); const auto policy = static_cast<SpaceMiningPolicy>(widget - WID_SS_POLICY_LEGACY);
+			if (mine && CmdSetSpaceMiningPolicy({}, ref.vehicle, ref.generation, *mine, policy).Succeeded()) {
+				Command<Commands::SetSpaceMiningPolicy>::Post(STR_SPACE_ORDER_FAILED, ref.vehicle, ref.generation, *mine, policy);
+			}
+			this->RefreshPresentation(); this->SetDirty(); return;
+		}
 		/** @param operation Queue mutation. @param index Existing or insertion slot. @param action Typed action. @param target Original generation-qualified target. */
 		auto edit = [&](SpaceOrderEdit operation, uint8_t index, SpaceOrderAction action, SpaceOrderTarget target) {
 			Command<Commands::EditSpaceOrder>::Post(STR_SPACE_ORDER_FAILED, ref.vehicle, ref.generation, operation, index, action, target.kind, target.id, target.generation);
@@ -265,24 +448,24 @@ struct SpaceSurveyWindow : Window {
 			edit(widget == 6 ? SpaceOrderEdit::Erase : widget == 7 ? SpaceOrderEdit::MoveUp : SpaceOrderEdit::MoveDown, this->selected_order, SpaceOrderAction::Visit, {});
 			this->selected_order = UINT8_MAX;
 		}
+		this->RefreshPresentation();
 		this->SetDirty();
 	}
-	/** @param rect Current panel bounds. @param widget Native draw identity; only the inspector panel owns these rows. */
-	void DrawWidget(const Rect &rect, WidgetID widget) const override
+	/** Collect all owner disclosures and hit identities without drawing or advancing gameplay. */
+	void RebuildLines()
 	{
-		if (widget != 0) return;
-		this->probe_rows.clear(); this->order_rows.clear();
+		this->lines.clear();
 		const auto &field = GetAsteroidField(); const auto *selected = ResolveSpaceCraft(_inspected_probe);
-		const int line = GetCharacterHeight(FontSize::Normal) + 3; int y = rect.top + 8;
-		/** @param text Already translated native disclosure. @param colour Selection/readability colour. Advance only the presentation cursor. */
-		auto draw = [&](const std::string &text, TextColour colour = TextColour::White) { DrawString(rect.left + 8, rect.right - 8, y, text, colour); y += line; };
+		/** @param text Localized owner disclosure. @param colour Selection colour, never an authority change. */
+		auto draw = [&](const std::string &text, TextColour colour = TextColour::White) { this->lines.push_back({text, colour, {}}); };
 		uint native_count = 0; for (const auto *probe : SpaceVehicle::Iterate()) if (probe->construction.placement == SpacePlacement::Orbital) ++native_count;
 		draw(GetString(native_count == 0 ? STR_SPACE_FIELD_COUNT : STR_SPACE_NATIVE_FIELD_COUNT, field.bodies.size(), native_count == 0 ? field.surveys.size() : native_count));
 		draw(GetString(native_count == 0 ? STR_SPACE_SURVEY_BOUNDARY : STR_SPACE_MINING_BOUNDARY));
 		static constexpr StringID classes[] = {STR_SPACE_METALLIC, STR_SPACE_CARBONACEOUS, STR_SPACE_RICH};
+		const auto *selected_body = _inspected_asteroid ? FindAsteroidBody(field, *_inspected_asteroid) : nullptr;
 		// Only a body still present in the actual field may reveal source-authorized survey knowledge.
-		if (_inspected_asteroid && _inspected_asteroid->base() < field.bodies.size()) {
-			const auto &body = field.bodies[_inspected_asteroid->base()]; const auto inspection = *GetAsteroidInspectionDisclosure(_local_company, body.id); const auto &quantity = inspection.quantities;
+		if (selected_body != nullptr) {
+			const auto &body = *selected_body; const auto inspection = *GetAsteroidInspectionDisclosure(_local_company, body.id); const auto &quantity = inspection.quantities;
 			if (quantity) draw(GetString(STR_SPACE_BODY_RESERVE, body.id.base(), classes[to_underlying(body.resource_class)], quantity->remaining, quantity->initial));
 			else draw(GetString(STR_SPACE_BODY_UNKNOWN, body.id.base(), classes[to_underlying(body.resource_class)]));
 			draw(GetString(STR_SPACE_BODY_LOCATION, body.motion.position.x / SPACE_Q16, body.motion.position.y / SPACE_Q16));
@@ -291,21 +474,50 @@ struct SpaceSurveyWindow : Window {
 			draw(GetString(STR_SPACE_BODY_TRAJECTORY, std::string{inspection.trajectory.x_negative ? "-" : "+"}, std::abs(inspection.trajectory.x_milli), 3,
 				std::string{inspection.trajectory.y_negative ? "-" : "+"}, std::abs(inspection.trajectory.y_milli), 3, inspection.trajectory.speed_milli, 3));
 		}
+		// The selected builder's real current instruction and next action remain
+		// visible independently of the mining controller's idle/holding state.
+		if (selected != nullptr && GetSpaceVehicleModel(*selected) == 20) {
+			for (const auto &line : GetSpaceConstructionBuilderText(*selected)) draw(line);
+		}
 		// Queue/progress disclosure requires the actual selected incarnation and an existing action; a stale cursor never creates work.
 		if (selected != nullptr && !selected->space_orders.entries.empty()) {
 			const auto &q = selected->space_orders;
-			draw(GetString(STR_SPACE_ORDER_PROGRESS, std::min<size_t>(q.cursor + 1, q.entries.size()), q.entries.size(), order_blocks[to_underlying(q.blocked)]));
+			// The shared ProducerUnavailable fallback needs the continuation's
+			// actual reason; an unsafe/missing mineral is not a missing facility.
+			// A stopped controller cannot claim Working/travelling. Keep concrete
+			// pod, pending-return and service blocks informative alongside its flag.
+			StringID progress = order_blocks[to_underlying(q.blocked)];
+			const auto continuation = MiningContinuationStatus(*selected);
+			if (q.blocked == SpaceOrderBlock::ProducerUnavailable || (q.blocked == SpaceOrderBlock::None && continuation == STR_VEHICLE_STATUS_STOPPED)) progress = continuation.value_or(progress);
+			draw(GetString(STR_SPACE_ORDER_PROGRESS, std::min<size_t>(q.cursor + 1, q.entries.size()), q.entries.size(), progress));
 			// Survey work belongs only to the current typed Survey action, independently of mining or service work.
 			if (q.cursor < q.entries.size() && q.entries[q.cursor].action == SpaceOrderAction::Survey) draw(GetString(STR_SPACE_SCAN_PROGRESS, q.work_ticks));
-			// A current Construct instruction identifies the exact original blueprint job. Its retained delivered inputs and earned native work supply this progress, never the queue's presentation timer.
-			if (q.cursor < q.entries.size() && q.entries[q.cursor].action == SpaceOrderAction::Construct) {
-				const auto &target = q.entries[q.cursor].target;
-				if (const auto *site = ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(target.id)}, target.generation})) {
-					const auto &recipe = *GetSpaceConstructionDefinition(site->state.kind);
-					draw(GetString(STR_SPACE_CONSTRUCTION_STOCK, site->job.inputs[0].TotalCount(), recipe.inputs[0].quantity, site->job.inputs[1].TotalCount(), recipe.inputs[1].quantity, site->job.work_ticks, recipe.work_ticks));
-					draw(GetString(STR_SPACE_CONSTRUCTION_CONSUMED, site->job.consumed[0], site->job.consumed[1]));
+			// Current or just-completed construction retains the exact original job.
+			// The queue cursor advancing cannot make consumed material look missing.
+			const auto construction = GetOrbitalConstructionReadiness(*selected);
+			if (construction.target != SpaceStructureRef{}) {
+				if (const auto *site = ResolveSpaceStructure(construction.target)) {
+					// Both construction views describe the same original packet/work owner.
+					for (const auto &line : GetSpaceConstructionMaterialText(*site, selected)) draw(line);
 				}
 			}
+		}
+		// The original queue rows remain visible below. Show its actual current
+		// destination separately, so a retained Mine/body history cannot masquerade
+		// as the live same-mineral receiver or imply that a berth was reached.
+		if (selected != nullptr && GetSpaceMiningTuning(GetSpaceVehicleModel(*selected)) != nullptr) {
+			if (const auto mine = this->SelectedMiningOrder(*selected)) draw(GetString(STR_SPACE_POLICY_DETAIL, *mine + 1, mining_policies[to_underlying(selected->space_orders.entries[*mine].mining_policy)]));
+			else draw(GetString(STR_SPACE_POLICY_MANUAL));
+			const auto effective = ResolveEffectiveSpaceOrderTarget(*selected);
+			// A retired original target remains truthful queue history, but cannot
+			// be disclosed as a current live asteroid destination or click target.
+			if (effective && (effective->kind != SpaceOrderTargetKind::Body || FindAsteroidBody(field, OrbitalBodyID{effective->id}) != nullptr)) {
+				const bool site = effective->kind == SpaceOrderTargetKind::Structure || effective->kind == SpaceOrderTargetKind::Blueprint;
+				draw(GetString(STR_SPACE_EFFECTIVE_TARGET, order_targets[to_underlying(effective->kind)], uint64_t{effective->id} + (site ? 1 : 0)));
+			} else {
+				draw(GetString(STR_SPACE_EFFECTIVE_NONE));
+			}
+			if (const auto status = MiningContinuationStatus(*selected)) draw(GetString(STR_SPACE_CONT_STATUS, *status));
 		}
 		// Actual contained compartments, rather than role defaults, supply loose parts, shells and earned service history.
 		if (selected != nullptr && selected->manifest) {
@@ -347,35 +559,32 @@ struct SpaceSurveyWindow : Window {
 				if (block != SpaceOrderBlock::None) draw(GetString(order_blocks[to_underlying(block)]));
 			}
 		}
-		draw(GetString(STR_SPACE_SURVEY_HINT)); y += 4;
-		const uint order_count = selected == nullptr ? 0 : static_cast<uint>(selected->space_orders.entries.size());
-		this->scrollbar->SetCount(order_count + native_count + static_cast<uint>(field.surveys.size()));
-		this->scrollbar->SetCapacity(std::max(1, (rect.bottom - y + 1) / line));
-		uint item = 0; const int first = this->scrollbar->GetPosition(), last = first + this->scrollbar->GetCapacity();
-		/** @return Whether the next original row lies inside this scrollbar page; filtering changes no native owner or queue. */
-		auto visible = [&] { const int ordinal = static_cast<int>(item++); return ordinal >= first && ordinal < last; };
-		// Draw existing orders and hulls only within the page while retaining original hit targets for command selection.
+		draw(GetString(STR_SPACE_SURVEY_HINT));
+		// Retain every order/hull row. Pixel scrolling covers the complete details
+		// and list together, so additional readiness text cannot hide controls.
 		if (selected != nullptr) for (uint8_t index = 0; index < selected->space_orders.entries.size(); ++index) {
-			if (!visible()) continue;
-			const auto &o = selected->space_orders.entries[index]; const int top = y;
-			draw(GetString(STR_SPACE_ORDER_ROW, index + 1, order_actions[to_underlying(o.action)], order_targets[to_underlying(o.target.kind)], o.target.id), index == this->selected_order ? TextColour::Yellow : TextColour::White);
-			this->order_rows.push_back({index, {rect.left, top, rect.right, y - 1}});
+			const auto &o = selected->space_orders.entries[index];
+			// Site numbering matches the construction selector/current instruction;
+			// natural-body and other target domains retain their existing identities.
+			const bool site = o.target.kind == SpaceOrderTargetKind::Structure || o.target.kind == SpaceOrderTargetKind::Blueprint;
+			draw(GetString(STR_SPACE_ORDER_ROW, index + 1, order_actions[to_underlying(o.action)], order_targets[to_underlying(o.target.kind)], uint64_t{o.target.id} + (site ? 1 : 0)), index == this->selected_order ? TextColour::Yellow : TextColour::White);
+			this->lines.back().order = index;
 		}
 		static constexpr StringID preview_phases[] = {STR_SPACE_APPROACH, STR_SPACE_ATTACHED, STR_SPACE_RETURN, STR_SPACE_WAITING};
-		for (const auto &preview : field.surveys) if (visible()) draw(GetString(STR_SPACE_SURVEY_STATUS, preview.id.base() + 1, preview_phases[to_underlying(preview.phase)], preview.target.base(), preview.completed_surveys));
+		for (const auto &preview : field.surveys) draw(GetString(STR_SPACE_SURVEY_STATUS, preview.id.base() + 1, preview_phases[to_underlying(preview.phase)], preview.target.base(), preview.completed_surveys));
 		static constexpr StringID mining_phases[] = {STR_SPACE_IDLE, STR_SPACE_APPROACH, STR_SPACE_MINING, STR_SPACE_RETURN, STR_SPACE_HOLDING};
 		for (const auto *probe : SpaceVehicle::Iterate()) {
-			// Carried/Surface hulls do not occupy this orbital list, and clipped rows cannot create clickable selections.
-			if (probe->construction.placement != SpacePlacement::Orbital || !visible()) continue;
-			const int top = y;
+			// Carried and Surface hulls have no independent orbital list entry.
+			if (probe->construction.placement != SpacePlacement::Orbital) continue;
 			const auto model = GetSpaceVehicleModel(*probe); const auto &orders = probe->space_orders; StringID status = mining_phases[to_underlying(probe->mission.phase)];
+			if (const auto continuation = MiningContinuationStatus(*probe)) status = *continuation;
 			// Survey/construction/freight roles keep the mining controller in Holding during real typed work. Their current action or actual wait supplies mission status instead of falsely reporting Idle.
 			if (GetSpaceMiningTuning(model) == nullptr && orders.cursor < orders.entries.size()) {
 				status = orders.blocked == SpaceOrderBlock::None ? order_actions[to_underlying(orders.entries[orders.cursor].action)] : order_blocks[to_underlying(orders.blocked)];
 			}
 			if (model == 19) draw(GetString(STR_SPACE_NATIVE_SURVEY_STATUS, probe->index, status), GetSpaceCraftReference(*probe) == _inspected_probe ? TextColour::Yellow : TextColour::White);
 			else draw(GetString(STR_SPACE_NATIVE_PROBE_STATUS, probe->index, status, probe->cargo.TotalCount(), probe->cargo_cap, CargoSpec::Get(probe->cargo_type)->name), GetSpaceCraftReference(*probe) == _inspected_probe ? TextColour::Yellow : TextColour::White);
-			this->probe_rows.push_back({GetSpaceCraftReference(*probe), {rect.left, top, rect.right, y - 1}});
+			this->lines.back().craft = GetSpaceCraftReference(*probe);
 		}
 	}
 };
@@ -389,17 +598,29 @@ void ShowSpaceSurveyWindow()
 		// Initial selection is one actual local deployed hull; scanning does not create a vehicle or reserve an approach.
 		for (const auto *probe : SpaceVehicle::Iterate()) if (probe->owner == _local_company && probe->construction.placement == SpacePlacement::Orbital) { _inspected_probe = GetSpaceCraftReference(*probe); break; }
 	}
-	const auto &bodies = GetAsteroidField().bodies;
-	// Body selection falls back only when a real body exists and the old selection no longer resolves.
-	if (!bodies.empty() && (!_inspected_asteroid || _inspected_asteroid->base() >= bodies.size())) _inspected_asteroid = bodies.front().id;
-	if (BringWindowToFrontById(WindowClass::SpaceSurvey, 0) == nullptr) new SpaceSurveyWindow();
+	auto *window = static_cast<SpaceSurveyWindow *>(BringWindowToFrontById(WindowClass::SpaceSurvey, 0));
+	// Preserve independent craft/order context and clear only a retired body.
+	// An already open inspector cannot transfer its old highlight to a birth;
+	// only a newly opened unselected inspector chooses an initial live default.
+	if (_inspected_asteroid) {
+		if (FindAsteroidBody(GetAsteroidField(), *_inspected_asteroid) == nullptr) _inspected_asteroid.reset();
+	} else if (window == nullptr) {
+		_inspected_asteroid = ResolveAsteroidSelection(GetAsteroidField(), std::nullopt);
+	}
+	if (window == nullptr) window = new SpaceSurveyWindow();
+	window->RefreshPresentation(); window->SetDirty();
 }
 
 /** @param craft Original desired hull incarnation; only an actual deployed hull can become the inspector selection. */
 void ShowSpaceSurveyWindow(SpaceCraftRef craft)
 {
 	// A stale or Surface incarnation cannot replace an existing valid orbital selection.
-	if (const auto *v = ResolveSpaceCraft(craft); v != nullptr && v->construction.placement == SpacePlacement::Orbital) _inspected_probe = craft;
+	if (const auto *v = ResolveSpaceCraft(craft); v != nullptr && v->construction.placement == SpacePlacement::Orbital) {
+		_inspected_probe = craft;
+		// An explicit hull inspection follows its actual live effective source.
+		// Historical Mine IDs remain queue text and never become a new highlight.
+		if (const auto target = InspectedProbeTarget(*v)) _inspected_asteroid = *target;
+	}
 	ShowSpaceSurveyWindow();
 }
 
@@ -440,8 +661,14 @@ bool HandleSpaceEntityClick(const Viewport &vp, int x, int y)
 		_inspected_asteroid = survey.target; ShowSpaceSurveyWindow(); return true;
 	}
 	DrawPixelInfo region{}; region.left = x; region.top = y;
-	for (const auto id : VisibleBodies(region)) if (hit(GetAsteroidField().bodies[id.base()].motion.position, 30)) {
-		_inspected_asteroid = id; ShowSpaceSurveyWindow(); return true;
+	// A queried ID is only a candidate. Retirement between retained query data
+	// and lookup cannot redirect a click to the body now occupying its old slot.
+	for (const auto id : VisibleBodies(region)) {
+		const auto *body = FindAsteroidBody(GetAsteroidField(), id);
+		if (body == nullptr) continue;
+		if (hit(body->motion.position, 30)) {
+			_inspected_asteroid = id; ShowSpaceSurveyWindow(); return true;
+		}
 	}
 	return false;
 }

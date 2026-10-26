@@ -11,6 +11,7 @@
 
 #include "../stdafx.h"
 #include "space_cargo_preview.h"
+#include "../asteroid_cargo.h"
 #include "../orbital_recipe.h"
 #include "../surface_supply_order_runtime.h"
 #include "../space_vehicle.h"
@@ -3509,6 +3510,10 @@ bool AfterLoadGame()
 	if (!AcceptLoadedLayerMines()) SlErrorCorrupt("Invalid finite mine state");
 	if (!AcceptLoadedLayerProcessors()) SlErrorCorrupt("Invalid native processor state");
 	if (!AcceptLoadedAsteroidField()) SlErrorCorrupt("Invalid asteroid field state");
+	// Only genuine older files infer mineral from their own original body.
+	// Qualify the same packets before native manifest/fleet/custody joins; load
+	// issues no replacement cargo and cannot infer a missing retired source.
+	if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPackets(GetAsteroidField())) SlErrorCorrupt("Invalid legacy asteroid cargo origin");
 	if (!AcceptLoadedLaunchCenters()) SlErrorCorrupt("Invalid native launch-center state");
 	if (!AcceptLoadedLaunchHubs()) SlErrorCorrupt("Invalid native launch-hub membership");
 	if (!AcceptLoadedSurfaceHandling()) SlErrorCorrupt("Invalid native Surface handling state");

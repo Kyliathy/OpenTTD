@@ -7,6 +7,7 @@
 
 /**
  * @file cargopacket.cpp Native packets, accepted-count unloading and bounded tube transfers.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; in-place legacy origin upgrade preserves the original packet owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md accepted-count unloading.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
  */
@@ -112,6 +113,18 @@ CargoPacket *CargoPacket::Split(uint new_size)
 	this->feeder_share -= fs;
 	this->count -= new_size;
 	return cp_new;
+}
+
+/** @copydoc CargoPacket::UpgradeLegacyAsteroidSource */
+bool CargoPacket::UpgradeLegacyAsteroidSource(CargoLabel mineral)
+{
+	// Migration may qualify one existing natural origin, never reinterpret an
+	// ordinary source or manufacture missing provenance after a body vanished.
+	if (this->source.type != SourceType::Asteroid || !this->source.IsCanonical() || mineral.Empty()) return false;
+	if (const auto origin = this->source.GetAsteroidOrigin()) return origin->mineral == mineral;
+	if (!this->source.IsValid()) return false;
+	this->source = Source::FromAsteroid(this->source.id, mineral);
+	return true;
 }
 
 /**

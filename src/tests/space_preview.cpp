@@ -8,6 +8,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md GroupP1
  */
 #include "../stdafx.h"
+#include "asteroid_snapshot_fixture.h"
 #include <thread>
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid.h"
@@ -128,7 +129,7 @@ TEST_CASE("Predeployed survey probes pursue attach depart and repeat without ext
 	auto field = GetAsteroidField();
 	std::set<SpaceSurveyPhase> phases;
 	for (uint32_t i = 0; i < 3000; ++i) {
-		AdvanceAsteroidField(field);
+		AdvanceContainedAsteroidSnapshot(field);
 		REQUIRE(ValidateAsteroidField(field));
 		for (const auto &survey : field.surveys) phases.insert(survey.phase);
 	}
@@ -140,15 +141,15 @@ TEST_CASE("Predeployed survey probes pursue attach depart and repeat without ext
 	const auto point = field.bodies.front().motion.position;
 	const SpacePoint attachment{point.x + SPACE_Q16, point.y - SPACE_Q16 / 2};
 	field.surveys = {{SpaceSurveyID{0}, 15, attachment, attachment, OrbitalBodyID{0}}, {SpaceSurveyID{1}, 15, attachment, attachment, OrbitalBodyID{0}}};
-	AdvanceAsteroidField(field);
+	AdvanceContainedAsteroidSnapshot(field);
 	CHECK(field.bodies.front().survey_slot == SpaceSurveyID{0});
 	CHECK(field.surveys[1].phase == SpaceSurveyPhase::Approach);
 	CHECK(ValidateAsteroidField(field));
 	field.bodies.front().motion.position = field.band.max;
 	field.bodies.front().motion.velocity_x = 16384; field.bodies.front().motion.velocity_y = 0;
 	field.surveys.front().position = {field.band.max.x + SPACE_Q16, field.band.max.y - SPACE_Q16 / 2};
-	AdvanceAsteroidField(field);
-	CHECK(field.bodies.front().motion.velocity_x == -16384);
+	AdvanceContainedAsteroidSnapshot(field);
+	CHECK(field.bodies.front().motion.velocity_x == 16384); // The historical placement strip is not a physical map edge.
 	CHECK(field.surveys.front().position == SpacePoint{field.bodies.front().motion.position.x + SPACE_Q16, field.bodies.front().motion.position.y - SPACE_Q16 / 2});
 	CHECK(ValidateAsteroidField(field));
 	field.surveys.front().remaining_ticks = 0;
@@ -157,6 +158,7 @@ TEST_CASE("Predeployed survey probes pursue attach depart and repeat without ext
 }
 
 static std::function<void()> *_space_demo_observer = nullptr;
+/** @param args Exact registered console tokens. @return Whether the current invocation's actual native observer ran. */
 static bool SpaceDemoObserver(std::span<std::string_view> args)
 {
 	REQUIRE(args.size() == 1); REQUIRE(_space_demo_observer != nullptr); (*_space_demo_observer)(); return true;
@@ -223,7 +225,7 @@ TEST_CASE("Space preview prepares or resumes ordinary playable checkpoints", "[.
 					CHECK(GetAsteroidField() == expected); // CargoDist can pause the real simulation between work ticks.
 					std::this_thread::sleep_for(std::chrono::milliseconds(1)); continue;
 				}
-				REQUIRE(GetAsteroidField().elapsed_ticks == before + 1); AdvanceAsteroidField(expected);
+				REQUIRE(GetAsteroidField().elapsed_ticks == before + 1); AdvanceContainedAsteroidSnapshot(expected);
 				REQUIRE(GetAsteroidField() == expected);
 				if (!attached_saved && std::ranges::any_of(expected.surveys, [](const auto &p) { return p.phase == SpaceSurveyPhase::Attached; })) {
 					attached_saved = true;

@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file probe_mining_fixture.h Shared isolated native mining participants; this unit adapter claims no paid procurement or whole-world save acceptance.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Groups10/21
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group21; original packet containers are emptied before bulk hull teardown.
  */
 #ifndef TESTS_PROBE_MINING_FIXTURE_H
 #define TESTS_PROBE_MINING_FIXTURE_H
@@ -39,7 +40,15 @@ public:
 		REQUIRE(GenerateWorldAsteroids(12345)); REQUIRE(InitialiseSpaceEngineDefinition());
 	}
 	/** Dispose each native hull's sole packet holding before restoring caller field, descriptors and clock. */
-	~ProbeExtractionRig() { _vehicle_pool.CleanPool(); ResetVehicleHash(); CHECK(InstallAsteroidField(std::move(previous))); _grfconfig.clear(); previous_content.swap(_grfconfig); }
+	~ProbeExtractionRig()
+	{
+		// Native bulk pool cleanup skips per-hull cargo disposal. Empty each
+		// fixture-owned original carrier first so the next isolated test cannot
+		// inherit orphaned natural packets from this field's previous generation.
+		for (auto *vehicle : Vehicle::Iterate()) vehicle->cargo.Truncate();
+		_vehicle_pool.CleanPool(); ResetVehicleHash(); CHECK(InstallAsteroidField(std::move(previous)));
+		_grfconfig.clear(); previous_content.swap(_grfconfig);
+	}
 	/** Install an explicitly generated isolated Space performance world before creating any hull.
 	 * @param field Complete native generated field, including any declared in-band cluster geometry.
 	 * Only Space's tile geometry is initialized on larger maps; unused terrestrial fixture owners supply no performance or whole-save claims.

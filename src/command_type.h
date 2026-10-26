@@ -446,6 +446,7 @@ enum class Commands : uint8_t {
 	SetSpaceMissionChecked, ///< Plan10 Group20: assign/recall only the original hull generation; legacy command IDs/layout remain unchanged.
 	PlaceSurfaceSupplyOrder, ///< Plan6 Groups13CCC/13CCD: dormant monotonic paid Surface intent ABI; producer currently refuses without mutation.
 	CancelSurfaceSupplyOrder, ///< Plan6 Groups13CCC/13CCD: dormant unshipped-only cancellation ABI; producer currently refuses without mutation.
+	SetSpaceMiningPolicy, ///< r2sff1-space-fixes-features-1.md Group23: generation-checked policy for one original Mine; matching443 SPOR/VEHS readers are present.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

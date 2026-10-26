@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md */
+/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #include "stdafx.h"
 #include "core/geometry_func.hpp"
@@ -2202,7 +2204,13 @@ struct MainToolbarWindow : Window {
 		switch (hotkey) {
 			case MTHK_PAUSE: ToolbarPauseClick(this); break;
 			case MTHK_FASTFORWARD: ToolbarFastForwardClick(this); break;
-			case MTHK_SETTINGS: ShowGameOptions(); break;
+			case MTHK_SETTINGS:
+				if (!HandleWindowOpeningHotkey(WindowClass::GameOptions, GameOptionsWindowNumber::GameOptions)) ShowGameOptions();
+				break;
+			case MTHK_LAYER_SURFACE: SelectMainViewportLayer(MapLayer::Surface); break;
+			case MTHK_LAYER_UNDERGROUND: SelectMainViewportLayer(MapLayer::Underground); break;
+			case MTHK_LAYER_DEEP_UNDERGROUND: SelectMainViewportLayer(MapLayer::DeepUnderground); break;
+			case MTHK_LAYER_SPACE: SelectMainViewportLayer(MapLayer::Space); break;
 			case MTHK_SAVEGAME: MenuClickSaveLoad(); break;
 			case MTHK_LOADGAME: ShowSaveLoadDialog(AbstractFileType::Savegame, SaveLoadOperation::Load); break;
 			case MTHK_SMALLMAP: ShowSmallMap(); break;
@@ -2328,6 +2336,10 @@ struct MainToolbarWindow : Window {
 		Hotkey({WKC_F4, 'M'}, "smallmap", MTHK_SMALLMAP),
 		//N is free. L is terraform, M is the small map and V opens an extra view.
 		Hotkey('N', "cycle_map_layer", MTHK_CYCLE_MAP_LAYER),
+		Hotkey(WKC_ALT | '1', "map_layer_surface", MTHK_LAYER_SURFACE),
+		Hotkey(WKC_ALT | '2', "map_layer_underground", MTHK_LAYER_UNDERGROUND),
+		Hotkey(WKC_ALT | '3', "map_layer_deep_underground", MTHK_LAYER_DEEP_UNDERGROUND),
+		Hotkey(WKC_ALT | '4', "map_layer_space", MTHK_LAYER_SPACE),
 		Hotkey(WKC_F5, "town_list", MTHK_TOWNDIRECTORY),
 		Hotkey(WKC_F6, "subsidies", MTHK_SUBSIDIES),
 		Hotkey(WKC_F7, "station_list", MTHK_STATIONS),
@@ -2541,6 +2553,10 @@ enum class MainToolbarEditorHotkeys : int32_t {
 	GenerateTown, ///< Open town generation window.
 	BuildRoad, ///< Open toolbar window with tools for building roads.
 	BuildTram, ///< Open toolbar window with tools for building tramways.
+	LayerSurface, ///< Select main Surface view.
+	LayerUnderground, ///< Select allocated Underground view.
+	LayerDeepUnderground, ///< Select allocated Deep Underground view.
+	LayerSpace, ///< Select allocated Space view.
 };
 
 /** Editor construction entry respects the viewed layer while mutation stays in feature commands. */
@@ -2631,12 +2647,19 @@ struct ScenarioEditorToolbarWindow : Window {
 		SndClickBeep();
 	}
 
+	/** @param hotkey Configured editor action, including explicitly named layer choices. @return Whether this toolbar handled it. */
 	EventState OnHotkey(int hotkey) override
 	{
 		if (IsSpecialHotkey(hotkey)) {
 			CallBackFunction cbf = CallBackFunction::None;
 			switch (MainToolbarEditorHotkeys(hotkey)) {
-				case MainToolbarEditorHotkeys::Settings: ShowGameOptions(); break;
+				case MainToolbarEditorHotkeys::Settings:
+					if (!HandleWindowOpeningHotkey(WindowClass::GameOptions, GameOptionsWindowNumber::GameOptions)) ShowGameOptions();
+					break;
+				case MainToolbarEditorHotkeys::LayerSurface: SelectMainViewportLayer(MapLayer::Surface); break;
+				case MainToolbarEditorHotkeys::LayerUnderground: SelectMainViewportLayer(MapLayer::Underground); break;
+				case MainToolbarEditorHotkeys::LayerDeepUnderground: SelectMainViewportLayer(MapLayer::DeepUnderground); break;
+				case MainToolbarEditorHotkeys::LayerSpace: SelectMainViewportLayer(MapLayer::Space); break;
 				case MainToolbarEditorHotkeys::SaveGame: MenuClickSaveLoad(); break;
 				case MainToolbarEditorHotkeys::Music: ShowMusicWindow(); break;
 				case MainToolbarEditorHotkeys::LandInfo: cbf = PlaceLandBlockInfo(); break;
@@ -2762,6 +2785,10 @@ struct ScenarioEditorToolbarWindow : Window {
 		Hotkey('L', "terraform", MainToolbarEditorHotkeys::Terraform),
 		Hotkey('M', "smallmap", MainToolbarEditorHotkeys::SmallMap),
 		Hotkey(0, "cycle_map_layer", MainToolbarEditorHotkeys::CycleMapLayer),
+		Hotkey(WKC_ALT | '1', "map_layer_surface", MainToolbarEditorHotkeys::LayerSurface),
+		Hotkey(WKC_ALT | '2', "map_layer_underground", MainToolbarEditorHotkeys::LayerUnderground),
+		Hotkey(WKC_ALT | '3', "map_layer_deep_underground", MainToolbarEditorHotkeys::LayerDeepUnderground),
+		Hotkey(WKC_ALT | '4', "map_layer_space", MainToolbarEditorHotkeys::LayerSpace),
 		Hotkey('V', "extra_viewport", MainToolbarEditorHotkeys::ExtraViewport),
 	}};
 };

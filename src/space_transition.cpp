@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_transition.cpp Real native rocket round trips, single burns and explicit payload completion.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group14C; original field issuance bounds natural-body history.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups10B/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8; a deployed shell without a target starts Idle.
  */
@@ -330,7 +331,7 @@ std::vector<SpaceTransitionRecord> CaptureSpaceTransitions()
 	return records;
 }
 /** @copydoc ValidateSpaceTransitionRecords */
-bool ValidateSpaceTransitionRecords(std::span<const SpaceTransitionRecord> records, uint32_t width, uint32_t height)
+bool ValidateSpaceTransitionRecords(std::span<const SpaceTransitionRecord> records, uint32_t width, uint32_t height, uint32_t next_body_id)
 {
 	// Bounded original fleet and supported plane limits protect every later saved-coordinate/timer check from unbounded transport.
 	if (records.size() > MAX_SPACE_VEHICLES || width < 64 || height < 64 || width > 4096 || height > 4096) return false;
@@ -361,9 +362,11 @@ bool ValidateSpaceTransitionRecords(std::span<const SpaceTransitionRecord> recor
 		if ((f.resupplied || f.module_delivered) && f.phase != SpaceFlightPhase::ReturnRecovery && f.phase != SpaceFlightPhase::Turnaround && f.phase != SpaceFlightPhase::Holding) return false;
 		// Capacity/admission waits retain original freight only during unresolved orbital delivery.
 		if (f.blocked >= SpaceFlightBlock::ReceiverBusy && (!freight || f.phase != SpaceFlightPhase::OrbitalDelivery)) return false;
-		// Saved departure stays inside the actual plane and natural-body references stay bounded; no wrapped coordinate or unrelated object domain can authorize navigation.
+		// Departure stays in-plane and body intent names an issued ID. A retired
+		// target may remain as failed/returning flight history, just like a removed
+		// craft target; ResolveDestination still requires a live body to act on it.
 		if (f.departure.x < 0 || f.departure.y < 0 || f.departure.x > int64_t{width - 1} * SPACE_Q16 || f.departure.y > int64_t{height - 1} * SPACE_Q16 ||
-			(f.destination.kind == SpaceOrderTargetKind::Body && f.destination.id >= MAX_ORBITAL_BODIES)) return false;
+			(f.destination.kind == SpaceOrderTargetKind::Body && f.destination.id >= next_body_id)) return false;
 		// Each leg fixes its physical layer, remaining canonical time and once-only burn/delivery receipts; resuming a snapshot cannot skip a burn or repeat an unload.
 		if (f.phase == SpaceFlightPhase::Preparing) {
 			if (f.layer != MapLayer::Surface || f.remaining_ticks > b.prepare_ticks || f.outbound_burned || f.recovery_burned || f.deployed) return false;
@@ -414,7 +417,7 @@ bool ValidateSpaceTransitions()
 {
 	const auto records = CaptureSpaceTransitions();
 	// Structural receipts and actual paid production/pad owners must agree before any installed flight can be saved or treated as operational.
-	if (!ValidateSpaceTransitionRecords(records, Map::SizeX(), Map::SizeY()) || !ValidateSpaceTransitionLinks(records, CaptureSpaceProduction(), CaptureLaunchOperations())) return false;
+	if (!ValidateSpaceTransitionRecords(records, Map::SizeX(), Map::SizeY(), GetAsteroidField().next_body_id) || !ValidateSpaceTransitionLinks(records, CaptureSpaceProduction(), CaptureLaunchOperations())) return false;
 	// Verify every installed original hull, physical compartment and destination incarnation without moving cargo, assigning a berth or burning fuel.
 	for (const auto &r : records) {
 		const auto *v = ResolveSpaceCraft(r.craft); if (v == nullptr || GetSpaceVehicleModel(*v) != 14 || !v->manifest) return false;
@@ -462,7 +465,7 @@ bool ValidateSpaceTransitions()
 /** @copydoc InstallLoadedSpaceTransitions */
 bool InstallLoadedSpaceTransitions(std::span<const SpaceTransitionRecord> records)
 {
-	if (!ValidateSpaceTransitionRecords(records, Map::SizeX(), Map::SizeY())) return false;
+	if (!ValidateSpaceTransitionRecords(records, Map::SizeX(), Map::SizeY(), GetAsteroidField().next_body_id)) return false;
 	// Admit the entire original native family before attaching any transition; a pre-existing owner or missing paid rocket refuses without partial installation.
 	for (const auto *v : SpaceVehicle::Iterate()) if (v->transition) return false;
 	for (const auto &r : records) { const auto *v = ResolveSpaceCraft(r.craft); if (v == nullptr || GetSpaceVehicleModel(*v) != 14) return false; }

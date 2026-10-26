@@ -40,6 +40,13 @@ void PublishOrbitalUtilitySources(uint64_t interval, uint32_t ticks);
 void AppendOrbitalUtilityRequests(std::vector<UtilityPowerRequest> &requests);
 /** @param craft Actual native hull. @return Whether a contained Core/Dock job retains this exact hull, including paused work. */
 bool HasOrbitalServiceAssignment(const SpaceVehicle &craft);
+/** Query the original module service producer before travelling, without reserving a berth or parts.
+ * @param craft Exact native hull with its actual service history and manifest.
+ * @param site Exact owned operational service module.
+ * @return Whether original role, service ownership, real material, power-source and history/registration gates admit service except for current arrival/Holding. Actual CmdServiceOrbitalProbe must still admit the reached start.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19.
+ */
+bool CanNavigateOrbitalService(SpaceCraftRef craft, SpaceStructureRef site);
 /** Read the original contained service countdown without copying its packet owner or acquiring a berth.
  * @param craft Exact native hull incarnation whose original contained assignment is queried.
  * @return Const original job metadata, or nullptr when this hull has no contained service job.

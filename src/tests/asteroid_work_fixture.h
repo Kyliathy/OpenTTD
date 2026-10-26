@@ -7,6 +7,7 @@
 #define TESTS_ASTEROID_WORK_FIXTURE_H
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid.h"
+#include "asteroid_snapshot_fixture.h"
 #include "../space_work_cost.h"
 #include "../multilayer_asteroid_catalogue.h"
 #include "test_artifact_paths.h"
@@ -71,7 +72,7 @@ static void MeasureAsteroidWork(AsteroidWorkMeasurement &total, Action action)
 static void PrepareAsteroidWorkGeometry(AsteroidField &field, const AsteroidWorkCase &scenario)
 {
 	if (!scenario.clustered) return;
-	AdvanceAsteroidField(field);
+	AdvanceContainedAsteroidSnapshot(field);
 	// All actual IDs share one in-band bucket just before its boundary. The next real maximum-drift step must unlink each by the native constant-work swap/pop path.
 	for (auto &body : field.bodies) {
 		body.motion.position = {80 * SPACE_Q16 - 1, static_cast<int32_t>(scenario.height / 2) * SPACE_Q16};
@@ -97,6 +98,7 @@ static nlohmann::json AsteroidWorkRecord(const AsteroidWorkMeasurement &measurem
 		"body_steps", "index_updates", "index_unlinks", "index_links", "query_calls", "query_buckets", "query_candidates", "query_order_tests", "body_lookups", "craft_ticks",
 		"attachment_visits", "approach_craft_visits", "approach_occupant_checks", "approach_target_checks", "planner_requests", "planner_slots", "planner_slot_tests",
 		"planner_owner_tests", "planner_order_tests", "staging_body_tests", "extraction_attempts", "extraction_units",
+		"exit_forecasts", "intercept_forecasts", "mining_selections", "renewal_attempts", "renewal_entry_candidates", "retirement_participants",
 	};
 	nlohmann::json work = nlohmann::json::object();
 	// Every original producer counter has one stable report label, including zeros that expose an unexpected whole-field query during a native craft tick.

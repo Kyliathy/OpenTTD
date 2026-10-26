@@ -28,6 +28,11 @@ add_files(
     surface_supply_order_sl.cpp
     # Original non-paying packet purpose admission: r2mlvs6-mines-and-resource-chains.md Group13CB.
     cargo_source_sl.h
+    cargo_source_sl.cpp
+    asteroid_field_sl.cpp
+    space_mining_sl.cpp
+    space_mining_sl.h
+    asteroid_field_sl.h
     cheat_sl.cpp
     company_sl.cpp
     depot_sl.cpp

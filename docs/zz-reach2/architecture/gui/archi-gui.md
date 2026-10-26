@@ -29,6 +29,26 @@ Identity is the pair `window_class` + `window_number`. Lookup, dirty marking, an
 
 Hit-testing walks `Window::IterateFromFront` (`FindWindowFromPt`). Painting walks `Window::IterateFromBack` and clips.
 
+### Space windows and repeated shortcuts
+
+[R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md) keeps
+`SpaceConstructionWindow` bounded to the usable client area. Its Construction,
+Inventory, Service, Connections and Manufacture pages retain the original
+command arguments and admission predicates; separate scrolling covers site and
+detail rows. Resize/page changes recompute hit regions. The Space inspector
+likewise keeps policy controls and its final detail row reachable at enlarged
+GUI/font scales. Paint and selection read the original owners without granting
+work, targets, inventory or time.
+
+F2 dispatch in both normal/editor toolbars uses retained Game Options identity:
+open when absent, raise when covered, close when already foremost and the
+client-only `gui.hotkey_toggles_window` setting is enabled. Pinned, modal and
+non-closable windows retain their existing protections. Other popup/Escape
+proposals in the older demo-fix plan remain independent. Mine continuation
+buttons edit only the original generation-qualified native Mine order.
+Readiness/status comes from actual construction/mining/service owners, including
+stopped, pending return, missing shell/parts and unavailable receiver waits.
+
 ## Widget tables
 
 A window's layout is a flat `std::span<const NWidgetPart>`, written as a brace list of `NWidget(...)` parts. Containers (`NWID_HORIZONTAL`, `NWID_VERTICAL`, `NWID_MATRIX`, `NWID_SELECTION`, `NWID_LAYER`) open a scope; `EndContainer()` closes it. Attributes (`SetResize`, `SetFill`, `SetPadding`, `SetStringTip`, `SetSpriteTip`, `SetMinimalSize`, `SetPIP`) attach to the part that precedes them. The comment block above `NWidgetPart` in `src/widget_type.h` is the grammar.

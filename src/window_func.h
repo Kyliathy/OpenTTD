@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window_func.h %Window functions not directly related to making/drawing windows. */
+/** @file window_func.h %Window functions not directly related to making/drawing windows.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #ifndef WINDOW_FUNC_H
 #define WINDOW_FUNC_H
@@ -49,6 +51,16 @@ template <typename T> requires is_scoped_enum_v<T>
 void InvalidateWindowClassesData(WindowClass cls, T data, bool gui_scope = false) { InvalidateWindowClassesData(cls, to_underlying(data), gui_scope); }
 
 void CloseNonVitalWindows();
+
+/**
+ * Handle an opening shortcut for an existing retained window.
+ * @param cls Requested window class.
+ * @param number Requested exact window number.
+ * @return True when raised/closed or blocked by a modal window; false if the caller must open it.
+ * The client toggle setting permits closing only a front-most, unpinned,
+ * closable window. Raising never recreates the window or loses its state.
+ */
+bool HandleWindowOpeningHotkey(WindowClass cls, WindowNumber number);
 void CloseAllNonVitalWindows();
 void DeleteAllMessages();
 void CloseConstructionWindows();

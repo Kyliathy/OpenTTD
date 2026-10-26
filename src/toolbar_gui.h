@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.h Stuff related to the (main) toolbar. */
+/** @file toolbar_gui.h Stuff related to the (main) toolbar.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #ifndef TOOLBAR_GUI_H
 #define TOOLBAR_GUI_H
@@ -54,7 +56,11 @@ enum MainToolbarHotkeys : int32_t {
 	MTHK_EXTRA_VIEWPORT,
 	MTHK_CLIENT_LIST,
 	MTHK_SIGN_LIST,
-	MTHK_CYCLE_MAP_LAYER
+	MTHK_CYCLE_MAP_LAYER,
+	MTHK_LAYER_SURFACE, ///< Select the main Surface viewport without moving its plane position.
+	MTHK_LAYER_UNDERGROUND, ///< Select allocated Underground.
+	MTHK_LAYER_DEEP_UNDERGROUND, ///< Select allocated Deep Underground.
+	MTHK_LAYER_SPACE, ///< Select allocated Space.
 };
 
 void AllocateToolbar();

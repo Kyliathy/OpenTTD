@@ -501,6 +501,11 @@ enum class SaveLoadVersion : uint16_t {
 	OrbitalRecipeProcessing, ///< Saveload version: 438\n Native module recipe/work/material/residue metadata and bounded retired history join original SPST stocks and utility authority. See r2mlvs11-orbital-stations-and-manufacturing.md Group10C.
 	CompanySupplyPackets, ///< Saveload version: 439\n Appended non-paying CompanySupply source meaning in original CAPA packets; r2mlvs6-mines-and-resource-chains.md Group13CB. No order/quota inventory is introduced.
 	SurfaceSupplyOrders, ///< Saveload version: 440\n Sole bounded paid-order commitment/history family with same-file economy-day/company/Surface-station admission; r2mlvs6-mines-and-resource-chains.md Group13CCC. Native packets remain the physical stock owner.
+	AsteroidCargoOrigins, ///< Saveload version: 441\n Original CAPA packets retain full32-bit asteroid IDs and immutable mineral labels; genuine older sources normalize from their same-file body. See r2sff1-space-fixes-features-1.md Group21.
+	AsteroidFieldLifecycle, ///< Saveload version: 442\n Original ASTR/SPKN owners retain sparse issuance, explicit lifecycle revision, terminal size credits and all renewal RNG/timer state. See r2sff1-space-fixes-features-1.md Group22.
+	SpaceMiningContinuation, ///< Saveload version: 443\n Original SPOR policy and VEHS contained mining intent retain effective targets, mineral, departure and bounded progress. See r2sff1-space-fixes-features-1.md Group23.
+	SpaceLegacyDeparture, ///< Saveload version: 444\n The same contained fields may retain only local departure for an actual unordered legacy miner, without fabricating a queue. Older sources retain inert empty-queue semantics. See r2sff1-space-fixes-features-1.md Group25.
+	SpaceSurveyDeparture, ///< Saveload version: 445\n Original ownerless survey rows may retain explicit no-target Return/Waiting after release; earlier sources still require a live target. Existing ASTR row widths are unchanged. See r2sff1-space-fixes-features-1.md Group26.
 	MaxVersion, ///< Highest possible saveload version.
 };
 

@@ -1,5 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file launch_center_sl.cpp Bounded native launch-anchor transport and independent preview. */
+/** @file launch_center_sl.cpp Bounded native launch-anchor transport and independent preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group23; copied continuation uses same-file generation issuance.
+ */
 #include "../stdafx.h"
 #include "saveload.h"
 #include "saveload_error.hpp"
@@ -109,6 +111,7 @@ struct LCTRChunkHandler : ChunkHandler {
 		CheckTransport(_staged_launch_centers ? &*_staged_launch_centers : nullptr,
 			Map::SizeX(), Map::SizeY(), metadata == nullptr ? 0 : metadata->feature_flags);
 	}
+	/** @param length Dispatcher framing; Read bounds candidate ownership and its exact original incarnation cursor. */
 	void LoadCheck([[maybe_unused]] size_t length) const override
 	{
 		const auto data = this->Read();
@@ -116,6 +119,7 @@ struct LCTRChunkHandler : ChunkHandler {
 			(Active(data) && _load_check_data.map_layers < 3)) SlErrorCorrupt("Invalid launch-center preview geometry");
 		_load_check_data.launch_centers_present = true;
 		_load_check_data.launch_centers_active = Active(data);
+		_load_check_data.next_launch_center_generation = data.next;
 		for (const auto &r : data.records) _load_check_data.launch_center_preview_refs.push_back({r.station, r.anchor.generation});
 		_load_check_data.launch_center_preview_rows = data.records;
 	}

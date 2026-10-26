@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settingentry_gui.cpp Definitions of classes for handling display of individual configuration settings. */
+/** @file settingentry_gui.cpp Definitions of classes for handling display of individual configuration settings.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #include "stdafx.h"
 #include "company_base.h"
@@ -618,6 +620,7 @@ SettingsContainer &GetSettingsTree()
 				general->Add(new SettingEntry("gui.window_snap_radius"));
 				general->Add(new SettingEntry("gui.window_soft_limit"));
 				general->Add(new SettingEntry("gui.right_click_wnd_close"));
+				general->Add(new SettingEntry("gui.hotkey_toggles_window"));
 				general->Add(new SettingEntry("gui.toolbar_dropdown_autoselect"));
 			}
 

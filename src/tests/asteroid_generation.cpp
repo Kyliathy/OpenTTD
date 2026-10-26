@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group2
  */
 #include "../stdafx.h"
+#include "asteroid_snapshot_fixture.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid.h"
 #include "../multilayer_asteroid_catalogue.h"
@@ -140,7 +141,7 @@ TEST_CASE("World asteroid starter search uses real launch geometry and preserves
 			CHECK(to_underlying(field->bodies[starter].resource_class) == starter);
 		}
 		CHECK(field->starter_input.initial_approach_distance_squared == expected.approach_distance_squared);
-		auto moved = *field; AdvanceAsteroidField(moved);
+		auto moved = *field; AdvanceContainedAsteroidSnapshot(moved);
 		CHECK(moved.starter_input == field->starter_input); CHECK(ValidateAsteroidField(moved));
 	}
 	CHECK(_random.state[0] == random.state[0]); CHECK(_random.state[1] == random.state[1]);

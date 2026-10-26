@@ -31,6 +31,12 @@ struct SpaceServiceTuning {
  * @return Exact service quantities, or absence for an unrelated/unknown role.
  */
 std::optional<SpaceServiceTuning> GetSpaceServiceTuning(uint16_t model);
+/** Query a fresh original onboard service start before travelling to a permitted center instruction.
+ * @param craft Exact owned orbital hull with real manifest parts and service history.
+ * @return Whether the original onboard role, quota, pending-return and material gates admit fresh service except for current Holding/reached-action geometry. An active or paused service remains with its existing owner; no timer, parts or allowance are changed.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19.
+ */
+bool CanNavigateSpaceOnboardService(SpaceCraftRef craft);
 enum class SpaceFlightBlock : uint8_t;
 inline constexpr size_t SPACE_SUPPLY_COUNT = 3;
 /** Native Vehicle owns these actual packets. StationCargoList is a container,
@@ -67,6 +73,8 @@ struct SpaceManifestRecord {
 };
 /** @param supply Explicit physical compartment kind. @return Actual runtime label slot, or invalid when unsupported. */
 CargoType GetSpaceSupplyCargo(SpaceSupply supply);
+/** @param supply Explicit physical compartment kind. @return Its immutable label without consulting active-world CargoSpec; copied previews use this meaning directly. */
+std::optional<CargoLabel> GetSpaceSupplyLabel(SpaceSupply supply);
 /** @param model Canonical logical hull model. @param supply Explicit physical compartment kind. @return Its frozen whole-unit capacity, without granting stock. */
 uint16_t GetSpaceSupplyCapacity(uint16_t model, SpaceSupply supply);
 /** Validate the heavy supply capability at the source-version boundary without consulting native pools.

@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file map_layer_gui.h Names, icons, layer switching and shared portal UI choices. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md */
+/** @file map_layer_gui.h Names, icons, layer switching and shared portal UI choices. @see docs/zz-reach2/upgrades/2026-10/r2mlm1-layer-toolbar-button.md, r2mlvs7-underground-construction-and-fleet.md and docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #ifndef MAP_LAYER_GUI_H
 #define MAP_LAYER_GUI_H
@@ -86,6 +88,13 @@ void SetViewportLayer(Window *w, MapLayer layer);
 
 /** Cycle the main viewport to the next map layer. */
 void CycleMainViewportLayer();
+
+/**
+ * Select one allocated main-view layer through the shared viewport owner.
+ * @param layer Explicit layer identity, independent of display-order ordinals.
+ * Unallocated layers are ignored; other viewports and gameplay remain unchanged.
+ */
+void SelectMainViewportLayer(MapLayer layer);
 
 /**
  * Open native portal status and validated connection controls for either housing.

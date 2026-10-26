@@ -5,6 +5,7 @@
  */
 #include "stdafx.h"
 #include "space_order_actions.h"
+#include "space_mining_continuation.h"
 #include "space_vehicle.h"
 #include "space_manifest.h"
 #include "space_structure_cmd.h"
@@ -26,7 +27,9 @@ bool IsSpaceReturnServiceWait(const SpaceOrderQueue &queue)
 bool IsSpaceOnboardServiceOrder(const SpaceVehicle &craft)
 {
 	if (!IsSpaceReturnServiceWait(craft.space_orders)) return false;
-	const auto &target = craft.space_orders.entries[craft.space_orders.cursor].target;
+	const auto effective = ResolveEffectiveSpaceOrderTarget(craft);
+	if (!effective) return false;
+	const auto &target = *effective;
 	SpacePoint point;
 	// Onboard parts can service only this explicit reached owned center instruction; a module request cannot borrow that independent service owner.
 	if (target.kind != SpaceOrderTargetKind::LaunchCenter || craft.construction.placement != SpacePlacement::Orbital || craft.mission.phase != SpaceMissionPhase::Holding) return false;
@@ -52,7 +55,9 @@ void ForgetSpaceServiceOrderCenter(const LaunchCenterRef &center)
 bool ExecuteSpaceOrderUnload(SpaceVehicle &craft)
 {
 	if (craft.cargo.TotalCount() == 0) return true;
-	const auto &target = craft.space_orders.entries[craft.space_orders.cursor].target;
+	const auto effective = ResolveEffectiveSpaceOrderTarget(craft);
+	if (!effective) { craft.space_orders.blocked = SpaceOrderBlock::TargetRemoved; return false; }
+	const auto &target = *effective;
 	AutoRestoreBackup actor(_current_company, craft.owner);
 	// The original exchange command preflights the whole destination capacity, exact module generation/berth and every physical packet before moving any freight. A full or unavailable module retains the old hold.
 	const auto result = CmdMoveOrbitalFreight(DoCommandFlag::Execute, SpaceStructureID{static_cast<uint16_t>(target.id)}, target.generation,
@@ -70,7 +75,9 @@ bool ExecuteSpaceOrderService(SpaceVehicle &craft)
 	if (craft.manifest->pending_returns != 0) { queue.blocked = SpaceOrderBlock::ReturnsPending; return false; }
 	// Return does not top up a partly used budget. Existing native onboard service becomes due only when exhausted, and only its completed real work restores allowance.
 	if (craft.manifest->returns_remaining != 0) return true;
-	const auto &target = queue.entries[queue.cursor].target;
+	const auto effective = ResolveEffectiveSpaceOrderTarget(craft);
+	if (!effective) { queue.blocked = SpaceOrderBlock::TargetRemoved; return false; }
+	const auto &target = *effective;
 	AutoRestoreBackup actor(_current_company, craft.owner);
 	CommandCost result;
 	if (target.kind == SpaceOrderTargetKind::Structure) {

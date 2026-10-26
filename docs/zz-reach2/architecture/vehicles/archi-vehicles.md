@@ -104,6 +104,23 @@ CargoPacket batch and debits only its finite body; refusal keeps the last
 partial interval and all material. Model15 earns two units per74 working
 opportunities into its20-unit hold. Rendering earns no opportunities.
 
+[R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md) adds saved
+Mine continuation to that same native queue. The generation-checked policy
+command retains route/home behavior, selects a nearest eligible receiver, or
+keeps partial ore while seeking a safely interceptable same-mineral body.
+Effective continuation targets remain distinct from the player's original
+instruction. Stable typed ID/generation breaks distance ties; selection grants
+no berth, stock, packet capacity, shell or service allowance. Original action
+admission rechecks those owners at arrival. No compatible target retains cargo
+and an explicit bounded retry wait. Stop pauses mining/navigation; an existing
+safe attachment still follows its body until native safety releases it. Recall
+cancels continuation and retains emitted cargo. Service retains its separate
+paid pause/work contract. Full32-bit asteroid cargo origins survive live-body
+retirement without another provenance registry. Current445 transport and
+[role, wait, service and peer evidence](../../upgrades/2026-10/r2sff1-z-o-final-handoff.md)
+supersede old reflection/permanent-target assumptions without closing other
+plans' financial, graphics or continuous-chain gates.
+
 Final Space art,2026-10-17: [Plan10's accepted runtime review](../../../../logs/space-art-final-verification.json)
 binds seven original-derived families at native3599..5166, both actual decoded
 payload boundaries,95,743 focused assertions per configuration and34 ordinary

@@ -41,6 +41,15 @@ The main toolbar's Layer button sits immediately to the right of Small map. The 
 
 The default `N` hotkey cycles the main game view through the same display order, skipping unavailable layers. The scenario editor's cycle action has no default key binding. View captions report their own layer.
 
+[R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md) adds direct
+Alt+1/2/3/4 selection of Surface/Underground/Deep Underground/Outer Space in both
+toolbars. The shared viewport setter ignores unavailable layers and preserves
+the same plane position and unrelated extra views. Display order is mapped
+explicitly rather than cast from key digits. Conflicting old Debug defaults
+migrate only their exact obsolete chords to Ctrl+Alt+0/1/2; intentional custom
+bindings are retained. Small-map following/legend changes are separate pending
+work and are not implied by these shortcuts.
+
 `SetViewportLayer` shifts both current and destination scroll positions by the isometric projection of the stacked world-Y delta. The same horizontal position stays on screen. It cancels following a vehicle on another layer and invalidates cached overlays. `ScrollWindowTo` and vehicle following select the destination layer without translating an already projected destination twice. Map picking, clamping and tile selection use the viewport's own band; construction commands derive the layer from the clicked tile, including clicks in extra viewports.
 
 Landscape, vehicles, signs, floating text and link-graph lines are filtered to the view's layer. The small map owns its layer and invalidates its link overlay when switching. `GetVehicleDisplayLayer` keeps aircraft, ships and disasters on Surface, derives effects from world Y, and normally derives ground vehicles from their tile, with a world-Y fallback for an invalid tile.
@@ -137,7 +146,7 @@ keep exact generated bodies, finite reserves, frozen initial access history
 and Q16 motion under `AsteroidField`. ASTR and native vehicle/order/packet
 records own continuation; SPKN owns company scan receipts. Reloading cannot
 reroll or replenish from current density, definitions or camera selection.
-Depleted body IDs remain visible, moving and indexed. Bodies use plane
+Depleted body IDs remain visible, moving and indexed until terminal map exit. Bodies use plane
 coordinates; `MultiLayerMap` owns native layer meaning and tile conversion.
 
 Actual body/index steps and attached transforms precede all native probe
@@ -146,6 +155,43 @@ mining/return/descent/Surface results. Actual joined loopback peers retain six
 matching frame/tick/elapsed checkpoints and55 owner families through recovery;
 company access setup grants no physical or financial resource. Plan11's
 broader module/manufacturing acceptance remains independently pending.
+
+The current [Space fixes](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md)
+replace reflection with signed straight Q16 motion to the actual plane edge.
+The historical middle-half generation/static-module placement strip is not the
+terminal boundary. Native safety releases a threatened attachment before the
+unsafe step, including on a stopped hull; safe existing attachments still follow
+their body. Actual field/index publication precedes native craft decisions.
+Retirement removes live lookup/index/knowledge/lease rows; cargo may retain its
+immutable retired32-bit Source without a tombstone or body-ID reuse.
+
+The original field owns cumulative exits, dedicated Small/Medium/Large weights
+1/3/5, pending credit, latest exit size/class, monotonic issuance and independent
+timer/candidate RNG streams. First credit arms741..2222 ordinary opportunities
+(20..60 normal-speed seconds); pause freezes and fast-forward changes opportunity
+frequency. A due attempt creates at most one affordable body of a different
+size from the latest exit, debiting only success. Failed attempts retain credit
+and rearm; there is no minimum-population refill or catch-up burst.
+
+The original native Mine order chooses LegacyReturn, ReturnNearest or
+FullLoadNearest. Automatic selection ranks actual squared distance, then stable
+typed identity, among safely interceptable compatible targets. Held Full Load
+intent retains cargo and seeks the same mineral; no target/receiver produces a
+bounded visible wait. Approach/arrival, whole-batch transfer, paid shells and
+per-role service remain original owners. Checked Recall cancels reacquisition
+while retaining earned packets. Removing an effective receiver releases its
+approach and records TargetRemoved immediately, so a paused save cannot retain
+ApproachBusy without a request.
+
+Current [lifecycle peers](../../upgrades/2026-10/r2sff1-z-m-high-id-peers.md)
+exercise owning-client policy commands, armed-timer late join and local/reversed
+replay with original low-ID and native-produced high-ID cargo. The declared
+historical high-ID prefix is separate from earned native birth/extraction.
+New [work/storage measurements](../../upgrades/2026-10/r2sff1-z-n-lifecycle-work.md)
+count actual events and live container capacities; fixed geometric bucket
+headers and allocator-specific heap overhead are distinguished. Diagnostic
+counters are disposable and confer no simulation authority. Earlier438 mining
+and art receipts above retain their original scope.
 
 Exact population performance fixtures cover10,160,10,240 and14,336 bodies,
 clustered drift and64x1024/1024x64 maps. Each body steps and updates its derived

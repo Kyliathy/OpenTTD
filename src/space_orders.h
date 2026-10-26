@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_orders.h Native typed Space order ownership and physical work admission.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups17/26; per-Mine policy and exact lost natural Survey/Visit targets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group3.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group14; paid cargo descent uses an explicit center's circular region.
@@ -15,6 +16,8 @@ struct SpaceVehicle;
 inline constexpr size_t MAX_SPACE_ORDERS = 32;
 /** Append-only native action identities; unavailable feature owners retain explicit waits. */
 enum class SpaceOrderAction : uint8_t { Visit, Survey, Mine, Construct, Unload, ReturnService, End };
+/** Per-Mine continuation intent; old instructions retain their explicit route/home behavior. New command exposure waits for the matching save era. */
+enum class SpaceMiningPolicy : uint8_t { LegacyReturn, ReturnNearest, FullLoadNearest, End };
 /** Target domains remain distinct even when their numeric IDs coincide. */
 enum class SpaceOrderTargetKind : uint8_t { Body, Structure, Blueprint, LaunchCenter, Craft, End };
 /** Saved explicit operational waits; presentation never invents progress to clear one. */
@@ -33,6 +36,7 @@ struct SpaceOrderTarget {
 struct SpaceOrder {
 	SpaceOrderAction action = SpaceOrderAction::Visit;
 	SpaceOrderTarget target;
+	SpaceMiningPolicy mining_policy = SpaceMiningPolicy::LegacyReturn; ///< Inert on non-Mine actions; never inferred from UI selection or a later body's mineral.
 	/** @param other Order to compare. @return Whether action and exact typed target agree. */
 	bool operator==(const SpaceOrder &other) const = default;
 };
@@ -99,6 +103,8 @@ void ValidateSpaceOrderLoadPreview();
 bool TickSpaceOrders(SpaceVehicle &vehicle);
 /** @param vehicle Actual hull whose queue and existing mining lease must be explicitly released. */
 void CancelSpaceOrders(SpaceVehicle &vehicle);
+/** @param bodies Prevalidated original bodies being retired in the same atomic field transaction. Release only current native Survey/Visit approaches and incomplete scan/travel work, retaining original instructions, earned disclosure, cargo, position and stopped flags. No instruction completes and no craft starts. */
+void ForgetSpaceBodySurveyOrders(std::span<const OrbitalBodyID> bodies);
 /** @param vehicle Actual survey hull. @return Shared physical scan admission used by both work and upkeep. */
 bool IsSpaceSurveyWorkTick(const SpaceVehicle &vehicle);
 /** Resolve only actual producer coordinates for native orders and rocket delivery.

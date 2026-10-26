@@ -26,6 +26,9 @@
 #include "../safeguards.h"
 
 extern SaveLoadVersion _sl_version; ///< Candidate file's genuine era, owned by the native save/load framework.
+extern const SaveLoadVersion SAVEGAME_VERSION; ///< Original framework's current writer era; saving cannot flatten typed origins into an older source domain.
+
+static CargoSourceAsteroidWire _cargo_source_asteroid_wire; ///< Per-row transport scratch only, reset before every native/copied row; no optional host representation reaches SlObject.
 
 /**
  * Savegame conversion for cargopackets.
@@ -146,6 +149,8 @@ SaveLoadTable GetCargoPacketDesc()
 		SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(CargoPacket, feeder_share)),
 		SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(CargoPacket, source.type), SaveLoadVersion::RemoveSubsidyStationBinding),
 		SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(CargoPacket, source.id), SaveLoadVersion::RemoveSubsidyStationBinding),
+		SaveLoad::Variable<VarFileType::U32>("asteroid_body", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.body), SaveLoadVersion::AsteroidCargoOrigins),
+		SaveLoad::Variable<VarFileType::U32>("asteroid_mineral", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.mineral), SaveLoadVersion::AsteroidCargoOrigins),
 		SaveLoad::Variable<VarFileType::I16>("travelled.x", SLE_OBJECT_ADDRESS(CargoPacket, travelled.x), SaveLoadVersion::CargoTravelled),
 		SaveLoad::Variable<VarFileType::I16>("travelled.y", SLE_OBJECT_ADDRESS(CargoPacket, travelled.y), SaveLoadVersion::CargoTravelled),
 	};
@@ -157,11 +162,11 @@ SaveLoadTable GetCargoPacketDesc()
  */
 static void CheckCargoPacketSourceFields(const std::vector<SaveLoad> &desc)
 {
-	if (IsSavegameVersionBefore(SaveLoadVersion::TableChunks)) return;
-	// Table-era packets already serialize all four fields. Refusing an omission prevents either loading mode from inventing paying provenance or silently dropping a bought packet's credit.
-	for (const std::string_view field : {"count", "source_type", "source_id", "feeder_share"}) {
-		if (std::ranges::find(desc, field, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native cargo packet quantity/source/credit field");
-	}
+	std::vector<std::string_view> fields; fields.reserve(desc.size());
+	// Preserve every original header key, including unknown/skipped fields, so
+	// an older file cannot borrow a newer asteroid payload through skip handling.
+	for (const auto &field : desc) fields.push_back(field.name);
+	if (!ValidateCargoPacketSourceSchema(fields, _sl_version)) SlErrorCorrupt("Missing or wrong-era native cargo packet source fields");
 }
 
 /** Original native packet transport with a bounded read-only quantity/provenance view; preview never creates or publishes an inventory owner. */
@@ -176,6 +181,8 @@ struct CAPAChunkHandler : ChunkHandler {
 
 		// Serialize the sole original native packet pool; every container retains its own references and no transport copy becomes stock.
 		for (CargoPacket *cp : CargoPacket::Iterate()) {
+			if (!IsValidCargoPacketSource(cp->GetSource(), cp->GetFeederShare(), SAVEGAME_VERSION)) SlErrorCorrupt("Invalid native cargo source for saving");
+			_cargo_source_asteroid_wire = EncodeCargoSourceAsteroid(cp->GetSource());
 			SlSetArrayIndex(cp->index);
 			SlObject(cp, GetCargoPacketDesc());
 		}
@@ -192,9 +199,12 @@ struct CAPAChunkHandler : ChunkHandler {
 		// Native source identities reconstruct before container pointer fixing, preserving the original packet pool rather than issuing replacement cargo.
 		while ((index = SlIterateArray()) != -1) {
 			CargoPacket *cp = CargoPacket::CreateAtIndex(CargoPacketID(index));
+			_cargo_source_asteroid_wire = {};
 			SlObject(cp, slt);
 			// The candidate file's own era, provenance and feeder credit decide admission; no live company or cargo lookup can convert bought supplies into paying freight.
-			if (!IsValidCargoPacketSource(cp->GetSource(), cp->GetFeederShare(), _sl_version)) SlErrorCorrupt("Invalid cargo source type/identity/credit");
+			const auto decoded = DecodeCargoPacketSource(cp->GetSource(), _cargo_source_asteroid_wire, cp->GetFeederShare(), _sl_version);
+			if (!decoded) SlErrorCorrupt("Invalid cargo source type/identity/credit");
+			cp->source = *decoded;
 		}
 	}
 	/** Copy this file's original packet quantities/purpose/credit without allocating live cargo.
@@ -208,17 +218,24 @@ struct CAPAChunkHandler : ChunkHandler {
 			SaveLoad::Variable<VarFileType::U16>("count", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, quantity)),
 			SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.type)),
 			SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source.id)),
+			SaveLoad::Variable<VarFileType::U32>("asteroid_body", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.body), SaveLoadVersion::AsteroidCargoOrigins),
+			SaveLoad::Variable<VarFileType::U32>("asteroid_mineral", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.mineral), SaveLoadVersion::AsteroidCargoOrigins),
 			SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, feeder_share)),
+			SaveLoad::Variable<VarFileType::U32>("source_xy", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source_tile)),
+			SaveLoad::Variable<VarFileType::U16>("source", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, first_station)),
 		};
 		const auto desc = SlTableHeader(preview);
 		CheckCargoPacketSourceFields(desc);
 		auto &rows = _load_check_data.native_cargo_packet_rows;
 		// Native framing supplies actual indices and original provenance/credit; each detached row must pass the same source predicate as full loading, without allocating or borrowing a live packet.
 		for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
+			_cargo_source_asteroid_wire = {};
 			NativeCargoPacketPreview row; row.packet = CargoPacketID{static_cast<uint32_t>(index)}; SlObject(&row, desc);
 			// Bounded positive original quantities and strictly issued index order prevent an absent, duplicate or weightless fake packet from validating a descent reference.
 			if (row.packet >= CargoPacketID::End() || row.quantity == 0 || rows.size() >= CargoPacketID::End().base() || (!rows.empty() && row.packet <= rows.back().packet)) SlErrorCorrupt("Invalid copied native cargo packet identity/quantity");
-			if (!IsValidCargoPacketSource(row.source, row.feeder_share, _sl_version)) SlErrorCorrupt("Invalid copied cargo source type/identity/credit");
+			const auto decoded = DecodeCargoPacketSource(row.source, _cargo_source_asteroid_wire, row.feeder_share, _sl_version);
+			if (!decoded) SlErrorCorrupt("Invalid copied cargo source type/identity/credit");
+			row.source = *decoded;
 			rows.push_back(row);
 		}
 		_load_check_data.native_cargo_packets_present = true;

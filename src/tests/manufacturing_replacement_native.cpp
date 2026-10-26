@@ -4,6 +4,7 @@
  * Inputs are exact accepted paid traffic checkpoints. Only the explicitly reported age-policy fixture invokes daily hull aging without advancing calendar/economy; no hull, stock, funds, work or pose is granted.
  */
 #include "../stdafx.h"
+#include "../cargo_source_digest.h"
 #include "assembly_native_fixture.h"
 #include "../space_replacement.h"
 #include "../autoreplace_cmd.h"
@@ -43,7 +44,7 @@ static uint64_t ReplacementAssets(const SpaceVehicle &source)
 	/** @param packet Actual original accountable packet; elapsed transit age is not a transfer. */
 	const auto packet = [&](const CargoPacket &packet) {
 		add(packet.index.base()); add(packet.Count()); add(static_cast<uint64_t>(static_cast<int64_t>(packet.GetFeederShare())));
-		add(packet.GetSourceTile().base()); add(packet.GetFirstStation().base()); add(to_underlying(packet.GetSource().type)); add(packet.GetSource().id);
+		add(packet.GetSourceTile().base()); add(packet.GetFirstStation().base()); AppendCargoSourceDigest(packet.GetSource(), add);
 	};
 	add(source.cargo_type); add(source.cargo.TotalCount());
 	// Each whole original packet must retain its identity and physical production provenance; no new recipe can consume or relabel these holdings.
