@@ -3,8 +3,11 @@
 @file package_transfer.py Explicit source transfer and cold staging boundary.
 @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group29.
 @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
+@see docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md Group2.
 Ignore rules never select transfer contents. The actual cleaner supplies exact
 generated exclusions; save export and required-input checks precede staging.
+The separate donor-source entry copies only explicitly pinned inputs and never
+invokes cleaner, preservation or Git-writing operations against its read root.
 """
 
 import argparse
@@ -126,10 +129,14 @@ def _git_dependency(root):
     # rather than mistake fsck's promised omissions for a complete local store.
     for line in configuration.splitlines():
         key, separator, value = line.partition("=")
+        # A remote promise with any enabled spelling means local history alone
+        # cannot reproduce the transfer, even if the current files are present.
         if key.endswith(".promisor") and value not in ("false", "no", "off", "0"):
             promised = True
         if key == "extensions.partialclone":
             promised = True
+    # Either configuration or pack metadata can declare incomplete history;
+    # both must refuse before this tree is described as independently portable.
     if promised or any((marker / "objects/pack").glob("*.promisor")):
         raise ValueError(f"partial Git object store requires completion before transfer: {root}")
     _git(root, "fsck", "--full", "--no-reflogs", "--no-dangling")
@@ -214,6 +221,8 @@ def _destination(path, source):
     if local:
         local = Path(local).resolve()
         relative = target.relative_to(local) if target.is_relative_to(local) else None
+        # Only the established temporary namespaces extend project scratch
+        # permission; arbitrary user-profile folders remain outside this owner.
         if relative is not None and relative.parts:
             permitted |= relative.parts[0] == "Temp" or relative.parts[0].startswith("cxc-")
     if not permitted:
@@ -238,6 +247,8 @@ def _member(path):
     # spelling is relative; Windows could redirect or merge extracted members.
     reserved = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10)), *(f"lpt{i}" for i in range(1, 10))}
     for part in result.parts:
+        # Windows aliases could turn two distinct manifest members into one
+        # physical output or redirect it to a device instead of an ordinary file.
         if part.endswith((" ", ".")) or part.split(".", 1)[0].casefold() in reserved:
             raise ValueError(f"unsafe Windows transfer member: {path}")
     return result
@@ -258,6 +269,107 @@ def _check_output_lengths(target, names):
     longest = max((target.joinpath(*_member(name).parts) for name in names), key=lambda path: len(str(path)), default=target)
     if len(str(longest)) > 259:
         raise ValueError(f"Windows transfer path exceeds 259 characters; choose a shorter destination root: {longest}")
+
+
+def stage_donor_source(destination, source, members, root=None):
+    """Copy pinned donor inputs into a fresh project-owned build bootstrap tree.
+
+    @param destination New directory beneath the destination checkout's test-cache.
+    @param source Read-only donor source root containing CMakeLists.txt and src/.
+    @param members Explicit path/SHA256/bytes records observed before staging.
+    @param root Destination checkout; defaults to this module's owning checkout.
+    @return Completed manifest identity and copied file count, never build proof.
+    @throws ValueError For unsafe roots, stale inputs, aliases or output collisions.
+    """
+    root = repository_root(root)
+    source = Path(source).absolute()
+    # Checking unresolved edges first prevents a junction from silently changing
+    # which repository supplies the supposedly independent reference sources.
+    for component in (source, *source.parents):
+        _ordinary(component)
+    selected_source = source.resolve()
+    source = repository_root(source)
+    if source != selected_source:
+        raise ValueError("donor source must be the explicitly selected source root")
+    target = _destination(destination, source)
+    # Bootstrap outputs may neither overlay an earlier build nor escape the
+    # implementing checkout; donor/source writes are outside this operation.
+    if target.exists() or not target.is_relative_to(root / "test-cache"):
+        raise ValueError("donor staging requires a fresh destination test-cache directory")
+    payload = []
+    names = set()
+    # The caller's immutable member list selects the source closure. Cleaner
+    # exclusions and reconstruction catalogues must not expand that selection.
+    for reference in members:
+        if set(reference) != {"path", "sha256", "bytes"}:
+            raise ValueError("donor member requires exact path/SHA256/bytes")
+        relative = _member(reference["path"])
+        spelling = relative.as_posix()
+        folded = spelling.casefold()
+        # Git stores and old generated worlds cannot become source inputs just
+        # because an explicit caller accidentally listed them as members.
+        if ".git" in folded.split("/") or folded.split("/")[0] in ("build", "logs", "test-cache") or folded.startswith(("mlm/reviews/", "mlm/runtime/")) or folded == ".donor-source-manifest.json":
+            raise ValueError("donor member is metadata or generated output: " + spelling)
+        if folded in names:
+            raise ValueError("duplicate/case-colliding donor member: " + spelling)
+        names.add(folded)
+        selected = source.joinpath(*relative.parts)
+        # Inspect each physical edge, including intermediate directories, so an
+        # ordinary-looking leaf cannot import another tree through a junction.
+        for component in (selected, *selected.relative_to(source).parents):
+            edge = component if component.is_absolute() else source / component
+            status = _ordinary(edge)
+            # A shared inode could let a later build alter the original donor.
+            if stat.S_ISREG(status.st_mode) and status.st_nlink != 1:
+                raise ValueError("hard-linked donor input: " + spelling)
+        if not selected.is_file():
+            raise ValueError("donor member is not an ordinary file: " + spelling)
+        if file_identity(selected) != (reference["sha256"], reference["bytes"]):
+            raise ValueError("donor input changed before staging: " + spelling)
+        payload.append(dict(reference))
+    required = {"cmakelists.txt", "src/cmakelists.txt", "vcpkg.json"}
+    if not required <= names:
+        raise ValueError("donor staging lacks required build source inputs")
+    _check_output_lengths(target, (row["path"] for row in payload))
+    ancestor = target.parent
+    # A new run may create several routing directories; capacity is measured
+    # on their existing volume before any staged payload is published.
+    while not ancestor.exists():
+        ancestor = ancestor.parent
+    if shutil.disk_usage(ancestor).free < sum(row["bytes"] for row in payload):
+        raise ValueError("insufficient space for independent donor source copies")
+    target.mkdir(parents=True)
+    # Independent files preserve the donor even when the staged build writes
+    # generated source-side files. A failed partial tree stays visibly incomplete.
+    for reference in sorted(payload, key=lambda row: row["path"]):
+        selected = source.joinpath(*_member(reference["path"]).parts)
+        output = target.joinpath(*_member(reference["path"]).parts)
+        expected = (reference["sha256"], reference["bytes"])
+        if file_identity(selected) != expected:
+            raise ValueError("donor input changed before copy: " + reference["path"])
+        output.parent.mkdir(parents=True, exist_ok=True)
+        # Recheck destination parents immediately before writing: a redirected
+        # newly created routing edge must not turn this copy into a source edit.
+        for parent in (output.parent, *output.parent.relative_to(target).parents):
+            _ordinary(parent if parent.is_absolute() else target / parent)
+        with selected.open("rb") as incoming, output.open("xb") as outgoing:
+            shutil.copyfileobj(incoming, outgoing)
+        # Source races and truncated copies both invalidate the whole bootstrap;
+        # no completion manifest is emitted for a partially trusted reference.
+        if file_identity(selected) != expected or file_identity(output) != expected:
+            raise ValueError("donor input changed during staging: " + reference["path"])
+    manifest = dict(_documentation=__doc__, schema_version=1,
+                    kind="read_only_donor_source_stage", source=str(source),
+                    files=sorted(payload, key=lambda row: row["path"]),
+                    git_metadata_copied=False, donor_modified=False,
+                    historical_executables_copied=False)
+    manifest_path = target / ".donor-source-manifest.json"
+    with manifest_path.open("x", encoding="utf-8") as stream:
+        json.dump(manifest, stream, indent=2)
+        stream.write("\n")
+    return dict(root=target.relative_to(root).as_posix(), files=len(payload),
+                manifest=dict(path=manifest_path.relative_to(root).as_posix(),
+                              sha256=file_identity(manifest_path)[0]))
 
 
 def stage_transfer(destination, root=None):
@@ -311,6 +423,8 @@ def stage_transfer(destination, root=None):
         output = target.joinpath(*_member(row["path"]).parts)
         output.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, output)
+        # A successful copy must still match the initial source observation and
+        # its new independent output; neither a source race nor truncation passes.
         if file_identity(source) != (row["sha256"], row["bytes"]) or file_identity(output) != (row["sha256"], row["bytes"]):
             raise ValueError(f"transfer bytes changed during staging: {row['path']}")
     LOGGER.info("Rechecking source save observations after independent staging copies")
@@ -366,6 +480,8 @@ def stage_selected_recovery(destination, references, current_build, root=None):
         path = checked_path(relative, root)
         _ordinary(path)
         disposable = relative.split('/')[0] in ('build', 'logs', 'test-cache') or relative.startswith(('mlm/reviews/', 'mlm/runtime/'))
+        # Only this selected current build grants generated-input authority;
+        # unrelated old review/cache files cannot enter the cold recovery closure.
         if disposable and allowed_generated.get(relative) != reference:
             raise ValueError('undeclared earlier generated recovery input: ' + relative)
         if '.git' in Path(relative).parts:
@@ -459,6 +575,8 @@ def verify_transfer_archive(archive, extraction=None):
         names = [row.filename for row in infos]
         if len({name.casefold() for name in names}) != len(names):
             raise ValueError("duplicate or case-colliding archive member")
+        # Every physical archive entry must pass path/type admission before even
+        # its manifest can be trusted to describe an extractable source closure.
         for info in infos:
             _member(info.filename)
             if stat.S_ISLNK(info.external_attr >> 16):
@@ -474,12 +592,16 @@ def verify_transfer_archive(archive, extraction=None):
             if relative != ".":
                 _member(relative)
         rows = {row["path"]: row for row in manifest["files"]}
+        # A safe manifest filename does not imply its declared payload paths are
+        # safe; validate those independently before joining them to archive names.
         for name in rows:
             _member(name)
         # One explicit manifest describes all other members; it intentionally
         # cannot contain its own SHA256 or accidentally include another archive.
         if len(rows) != len(manifest["files"]) or set(names) != {*rows, MANIFEST}:
             raise ValueError("archive member set differs from complete transfer manifest")
+        # Verify all content before publishing any extracted file, keeping an
+        # archive's readable header from concealing a corrupted later payload.
         for name, row in rows.items():
             observed, length = hashlib.sha256(), 0
             with package.open(name) as stream:
@@ -498,6 +620,8 @@ def verify_transfer_archive(archive, extraction=None):
                 output.parent.mkdir(parents=True, exist_ok=True)
                 with package.open(name) as incoming, output.open("xb") as outgoing:
                     shutil.copyfileobj(incoming, outgoing)
+            # Reconstructed Git stores must be self-contained in the new tree;
+            # original-machine metadata is never borrowed to certify extraction.
             for relative in manifest["git_repositories"]:
                 _git_dependency(target / relative)
     return dict(verified=True, files=len(rows), payload_bytes=sum(row["bytes"] for row in rows.values()),
@@ -517,6 +641,8 @@ def main():
     choice.add_argument("--verify", type=Path)
     parser.add_argument("--extract", type=Path)
     arguments = parser.parse_args()
+    # Extraction is authorized only by successful archive verification; a naked
+    # output argument must not skip the checksum/member-set admission boundary.
     if arguments.extract is not None and arguments.verify is None:
         parser.error("--extract requires --verify")
     if arguments.stage is not None:
