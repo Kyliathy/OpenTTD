@@ -2,6 +2,20 @@
 
 Owner: this continuation of [completed preservation and artifact reconstruction](r2fc-file-cleanup3.md). Storage and rebuild contract: [historical debugging architecture](../../architecture/archi-historical-debug.md). Original group/task numbers are retained for continuity.
 
+**Current cleanup policy, 2026-10-26:** the user's
+[explicit correction](r2fc-file-cleanup3.md#current-cleanup-policy--user-correction-2026-10-26)
+supersedes this completed plan's automatic retention/export requirements.
+`clean.ps1 -Apply` deletes selected disposable output, including saves/configs
+and source copies, without consulting hashes/catalogues or creating backups.
+Preservation/transfer commands remain separate; the caller arranges backups.
+Run from the repository root containing the script. Apply requires a clean Git
+working tree, including no non-ignored untracked files; ignored generated output
+is expected. Preview permits pending changes. The script refuses another current
+directory or redirected Git ownership/index, and protects tracked directories
+as well as tracked files. Durable inputs and reconstruction tools stay outside
+the declared output owners; cleanup does not replay tests to establish readiness.
+Checked tasks below record the earlier implementation and are not new gates.
+
 ## Global Mandatory Reading
 
 Read this section before work and after every context compaction. Read only the
@@ -11,9 +25,9 @@ completed plan or execution ledger wholesale.
 
 - Read only the relevant rows/sections of [Storage ownership](../../architecture/archi-historical-debug.md#storage-ownership) and [Historical facts and current proof](../../architecture/archi-historical-debug.md#historical-facts-and-current-proof). Use that architecture for rebuild commands; do not create another runbook or asset catalogue.
 - Execute groups top to bottom, sequentially, without subagents. Mark `[X]` after the stated outcome is verified and record one concise result before the next group.
-- Preserve source, authored media, fixtures, every save, unique source epochs, other worktrees and valuable untracked/ignored files. No Git writes, staging, commit, reset, checkout or clean. Write outside repositories only in explicitly authorized temporary/Codex locations.
+- Preserve durable source, authored media, fixtures, retained saves and other worktrees outside the selected output owners. Everything within selected output owners is disposable on `-Apply`; do not add automatic preservation gates. No Git writes, staging, commit, reset, checkout or clean. Write outside repositories only in explicitly authorized temporary/Codex locations.
 - New/edited code needs ownership headers, JavaDoc/Doxygen function/class/interface docs and clear argument comments. Explain compound conditions and nontrivial loops as business logic. Preserve immutable fixture bytes and independent expectations.
-- Follow the **Fewer debug and verification cycles** policy below. Keep save-preservation and deletion safeguards intact.
+- Follow the **Fewer debug and verification cycles** policy below. Keep filesystem ownership, tracked-file and writer safeguards intact; backup tools run separately from cleanup.
 - Put optional logs, debug output and scratch in `logs/` or `test-cache/`; required current transcripts belong in review `evidence/`. Long-term test tools stay beside tests. New source/test/JSON names must not begin `r2`.
 - After compaction, note `Context has compacted X times while executing this group.` above the active group. After more than three compactions, split that group using B/C/D suffixes and matching local reading blocks; keep groups at most eight tasks. Do not subdivide merely to add proof detail.
 - Keep assisting Markdown beside this plan using its own `r2fc2-file-cleanup3-a-...` prefix, then the next lowercase letter if needed. Prefer concise results in this plan over additional documents.
@@ -349,14 +363,14 @@ build or real cleanup was performed. Carry these results into the cold rehearsal
 
 _Applies to Groups 26-28._
 
-Entry gate: Group24 exports saves safely and Groups16-23 close required-input migrations. Verify export tests and zero unresolved required inputs in the durable inventory. Stop real deletion if absent; isolated target/refusal fixtures may continue. Do not weaken tracked/reparse/nested-repository guards to force a clean result.
+Current entry gate, 2026-10-26: read the user's cleanup correction above. Selected output is disposable; source-epoch inventories and save exports must not gate preview or apply. Require the current directory to be the script's repository root, and a clean Git working tree before apply. Retain tracked/reparse/nested-repository, containment and stopped-writer safeguards. The former Group24/migration requirements describe the completed historical implementation only.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
 | [Cleanup target selection](../../../../clean.ps1) | 162-240 | `Assert-CleanupTarget/New-CleanupEntry/Get-DevelopmentCleanupPlan` must share the same exact broad disposable-root policy; deleting more than the validated plan is forbidden. |
-| [Cleanup entry point](../../../../clean.ps1) | 306-356 | Current preview exits before process checks/deletion; actual removal rechecks targets and tracked files. Add save export without causing preview writes or shell-crossed deletion. |
-| [Existing cleanup tests](../../../../src/tests/multilayer/support/cleanup_check.ps1) | 39-79;94-142 | Current fixtures deliberately discard some generated saves and preserve logs/builds. Reverse those expectations under the new policy, while retaining isolation, hard-link and refusal checks. |
-| [Save exporter](../../../../src/tests/multilayer/support/save_retention.py) | Live Group24 exports; no fixed range | `plan_save_exports/apply_save_exports` are the established preservation boundary; PowerShell consumes structured results rather than implementing a divergent save policy. |
+| [Cleanup entry point](../../../../clean.ps1) | `Resolve-CleanupRepository/Assert-CleanupCleanWorktree/Invoke-DevelopmentCleanup/Assert-CleanupEntryCurrent/Remove-CleanupTarget` | Bind cleanup to the current Git root. Preview permits pending changes; apply requires clean Git state and rechecks ownership before removal. No preservation helper, manifest/hash gate, export or backup belongs in this pipeline. |
+| [Existing cleanup tests](../../../../src/tests/multilayer/support/cleanup_check.ps1), [refusal/race companion](../../../../src/tests/multilayer/support/cleanup_check-1.ps1), [directory/Git companion](../../../../src/tests/multilayer/support/cleanup_check-2.ps1) | Named fixture cases; no fixed range | Verify disposable saves/configs/source copies, absent or stale catalogues, no backup writes, preview, isolation, hard links, writer refusals, races, partial removal, wrong-directory refusal and clean Git requirements. |
+| [Save exporter](../../../../src/tests/multilayer/support/save_retention.py) | `plan_save_exports/apply_save_exports`; consult only when changing explicit backup behavior | Independent optional preservation commands remain available. The cleaner does not invoke or depend on them. |
 
 ### Group 26 - Extend cleanup through one export-and-delete pipeline
 

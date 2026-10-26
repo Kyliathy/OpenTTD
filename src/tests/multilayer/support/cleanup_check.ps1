@@ -1,6 +1,6 @@
 #requires -Version 5.1
 <#
- * @file cleanup_check.ps1 Actual cleaner scope/export/preview fixture burst.
+ * @file cleanup_check.ps1 Actual cleaner scope/disposal/preview fixture burst.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group27.
  * @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
  * Run powershell -NoProfile -File src/tests/multilayer/support/cleanup_check.ps1.
@@ -84,24 +84,16 @@ try {
     Assert-Refused { Assert-CleanupUntracked $plan @((Join-Path $fixture 'build-probe/compiler.obj')) } 'tracked' 'one tracked candidate blocks its target'
 
     $result = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-    Assert-Check ($result.Failed.Count -eq 0) 'actual export-and-delete pipeline completed every target'
+    Assert-Check ($result.Failed.Count -eq 0) 'actual deletion pipeline completed every target without preservation inputs'
     foreach ($relative in $discard) { Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture $relative))) "removed generated target: $relative" }
     foreach ($relative in $preserve) { Assert-Check (Test-Path -LiteralPath (Join-Path $fixture $relative)) "preserved durable input: $relative" }
-    # Expectations come from the independently authored original fixture text,
-    # not from the exporter's chosen filename or its own reported hash.
-    foreach ($relative in @(
-        'mlm/runtime/native/first/main/save/automatic.sav',
-        'mlm/runtime/demo/player/save.sav',
-        'mlm/runtime/host/first/host/autosave.ss0',
-        'mlm/runtime/client/first/client/scenario.scn.bak',
-        'build/save/manual.sav',
-        'mlm/reviews/space/continuation/run/saves/input.sav',
-        'mlm/runtime/native/first/main/native-art.cfg',
-        'build/play.cfg', 'build/private.cfg', 'build/scripts/game_start.scr'
-    )) { $null = Assert-Exported $fixture $relative 'independent fixture bytes' }
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'savegames/retained'))) 'apply creates no save/config backup copies'
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'src/tests/fixtures/cleanup'))) 'apply creates no retention journals or source payloads'
     Assert-Check ([IO.File]::ReadAllText($outsideLink) -eq 'allocation kept by a durable outside link') 'durable hard-link bytes survive removal'
     Assert-Check ([IO.File]::ReadAllText((Join-Path $fixture '.git')) -eq 'fixture git marker') 'checkout Git marker stays outside all deletion targets'
     $repeat = Invoke-DevelopmentCleanup -Repository $fixture -Apply
     Assert-Check ($repeat.Completed.Count -eq 0) 'repeated apply is idempotent'
-    Write-Host "Passed $checks cleanup scope/export checks; real workspace output was untouched."
+    $emptyPreview = Invoke-DevelopmentCleanup -Repository $fixture -Apply -DryRun
+    Assert-Check ($emptyPreview.Preview) 'explicit preview overrides Apply for an empty plan too'
+    Write-Host "Passed $checks cleanup scope/disposal checks; real workspace output was untouched."
 } finally { Complete-CleanupChecks }
