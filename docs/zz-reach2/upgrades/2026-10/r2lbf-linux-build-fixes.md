@@ -941,15 +941,15 @@ Groups 5-15 leave green GCC and Clang baselines that this third tree is compared
 
 {{MEDIUM}}
 
-- [ ] **16.1** Configure `build-dedicated/` with GCC exactly as the CI Dedicated row does, with no build type: `-G Ninja -DOPTION_DEDICATED=ON -DCMAKE_CXX_FLAGS_INIT="-DRANDOM_DEBUG" -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON`. Build it with `ninja -j4 -k 0` into `build-dedicated.log`.
+- [X] **16.1** Configure `build-dedicated/` with GCC exactly as the CI Dedicated row does, with no build type: `-G Ninja -DOPTION_DEDICATED=ON -DCMAKE_CXX_FLAGS_INIT="-DRANDOM_DEBUG" -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON`. Build it with `ninja -j4 -k 0` into `build-dedicated.log`.
 
-- [ ] **16.2** Fix every missing include the disabled PCH exposes by including what is used in the owning file. Do the same for any `OPTION_DEDICATED`-only compile error in sources this branch added. Re-verify each touched object in `build/` and `build-clang/`.
+- [X] **16.2** Fix every missing include the disabled PCH exposes by including what is used in the owning file. Do the same for any `OPTION_DEDICATED`-only compile error in sources this branch added. Re-verify each touched object in `build/` and `build-clang/`.
 
-- [ ] **16.3** Run `ctest --test-dir build-dedicated -j4 --timeout 600`, then classify and fix only new failures with the Group 8 diagram. Record Debug, `RANDOM_DEBUG` and dedicated-only failures separately in the ledger. `build-dedicated` tests also read content from `build/` (6.4).
+- [X] **16.3** Run `ctest --test-dir build-dedicated -j4 --timeout 600`, then classify and fix only new failures with the Group 8 diagram. Record Debug, `RANDOM_DEBUG` and dedicated-only failures separately in the ledger. `build-dedicated` tests also read content from `build/` (6.4).
 
-- [ ] **16.4** Classify the 11 GCC `-Wmisleading-indentation` sites: `asteroid_gui.cpp:317`, `launch_assembly_gui.cpp:239,255`, `space_manifest.cpp:569`, `space_production.cpp:128,131`, `space_transition.cpp:80,139,348`, `tests/manufacturing_clone_native.cpp:292` and `tests/space_resupply.cpp:203`. Confirm that each dense `if (x) a; b;` line means `b` to run unconditionally. Change only a site where it does not, as a C-category fix. Record the rest as intentional style.
+- [X] **16.4** Classify the 11 GCC `-Wmisleading-indentation` sites: `asteroid_gui.cpp:317`, `launch_assembly_gui.cpp:239,255`, `space_manifest.cpp:569`, `space_production.cpp:128,131`, `space_transition.cpp:80,139,348`, `tests/manufacturing_clone_native.cpp:292` and `tests/space_resupply.cpp:203`. Confirm that each dense `if (x) a; b;` line means `b` to run unconditionally. Change only a site where it does not, as a C-category fix. Record the rest as intentional style.
 
-- [ ] **16.5** Record the final per-flag warning counts for all three trees in the execution notes, compared with the planning baseline (R7 and the counts in 5.1/5.2). `-Wrange-loop-construct`, `-Wunused-function` and `-Wsign-compare` stay as recorded debt, with no bulk edits.
+- [X] **16.5** Record the final per-flag warning counts for all three trees in the execution notes, compared with the planning baseline (R7 and the counts in 5.1/5.2). `-Wrange-loop-construct`, `-Wunused-function` and `-Wsign-compare` stay as recorded debt, with no bulk edits.
 
 ### Area Mandatory Reading - Baseline record and Windows handoff
 

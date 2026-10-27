@@ -320,3 +320,45 @@ The full regression ran once here, as the user's test policy allows. Group 8 was
 **15.5 (Clang, `group15-clang/`):** all nine targets pass (rc=0), including `openttd_tube_test` under JUnit (207 s, build included). Every per-target ledger is identical to GCC's by name and status.
 
 **Carry forward:** `tbm_fixture.h` and `underground_workflow_fixture.h` are also compiled into `openttd_test`. The plan's final GCC CTest run in Group 17 re-verifies it, the one remaining full regression the user's test policy allows at the end.
+
+## Group 16 completed
+
+**16.1:** `build-dedicated/` was configured as CI's "GCC - Dedicated" row: `-G Ninja -DOPTION_DEDICATED=ON -DCMAKE_CXX_FLAGS_INIT="-DRANDOM_DEBUG" -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON`, no build type (`configure-dedicated.log`). `ninja -j4 -k 0` built all 1,530 steps in 22 min 34 s. Every translation unit compiled, so the disabled PCH exposed **no missing include**. The only failure was the `openttd_test` link (`build-dedicated.log`).
+
+**16.2:**
+- **The link failure:** `undefined reference to CargoPacket::MAX_COUNT` from `surface_supply_order_owner.cpp:129`. This is root cause R8 again, at an unoptimised site: `CargoPacket::Create()` forwards its arguments by reference, which odr-uses the in-class constant. The fix passes `uint16_t{CargoPacket::MAX_COUNT}` (`58c21e51`). After it, the tree builds completely (`build-dedicated-2.log`).
+- **Re-verification:** `build/` and `build-clang/` rebuilt with 0 failures (388 s and 293 s, `group16-reverify-*.log`). Both edited files pass in all three trees: `surface_supply_order_owner` 15 cases (1,237 assertions), and the network case below.
+
+**16.3:** `ctest --test-dir build-dedicated -j4 --timeout 600` reported `99% tests passed, 5 tests failed out of 1360` in 182.5 s (`ctest-dedicated.log`, `ctest-dedicated.xml`, `ledger-dedicated.tsv`). It runs one test fewer than the other trees: upstream's "ICU ScriptRun" is compiled only with ICU text layout, which the dedicated build lacks. New failures:
+- **E (environment), 4:** `regression_regression`, `regression_stationlist`, `regression_gs` and `regression_gs_compat` failed with "Failed to find a graphics set". Running Group 6's `materialize_baseset.py build-dedicated` fixed them: 4 of 4 pass (`group16-dedicated-regression.log`). The tracked tree stays clean.
+- **RANDOM_DEBUG-only, 1:** "Merged native network identity refuses original and stale protocol peers" (`merged_command_compatibility.cpp:58-59`, added in `0119308a`).
+  - With `RANDOM_DEBUG`, `network_internal.h` enables `ENABLE_NETWORK_SYNC_EVERY_FRAME` and `NETWORK_SEND_DOUBLE_SEED`, so the build names itself `dbg_seed-…`. Upstream's `IsNetworkCompatibleVersion` accepts only peers of the same debug flavour.
+  - The case hard-coded a standard build's alias pair. It now derives the flavour from its own revision string and checks the same accept/refuse pair (`02ec6b10`). In a standard build the two checks are exactly the old ones.
+  - It passes in all three trees. Production is correct.
+- **None was Debug-only or dedicated-only** beyond the excluded ICU case.
+
+**16.4:** the 13 GCC `-Wmisleading-indentation` sites come from the Group 5 log. The plan listed 11 and missed `saveload/space_manifest_sl.cpp:192` and `saveload/space_production_sl.cpp:169`. **All 13 are intentional dense style; no code changed:**
+- **Guard-then-continue (10 sites):** `asteroid_gui.cpp:317`, `launch_assembly_gui.cpp:239,255` (now 318, 241 and 257 after Group 13's header lines), `space_manifest.cpp:569`, `space_production.cpp:128,131`, `space_transition.cpp:80,348` and `space_manifest_sl.cpp:192`. In each, the guard leaves via `continue` or `return`, or calls `[[noreturn]] SlErrorCorrupt` (`saveload_error.hpp:17`). The next statement is reached only on the good path, as intended.
+- **Ensure-then-use (1):** at `space_transition.cpp:139`, `if (!v->transition) v->transition = …; auto &f = *v->transition;` must bind `f` in every case.
+- **After-loop statements (2):** at `space_production_sl.cpp:169`, `records.push_back(std::move(r))` runs once after its `for`. At `tests/space_resupply.cpp:203`, the two `CHECK`s run once after the summing loop.
+- **`tests/manufacturing_clone_native.cpp:292`:** `ShowSpaceConstructionWindow` must run for all three actions, because the next line `REQUIRE`s the window.
+
+**16.5, warning counts per flag.** Raw counts are compiler output lines, as in 5.1 and 5.2; unique counts are distinct file:line:column sites. GCC and Clang are their Group 5 full builds. Later builds were incremental and added no warning on an edited line (checked in Group 14). Dedicated is this group's full build.
+
+| Flag | GCC raw / unique | Clang raw / unique | Dedicated raw / unique |
+| --- | --- | --- | --- |
+| `-Wmissing-field-initializers` | 492 / 191 | 204 / 191 | 498 / 192 |
+| `-Wrange-loop-construct` | 333 / 221 | 17 / 17 | 340 / 227 |
+| `-Wunused-function` | 71 / 5 | 71 / 5 | 76 / 5 |
+| `-Wsign-compare` | 25 / 22 | 18 / 15 | 32 / 29 |
+| `-Wmisleading-indentation` | 13 / 13 | - | 13 / 13 |
+| `-Wredundant-decls` | 11 / 7 | - | 11 / 7 |
+| `-Wstringop-overflow=` | 6 / 2 | - | - |
+| `-Wunused-variable`, `-Wtype-limits`, `-Wenum-compare` | 1 / 1 each | - | 1 / 1 each |
+| `-Wmaybe-uninitialized`, `-Warray-bounds=` | 1 / 1 each | - | - |
+| `-Wdeprecated-enum-compare-conditional` | - | 1 / 1 | - |
+
+How these compare with the planning baseline:
+- R7 (2.7) removed about 450 GCC and about 580 Clang `-Wmissing-field-initializers` lines (944 → 492 and 783 → 204). The rest come from other aggregates.
+- GCC's optimiser-only warnings (`-Wstringop-overflow=`, `-Wmaybe-uninitialized`, `-Warray-bounds=`) do not appear at `-O0`. The no-PCH, Debug and dedicated-specific translation units add a few repeats of the same sites.
+- `-Wrange-loop-construct`, `-Wunused-function` and `-Wsign-compare` stay as recorded debt, with no bulk edits, as the plan requires.
