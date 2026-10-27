@@ -714,9 +714,11 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
+**Execution note (2026-10-27):** 13.1 and 13.2 were applied as written; 13.2 also requires that model 5 has art. Under the user's test policy (a full regression at most once every 10 groups, or at the end of the plan), 13.3's full GCC suite moved into 14.1, so it runs after Groups 13B-13D have settled. 13.3 was done as focused runs plus the `git status` check.
+
 {{SIMPLE}}
 
-- [ ] **13.1** Give both sticky windows an INI key, following upstream's rule in `test_window_desc.cpp:49-61`. The test reports only the first offender per run, so rerun it after each fix until it passes. In the research copy, these two edits made it pass.
+- [X] **13.1** Give both sticky windows an INI key, following upstream's rule in `test_window_desc.cpp:49-61`. The test reports only the first offender per run, so rerun it after each fix until it passes. In the research copy, these two edits made it pass.
 
   ```cpp
   // src/launch_assembly_gui.cpp:95 (sticky box at line 39)
@@ -727,7 +729,7 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
   These are production changes. They make each window's sticky state and size persist in `windows.cfg`, which is the behaviour `WWT_STICKYBOX` implies. Removing the sticky boxes instead (lines 39 and 167) would also satisfy the test. Record that alternative for the owner in the execution notes.
 
-- [ ] **13.2** `src/tests/multilayer_control_selection.cpp:154`: model 5 is now a published ground fleet model (`75cf506b`). Keep the "unpublished model has no art" property by asserting both facts:
+- [X] **13.2** `src/tests/multilayer_control_selection.cpp:154`: model 5 is now a published ground fleet model (`75cf506b`). Keep the "unpublished model has no art" property by asserting both facts:
 
   ```cpp
   // Model 5 belongs to the published ground fleet; it resolves through that owner, not the M1 slice.
@@ -739,7 +741,7 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
   The two ground functions are declared in `src/ground_train_sprite.h:27` and `src/ground_road_sprite.h:29`; include whichever the test does not already reach. Do not use `std::optional::or_else`, which is C++23. Validated in the research copy: with both includes added, the case passes (34 assertions), so `UINT16_MAX` is outside both published ranges.
 
-- [ ] **13.3** Run the full GCC suite. Expected: `100% tests passed, 0 tests failed out of 1359`. Record the ledger, then run `git status --short`: it must list only the intended test and source edits.
+- [X] **13.3** Run the full GCC suite. Expected: `100% tests passed, 0 tests failed out of 1359`. Record the ledger, then run `git status --short`: it must list only the intended test and source edits.
 
 ### Area Mandatory Reading - Fixture producers and tracked outputs
 
@@ -824,7 +826,7 @@ _Applies to Groups 14-15._
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
-**Entry gate:** Group 13 ended with a green GCC suite, `build-clang/openttd_test` links (Group 5), and `build/` content is materialized (Group 6). Verify this with the 13.3 ledger and `ls -l build-clang/openttd_test`. If the GCC suite is not green, Groups 14-15 may still run, but every failure must first be matched against the GCC ledger. Do not reuse GCC binaries or objects in the Clang tree, and do not edit `GetTestRuntimeConfig` to point at `build-clang/` (6.4).
+**Entry gate:** Group 13 ended with a green GCC suite, `build-clang/openttd_test` links (Group 5), and `build/` content is materialized (Group 6). Verify this with the 14.1 GCC ledger (13.3's full run moved there) and `ls -l build-clang/openttd_test`. If the GCC suite is not green, Groups 14-15 may still run, but every failure must first be matched against the GCC ledger. Do not reuse GCC binaries or objects in the Clang tree, and do not edit `GetTestRuntimeConfig` to point at `build-clang/` (6.4).
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
@@ -839,12 +841,12 @@ Groups 5, 6 and 9-13 are complete in both trees.
 
 {{MEDIUM}}
 
-- [ ] **14.1** Run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3. In the research copy this took 25 s. With the same fixes applied, it failed on exactly the names GCC fails on.
+- [ ] **14.1** First run the end-of-plan GCC regression deferred from 13.3: rebuild `build/`, run `ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-gcc-final.xml`, write `ledger-gcc-final.tsv` with 7.3, restore `src/tests/fixtures/` if 13B chose (b), and use that ledger in 14.2. Then run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3. In the research copy this took 25 s. With the same fixes applied, it failed on exactly the names GCC fails on.
 
 - [ ] **14.2** Diff the two ledgers by name and status. List every test whose status differs between GCC and Clang as category X.
 
   ```bash
-  python3 -I - logs/linux-baseline/<run>/ledger-gcc.tsv logs/linux-baseline/<run>/ledger-clang.tsv <<'EOF'
+  python3 -I - logs/linux-baseline/<run>/ledger-gcc-final.tsv logs/linux-baseline/<run>/ledger-clang.tsv <<'EOF'
   import csv, sys
   gcc, clang = ({r["name"]: r["status"] for r in csv.DictReader(open(p), delimiter="\t")} for p in sys.argv[1:3])
   for name in sorted(set(gcc) | set(clang)):

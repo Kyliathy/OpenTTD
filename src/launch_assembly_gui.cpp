@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups8B/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JD; actual FIFO wait disclosure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; explicit paid Earth replacement cancellation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13; the sticky window persists under its own INI key.
  */
 #include "stdafx.h"
 #include "launch_operations.h"
@@ -92,7 +93,8 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 31), SetStringTip(STR_LAUNCH_MODULE_START, STR_LAUNCH_MODULE_HINT), SetFill(1, 0),
 	EndContainer(),
 };
-static WindowDesc desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::LaunchAssembly, WindowClass::StationView, {}, widgets);
+// A sticky box needs an INI key (upstream WindowDesc rule, test_window_desc.cpp), so its sticky state and size persist in windows.cfg.
+static WindowDesc desc(WindowPosition::Automatic, "launch_assembly", 0, 0, WindowClass::LaunchAssembly, WindowClass::StationView, {}, widgets);
 /** Explain actual FIFO storage without creating another pad or admission rule.
  * @param center Existing native facility displayed by this inventory window.
  * @param craft Actual paid hull whose current source row is being drawn.

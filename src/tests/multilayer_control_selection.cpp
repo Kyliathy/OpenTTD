@@ -8,11 +8,14 @@
  * @file multilayer_control_selection.cpp Real UI calendar/cursor, cargo ownership and geological marker boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group83B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md checkpoint8.7
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13 (model 5 now belongs to the published ground fleet)
  */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../multilayer_sprite.h"
+#include "../ground_train_sprite.h"
+#include "../ground_road_sprite.h"
 #include "../underground_gui.h"
 #include "../underground_vehicle.h"
 #include "../newgrf.h"
@@ -151,5 +154,12 @@ TEST_CASE("Native purchase previews resolve actual engines and both availability
 		CHECK(*GetMultiLayerEnginePurchaseSprite(engine, false) == *GetMultiLayerEnginePurchaseSprite(engine, true) + 1);
 	}
 	CHECK_FALSE(GetMultiLayerEnginePurchaseSprite(fixture.stock->index, true).has_value());
-	CHECK_FALSE(GetMultiLayerPurchaseSprite(5, true).has_value());
+	// Since 75cf506b (ground art) model 5 belongs to the published ground fleet: it has art, resolved by that owner
+	// before the five-model M1 slice is consulted.
+	const auto rail = GetGroundRailPurchaseSprite(5, true);
+	const auto ground = rail.has_value() ? rail : GetGroundRoadPurchaseSprite(5, true);
+	REQUIRE(ground.has_value());
+	CHECK(GetMultiLayerPurchaseSprite(5, true) == ground);
+	// A model outside every published slice still has no art or permission.
+	CHECK_FALSE(GetMultiLayerPurchaseSprite(UINT16_MAX, true).has_value());
 }

@@ -5,6 +5,7 @@
  */
 /** @file asteroid_gui.cpp Read-only Space viewport rendering/picking and live survey inspector.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; final natural-body and original passive-pod sprites.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13; the sticky survey window persists under its own INI key.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20; generation-bound synchronized mission admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11; native approach waits.
@@ -184,7 +185,8 @@ static constexpr std::initializer_list<NWidgetPart> _space_survey_widgets = {
 		NWidget(WWT_PUSHTXTBTN, Colours::DarkBlue, 8), SetStringTip(STR_SPACE_ORDER_DOWN, STR_SPACE_ORDER_EDIT_RESTARTS), SetFill(1, 0),
 	EndContainer(),
 };
-static WindowDesc _space_survey_desc(WindowPosition::Automatic, {}, 0, 0, WindowClass::SpaceSurvey, WindowClass::None, {}, _space_survey_widgets);
+// A sticky box needs an INI key (upstream WindowDesc rule, test_window_desc.cpp), so its sticky state and size persist in windows.cfg.
+static WindowDesc _space_survey_desc(WindowPosition::Automatic, "space_survey", 0, 0, WindowClass::SpaceSurvey, WindowClass::None, {}, _space_survey_widgets);
 /** Native fleet/body inspector with read-only disclosures and synchronized command controls. */
 struct SpaceSurveyWindow : Window {
 	mutable std::vector<std::pair<SpaceCraftRef, Rect>> probe_rows;
