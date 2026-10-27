@@ -843,9 +843,9 @@ Groups 5, 6 and 9-13 are complete in both trees.
 
 {{MEDIUM}}
 
-- [ ] **14.1** First run the end-of-plan GCC regression deferred from 13.3: rebuild `build/`, run `ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-gcc-final.xml`, write `ledger-gcc-final.tsv` with 7.3, restore `src/tests/fixtures/` if 13B chose (b), and use that ledger in 14.2. Then run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3. In the research copy this took 25 s. With the same fixes applied, it failed on exactly the names GCC fails on.
+- [X] **14.1** First run the end-of-plan GCC regression deferred from 13.3: rebuild `build/`, run `ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-gcc-final.xml`, write `ledger-gcc-final.tsv` with 7.3, restore `src/tests/fixtures/` if 13B chose (b), and use that ledger in 14.2. Then run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3. In the research copy this took 25 s. With the same fixes applied, it failed on exactly the names GCC fails on.
 
-- [ ] **14.2** Diff the two ledgers by name and status. List every test whose status differs between GCC and Clang as category X.
+- [X] **14.2** Diff the two ledgers by name and status. List every test whose status differs between GCC and Clang as category X.
 
   ```bash
   python3 -I - logs/linux-baseline/<run>/ledger-gcc-final.tsv logs/linux-baseline/<run>/ledger-clang.tsv <<'EOF'
@@ -858,11 +858,11 @@ Groups 5, 6 and 9-13 are complete in both trees.
 
   Expected: no output. In the research copy the only differences were the four `regression_*` tests, and 14.4 explains them.
 
-- [ ] **14.3** For each X test, rerun it alone in both trees with `-s` and compare the first diverging assertion. Typical causes are unspecified argument evaluation order (for example `UpdatePosition(GetString(…), GetString(…))`), uninitialized members, or implementation-defined library behaviour. Fix with code whose meaning does not depend on the compiler, and rerun both trees. If 14.2 printed nothing, record "no X category" and skip this task.
+- [X] **14.3** For each X test, rerun it alone in both trees with `-s` and compare the first diverging assertion. Typical causes are unspecified argument evaluation order (for example `UpdatePosition(GetString(…), GetString(…))`), uninitialized members, or implementation-defined library behaviour. Fix with code whose meaning does not depend on the compiler, and rerun both trees. If 14.2 printed nothing, record "no X category" and skip this task.
 
-- [ ] **14.4** Run the Clang tree's regression tests (`ctest --test-dir build-clang -R '^regression_' --output-on-failure`). If they report `Failed to find a graphics set`, 6.1 has not been run for `build-clang/`. That is category E, not X: run 6.1 for that tree and rerun. In the research copy this went from 0/4 to 4/4.
+- [X] **14.4** Run the Clang tree's regression tests (`ctest --test-dir build-clang -R '^regression_' --output-on-failure`). If they report `Failed to find a graphics set`, 6.1 has not been run for `build-clang/`. That is category E, not X: run 6.1 for that tree and rerun. In the research copy this went from 0/4 to 4/4.
 
-- [ ] **14.5** Record the final Clang counts in the execution notes. They must equal GCC's at every stage. With Groups 9-13 complete, both read `100% tests passed, 0 tests failed out of 1359`.
+- [X] **14.5** Record the final Clang counts in the execution notes. They must equal GCC's at every stage. With Groups 9-13 complete, both read `100% tests passed, 0 tests failed out of 1359`.
 
 ### Group 15 - Run the nine focused executables
 
