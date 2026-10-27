@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file underground_workflow_fixture.h Accepted scenario preconditions and actual native ticks for visible workflows. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D; r2mlvs4-tunnel-boring-machines.md, Group 20 (paid initial logistics and complete cost); r2mlvs5-spoil-wagons-and-haulage.md, Group 13A (native spoil physics) */
+/**
+ * @file underground_workflow_fixture.h Accepted scenario preconditions and actual native ticks for visible workflows.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D; r2mlvs4-tunnel-boring-machines.md, Group 20 (paid initial logistics and complete cost); r2mlvs5-spoil-wagons-and-haulage.md, Group 13A (native spoil physics)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 15 (a paid world restores the caller's prices and economy)
+ */
 
 #ifndef TESTS_UNDERGROUND_WORKFLOW_FIXTURE_H
 #define TESTS_UNDERGROUND_WORKFLOW_FIXTURE_H
@@ -19,6 +23,8 @@
 #include "../layer_industry_baseline.h"
 #include "../landscape.h"
 #include "../economy_base.h"
+#include "../economy_func.h"
+#include "../core/backup_type.hpp"
 #include "../spoil_receiver.h"
 #include "../industry.h"
 #include "../industrytype.h"
@@ -45,6 +51,9 @@ extern TileIndex _cur_tileloop_tile;
 
 /** A generated seam with existing funded Surface spoil logistics; the target mine floor begins as untouched rock. */
 class UndergroundWorkflowWorld : public ExcavationFixture {
+	// A paid world recomputes the native prices (and with them the loan limit); later cases keep their own zero prices.
+	AutoRestoreBackup<Prices> prices{_price}; ///< Caller's prices, restored when this world ends.
+	AutoRestoreBackup<Economy> economy{_economy}; ///< Caller's economy state, restored when this world ends.
 	bool paid_setup; ///< Economics scenarios invoice initial infrastructure through the actual command kernel.
 	decltype(_engine_mngr.mappings) engine_mappings = _engine_mngr.mappings; ///< Caller EIDS ownership.
 	decltype(_industry_mngr.mappings) industry_mappings = _industry_mngr.mappings; ///< Caller IIDS ownership.

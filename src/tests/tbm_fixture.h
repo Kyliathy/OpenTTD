@@ -9,6 +9,7 @@
  * The engine fixture moved here from tbm_engine.cpp; the acquisition rig (hoppers available, train limits, a
  * door-exit proposal), the published-project rig and the face-work rig are shared by the Group 2B-8 tests.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 2, 2B and 3-8
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 15 (the engine fixture releases the cargo packets its trains and stations held)
  */
 
 #ifndef TESTS_TBM_FIXTURE_H
@@ -93,6 +94,9 @@ public:
 	{
 		_vehicle_pool.CleanPool(); ResetVehicleHash();
 		_station_pool.CleanPool(); ResetLayerPortalWorkState(); ResetTBMProjectState();
+		// Cleaning a vehicle or station pool only forgets their packet lists (CargoList::OnCleanPool), because a whole-game
+		// clean also empties the packet pool. Release those orphaned packets too, so no later case inherits the spoil.
+		_cargopacket_pool.CleanPool();
 		_engine_pool.CleanPool(); _engine_mngr.mappings = std::move(original_mapping);
 	}
 };
