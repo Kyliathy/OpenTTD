@@ -2,6 +2,7 @@
 /** @file descent_custody.cpp Isolated full-storage and retired-center descent boundaries, separate from paid-world checkpoints.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group13.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; declared40t heavy recovery boundaries.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (footprint optionals outlive their loops)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -33,7 +34,10 @@ public:
 		const auto tile = TileXYL(20, 20, MapLayer::Surface); REQUIRE(Station::CanAllocateItem()); center.reset(Station::Create(tile));
 		center->owner = _current_company; center->facilities.Set(StationFacility::LaunchCenter);
 		// Build only isolated ownership/tile metadata; real placement and material-paid gameplay remain the native fixture's responsibility.
-		for (const auto cell : *GetLaunchCenterFootprint(tile, 0)) { MakeStation(cell, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(cell); }
+		// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+		const auto footprint = GetLaunchCenterFootprint(tile, 0);
+		REQUIRE(footprint);
+		for (const auto cell : *footprint) { MakeStation(cell, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(cell); }
 		MakeRiver(TileAddXY(tile, 0, -1), 0); InstallNewLaunchCenter(*center, tile, 0);
 		REQUIRE(SpacePod::CanAllocateItem()); auto *pod = SpacePod::Create(); pod->generation = 1; shell = GetSpacePodReference(*pod);
 		pod->state.owner = _current_company; pod->state.custody = SpacePodCustody::Descent; pod->state.position = *GetLaunchCenterPlaneReference(tile);

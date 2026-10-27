@@ -1,5 +1,8 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file launch_center.cpp Native launch facility placement, ownership, water and save lifecycle. */
+/** @file launch_center.cpp Native launch facility placement, ownership, water and save lifecycle.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (footprint optionals outlive their loops)
+ */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../launch_center.h"
@@ -102,7 +105,11 @@ struct LaunchHubRig {
 		REQUIRE(Station::CanAllocateItem());
 		stations.emplace_back(Station::Create(tile)); auto *station = stations.back().get();
 		station->owner = _current_company; station->facilities.Set(StationFacility::LaunchCenter);
-		for (const auto cell : *GetLaunchCenterFootprint(tile, 0)) { MakeStation(cell, station->owner, station->index, StationType::LaunchCenter, 0); station->spread.Add(cell); }
+		// Stamp every footprint cell as this center's station tile, so placement and ownership checks see one complete facility.
+		// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+		const auto footprint = GetLaunchCenterFootprint(tile, 0);
+		REQUIRE(footprint);
+		for (const auto cell : *footprint) { MakeStation(cell, station->owner, station->index, StationType::LaunchCenter, 0); station->spread.Add(cell); }
 		MakeRiver(TileAddXY(tile, 0, -1), 0);
 		InstallNewLaunchCenter(*station, tile, 0);
 		return station;
@@ -597,7 +604,11 @@ TEST_CASE("Native launch facility builds joins protects water and retains saved 
 				SetTileHeight(last_corner, 3);
 				CHECK(CmdBuildLaunchCenter(DoCommandFlag::Execute, tile, 0, NEW_STATION, true).Failed());
 				CHECK(CaptureLaunchCenters().empty()); CHECK(GetNextLaunchCenterGeneration() == 1);
-				for (const auto cell : *GetLaunchCenterFootprint(tile, 0)) CHECK(IsTileType(cell, TileType::Clear));
+				// A refused build must leave the whole footprint untouched: every cell is still clear land.
+				// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+				const auto footprint = GetLaunchCenterFootprint(tile, 0);
+				REQUIRE(footprint);
+				for (const auto cell : *footprint) CHECK(IsTileType(cell, TileType::Clear));
 				SetTileHeight(last_corner, 2);
 				{
 					AutoRestoreBackup year(TimerGameCalendar::year, TimerGameCalendar::Year{1989});

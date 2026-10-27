@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file launch_retirement_native.cpp Stand-alone recovery-center demolition refusal with actual recovered mined cargo.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group16.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (footprint optionals outlive their loops)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -91,7 +92,10 @@ TEST_CASE("Stand-alone launch recovery demolition cannot strand its actual retur
 			}
 			TileIndex rail = INVALID_TILE;
 			// Find an actual legal adjacent loading point using the native placement query; no terrain or station inventory is synthesized to exercise the joined-freight branch.
-			for (const auto cell : *GetLaunchCenterFootprint(tile, receiver->launch_center->rotation)) {
+			// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+			const auto footprint = GetLaunchCenterFootprint(tile, receiver->launch_center->rotation);
+			REQUIRE(footprint);
+			for (const auto cell : *footprint) {
 				for (const auto direction : {DiagDirection::NE, DiagDirection::SE, DiagDirection::SW, DiagDirection::NW}) {
 					const auto candidate = TileAddByDiagDir(cell, direction);
 					if (CmdBuildRailStation({}, candidate, RAILTYPE_RAIL, Axis::X, 1, 1, STAT_CLASS_DFLT, 0, receiver->index, false).Succeeded()) { rail = candidate; break; }

@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file surface_collection_boundaries.cpp Isolated full storage, cargo-demand allocation and cross-layer/global-setting boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group19.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (footprint optionals outlive their loops)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -44,7 +45,10 @@ public:
 		ResetRoadTypes(); ResetLaunchCenters(); const auto tile = TileXYL(20, 20, MapLayer::Surface);
 		REQUIRE(Station::CanAllocateItem()); owners.emplace_back(Station::Create(tile)); center = owners.back().get(); center->owner = _current_company; center->facilities.Set(StationFacility::LaunchCenter);
 		// These explicit boundary tiles establish isolated starting ownership only; actual placement/material-paid recovery is proved by surface_collection_native.cpp.
-		for (const auto cell : *GetLaunchCenterFootprint(tile, 0)) { MakeStation(cell, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(cell); }
+		// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+		const auto footprint = GetLaunchCenterFootprint(tile, 0);
+		REQUIRE(footprint);
+		for (const auto cell : *footprint) { MakeStation(cell, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(cell); }
 		MakeRiver(TileAddXY(tile, 0, -1), 0); InstallNewLaunchCenter(*center, tile, 0);
 		rail = Freight(TileXYL(40, 20, MapLayer::Surface), false, _current_company); lorry = Freight(TileXYL(39, 23, MapLayer::Surface), true, _current_company);
 		ore = GetCargoTypeByLabel(CargoLabel{"NORE"}); ice = GetCargoTypeByLabel(CargoLabel{"WICE"}); REQUIRE(IsValidCargoType(ore)); REQUIRE(IsValidCargoType(ice)); CargoSpec::Get(ore)->weight = CargoSpec::Get(ice)->weight = 16;

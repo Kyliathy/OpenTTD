@@ -228,21 +228,21 @@ for (const auto cell : *footprint) { /* unchanged body */ }
 
 {{SIMPLE}}
 
-- [ ] **4.1** Fix `src/tests/descent_custody.cpp:36`.
+- [X] **4.1** Fix `src/tests/descent_custody.cpp:36`.
 
-- [ ] **4.2** Fix `src/tests/launch_center.cpp:105`.
+- [X] **4.2** Fix `src/tests/launch_center.cpp:105`.
 
-- [ ] **4.3** Fix `src/tests/launch_center.cpp:600` (a one-line `for … CHECK(IsTileType(…))` inside a `SECTION`; keep the `CHECK` unchanged).
+- [X] **4.3** Fix `src/tests/launch_center.cpp:600` (a one-line `for … CHECK(IsTileType(…))` inside a `SECTION`; keep the `CHECK` unchanged).
 
-- [ ] **4.4** Fix `src/tests/launch_production.cpp:292` (iteration variable `tile`; pass `anchor, rotation` unchanged).
+- [X] **4.4** Fix `src/tests/launch_production.cpp:292` (iteration variable `tile`; pass `anchor, rotation` unchanged).
 
-- [ ] **4.5** Fix `src/tests/launch_retirement_native.cpp:94` (rotation `receiver->launch_center->rotation`).
+- [X] **4.5** Fix `src/tests/launch_retirement_native.cpp:94` (rotation `receiver->launch_center->rotation`).
 
-- [ ] **4.6** Fix `src/tests/surface_collection_boundaries.cpp:47`.
+- [X] **4.6** Fix `src/tests/surface_collection_boundaries.cpp:47`.
 
-- [ ] **4.7** Sweep `grep -rnE "for \(.*: \*[A-Za-z_:]+\(" src` for the same shape over any function that returns `std::optional`/by value, including production code. Fix every hit with the same idiom. Production code takes `assert(footprint.has_value())` (or the owner's existing check) instead of `REQUIRE`. Compile the five edited test objects in both trees.
+- [X] **4.7** Sweep `grep -rnE "for \(.*: \*[A-Za-z_:]+\(" src` for the same shape over any function that returns `std::optional`/by value, including production code. Fix every hit with the same idiom. Production code takes `assert(footprint.has_value())` (or the owner's existing check) instead of `REQUIRE`. Compile the five edited test objects in both trees.
 
-- [ ] **4.8** Fix R8 in the two tests, not in upstream `cargopacket.h`. Compare against a prvalue copy so that Catch binds a temporary rather than the undefined static member. `room` is `uint64_t`, so the comparison stays exact. This fix was validated in the research build: both objects recompiled and `openttd_test` linked in 42 s.
+- [X] **4.8** Fix R8 in the two tests, not in upstream `cargopacket.h`. Compare against a prvalue copy so that Catch binds a temporary rather than the undefined static member. `room` is `uint64_t`, so the comparison stays exact. This fix was validated in the research build: both objects recompiled and `openttd_test` linked in 42 s.
 
   ```cpp
   // src/tests/tbm_face_preflight.cpp:112

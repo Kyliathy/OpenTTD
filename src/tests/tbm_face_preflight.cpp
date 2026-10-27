@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md actual packet and train ownership.
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Group21; mutation follows in21B.
  * Actual loaded-return components do not claim installed face-wait activation or driven route acceptance.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (no odr-use of CargoPacket::MAX_COUNT)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -109,7 +110,8 @@ TEST_CASE("Face transfer refusals follow the rule order and change nothing", "[t
 	SECTION("the hauler's hoppers cannot take the whole load") {
 		TBMFaceTransferRig rig;
 		const uint64_t room = CapacityOf(rig.SetWagons(TBMConsistRole::EarthWagon));
-		REQUIRE(room < CargoPacket::MAX_COUNT);
+		// Compare with a prvalue copy: binding CargoPacket::MAX_COUNT by reference odr-uses a constant that has no definition.
+		REQUIRE(room < uint32_t{CargoPacket::MAX_COUNT});
 		TBMFaceTransferRig::AddPacket(rig.Wagons(TBMConsistRole::EarthWagon).front(), static_cast<uint16_t>(room + 1));
 		CheckPreflightRefused(rig, TBMExchangeError::InsufficientEmpties);
 	}

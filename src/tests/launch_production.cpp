@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups2B/8B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md task8C.4; future-version refusal follows current content.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group61B; native art placement contract.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 4 (footprint optionals outlive their loops)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -289,7 +290,10 @@ TEST_CASE("Native workshop charges once and resumes the same paid dormant hull",
 			// Native pool reuse may occupy the identical StationID; it never inherits paid craft.
 			center = Station::CreateAtIndex(deleted_ref.station, anchor); center->owner = receiver->index; center->facilities.Set(StationFacility::LaunchCenter);
 			// Explicit identity-reuse fixture rebuilds the same original footprint; no old hull or paid receipt is attached by allocating matching tiles.
-			for (auto tile : *GetLaunchCenterFootprint(anchor, rotation)) { MakeStation(tile, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(tile); }
+			// Name the optional so it outlives the loop: C++20 range-for does not extend a temporary inside its range expression.
+			const auto footprint = GetLaunchCenterFootprint(anchor, rotation);
+			REQUIRE(footprint);
+			for (auto tile : *footprint) { MakeStation(tile, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(tile); }
 			InstallNewLaunchCenter(*center, anchor, rotation);
 			CHECK(GetLaunchCenterReference(*center) != deleted_ref); CHECK_FALSE(HasLaunchCraft(GetLaunchCenterReference(*center)));
 			// Every old-generation request must refuse despite native StationID reuse, retaining each hull's unhomed ownership.
