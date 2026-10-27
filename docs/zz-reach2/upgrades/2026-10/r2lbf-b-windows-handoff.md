@@ -4,7 +4,7 @@
 
 **Status:** waiting for the owner. This plan changed source and test files that the primary Windows/MSVC build also compiles. MSVC cannot run in the Linux cloud environment, so **completion needs the owner's Windows confirmation, or an explicit waiver**.
 
-**Tested commit:** `cdaab156` (branch `mlm-mlv`, not pushed). On Linux, GCC 13.3 and Clang 18.1.3 pass all 1,361 CTest tests, and the CI Dedicated/no-PCH variant builds. Counts and logs are in the execution notes, **Final record**.
+**Tested commit:** `b4c3cb53` (branch `mlm-mlv`, not pushed). On Linux, GCC 13.3 and Clang 18.1.3 pass all 1,361 CTest tests and all nine focused executables. The CI Dedicated/no-PCH variant builds and passes 1,360 of 1,360 (at `cdaab156`). Counts and logs are in the execution notes, **Final record**.
 
 ## What to run on Windows
 

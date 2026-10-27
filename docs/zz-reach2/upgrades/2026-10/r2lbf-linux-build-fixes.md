@@ -968,17 +968,19 @@ _Applies to Group 17._
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
+**Execution note (2026-10-27):** 17.2's Windows confirmation is pending with the owner, as the task itself foresees. The handoff is written, and the plan's Linux work is complete.
+
 Groups 1-16 have produced the records this group publishes.
 
 {{SIMPLE}}
 
-- [ ] **17.1** Finalize `r2lbf-a-execution-notes.md` with: the commit tested, the toolchains, the exact configure/build/test commands for all three trees, durations, final pass/fail counts per tree and per focused executable, the complete failure ledger with each test's category, causal commit and fix, and any remaining E-category items with their prerequisites.
+- [X] **17.1** Finalize `r2lbf-a-execution-notes.md` with: the commit tested, the toolchains, the exact configure/build/test commands for all three trees, durations, final pass/fail counts per tree and per focused executable, the complete failure ledger with each test's category, causal commit and fix, and any remaining E-category items with their prerequisites.
 
-- [ ] **17.2** Write the Windows handoff: list every touched source and test file and the reason for each change. Ask the owner to build Debug and RelWithDebInfo through the existing Windows native-build profile, run `openttd_test.exe -f windows-check.txt` (8.6) and the affected focused tests, and note that every S-category edit was justified by history evidence. Completion needs that confirmation or an explicit waiver from the owner, because MSVC cannot be run in the Linux environment.
+- [X] **17.2** Write the Windows handoff: list every touched source and test file and the reason for each change. Ask the owner to build Debug and RelWithDebInfo through the existing Windows native-build profile, run `openttd_test.exe -f windows-check.txt` (8.6) and the affected focused tests, and note that every S-category edit was justified by history evidence. Completion needs that confirmation or an explicit waiver from the owner, because MSVC cannot be run in the Linux environment.
 
-- [ ] **17.3** Report `git status --short` and `git diff --stat`. Do not commit, push or open a pull request unless the user explicitly asks for it.
+- [X] **17.3** Report `git status --short` and `git diff --stat`. Do not commit, push or open a pull request unless the user explicitly asks for it.
 
-- [ ] **17.4** List follow-up options for the user to decide on, without implementing them: a cloud SessionStart hook that runs the Group 1/6 preparation, a Linux CTest job on the fork's CI (which would have caught every I and S failure in this plan), and a rule that each feature commit runs the full `openttd_test` suite under CTest.
+- [X] **17.4** List follow-up options for the user to decide on, without implementing them: a cloud SessionStart hook that runs the Group 1/6 preparation, a Linux CTest job on the fork's CI (which would have caught every I and S failure in this plan), and a rule that each feature commit runs the full `openttd_test` suite under CTest.
 
 ## Consult on Demand
 

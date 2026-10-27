@@ -362,3 +362,79 @@ How these compare with the planning baseline:
 - R7 (2.7) removed about 450 GCC and about 580 Clang `-Wmissing-field-initializers` lines (944 → 492 and 783 → 204). The rest come from other aggregates.
 - GCC's optimiser-only warnings (`-Wstringop-overflow=`, `-Wmaybe-uninitialized`, `-Warray-bounds=`) do not appear at `-O0`. The no-PCH, Debug and dedicated-specific translation units add a few repeats of the same sites.
 - `-Wrange-loop-construct`, `-Wunused-function` and `-Wsign-compare` stay as recorded debt, with no bulk edits, as the plan requires.
+
+## Group 17 completed: final record
+
+**Tested commit:** `b4c3cb53`, the last code commit on `mlm-mlv`. Later commits change only documents. Nothing is pushed; the branch is 28 commits ahead of `origin/mlm-mlv`, as the user asked ("don't push yet").
+
+**Toolchains:** GCC 13.3.0, Ubuntu Clang 18.1.3, CMake 3.28.3, Ninja 1.11.1. All trees live inside the repository, because `build_content.py` refuses output outside it, and build with at most `-j4`.
+
+**Commands per tree:**
+
+```bash
+# build/ (GCC) and build-clang/ (Clang): RelWithDebInfo
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+CC=clang CXX=clang++ cmake -S . -B build-clang -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+# build-dedicated/ (GCC): exactly CI's "GCC - Dedicated" row, no build type
+cmake -S . -B build-dedicated -G Ninja -DOPTION_DEDICATED=ON -DCMAKE_CXX_FLAGS_INIT="-DRANDOM_DEBUG" -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON
+ninja -C <tree> -j4 -k 0
+python3 -I -B test-cache/linux-baseline/materialize_baseset.py <tree>      # runtime content (Group 6), every tree
+ctest --test-dir <tree> -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/20261027-linux/<report>.xml
+test-cache/linux-baseline/run_focused.sh <tree> logs/linux-baseline/20261027-linux/<dir>   # nine focused executables
+```
+
+**Durations:**
+
+| Step | GCC | Clang | Dedicated |
+| --- | --- | --- | --- |
+| Full build | 28 min 14 s (Group 5) | 23 min 21 s (Group 5) | 22 min 34 s, no PCH |
+| Full CTest | 29-33 s | 25-28 s | 183-207 s (Debug) |
+| Nine focused targets, build and run each | about 7 min | about 7 min | not built |
+
+**Final results:**
+
+| Tree | Commit | CTest | Focused executables |
+| --- | --- | --- | --- |
+| `build/` (GCC) | `b4c3cb53` | **1,361 / 1,361 passed** (`ctest-gcc-final2.log`) | All 9 pass (`group15-gcc/`); `openttd_tube_test` re-run at `b4c3cb53`: 0 failures, 4,129,817 assertions (`group17-tube-gcc/`) |
+| `build-clang/` (Clang) | `b4c3cb53` | **1,361 / 1,361 passed** (`ctest-clang-final2.log`); ledger identical to GCC's | All 9 pass (`group15-clang/`), ledgers identical to GCC's |
+| `build-dedicated/` (GCC, Debug, `RANDOM_DEBUG`, no PCH) | `cdaab156` | **1,360 / 1,360 passed** (`ctest-dedicated-end.log`) | Not part of CI's Dedicated row |
+
+Notes on the table:
+- The Dedicated tree runs one case fewer because upstream's "ICU ScriptRun" needs ICU text layout. It was not re-run after `cdaab156`. The later commits change only test fixtures (`tbm_fixture.h`, `layer_processor_load.cpp`), and both other trees verified them.
+- Building and testing leave every tracked file unchanged. `git status --short` was empty after every final run.
+- Focused targets: `openttd_ground_art_test` and `openttd_ground_viewport_test` hold only hidden cases. Their default runs select nothing.
+
+**Failure ledger:** see **Failure ledger** above. It has one row per Group 8 failure, with the GCC and Clang results, the category, the evidence, the owning group, and for Groups 11-13 the causal commit. All 37 rows pass in both compilers. Category by category:
+- **21 isolation (I):** fixed in Groups 9-10.
+- **15 stale expectations (S):** S1 from `bfba42fd`'s halved yields (Group 11). S2 from `bfba42fd`'s FollowOrders, support in use, halved rate and hangar rules, plus `0119308a`'s support-piece quote and r2df's straight exit (Groups 12 and 13D). S3 from the upstream `WindowDesc` rule and `75cf506b`'s ground art (Group 13).
+- **1 self-inflicted:** the Group 4 comment, fixed in Group 8.
+- **Found later:**
+  - one C finding, fixed after the owner's decision (Group 13C);
+  - one fixture-write defect (Group 13B);
+  - four cross-case leaks and one JUnit crash in one-process runs (Groups 15 and 17);
+  - one R8 link failure and one `RANDOM_DEBUG`-only case in the Dedicated tree (Group 16).
+
+**Remaining E-category items and their prerequisites:**
+- Every new tree needs `materialize_baseset.py <tree>` (Group 6) before its regression tests can find a graphics set.
+- Windows/MSVC verification is pending with the owner (`r2lbf-b-windows-handoff.md`).
+- The hidden cases of the two ground targets need the Windows native pipeline.
+
+**Single-process run (recorded, not fixed):** `openttd_test` with all 1,357 cases in one process fails 485 of them (`group17-openttd_test-one-process.log`). The failures are cascading leaks in fixtures this plan did not change, led by `surface_supply_space_custody.cpp:114`. CTest's one process per case is the contract this plan verified. The 45-case handoff list passes in one process after the two fixes in `b4c3cb53`: `TBMEngineFixture` cleans the depot pool, and the processor save carrier deletes its packet.
+
+**17.2:** `r2lbf-b-windows-handoff.md` lists every changed file with its reason. It also gives the 45-case `windows-check.txt` (it ran on Linux in one process, all passing), the two configurations, and the focused executables. Completion needs the owner's Windows confirmation or an explicit waiver.
+
+**17.3:** `git status --short` and `git diff --stat` are both empty: every change is committed. `git diff --stat 75598d9f~1 b4c3cb53 -- src mlm`: 49 files changed, 425 insertions, 79 deletions. Eleven are production files: `saveload.h`, two include fixes, three saveload binds, one explicit instantiation, two INI keys and `tbm_exchange.cpp`; plus `mlm/review-producers.json`. The other 38 are test files. No pull request was opened.
+
+**17.4, follow-up options for the user (not implemented):**
+1. A cloud SessionStart hook that runs the Group 1 and Group 6 preparation: toolchain check, in-repository trees and `materialize_baseset.py`.
+2. A Linux CTest job on the fork's CI, GCC or Clang with `ctest -j4`. It would have caught every I and S failure in this plan, each within a day of its causal commit.
+3. A rule that each feature commit runs the full `openttd_test` suite under CTest, not only file-order runs. Files passing in order hid all 21 I failures.
+4. Fix the single-process leaks, starting with the `surface_supply_*` fixtures, so a whole-executable run, like the Windows pipeline's, is meaningful.
+5. Several other fixtures still clean only `_vehicle_pool` and leave orphaned packets: `manufacturing_fixture.h`, `native_cargo_custody_fixture.h`, `solid_starter_fixture.h`, `geothermal_generator_delivery.cpp`, `geothermal_riser_delivery.cpp`, `layer_baseline_receiver.cpp`, `layer_processor_delivery.cpp`, `surface_supply_custody.cpp` and others. Some carry comments claiming the clean "releases" the packets.
+6. Tests that call `Cmd*` functions directly make their sub-commands top-level, so the money checks after a refusal depend on the price state. Routing them through `Command<>::Do` would make those checks independent of prices.
+
+**Completion status against the plan's Completion Conditions:** every condition holds except two, carried here with their reasons.
+1. **Windows confirmation:** pending. Only the owner can build with MSVC. See `r2lbf-b-windows-handoff.md`; a waiver would also close it.
+2. **Focused executables in `build-dedicated/`:** not run. Group 16 did not schedule them, and CI's Dedicated row does not build them (they are `EXCLUDE_FROM_ALL`). They ran in `build/` and `build-clang/`. Running them in the Debug, no-PCH tree is possible but slow, roughly 1-2 hours for nine targets. It is offered to the user, not done.
+
+Commits were made because the user authorized them ("I authorize committing whatever"). Nothing was pushed, and no pull request was opened.
