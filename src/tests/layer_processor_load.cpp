@@ -8,6 +8,7 @@
  * @file layer_processor_load.cpp Exact choice/work/batch restoration, finite stocks and actual waiting transport packets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16B
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13B (fresh saves are run-owned outputs)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 17 (the save carrier deletes its own packet)
  */
 
 #include "../stdafx.h"
@@ -67,6 +68,9 @@ public:
 	~ProcessorSaveCarrier()
 	{
 		if (this->wagon == nullptr) return;
+		// Cleaning the vehicle pool only forgets the wagon's packet list; truncating deletes its own packets, while the
+		// rig's stations keep theirs until their own teardown.
+		this->wagon->cargo.Truncate();
 		_vehicle_pool.CleanPool();
 		ResetVehicleHash();
 		_engine_pool.CleanPool();
