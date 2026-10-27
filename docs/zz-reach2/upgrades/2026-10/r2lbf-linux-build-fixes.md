@@ -868,11 +868,13 @@ Groups 5, 6 and 9-13 are complete in both trees.
 
 **ASSUMPTION: this was already built previously. If not, re-asses at runtime**
 
+**Execution note (2026-10-27):** the rc=139 crash was not caused by the assertion count. `tube_test_environment.cpp`'s Catch listener ran an asserting helper before any test case started, and the JUnit reporter crashed on that assertion. This is now fixed. 15.3 also used a pair scan (`pair_scan.sh`), because one of the leaks had 32 contributors. 15.4's GCC CTest rerun is the plan's final regression in Group 17. See `r2lbf-a-execution-notes.md`, **Group 15 completed**.
+
 Group 5 builds the targets, Group 6 provides their content, and Groups 9-13 fix the shared test sources they compile.
 
 {{MEDIUM}}
 
-- [ ] **15.1** Build, run and delete each focused executable in turn in `build/`, so disk use stays bounded. Each binary is about 1.4 GB with debug info. The research copy ran exactly this loop: the nine targets took 208, 71, 38, 34, 59, 34, 310, 65 and 46 s, build included.
+- [X] **15.1** Build, run and delete each focused executable in turn in `build/`, so disk use stays bounded. Each binary is about 1.4 GB with debug info. The research copy ran exactly this loop: the nine targets took 208, 71, 38, 34, 59, 34, 310, 65 and 46 s, build included.
 
   ```bash
   for t in openttd_surface_supply_test openttd_surface_capital_test openttd_processor_contract_test openttd_ground_art_test \
@@ -885,7 +887,7 @@ Group 5 builds the targets, Group 6 provides their content, and Groups 9-13 fix 
 
   A non-zero exit code is the number of failed assertions. Exit code 139 with an empty `.xml` means the process died during the JUnit run; this happened once with `openttd_tube_test`, which has 4.17 million assertions. Rebuild that target and rerun it with `-r console -d yes > <target>.console.log`, which completed in the research copy.
 
-- [ ] **15.2** Build a ledger for each target with 7.3, which strips Catch's `/<section>` suffix. A focused executable runs all its cases in one process. Match each failure by name against the GCC ledger first. Expected from the research copy:
+- [X] **15.2** Build a ledger for each target with 7.3, which strips Catch's `/<section>` suffix. A focused executable runs all its cases in one process. Match each failure by name against the GCC ledger first. Expected from the research copy:
 
   | Target | Cases | Failures | Already covered by |
   | --- | --- | --- | --- |
@@ -893,7 +895,7 @@ Group 5 builds the targets, Group 6 provides their content, and Groups 9-13 fix 
   | `openttd_tube_test` | 428 | 7 | 11.5, 11.6, 11.7, 12.5, 12.7, plus the two leaks in 15.3 |
   | the other seven targets | | 0 | |
 
-- [ ] **15.3** Find what leaks into the two `openttd_tube_test` cases that pass alone and in file order but fail after the earlier cases of that executable. Classify each as **I**, a leaking predecessor:
+- [X] **15.3** Find what leaks into the two `openttd_tube_test` cases that pass alone and in file order but fail after the earlier cases of that executable. Classify each as **I**, a leaking predecessor:
   - `geothermal_generator_delivery.cpp:120`, section "freight income": `CargoPacket::GetNumItems() == 0` is `221 == 0`.
   - `transport_tube_interchange_geometry.cpp:117`, "Tube interchange geometry refuses cross-layer station identity": `money == money` is `999991 == 999994`.
 
@@ -914,9 +916,9 @@ Group 5 builds the targets, Group 6 provides their content, and Groups 9-13 fix 
 
   Escape `,`, `[` and `]` with a backslash in names you put into `-f` files.
 
-- [ ] **15.4** Fix each leak at its source. The leaking case or its fixture destructor must restore what it changed: delete its cargo packets, or restore prices or economy state with `AutoRestoreBackup`. Only if the leaker cannot own the cleanup, make the victim's global assertion relative to its own baseline (for example `const auto packets = CargoPacket::GetNumItems();` at the start of the section). Never delete the assertion. Rebuild and rerun the whole `openttd_tube_test`, and rerun the GCC CTest suite to prove that nothing else changed.
+- [X] **15.4** Fix each leak at its source. The leaking case or its fixture destructor must restore what it changed: delete its cargo packets, or restore prices or economy state with `AutoRestoreBackup`. Only if the leaker cannot own the cleanup, make the victim's global assertion relative to its own baseline (for example `const auto packets = CargoPacket::GetNumItems();` at the start of the section). Never delete the assertion. Rebuild and rerun the whole `openttd_tube_test`, and rerun the GCC CTest suite to prove that nothing else changed.
 
-- [ ] **15.5** Repeat 15.1-15.2 in `build-clang/`. Record per-target pass/fail counts, the bisection results and the fixes in the execution notes.
+- [X] **15.5** Repeat 15.1-15.2 in `build-clang/`. Record per-target pass/fail counts, the bisection results and the fixes in the execution notes.
 
 ### Area Mandatory Reading - CI-parity variant and residual warnings
 

@@ -283,3 +283,40 @@ The same notes changed the test: "`[underground-workflow-turn-refusal]` became `
 **14.2:** the ledger diff by name and status is empty (`group14-ledger-diff.txt`; 1,361 names in each). **14.3:** therefore no category X test and nothing to fix. **14.4:** `ctest --test-dir build-clang -R '^regression_'` passes 4 of 4 (`group14-clang-regression.log`), so Group 6's content materialization holds for this tree. **14.5:** both compilers read `100% tests passed, 0 tests failed out of 1361`. The ledger's Clang column now reads "pass" for all 37 Group 8 rows.
 
 The full regression ran once here, as the user's test policy allows. Group 8 was the only earlier full run.
+
+## Group 15 completed
+
+**15.1-15.2 (GCC, `group15-gcc/`):** `test-cache/linux-baseline/run_focused.sh` builds, runs and deletes each target in turn. Eight targets passed at once (rc=0):
+
+| Target | Cases | Failures | Note |
+| --- | --- | --- | --- |
+| `openttd_surface_supply_test` | 176 | 0 | The research copy's 2 failures (12.3, 12.7) are fixed |
+| `openttd_surface_capital_test` | 2 | 0 | |
+| `openttd_processor_contract_test` | 9 | 0 | |
+| `openttd_ground_art_test` | 0 | 0 | Only hidden `[.…]` cases (for example `[.ground-packed-art-load]`); a default run selects none |
+| `openttd_ground_consumer_test` | 66 | 0 | |
+| `openttd_ground_viewport_test` | 0 | 0 | Only hidden cases, as above |
+| `openttd_space_art_test` | 68 | 0 | |
+| `openttd_merge_contract_test` | 59 | 0 | |
+
+`openttd_tube_test` died with rc=139 and an empty JUnit file. The console rerun completed: 429 cases, 427 passed, and 2 failed, exactly the two 15.3 leaks. The research copy's other 5 tube failures (11.5-11.7, 12.5, 12.7) are fixed.
+
+**15.3 (`bisect_leak.sh`, `pair_scan.sh`):** the bisection names the first case that completes a leak. Its first version printed the pair result inverted ("passes" meant "fails"); that is fixed, and both `result.txt` files are annotated. Because one leak had several sources, `pair_scan.sh` then ran every earlier case paired with the victim, 0.1 s per run:
+- **Packets, 221.** "Paid Surface packets enter the actual powerhouse construction owner…" (`geothermal_generator_delivery.cpp:141`, `CargoPacket::GetNumItems() == 0`) has 32 individual leakers. All are TBM rig cases at positions 162-267, with 1 to 38 packets each, summing to exactly 221 (`scan-geothermal/leakers.tsv`).
+  - Cause: OpenTTD's `Vehicle` and `Station` destructors only forget their packet lists while their pool is being cleaned (`CargoList::OnCleanPool`), because a whole-game clean also empties the packet pool.
+  - `TBMEngineFixture` cleaned the vehicle and station pools but never `_cargopacket_pool`. Several other fixtures carry comments claiming `_vehicle_pool.CleanPool()` "releases" packets, which it does not. They leak only packets nobody counts, so they were left alone as follow-ups.
+- **Money, 3.** "Tube interchange geometry refuses cross-layer station identity" (`transport_tube_interchange_geometry.cpp:138`) has one leaker: "Two driven source haulers save an occupied FIFO turn and its next legal exchange" (`tbm_logistics_queue.cpp:36`). A temporary money trace, reverted, and a gdb breakpoint on `RecomputePrices` showed the mechanism:
+  - `UndergroundWorkflowWorld` with `paid_setup` calls `RecomputePrices()` and never restores the test world's zero prices.
+  - Under non-zero prices the victim's direct `CmdBuildRailStation` and `CmdBuildRoadStop` calls charge 2 and 1. Called outside the command framework, their inner sub-commands count as top-level.
+  - **Not a production defect:** through `Command<>::Post` a refused command charges nothing.
+
+**15.4 (fixed at the source, no assertion changed):**
+- `TBMEngineFixture` also calls `_cargopacket_pool.CleanPool()`.
+- `UndergroundWorkflowWorld` holds `AutoRestoreBackup<Prices>` and `AutoRestoreBackup<Economy>` members.
+- Both pairs now pass, and the whole tube executable passes 429 of 429 cases (4,129,821 assertions, 29 s).
+
+**JUnit crash (rc=139), root cause found:** a gdb backtrace showed `CumulativeReporterBase<JunitReporter>::assertionEnded` dereferencing an empty section stack. The assertion came from `LoadGeneratedWindowTestLanguage()`, which `tube_test_environment.cpp`'s listener calls in `testRunStarting`, before any test case. The listener now uses its own non-asserting load, which throws a `std::runtime_error` with a clear message if the pack is missing. The JUnit run then completes: rc=0, 4,129,817 assertions (the listener's 4 `REQUIRE`s are gone), 429 cases. Commit `577a7cab`.
+
+**15.5 (Clang, `group15-clang/`):** all nine targets pass (rc=0), including `openttd_tube_test` under JUnit (207 s, build included). Every per-target ledger is identical to GCC's by name and status.
+
+**Carry forward:** `tbm_fixture.h` and `underground_workflow_fixture.h` are also compiled into `openttd_test`. The plan's final GCC CTest run in Group 17 re-verifies it, the one remaining full regression the user's test policy allows at the end.
