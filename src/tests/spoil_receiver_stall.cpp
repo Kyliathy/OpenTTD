@@ -10,6 +10,7 @@
  * new face work but never the return for exchange, the exchange or the haul of loaded spoil.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs5-spoil-wagons-and-haulage.md, Group 9
  * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (resumed work is checked over one whole rate period)
  */
 
 #include "../stdafx.h"
@@ -72,8 +73,12 @@ TEST_CASE("A blocked hauler pauses new cutting until its route is found", "[spoi
 
 	second->vehicle_flags.Reset(VehicleFlag::PathfinderLost);
 	CHECK(TBMExchangeRig::StepHauler(*second).wait == TBMHaulerWait::None);
-	CHECK(rig.Tick().blocked == TBMBlockedReason::None);
-	CHECK((rig.Job().partial_work_ticks > partial || rig.Job().cursor == 1)); // Work resumed, or a one-tick cut completed.
+	const auto *model = GetTBMCutterModel(rig.Project().model_id);
+	REQUIRE(model != nullptr);
+	// At a fractional cutting rate (r2tbmf Group 5) one tick may only bank the remainder; one whole rate period always
+	// adds work, and none of its ticks may stall again.
+	for (uint tick = 0; tick < CeilDiv(model->work_rate_denominator, model->work_rate_numerator); ++tick) CHECK(rig.Tick().blocked == TBMBlockedReason::None);
+	CHECK((rig.Job().partial_work_ticks > partial || rig.Job().cursor == 1)); // Work resumed, or a short cut completed.
 }
 
 /** A stall never strands loaded spoil: the cutter still returns, waits and exchanges with another hauler. */

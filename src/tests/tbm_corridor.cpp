@@ -8,6 +8,7 @@
  * @file tbm_corridor.cpp Work reservations separate from ordinary freight (Group 14): the corridor by project, path
  * finding and tile entry that refuse other trains even when forced, and release that waits for withdrawal.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 14
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (a standing train keeps released support in use)
  */
 
 #include "../stdafx.h"
@@ -110,12 +111,14 @@ TEST_CASE("Released support stays while a train stands on it", "[tbm-corridor]")
 	CHECK(IsTBMCorridorOccupied(rig.Project()));
 
 	rig.Reload(TBMPhase::Completed);
-	CHECK_FALSE(IsTBMSupportInUse(cell));
+	// Since bfba42fd a train on the tile keeps the support in use: a hidden tail never becomes convertible (tbm_support.cpp).
+	CHECK(IsTBMSupportInUse(cell));
 	CHECK(Command<Commands::RemoveRail>::Do(DoCommandFlag::Execute, cell, laid).Failed()); // A train is on it.
 	CHECK(GetTBMSupportTile(cell) != nullptr);
 	intruder->tile = home;
 	intruder->track = home_track;
 	intruder->UpdatePosition();
+	CHECK_FALSE(IsTBMSupportInUse(cell)); // Withdrawal is what releases the finished project's support.
 	CHECK(Command<Commands::RemoveRail>::Do(DoCommandFlag::Execute, cell, laid).Succeeded());
 	CHECK(GetTBMSupportTile(cell) == nullptr);
 }

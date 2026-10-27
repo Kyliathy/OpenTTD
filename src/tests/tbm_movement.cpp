@@ -21,6 +21,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4; physical travel holds and lost-target recovery.
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (routes that need an early bay exchange declare Mixed rock after the halved yields)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (halted depot visits resume explicitly; loaded ones wait in their bay)
  */
 
 #include "../stdafx.h"
@@ -307,11 +308,31 @@ TEST_CASE("A TBM leaves its work hold for a real depot visit and returns to the 
 		INFO(rig.Describe());
 		REQUIRE(done());
 	};
+	if (halt && loaded) {
+		// Since bfba42fd a halt order first takes loaded spoil back to the exchange bay; only an emptied consist goes on
+		// to the hangar (BeginTBMHangarReturn, TBMPhase::WaitForHangar). This rig has no hauler, so the cutter waits in
+		// its bay with its work and every packet intact. The hauler-emptied continuation is tbm_face_lifecycle.cpp
+		// "A hangar order from the face wait".
+		drive([&] { return rig.Project().phase == TBMPhase::WaitForHangar; });
+		uint ticks = 0;
+		/** @return Whether an ordinary depot service interval has passed without the loaded cutter leaving its bay. */
+		const auto waited = [&] { return ticks++ >= 200; };
+		drive(waited);
+		CHECK(rig.Project().phase == TBMPhase::WaitForHangar);
+		CHECK(rig.Job() == job);
+		CHECK(GetTBMPacketOwners(rig.front) == packets);
+		return;
+	}
 	drive(stored);
 	CHECK(rig.Job() == job);
 	CHECK(GetTBMPacketOwners(rig.front) == packets);
-	if (pause) REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Resume).Succeeded());
-	if (halt) REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, cutter, true).Succeeded());
+	if (halt) {
+		// Since bfba42fd a halted machine parks in its hangar and the controller keeps it stopped until the player's
+		// explicit Resume, which also starts it and lifts a pause (CmdControlTBMProject); a plain start hands back no work.
+		CHECK(rig.Project().phase == TBMPhase::ParkedHangar);
+		REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, rig.project.id, TBMProjectAction::Resume).Succeeded());
+		CHECK_FALSE(rig.front->vehstatus.Test(VehState::Stopped));
+	}
 	/** @return Whether the original actual cutter has physically returned to its accepted work face. */
 	const auto rejoined = [&] { return rig.front->tile == face && rig.Project().phase == TBMPhase::Bore; };
 	drive(rejoined);

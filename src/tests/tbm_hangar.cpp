@@ -8,6 +8,7 @@
  * @file tbm_hangar.cpp Actual selected-hangar movement, preserved work and native service.
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group8
  * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (the remote job funds its missing support piece before the quote)
  */
 
 #include "../stdafx.h"
@@ -384,16 +385,20 @@ TEST_CASE("A TBM releases at the remote hangar and commissions its next job ther
 		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, start, end, false, ExcavationPlanIntent::Area);
 	INFO("remote quote error=" << quote.purchase.GetErrorMessage().base() << " geology=" << uint{to_underlying(quote.area.error)}
 		<< " failure_tile=" << quote.area.failure_tile.base());
-	REQUIRE(quote.purchase.Succeeded());
-	REQUIRE(quote.request.reuse_cutter == front->index);
-	CHECK(quote.purchase.GetCost() == 0);
+	// Since r2df task 7.3 (0119308a) a quote refuses a route whose cut would wait for ever on existing track. The B
+	// approach is the company's own permanent freight lane, which lacks only the piece this route needs, so the quote
+	// may refuse it as fundable and still carry the planned geometry (as UndergroundDepotWorkflow::FundFurtherRoute uses).
+	if (quote.purchase.Failed()) REQUIRE(quote.purchase.GetErrorMessage() == STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE);
+	const auto &route = quote.purchase.Succeeded() ? quote.request.proposal : quote.area.proposal;
 	std::vector<size_t> ends;
-	workflow.BuildRailPath(GetTBMWorkRailPath(quote.request.proposal, quote.request.proposal.route.size(), ends), true);
+	workflow.BuildRailPath(GetTBMWorkRailPath(route, route.route.size(), ends), true);
 	// Paid ordinary track can change the quote's topology; review once more
 	// before the synchronized confirmation rather than accepting a stale quote.
 	const auto prepared = PreviewTBMCommissionArea(_current_company, workflow.connection, workflow.first.model_id,
 		consist.earth_wagons, consist.rock_wagons, workflow.world.origin->index, start, end, false, ExcavationPlanIntent::Area);
 	REQUIRE(prepared.purchase.Succeeded());
+	REQUIRE(prepared.request.reuse_cutter == front->index);
+	CHECK(prepared.purchase.GetCost() == 0);
 	workflow.Do<Commands::ConfirmTBMCommission>(workflow.connection, workflow.first.model_id, consist.earth_wagons, consist.rock_wagons,
 		workflow.world.origin->index, start, end, prepared.fingerprint, ExcavationPlanIntent::Area);
 	const auto *next = GetTBMProjectForCutter(front->index);

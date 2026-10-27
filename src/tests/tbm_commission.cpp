@@ -13,6 +13,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 3B (same-owner area quotes)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 17 (actual script commissioning)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (first-cut bound follows the halved cutting rate)
  */
 
 #include "../stdafx.h"
@@ -348,8 +349,13 @@ static TBMCutMeasure MeasureFirstCut(const TBMWorkRig &rig, TBMProjectID id)
 	REQUIRE(estimate.error == ExcavationError::None);
 	TBMCutMeasure measure;
 	const Money cash = Company::Get(_current_company)->money;
-	// One controller step per tick until the commit; no cutter is slower than one work tick per tick.
-	while (GetExcavationJob(job)->cursor == 0 && measure.ticks <= estimate.work_ticks) {
+	// The cutter does its model's rate of geological work per tick: half a work tick for the standard cutter since
+	// r2tbmf Group 5 (2026-10-09), three quarters for the Deep one.
+	const auto *model = GetTBMCutterModel(GetTBMProject(id)->model_id);
+	REQUIRE(model != nullptr);
+	const uint64_t limit = CeilDiv(estimate.work_ticks * model->work_rate_denominator, model->work_rate_numerator);
+	// One controller step per tick until the commit, bounded by the model's own rate.
+	while (GetExcavationJob(job)->cursor == 0 && measure.ticks <= limit) {
 		REQUIRE(AdvanceTBMWork(id) == TBMProjectError::None);
 		REQUIRE(GetTBMProject(id)->blocked == TBMBlockedReason::None);
 		++measure.ticks;
@@ -358,9 +364,6 @@ static TBMCutMeasure MeasureFirstCut(const TBMWorkRig &rig, TBMProjectID id)
 	measure.cut_cost = cash - Company::Get(_current_company)->money;
 	measure.spoil_t = TBMExchangeRig::Aboard(front);
 	measure.running_cost = ComputeTBMRecurringCharge(*GetTBMProject(id)).cost;
-	// The cutter does its model's rate of geological work per tick: one for the standard cutter, more for the Deep one.
-	const auto *model = GetTBMCutterModel(GetTBMProject(id)->model_id);
-	REQUIRE(model != nullptr);
 	CHECK(measure.ticks == CeilDiv(estimate.work_ticks * model->work_rate_denominator, model->work_rate_numerator));
 	CHECK(measure.cut_cost == estimate.cost);
 	CHECK(measure.spoil_t == estimate.earth_t + estimate.rock_t);

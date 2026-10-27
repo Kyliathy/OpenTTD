@@ -9,6 +9,7 @@
  * The project is published in the order master Group 6 will use (acquire, reserve, Commissioning pair, publish),
  * but through test scaffolding: production publication stays guarded until then.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 3
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (pause/resume compare against the order-driven baseline)
  */
 
 #include "../stdafx.h"
@@ -86,16 +87,20 @@ TEST_CASE("Project controls pause and resume without touching orders or phase", 
 	const auto geology = ComputeGeologyStateDigest(GetGeologyWorldState());
 	const auto portal = ComputeLayerPortalWorkDigest();
 	const auto start = ComputeTBMProjectDigest();
+	// The travel order already handed the project to its orders (FollowOrders, r2tbmf-tbm-fixes.md requirement 8), which
+	// is itself a revision; pause and resume must leave that phase alone and add exactly one revision each.
+	const auto phase = GetTBMProject(id)->phase;
+	const auto revision = GetTBMProject(id)->revision;
 	CHECK(Command<Commands::ControlTBMProject>::Do({}, id, TBMProjectAction::Pause).Succeeded());
 	CHECK(ComputeTBMProjectDigest() == start); // An estimate changes nothing.
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Pause).Succeeded());
 	CHECK(GetTBMProject(id)->blocked == TBMBlockedReason::Paused);
-	CHECK(GetTBMProject(id)->phase == TBMPhase::Commissioning);
-	CHECK(GetTBMProject(id)->revision == 2);
+	CHECK(GetTBMProject(id)->phase == phase);
+	CHECK(GetTBMProject(id)->revision == revision + 1);
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Pause).Failed());
 	REQUIRE(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Resume).Succeeded());
 	CHECK(GetTBMProject(id)->blocked == TBMBlockedReason::None);
-	CHECK(GetTBMProject(id)->revision == 3);
+	CHECK(GetTBMProject(id)->revision == revision + 2);
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Resume).Failed());
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Retire).Failed()); // Only a finished project retires; cancellation has its own tests (tbm_recovery.cpp).
 	CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::End).Failed());
@@ -107,7 +112,7 @@ TEST_CASE("Project controls pause and resume without touching orders or phase", 
 		CHECK(Command<Commands::ControlTBMProject>::Do(DoCommandFlag::Execute, id, TBMProjectAction::Pause).Failed()); // Only the owner controls it.
 	}
 	delete other;
-	CHECK(GetTBMProject(id)->revision == 3);
+	CHECK(GetTBMProject(id)->revision == revision + 2);
 	CHECK(rig.front->GetNumOrders() == 1);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == geology);
 	CHECK(ComputeLayerPortalWorkDigest() == portal);

@@ -647,9 +647,11 @@ These six tests passed in the research build only when `_cut_terms` was temporar
 
 These seven still fail with the old `_cut_terms`, so each one needs its own causal commit. Items 12.1-12.4 are solved and were validated in the research copy; 12.3 and 12.4 share the halved cutting rate. Items 12.5-12.7 still need their cause found. The suspects are `bfba42fd` (2026-10-09: `FollowOrders`, support retention, "complete TBM fixes"), `99d8aa5a` (2026-10-23: `AwaitFaceTransfer`) and `0119308a` (2026-10-25: `tbm_support.cpp` +267 lines, `tbm_movement.cpp`, `tbm_hangar.cpp`). Every test file here was last edited before the production code it exercises.
 
+**Execution note (2026-10-27):** 12.1-12.4 were applied as written. 12.5's cause is `bfba42fd`, not `0119308a`: a halted machine parks in its hangar and stays stopped until the explicit Resume, which also starts it. A loaded halt waits in its bay for a hauler. 12.6 funds the missing support piece before quoting, the fixture's own `FundFurtherRoute` idiom, rather than moving the area. 12.7 is a category C finding, which is now Group 13D. See `r2lbf-a-execution-notes.md`, **Group 12 completed**.
+
 {{MEDIUM}}
 
-- [ ] **12.1** `src/tests/tbm_project.cpp:81-110`: after `rig.AddTravelOrder()` the project is in `FollowOrders` (19, `bfba42fd`), not `Commissioning`, and the revision numbers moved with it. Keep the intent "pause/resume touches neither orders nor phase" by capturing the baseline and comparing against it:
+- [X] **12.1** `src/tests/tbm_project.cpp:81-110`: after `rig.AddTravelOrder()` the project is in `FollowOrders` (19, `bfba42fd`), not `Commissioning`, and the revision numbers moved with it. Keep the intent "pause/resume touches neither orders nor phase" by capturing the baseline and comparing against it:
 
   ```cpp
   const auto phase = GetTBMProject(id)->phase;
@@ -663,9 +665,9 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
   Keep the ownership and order-count checks. Validated in the research copy: with these four edits the case passes (39 assertions), so `+1`/`+2` are the observed revision steps.
 
-- [ ] **12.2** `src/tests/tbm_corridor.cpp:95-118`: since `bfba42fd`, a support with a train on it is in use (`tbm_support.cpp:912`). While the intruder stands on `cell`, change `CHECK_FALSE(IsTBMSupportInUse(cell))` to `CHECK(IsTBMSupportInUse(cell))`. After the intruder is moved home (`intruder->UpdatePosition()`), add `CHECK_FALSE(IsTBMSupportInUse(cell));` so the release side stays covered. Keep the `RemoveRail` refusal check. Validated in the research copy: the case passes (3,583 assertions).
+- [X] **12.2** `src/tests/tbm_corridor.cpp:95-118`: since `bfba42fd`, a support with a train on it is in use (`tbm_support.cpp:912`). While the intruder stands on `cell`, change `CHECK_FALSE(IsTBMSupportInUse(cell))` to `CHECK(IsTBMSupportInUse(cell))`. After the intruder is moved home (`intruder->UpdatePosition()`), add `CHECK_FALSE(IsTBMSupportInUse(cell));` so the release side stays covered. Keep the `RemoveRail` refusal check. Validated in the research copy: the case passes (3,583 assertions).
 
-- [ ] **12.3** `src/tests/tbm_commission.cpp:341-364` (`MeasureFirstCut`, used by the case at 371): the loop bound `measure.ticks <= estimate.work_ticks` assumes one work tick per controller step ("no cutter is slower than one work tick per tick"). Since `bfba42fd` the standard cutter works at 1/2. A per-step trace in the research copy showed `partial` rising by 1 every second step, so the 888-tick estimate needs 1,776 steps. The helper already computes the right total after the loop (lines 361-364). Move that model lookup above the loop and use it as the bound:
+- [X] **12.3** `src/tests/tbm_commission.cpp:341-364` (`MeasureFirstCut`, used by the case at 371): the loop bound `measure.ticks <= estimate.work_ticks` assumes one work tick per controller step ("no cutter is slower than one work tick per tick"). Since `bfba42fd` the standard cutter works at 1/2. A per-step trace in the research copy showed `partial` rising by 1 every second step, so the 888-tick estimate needs 1,776 steps. The helper already computes the right total after the loop (lines 361-364). Move that model lookup above the loop and use it as the bound:
 
   ```cpp
   const Money cash = Company::Get(_current_company)->money;
@@ -683,7 +685,7 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
   Delete the second, now duplicate, `model` lookup and its comment before that final `CHECK`. Validated in the research copy: the case passes (8,365 assertions).
 
-- [ ] **12.4** `src/tests/spoil_receiver_stall.cpp:74-77`: after the stall clears, the test ticks once and expects new work. At rate 1/2 one tick may only add to the remainder. Tick one whole rate period instead:
+- [X] **12.4** `src/tests/spoil_receiver_stall.cpp:74-77`: after the stall clears, the test ticks once and expects new work. At rate 1/2 one tick may only add to the remainder. Tick one whole rate period instead:
 
   ```cpp
   CHECK(TBMExchangeRig::StepHauler(*second).wait == TBMHaulerWait::None);
@@ -696,17 +698,17 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
 
   Validated in the research copy: the case passes (70 assertions).
 
-- [ ] **12.5** `src/tests/tbm_movement.cpp:256-307`, "A TBM leaves its work hold for a real depot visit…": the project ends in `ParkedHangar` (18) with `blocked 1`, cursor 0. Since `0119308a`, a depot visit parks the cutter until an explicit resume ("explicit Resume retains the job", `tbm.h` phase comments). Add the player's `ControlTBMProject … TBMProjectAction::Resume` at the point where the old test expected an automatic return, then keep the face-return assertions. Check every tick budget in this case against the halved cutting rate too (12.3's `CeilDiv` formula).
+- [X] **12.5** `src/tests/tbm_movement.cpp:256-307`, "A TBM leaves its work hold for a real depot visit…": the project ends in `ParkedHangar` (18) with `blocked 1`, cursor 0. Since `0119308a`, a depot visit parks the cutter until an explicit resume ("explicit Resume retains the job", `tbm.h` phase comments). Add the player's `ControlTBMProject … TBMProjectAction::Resume` at the point where the old test expected an automatic return, then keep the face-return assertions. Check every tick budget in this case against the halved cutting rate too (12.3's `CeilDiv` formula).
 
-- [ ] **12.6** `src/tests/tbm_hangar.cpp:308-387`: the remote quote is refused with `error=35052` (`STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE`) at `failure_tile=5200`. A temporary support from the first job lies in the second job's swept envelope. Use `git log -L` on `tbm_support.cpp`'s commission check (search for `STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE`) and decide which applies. If the new refusal is deliberate, choose `start`/`end` so the envelope avoids that support, keeping the "reuse cutter at zero cost" checks. If the support should have been released, that is a C finding: owner decision.
+- [X] **12.6** `src/tests/tbm_hangar.cpp:308-387`: the remote quote is refused with `error=35052` (`STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE`) at `failure_tile=5200`. A temporary support from the first job lies in the second job's swept envelope. Use `git log -L` on `tbm_support.cpp`'s commission check (search for `STR_ERROR_TBM_COMMISSION_SUPPORT_PIECE`) and decide which applies. If the new refusal is deliberate, choose `start`/`end` so the envelope avoids that support, keeping the "reuse cutter at zero cost" checks. If the support should have been released, that is a C finding: owner decision.
 
-- [ ] **12.7** `src/tests/underground_workflow.cpp:523-549`: with the current rules, the area plan from `world.site` to `site + (4, 8)` is accepted. The confirm button is enabled, a project is created and money is spent. Planning already ruled out two explanations:
+- [X] **12.7** `src/tests/underground_workflow.cpp:523-549`: with the current rules, the area plan from `world.site` to `site + (4, 8)` is accepted. The confirm button is enabled, a project is created and money is spent. Planning already ruled out two explanations:
   - The rule is on: `UndergroundWorkflowWorld` holds `PathfinderDefaults pathfinder;` (`underground_workflow_fixture.h:75`), which resets `pf.forbid_90_deg` to its declared default, `true` (`src/table/settings/pathfinding_settings.ini:43-44`).
   - No rail type overrides it: no fork rail type sets `RailTypeFlag::Allow90Deg` (`src/rail.h:414-425`).
 
   So `CheckTBMSupportRailTurns` (`src/tbm_support.cpp:209-229`) really validates the planned path and finds no forbidden bend: the area planner now routes this rectangle without one. Find the planner change with `git log -L` on the area planner in `src/tbm_area.cpp`, and print the planned path (`GetTBMWorkRailPath`) for this request to confirm it. Then choose a request whose only connection needs a 90-degree corner, such as a narrow L-shaped selection, so the refusal path, the status text and every "nothing changed" check run again. If the current planner can always avoid the bend, the refusal is unreachable from the UI. Record a C finding and ask the owner whether to keep the test as a lower-level `CheckTBMSupportRailTurns` case.
 
-- [ ] **12.8** Rebuild and run the seven names alone, their files with `-#`, and the full suite. Record the causal commit for each test in the ledger. Expected: the suite shows only the 2 S3 failures.
+- [X] **12.8** Rebuild and run the seven names alone, their files with `-#`, and the full suite. Record the causal commit for each test in the ledger. Expected: the suite shows only the 2 S3 failures.
 
 ### Group 13 - Fix the two UI and content invariants (S3)
 
@@ -759,7 +761,7 @@ _Applies to Group 13B._
 
 {{MEDIUM}}
 
-- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name. Ask 13C.1 in the same prompt, so the owner answers both decisions at once.
+- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name. Ask 13C.1 and 13D.1 in the same prompt, so the owner answers all three decisions at once.
 
 - [ ] **13B.2** If (a): in `layer_processor_load.cpp`, write the save and its checkpoint text under the case's run-owned `saves` directory. Choose a feature and scenario declared in `mlm/review-producers.json`. Keep every assertion and the checkpoint content unchanged.
 
@@ -793,6 +795,28 @@ _Applies to Group 13C._
 - [ ] **13C.2** If (a): apply the one-line change with a comment, and add a focused regression case to `tbm_movement.cpp`. The case plays the whole-life opening on Soft rock (no `TBMRigRock`) up to the first face wait, then requires `controls().step == TBMPlayerStep::AssignHauler` and `controls().wait == TBMLogisticsWait::NoHauler`. If (b): add the comment only.
 
 - [ ] **13C.3** Rebuild `openttd_test` and run the new case alone, then with `-#` every file that reads `TBMLogisticsWait`: `tbm_movement.cpp`, `spoil_receiver_stall.cpp`, `tbm_exchange_acceptance.cpp`, `tbm_face_cycle.cpp` and `tbm_face_regression.cpp`. Also run `tbm_face_meeting.cpp`, which covers the face meeting itself. Expected: no new failures. Record the result in the execution notes.
+
+### Area Mandatory Reading - Unreachable rail-turn refusal
+
+_Applies to Group 13D._
+
+**Entry gate (added during execution, 2026-10-27):** Group 12 (12.7) found that `STR_ERROR_TBM_COMMISSION_RAIL_TURNS` can no longer be reached through the commission command in the workflow world. None of 21,316 estimate-only quotes was refused for rail turns (`logs/linux-baseline/20261027-linux/group12-turn-scan.txt`). The test's UI premise is gone, so the owner decides first (13D.1). Do not delete the test or weaken its "nothing changed" checks.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/tests/underground_workflow.cpp](../../../../src/tests/underground_workflow.cpp) | 522-549 | "Visible chamber quote refuses rail turns forbidden by the current game rule" (`a39ab99b`, 2026-10-06). It expects a disabled confirm button, a "90-degree" status and `STR_ERROR_TBM_COMMISSION_RAIL_TURNS` for the area `site` to `site + (4, 8)`. The current planner accepts that area. |
+| [src/tbm_commission.cpp](../../../../src/tbm_commission.cpp) | 189-197 | The quote refuses with `STR_ERROR_TBM_COMMISSION_RAIL_TURNS` when `CheckTBMSupportRailTurns(preview.proposal)` fails, after the planner has already chosen the route. |
+| [src/tbm_support.cpp](../../../../src/tbm_support.cpp) | 209-229 | `CheckTBMSupportRailTurns` validates every physical support bend under `pf.forbid_90_deg` and `RailTypeFlag::Allow90Deg`. It is still reachable directly with a hand-built proposal. |
+
+### Group 13D - Keep the rail-turn refusal covered (owner decision first)
+
+{{SIMPLE}}
+
+- [ ] **13D.1** Ask the owner, in the same prompt as 13B.1, how to cover the rail-turn refusal now that the planner never produces a forbidden bend. The options are: (a) keep the UI case for its "nothing changed" checks, but drive the refusal through a lower-level case that hands `CheckTBMSupportRailTurns` a proposal with a 90-degree support bend (recommended); (b) treat the planner's avoidance as a defect, which is a production change to investigate; or (c) another rule they name. Record the answer.
+
+- [ ] **13D.2** If (a): add a focused `CheckTBMSupportRailTurns` case with a two-cut proposal whose support turns 90 degrees on one tile pair. Require `false` with `pf.forbid_90_deg` on and `true` with it off. Re-derive the UI case so it asserts that the planner's accepted route passes `CheckTBMSupportRailTurns`, keeping every refusal-side check under the new case. If (b), record the investigation as a new group instead.
+
+- [ ] **13D.3** Rebuild `openttd_test` and run the new case alone, then `underground_workflow.cpp` and `tbm_support*.cpp` with `-#`. Record the result in the execution notes.
 
 ### Area Mandatory Reading - Clang baseline and focused executables
 
