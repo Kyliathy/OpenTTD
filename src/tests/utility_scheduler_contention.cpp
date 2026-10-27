@@ -5,8 +5,10 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md.
  * The mixed fixture documents supplied floor, consumed frames and received
  * material inputs. All output, native work and money changes use original owners.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 10 (cases own their language pack)
  */
 #include "utility_scheduler_mixed_fixture.h"
+#include "layer_window_fixture.h"
 #include "../core/random_func.hpp"
 #include "../safeguards.h"
 
@@ -132,7 +134,8 @@ static MixedSchedulerObservation RunMixedContention(GeothermalGeneratorModel mod
 /** Native short grants and shared cable residuals preserve exact work, money and counters across valid binding transport permutations. */
 TEST_CASE("Common scheduler settles mixed native contention in original destination order", "[utility-scheduler-mixed-contention]")
 {
-	MockEnvironment::Instance();
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage();
 	const auto model = GENERATE(GeothermalGeneratorModel::VentTap, GeothermalGeneratorModel::MagmaLoop);
 	const auto ordered = RunMixedContention(model, false); const auto reversed = RunMixedContention(model, true);
 	CHECK(ordered == reversed);

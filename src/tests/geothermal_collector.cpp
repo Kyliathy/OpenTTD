@@ -8,6 +8,7 @@
  * @file geothermal_collector.cpp Actual capital/stock/once-per-tick native construction, shortage recovery and source readiness boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group1B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs13-graphics-and-asset-pipeline.md Group54BB native construction-frame binding
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 10 (local company owned by the case)
  */
 
 #include "../stdafx.h"
@@ -200,6 +201,7 @@ TEST_CASE("Geothermal interrupted collector holds construction and exclusive sou
 		AutoRestoreBackup mode(_game_mode, GameMode::Editor); rig.Tick(5); CHECK(GetGeothermalCollectorState(industry.index)->work_ticks == 0);
 	}
 	rig.Tick(20); REQUIRE(GetGeothermalCollectorState(industry.index)->work_ticks == 20); const auto before = *GetGeothermalCollectorState(industry.index);
+	AutoRestoreBackup local(_local_company, CompanyID::Invalid()); // The abandoned owner is never the local player.
 	ChangeOwnershipOfCompanyItems(rig.request.owner, INVALID_OWNER);
 	REQUIRE(GetGeothermalCollectorState(industry.index) != nullptr); CHECK(GetGeothermalCollectorState(industry.index)->owner == CompanyID::Invalid());
 	rig.Tick(10); CHECK(GetGeothermalCollectorState(industry.index)->work_ticks == before.work_ticks);

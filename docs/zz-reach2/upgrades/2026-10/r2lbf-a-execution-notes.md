@@ -133,3 +133,15 @@ The 2.8 sweep (`group2-sweep.txt`) found no other conditional-lvalue braced assi
 ## Group 9 completed
 
 `test-cache/linux-baseline/apply_group9.py` inserted `MockEnvironment::Instance();`, with a comment, as the first statement of the nine T1 cases: `transport_tube_recovery.cpp` 73/87/104/116, `transport_tube_construction.cpp` 158/226, `transport_tube_vehicle_sprite.cpp` 82 and `transport_tube_facility_sprite.cpp` 59/158. Each file's header now cites this plan. 9.5: `openttd_test` rebuilt in 6 min 57 s with 0 failures (`group9-build.log`). That build also compiled Group 8's include-comment change. Each of the nine cases then ran alone in a fresh process, as CTest runs it (`group9-reruns/`). **All nine pass**, every log showing "All tests passed (… in 1 test case)" (44 to 4,498 assertions). No tracked fixture was written.
+
+## Group 10 completed
+
+`test-cache/linux-baseline/apply_group10.py` applied 10.1-10.6, each with an explanatory comment and a header reference to this plan:
+- T2: the six `utility_scheduler_lifecycle.cpp` cases and the `utility_scheduler_contention.cpp:133` case call `LoadGeneratedWindowTestLanguage()` right after `MockEnvironment::Instance()`, and both files include `layer_window_fixture.h`.
+- T3: `geothermal_collector.cpp` and `geothermal_riser_lifecycle.cpp` set `AutoRestoreBackup local(_local_company, CompanyID::Invalid())` before `ChangeOwnershipOfCompanyItems`.
+- T4: `layer_recipe_batch.cpp` 220/242/274 construct `ExcavationFixture world;`.
+- 10.3: `geothermal_town_service_fixture.h` is unchanged (`git diff 169abb88` is empty).
+
+**Second instance of the trailing-comment trap, caught before any build:** the first script version appended a `//` comment to the shared first line of the six lifecycle cases, which would have commented out `UtilitySchedulerMixedRig rig{…}`. The comment now sits on its own line, and the script is fixed. The guard `test-cache/linux-baseline/check_swallowed_code.py <base>` scans every added `src` line for a `//` comment followed by statement-shaped code. It was checked against both real bug lines and two prose lines, and reports **0** for `169abb88..working tree`. **Carry forward:** run the guard after every scripted edit.
+
+Verification (focused, per the test policy; 10.7's full suite is replaced by this): `openttd_test` rebuilt in 36 s with 0 failures. All 12 Group 10 cases pass alone in fresh processes (`group10-reruns/`, 8 to 2,710 assertions each). In file order, the five edited files and the three files the rejected 10.3 variant once broke (`geothermal_town_service`, `geothermal_town_recovery`, `utility_controls_window`) all pass. No tracked fixture was written.

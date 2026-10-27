@@ -562,27 +562,27 @@ These are three small idioms with a hard ordering constraint: the language must 
 
 {{SIMPLE}}
 
-- [ ] **10.1** `src/tests/utility_scheduler_lifecycle.cpp`: add `#include "layer_window_fixture.h"` after `#include "utility_scheduler_mixed_fixture.h"`. In each of the six cases at lines 16, 50, 81, 99, 129 and 150, extend the existing first statement as follows:
+- [X] **10.1** `src/tests/utility_scheduler_lifecycle.cpp`: add `#include "layer_window_fixture.h"` after `#include "utility_scheduler_mixed_fixture.h"`. In each of the six cases at lines 16, 50, 81, 99, 129 and 150, extend the existing first statement as follows:
 
   ```cpp
   MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{…};
   ```
 
-- [ ] **10.2** `src/tests/utility_scheduler_contention.cpp`: the same include, and the same extension for the case at line 133.
+- [X] **10.2** `src/tests/utility_scheduler_contention.cpp`: the same include, and the same extension for the case at line 133.
 
-- [ ] **10.3** Do not put `LoadGeneratedWindowTestLanguage()` into `GeothermalTownServiceRig`'s constructor (`geothermal_town_service_fixture.h`). The research build tried that. `ReadLanguagePack` re-sorts cargo specs after the rig's world exists, which tripped `Assertion failed at line 260 of src/cargotype.cpp: cargo->town_production_effect != TownProductionEffect::Invalid`. It broke 16 previously passing tests, including all of `geothermal_town_service`, `geothermal_town_recovery` and `utility_controls_window`. Verify that the fixture header is unchanged by this group.
+- [X] **10.3** Do not put `LoadGeneratedWindowTestLanguage()` into `GeothermalTownServiceRig`'s constructor (`geothermal_town_service_fixture.h`). The research build tried that. `ReadLanguagePack` re-sorts cargo specs after the rig's world exists, which tripped `Assertion failed at line 260 of src/cargotype.cpp: cargo->town_production_effect != TownProductionEffect::Invalid`. It broke 16 previously passing tests, including all of `geothermal_town_service`, `geothermal_town_recovery` and `utility_controls_window`. Verify that the fixture header is unchanged by this group.
 
-- [ ] **10.4** `src/tests/geothermal_collector.cpp:203`: directly before `ChangeOwnershipOfCompanyItems(rig.request.owner, INVALID_OWNER);`, add the following line:
+- [X] **10.4** `src/tests/geothermal_collector.cpp:203`: directly before `ChangeOwnershipOfCompanyItems(rig.request.owner, INVALID_OWNER);`, add the following line:
 
   ```cpp
   AutoRestoreBackup local(_local_company, CompanyID::Invalid()); // The abandoned owner is never the local player.
   ```
 
-- [ ] **10.5** `src/tests/geothermal_riser_lifecycle.cpp:88`: the same line before the same call.
+- [X] **10.5** `src/tests/geothermal_riser_lifecycle.cpp:88`: the same line before the same call.
 
-- [ ] **10.6** `src/tests/layer_recipe_batch.cpp`: as the first statement of the cases at lines 220, 242 and 274 (bottom up), add `ExcavationFixture world; // Bootstrap the content owner that BatchTestRecipe() reads.` The case at line 197 expects zero batches either way, so leave it unchanged.
+- [X] **10.6** `src/tests/layer_recipe_batch.cpp`: as the first statement of the cases at lines 220, 242 and 274 (bottom up), add `ExcavationFixture world; // Bootstrap the content owner that BatchTestRecipe() reads.` The case at line 197 expects zero batches either way, so leave it unchanged.
 
-- [ ] **10.7** Rebuild, run the full suite again (8.1-8.2) and compare. Expected: `99% tests passed, 15 tests failed out of 1359`, with exactly the S1-S3 rows of the signature table. If any previously passing test now fails, revert the last idiom you added, record the failure, and re-check 10.3.
+- [X] **10.7** Rebuild, run the full suite again (8.1-8.2) and compare. Expected: `99% tests passed, 15 tests failed out of 1359`, with exactly the S1-S3 rows of the signature table. If any previously passing test now fails, revert the last idiom you added, record the failure, and re-check 10.3.
 
 ### Area Mandatory Reading - Stale expectations after deliberate production changes
 

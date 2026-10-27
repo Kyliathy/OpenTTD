@@ -5,8 +5,10 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md.
  * The mixed fixture discloses its geometry/material/frame inputs. Native
  * commands, original accounts and actual consumers retain all runtime authority.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 10 (cases own their language pack)
  */
 #include "utility_scheduler_mixed_fixture.h"
+#include "layer_window_fixture.h"
 #include "transport_tube_power_fixture.h"
 #include "../economy_func.h"
 #include "../landscape_cmd.h"
@@ -15,7 +17,8 @@
 /** Original accepted row order is canonical while every saved fraction and physical provider reference remains observable. */
 TEST_CASE("Native provider binding captures and hashes ignore transport row order", "[utility-scheduler-provider-canonical]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
 	auto *first = rig.Buy(), *second = rig.Buy(true); rig.Opportunity(std::array{first, second});
 	const auto original = CaptureTubePowerVehicles(); const auto digest = ComputeTubePowerVehicleDigest();
 	const auto utility = ComputeUtilityPowerDigest(), source = ComputeTubeGeothermalPowerDigest(), generator = ComputeGeothermalGeneratorDigest();
@@ -49,7 +52,8 @@ TEST_CASE("External provider captures preserve canonical paid source identity", 
 /** Removing one bought branch releases its unused descendants and stops only its capsules; repair uses new cell identity with original provider/carry. */
 TEST_CASE("Native cable loss and repair preserve unrelated town and orbital work", "[utility-scheduler-path-reconnect]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
 	auto *capsule = rig.Buy(); rig.Opportunity(std::array{capsule});
 	const auto binding = *GetTubePowerVehicle(capsule->index); const auto output = GetTubeGeothermalSource(rig.source)->producer;
 	const auto used = GetUtilityPowerProducer(output)->consumed_lifetime_j;
@@ -80,7 +84,8 @@ TEST_CASE("Native cable loss and repair preserve unrelated town and orbital work
 /** A real unrelated distribution-pair seal cannot erase a capsule's already prepared original native grant. */
 TEST_CASE("Unrelated portal loss preserves an imported native capsule reservation", "[utility-scheduler-scoped-portal-loss]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop}; auto *capsule = rig.Buy();
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop}; auto *capsule = rig.Buy();
 	++TimerGameTick::counter; PrepareTubePowerTick();
 	const auto binding = *GetTubePowerVehicle(capsule->index); const auto source = *GetTubeGeothermalSource(rig.source);
 	REQUIRE(GetUtilityAllocation(binding.consumer)->granted_energy_j == 270);
@@ -98,7 +103,8 @@ TEST_CASE("Unrelated portal loss preserves an imported native capsule reservatio
 /** Actual portal sealing or generator demolition affects its own physical descendants while independent native Space processing continues. */
 TEST_CASE("Integrated source and riser loss preserve original histories and independent work", "[utility-scheduler-source-loss]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
 	auto *capsule = rig.Buy(); rig.Opportunity(std::array{capsule});
 	const auto native = *GetGeothermalGeneratorState(rig.generator); const auto original = *GetTubeGeothermalSource(rig.source);
 	const auto used = GetUtilityPowerProducer(native.electrical_producer)->consumed_lifetime_j;
@@ -128,7 +134,8 @@ TEST_CASE("Integrated source and riser loss preserve original histories and inde
 /** Renewable native sources offer one bounded interval; exhausting the actual panel cannot buy another work opportunity before rotation. */
 TEST_CASE("Original interval depletion never republishes energy during consumer retries", "[utility-scheduler-interval-depletion]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::VentTap};
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::VentTap};
 	rig.Opportunity(); const auto panel = rig.core->module->producer;
 	const auto before = GetUtilityPowerProducer(panel)->consumed_lifetime_j; rig.Opportunity();
 	CHECK(GetUtilityPowerProducer(panel)->consumed_lifetime_j == before + 810);
@@ -149,7 +156,8 @@ TEST_CASE("Original interval depletion never republishes energy during consumer 
 /** Actual takeover and later company-slot reuse retain original generator/Space history while retiring every old Tube incarnation. */
 TEST_CASE("Integrated company transitions cannot revive old native provider rights", "[utility-scheduler-company-reuse]")
 {
-	MockEnvironment::Instance(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
+	// Own the language pack before the rig names stations (Station::UpdateVirtCoord formats real strings).
+	MockEnvironment::Instance(); LoadGeneratedWindowTestLanguage(); UtilitySchedulerMixedRig rig{GeothermalGeneratorModel::MagmaLoop};
 	auto *capsule = rig.Buy(true); rig.Opportunity(std::array{capsule});
 	const auto original = *GetTubeGeothermalSource(rig.source); const auto old_owner = _current_company;
 	const auto used = GetUtilityPowerProducer(original.producer)->consumed_lifetime_j;

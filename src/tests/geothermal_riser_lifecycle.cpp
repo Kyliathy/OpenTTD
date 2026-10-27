@@ -8,6 +8,7 @@
  * @file geothermal_riser_lifecycle.cpp Actual native sealing, takeover, abandonment and original-housing demolition/rebuild boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group5B
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 10 (local company owned by the case)
  */
 
 #include "../stdafx.h"
@@ -85,6 +86,7 @@ TEST_CASE("Native riser abandonment retains material custody and cannot regain r
 	REQUIRE(rig.Deliver(CargoLabel{"STEL"}, 4) == 4);
 	const auto before = *GetGeothermalRiserState(industry.index);
 	const auto power = ComputeUtilityPowerDigest();
+	AutoRestoreBackup local(_local_company, CompanyID::Invalid()); // The abandoned owner is never the local player.
 	ChangeOwnershipOfCompanyItems(rig.request.owner, INVALID_OWNER);
 	const auto *state = GetGeothermalRiserState(industry.index); REQUIRE(state != nullptr);
 	CHECK(state->site.owner == CompanyID::Invalid()); CHECK(state->portal_retired);

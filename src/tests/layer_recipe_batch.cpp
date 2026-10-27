@@ -4,7 +4,9 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_recipe_batch.cpp Shared all-input transaction boundaries and actual utility participant admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 7/13; r2mlvs12-solar-farms-mirrors-and-eti.md Group 8 */
+/** @file layer_recipe_batch.cpp Shared all-input transaction boundaries and actual utility participant admission. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 7/13; r2mlvs12-solar-farms-mirrors-and-eti.md Group 8
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 10 (cases bootstrap their recipe content)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -219,6 +221,7 @@ TEST_CASE("Shared recipe batches require all inputs and every output slot", "[la
 /** A whole transaction consumes each role and work once; a retry cannot create a second output from the same quote. */
 TEST_CASE("Shared recipe commit preserves exact all-input deltas and refuses a retry", "[layer-recipe-batch]")
 {
+	ExcavationFixture world; // Bootstrap the content owner that BatchTestRecipe() reads.
 	const auto &recipe = BatchTestRecipe();
 	RecipeBatchTestFacility facility(recipe);
 	const auto before = facility.Capture();
@@ -241,6 +244,7 @@ TEST_CASE("Shared recipe commit preserves exact all-input deltas and refuses a r
 /** Foreign, edited and stale proposals or participant refusals cannot debit the actual owner. */
 TEST_CASE("Recipe quotes bind their exact owner state and complete deltas", "[layer-recipe-batch]")
 {
+	ExcavationFixture world; // Bootstrap the content owner that BatchTestRecipe() reads.
 	const auto &recipe = BatchTestRecipe();
 	RecipeBatchTestFacility facility(recipe), foreign(recipe);
 	auto proposal = PrepareLayerRecipeBatch(recipe, facility);
@@ -273,6 +277,7 @@ TEST_CASE("Recipe quotes bind their exact owner state and complete deltas", "[la
 /** Wide work and near-limit narrow stock counters still admit only a complete bounded output. */
 TEST_CASE("Recipe planner checks integer limits before complete commit", "[layer-recipe-batch]")
 {
+	ExcavationFixture world; // Bootstrap the content owner that BatchTestRecipe() reads.
 	MultiLayerRecipe recipe = BatchTestRecipe();
 	recipe.work_economy_ticks = UINT32_MAX;
 	RecipeBatchTestFacility facility(recipe);
