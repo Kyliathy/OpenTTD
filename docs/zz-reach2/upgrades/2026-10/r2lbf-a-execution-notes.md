@@ -35,3 +35,17 @@ The 2.8 sweep (`group2-sweep.txt`) found no other conditional-lvalue braced assi
 `test-cache/linux-baseline/apply_group4.py` rewrote the six `for (… : *GetLaunchCenterFootprint(…))` loops (4.1-4.6) into a named `footprint` local with `REQUIRE(footprint)`. Each rewrite carries a comment on the C++20 lifetime rule. `launch_center.cpp`'s two loops also gained business-logic comments: stamping the whole footprint as one facility, and a refused build leaving every cell clear. The other four already had one. `launch_center.cpp` had no plan reference in its header, so it now cites `r2mlvs9-launch-centers-and-rockets.md` and this plan. 4.8 compares against `uint32_t{CargoPacket::MAX_COUNT}` in `tbm_face_preflight.cpp` and `tbm_face_cycle.cpp`, with a comment on the odr-use, and leaves upstream `cargopacket.h` unchanged.
 
 4.7 sweep (`group4-sweep.txt`): the only other range-for over a dereferenced call is upstream `src/core/pool_func.cpp:32` (`*PoolBase::GetPools()`), which dereferences a pointer to a static vector, not a temporary, so it is not an R6 case. Compile check: the 10 objects that include these sources (7 `openttd_test`, 2 `openttd_tube_test`, 1 `openttd_space_art_test`) compile in both trees, with 0 `-Wdangling-gsl` (`group4-objects-{build,build-clang}.log`).
+
+## Group 5 completed
+
+5.1 GCC `ninja -C build -j4 -k 0`: **0 failures** in 28 min 14 s (1,152 edges; objects from the validation run were reused). The new Allegro, Opus and Soxr sources compiled cleanly. Warnings (`build-gcc.warnings.txt`): 492 `-Wmissing-field-initializers` (down from 944; the rest come from other structs, for example `TBMFaceSnapshot::facts` in `tbm_face_fixture.h`), 333 `-Wrange-loop-construct`, 71 `-Wunused-function`, 25 `-Wsign-compare`, 13 `-Wmisleading-indentation` (11 in planning; 16.4 classifies them), 11 `-Wredundant-decls`, 1 `-Wunused-variable`, 1 `-Wtype-limits`.
+
+5.2 Clang `ninja -C build-clang -j4 -k 0`: **0 failures** in 23 min 21 s, with `-Wdangling-gsl` 0. Warnings (`build-clang.warnings.txt`): 204 `-Wmissing-field-initializers` (down from 783), 71 `-Wunused-function`, 18 `-Wsign-compare`, 17 `-Wrange-loop-construct`, 1 `-Wdeprecated-enum-compare-conditional`.
+
+5.3: no newly surfaced compile or link error in either tree. R8 (item 4.8) was the only link-time cause, as in the research copy.
+
+5.4: `ctest -N` reports `Total Tests: 1359` in both trees, and the `POST_BUILD` discovery ran without error.
+
+5.5: all nine focused executables built and linked in both trees (`test-cache/linux-baseline/build_focused.sh`, `group5-focused-summary.txt`). Each binary was deleted after linking to keep the disk allowance; the objects remain for Group 15. GCC: surface_supply_test 204 s, surface_capital_test 68 s, processor_contract_test 36 s, ground_art_test 35 s, ground_consumer_test 59 s, ground_viewport_test 37 s, tube_test 325 s, space_art_test 66 s, merge_contract_test 55 s. Clang: surface_supply_test 164 s, surface_capital_test 48 s, processor_contract_test 31 s, ground_art_test 30 s, ground_consumer_test 48 s, ground_viewport_test 28 s, tube_test 269 s, space_art_test 61 s, merge_contract_test 46 s.
+
+5.6 (`group5-status.txt`): `git status --short` is empty, no tracked `media/**/*.grf` changed, and `newgrf/multilayer_industry.grf` (2,489 bytes) and `generated/table/multilayer_content_manifest.h` (2,923 bytes) exist only inside `build/` and `build-clang/`.

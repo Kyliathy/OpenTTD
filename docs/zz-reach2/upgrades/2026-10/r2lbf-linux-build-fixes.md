@@ -276,17 +276,17 @@ Groups 2-4 supply every known compile and link fix. This is the first time this 
 
 {{MEDIUM}}
 
-- [ ] **5.1** GCC: run `ninja -C build -j4 -k 0` with full output in `logs/linux-baseline/<run>/build-gcc.log`. Record the wall time (31 min from scratch in the research build), the `FAILED:` count (0 expected) and the warning counts per `-W` flag.
+- [X] **5.1** GCC: run `ninja -C build -j4 -k 0` with full output in `logs/linux-baseline/<run>/build-gcc.log`. Record the wall time (31 min from scratch in the research build), the `FAILED:` count (0 expected) and the warning counts per `-W` flag.
 
-- [ ] **5.2** Clang: the same in `build-clang/`, logged to `build-clang.log` (26 min from scratch in the research build, 0 failures with Groups 2-4 in). Also record `-Wdangling-gsl`, which must be 0 after Group 4. Clang-only diagnostics, previously hidden by its 20-errors-per-file limit, are triaged in 5.3.
+- [X] **5.2** Clang: the same in `build-clang/`, logged to `build-clang.log` (26 min from scratch in the research build, 0 failures with Groups 2-4 in). Also record `-Wdangling-gsl`, which must be 0 after Group 4. Clang-only diagnostics, previously hidden by its 20-errors-per-file limit, are triaged in 5.3.
 
-- [ ] **5.3** Triage every newly surfaced compile or link error. Fix each one with a standard-conforming edit in the owning file, using the Global contracts. For a link error, first check whether a test odr-uses an in-class constant (the R8 shape), because MSVC hides that class of error. If more than five new distinct root causes appear, split this group per the protocol (5B, 5C…), one root-cause family per sub-group.
+- [X] **5.3** Triage every newly surfaced compile or link error. Fix each one with a standard-conforming edit in the owning file, using the Global contracts. For a link error, first check whether a test odr-uses an in-class constant (the R8 shape), because MSVC hides that class of error. If more than five new distinct root causes appear, split this group per the protocol (5B, 5C…), one root-cause family per sub-group.
 
-- [ ] **5.4** Confirm that the `POST_BUILD` discovery succeeded in both trees, and record `ctest -N | tail -1`. Expected: `Total Tests: 1359` (1,355 Catch cases plus `regression_regression`, `regression_stationlist`, `regression_gs` and `regression_gs_compat`). If discovery crashes, record the signal and output, carry it to Group 8 as a runtime defect, and do not disable discovery.
+- [X] **5.4** Confirm that the `POST_BUILD` discovery succeeded in both trees, and record `ctest -N | tail -1`. Expected: `Total Tests: 1359` (1,355 Catch cases plus `regression_regression`, `regression_stationlist`, `regression_gs` and `regression_gs_compat`). If discovery crashes, record the signal and output, carry it to Group 8 as a runtime defect, and do not disable discovery.
 
-- [ ] **5.5** Explicitly build the nine focused executables in both trees under 5.3's rules, as Group 15 describes. Each linked binary is about 1.4 GB, so build, run and delete them one at a time when disk space is short.
+- [X] **5.5** Explicitly build the nine focused executables in both trees under 5.3's rules, as Group 15 describes. Each linked binary is about 1.4 GB, so build, run and delete them one at a time when disk space is short.
 
-- [ ] **5.6** Run `git status --short`. It must show only the intended source edits from Groups 2-5. Confirm that no `media/**/*.grf` was regenerated (GRFCodec is absent) and that `newgrf/multilayer_industry.grf` and `generated/table/multilayer_content_manifest.h` exist only inside the build trees.
+- [X] **5.6** Run `git status --short`. It must show only the intended source edits from Groups 2-5. Confirm that no `media/**/*.grf` was regenerated (GRFCodec is absent) and that `newgrf/multilayer_industry.grf` and `generated/table/multilayer_content_manifest.h` exist only inside the build trees.
 
 ### Group 6 - Materialize test runtime content inside the build trees
 
