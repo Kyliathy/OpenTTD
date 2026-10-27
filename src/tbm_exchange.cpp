@@ -13,6 +13,7 @@
  * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-j-lifecycle-design.md
  * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-h-exchange-design.md
  * @see docs/zz-rhr/upgrades/2026-10/portal-tbm/r2mlvs3mp-i-receiver-design.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13C (a face wait without a hauler reports NoHauler)
  */
 
 #include "stdafx.h"
@@ -1335,8 +1336,9 @@ TBMLogisticsWait GetTBMLogisticsWait(const TBMProject &project)
 	if (blocked) return TBMLogisticsWait::BlockedLine;
 	if (short_empties) return TBMLogisticsWait::NoEmpties;
 	if (occupied) return TBMLogisticsWait::OccupiedBay;
-	// A cutter on its way back for, or waiting for, empties needs a hauler to bring them.
-	if (!any && (IsTBMReturning(project.phase) || IsTBMWaitingForExchange(project.phase))) return TBMLogisticsWait::NoHauler;
+	// A cutter on its way back for, or waiting for, empties needs a hauler to bring them. So does a cutter whose load
+	// waits at its face for a transfer: with no hauler assigned, none of these waits can end until the player assigns one.
+	if (!any && (IsTBMReturning(project.phase) || IsTBMWaitingForExchange(project.phase) || IsTBMAwaitingFaceTransfer(project.phase))) return TBMLogisticsWait::NoHauler;
 	return TBMLogisticsWait::None;
 }
 

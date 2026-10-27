@@ -22,6 +22,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4; physical travel holds and lost-target recovery.
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (routes that need an early bay exchange declare Mixed rock after the halved yields)
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 12 (halted depot visits resume explicitly; loaded ones wait in their bay)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13C (a face wait without a hauler asks for one)
  */
 
 #include "../stdafx.h"
@@ -894,6 +895,35 @@ TEST_CASE("The source loop replays the same trace from the same fixture", "[tbm-
 	again.Run();
 	REQUIRE_FALSE(first.empty());
 	CHECK(again.trace == first);
+}
+
+/**
+ * A machine whose first load waits at its face, with no hauler assigned, asks the player for one (r2lbf Group 13C).
+ * On the halved Soft yields the Command route's first breakpoint comes once the consist stands clear of its housing, so
+ * the load waits for a face transfer rather than a bay return. Only a hauler can end that wait, so the controls must
+ * name the missing hauler instead of reporting that the machine is working.
+ */
+TEST_CASE("A face wait without a hauler asks the player to assign one", "[tbm-controls]")
+{
+	SourceLoop loop(LoopStart::Command, true);
+	const CompanyID company = _current_company;
+	REQUIRE(Command<Commands::StartStopVehicle>::Do(DoCommandFlag::Execute, loop.cutter->index, false).Succeeded());
+	uint ticks = 0;
+	// Run the receivers and the game's vehicle step until the first load waits at the face; no train may crash.
+	while (loop.Project().phase != TBMPhase::AwaitFaceTransfer && ticks < 20000) {
+		AdvanceSpoilReceiver(*loop.earth);
+		AdvanceSpoilReceiver(*loop.rock);
+		CallVehicleTicks();
+		REQUIRE_FALSE(loop.cutter->vehstatus.Test(VehState::Crashed));
+		++ticks;
+	}
+	INFO("after " << ticks << " ticks: " << DescribeProject(loop.Project()));
+	REQUIRE(loop.Project().phase == TBMPhase::AwaitFaceTransfer);
+	REQUIRE(GetTBMExchangeAssignmentForHauler(loop.hauler->index) == nullptr);
+	const TBMPairControls c = GetTBMPairControls(loop.source, company);
+	CHECK(c.wait == TBMLogisticsWait::NoHauler);
+	CHECK(c.step == TBMPlayerStep::AssignHauler);
+	CHECK(c.assign);
 }
 
 /**

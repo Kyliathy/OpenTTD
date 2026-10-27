@@ -796,9 +796,9 @@ _Applies to Group 13C._
 
 - [X] **13C.1** Ask the owner, in the same prompt as 13B.1, whether `AwaitFaceTransfer` with no assigned hauler should show `TBMPlayerStep::AssignHauler`. The options are: (a) yes, add `|| IsTBMAwaitingFaceTransfer(project.phase)` to the `NoHauler` condition in `GetTBMLogisticsWait` (recommended: the step's own documentation describes this state); (b) no, the face wait is meant to stay silent, which is then documented at the condition; or (c) another rule they name. Record the answer.
 
-- [ ] **13C.2** If (a): apply the one-line change with a comment, and add a focused regression case to `tbm_movement.cpp`. The case plays the whole-life opening on Soft rock (no `TBMRigRock`) up to the first face wait, then requires `controls().step == TBMPlayerStep::AssignHauler` and `controls().wait == TBMLogisticsWait::NoHauler`. If (b): add the comment only.
+- [X] **13C.2** If (a): apply the one-line change with a comment, and add a focused regression case to `tbm_movement.cpp`. The case plays the whole-life opening on Soft rock (no `TBMRigRock`) up to the first face wait, then requires `controls().step == TBMPlayerStep::AssignHauler` and `controls().wait == TBMLogisticsWait::NoHauler`. If (b): add the comment only.
 
-- [ ] **13C.3** Rebuild `openttd_test` and run the new case alone, then with `-#` every file that reads `TBMLogisticsWait`: `tbm_movement.cpp`, `spoil_receiver_stall.cpp`, `tbm_exchange_acceptance.cpp`, `tbm_face_cycle.cpp` and `tbm_face_regression.cpp`. Also run `tbm_face_meeting.cpp`, which covers the face meeting itself. Expected: no new failures. Record the result in the execution notes.
+- [X] **13C.3** Rebuild `openttd_test` and run the new case alone, then with `-#` every file that reads `TBMLogisticsWait`: `tbm_movement.cpp`, `spoil_receiver_stall.cpp`, `tbm_exchange_acceptance.cpp`, `tbm_face_cycle.cpp` and `tbm_face_regression.cpp`. Also run `tbm_face_meeting.cpp`, which covers the face meeting itself. Expected: no new failures. Record the result in the execution notes.
 
 ### Area Mandatory Reading - Unreachable rail-turn refusal
 

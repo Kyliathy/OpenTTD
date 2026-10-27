@@ -231,3 +231,21 @@ Every assertion and the checkpoint text are unchanged, and each file header cite
 - In file order, `layer_processor_load` passes 3 cases (2,164 assertions), `layer_mine_load` 3 (495) and `underground_save` 1 (389).
 - All 10 outputs landed under the git-ignored `mlm/reviews/<feature>/<scenario>/<run>/saves/`. `git status --short -- src/tests/fixtures` is empty.
 - **The Group 8 carry-forward restore step is no longer needed.**
+
+## Group 13C completed
+
+**13C.2 (production, owner option a):** `GetTBMLogisticsWait` (`src/tbm_exchange.cpp`) now also returns `NoHauler` for `IsTBMAwaitingFaceTransfer` when no hauler is assigned. The comment states the rule: none of the three waits can end until the player assigns a hauler. The file header cites this plan. `IsTBMLogisticsStalled` does not count `NoHauler`, so only the controls change.
+
+The new regression case is "A face wait without a hauler asks the player to assign one" (`tbm_movement.cpp`, `[tbm-controls]`). It plays the whole-life opening on halved Soft rock, with no `TBMRigRock`, until the first `AwaitFaceTransfer`. It then requires `NoHauler`, `AssignHauler` and the assign control.
+- **Before the fix it failed** (`group13c-before-fix.log`): after 7,224 ticks, phase 20 at cursor 11, wait `None` (0) and step `Working` (2). This reproduces the Group 11 finding.
+- **After the fix it passes** (`group13c-after-fix.log`, 7,304 assertions).
+
+**13C.3:** `openttd_test` rebuilt in 29 s with 0 errors (`group13c-build.log`). In file order (`group13c-files.txt`), all six files that read the wait pass:
+- `tbm_movement`: 16 cases.
+- `spoil_receiver_stall`: 4.
+- `tbm_exchange_acceptance`: 4.
+- `tbm_face_cycle`: 6.
+- `tbm_face_regression`: 3.
+- `tbm_face_meeting`: 3.
+
+`check_swallowed_code.py fd7830b5` reports 0.
