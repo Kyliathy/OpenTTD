@@ -353,11 +353,11 @@ Group 5 left linked test binaries and Group 6 materialized content. This group o
 
 {{SIMPLE}}
 
-- [ ] **7.1** Create `logs/linux-baseline/<run>/` (for example `<run>` = `20261027-gcc-baseline`) and `test-cache/linux-baseline/`. Every later group writes its logs and reports there, never into tracked paths.
+- [X] **7.1** Create `logs/linux-baseline/<run>/` (for example `<run>` = `20261027-gcc-baseline`) and `test-cache/linux-baseline/`. Every later group writes its logs and reports there, never into tracked paths.
 
-- [ ] **7.2** Record the inventory for `build/`: `ctest --test-dir build -N | tail -1`, `build/openttd_test --list-tags > logs/linux-baseline/<run>/tags.txt` and `build/openttd_test --list-test-names-only | wc -l`. Use the test case and tag counts it prints, not the source-literal estimate.
+- [X] **7.2** Record the inventory for `build/`: `ctest --test-dir build -N | tail -1`, `build/openttd_test --list-tags > logs/linux-baseline/<run>/tags.txt` and `build/openttd_test --list-test-names-only | wc -l`. Use the test case and tag counts it prints, not the source-literal estimate.
 
-- [ ] **7.3** Install the ledger helper as `test-cache/linux-baseline/ledger.py`. It must not start with `r2`. It joins a JUnit report with the `TEST_CASE("<name>", "<tags>")` literals in `src/tests` and assigns a family from the first tag word. It was written and exercised during the research build: it mapped all but 2 upstream names, and labels the 4 regression tests explicitly.
+- [X] **7.3** Install the ledger helper as `test-cache/linux-baseline/ledger.py`. It must not start with `r2`. It joins a JUnit report with the `TEST_CASE("<name>", "<tags>")` literals in `src/tests` and assigns a family from the first tag word. It was written and exercised during the research build: it mapped all but 2 upstream names, and labels the 4 regression tests explicitly.
 
   ```python
   """Join a CTest or Catch JUnit report with TEST_CASE literals into a family-sorted TSV ledger."""
@@ -409,7 +409,7 @@ Group 5 left linked test binaries and Group 6 materialized content. This group o
       sys.exit(main())
   ```
 
-- [ ] **7.4** Install the single-failure helper as `test-cache/linux-baseline/rerun_failed.sh`. It reruns each non-passing ledger row on its own and writes one log per test, so every later classification can cite one file.
+- [X] **7.4** Install the single-failure helper as `test-cache/linux-baseline/rerun_failed.sh`. It reruns each non-passing ledger row on its own and writes one log per test, so every later classification can cite one file.
 
   ```bash
   #!/bin/bash
@@ -423,7 +423,7 @@ Group 5 left linked test binaries and Group 6 materialized content. This group o
 
   Test names containing `,`, `[` or `]` need a backslash before that character for Catch. None of the 36 research-build failures contains them.
 
-- [ ] **7.5** Extend `r2lbf-a-execution-notes.md` in this directory (started in Group 1), following the house style of [m2o26-a-execution-notes.md](m2o26-a-execution-notes.md). It holds a header with the toolchain and commands, one section per completed group, and a **Failure ledger** table with these columns: test, family, GCC, Clang, category (from item 8.5), evidence file, owning group.
+- [X] **7.5** Extend `r2lbf-a-execution-notes.md` in this directory (started in Group 1), following the house style of [m2o26-a-execution-notes.md](m2o26-a-execution-notes.md). It holds a header with the toolchain and commands, one section per completed group, and a **Failure ledger** table with these columns: test, family, GCC, Clang, category (from item 8.5), evidence file, owning group.
 
 ### Group 8 - Run the GCC baseline and classify every failure
 

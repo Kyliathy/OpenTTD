@@ -6,6 +6,28 @@
 
 **Test policy for this execution (user instruction, 2026-10-27):** tests run in focused bursts for the group being developed. The full CTest suite runs only as the Group 8 baseline and once more at the end of the plan (Groups 14-17). Each group's "full suite" check in the plan is narrowed to its affected names and files.
 
+## Commands and toolchain
+
+GCC 13.3.0 (`build/`, `/usr/bin/c++`) and Ubuntu Clang 18.1.3 (`build-clang/`), CMake 3.28.3, Ninja 1.11.1, `RelWithDebInfo`, `-j4`, one tree at a time.
+
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+CC=clang CXX=clang++ cmake -S . -B build-clang -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
+ninja -C build -j4 -k 0                                  # then the same for build-clang
+python3 -I -B test-cache/linux-baseline/materialize_baseset.py build build-clang
+ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/20261027-linux/ctest-gcc.xml
+python3 -I test-cache/linux-baseline/ledger.py --junit <report.xml> --src src --out <ledger.tsv>
+test-cache/linux-baseline/rerun_failed.sh build <ledger.tsv> <out-dir>
+```
+
+## Failure ledger
+
+Categories follow the Group 8 diagram: I isolation, S stale expectation, P Linux portability, C code defect, X compiler divergence, E environment.
+
+| Test | Family | GCC | Clang | Category | Evidence | Group |
+| --- | --- | --- | --- | --- | --- | --- |
+| *(filled by Group 8)* | | | | | | |
+
 ## Group 1 completed
 
 Branch `mlm-mlv`, HEAD `169abb88`. The tree was clean. HEAD differs from the planning commit `7a66e52f` only in plan documents (`git diff --stat 7a66e52f HEAD -- . ':(exclude)docs'` is empty), so every line number in the plan is valid.
@@ -55,3 +77,7 @@ The 2.8 sweep (`group2-sweep.txt`) found no other conditional-lvalue braced assi
 6.1: `test-cache/linux-baseline/materialize_baseset.py build build-clang` wraps the repository's own `load_profile` and `prepare_runtime_assets` and materialized the seven retained original-DOS fixtures into both trees (`group6-materialize.log`). 6.2: all 14 destination files match the profile's SHA256s (`group6-hashes.txt`; `trg1.grf` is `38f0494a…`, `sample.cat` is `edb6233c…`). 6.3: `ctest --test-dir build -R '^regression_'` passed **4/4** (regression 4.7 s, stationlist 2.1 s, gs 0.6 s, gs_compat 0.5 s) with no OpenGFX and no network (`group6-regression-gcc.log`).
 
 6.4 coupling, recorded for Groups 14-16: both trees' Catch tests copy `baseset/`, `newgrf/`, `scripts/` and `lang/` from `<repository>/build` (`GetTestRuntimeConfig`). `build/` is built and materialized, so `build-clang/` and `build-dedicated/` test runs are covered; `GetTestRuntimeConfig` is unchanged. 6.5: no wrapper-only case is registered with CTest. Four exist in `openttd_test` behind hidden tags (`[.m1-packed-art-load]` and its siblings); `ground_packed_load.cpp` is compiled only into a focused target (`group6-boundaries.txt`). 6.6: `mlm/reviews/`, `logs/` and `test-cache/` exist and are ignored, `mlm/runtime/` is ignored and will be created by the tests, and `mlm/reviews/README.md` stays tracked.
+
+## Group 7 completed
+
+7.1: the run folders `logs/linux-baseline/20261027-linux/` and `test-cache/linux-baseline/` already existed (Group 1). 7.2: CTest `Total Tests: 1359`, Catch lists 1,355 names, and `--list-tags` reports 581 tags (`group7-inventory.txt`, `tags.txt`). 7.3: `test-cache/linux-baseline/ledger.py` keeps the plan's logic and adds full parameter docs and business-logic comments. 7.4: `test-cache/linux-baseline/rerun_failed.sh`, likewise documented. The smoke run (`group7-smoke*`: 4 `WindowDesc` cases plus `regression_gs`) exposed one bug in 7.4: a relative output directory broke after the `cd` into the build tree. It is fixed with `realpath -m`. The smoke run also showed that `-s` reports **both** `WindowDesc` offenders (`launch_assembly_gui.cpp:95`, `asteroid_gui.cpp:187`) in one run, which confirms 13.1's two sites. 7.5: this file gained the commands header and the failure-ledger table.
