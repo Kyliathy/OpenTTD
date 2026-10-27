@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file underground_workflow.cpp Connected visible excavation and mine freight workflow using real controls and native movement. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D; r2mlvs4-tunnel-boring-machines.md, Group 20; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (paid wide depot chamber) */
+/**
+ * @file underground_workflow.cpp Connected visible excavation and mine freight workflow using real controls and native movement.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Groups 9B-9D; r2mlvs4-tunnel-boring-machines.md, Group 20; r2mlvs5-spoil-wagons-and-haulage.md, Group 13B (paid wide depot chamber)
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13D (the chamber quote plans only legal support turns)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -519,12 +523,18 @@ TEST_CASE("Editor underground authoring preserves restrictions and normal freigh
 	RunVisibleMineFreight(world, view);
 }
 
-/** An impossible physical bend is a visible pre-purchase refusal, without any partial machine, job, terrain or money mutation. */
-TEST_CASE("Visible chamber quote refuses rail turns forbidden by the current game rule", "[underground-workflow-turn-refusal]")
+/**
+ * The visible chamber quote plans only support turns the current game rule allows (r2lbf Group 13D). The area planner
+ * leaves the housing straight and chooses legal side cells (r2df), so the chamber is accepted with drivable support,
+ * and quoting it still changes no machine, job, terrain or money. The refusal of a forbidden bend is "Support rail turns
+ * follow the game's 90-degree rule" (tbm_support.cpp), which hands the commission's own check such a route.
+ */
+TEST_CASE("Visible chamber quote plans only rail turns the current game rule allows", "[underground-workflow-turns]")
 {
 	MockEnvironment::Instance();
 	LoadGeneratedWindowTestLanguage();
 	UndergroundWorkflowWorld world;
+	REQUIRE(_settings_game.pf.forbid_90_deg); // The world's PathfinderDefaults restore the declared default rule.
 	UndergroundWorkflowUI ui(_current_company);
 	Window *tools = ShowUndergroundConstructionToolbar(world.layer, GetCurrentMultiLayerProfileSelection());
 	const auto before = ComputeGeologyStateDigest(GetGeologyWorldState());
@@ -536,13 +546,14 @@ TEST_CASE("Visible chamber quote refuses rail turns forbidden by the current gam
 	const auto end = TileAddWrap(world.site, 4, 8);
 	tools->OnPlaceMouseUp(VPM_X_AND_Y, DDSP_DEMOLISH_AREA, {}, world.site, end);
 	tools->OnPaint();
-	CHECK(tools->IsWidgetDisabled(WID_UC_AREA_CONFIRM));
-	CHECK(tools->GetWidgetString(WID_UC_STATUS, STR_UNDERGROUND_SELECT_TOOL).find("90-degree") != std::string::npos);
+	CHECK_FALSE(tools->IsWidgetDisabled(WID_UC_AREA_CONFIRM));
+	CHECK(tools->GetWidgetString(WID_UC_STATUS, STR_UNDERGROUND_SELECT_TOOL).find("90-degree") == std::string::npos);
 	const auto model = GetLayerPortalDefaultTBMModel(world.portal);
+	const auto quote = PreviewTBMCommissionArea(_current_company, world.portal, model, 2, 2, world.origin->index, world.site, end, false);
+	REQUIRE(quote.purchase.Succeeded());
+	CHECK(CheckTBMSupportRailTurns(quote.request.proposal)); // The same check the commission applies before any purchase.
 	const auto estimate = CmdCommissionTBM({}, world.portal, model, 2, 2, world.origin->index, world.site, end, false);
-	const auto execute = CmdCommissionTBM(DoCommandFlag::Execute, world.portal, model, 2, 2, world.origin->index, world.site, end, false);
-	CHECK(estimate.GetErrorMessage() == STR_ERROR_TBM_COMMISSION_RAIL_TURNS);
-	CHECK(execute.GetErrorMessage() == estimate.GetErrorMessage());
+	CHECK(estimate.Succeeded());
 	CHECK(CaptureTBMProjects().empty());
 	CHECK(Vehicle::GetNumItems() == vehicles);
 	CHECK(Company::Get(_current_company)->money == cash);

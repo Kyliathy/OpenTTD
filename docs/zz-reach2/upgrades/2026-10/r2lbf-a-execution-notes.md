@@ -54,7 +54,7 @@ Categories follow the Group 8 diagram: I isolation, S stale expectation, P Linux
 | Five actual capsule bodies preserve load across native service and source waits (`src/tests/transport_tube_vehicle_sprite.cpp:82`) | tube | fail (alone fail, file order fail) | pending (Group 14) | I (T1 sprite cache) | `reruns/Five_actual_capsule_bodies_preserve_load_across_native_service_and_source_waits.log`, `files/transport_tube_vehicle_sprite.xml` | 9 |
 | Tube platform art warns on the exact original full native packet queue (`src/tests/transport_tube_facility_sprite.cpp:158`) | tube | fail (alone fail, file order not-reached) | pending (Group 14) | I (T1 sprite cache) | `reruns/Tube_platform_art_warns_on_the_exact_original_full_native_packet_queue.log`, `files/transport_tube_facility_sprite.xml` | 9 |
 | Tube terminal and interchange art follows real native platform roles and joins (`src/tests/transport_tube_facility_sprite.cpp:59`) | tube | fail (alone fail, file order fail) | pending (Group 14) | I (T1 sprite cache) | `reruns/Tube_terminal_and_interchange_art_follows_real_native_platform_roles_and_joins.log`, `files/transport_tube_facility_sprite.xml` | 9 |
-| Visible chamber quote refuses rail turns forbidden by the current game rule (`src/tests/underground_workflow.cpp:523`) | underground | fail (alone fail, file order fail) | pending (Group 14) | C (12.7: refusal unreachable from the planner; owner decision, Group 13D) | `reruns/Visible_chamber_quote_refuses_rail_turns_forbidden_by_the_current_game_rule.log`, `files/underground_workflow.xml` | 13D |
+| Visible chamber quote refuses rail turns forbidden by the current game rule (`src/tests/underground_workflow.cpp:523`) | underground | fail (alone fail, file order fail) | pending (Group 14) | S2 (12.7: the planner avoids forbidden bends by design, r2df; owner chose a lower-level case). Group 13D: renamed "Visible chamber quote plans only rail turns the current game rule allows", passes alone and in file order | `reruns/Visible_chamber_quote_refuses_rail_turns_forbidden_by_the_current_game_rule.log`, `files/underground_workflow.xml` | 13D |
 | WindowDesc - ini_key validity (`src/tests/test_window_desc.cpp:49`) | upstream | fail (alone fail, file order fail); Group 13: pass alone and in file order (upstream WindowDesc rule) | pending (Group 14) | S3 UI/content drift | `reruns/WindowDesc_-_ini_key_validity.log`, `files/test_window_desc.xml` | 13 |
 | Common scheduler settles mixed native contention in original destination order (`src/tests/utility_scheduler_contention.cpp:133`) | utility | fail (alone fail, file order fail) | pending (Group 14) | I (T2 language pack) | `reruns/Common_scheduler_settles_mixed_native_contention_in_original_destination_order.log`, `files/utility_scheduler_contention.xml` | 10 |
 | Integrated company transitions cannot revive old native provider rights (`src/tests/utility_scheduler_lifecycle.cpp:150`) | utility | fail (alone fail, file order not-reached) | pending (Group 14) | I (T2 language pack) | `reruns/Integrated_company_transitions_cannot_revive_old_native_provider_rights.log`, `files/utility_scheduler_lifecycle.xml` | 10 |
@@ -249,3 +249,27 @@ The new regression case is "A face wait without a hauler asks the player to assi
 - `tbm_face_meeting`: 3.
 
 `check_swallowed_code.py fd7830b5` reports 0.
+
+## Group 13D completed
+
+**Cause, now documented:** the owner's imported r2df notes record this change on the `openttd3-75ea75718f` line (`docs/zz-rhr/imports/openttd3-75ea75718f/docs/zz-reach2/upgrades/2026-10/r2df-a-reproduction-notes.md`, around line 270). The planner was changed deliberately:
+- "A start pose whose whole trail stands on its own tile now leaves straight on."
+- `GetTBMWorkRailPath` passes the other side cell when its usual one would form a forbidden 90-degree bend.
+- "A scratch enumeration shows a legal choice always exists."
+
+The same notes changed the test: "`[underground-workflow-turn-refusal]` became `[underground-workflow-turns]`: the chamber is now accepted with drivable support." So the 12.7 row is S2 (deliberate planner change), and 13D aligns with that precedent.
+
+**13D.2 (owner option a):**
+- **New case** "Support rail turns follow the game's 90-degree rule" (`tbm_support.cpp`, `[tbm-support]`). A temporary probe was reverted afterwards; it planned every legal 1-3-cut heading sequence through `AdvanceExcavationPlanningPose`. It found that a single first cut turning 45 degrees at the door is the minimal forbidden bend: the housing's axis track meets a crossing piece. The case requires that bend to be refused with `pf.forbid_90_deg` on and allowed with it off, and the straight exit allowed both ways.
+- **UI case renamed** "Visible chamber quote plans only rail turns the current game rule allows" (`[underground-workflow-turns]`). It now requires:
+  - the rule is on;
+  - the confirm button is enabled and the status has no "90-degree" warning;
+  - the quote succeeds, and its route passes `CheckTBMSupportRailTurns`;
+  - the estimate succeeds;
+  - the four "nothing changed" checks hold: no project, the same vehicle count, cash and geology digest.
+
+  The `Execute` call was dropped: it would now legitimately buy the machine, and the owner asked to keep the UI case for its "nothing changed" checks.
+
+**13D.3:** `openttd_test` rebuilt in 34 s with 0 errors (`group13d-build.log`). Both cases pass alone, with 18 and 49 assertions. In file order, `underground_workflow` passes 5 cases and `tbm_support` 7. `check_swallowed_code.py 0536c15d` reports 0.
+
+**State before Group 14:** all 37 Group 8 failures are fixed and verified by focused runs. No owner decisions remain open. The end-of-plan GCC regression (14.1) is next.

@@ -9,6 +9,7 @@
  * real track with saved metadata, and trailing parts that stay inside opened ground through a legal turn. Group 9:
  * ordinary rail tools refuse support in use, removal after release drops the metadata, conversion, traffic classes.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8 and 9
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13D (the 90-degree support rule, checked on a hand-planned bend)
  */
 
 #include "../stdafx.h"
@@ -307,6 +308,28 @@ TEST_CASE("Support in use refuses ordinary rail tools until released", "[tbm-sup
 }
 
 /** The project's machinery runs as the cutter and its wagons as spoil wagons; other trains have no class on support. */
+/**
+ * The game's 90-degree rule applies to the support a route would lay (r2lbf Group 13D). A first cut that turns 45 degrees
+ * at the door leaves the housing's axis track for a crossing piece on the next tile pair, which is a 90-degree rail bend.
+ * The area planner always leaves the housing straight (r2df), so this hands the commission's own check that route.
+ */
+TEST_CASE("Support rail turns follow the game's 90-degree rule", "[tbm-support]")
+{
+	TBMAcquisitionRig rig;
+	const std::array bend_headings{ChangeDir(rig.proof.exit_heading, DirDiff::Right45)};
+	const auto bend = rig.Proposal(bend_headings, 4);
+	const std::array straight_headings{rig.proof.exit_heading};
+	const auto straight = rig.Proposal(straight_headings, 4);
+	{
+		AutoRestoreBackup forbid(_settings_game.pf.forbid_90_deg, true);
+		CHECK_FALSE(CheckTBMSupportRailTurns(bend));
+		CHECK(CheckTBMSupportRailTurns(straight));
+	}
+	AutoRestoreBackup allow(_settings_game.pf.forbid_90_deg, false);
+	CHECK(CheckTBMSupportRailTurns(bend));
+	CHECK(CheckTBMSupportRailTurns(straight));
+}
+
 TEST_CASE("Support traffic classes follow the consist roles", "[tbm-support]")
 {
 	TBMWorkRig rig;

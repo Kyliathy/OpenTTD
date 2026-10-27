@@ -818,9 +818,9 @@ _Applies to Group 13D._
 
 - [X] **13D.1** Ask the owner, in the same prompt as 13B.1, how to cover the rail-turn refusal now that the planner never produces a forbidden bend. The options are: (a) keep the UI case for its "nothing changed" checks, but drive the refusal through a lower-level case that hands `CheckTBMSupportRailTurns` a proposal with a 90-degree support bend (recommended); (b) treat the planner's avoidance as a defect, which is a production change to investigate; or (c) another rule they name. Record the answer.
 
-- [ ] **13D.2** If (a): add a focused `CheckTBMSupportRailTurns` case with a two-cut proposal whose support turns 90 degrees on one tile pair. Require `false` with `pf.forbid_90_deg` on and `true` with it off. Re-derive the UI case so it asserts that the planner's accepted route passes `CheckTBMSupportRailTurns`, keeping every refusal-side check under the new case. If (b), record the investigation as a new group instead.
+- [X] **13D.2** If (a): add a focused `CheckTBMSupportRailTurns` case with a two-cut proposal whose support turns 90 degrees on one tile pair. Require `false` with `pf.forbid_90_deg` on and `true` with it off. Re-derive the UI case so it asserts that the planner's accepted route passes `CheckTBMSupportRailTurns`, keeping every refusal-side check under the new case. If (b), record the investigation as a new group instead.
 
-- [ ] **13D.3** Rebuild `openttd_test` and run the new case alone, then `underground_workflow.cpp` and `tbm_support*.cpp` with `-#`. Record the result in the execution notes.
+- [X] **13D.3** Rebuild `openttd_test` and run the new case alone, then `underground_workflow.cpp` and `tbm_support*.cpp` with `-#`. Record the result in the execution notes.
 
 ### Area Mandatory Reading - Clang baseline and focused executables
 
