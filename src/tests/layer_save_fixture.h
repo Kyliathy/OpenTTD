@@ -10,7 +10,7 @@
 #define TESTS_LAYER_SAVE_FIXTURE_H
 
 #include <fstream>
-#include <filesystem> // LayerSaveFileSink takes std::filesystem::path; libstdc++ does not supply it through <fstream>.
+#include <filesystem> /* LayerSaveFileSink takes std::filesystem::path; libstdc++ does not supply it through <fstream>. */
 #include "../saveload/saveload_filter.h"
 #include "../engine_base.h"
 #include "../newgrf_config.h"

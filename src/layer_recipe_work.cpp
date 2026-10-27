@@ -7,7 +7,7 @@
  */
 #include "stdafx.h"
 #include "layer_recipe_work.h"
-#include <utility> // std::exchange in the move operations below.
+#include <utility> /* std::exchange in the move operations below. */
 
 #include "safeguards.h"
 

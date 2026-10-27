@@ -421,7 +421,7 @@ Group 5 left linked test binaries and Group 6 materialized content. This group o
   done
   ```
 
-  Test names containing `,`, `[` or `]` need a backslash before that character for Catch. None of the 36 research-build failures contains them.
+  Test names containing `,`, `[` or `]` need a backslash before that character for Catch, otherwise Catch reads the spec as several names and a non-matching run exits 0 (a false pass). The installed helper escapes them. Execution found one such name among the 36: "A started cutter drives to its face, works its route and backs into its magazine".
 
 - [X] **7.5** Extend `r2lbf-a-execution-notes.md` in this directory (started in Group 1), following the house style of [m2o26-a-execution-notes.md](m2o26-a-execution-notes.md). It holds a header with the toolchain and commands, one section per completed group, and a **Failure ledger** table with these columns: test, family, GCC, Clang, category (from item 8.5), evidence file, owning group.
 
@@ -450,13 +450,13 @@ flowchart TD
 
 {{MEDIUM}}
 
-- [ ] **8.1** Run the suite: `ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-gcc.xml > logs/linux-baseline/<run>/ctest-gcc.log 2>&1`. Record the summary line. The research build gave `97% tests passed, 36 tests failed out of 1359` in 29.7 s. There were no time-outs; the timeout stays at 600 s because native cases can drive up to 250,000 frames.
+- [X] **8.1** Run the suite: `ctest --test-dir build -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-gcc.xml > logs/linux-baseline/<run>/ctest-gcc.log 2>&1`. Record the summary line. The research build gave `97% tests passed, 36 tests failed out of 1359` in 29.7 s. There were no time-outs; the timeout stays at 600 s because native cases can drive up to 250,000 frames.
 
-- [ ] **8.2** Build the ledger: `python3 -I test-cache/linux-baseline/ledger.py --junit logs/linux-baseline/<run>/ctest-gcc.xml --src src --out logs/linux-baseline/<run>/ledger-gcc.tsv`. Compare the failures with the **Expected failure signatures** table below. Each listed name must appear. Any extra failure is a new family: record it, classify it through 8.3-8.5, and add a split group (for example 13B) if it is not covered by Groups 9-13.
+- [X] **8.2** Build the ledger: `python3 -I test-cache/linux-baseline/ledger.py --junit logs/linux-baseline/<run>/ctest-gcc.xml --src src --out logs/linux-baseline/<run>/ledger-gcc.tsv`. Compare the failures with the **Expected failure signatures** table below. Each listed name must appear. Any extra failure is a new family: record it, classify it through 8.3-8.5, and add a split group (for example 13B) if it is not covered by Groups 9-13.
 
-- [ ] **8.3** Rerun each failure alone with `test-cache/linux-baseline/rerun_failed.sh build logs/linux-baseline/<run>/ledger-gcc.tsv logs/linux-baseline/<run>/reruns`. All 36 reproduced in the research build. For a crash, capture a stack with `gdb -batch -ex run -ex "bt 25" --args ./openttd_test "<name>"` run from `build/`, because the abort-stack printer in `test_main.cpp` is MSVC-only. Install `gdb` if it is missing.
+- [X] **8.3** Rerun each failure alone with `test-cache/linux-baseline/rerun_failed.sh build logs/linux-baseline/<run>/ledger-gcc.tsv logs/linux-baseline/<run>/reruns`. All 36 reproduced in the research build. For a crash, capture a stack with `gdb -batch -ex run -ex "bt 25" --args ./openttd_test "<name>"` run from `build/`, because the abort-stack printer in `test_main.cpp` is MSVC-only. Install `gdb` if it is missing.
 
-- [ ] **8.4** Run each failing source file in one process and record per-test status. A failure that passes here is category **I**.
+- [X] **8.4** Run each failing source file in one process and record per-test status. A failure that passes here is category **I**.
 
   ```bash
   cd build
@@ -468,11 +468,11 @@ flowchart TD
 
   Note that a crash, such as the SIGABRT in `utility_scheduler_lifecycle`, ends the per-file process early, so the cases after it read as "not reached", not as passing.
 
-- [ ] **8.5** Classify every failure with the decision diagram above, and write one ledger row per test in the execution notes with the evidence file from 8.3 or 8.4. Use only the categories I, S, P, C, X and E. Never label a failure "flaky" without three reruns.
+- [X] **8.5** Classify every failure with the decision diagram above, and write one ledger row per test in the execution notes with the evidence file from 8.3 or 8.4. Use only the categories I, S, P, C, X and E. Never label a failure "flaky" without three reruns.
 
-- [ ] **8.6** Prepare the owner's Windows check, which is the only direct evidence for P versus S. Write the 15 deterministic names, one per line, to `logs/linux-baseline/<run>/windows-check.txt`. Hand the owner this command, to run from their Windows build directory: `openttd_test.exe -f windows-check.txt -r compact`. Record their answer in the execution notes when it arrives. Groups 11-13 may proceed on history evidence alone, but a "passes on Windows" answer reclassifies that test as P and stops any edit to it.
+- [X] **8.6** Prepare the owner's Windows check, which is the only direct evidence for P versus S. Write the 15 deterministic names, one per line, to `logs/linux-baseline/<run>/windows-check.txt`. Hand the owner this command, to run from their Windows build directory: `openttd_test.exe -f windows-check.txt -r compact`. Record their answer in the execution notes when it arrives. Groups 11-13 may proceed on history evidence alone, but a "passes on Windows" answer reclassifies that test as P and stops any edit to it.
 
-- [ ] **8.7** Confirm that the tracked tree is unchanged after all test runs (`git status --short`), mirroring CI's `git diff --exit-code`. Record any test that writes tracked files as a new P or C finding.
+- [X] **8.7** Confirm that the tracked tree is unchanged after all test runs (`git status --short`), mirroring CI's `git diff --exit-code`. Record any test that writes tracked files as a new P or C finding.
 
 **Expected failure signatures (GCC, research build).** Failure lines are the first failing assertion; the full text is in the 8.3 logs.
 
@@ -736,6 +736,38 @@ These seven still fail with the old `_cut_terms`, so each one needs its own caus
   The two ground functions are declared in `src/ground_train_sprite.h:27` and `src/ground_road_sprite.h:29`; include whichever the test does not already reach. Do not use `std::optional::or_else`, which is C++23. Validated in the research copy: with both includes added, the case passes (34 assertions), so `UINT16_MAX` is outside both published ranges.
 
 - [ ] **13.3** Run the full GCC suite. Expected: `100% tests passed, 0 tests failed out of 1359`. Record the ledger, then run `git status --short`: it must list only the intended test and source edits.
+
+### Area Mandatory Reading - Fixture producers and tracked outputs
+
+_Applies to Group 13B._
+
+**ASSUMPTION: this was already built previously. If not, re-asses at runtime**
+
+**Entry gate (added during execution, 2026-10-27):** the Group 8 baseline showed that three tests rewrite tracked fixtures in place (`git status` listed 10 files). The owner must choose the target behaviour before any edit (13B.1). Until then, restore the fixtures after every run with `git checkout -- src/tests/fixtures/` and record that you did. Do not add ignore rules, delete the producers or edit `multilayer-inputs.json` to hide the writes.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/tests/layer_processor_load.cpp](../../../../src/tests/layer_processor_load.cpp) | 183-199 | The producer case writes `src/tests/fixtures/processors/r2mlvs6-ds-processor-<suffix>.sav` and its `.sav.txt` checkpoint via `current_path().parent_path()`. The text is written in text mode, so Linux writes LF where the tracked bytes are CRLF. |
+| [src/tests/layer_mine_load.cpp](../../../../src/tests/layer_mine_load.cpp) | 115 | The same pattern for `src/tests/fixtures/mines/r2mlvs6-cr-mine-<suffix>.sav`. |
+| [src/tests/underground_save.cpp](../../../../src/tests/underground_save.cpp) | 110-117 | The same pattern for `src/tests/fixtures/underground/native-fleet.sav`. |
+| [src/tests/tbm_planning_seed.cpp](../../../../src/tests/tbm_planning_seed.cpp) | 176 | The run-owned alternative already used in the repository: `GetTestArtifactPaths("mines", "underground-demo").saves / …`. |
+| [docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup.md](r2fc-file-cleanup.md) | 271-282 | **Output and fixture contract** item 1: fixtures are read-only during normal tests, and resaves go into the run's directories. |
+
+### Group 13B - Stop tests from rewriting tracked fixtures (owner decision first)
+
+{{MEDIUM}}
+
+- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name.
+
+- [ ] **13B.2** If (a): in `layer_processor_load.cpp`, write the save and its checkpoint text under the case's run-owned `saves` directory. Choose a feature and scenario declared in `mlm/review-producers.json`. Keep every assertion and the checkpoint content unchanged.
+
+- [ ] **13B.3** If (a): do the same in `layer_mine_load.cpp:115`.
+
+- [ ] **13B.4** If (a): do the same in `underground_save.cpp:110`.
+
+- [ ] **13B.5** Check the Python fixture checkers (`layer_processor_save_fixture.py`, `layer_mine_save_fixture.py`, `underground_save_fixture.py`) and the `multilayer-inputs.json` references. If a checker reads the producer's fresh output rather than the committed fixture, point it at the new run-owned path. Otherwise leave it unchanged.
+
+- [ ] **13B.6** Run the three producer cases and their files with `-#` in `build/`, and confirm that `git status --short -- src/tests/fixtures` is empty afterwards. If (b) was chosen, record the restore step in the execution notes instead.
 
 ### Area Mandatory Reading - Clang baseline and focused executables
 

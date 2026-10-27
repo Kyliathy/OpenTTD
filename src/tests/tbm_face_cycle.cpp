@@ -49,7 +49,8 @@ TEST_CASE("Hauler cycle reports insufficient complete face room without a partia
 {
  TBMFaceTransferRig rig; REQUIRE(rig.StepHauler().phase == TBMHaulerPhase::AwaitExchange);
  uint64_t room = 0; for (const Train *wagon : rig.SetWagons(TBMConsistRole::EarthWagon)) room += wagon->cargo_cap;
- REQUIRE(room + 1 < uint32_t{CargoPacket::MAX_COUNT}); // Prvalue copy: no odr-use of the undefined in-class constant. TBMFaceTransferRig::AddPacket(rig.Wagons(TBMConsistRole::EarthWagon).front(), static_cast<uint16_t>(room + 1));
+ // Compare with a prvalue copy: binding CargoPacket::MAX_COUNT by reference odr-uses a constant that has no definition.
+ REQUIRE(room + 1 < uint32_t{CargoPacket::MAX_COUNT}); TBMFaceTransferRig::AddPacket(rig.Wagons(TBMConsistRole::EarthWagon).front(), static_cast<uint16_t>(room + 1));
  const auto before = TBMFaceSnapshot::Capture(rig); const auto held = rig.StepHauler();
  CHECK(held.wait == TBMHaulerWait::NoEmpties); CHECK(held.phase == TBMHaulerPhase::AwaitExchange); CHECK(held.exchanges == 0);
  const auto after = TBMFaceSnapshot::Capture(rig); CHECK(after.packets == before.packets); CHECK(after.facts == before.facts); CHECK(after.trains == before.trains);

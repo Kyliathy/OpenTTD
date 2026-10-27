@@ -8,7 +8,7 @@
 #include "surface_supply_order.h"
 #include "multilayer_bootstrap.h"
 #include "timer/timer_game_calendar.h"
-#include <utility> // std::as_const in the mutable record lookup.
+#include <utility> /* std::as_const in the mutable record lookup. */
 
 #include "safeguards.h"
 
