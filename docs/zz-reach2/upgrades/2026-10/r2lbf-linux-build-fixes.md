@@ -75,6 +75,7 @@ During planning, a `git archive` copy of `7a66e52f` was built in the session scr
 - **What was ruled out:** every test that needs wrapper-only `OTTD_TEST_*` inputs is hidden (`[.…]`), so none is registered with CTest. There is no fork use of `long`, `<random>` distributions, unordered-container iteration or tie-prone `std::sort` in the failing TBM/excavation code. A whole-suite single-process run is unusable as a baseline (508 of 1,547 cases fail through cascading state).
 - **Prescription check:** in the same copy, Groups 9-10 and items 11.2, 12.1-12.4 and 13.1-13.2 were then applied exactly as this plan writes them. The suite showed exactly **8 failures**: the remaining S1/S2 items 11.3-11.7 and 12.5-12.7. Two root causes are proven, and both are recorded user decisions dated 2026-10-09. Per-cell Earth/Rock yields were halved (`r2tbmf-tbm-fixes.md` line 37). TBM cutting rates were halved (`TBMHalfCuttingRate`, save version 394; `r2tbmf-tbm-fixes.md` Group 5).
 - **Focused executables:** all nine built. Seven passed cleanly. `openttd_surface_supply_test` failed only on 2 already-listed cases. `openttd_tube_test` (428 cases in one process) failed on 5 already-listed cases plus 2 that pass alone, which are state leaks from an earlier case (Group 15). Under `-r junit` it once died with SIGSEGV (exit 139) and left an empty report; `-r console -d yes` completed.
+- **Clang:** a `build-clang/` tree of the same patched copy built with 0 failures in 26 min. `ctest -N` gave 1,359, and the suite ran in 25 s. Its failures were the same 8 names as GCC, with zero GCC/Clang differences (no X category). The 4 `regression_*` tests first failed with `Failed to find a graphics set`, because 6.1 had only been run for `build/`. After running 6.1 for `build-clang/`, they passed 4/4.
 - **The game itself:** the `underground-mines` demo save loads and renders on the Linux build. The null video driver cannot take console screenshots, because it never drains the main-thread queue, so the planning run used SDL2 under `xvfb-run` (Consult on Demand).
 
 ```mermaid
@@ -277,7 +278,7 @@ Groups 2-4 supply every known compile and link fix. This is the first time this 
 
 - [ ] **5.1** GCC: run `ninja -C build -j4 -k 0` with full output in `logs/linux-baseline/<run>/build-gcc.log`. Record the wall time (31 min from scratch in the research build), the `FAILED:` count (0 expected) and the warning counts per `-W` flag.
 
-- [ ] **5.2** Clang: the same in `build-clang/`, logged to `build-clang.log`. Also record `-Wdangling-gsl`, which must be 0 after Group 4. Clang-only diagnostics, previously hidden by its 20-errors-per-file limit, are triaged in 5.3.
+- [ ] **5.2** Clang: the same in `build-clang/`, logged to `build-clang.log` (26 min from scratch in the research build, 0 failures with Groups 2-4 in). Also record `-Wdangling-gsl`, which must be 0 after Group 4. Clang-only diagnostics, previously hidden by its 20-errors-per-file limit, are triaged in 5.3.
 
 - [ ] **5.3** Triage every newly surfaced compile or link error. Fix each one with a standard-conforming edit in the owning file, using the Global contracts. For a link error, first check whether a test odr-uses an in-class constant (the R8 shape), because MSVC hides that class of error. If more than five new distinct root causes appear, split this group per the protocol (5B, 5C…), one root-cause family per sub-group.
 
@@ -757,7 +758,7 @@ Groups 5, 6 and 9-13 are complete in both trees.
 
 {{MEDIUM}}
 
-- [ ] **14.1** Run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3.
+- [ ] **14.1** Run `ctest --test-dir build-clang -j4 --timeout 600 --output-junit $PWD/logs/linux-baseline/<run>/ctest-clang.xml` and build `ledger-clang.tsv` with 7.3. In the research copy this took 25 s. With the same fixes applied, it failed on exactly the names GCC fails on.
 
 - [ ] **14.2** Diff the two ledgers by name and status. List every test whose status differs between GCC and Clang as category X.
 
@@ -770,11 +771,13 @@ Groups 5, 6 and 9-13 are complete in both trees.
   EOF
   ```
 
-- [ ] **14.3** For each X test, rerun it alone in both trees with `-s` and compare the first diverging assertion. Typical causes are unspecified argument evaluation order (for example `UpdatePosition(GetString(…), GetString(…))`), uninitialized members, or implementation-defined library behaviour. Fix with code whose meaning does not depend on the compiler, and rerun both trees.
+  Expected: no output. In the research copy the only differences were the four `regression_*` tests, and 14.4 explains them.
 
-- [ ] **14.4** Run the Clang tree's regression tests (`ctest --test-dir build-clang -R '^regression_'`), which use `build-clang/baseset/` from 6.1, and record the result.
+- [ ] **14.3** For each X test, rerun it alone in both trees with `-s` and compare the first diverging assertion. Typical causes are unspecified argument evaluation order (for example `UpdatePosition(GetString(…), GetString(…))`), uninitialized members, or implementation-defined library behaviour. Fix with code whose meaning does not depend on the compiler, and rerun both trees. If 14.2 printed nothing, record "no X category" and skip this task.
 
-- [ ] **14.5** Record the final Clang counts in the execution notes. Expected: identical to GCC (`0 tests failed out of 1359`) once Groups 9-13 are in.
+- [ ] **14.4** Run the Clang tree's regression tests (`ctest --test-dir build-clang -R '^regression_' --output-on-failure`). If they report `Failed to find a graphics set`, 6.1 has not been run for `build-clang/`. That is category E, not X: run 6.1 for that tree and rerun. In the research copy this went from 0/4 to 4/4.
+
+- [ ] **14.5** Record the final Clang counts in the execution notes. They must equal GCC's at every stage. With Groups 9-13 complete, both read `100% tests passed, 0 tests failed out of 1359`.
 
 ### Group 15 - Run the nine focused executables
 
@@ -945,4 +948,4 @@ The Linux baseline is complete only when these all hold:
 - The Windows owner has confirmed Debug and RelWithDebInfo builds and the `windows-check.txt` run after these edits, or has explicitly waived that check.
 - No commit, push or pull request was made unless the user explicitly asked.
 
-Planning-format audit (2026-10-27, second iteration): **100 empty task checkboxes in 17 groups (1-17), one difficulty tag per group (9 {{SIMPLE}}, 8 {{MEDIUM}}, no {{HARD}} or {{COMPLEX}}), at most 8 tasks per batch (Groups 2, 4, 11 and 12), and 9 Area blocks with unambiguous coverage**: Group 1; Groups 2-4; 5-6; 7-8; 9-10; 11-13; 14-15; 16; 17. The old HARD Group 7 and COMPLEX Group 8 became Groups 7-15. Old Groups 9 and 10 are now Groups 16 and 17. Each group that depends on earlier work carries the ASSUMPTION note. The plan holds 5 Mermaid diagrams and 20 code sketches. The research copy executed these items as written: 2.1-2.7, 3.1, 3.3, 4.1-4.8, 6.1, 7.3, 8.1-8.4, 9.1-9.4, 10.1-10.6 (and the rejected 10.3 variant), 11.2, 12.1-12.4, 13.1, 13.2 and 15.1. Not yet executed: the 15.3 bisection, and the Clang CTest run (Group 14) at the time of this audit. The execution protocol is verbatim. All 85 local links (54 distinct targets) resolve, and every cited line range was rechecked against `7a66e52f`. Only this plan file changed in the repository.
+Planning-format audit (2026-10-27, second iteration): **100 empty task checkboxes in 17 groups (1-17), one difficulty tag per group (9 {{SIMPLE}}, 8 {{MEDIUM}}, no {{HARD}} or {{COMPLEX}}), at most 8 tasks per batch (Groups 2, 4, 11 and 12), and 9 Area blocks with unambiguous coverage**: Group 1; Groups 2-4; 5-6; 7-8; 9-10; 11-13; 14-15; 16; 17. The old HARD Group 7 and COMPLEX Group 8 became Groups 7-15. Old Groups 9 and 10 are now Groups 16 and 17. Each group that depends on earlier work carries the ASSUMPTION note. The plan holds 5 Mermaid diagrams and 20 code sketches. The research copy executed these items as written: 2.1-2.7, 3.1, 3.3, 4.1-4.8, 5.1-5.2, 6.1, 6.3, 7.3, 8.1-8.4, 9.1-9.4, 10.1-10.6 (and the rejected 10.3 variant), 11.2, 12.1-12.4, 13.1, 13.2 and 15.1. The Clang tree (5.2, 14.1, 14.2, 14.4) was also built and run, with no GCC/Clang difference. Not yet executed: the 15.3 bisection and the Dedicated/no-PCH tree (Group 16). The execution protocol is verbatim. All 85 local links (54 distinct targets) resolve, and every cited line range was rechecked against `7a66e52f`. Only this plan file changed in the repository.
