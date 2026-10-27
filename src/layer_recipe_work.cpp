@@ -2,10 +2,13 @@
 /** @file layer_recipe_work.cpp Shared paid recipe progress and once-only complete material settlement.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md shared recipe participant
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 (include what is used on Linux)
  * Only actual utility transactions earn work. Pending receipts are consumed physical progress, never a second grid or refundable power store.
  */
 #include "stdafx.h"
 #include "layer_recipe_work.h"
+#include <utility> // std::exchange in the move operations below.
+
 #include "safeguards.h"
 
 /** Resolve an exact integral rate without reinterpreting a published recipe or permitting geological/thermal stock to fund electrical work.

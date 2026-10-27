@@ -4,12 +4,13 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_save_fixture.h Real save-writer sink and native package/engine transport setup. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 16/16B */
+/** @file layer_save_fixture.h Real save-writer sink and native package/engine transport setup. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Groups 16/16B; Linux include ownership: docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 */
 
 #ifndef TESTS_LAYER_SAVE_FIXTURE_H
 #define TESTS_LAYER_SAVE_FIXTURE_H
 
 #include <fstream>
+#include <filesystem> // LayerSaveFileSink takes std::filesystem::path; libstdc++ does not supply it through <fstream>.
 #include "../saveload/saveload_filter.h"
 #include "../engine_base.h"
 #include "../newgrf_config.h"

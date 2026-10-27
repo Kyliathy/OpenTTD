@@ -8,6 +8,7 @@
  * @file geothermal_heat_route_sl.cpp Exact physical Heat ports and source paths; shared native utility chunks retain every quantity.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Groups3-4
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md independent preview and complete acceptance
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 (GCC-portable header bounds)
  */
 
 #include "../stdafx.h"
@@ -133,7 +134,9 @@ struct GHTHChunkHandler final : ChunkHandler {
 		auto &presence = preview ? _load_check_data.geothermal_heat_route_present : _heat_route_presence;
 		if (presence[0]) SlErrorCorrupt("Duplicate geothermal heat route header");
 		presence[0] = true;
-		(preview ? _load_check_data.geothermal_heat_route_expected : _heat_route_expected) = {counts[1], counts[2], counts[3]};
+		// Bind the destination first: GCC 13 rejects a braced-list assignment to a conditional lvalue.
+		auto &expected = preview ? _load_check_data.geothermal_heat_route_expected : _heat_route_expected;
+		expected = {counts[1], counts[2], counts[3]};
 		(preview ? _load_check_data.geothermal_heat_route_interval : _heat_route_interval) = interval[0];
 	}
 	/** Decode unpublished whole-load bounds. */

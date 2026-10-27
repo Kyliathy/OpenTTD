@@ -5,7 +5,7 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file saveload.h Functions/types related to saving and loading games. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md */
+/** @file saveload.h Functions/types related to saving and loading games. @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md; warning hygiene: docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 */
 
 #ifndef SAVELOAD_H
 #define SAVELOAD_H
@@ -877,7 +877,7 @@ struct SaveLoad {
 	AddressFunction<> address_func = nullptr; ///< Callback function the get the actual variable address in memory.
 	size_t extra_data = 0; ///< Extra data for the callback proc.
 	std::shared_ptr<SaveLoadHandler> handler{}; ///< Custom handler for Save/Load procs.
-	std::optional<SaveCapability> required_capability; ///< Exact optional branch feature, independent of overlapping numeric version intervals.
+	std::optional<SaveCapability> required_capability{}; ///< Exact optional branch feature, independent of overlapping numeric version intervals.
 
 	/** Attach an explicit branch feature to a native descriptor without changing its old wire bounds.
 	 * @param capability Required original A/B feature; unknown values remain a refusing requirement.

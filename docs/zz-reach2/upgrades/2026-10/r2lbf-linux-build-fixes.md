@@ -134,15 +134,15 @@ The only dependency is the clean checkout. This group writes no source.
 
 {{SIMPLE}}
 
-- [ ] **1.1** Confirm branch `mlm-mlv` and record `git rev-parse HEAD` and `git status --short`. The plan was written against `7a66e52f64bdde4c260328c87f3449bd53356be1` with a clean worktree. If HEAD has moved, re-check every site in the **Scope and observed baseline** table with `grep -n` before editing, and update the line numbers in this plan when they drifted.
+- [X] **1.1** Confirm branch `mlm-mlv` and record `git rev-parse HEAD` and `git status --short`. The plan was written against `7a66e52f64bdde4c260328c87f3449bd53356be1` with a clean worktree. If HEAD has moved, re-check every site in the **Scope and observed baseline** table with `grep -n` before editing, and update the line numbers in this plan when they drifted.
 
-- [ ] **1.2** Record the exact toolchain: `g++ --version`, `clang++ --version`, `cmake --version`, `ninja --version`, `python3 --version`, `nproc`, and the installed versions of the CI apt packages (`dpkg -l`). The minimums are CMake 3.16, Python 3.9 and a C++20 compiler.
+- [X] **1.2** Record the exact toolchain: `g++ --version`, `clang++ --version`, `cmake --version`, `ninja --version`, `python3 --version`, `nproc`, and the installed versions of the CI apt packages (`dpkg -l`). The minimums are CMake 3.16, Python 3.9 and a C++20 compiler.
 
-- [ ] **1.3** If package installation is permitted, install the CI-parity optional packages that are missing: `liballegro4-dev libogg-dev libopus-dev libopusfile-dev libsoxr-dev`. Apt candidates were present on 2026-10-27. Skip vcpkg breakpad and record that it is absent. If installation is refused, record that and continue, because these libraries are optional.
+- [X] **1.3** If package installation is permitted, install the CI-parity optional packages that are missing: `liballegro4-dev libogg-dev libopus-dev libopusfile-dev libsoxr-dev`. Apt candidates were present on 2026-10-27. Skip vcpkg breakpad and record that it is absent. If installation is refused, record that and continue, because these libraries are optional.
 
-- [ ] **1.4** Configure two trees inside the checkout. `build/` uses the default GCC `c++`; `build-clang/` uses `CC=clang CXX=clang++`. Both use `-G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo`. Existing trees from the 2026-10-27 validation may be reused incrementally but must be reconfigured after 1.3. Save each CMake summary (`found` / `Could NOT find` lines, `Option …` lines) to `logs/linux-baseline/<run>/configure-{gcc,clang}.log`.
+- [X] **1.4** Configure two trees inside the checkout. `build/` uses the default GCC `c++`; `build-clang/` uses `CC=clang CXX=clang++`. Both use `-G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo`. Existing trees from the 2026-10-27 validation may be reused incrementally but must be reconfigured after 1.3. Save each CMake summary (`found` / `Could NOT find` lines, `Option …` lines) to `logs/linux-baseline/<run>/configure-{gcc,clang}.log`.
 
-- [ ] **1.5** Confirm the boundaries: `git check-ignore -v build build-clang build-dedicated logs/linux-baseline test-cache/linux-baseline` matches the expected rules, and `git status --short` is still clean.
+- [X] **1.5** Confirm the boundaries: `git check-ignore -v build build-clang build-dedicated logs/linux-baseline test-cache/linux-baseline` matches the expected rules, and `git status --short` is still clean.
 
 ### Area Mandatory Reading - Portable source fixes
 
@@ -169,26 +169,26 @@ These are mechanical, local edits. Item 2.7 touches `saveload.h`, so it goes her
 
 {{SIMPLE}}
 
-- [ ] **2.1** In `src/tests/layer_save_fixture.h`, add `#include <filesystem>` directly after `#include <fstream>` (line 12). This resolves R1 for all 92 dependent test objects on both compilers.
+- [X] **2.1** In `src/tests/layer_save_fixture.h`, add `#include <filesystem>` directly after `#include <fstream>` (line 12). This resolves R1 for all 92 dependent test objects on both compilers.
 
-- [ ] **2.2** In `src/layer_recipe_work.cpp`, add `#include <utility>` after `#include "layer_recipe_work.h"`, then a blank line before `#include "safeguards.h"`, following the `ground_processor_sprite.cpp` order. This fixes `std::exchange` at lines 42 and 47. Do not move the include into `layer_recipe_work.h`, because only the `.cpp` uses it.
+- [X] **2.2** In `src/layer_recipe_work.cpp`, add `#include <utility>` after `#include "layer_recipe_work.h"`, then a blank line before `#include "safeguards.h"`, following the `ground_processor_sprite.cpp` order. This fixes `std::exchange` at lines 42 and 47. Do not move the include into `layer_recipe_work.h`, because only the `.cpp` uses it.
 
-- [ ] **2.3** In `src/surface_supply_order.cpp`, add `#include <utility>` the same way, after `#include "timer/timer_game_calendar.h"`. This fixes `std::as_const` at line 181.
+- [X] **2.3** In `src/surface_supply_order.cpp`, add `#include <utility>` the same way, after `#include "timer/timer_game_calendar.h"`. This fixes `std::as_const` at line 181.
 
-- [ ] **2.4** In `src/saveload/layer_processor_sl.cpp:126`, replace the conditional-lvalue assignment with the reference idiom already used two lines above. The behaviour is identical:
+- [X] **2.4** In `src/saveload/layer_processor_sl.cpp:126`, replace the conditional-lvalue assignment with the reference idiom already used two lines above. The behaviour is identical:
 
   ```cpp
   auto &expected = preview ? _load_check_data.layer_processor_expected : _processor_expected;
   expected = {header[1], header[2]};
   ```
 
-- [ ] **2.5** Apply the same rewrite to `src/saveload/transport_tube_power_sl.cpp:129` (`tube_power_expected` / `_tube_power_expected`).
+- [X] **2.5** Apply the same rewrite to `src/saveload/transport_tube_power_sl.cpp:129` (`tube_power_expected` / `_tube_power_expected`).
 
-- [ ] **2.6** Apply the same rewrite to `src/saveload/geothermal_heat_route_sl.cpp:136` (`geothermal_heat_route_expected` / `_heat_route_expected`, three elements). Leave line 137 unchanged: GCC accepts assigning a scalar `interval[0]` to a conditional lvalue.
+- [X] **2.6** Apply the same rewrite to `src/saveload/geothermal_heat_route_sl.cpp:136` (`geothermal_heat_route_expected` / `_heat_route_expected`, three elements). Leave line 137 unchanged: GCC accepts assigning a scalar `interval[0]` to a conditional lvalue.
 
-- [ ] **2.7** In `src/saveload/saveload.h:880`, change `std::optional<SaveCapability> required_capability;` to `std::optional<SaveCapability> required_capability{};`. The value is still `std::nullopt` and `SaveLoad` stays an aggregate. This removes about 944 GCC and 783 Clang `-Wmissing-field-initializers` warnings so that real warnings can be seen. Change no factory.
+- [X] **2.7** In `src/saveload/saveload.h:880`, change `std::optional<SaveCapability> required_capability;` to `std::optional<SaveCapability> required_capability{};`. The value is still `std::nullopt` and `SaveLoad` stays an aggregate. This removes about 944 GCC and 783 Clang `-Wmissing-field-initializers` warnings so that real warnings can be seen. Change no factory.
 
-- [ ] **2.8** Verify the six edited objects in both trees: `ninja -C build <obj>` and `ninja -C build-clang <obj>` for `CMakeFiles/openttd_lib.dir/src/{layer_recipe_work,surface_supply_order}.cpp.o`, `CMakeFiles/openttd_lib.dir/src/saveload/{layer_processor_sl,transport_tube_power_sl,geothermal_heat_route_sl}.cpp.o` and the fixture consumer `CMakeFiles/openttd_test.dir/src/tests/space_preview.cpp.o`. Then sweep for remaining R1-R3 shapes: `grep -rnE "\) = \{" src --include=*.cpp --include=*.h` for conditional-lvalue braced assignments, and `grep -rlE "std::(exchange|as_const|filesystem)" src` cross-checked against each file's own or fixture includes. Record the results. Leave any new hit for Group 5, which owns diagnostics, unless it is the identical shape.
+- [X] **2.8** Verify the six edited objects in both trees: `ninja -C build <obj>` and `ninja -C build-clang <obj>` for `CMakeFiles/openttd_lib.dir/src/{layer_recipe_work,surface_supply_order}.cpp.o`, `CMakeFiles/openttd_lib.dir/src/saveload/{layer_processor_sl,transport_tube_power_sl,geothermal_heat_route_sl}.cpp.o` and the fixture consumer `CMakeFiles/openttd_test.dir/src/tests/space_preview.cpp.o`. Then sweep for remaining R1-R3 shapes: `grep -rnE "\) = \{" src --include=*.cpp --include=*.h` for conditional-lvalue braced assignments, and `grep -rlE "std::(exchange|as_const|filesystem)" src` cross-checked against each file's own or fixture includes. Record the results. Leave any new hit for Group 5, which owns diagnostics, unless it is the identical shape.
 
 ### Group 3 - Correct template instantiation and member ordering
 
@@ -423,7 +423,7 @@ Group 5 left linked test binaries and Group 6 materialized content. This group o
 
   Test names containing `,`, `[` or `]` need a backslash before that character for Catch. None of the 36 research-build failures contains them.
 
-- [ ] **7.5** Create `r2lbf-a-execution-notes.md` in this directory, following the house style of [m2o26-a-execution-notes.md](m2o26-a-execution-notes.md). It holds a header with the toolchain and commands, one section per completed group, and a **Failure ledger** table with these columns: test, family, GCC, Clang, category (from item 8.5), evidence file, owning group.
+- [ ] **7.5** Extend `r2lbf-a-execution-notes.md` in this directory (started in Group 1), following the house style of [m2o26-a-execution-notes.md](m2o26-a-execution-notes.md). It holds a header with the toolchain and commands, one section per completed group, and a **Failure ledger** table with these columns: test, family, GCC, Clang, category (from item 8.5), evidence file, owning group.
 
 ### Group 8 - Run the GCC baseline and classify every failure
 

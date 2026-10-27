@@ -8,6 +8,7 @@
  * @file layer_processor_sl.cpp Bounded recipe choice/work/counter transport; physical cargo stays in ordinary industry/packet chunks.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16B
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 (GCC-portable header bounds)
  */
 
 #include "../stdafx.h"
@@ -123,7 +124,9 @@ struct LPCHChunkHandler : ChunkHandler {
 		auto &presence = preview ? _load_check_data.layer_processor_present : _processor_presence;
 		if (presence[0]) SlErrorCorrupt("Duplicate processor header");
 		presence[0] = true;
-		(preview ? _load_check_data.layer_processor_expected : _processor_expected) = {header[1], header[2]};
+		// Bind the destination first: GCC 13 rejects a braced-list assignment to a conditional lvalue.
+		auto &expected = preview ? _load_check_data.layer_processor_expected : _processor_expected;
+		expected = {header[1], header[2]};
 	}
 	/** Parse unpublished header bounds. */
 	void Load() const override { this->Read(false); }

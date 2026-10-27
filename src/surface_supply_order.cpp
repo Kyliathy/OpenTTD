@@ -1,12 +1,15 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file surface_supply_order.cpp Pure original-owner order/receipt validation and shared day allowance.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCB.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 (include what is used on Linux)
  * No function here installs an owner, allocates cargo, charges/refunds cash or activates saved orders.
  */
 #include "stdafx.h"
 #include "surface_supply_order.h"
 #include "multilayer_bootstrap.h"
 #include "timer/timer_game_calendar.h"
+#include <utility> // std::as_const in the mutable record lookup.
+
 #include "safeguards.h"
 
 /** Validate only original A provenance without requiring physical historical packets to survive.

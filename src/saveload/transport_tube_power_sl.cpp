@@ -8,6 +8,7 @@
  * @file transport_tube_power_sl.cpp Bounded explicit physical inlet/path and fractional invoice transport; electrical accounts stay in UPLH/UPLD.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group5
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md schema ownership
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 2 (GCC-portable header bounds)
  */
 
 #include "../stdafx.h"
@@ -126,7 +127,9 @@ struct TUPHChunkHandler final : ChunkHandler {
 		auto &presence = preview ? _load_check_data.tube_power_present : _tube_power_presence;
 		if (presence[0]) SlErrorCorrupt("Duplicate tube power header");
 		presence[0] = true;
-		(preview ? _load_check_data.tube_power_expected : _tube_power_expected) = {header[1], header[2]};
+		// Bind the destination first: GCC 13 rejects a braced-list assignment to a conditional lvalue.
+		auto &expected = preview ? _load_check_data.tube_power_expected : _tube_power_expected;
+		expected = {header[1], header[2]};
 	}
 	/** Stage full-load header without publishing physical services. */
 	void Load() const override { this->Read(false); }
