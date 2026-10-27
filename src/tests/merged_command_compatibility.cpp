@@ -2,6 +2,7 @@
 /** @file merged_command_compatibility.cpp Independent wire bytes and pre-dispatch merged peer refusal.
  * @see docs/zz-reach2/architecture/commands/archi-commands.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 16 (the alias check follows this build's debug flavour)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -55,7 +56,11 @@ TEST_CASE("Merged native network identity refuses original and stale protocol pe
 	info.server_revision = current.substr(0, marker); CheckGameCompatibility(info); CHECK_FALSE(info.version_compatible); CHECK_FALSE(info.compatible);
 	if (!_openttd_revision_tagged) {
 		const auto hash = current.find_last_of('-'); REQUIRE(hash != std::string::npos);
-		CHECK(IsNetworkCompatibleVersion("alias" + current.substr(hash)));
-		CHECK_FALSE(IsNetworkCompatibleVersion("dbg_seed-alias" + current.substr(hash)));
+		// A RANDOM_DEBUG build (CI's Dedicated row) names itself "dbg_seed-..." and accepts only peers of the same debug
+		// flavour, as a standard build accepts only standard peers. The alias keeps this build's flavour and source hash.
+		const std::string flavour = current.starts_with("dbg_seed-") ? "dbg_seed-" : current.starts_with("dbg_sync-") ? "dbg_sync-" : "";
+		const std::string other_flavour = flavour.empty() ? "dbg_seed-" : "";
+		CHECK(IsNetworkCompatibleVersion(flavour + "alias" + current.substr(hash)));
+		CHECK_FALSE(IsNetworkCompatibleVersion(other_flavour + "alias" + current.substr(hash)));
 	}
 }
