@@ -308,7 +308,7 @@ flowchart LR
 
 {{SIMPLE}}
 
-- [ ] **6.1** Materialize the seven retained base-set fixtures into both trees with the existing owner. Do not copy files by hand. The research build ran this exact snippet, and the destination hashes matched the profile.
+- [X] **6.1** Materialize the seven retained base-set fixtures into both trees with the existing owner. Do not copy files by hand. The research build ran this exact snippet, and the destination hashes matched the profile.
 
   ```bash
   python3 -I -B - <<'EOF'
@@ -323,15 +323,15 @@ flowchart LR
   EOF
   ```
 
-- [ ] **6.2** Verify the bytes. For example, `sha256sum build/baseset/trg1.grf` must print `38f0494a7f508dc6e471ca3eba91703f9a1df7aad2067f0f4e25f79b5e9aab51`, and `build/baseset/sample.cat` must print `edb6233cb97546a11b4f50cf0fe3d95ed00e767d26c00246850ff992a7d495bd`. The seven expected values are the `runtime_assets` entries of `src/tests/fixtures/config/multilayer/native-build-profile.json`. Record all seven for both trees.
+- [X] **6.2** Verify the bytes. For example, `sha256sum build/baseset/trg1.grf` must print `38f0494a7f508dc6e471ca3eba91703f9a1df7aad2067f0f4e25f79b5e9aab51`, and `build/baseset/sample.cat` must print `edb6233cb97546a11b4f50cf0fe3d95ed00e767d26c00246850ff992a7d495bd`. The seven expected values are the `runtime_assets` entries of `src/tests/fixtures/config/multilayer/native-build-profile.json`. Record all seven for both trees.
 
-- [ ] **6.3** Smoke-test the regression path with `ctest --test-dir build -R '^regression_' --output-on-failure`. Expected: 4/4 pass, as in the research build. If a run reports a missing graphics set, use the OpenGFX row in **Consult on Demand**. Pass any other failure to Group 8 without fixing it.
+- [X] **6.3** Smoke-test the regression path with `ctest --test-dir build -R '^regression_' --output-on-failure`. Expected: 4/4 pass, as in the research build. If a run reports a missing graphics set, use the OpenGFX row in **Consult on Demand**. Pass any other failure to Group 8 without fixing it.
 
-- [ ] **6.4** Record the content coupling: both trees' Catch tests copy runtime content from `<repository>/build` (`GetTestRuntimeConfig`). Therefore `build/` must be built (Group 5) and materialized (6.1) before any `build-clang/` test run in Group 14. Do not change `GetTestRuntimeConfig` to follow the executable; that would change the Windows layout too.
+- [X] **6.4** Record the content coupling: both trees' Catch tests copy runtime content from `<repository>/build` (`GetTestRuntimeConfig`). Therefore `build/` must be built (Group 5) and materialized (6.1) before any `build-clang/` test run in Group 14. Do not change `GetTestRuntimeConfig` to follow the executable; that would change the Windows layout too.
 
-- [ ] **6.5** Record that the wrapper-only tests are not part of this baseline. Every consumer of `GetTestExpectedSprites` and `test_candidate_sprite_input.h` (`multilayer_packed_load.cpp`, `ground_packed_load.cpp`) is tagged hidden (`[.m1-packed-art-load]`, `[.ground-packed-art-load]`, …). CTest therefore never registers them. Do not synthesize `OTTD_TEST_*` inputs for them.
+- [X] **6.5** Record that the wrapper-only tests are not part of this baseline. Every consumer of `GetTestExpectedSprites` and `test_candidate_sprite_input.h` (`multilayer_packed_load.cpp`, `ground_packed_load.cpp`) is tagged hidden (`[.m1-packed-art-load]`, `[.ground-packed-art-load]`, …). CTest therefore never registers them. Do not synthesize `OTTD_TEST_*` inputs for them.
 
-- [ ] **6.6** Confirm that the test output locations are present and ignored: `mlm/reviews/`, `mlm/runtime/`, `logs/` and `test-cache/`. Check them with `git check-ignore -v`, keeping `mlm/reviews/README.md` tracked. Run tests only from inside the checkout, so that `FindTestRepositoryRoot` resolves this repository.
+- [X] **6.6** Confirm that the test output locations are present and ignored: `mlm/reviews/`, `mlm/runtime/`, `logs/` and `test-cache/`. Check them with `git check-ignore -v`, keeping `mlm/reviews/README.md` tracked. Run tests only from inside the checkout, so that `FindTestRepositoryRoot` resolves this repository.
 
 ### Area Mandatory Reading - Test-run kit and GCC baseline
 
