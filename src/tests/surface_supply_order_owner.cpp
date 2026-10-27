@@ -2,6 +2,7 @@
 /** @file surface_supply_order_owner.cpp Actual native owner restoration, paid command settlement and independent copied-reference boundaries.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Groups13CCC/13CCD.
  * Staged paid-looking records are declared restore components, never purchases or usable stock/payment evidence.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 16 (no odr-use of CargoPacket::MAX_COUNT in Debug links)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -126,7 +127,8 @@ TEST_CASE("A full actual native receiver retains the whole paid pending order un
 	// Spread opaque routing buckets to avoid quadratic merge scans; these
 	// routes confer no operational route/station or saved-world evidence.
 	for (uint32_t index = 0; index < packet_count; ++index) {
-		auto *packet = CargoPacket::Create(rig.station, CargoPacket::MAX_COUNT, Source{_current_company.base(), SourceType::CompanySupply});
+		// Pass a copy: Create() forwards by reference, which odr-uses the in-class constant and fails to link without optimisation.
+		auto *packet = CargoPacket::Create(rig.station, uint16_t{CargoPacket::MAX_COUNT}, Source{_current_company.base(), SourceType::CompanySupply});
 		queue.Append(packet, StationID{static_cast<uint16_t>(index % 512)});
 	}
 	REQUIRE(queue.TotalCount() == UINT32_MAX); const auto packets = CargoPacket::GetNumItems();
