@@ -9,6 +9,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Groups9/11
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  * @see docs/zz-reach2/architecture/vehicles/archi-vehicles.md
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 3 (member order portable to GCC/Clang)
  */
 
 #include "../stdafx.h"
@@ -56,6 +57,17 @@ public:
 	DiagDirection shaft = DiagDirection::Invalid; ///< B shaft points away from the retained A-side approach.
 	std::string side; ///< Evidence namespace only; never a gameplay destination.
 
+	// Defined before the constructor: a member with a deduced return type must be defined before its first use (GCC/Clang).
+	/** @tparam Tcmd Actual synchronized command. @param args Its ordinary native arguments. @return Successful command result and real invoice. */
+	template <Commands Tcmd, typename... Args>
+	auto Do(Args... args)
+	{
+		auto result = Command<Tcmd>::Do(DoCommandFlag::Execute, args...);
+		INFO("exit command=" << GetCommandName(Tcmd) << " error=" << ExtractCommandCost(result).GetErrorMessage().base());
+		REQUIRE(ExtractCommandCost(result).Succeeded());
+		return result;
+	}
+
 	/** @param side Evidence namespace for the reciprocal construction. @param cells Accepted initial length; final GUI acceptance extends44 to50. @param regional Use current new-map geology for the final integrated journey. */
 	explicit TBMExitJourney(std::string side, uint cells = 50, bool regional = false) :
 		world(MapLayer::Underground, true, true, regional ? GEOLOGY_HARDNESS_VERSION : 0), content(this->world.ActivatedContent(), true), side(std::move(side))
@@ -86,15 +98,6 @@ public:
 		this->Do<Commands::StartStopVehicle>(this->world.hauler->index, true);
 	}
 
-	/** @tparam Tcmd Actual synchronized command. @param args Its ordinary native arguments. @return Successful command result and real invoice. */
-	template <Commands Tcmd, typename... Args>
-	auto Do(Args... args)
-	{
-		auto result = Command<Tcmd>::Do(DoCommandFlag::Execute, args...);
-		INFO("exit command=" << GetCommandName(Tcmd) << " error=" << ExtractCommandCost(result).GetErrorMessage().base());
-		REQUIRE(ExtractCommandCost(result).Succeeded());
-		return result;
-	}
 
 	/** @param state Genuinely reached stage. @return Nothing; optional recorder retains the actual native world. */
 	void Save(std::string_view state) const { DepotFileRecorder{}.Save(fmt::format("exit-{}-{}", this->side, state)); }

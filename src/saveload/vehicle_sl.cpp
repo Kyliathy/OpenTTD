@@ -9,6 +9,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group11 independent native freight preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C same-file mining role/work preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; refuse missing Space companies before generic unit-number reconstruction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 3 (explicit preview handler instantiations for Clang)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; copied hauler refits retain original common cargo/capacity fields.
  */
 
@@ -1213,6 +1214,13 @@ public:
 		SlObject(row, this->GetLoadDescription());
 	}
 };
+
+/* Instantiate SlOrdinaryCargoPreview classes: Clang needs each specialization's inline description[] complete
+ * before DefaultSaveLoadHandler::GetDescription converts it to a SaveLoadTable (same cure as SlStationSpecList). */
+template class SlOrdinaryCargoPreview<VehicleType::Train>;
+template class SlOrdinaryCargoPreview<VehicleType::Road>;
+template class SlOrdinaryCargoPreview<VehicleType::Ship>;
+template class SlOrdinaryCargoPreview<VehicleType::Aircraft>;
 
 /** Original native vehicle transport; independent copied Space rows grant no physical hull, company, packet or progress. */
 struct VEHSChunkHandler : ChunkHandler {

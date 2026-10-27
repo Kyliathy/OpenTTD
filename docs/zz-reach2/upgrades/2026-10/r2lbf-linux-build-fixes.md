@@ -196,11 +196,11 @@ These changes need C++ template-semantics judgement and checks under both compil
 
 {{MEDIUM}}
 
-- [ ] **3.1** In `src/tests/tbm_exit.cpp`, move the `Do` member template (doc comment plus lines 89-97) above the `explicit TBMExitJourney(...)` constructor, before line 59. Leave its body unchanged. Do not use a trailing return type, which would duplicate the `Command<Tcmd>::Do(...)` call expression. The diff must be a pure move.
+- [X] **3.1** In `src/tests/tbm_exit.cpp`, move the `Do` member template (doc comment plus lines 89-97) above the `explicit TBMExitJourney(...)` constructor, before line 59. Leave its body unchanged. Do not use a trailing return type, which would duplicate the `Command<Tcmd>::Do(...)` call expression. The diff must be a pure move.
 
-- [ ] **3.2** Confirm `TBMExitJourney` has no other member that uses a deduced-return member defined later in the class. Treat the Clang diagnostic "function '…' with deduced return type cannot be used before it is defined" in Group 5 as the authoritative sweep over all tests. Do not refactor other fixtures speculatively.
+- [X] **3.2** Confirm `TBMExitJourney` has no other member that uses a deduced-return member defined later in the class. Treat the Clang diagnostic "function '…' with deduced return type cannot be used before it is defined" in Group 5 as the authoritative sweep over all tests. Do not refactor other fixtures speculatively.
 
-- [ ] **3.3** In `src/saveload/vehicle_sl.cpp`, directly after the closing `};` of `SlOrdinaryCargoPreview` (line 1215), add the explicit instantiations, mirroring `station_sl.cpp`:
+- [X] **3.3** In `src/saveload/vehicle_sl.cpp`, directly after the closing `};` of `SlOrdinaryCargoPreview` (line 1215), add the explicit instantiations, mirroring `station_sl.cpp`:
 
   ```cpp
   /* Instantiate SlOrdinaryCargoPreview classes. */
@@ -212,9 +212,9 @@ These changes need C++ template-semantics judgement and checks under both compil
 
   Use exactly the four types that `VEHSChunkHandler::LoadCheck` names. Clang's diagnostic prints `VehicleType::Begin`, which is the same value as `Train`.
 
-- [ ] **3.4** Verify `CMakeFiles/openttd_lib.dir/src/saveload/vehicle_sl.cpp.o` and `CMakeFiles/openttd_test.dir/src/tests/tbm_exit.cpp.o` compile in both trees with no new warnings from those files.
+- [X] **3.4** Verify `CMakeFiles/openttd_lib.dir/src/saveload/vehicle_sl.cpp.o` and `CMakeFiles/openttd_test.dir/src/tests/tbm_exit.cpp.o` compile in both trees with no new warnings from those files.
 
-- [ ] **3.5** Review the combined diff of Groups 2-3 adversarially. Each hunk must be an include, a reference binding, a member move, an explicit instantiation or a default member initializer. No hunk may change a saved field, a version gate, a command or an assertion. Record the diff summary in the execution notes when Group 7 creates them.
+- [X] **3.5** Review the combined diff of Groups 2-3 adversarially. Each hunk must be an include, a reference binding, a member move, an explicit instantiation or a default member initializer. No hunk may change a saved field, a version gate, a command or an assertion. Record the diff summary in the execution notes when Group 7 creates them.
 
 ### Group 4 - Remove dangling temporaries and odr-used constants in tests
 

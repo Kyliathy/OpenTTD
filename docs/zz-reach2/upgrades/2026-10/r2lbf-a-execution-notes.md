@@ -23,3 +23,9 @@ Items 2.1-2.7 were applied by `test-cache/linux-baseline/apply_group2.py` (ancho
 The 2.8 sweep (`group2-sweep.txt`) found no other conditional-lvalue braced assignment and no `std::exchange`/`std::as_const` user without `<utility>`. The 37 `std::filesystem` users without a direct `<filesystem>` include get it through project headers (`test_artifact_paths.h`, `language.h`, `fileio_func.h`, and now `layer_save_fixture.h`). The research copy compiled all of them with both compilers, so nothing is carried to Group 5.
 
 **Commenting interpretation (user standard, 2026-10-27):** in upstream or fork files that this plan only touches, the standard applies to the header (a plan/architecture reference) and to every changed or added statement. Untouched existing code in those files is not rewritten.
+
+## Group 3 completed
+
+`test-cache/linux-baseline/apply_group3.py` moved `TBMExitJourney::Do` above the constructor (3.1). The doc comment and body are byte-identical, and one placement comment states the deduced-return rule. It then added the four `template class SlOrdinaryCargoPreview<…>` instantiations after the class (3.3), with a comment that ties them to the `SlStationSpecList` precedent. Both file headers now cite this plan. 3.2: `Do` is the class's only deduced-return member (`group3-deduced-members.txt`). 3.4: `vehicle_sl.cpp.o` and `tbm_exit.cpp.o` compile in both trees, with no warnings from the touched lines (`group3-objects-{build,build-clang}.log`).
+
+3.5 diff summary (Groups 2-3, `git diff 169abb88 -- src`): 10 source files. The hunks are 7 header references, 3 includes, 3 reference bindings, 1 default member initializer, 1 member move and 1 explicit-instantiation block. No saved field, version gate, command, test assertion or behaviour changed.
