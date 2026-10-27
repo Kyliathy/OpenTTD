@@ -9,6 +9,7 @@
  * irregular floors bored to completion against the accepted outline; tight turns, solid diagonal corners and a late
  * obstruction that pauses at the previous safe support; reversing and a reload during a bend.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 11
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (the bend reload declares Mixed rock after the halved yields)
  */
 
 #include "../stdafx.h"
@@ -215,6 +216,9 @@ TEST_CASE("Reversing keeps the cutting heading and never cuts backwards", "[tbm-
 /** A save in the middle of a bend reloads to the same cursor and spoil ledger, and commits on the same tick. */
 TEST_CASE("A reload during a bend continues the same cursor and ledger", "[tbm-coverage]")
 {
+	// Mixed rock keeps the former Soft 12 t Rock per cell, so the route keeps its frozen breakpoint after the bend
+	// (halved Soft yields since 2026-10-09, r2tbmf-tbm-fixes.md line 37, let the wagons take the third cut too).
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed};
 	TBMWorkRig rig({DirDiff::Same, DirDiff::Right45, DirDiff::Right45});
 	rig.BoreOneCut();
 	rig.ExchangeAndReturn();

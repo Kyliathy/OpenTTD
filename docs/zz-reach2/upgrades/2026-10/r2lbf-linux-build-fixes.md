@@ -621,23 +621,25 @@ flowchart TD
 
 These six tests passed in the research build only when `_cut_terms` was temporarily restored to its pre-`bfba42fd` values in the scratch copy. That isolates their cause to the halving, which the user decided on 2026-10-09 (`r2tbmf-tbm-fixes.md` line 37). Keep each test's intent and change only what the halving moved.
 
+**Execution note (2026-10-27):** 11.3-11.7 used the repository's own idiom for this situation instead of the literal suggestions below. `ExcavationFixture::DeclareRockSeam` / `TBMRigRock` declare Mixed rock, whose 12 t Rock per cell is the former Soft total, so routes keep their breakpoints and every assertion stays. 11.7 also surfaced a category C finding, which is now Group 13C. See `r2lbf-a-execution-notes.md`, **Group 11 completed**.
+
 {{MEDIUM}}
 
-- [ ] **11.1** Record the causal proof in the execution notes: `git show bfba42fd -- src/excavation_cut.cpp` (the `_cut_terms` line) and the sibling test updates in the same commit (`git show bfba42fd | grep -E "^[-+].*(earth_t|rock_t) =="`). Optionally reproduce the differential in a **scratch copy outside the repository** (`git archive HEAD | tar -x -C <scratch>`): restore `{{{6, 12, 1, 1, 30}, {4, 24, 2, 1, 50}, {2, 40, 3, 2, 80}, {1, 48, 0, 4, 120}}}` there, rebuild, and confirm that the six cases pass. Never make this revert in the repository.
+- [X] **11.1** Record the causal proof in the execution notes: `git show bfba42fd -- src/excavation_cut.cpp` (the `_cut_terms` line) and the sibling test updates in the same commit (`git show bfba42fd | grep -E "^[-+].*(earth_t|rock_t) =="`). Optionally reproduce the differential in a **scratch copy outside the repository** (`git archive HEAD | tar -x -C <scratch>`): restore `{{{6, 12, 1, 1, 30}, {4, 24, 2, 1, 50}, {2, 40, 3, 2, 80}, {1, 48, 0, 4, 120}}}` there, rebuild, and confirm that the six cases pass. Never make this revert in the repository.
 
-- [ ] **11.2** `src/tests/excavation_outline.cpp:56-57`: one hardness-0 cell now yields `earth_t == 3` and `rock_t == 6`. Cost 30 and 74 work ticks are unchanged, and the asserts at lines 58-59 already pass. Change the two literals and keep every other assertion. Validated in the research copy: the case passes (22 assertions).
+- [X] **11.2** `src/tests/excavation_outline.cpp:56-57`: one hardness-0 cell now yields `earth_t == 3` and `rock_t == 6`. Cost 30 and 74 work ticks are unchanged, and the asserts at lines 58-59 already pass. Change the two literals and keep every other assertion. Validated in the research copy: the case passes (22 assertions).
 
-- [ ] **11.3** `src/tests/tbm_engine.cpp:144-153`: the premise "twelve unopened cells, whose Rock alone exceeds a single 128 t hopper" no longer holds (72 t), so the `InsufficientCapacity` refusals at 147-151 do not happen. Rebuild the scenario so the refusal is exercised again. Prefer making the swept door cells harder in the fixture's geology (hardness 2 gives 12 × 20 t = 240 t of rock) over changing hopper capacity. Then update the comment's arithmetic. If the fixture cannot set hardness without new production API, record a C finding and ask the owner instead.
+- [X] **11.3** `src/tests/tbm_engine.cpp:144-153`: the premise "twelve unopened cells, whose Rock alone exceeds a single 128 t hopper" no longer holds (72 t), so the `InsufficientCapacity` refusals at 147-151 do not happen. Rebuild the scenario so the refusal is exercised again. Prefer making the swept door cells harder in the fixture's geology (hardness 2 gives 12 × 20 t = 240 t of rock) over changing hopper capacity. Then update the comment's arithmetic. If the fixture cannot set hardness without new production API, record a C finding and ask the owner instead.
 
-- [ ] **11.4** `src/tests/tbm_coverage.cpp:216-236`: with half the spoil per cell, the cutter's hoppers fill later, so the expected `ReturnForExchange` (4) arrives after more ticks; `AdvanceSupport` (3) is observed instead. Trace the phase per tick in the case with `INFO(…)`, find where the reload-during-bend sequence now reaches `ReturnForExchange`, and move the assertion there. The bend, cursor and ledger-continuity checks must stay.
+- [X] **11.4** `src/tests/tbm_coverage.cpp:216-236`: with half the spoil per cell, the cutter's hoppers fill later, so the expected `ReturnForExchange` (4) arrives after more ticks; `AdvanceSupport` (3) is observed instead. Trace the phase per tick in the case with `INFO(…)`, find where the reload-during-bend sequence now reaches `ReturnForExchange`, and move the assertion there. The bend, cursor and ledger-continuity checks must stay.
 
-- [ ] **11.5** `src/tests/tbm_movement.cpp:325-350`, "A started cutter drives to its face…": `REQUIRE((breakpoints.size() >= 2) == bending)` now fails for the bending variant, because fewer exchange breakpoints occur with lighter spoil. Re-derive the breakpoint count from the halved load. Keep the property that a bending route produces at least two exchange breakpoints by lengthening the route, if needed, rather than weakening the comparison.
+- [X] **11.5** `src/tests/tbm_movement.cpp:325-350`, "A started cutter drives to its face…": `REQUIRE((breakpoints.size() >= 2) == bending)` now fails for the bending variant, because fewer exchange breakpoints occur with lighter spoil. Re-derive the breakpoint count from the halved load. Keep the property that a bending route produces at least two exchange breakpoints by lengthening the route, if needed, rather than weakening the comparison.
 
-- [ ] **11.6** `src/tests/tbm_movement.cpp:694-710`, "A TBM holds at a junction…": `REQUIRE(done())` times out in phase 7 (`Completed`) with cursor 13. With lighter spoil the job completes before the junction hold is exercised. Lengthen the job, or place the junction event earlier, so the hold-and-restore path still runs. Do not raise the tick budget alone.
+- [X] **11.6** `src/tests/tbm_movement.cpp:694-710`, "A TBM holds at a junction…": `REQUIRE(done())` times out in phase 7 (`Completed`) with cursor 13. With lighter spoil the job completes before the junction hold is exercised. Lengthen the job, or place the junction event earlier, so the hold-and-restore path still runs. Do not raise the tick budget alone.
 
-- [ ] **11.7** `src/tests/tbm_movement.cpp:875-903`, "A project's whole life can be played…": `controls().step == step` is `2 == 4` after 20,000 ticks in phase 20 (`AwaitFaceTransfer`). Re-derive the expected control-step sequence under the halved terms. If the scripted steps assume an exchange that no longer happens, add the missing player action rather than skipping a step.
+- [X] **11.7** `src/tests/tbm_movement.cpp:875-903`, "A project's whole life can be played…": `controls().step == step` is `2 == 4` after 20,000 ticks in phase 20 (`AwaitFaceTransfer`). Re-derive the expected control-step sequence under the halved terms. If the scripted steps assume an exchange that no longer happens, add the missing player action rather than skipping a step.
 
-- [ ] **11.8** Rebuild and run the six names alone, their files with `-#`, and the full suite. Record the result rows in the ledger. Expected: the S1 rows pass, nothing else changes, and the suite shows 9 failures.
+- [X] **11.8** Rebuild and run the six names alone, their files with `-#`, and the full suite. Record the result rows in the ledger. Expected: the S1 rows pass, nothing else changes, and the suite shows 9 failures.
 
 ### Group 12 - Re-align TBM phase, support, cutting and planner expectations (S2)
 
@@ -757,7 +759,7 @@ _Applies to Group 13B._
 
 {{MEDIUM}}
 
-- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name.
+- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name. Ask 13C.1 in the same prompt, so the owner answers both decisions at once.
 
 - [ ] **13B.2** If (a): in `layer_processor_load.cpp`, write the save and its checkpoint text under the case's run-owned `saves` directory. Choose a feature and scenario declared in `mlm/review-producers.json`. Keep every assertion and the checkpoint content unchanged.
 
@@ -768,6 +770,29 @@ _Applies to Group 13B._
 - [ ] **13B.5** Check the Python fixture checkers (`layer_processor_save_fixture.py`, `layer_mine_save_fixture.py`, `underground_save_fixture.py`) and the `multilayer-inputs.json` references. If a checker reads the producer's fresh output rather than the committed fixture, point it at the new run-owned path. Otherwise leave it unchanged.
 
 - [ ] **13B.6** Run the three producer cases and their files with `-#` in `build/`, and confirm that `git status --short -- src/tests/fixtures` is empty afterwards. If (b) was chosen, record the restore step in the execution notes instead.
+
+### Area Mandatory Reading - Face-wait hauler prompt
+
+_Applies to Group 13C._
+
+**Entry gate (added during execution, 2026-10-27):** Group 11 found that a cutter in `AwaitFaceTransfer` with no assigned hauler never prompts the player (category C, see `r2lbf-a-execution-notes.md` **Group 11 completed**). This is a production change, so the owner decides first (13C.1). Do not edit production code before the answer.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/tbm_exchange.cpp](../../../../src/tbm_exchange.cpp) | 1320-1346 | `GetTBMLogisticsWait` returns `NoHauler` only for `IsTBMReturning` or `IsTBMWaitingForExchange` phases. `IsTBMLogisticsStalled` does not count `NoHauler`, so adding the face wait changes only the controls. |
+| [src/tbm_controls.cpp](../../../../src/tbm_controls.cpp) | 178-203; 255 | `ChooseTBMProjectStep` maps `NoHauler` to `TBMPlayerStep::AssignHauler` ("The machine needs empties and no hauler serves the project"), otherwise `Working`. |
+| [src/tbm_project.cpp](../../../../src/tbm_project.cpp) | 1098-1123 | `Bore`/`AdvanceSupport` enter `AwaitFaceTransfer` when `GetTBMMeetingKind` is `Face`. Only removing the due load ends the wait, and that needs a hauler. |
+| [src/tests/tbm_movement.cpp](../../../../src/tests/tbm_movement.cpp) | 875-910 | The whole-life controls case. On Soft rock (no `TBMRigRock`) it reproduces the gap: step `Working` for 20,000 ticks in phase 20 at cursor 11. |
+
+### Group 13C - Prompt for a hauler while a cutter waits at its face (owner decision first)
+
+{{SIMPLE}}
+
+- [ ] **13C.1** Ask the owner, in the same prompt as 13B.1, whether `AwaitFaceTransfer` with no assigned hauler should show `TBMPlayerStep::AssignHauler`. The options are: (a) yes, add `|| IsTBMAwaitingFaceTransfer(project.phase)` to the `NoHauler` condition in `GetTBMLogisticsWait` (recommended: the step's own documentation describes this state); (b) no, the face wait is meant to stay silent, which is then documented at the condition; or (c) another rule they name. Record the answer.
+
+- [ ] **13C.2** If (a): apply the one-line change with a comment, and add a focused regression case to `tbm_movement.cpp`. The case plays the whole-life opening on Soft rock (no `TBMRigRock`) up to the first face wait, then requires `controls().step == TBMPlayerStep::AssignHauler` and `controls().wait == TBMLogisticsWait::NoHauler`. If (b): add the comment only.
+
+- [ ] **13C.3** Rebuild `openttd_test` and run the new case alone, then with `-#` every file that reads `TBMLogisticsWait`: `tbm_movement.cpp`, `spoil_receiver_stall.cpp`, `tbm_exchange_acceptance.cpp`, `tbm_face_cycle.cpp` and `tbm_face_regression.cpp`. Also run `tbm_face_meeting.cpp`, which covers the face meeting itself. Expected: no new failures. Record the result in the execution notes.
 
 ### Area Mandatory Reading - Clang baseline and focused executables
 

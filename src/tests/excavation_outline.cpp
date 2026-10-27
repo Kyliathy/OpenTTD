@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file excavation_outline.cpp Canonical irregular/branch/diagonal floors and explicit extra-space cost/refusal fixtures. @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 12 */
+/**
+ * @file excavation_outline.cpp Canonical irregular/branch/diagonal floors and explicit extra-space cost/refusal fixtures.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs2-geology-and-excavation.md, Group 12
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (yields follow the halved cut terms)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -53,8 +57,9 @@ TEST_CASE("Excavation outline extra work is explicit charged and read-only", "[e
 	CHECK(accepted.authorized_tiles == std::vector<TileIndex>{requested, extra});
 	CHECK(accepted.extra_tiles == std::vector<TileIndex>{extra});
 	CHECK(accepted.extra_estimate.new_cells == 1);
-	CHECK(accepted.extra_estimate.earth_t == 6);
-	CHECK(accepted.extra_estimate.rock_t == 12);
+	// One Soft (hardness 0) cell yields 3 t earth and 6 t rock since the 2026-10-09 halving (r2tbmf-tbm-fixes.md line 37).
+	CHECK(accepted.extra_estimate.earth_t == 3);
+	CHECK(accepted.extra_estimate.rock_t == 6);
 	CHECK(accepted.extra_estimate.cost == 30);
 	CHECK(accepted.extra_estimate.work_ticks == 74);
 	CHECK(ComputeGeologyStateDigest(GetGeologyWorldState()) == before);

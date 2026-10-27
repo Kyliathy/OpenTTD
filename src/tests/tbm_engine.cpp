@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file tbm_engine.cpp Native engine mapping, part construction and ordinary purchase refusal. @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2 */
+/**
+ * @file tbm_engine.cpp Native engine mapping, part construction and ordinary purchase refusal.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Group 2
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (sealed pocket declares Mixed rock after the halved yields)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -109,11 +113,15 @@ TEST_CASE("Validated portal geometry constructs real cutter machinery without ch
  * Sealed startup through the delivered solid-starter contract (r2mlvs3mp-f). Historical evidence r2mlvs4-k recorded
  * MissingSupport for this sideways step because no portal-issued start existed; it now refuses as an illegal turn,
  * and the legal door exit refuses because one Earth and one Rock hopper cannot hold its twelve-cell first cut.
+ * Since the 2026-10-09 halving (r2tbmf-tbm-fixes.md line 37) Soft cells give 6 t Rock, so the pocket is declared
+ * Mixed rock, whose 12 t per cell is the former Soft total: the twelve cells again hold 144 t Rock.
  * The portal entry without wagons still refuses as ControllerUnavailable; complete commissioning is tbm_commission.cpp.
  */
 TEST_CASE("Sealed TBM startup needs the door heading and capacity for the whole pocket", "[tbm-sealed-start-gate]")
 {
 	TBMEngineFixture fixture;
+	// Declare the rock before the proof, so the quote and the refused reservation read the same finite seam.
+	fixture.world.DeclareRockSeam(GetTileLayer(fixture.request.proposal.commissioning_anchor), GeologyHardness::Mixed);
 	const auto proof = IssueLayerPortalBootstrap(fixture.request);
 	REQUIRE(proof.error == LayerPortalWorkError::None);
 	const auto anchor = fixture.request.proposal.commissioning_anchor;
@@ -141,7 +149,7 @@ TEST_CASE("Sealed TBM startup needs the door heading and capacity for the whole 
 	CHECK(PrepareExcavationPass(sideways, *sideways.pass_terms).error == ExcavationError::IllegalTurn);
 	CHECK(ReserveExcavationJob(sideways, false).error == ExcavationError::IllegalTurn);
 	CHECK(ReserveExcavationJob(sideways, true).error == ExcavationError::IllegalTurn);
-	// Leaving through the door sweeps twelve unopened cells, whose Rock alone exceeds a single 128 t hopper.
+	// Leaving through the door sweeps twelve unopened Mixed cells, whose 144 t of Rock alone exceeds a single 128 t hopper.
 	const auto door = first_segment(proof.exit_heading);
 	CHECK(QuoteExcavationCells(door.route[0].swept_tiles, 0).rock_t > 128);
 	CHECK(PrepareExcavationPass(door, *door.pass_terms).error == ExcavationError::InsufficientCapacity);

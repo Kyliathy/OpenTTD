@@ -20,6 +20,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs4-tunnel-boring-machines.md, Groups 8 and 11 (paid support and bend reload)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3-sealed-portals-and-deep-rail.md, Group 15
  * @see docs/zz-reach2/upgrades/2026-10/r2tbmf-tbm-fixes.md Group4; physical travel holds and lost-target recovery.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 11 (routes that need an early bay exchange declare Mixed rock after the halved yields)
  */
 
 #include "../stdafx.h"
@@ -339,6 +340,9 @@ TEST_CASE("A started cutter drives to its face, works its route and backs into i
 		bending = true;
 		reload_bend = true;
 	}
+	// Both routes cut Mixed rock, whose 12 t Rock per cell is the former Soft total: the bend overflows one load again
+	// and the straight route still holds all of its spoil (Soft yields halved on 2026-10-09, r2tbmf-tbm-fixes.md line 37).
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed};
 	TBMMovementRig rig(turns);
 	const auto route = rig.Job().route;
 	const auto breakpoints = rig.Job().pass_terms->exchange_after;
@@ -693,6 +697,10 @@ TEST_CASE("An ordinary train is turned back at a Commissioning pair's door", "[t
 /** A valid face target does not authorize a guessed junction branch when the paid path to it is broken. */
 TEST_CASE("A TBM holds at a junction until its actual work route is restored", "[tbm-travel-junction]")
 {
+	// The fault needs a cutter driving back to its face over paid track after a bay exchange. On halved Soft yields the
+	// first load is due only once the consist stands clear of its housing, where it meets its hauler at the face and
+	// never drives back; Mixed rock restores the former 12 t Rock per cell and with it the early bay exchange.
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed};
 	SourceLoop loop(LoopStart::Command);
 	/** @param done Actual native state to reach. @param limit Maximum physical ticks; every cargo operation stays with its real owner. */
 	const auto drive = [&](const std::function<bool()> &done, uint limit = 30000) {
@@ -874,6 +882,9 @@ TEST_CASE("The source loop replays the same trace from the same fixture", "[tbm-
  */
 TEST_CASE("A project's whole life can be played from the portal window's controls", "[tbm-controls]")
 {
+	// Mixed rock keeps the former Soft 12 t Rock per cell, so the first load is due while the consist still stands in
+	// its housing and returns to its bay, where the controls ask for the hauler (halved Soft yields since 2026-10-09).
+	const TBMRigRock mixed_rock{GeologyHardness::Mixed};
 	SourceLoop loop(LoopStart::Command, true);
 	const CompanyID company = _current_company;
 	const TBMProjectID project = loop.project;
