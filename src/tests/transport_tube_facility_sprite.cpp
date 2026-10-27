@@ -4,6 +4,7 @@
  * @file transport_tube_facility_sprite.cpp Actual native tube facility geometry, service demand, packet queues and display-only animation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group13CC.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 9 (each case owns its mock environment)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -58,6 +59,7 @@ static void CheckTubeFacilityFrames(TileIndex tile, GroundSpriteFamily asset, ui
 /** All actual default native graphics roles retain their own station cell, through axis and joined packet identity. */
 TEST_CASE("Tube terminal and interchange art follows real native platform roles and joins", "[tube-facility-art-geometry]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	LoadGeneratedWindowTestLanguage(); TubePrototypeRig world;
 	AutoRestoreBackup clearing(Company::Get(_current_company)->clear_limit, uint32_t{256} << 16);
 	std::array<bool, 8> seen{};
@@ -157,6 +159,7 @@ TEST_CASE("Tube depot art reads genuine service demand without earning repairs",
 /** Actual native station capacity pressure changes a lamp without becoming another packet store. */
 TEST_CASE("Tube platform art warns on the exact original full native packet queue", "[tube-facility-art-stock]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	LoadGeneratedWindowTestLanguage(); TubeMeterRig world; world.Bind();
 	const auto tile = TileXYL(38, 44, MapLayer::Underground);
 	REQUIRE(CmdBuildRailStation(DoCommandFlag::Execute, tile, world.tube, Axis::Y, 1, 1, STAT_CLASS_DFLT, 0, NEW_STATION, false).Succeeded());

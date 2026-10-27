@@ -8,6 +8,7 @@
  * @file transport_tube_construction.cpp Actual tube floor/depot/conversion/purchase/coupling command refusals.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md task10.1
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 9 (each case owns its mock environment)
  */
 
 #include "../stdafx.h"
@@ -157,6 +158,7 @@ TEST_CASE("Tube conversion cannot bypass an unfinished or unreleased TBM support
 /** Actual native station construction and the public utility-floor gate inspect every platform/approach/cable cell. */
 TEST_CASE("Tube terminals and utility footprints require every actual floor and approach", "[transport-tube-construction]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	LoadGeneratedWindowTestLanguage();
 	TubePrototypeRig world;
 	const auto station = TileXYL(50, 44, MapLayer::Underground);
@@ -225,6 +227,7 @@ TEST_CASE("Actual rail toolbar tube depot placement preserves the geological com
 /** Native engine/cargo identity refuses conventional purchase and refit despite broad mutable mechanical/refit masks. */
 TEST_CASE("Tube purchase and refit preserve the native movement and cargo domain", "[transport-tube-purchase]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	TubePrototypeRig world;
 	const auto ordinary = world.BuildDepot(MapLayer::Underground, false);
 	const auto vehicles = Vehicle::GetNumItems();

@@ -6,6 +6,7 @@
 
 /** @file transport_tube_recovery.cpp Actual electrical loss, topology and paid source recovery with native cargo/stop ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group7
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 9 (each case owns its mock environment)
  */
 
 #include "../stdafx.h"
@@ -72,6 +73,7 @@ TEST_CASE("Tube electrical component split holds actual train and rebuild restor
 /** A player stop remains authoritative through supply loss/restoration; reconnecting cannot silently issue a start command. */
 TEST_CASE("Tube restored service preserves manual depot stop and queued unpowered custody", "[transport-tube-power-recovery]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	TubeMeterRig rig; const auto packet = LoadTubeRecoveryCargo(rig); rig.Bind();
 	Company::Get(_current_company)->money = Money{0}; rig.Run(20);
 	Company::Get(_current_company)->money = Money{10000}; rig.Run(20);
@@ -86,6 +88,7 @@ TEST_CASE("Tube restored service preserves manual depot stop and queued unpowere
 /** Eligible physical layout changes expire only unused current offers, preserving paid/consumed source history and invalidating stale mutation tickets. */
 TEST_CASE("Tube physical topology change revokes unused original reservation without refund", "[transport-tube-power-recovery]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	TubeMeterRig rig; rig.Bind(); rig.Start();
 	++TimerGameTick::counter; PrepareTubePowerTick();
 	REQUIRE(GetUtilityAllocation(rig.consumer)->granted_energy_j == 270);
@@ -103,6 +106,7 @@ TEST_CASE("Tube physical topology change revokes unused original reservation wit
 /** Native depot service remains held during loss, then resumes one real paid opportunity while preserving the player stop. */
 TEST_CASE("Tube depot power restoration services the actual capsule without starting it", "[transport-tube-power-recovery]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	TubeMeterRig rig; rig.Bind(); rig.capsule->reliability = 100;
 	Company::Get(_current_company)->money = Money{0}; rig.Run(20);
 	CHECK(rig.capsule->reliability == 100); CHECK(rig.capsule->IsStoppedInDepot());
@@ -115,6 +119,7 @@ TEST_CASE("Tube depot power restoration services the actual capsule without star
 /** Routine source allocation and read-only circuit queries do not invalidate the actual native route cache. */
 TEST_CASE("Tube routine allocation leaves native physical path topology stable", "[transport-tube-power-recovery]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	TubeMeterRig rig; rig.Bind();
 	const auto revision = CSegmentCostCacheBase::s_rail_change_counter;
 	rig.Run(100);

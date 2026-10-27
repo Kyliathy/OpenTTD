@@ -544,15 +544,15 @@ TEST_CASE("…", "[…]")
 
 {{SIMPLE}}
 
-- [ ] **9.1** `src/tests/transport_tube_recovery.cpp`: the cases at lines 73, 87, 104 and 116. Edit from the bottom up so that the earlier line numbers stay valid.
+- [X] **9.1** `src/tests/transport_tube_recovery.cpp`: the cases at lines 73, 87, 104 and 116. Edit from the bottom up so that the earlier line numbers stay valid.
 
-- [ ] **9.2** `src/tests/transport_tube_construction.cpp`: the cases at lines 158 and 226.
+- [X] **9.2** `src/tests/transport_tube_construction.cpp`: the cases at lines 158 and 226.
 
-- [ ] **9.3** `src/tests/transport_tube_vehicle_sprite.cpp`: the case at line 82.
+- [X] **9.3** `src/tests/transport_tube_vehicle_sprite.cpp`: the case at line 82.
 
-- [ ] **9.4** `src/tests/transport_tube_facility_sprite.cpp`: the cases at lines 59 and 158.
+- [X] **9.4** `src/tests/transport_tube_facility_sprite.cpp`: the cases at lines 59 and 158.
 
-- [ ] **9.5** Rebuild `openttd_test` in `build/` and run the nine names with CTest, for example `ctest --test-dir build -R 'Tube|capsule' --output-on-failure`. Each must pass. Add a row per test to the ledger. `MockEnvironment.h` already reaches these files through `transport_tube_meter_fixture.h`; if a file does not compile, add `#include "mock_environment.h"` after its fixture include.
+- [X] **9.5** Rebuild `openttd_test` in `build/` and run the nine names with CTest, for example `ctest --test-dir build -R 'Tube|capsule' --output-on-failure`. Each must pass. Add a row per test to the ledger. `MockEnvironment.h` already reaches these files through `transport_tube_meter_fixture.h`; if a file does not compile, add `#include "mock_environment.h"` after its fixture include.
 
 ### Group 10 - Load language, isolate the local company and bootstrap recipe content (T2-T4)
 

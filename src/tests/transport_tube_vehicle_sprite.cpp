@@ -4,6 +4,7 @@
  * @file transport_tube_vehicle_sprite.cpp Actual purchased capsules retain packet custody and native service/source ownership through every packed body pose.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group13CB.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 9 (each case owns its mock environment)
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -81,6 +82,7 @@ static void CheckTubeBodyViews(Train &train, GroundSpriteFamily asset, uint8_t s
 /** All720 original body poses consume actual five-model packets, paid source loss/recovery and native once-tick service. */
 TEST_CASE("Five actual capsule bodies preserve load across native service and source waits", "[tube-capsule-art-body]")
 {
+	MockEnvironment::Instance(); // Own the mock sprite/font caches; do not inherit them from an earlier case.
 	const uint16_t model = GENERATE(9, 10, 11, 12, 13);
 	TubeMeterRig world;
 	AutoRestoreBackup date(TimerGameCalendar::date, TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{2050}, 0, 1));
