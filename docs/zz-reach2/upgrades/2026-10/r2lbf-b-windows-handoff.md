@@ -16,7 +16,7 @@
    - the network flavour case;
    - the two former leak victims.
 3. Run `openttd_tube_test.exe` and `openttd_surface_supply_test.exe`. Both compile the changed fixtures, and the tube executable compiles the changed listener.
-4. If time allows, run the whole `openttd_test.exe`.
+4. If time allows, run the whole suite **through CTest** (`ctest -C <config>`), which gives each case its own process. Do not run all of `openttd_test.exe` as one process. On Linux that fails 485 of 1,357 cases through cross-case leaks this plan did not cause (see **Known limits**). The 45-case list above does pass as one process.
 
 Report each configuration's pass/fail summary. If a case that this plan treated as a stale expectation (S) passed on Windows **before** these edits, say so; it is then a portability case (P), and its edit needs another look.
 
@@ -95,7 +95,7 @@ All S-category edits cite the production commit and stated intent behind them (t
 | Stale expectation (S3): ground art (`75cf506b`) | `multilayer_control_selection.cpp` |
 | Face-wait prompt (13C) | `tbm_movement.cpp` (new case "A face wait without a hauler asks the player to assign one") |
 | Fixture producers write run-owned saves (13B) | `layer_processor_load.cpp`, `layer_mine_load.cpp`, `underground_save.cpp` |
-| Cross-case leaks and JUnit crash (15.3-15.4) | `tbm_fixture.h` (cleans the cargo packet pool), `underground_workflow_fixture.h` (restores `_price` and `_economy`), `tube_test_environment.cpp` (run-start load without Catch assertions) |
+| Cross-case leaks and JUnit crash (15.3-15.4, 17.2) | `tbm_fixture.h` (cleans the cargo packet and depot pools), `underground_workflow_fixture.h` (restores `_price` and `_economy`), `tube_test_environment.cpp` (run-start load without Catch assertions), `layer_processor_load.cpp` (the save carrier deletes its own packet) |
 | `RANDOM_DEBUG` build flavour (16.3) | `merged_command_compatibility.cpp` |
 
 ## Known limits
@@ -103,3 +103,4 @@ All S-category edits cite the production commit and stated intent behind them (t
 - **Not run on Windows.** Nothing here proves the MSVC build or the Windows test run; that is this handoff's purpose.
 - **Hidden cases not run.** `openttd_ground_art_test` and `openttd_ground_viewport_test` contain only hidden (`[.…]`) cases, so on Linux their default runs selected nothing. Their tagged runs belong to the Windows native pipeline.
 - **Packet leaks left alone.** Several other fixtures still clean only the vehicle pool and leave orphaned packets. No current test counts them, so they were not changed; they are listed as a follow-up.
+- **The suite needs one process per case.** Running all of `openttd_test` in one process fails 485 of 1,357 cases on Linux (`logs/linux-baseline/20261027-linux/group17-openttd_test-one-process.log`). The failures are cascading cross-case leaks, led by empty-pool `REQUIRE`s in `surface_supply_space_custody.cpp:114`, `surface_supply_refund.cpp:90`, `surface_supply_cross_owner.cpp:83` and `tbm_fixture.h:74`. They are not caused by this plan: the leaking fixtures are ones it did not change, and its own fixture edits only add cleanup. No single-process run of the whole suite was recorded before this plan. The leaks are listed as a follow-up. CTest, which the plan verified, runs each case in its own process.
