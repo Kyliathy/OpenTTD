@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_mine_load.cpp Exact finite binding restoration and malformed state refusal. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16 */
+/**
+ * @file layer_mine_load.cpp Exact finite binding restoration and malformed state refusal.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13B (fresh saves are run-owned outputs)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -12,6 +16,7 @@
 #include "layer_window_fixture.h"
 #include "mock_environment.h"
 #include "../saveload/saveload_func.h"
+#include "test_artifact_paths.h"
 #include "../saveload/saveload_filter.h"
 #include "../engine_base.h"
 #include "mine_production_fixture.h"
@@ -112,7 +117,8 @@ TEST_CASE("Finite mine state writes its actual savegame descriptor family", "[la
 	const auto saved = CaptureLayerMines();
 	const auto reserve = rig.Reserve();
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE); // The real save owner toggles its busy cursor, even with no visible window.
-	const auto path = std::filesystem::current_path().parent_path() / "src/tests/fixtures/mines" / ("r2mlvs6-cr-mine-" + suffix + ".sav");
+	// The fresh save goes to this run's own saves; the retained fixture stays a read-only input (r2fc output contract).
+	const auto path = GetTestArtifactPaths("mines", "layer-mine-save-fixture").saves / ("r2mlvs6-cr-mine-" + suffix + ".sav");
 	REQUIRE(std::filesystem::is_directory(path.parent_path()));
 	AutoRestoreBackup<GameMode> no_ui(_game_mode, GameMode::Menu);
 	REQUIRE(SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false) == SaveLoadResult::Ok);

@@ -264,6 +264,20 @@
       "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
     },
     {
+      "producer": "src/tests/layer_mine_load.cpp",
+      "features": [
+        {
+          "feature": "mines",
+          "scenario": "layer-mine-save-fixture"
+        }
+      ],
+      "test_tags": [
+        "[layer-mine-save-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
       "producer": "src/tests/layer_mine_save_fixture.py",
       "features": [
         {
@@ -274,6 +288,20 @@
       "test_tags": [],
       "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
       "invocation": "python -B src/tests/layer_mine_save_fixture.py"
+    },
+    {
+      "producer": "src/tests/layer_processor_load.cpp",
+      "features": [
+        {
+          "feature": "processors",
+          "scenario": "layer-processor-save-fixture"
+        }
+      ],
+      "test_tags": [
+        "[layer-processor-save-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
     },
     {
       "producer": "src/tests/layer_processor_save_fixture.py",
@@ -688,6 +716,20 @@
       ],
       "test_tags": [
         "[.transport-tube-power-file]"
+      ],
+      "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
+      "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"
+    },
+    {
+      "producer": "src/tests/underground_save.cpp",
+      "features": [
+        {
+          "feature": "vehicles",
+          "scenario": "underground-save-fixture"
+        }
+      ],
+      "test_tags": [
+        "[underground-save-file]"
       ],
       "context_policy": "explicit caller feature/scenario; inherited invocation and process runtime",
       "invocation": "shared native writer or declared Catch tag; use the owning wrapper for application startup"

@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file underground_save.cpp Actual native fleet, packets, station/service orders and project association written by the full game saver. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 10B */
+/**
+ * @file underground_save.cpp Actual native fleet, packets, station/service orders and project association written by the full game saver.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, Group 10B
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13B (fresh saves are run-owned outputs)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -12,6 +16,7 @@
 #include "layer_window_fixture.h"
 #include "layer_save_fixture.h"
 #include "underground_fleet_fixture.h"
+#include "test_artifact_paths.h"
 #include "movement_fixture.h"
 #include "../saveload/saveload_func.h"
 #include "../spoil_receiver.h"
@@ -107,7 +112,8 @@ TEST_CASE("Native conventional fleet writes real mappings orders cargo and proje
 	REQUIRE(CmdInsertOrder(DoCommandFlag::Execute, hauler->index, 1, rail_service).Succeeded());
 	CHECK(GetUndergroundEngine(4).base() != 4);
 	CHECK(GetUndergroundEngine(7).base() != 7);
-	const auto path = std::filesystem::current_path().parent_path() / "src/tests/fixtures/underground/native-fleet.sav";
+	// The fresh save goes to this run's own saves; the retained fixture stays a read-only input (r2fc output contract).
+	const auto path = GetTestArtifactPaths("vehicles", "underground-save-fixture").saves / "native-fleet.sav";
 	REQUIRE(std::filesystem::is_directory(path.parent_path()));
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
 	const auto assignments = CaptureTBMExchangeAssignments();

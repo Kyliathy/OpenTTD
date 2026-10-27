@@ -209,3 +209,25 @@ Verification (focused, per the test policy; 12.8's full suite is replaced by thi
   - The full GCC suite moved into 14.1 as the end-of-plan regression; the plan was updated.
 
 **State after Groups 9-13:** of the 37 Group 8 failures, 36 are fixed and verified by focused runs. One remains: the 12.7 C row, pending the owner's decision in Group 13D.
+
+## Group 13B completed
+
+**13B.1 (owner, 2026-10-27):** a single prompt asked all three queued decisions, and the owner chose the recommended option each time:
+- 13B (a): route the producers to run-owned outputs.
+- 13C (a): `AwaitFaceTransfer` without a hauler prompts `AssignHauler`.
+- 13D (a): cover the rail-turn refusal with a lower-level `CheckTBMSupportRailTurns` case.
+
+**13B.2-13B.4:** `test-cache/linux-baseline/apply_group13b.py` made the edits. Each producer now saves under `GetTestArtifactPaths(<feature>, <scenario>).saves`. Each reuses the feature and scenario its Python checker already declares in `mlm/review-producers.json`:
+- `layer_processor_load.cpp` uses `processors/layer-processor-save-fixture`, and writes the `.sav.txt` checkpoint beside its save.
+- `layer_mine_load.cpp` uses `mines/layer-mine-save-fixture`.
+- `underground_save.cpp` uses `vehicles/underground-save-fixture`.
+
+Every assertion and the checkpoint text are unchanged, and each file header cites this plan. The catalogue gained one entry per native producer, inserted directly before its checker. The file round-trips exactly through `json.dumps(indent=2)`, so only those 42 lines changed.
+
+**13B.5:** unchanged. The Python checkers read the committed fixtures as immutable inputs: `multilayer_state_fixture.save_path` resolves history unless the same process reserved an output. They never read the producers' fresh files.
+
+**13B.6:**
+- `openttd_test` rebuilt in 4 min 31 s with 0 errors (`group13b-build.log`).
+- In file order, `layer_processor_load` passes 3 cases (2,164 assertions), `layer_mine_load` 3 (495) and `underground_save` 1 (389).
+- All 10 outputs landed under the git-ignored `mlm/reviews/<feature>/<scenario>/<run>/saves/`. `git status --short -- src/tests/fixtures` is empty.
+- **The Group 8 carry-forward restore step is no longer needed.**

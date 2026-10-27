@@ -761,19 +761,21 @@ _Applies to Group 13B._
 
 ### Group 13B - Stop tests from rewriting tracked fixtures (owner decision first)
 
+**Owner decisions, 2026-10-27 (one prompt, all recommended options):** 13B (a) run-owned outputs; 13C (a) the face wait prompts for a hauler; 13D (a) a lower-level `CheckTBMSupportRailTurns` case. 13C.1 and 13D.1 are therefore done too.
+
 {{MEDIUM}}
 
-- [ ] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name. Ask 13C.1 and 13D.1 in the same prompt, so the owner answers all three decisions at once.
+- [X] **13B.1** Ask the owner which behaviour they want, and record the answer: (a) route the three producers to run-owned `GetTestArtifactPaths(…).saves` paths, as `tbm_planning_seed.cpp:176` does (recommended; it satisfies the r2fc contract and CI's `git diff --exit-code`); (b) keep the in-place regeneration as a deliberate fixture workflow, and document the restore step for Linux runs; or (c) another rule they name. Ask 13C.1 and 13D.1 in the same prompt, so the owner answers all three decisions at once.
 
-- [ ] **13B.2** If (a): in `layer_processor_load.cpp`, write the save and its checkpoint text under the case's run-owned `saves` directory. Choose a feature and scenario declared in `mlm/review-producers.json`. Keep every assertion and the checkpoint content unchanged.
+- [X] **13B.2** If (a): in `layer_processor_load.cpp`, write the save and its checkpoint text under the case's run-owned `saves` directory. Choose a feature and scenario declared in `mlm/review-producers.json`. Keep every assertion and the checkpoint content unchanged.
 
-- [ ] **13B.3** If (a): do the same in `layer_mine_load.cpp:115`.
+- [X] **13B.3** If (a): do the same in `layer_mine_load.cpp:115`.
 
-- [ ] **13B.4** If (a): do the same in `underground_save.cpp:110`.
+- [X] **13B.4** If (a): do the same in `underground_save.cpp:110`.
 
-- [ ] **13B.5** Check the Python fixture checkers (`layer_processor_save_fixture.py`, `layer_mine_save_fixture.py`, `underground_save_fixture.py`) and the `multilayer-inputs.json` references. If a checker reads the producer's fresh output rather than the committed fixture, point it at the new run-owned path. Otherwise leave it unchanged.
+- [X] **13B.5** Check the Python fixture checkers (`layer_processor_save_fixture.py`, `layer_mine_save_fixture.py`, `underground_save_fixture.py`) and the `multilayer-inputs.json` references. If a checker reads the producer's fresh output rather than the committed fixture, point it at the new run-owned path. Otherwise leave it unchanged.
 
-- [ ] **13B.6** Run the three producer cases and their files with `-#` in `build/`, and confirm that `git status --short -- src/tests/fixtures` is empty afterwards. If (b) was chosen, record the restore step in the execution notes instead.
+- [X] **13B.6** Run the three producer cases and their files with `-#` in `build/`, and confirm that `git status --short -- src/tests/fixtures` is empty afterwards. If (b) was chosen, record the restore step in the execution notes instead.
 
 ### Area Mandatory Reading - Face-wait hauler prompt
 
@@ -792,7 +794,7 @@ _Applies to Group 13C._
 
 {{SIMPLE}}
 
-- [ ] **13C.1** Ask the owner, in the same prompt as 13B.1, whether `AwaitFaceTransfer` with no assigned hauler should show `TBMPlayerStep::AssignHauler`. The options are: (a) yes, add `|| IsTBMAwaitingFaceTransfer(project.phase)` to the `NoHauler` condition in `GetTBMLogisticsWait` (recommended: the step's own documentation describes this state); (b) no, the face wait is meant to stay silent, which is then documented at the condition; or (c) another rule they name. Record the answer.
+- [X] **13C.1** Ask the owner, in the same prompt as 13B.1, whether `AwaitFaceTransfer` with no assigned hauler should show `TBMPlayerStep::AssignHauler`. The options are: (a) yes, add `|| IsTBMAwaitingFaceTransfer(project.phase)` to the `NoHauler` condition in `GetTBMLogisticsWait` (recommended: the step's own documentation describes this state); (b) no, the face wait is meant to stay silent, which is then documented at the condition; or (c) another rule they name. Record the answer.
 
 - [ ] **13C.2** If (a): apply the one-line change with a comment, and add a focused regression case to `tbm_movement.cpp`. The case plays the whole-life opening on Soft rock (no `TBMRigRock`) up to the first face wait, then requires `controls().step == TBMPlayerStep::AssignHauler` and `controls().wait == TBMLogisticsWait::NoHauler`. If (b): add the comment only.
 
@@ -814,7 +816,7 @@ _Applies to Group 13D._
 
 {{SIMPLE}}
 
-- [ ] **13D.1** Ask the owner, in the same prompt as 13B.1, how to cover the rail-turn refusal now that the planner never produces a forbidden bend. The options are: (a) keep the UI case for its "nothing changed" checks, but drive the refusal through a lower-level case that hands `CheckTBMSupportRailTurns` a proposal with a 90-degree support bend (recommended); (b) treat the planner's avoidance as a defect, which is a production change to investigate; or (c) another rule they name. Record the answer.
+- [X] **13D.1** Ask the owner, in the same prompt as 13B.1, how to cover the rail-turn refusal now that the planner never produces a forbidden bend. The options are: (a) keep the UI case for its "nothing changed" checks, but drive the refusal through a lower-level case that hands `CheckTBMSupportRailTurns` a proposal with a 90-degree support bend (recommended); (b) treat the planner's avoidance as a defect, which is a production change to investigate; or (c) another rule they name. Record the answer.
 
 - [ ] **13D.2** If (a): add a focused `CheckTBMSupportRailTurns` case with a two-cut proposal whose support turns 90 degrees on one tile pair. Require `false` with `pf.forbid_90_deg` on and `true` with it off. Re-derive the UI case so it asserts that the planner's accepted route passes `CheckTBMSupportRailTurns`, keeping every refusal-side check under the new case. If (b), record the investigation as a new group instead.
 

@@ -4,7 +4,11 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file layer_processor_load.cpp Exact choice/work/batch restoration, finite stocks and actual waiting transport packets. @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16B */
+/**
+ * @file layer_processor_load.cpp Exact choice/work/batch restoration, finite stocks and actual waiting transport packets.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md, Group 16B
+ * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 13B (fresh saves are run-owned outputs)
+ */
 
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -12,6 +16,7 @@
 #include "layer_window_fixture.h"
 #include "mock_environment.h"
 #include "../saveload/saveload_func.h"
+#include "test_artifact_paths.h"
 #include "../train.h"
 #include "../engine_func.h"
 #include "../vehicle_func.h"
@@ -183,7 +188,8 @@ TEST_CASE("Native processor checkpoints write real stock and packet descriptor f
 	const auto saved = CaptureLayerProcessors();
 	const auto digest = ComputeLayerProcessorDigest();
 	REQUIRE(AcceptLoadedLayerProcessors()); // Prove that the written stocks and counters satisfy the same final runtime activation boundary.
-	const auto path = std::filesystem::current_path().parent_path() / "src/tests/fixtures/processors" / ("r2mlvs6-ds-processor-" + suffix + ".sav");
+	// The fresh save goes to this run's own saves; the retained fixture stays a read-only input (r2fc output contract).
+	const auto path = GetTestArtifactPaths("processors", "layer-processor-save-fixture").saves / ("r2mlvs6-ds-processor-" + suffix + ".sav");
 	REQUIRE(std::filesystem::is_directory(path.parent_path()));
 	SetMouseCursor(SPR_CURSOR_MOUSE, PAL_NONE);
 	AutoRestoreBackup<GameMode> no_ui(_game_mode, GameMode::Menu);
