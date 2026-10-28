@@ -149,6 +149,9 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	// The descriptor-level CAPA observations (m2o28 Group 11) are malformed evidence
 	// too: a half supply pair or a narrowed asteroid key refuses whatever the version says.
 	if (facts.cargo_supply_encoding == SupplyColumnEncoding::Malformed || facts.asteroid_origin_columns == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
+	// An SSOR whose own bytes fit no book, or fit both the fixed and the tagged
+	// book (m2o28 Group 12), cannot be given to either decoder.
+	if (facts.supply_book_shape == SupplyBookShape::Malformed || facts.supply_book_shape == SupplyBookShape::Ambiguous) return result(SaveLineageStatus::Corrupt);
 	// Every observed selected family participates, even one whose feature is
 	// inactive: a malformed empty family cannot silently become an absent owner.
 	for (const auto &family : facts.families) {

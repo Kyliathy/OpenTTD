@@ -4,6 +4,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the incoming Space fixes eras as capability rules.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA column encodings observed from the file's own descriptor.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; the RIFF SSOR book shape observed from its own bytes.
  * This boundary neither parses bytes nor initializes a world. The actual reader
  * must supply bounded same-file facts; filenames and live owners are not inputs.
  */
@@ -51,6 +52,17 @@ enum class SupplyColumnEncoding : uint8_t {
 	Malformed, ///< Half a pair, or a pair with any other widths; the classifier refuses it.
 };
 
+/** How a RIFF SSOR payload reads, judged from its own bytes and never from the outer version or MLLN order.
+ * The fixed A440 shape and the SSM1 tagged book are checked independently; the classifier decides which writer was meant.
+ */
+enum class SupplyBookShape : uint8_t {
+	Absent, ///< No RIFF SSOR: genuinely absent, or the historical B TABLE.
+	Fixed, ///< No SSM1 signature, and the fixed shape fits: 14-byte header, little-endian count, exact 14 + 53 * n extent.
+	Tagged, ///< The SSM1 book validated completely, and the fixed shape does not fit.
+	Ambiguous, ///< The SSM1 book validated and the fixed shape also fits the same bytes; the classifier refuses it.
+	Malformed, ///< The SSM1 signature is present but its book is invalid, or no shape fits at all.
+};
+
 /** Lineage-relevant families; the normal native loader still validates other owners. */
 enum class SaveLineageFamily : uint8_t {
 	SupplyHeader, SupplyOrders, GeneratorHeader, GeneratorRows,
@@ -94,6 +106,7 @@ struct SaveWireFacts {
 	SaveSupplyColumns supply_columns = SaveSupplyColumns::Absent; ///< Actual legacy B extension names and types, including empty CAPA.
 	SupplyColumnEncoding cargo_supply_encoding = SupplyColumnEncoding::Absent; ///< Actual CAPA supply pair encoding, recorded even when CAPA has zero rows.
 	SaveEvidenceState asteroid_origin_columns = SaveEvidenceState::Absent; ///< Valid only for exactly `asteroid_body` and `asteroid_mineral`, both U32; any other shape is Malformed.
+	SupplyBookShape supply_book_shape = SupplyBookShape::Absent; ///< Actual RIFF SSOR shape; independent of the version and of chunk order.
 	SavePayloadDialect payload_dialect = SavePayloadDialect::Common; ///< Optional positive evidence from a bounded versioned owner-layout decoder.
 	std::array<SaveChunkEvidence, static_cast<uint8_t>(SaveLineageFamily::Count)> families{}; ///< Fixed-size inspector results, independent of native pools.
 	uint32_t marker_magic = 0; ///< Original MLLN payload magic, never supplied by the running build's identity.

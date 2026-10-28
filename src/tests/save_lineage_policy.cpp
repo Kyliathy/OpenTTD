@@ -4,6 +4,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the closed Space fixes capability matrix.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; descriptor-level CAPA observations refuse when malformed.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; malformed or ambiguous SSOR book shapes refuse.
  * SAVE_LINEAGE_STANDALONE builds this pure Catch leaf without native game pools.
  * The ordinary native test target registers this leaf through src/tests/CMakeLists.txt.
  */
@@ -304,6 +305,18 @@ TEST_CASE("Save lineage rejects malformed A transport and future capability gues
 	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	// An SSOR that fits no book, or both books, refuses even where the rest is
+	// complete; a single fitting shape leaves the existing rules in charge.
+	for (const auto shape : {SupplyBookShape::Malformed, SupplyBookShape::Ambiguous}) {
+		facts = Merged(); facts.supply_book_shape = shape;
+		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+		facts = Destination(440); facts.supply_book_shape = shape;
+		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	}
+	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Tagged;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
+	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Fixed;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Common(425)), SaveCapability::TBMFaceTransfer));
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Destination(440)), static_cast<SaveCapability>(255)));
 }

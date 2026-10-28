@@ -1,11 +1,11 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file save_envelope_cargo_columns.cpp Detached CAPA column and MLLN tuple observations for every merged-era writer.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
- * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; builders shared with Group 12 in save_envelope_chunks.h.
  * Every stream is written byte by byte below; no native save writer supplies the expected facts.
  */
 #include "../stdafx.h"
-#include "save_envelope_fixture.h"
+#include "save_envelope_chunks.h"
 #include "../core/sha256.hpp"
 #include <cstdlib>
 #include <filesystem>
@@ -13,10 +13,7 @@
 
 namespace {
 
-/** One CAPA field as the file's own table descriptor declares it: exact name and native type code. */
-using CargoField = std::pair<std::string_view, uint8_t>;
-/** One complete CAPA descriptor, in the file's own field order. */
-using CargoFields = std::vector<CargoField>;
+using CargoFields = EnvelopeFields; ///< One CAPA descriptor, in the file's own field order.
 
 /** The CAPA fields every 424+ writer declares, so the scanner's shared-history rule is met. */
 const CargoFields BASE_CARGO_FIELDS{
@@ -27,99 +24,14 @@ const CargoFields CANONICAL_SUPPLY{{"company_supply_order", 8}, {"company_supply
 const CargoFields LEGACY_SUPPLY{{"company_supply_order", 6}, {"company_supply_shipped", 1}}; ///< Historical B: U32 link, Bool flag.
 const CargoFields ASTEROID_ORIGIN{{"asteroid_body", 6}, {"asteroid_mineral", 6}}; ///< Space fixes typed origin: two U32 keys.
 
-/** Join descriptor parts in order.
- * @param parts Field groups, appended in the order given.
- * @return One descriptor.
- */
-CargoFields Fields(std::initializer_list<const CargoFields *> parts)
-{
-	CargoFields fields;
-	for (const auto *part : parts) fields.insert(fields.end(), part->begin(), part->end());
-	return fields;
-}
-
-/** Append one native gamma length (one or two bytes, enough for these fixtures).
- * @param out Stream being written.
- * @param value Length to encode; must be below 16384.
- */
-void PushGamma(std::vector<uint8_t> &out, size_t value)
-{
-	REQUIRE(value < 16384);
-	if (value >= 128) out.push_back(static_cast<uint8_t>(0x80 | (value >> 8)));
-	out.push_back(static_cast<uint8_t>(value));
-}
-
-/** Append one network-order scalar.
- * @param out Stream being written.
- * @param value Scalar value.
- * @param width Byte width, at most eight.
- */
-void PushInteger(std::vector<uint8_t> &out, uint64_t value, size_t width)
-{
-	for (size_t byte = width; byte-- > 0;) out.push_back(static_cast<uint8_t>(value >> (8 * byte)));
-}
-
-/** @param type Native scalar type code. @return Its fixed byte width in a row. */
-size_t FieldWidth(uint8_t type)
-{
-	static constexpr uint8_t widths[]{0, 1, 1, 2, 2, 4, 4, 8, 8, 2};
-	REQUIRE(type < std::size(widths));
-	return widths[type];
-}
-
-/** Build one TABLE CAPA chunk with its descriptor and zero-filled rows.
- * @param fields Exact descriptor, in file order.
- * @param rows Number of zero-filled packet rows; zero gives an empty CAPA.
- * @return Complete chunk bytes, including its row terminator.
- */
-std::vector<uint8_t> CargoChunk(const CargoFields &fields, size_t rows = 0)
-{
-	std::vector<uint8_t> header;
-	// Each field is its literal type byte, a gamma name length and the name.
-	for (const auto &[name, type] : fields) {
-		header.push_back(type); PushGamma(header, name.size());
-		header.insert(header.end(), name.begin(), name.end());
-	}
-	header.push_back(0);
-	std::vector<uint8_t> chunk{'C', 'A', 'P', 'A', 3};
-	PushGamma(chunk, header.size() + 1);
-	chunk.insert(chunk.end(), header.begin(), header.end());
-	size_t row_bytes = 0;
-	for (const auto &field : fields) row_bytes += FieldWidth(field.second);
-	// A contiguous TABLE row is a biased gamma length followed by every scalar.
-	for (size_t row = 0; row < rows; ++row) {
-		PushGamma(chunk, row_bytes + 1);
-		chunk.insert(chunk.end(), row_bytes, 0);
-	}
-	chunk.push_back(0); // Row terminator.
-	return chunk;
-}
-
-/** Build one eight-byte RIFF MLLN chunk.
- * @param magic Payload magic.
- * @param schema Marker schema.
- * @param writer Marker writer version.
- * @return Complete chunk bytes.
- */
-std::vector<uint8_t> MarkerChunk(uint32_t magic, uint16_t schema, uint16_t writer)
-{
-	std::vector<uint8_t> chunk{'M', 'L', 'L', 'N', 0, 0, 0, 8};
-	PushInteger(chunk, magic, 4); PushInteger(chunk, schema, 2); PushInteger(chunk, writer, 2);
-	return chunk;
-}
-
-/** Wrap chunks and the stream terminator in an uncompressed envelope.
- * @param version Outer envelope version.
- * @param chunks Complete chunks in file order.
- * @return Original raw save bytes.
- */
-std::vector<uint8_t> Stream(uint16_t version, std::initializer_list<std::vector<uint8_t>> chunks)
-{
-	std::vector<uint8_t> payload;
-	for (const auto &chunk : chunks) payload.insert(payload.end(), chunk.begin(), chunk.end());
-	payload.insert(payload.end(), 4, 0);
-	return EnvelopeStream(std::move(payload), "OTTN", version);
-}
+/** @param parts Field groups in order. @return One CAPA descriptor. */
+CargoFields Fields(std::initializer_list<const CargoFields *> parts) { return JoinEnvelopeFields(parts); }
+/** @param fields Exact CAPA descriptor. @param rows Zero-filled packet rows. @return Complete CAPA chunk. */
+std::vector<uint8_t> CargoChunk(const CargoFields &fields, size_t rows = 0) { return EnvelopeTableChunk("CAPA", fields, rows); }
+/** @param magic Payload magic. @param schema Marker schema. @param writer Marker writer. @return Complete MLLN chunk. */
+std::vector<uint8_t> MarkerChunk(uint32_t magic, uint16_t schema, uint16_t writer) { return EnvelopeMarkerChunk(magic, schema, writer); }
+/** @param version Outer version. @param chunks Chunks in file order. @return Original raw save bytes. */
+std::vector<uint8_t> Stream(uint16_t version, std::initializer_list<std::vector<uint8_t>> chunks) { return EnvelopeChunkStream(version, chunks); }
 
 /** The observations Group 11 adds, gathered so marker-first and marker-last scans compare as one value. */
 struct ColumnObservation {
@@ -153,20 +65,6 @@ ColumnObservation Observe(const std::vector<uint8_t> &input, const SaveInspectio
 	const auto &marker = facts.Get(SaveLineageFamily::Marker);
 	return {facts.cargo_supply_encoding, facts.asteroid_origin_columns, facts.supply_columns, facts.merged_cargo_valid,
 		marker.state, facts.marker_magic, facts.marker_schema, facts.marker_writer_version};
-}
-
-/** Check that every strict prefix of a stream refuses and rewinds.
- * @param input Complete original raw bytes.
- */
-void CheckTruncationsRewind(const std::vector<uint8_t> &input)
-{
-	// Each prefix ends inside some header, descriptor, row or marker; none may
-	// borrow bytes or leave the source positioned mid-stream.
-	for (size_t length = 0; length < input.size(); ++length) {
-		auto reader = std::make_shared<EnvelopeTestReader>(std::vector<uint8_t>(input.begin(), input.begin() + length));
-		CHECK_THROWS_AS(InspectSaveWireFacts(reader), SaveFramingError);
-		CHECK(reader->position == 0);
-	}
 }
 
 } // namespace
@@ -267,8 +165,8 @@ TEST_CASE("Save envelope column observations keep bounded work and rewind", "[sa
 		CHECK_THROWS_AS(InspectSaveWireFacts(reader, tight), SaveFramingError);
 		CHECK(reader->position == 0);
 	}
-	CheckTruncationsRewind(input);
-	CheckTruncationsRewind(Stream(441, {CargoChunk(Fields({&BASE_CARGO_FIELDS, &ASTEROID_ORIGIN}))}));
+	CheckEnvelopeTruncationsRewind(input);
+	CheckEnvelopeTruncationsRewind(Stream(441, {CargoChunk(Fields({&BASE_CARGO_FIELDS, &ASTEROID_ORIGIN}))}));
 }
 
 /** Optional real S445 files: Group 3's donor 445 reconstructions, when the caller names their directory.

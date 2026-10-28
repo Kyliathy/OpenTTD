@@ -534,6 +534,8 @@ add_executable(openttd_tube_test EXCLUDE_FROM_ALL
     src/tests/save_envelope_adversarial.cpp
     # Descriptor-level CAPA columns and MLLN tuples for every merged-era writer: archi-savegame.md; m2o28-1 Group 11.
     src/tests/save_envelope_cargo_columns.cpp
+    # SSOR fixed/tagged/TABLE book shapes, overlaps and refusals: archi-savegame.md; m2o28-1 Group 12.
+    src/tests/save_envelope_supply_book.cpp
     src/tests/save_lineage_preflight.cpp
     # Actual original A/shared-donor Space reconstruction: archi-savegame.md; m2o23-3 Group42.
     src/tests/space_lineage_native.cpp

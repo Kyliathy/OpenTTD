@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA columns and the MLLN tuple observed without a version guess.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; the SSOR book shape from a bounded prefix and the streaming SSM1 inspector.
  */
 #include "../stdafx.h"
 #include "save_envelope.h"
@@ -322,6 +323,60 @@ void CheckSelectedColumns(std::string_view id, const Columns &columns, SaveWireF
 	}
 }
 
+/** Observe one RIFF SSOR payload without choosing its writer.
+ * The fixed A440 shape comes from a bounded prefix and the extent; the SSM1 book is
+ * streamed through its own inspector, replaying that prefix first. Nothing payload-sized
+ * is allocated and no receipt is materialized.
+ * @param bytes Private reader at the payload start.
+ * @param end Checked exclusive payload boundary.
+ * @param facts Same-file observations; receives the shape and, for a validated tagged book, its frontier.
+ * @param evidence SSOR family slot; receives the record count of the reading that fits.
+ */
+void ObserveSupplyBook(InspectionBytes &bytes, uint64_t end, SaveWireFacts &facts, SaveChunkEvidence &evidence)
+{
+	const uint64_t length = end - bytes.position;
+	std::array<uint8_t, MERGED_SURFACE_SUPPLY_HEADER_SIZE> prefix{}; // Header-sized, never payload-sized.
+	const size_t prefix_size = static_cast<size_t>(std::min<uint64_t>(length, prefix.size()));
+	for (size_t index = 0; index < prefix_size; ++index) prefix[index] = bytes.Byte(end);
+	// Fixed A440 shape: twelve header bytes, a little-endian record count, and an
+	// extent of exactly 14 + 53 * n. A count above the native book limit fits nothing.
+	std::optional<uint32_t> fixed_records;
+	if (prefix_size >= 14) {
+		const uint32_t count = prefix[12] | (uint32_t{prefix[13]} << 8);
+		if (count <= 16384 && length == 14 + 53 * uint64_t{count}) fixed_records = count;
+	}
+	const bool signature = prefix_size >= 4 && ((uint32_t{prefix[0]} << 24) | (uint32_t{prefix[1]} << 16) | (uint32_t{prefix[2]} << 8) | prefix[3]) == MERGED_SURFACE_SUPPLY_MAGIC;
+	std::optional<MergedSurfaceSupplyWireSummary> tagged;
+	if (signature) {
+		size_t cursor = 0;
+		/** @param width Network-order scalar width requested by the inspector. @return The next bits, served from the prefix first, then from this payload. */
+		const auto read = [&](size_t width) {
+			uint64_t value = 0;
+			for (size_t byte = 0; byte < width; ++byte) value = (value << 8) | (cursor < prefix_size ? prefix[cursor++] : bytes.Byte(end));
+			return value;
+		};
+		tagged = InspectMergedSurfaceSupplyOrders(static_cast<size_t>(length), read);
+	}
+	// A recognized SSM1 signature never falls through to the fixed reading: if its
+	// book is invalid the family is malformed. When both readings validate on the
+	// same bytes, the overlap is kept as Ambiguous for the classifier to refuse.
+	if (tagged && fixed_records) {
+		facts.supply_book_shape = SupplyBookShape::Ambiguous;
+	} else if (tagged) {
+		facts.supply_book_shape = SupplyBookShape::Tagged;
+	} else if (signature || !fixed_records) {
+		facts.supply_book_shape = SupplyBookShape::Malformed;
+	} else {
+		facts.supply_book_shape = SupplyBookShape::Fixed;
+	}
+	if (tagged) {
+		evidence.schema = MERGED_SURFACE_SUPPLY_SCHEMA; evidence.records = tagged->records;
+		facts.merged_supply_next_id = tagged->next_id; facts.merged_supply_valid = true;
+	} else if (fixed_records) {
+		evidence.records = *fixed_records;
+	}
+}
+
 /** Collect selected fixed RIFF scalars; unneeded owner data is discarded through the bounded reader.
  * @param id Original chunk name.
  * @param bytes Private reader.
@@ -372,22 +427,7 @@ void ReadRiff(std::string_view id, InspectionBytes &bytes, uint64_t end, SaveWir
 				exact(1 + 6 * evidence->records); break;
 			}
 			case F::OrbitalRecipes: if (length < 11) throw SaveFramingError("Truncated recipe retirement header"); break;
-			case F::SupplyOrders: {
-				if (facts.original_version == MERGED_SAVE_LINEAGE_VERSION) {
-					/** @param width Frozen merged scalar width. @return Original network-order bits within this detached RIFFextent. */
-					const auto read = [&](size_t width) { return bytes.Integer(width, end); };
-					const auto summary = InspectMergedSurfaceSupplyOrders(length, read);
-					if (!summary) throw SaveFramingError("Invalid merged tagged supply family");
-					evidence->schema = MERGED_SURFACE_SUPPLY_SCHEMA; evidence->records = summary->records;
-					facts.merged_supply_next_id = summary->next_id; facts.merged_supply_valid = true; break;
-				}
-				if (length < 14) throw SaveFramingError("Truncated original order header");
-				bytes.SkipTo(bytes.End(12, end));
-				const auto low = bytes.Byte(end), high = bytes.Byte(end);
-				evidence->records = low | (uint32_t{high} << 8);
-				if (evidence->records > 16384 || length != 14 + 53 * evidence->records) throw SaveFramingError("Invalid original order count/length"); // A's little-endian exact count cannot hide appended or missing paid receipts.
-				break;
-			}
+			case F::SupplyOrders: ObserveSupplyBook(bytes, end, facts, *evidence); break; // Shape only; no version or marker picks the decoder.
 			case F::Marker: {
 				exact(8); // The tuple is recorded only after exact eight-byte framing.
 				facts.marker_magic = static_cast<uint32_t>(bytes.Integer(4, end)); facts.marker_schema = static_cast<uint16_t>(bytes.Integer(2, end)); facts.marker_writer_version = static_cast<uint16_t>(bytes.Integer(2, end));
