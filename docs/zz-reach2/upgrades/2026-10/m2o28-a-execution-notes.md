@@ -316,3 +316,54 @@ Results (GCC, `logs/merge-oct28/group12/`):
 - The focused subset (the Group 11 pattern plus `Merged supply`): 70/70 passed (`ctest-gcc.{log,xml}`).
 - With the donor scan extended to the SSOR shape, all 28 real S445 saves read as `Fixed` (197 assertions, `donor445-scan.log`).
 
+
+## Group 13
+
+**13.1-13.3** Commit `6cd8a5ba`. `ClassifySaveDialect` works in this order:
+
+1. Malformed evidence refuses first: framing, common transport, Group 11's column observations, the `Malformed` book shape and every Malformed family.
+2. Versions above 446 are `Unsupported`.
+3. A present marker goes to `CompatibleMerged`. It needs exactly 441/schema 1 or 446/schema 2, with the writer equal to the envelope version, plus:
+   - the canonical CAPA pair;
+   - the tagged book (Tagged or Ambiguous);
+   - no typed origins at 441 and typed origins at 446;
+   - every retained family check from the old marker branch.
+4. An unmarked 446 is Corrupt.
+5. A markerless 441-445 goes to `CompatibleSpaceFixes` and is never given a hint. It needs:
+   - typed CAPA origins;
+   - the Fixed book as a RIFF family;
+   - no B metadata bits, CAPA supply pair, B layout or merged book;
+   - none of the seven B families;
+   - content 0 or 3, with CDIM and SPRC present and `ValidSpaceFamilies`.
+6. Everything else goes to `ClassifyLegacy`: the old A/B/shared body and its hint semantics. It now also refuses typed origins, the canonical pair or an SSM1 book at 440 and below. `CompatibleA`'s A440 rule also requires `SupplyBookShape::Fixed`.
+
+The version constants moved to the top of `save_lineage.cpp`.
+
+Plan change, recorded in 13.3: an SSOR overlap (`Ambiguous`) no longer always refuses. A marked file takes the tagged book; a markerless file refuses. Group 12's notes give the collision arithmetic. Always refusing would have made some genuine D441 saves unloadable.
+
+**13.4** `DoLoad` binds the result as before. A new pending refusal follows the accepted-status check: `SaveDialect::SpaceFixes` refuses with `STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME` and "admitted but not yet readable". It is a burn-down row owned by Group 21. World initialization did not move.
+
+Three real S445 saves from Group 3 are committed under `src/tests/fixtures/saveload/space-fixes-445/`: typed-origin packets, mining continuation and field lifecycle. `catalogue.json` records the writer, the producer runs and the SHA-256 of each file.
+
+Tests:
+
+- `save_lineage_policy.cpp` builds facts with `Merged446()` and `SpaceFixes(version)`. It covers:
+  - both 441 writers, and each one's proof planted in the other's file;
+  - S441-445 accepted, including Classic content 0 and hints ignored, with ten foreign-evidence refusals;
+  - marked 446 accepted, with refusals for missing origins, the wrong schema, an unmarked file, markers on 442-445, and 447 as Unsupported;
+  - the overlap settled by the marker;
+  - the A442/A447 expectations updated to Corrupt/Unsupported.
+  Standalone result: 10 cases, 1,537 assertions.
+- `save_lineage_preflight.cpp` adds `Native preflight admits Space fixes originals and keeps them pending`. Each catalogued original:
+  - has the catalogued digest;
+  - classifies as SpaceFixes 445 (all five Space capabilities and all of A's, none of B's), and a DonorB hint is ignored;
+  - is refused by the network reader, `Check` (`TOO_NEW_SAVEGAME`) and `Load` without one native read or a retained lineage.
+  The open world (vehicle, money, map, tick, RNG) is unchanged.
+- The optional donor scan also classifies each of the 28 real saves.
+
+GCC results (`logs/merge-oct28/group13/`):
+
+- Build: 12 min 3 s, exit 0.
+- Focused subset: 74/74 (`ctest-gcc.{log,xml}`).
+- A wider save/load subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid"`: 369/369 (`ctest-gcc-wide.{log,xml}`).
+- Donor scan: all 28 saves classify as SpaceFixes 445 (253 assertions, `donor445-scan.log`).
