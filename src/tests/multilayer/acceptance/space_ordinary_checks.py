@@ -74,6 +74,8 @@ def main():
     log = ROOT / "logs/space-fixes" / (args.run + ".log")
     ticks = 3000 if args.mode == "advance" else 2
     started = time.monotonic()
+    # A fresh checkout has no logs/space-fixes yet; create it as space_fixes_checks.run does.
+    log.parent.mkdir(parents=True, exist_ok=True)
     with log.open("w", encoding="utf-8") as sink:
         result = subprocess.run([str(executable), "-v", f"null:ticks={ticks}", "-b", "null", "-s", "null", "-m", "null",
                                  "-x", "-X", "-I", "original_dos", "-d", "misc=3,sl=3", "-c", str(path), "-g", str(source)],
