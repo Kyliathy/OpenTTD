@@ -801,18 +801,20 @@ _Applies to Group 17B._
 
 {{MEDIUM}}
 
-- [ ] **17B.1** Remove `SaveDialect::SpaceFixes`, `CompatibleSpaceFixes`, the `first_space` rule column and the 441-445 range in `WriterProducedVersion`. The five capabilities are granted only to merged 446. Any markerless 441-445 classifies as Unsupported before any legacy rule; a hint never changes that.
+- [X] **17B.1** Remove `SaveDialect::SpaceFixes`, `CompatibleSpaceFixes`, the `first_space` rule column and the 441-445 range in `WriterProducedVersion`. The five capabilities are granted only to merged 446. Any markerless 441-445 classifies as Unsupported before any legacy rule; a hint never changes that.
 
-- [ ] **17B.2** In `DoLoad`, refuse Unsupported files at or below 446 with a new message saying a development build wrote them, keep "too new" for later versions, and remove the Group 13 pending refusal (tick its burn-down row as retired).
+- [X] **17B.2** In `DoLoad`, refuse Unsupported files at or below 446 with a new message saying a development build wrote them, keep "too new" for later versions, and remove the Group 13 pending refusal (tick its burn-down row as retired).
 
-- [ ] **17B.3** Convert the tests:
+- [X] **17B.3** Convert the tests:
   - the capability matrix becomes D441 against 446;
   - the S441-445 policy cases become refusals;
   - the real S445 fixtures refuse through every native entry with the world unchanged;
   - their CAPA rows decode with the merged-446 format, since they have the same column shape;
   - the optional donor scan expects refusal.
 
-- [ ] **17B.4** Build GCC and Clang, and run the lineage, envelope and save/load subsets.
+- [X] **17B.4** Build GCC and Clang, and run the lineage, envelope and save/load subsets.
+
+Execution evidence: see **Group 17B** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass 524/524, and all 28 local donor saves refuse.
 
 ### Group 18 - Adapt SPOR, VEHS and departure references as one mission contract
 

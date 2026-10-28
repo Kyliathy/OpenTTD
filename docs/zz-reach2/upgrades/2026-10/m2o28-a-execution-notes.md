@@ -581,3 +581,39 @@ S's existing cases already cover every era's exact trailer and row extents, unea
 
 The plan is amended below, as Group 17B and in the Group 18-22 text.
 
+## Group 17B
+
+Commit `19f4df73`, after the plan change `b4e13ae0`.
+
+**17B.1** Removed, with no other use left:
+
+- `SaveDialect::SpaceFixes`;
+- `CompatibleSpaceFixes`;
+- the `first_space` rule column;
+- the Space fixes range in `WriterProducedVersion`, and its `HasSaveCapability` case.
+
+The five capabilities are merged-446 rows (`{0, 0, false, true}`). The classifier now refuses any markerless 441-445 as Unsupported. The range constants are `FIRST/LAST_UNMARKED_DEVELOPMENT_VERSION` (441/445). The check runs after the malformed-first checks and the marker branch, and before the legacy path, so no hint is consulted.
+
+**17B.2** `DoLoad` maps Unsupported to `STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME` above 446. At or below 446 it maps to the new `STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME`: "Savegame was written by a development build whose format this version does not read". The Group 13 pending refusal is gone; its burn-down row is ticked as retired.
+
+Comments that still said "Space fixes" were updated in `save_lineage.*`, `saveload.cpp`, `cargo_source_sl.h`, `cargopacket_sl.cpp` and `asteroid_sl.cpp`. The ASTR selector never picks the Lifecycle-only layout now.
+
+**17B.3** Tests:
+
+- `save_lineage_policy.cpp`:
+  - `DevelopmentBuild(version)` replaces `SpaceFixes(version)`;
+  - the five expectation rows are `{Merged, 446}`;
+  - the matrix is reduced to merged 441 against 446;
+  - new cases: `grants the Space eras only to merged 446`, `reads merged 441 and refuses a markerless 441`, and `refuses every markerless 441-445 as a development build` (hints, Classic and changed content stay Unsupported; malformed evidence is still Corrupt).
+- `save_lineage_preflight.cpp`: `Native preflight refuses development-build originals without touching the world`, checking for `DEVELOPMENT_SAVEGAME`.
+- `asteroid_cargo_wire.cpp`: typed-origin contexts use merged 446. The real-row case becomes `CAPA rows of real typed-origin saves decode through the merged 446 format`, because these saves have the same column shape as 446.
+- The donor scan expects Unsupported.
+
+**17B.4** Results (`logs/merge-oct28/group17b/`):
+
+- The standalone policy build: 10 cases, 1,333 assertions.
+- GCC full rebuild (the new string regenerates the tables): 19 min 7 s.
+- Wide subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid|[Ss]ource|[Cc]argo|[Pp]acket|[Cc]ustody|ASTR|[Mm]erged"`: GCC 524/524, Clang 524/524 (616 steps).
+- `OTTD_DONOR445_DIR` scan: all 28 donor saves refuse as Unsupported (225 assertions).
+- Warnings seen in the build (`asteroid_gui.cpp`, `space_resupply.cpp`, `cargo_return_native.cpp`) are in files this group did not touch.
+
