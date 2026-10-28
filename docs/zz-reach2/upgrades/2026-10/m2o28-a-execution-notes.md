@@ -851,4 +851,4 @@ Left as they are: fixture provenance labels (`"origin": "A"`/`"B"` in the catalo
 - `space_mining_policy.cpp`, `Fleet and order diagnostics change with every saved mining intent field`: each continuation field, the target generation, and the Mine policy, with restore returning the original digests.
 - Camera independence stays covered by `[multilayer-state-digest]`.
 
-**23.4** GCC: `run_cases.sh` over `[asteroid-identity]`, `[asteroid-cargo-validation]`, `[space-mining-policy]`, `[multilayer-state-digest]` and `[surface-supply-merged-digest]` passes 20/20, and full CTest passes 1528/1528. Clang: not run; the session stopped during the Clang rebuild. Run `ninja -C build-clang openttd_test` and full CTest first (handover step 1).
+**23.4** GCC: `run_cases.sh` over `[asteroid-identity]`, `[asteroid-cargo-validation]`, `[space-mining-policy]`, `[multilayer-state-digest]` and `[surface-supply-merged-digest]` passes 20/20, and full CTest passes 1528/1528. Clang: `openttd_test` builds with no warnings, and full CTest passes 1528/1528 (`logs/merge-oct28/group23/ctest-clang-1.log`).

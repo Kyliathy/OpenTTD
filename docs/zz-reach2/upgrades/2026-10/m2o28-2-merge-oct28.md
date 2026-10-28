@@ -4,14 +4,14 @@
 
 ## Handover, 2026-10-28 (session stopped by the user)
 
-**Where we are.** Part 1 is complete (Groups 1-22 and 22B, all `[X]`). Part 2 is at **Group 23**: 23.1-23.3 are done, and 23.4 has GCC done; its Clang run did not finish before hand-off (see Group 23 below). Groups 24-41 have not started. Branch `merge-2sp-oct28`, all commits local, **nothing pushed** (the user's standing rule: no pushes until they say; Group 41.5 asks first). Never run `clean.ps1 -Apply` on this checkout.
+**Where we are.** Part 1 is complete (Groups 1-22 and 22B, all `[X]`). Part 2 is at **Group 23**: Group 23 is done (`[X]`), green in GCC and Clang. Groups 24-41 have not started. Branch `merge-2sp-oct28`, all commits local, **nothing pushed** (the user's standing rule: no pushes until they say; Group 41.5 asks first). Never run `clean.ps1 -Apply` on this checkout.
 
 **State of the code.**
 - One writer: merged 446 (`SaveLoadVersion::SpaceMiningLifecycle`), MLLN `MLN1`/schema 2, 128 families (`src/tests/fixtures/saveload/merged-446-family-set.json` on top of the 441 contract).
 - One loader: `InspectSaveWireFacts` → `ClassifySaveFormat` → a lineage bound to the load. Format families (renamed in 22B): `SaveFormat::Base` (≤424), `Orbital` (425-440, was "A"), `Geothermal` (425-434, was "B"), `Unified` (441 schema 1, 446 schema 2). Capabilities `SurfaceSupplyOrdersFixed/Table` (were A/B), plus the five Space capabilities granted only to Unified 446.
 - Development-build saves (markerless 441-445) refuse with `STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME`; `src/tests/fixtures/saveload/space-fixes-445/` holds three real ones as refusal fixtures.
 - `docs/zz-reach2/architecture/savegame/archi-savegame.md` opens with **One save system**, including the table of importable formats.
-- Full CTest last green: GCC 1528/1528 after Group 23. Clang was 1525/1525 after 22B; the post-Group-23 run is recorded in Group 23.
+- Full CTest is green after Group 23: GCC 1528/1528, Clang 1528/1528.
 
 **Where the evidence is.** Per-group records are in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md) (Groups 9-23), and logs are in `logs/merge-oct28/group<N>/` (ignored). Useful tools under `test-cache/merge-oct28/` (ignored; recreate if lost):
 - `run_cases.sh <build> "<tags>" <log>` runs each Catch case in its own process from the build directory, as CTest does. Running several cases in one process gives false failures (`Engine::GetNumItems() == 0`).
@@ -28,9 +28,8 @@
 - After a language-string change, also rebuild `openttd`, or CTest's `regression_*` entries fail with "No available language packs".
 
 **Next steps, in order.**
-1. If Group 23's Clang line below is not filled in, run `ninja -C build-clang openttd_test` and full CTest there, and record the count.
-2. Group 24: 24.1's dispatch already exists (`merged_contract` in `savegame_tables.py`). What remains is the four Python oracles that still assume the current writer is 441 (listed under 24.1): `surface_gateway_core_ledger.py`, `space_checkpoint_foundation.py`, `space_checkpoint_load.py`, and `space_checkpoint_migration.py`, which needs the documented 446 structural transforms for CAPA, ASTR, SPKN, SPOR and VEHS, not looser comparisons. Then 24.2-24.4.
-3. Groups 25-41 as planned. Group 33.1 must rebase or retire the incoming branch's malformed-file harnesses (`asteroid_cargo_wire_checks.py`, `asteroid_field_wire_checks.py`, `legacy_departure_wire_checks.py`), which still assert version 442 or later. Group 33.3 should extend `--late-failures` to a 446 source.
+1. Group 24: 24.1's dispatch already exists (`merged_contract` in `savegame_tables.py`). What remains is the four Python oracles that still assume the current writer is 441 (listed under 24.1): `surface_gateway_core_ledger.py`, `space_checkpoint_foundation.py`, `space_checkpoint_load.py`, and `space_checkpoint_migration.py`, which needs the documented 446 structural transforms for CAPA, ASTR, SPKN, SPOR and VEHS, not looser comparisons. Then 24.2-24.4.
+2. Groups 25-41 as planned. Group 33.1 must rebase or retire the incoming branch's malformed-file harnesses (`asteroid_cargo_wire_checks.py`, `asteroid_field_wire_checks.py`, `legacy_departure_wire_checks.py`), which still assert version 442 or later. Group 33.3 should extend `--late-failures` to a 446 source.
 
 **Known gaps worth remembering.**
 - A genuine Orbital 440 copied preview does not join mining leases; only 446 does, under `SpaceMiningContinuation`. The full loader's final fleet join refuses a bad lease (Group 21).
@@ -120,9 +119,9 @@ _Applies to Groups 23-24._
 
 - [X] **23.3** Add mutation-sensitivity tests: changing each saved field changes the right diagnostic, while reordering equivalent sparse storage or moving the camera does not. Derived indexes, addresses, hash-bucket order and allocator state stay out of the digest.
 
-- [ ] **23.4** Run the affected cases (`[multilayer-state]`, the Space digest cases and the S peer-diagnostic cases) through CTest in GCC and Clang, and record them in the notes.
+- [X] **23.4** Run the affected cases (`[multilayer-state]`, the Space digest cases and the S peer-diagnostic cases) through CTest in GCC and Clang, and record them in the notes.
 
-Execution evidence (2026-10-28): see **Group 23** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC: the 20 digest-related cases pass, and full CTest passes 1528/1528. Clang: not run; the session stopped during the Clang rebuild. Run `ninja -C build-clang openttd_test` and full CTest first (handover step 1). The S peer-diagnostic cases are native peer harnesses run in Groups 36-37.
+Execution evidence (2026-10-28): see **Group 23** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC: the 20 digest-related cases pass, and full CTest passes 1528/1528. Clang: full CTest 1528/1528, and the build has no warnings. The S peer-diagnostic cases are native peer harnesses run in Groups 36-37.
 
 ### Group 24 - Adapt the exact-family readers and independent comparison oracles
 
