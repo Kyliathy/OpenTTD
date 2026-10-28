@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_cargo_native.cpp Actual CAPA source migration, preview isolation and native resave checks.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups21-28B.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 15; source validity is judged by an accepted format, not a pending version name.
  * Existing saved assets and freight are observed in place. Optional policy/departure modes deliberately transition one existing hull; no packet, hull, material, service or income is synthesized.
  */
 #include "../stdafx.h"
@@ -210,9 +211,11 @@ void VerifyAsteroidCargoNative(const char *source, const char *output)
 	uint natural = 0;
 	// Every loaded source already passed its genuine era and same-file migration.
 	// Natural packets now have complete origins; ordinary/supply fields retain
-	// their own original purpose, invalid sentinels and credit rules.
+	// their own original purpose, invalid sentinels and credit rules. They must be
+	// valid for the combined writer that carries typed origins (m2o28 Group 15).
+	const auto combined = CargoSourceFormat::FromLineage({SaveLineageStatus::Accepted, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION});
 	for (const auto &row : before) {
-		CHECK(IsValidCargoPacketSource(row.source, row.feeder, SaveLoadVersion::AsteroidCargoOrigins));
+		CHECK(IsValidCargoPacketSource(row.source, row.feeder, combined));
 		if (row.source.type == SourceType::Asteroid) { REQUIRE(row.source.GetAsteroidOrigin()); ++natural; }
 	}
 	REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
