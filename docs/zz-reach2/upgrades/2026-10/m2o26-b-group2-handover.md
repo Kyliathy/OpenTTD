@@ -1,6 +1,6 @@
 # October 26 merge handover: donor reference build and Group 3 entry
 
-@see [historical build architecture](../../architecture/archi-historical-debug.md), [Part 1](m2o26-merge-source-save-compatibility-oct26.md) and [execution observations](m2o26-a-execution-notes.md). This note records a machine-transfer boundary; the plan's Global and nearest Area Mandatory Reading remain the execution contracts.
+@see [historical build architecture](../../architecture/archi-historical-debug.md), Part 1 (`d49c3596:docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md`, deleted 2026-10-28; superseded by [m2o28](m2o28-1-merge-oct28.md)) and [execution observations](m2o26-a-execution-notes.md). This note records a machine-transfer boundary; the plan's Global and nearest Area Mandatory Reading remain the execution contracts.
 
 ## Stop boundary
 
@@ -27,8 +27,8 @@ Transfer these local edits explicitly; several are untracked:
 | --- | --- |
 | [package_transfer.py](../../../../src/tests/multilayer/support/package_transfer.py) | Modified existing owner; new `stage_donor_source` copies only declared exact bytes into a fresh project-owned tree. |
 | [donor_source_stage_check.py](../../../../src/tests/multilayer/support/donor_source_stage_check.py) | New six-case non-destructive staging checks. |
-| [Part 1](m2o26-merge-source-save-compatibility-oct26.md) | Current task status, reading contracts and next Group 3. |
-| [Part 2](m2o27-merge-runtime-qualification-oct26.md) | Already split continuation plan; unchanged during Groups 1–2. |
+| Part 1, `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md` (deleted) | Current task status, reading contracts and next Group 3. |
+| Part 2, `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md` (deleted) | Already split continuation plan; unchanged during Groups 1–2. |
 | [Execution notes](m2o26-a-execution-notes.md) and [this handover](m2o26-b-group2-handover.md) | Actual observations, build scope, stop boundary and transfer instructions. |
 
 Both original repositories, retained fixtures and their required Git objects are still needed for later comparison and integration. OpenTTD4 is the incoming source; the historical DonorB/OpenTTD3 references inside existing fixture catalogues designate a different lineage.

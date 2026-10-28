@@ -1,6 +1,6 @@
 # October 26 merge: sequential execution notes
 
-@see [savegame architecture](../../architecture/savegame/archi-savegame.md) and [Part 1](m2o26-merge-source-save-compatibility-oct26.md). This is an implementation record, not an additional mandatory reading queue.
+@see [savegame architecture](../../architecture/savegame/archi-savegame.md) and Part 1 (`d49c3596:docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md`, deleted 2026-10-28; superseded by [m2o28](m2o28-1-merge-oct28.md)). This is an implementation record, not an additional mandatory reading queue.
 
 **User-directed stop boundary:** finish Group 2 and leave the [machine-transfer handover](m2o26-b-group2-handover.md), then stop before Group 3.
 

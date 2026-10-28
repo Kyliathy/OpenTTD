@@ -2,7 +2,7 @@
 
 @file donor_source_stage_check.py
 @see docs/zz-reach2/architecture/archi-historical-debug.md
-@see docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md Group2.
+@see docs/zz-reach2/upgrades/2026-10/m2o26-a-execution-notes.md Group 2 (the m2o26 plan itself is in Git history at d49c3596).
 Synthetic trees stay under test-cache/merge-oct26/stage-contracts. There is no
 recursive teardown, repository creation, Git mutation or real donor modification.
 Run: python -B src/tests/multilayer/support/donor_source_stage_check.py

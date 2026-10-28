@@ -490,7 +490,7 @@ _Applies to Groups 40-41._
 
 - [ ] **40.2** Reconcile `d2sa-space-adventures.md` (Part 1 5.5 union) and the affected demo guidance with both feature sets. Check that launcher selections use the public resolver and immutable source aliases.
 
-- [ ] **40.3** Update `r2lbf-b-windows-handoff.md`: the survey window's INI key is now `space_inspector` (560×380), not `space_survey`. Then update the **Status, 2026-10-28** note in the m2o26 and m2o27 plans (added while planning) with the final merge commit, leaving their tasks as historical records.
+- [ ] **40.3** Update `r2lbf-b-windows-handoff.md`: the survey window's INI key is now `space_inspector` (560×380), not `space_survey`.
 
 - [ ] **40.4** Validate every row of `dispositions.tsv` and all 40 shared paths against the merged result, and confirm no S addition, save field, test target or documentation change was lost (`git diff origin/mlm-mlv-2sp HEAD --stat -- <S-only paths>` shows only intended changes).
 
@@ -522,7 +522,7 @@ These are conditional sources, not prerequisites. Read a row only after its trig
 
 | Trigger | File name | Start at | Expand only when | Consultation purpose |
 | --- | --- | --- | --- | --- |
-| A runtime group's intent for a boundary is unclear from code | [docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md](m2o27-merge-runtime-qualification-oct26.md) | The group whose number is this group minus 4, from **Group 19** at line 99 | The Part 1 decision table does not cover the boundary | Recover the October 26 reasoning. The Part 1 decision table wins wherever they differ. |
+| A runtime group's intent for a boundary is unclear from code | `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md` (deleted; read with `git show`) | The group whose number is this group minus 4, from **Group 19** at line 99 | The Part 1 decision table does not cover the boundary | Recover the October 26 reasoning. The Part 1 decision table wins wherever they differ. |
 | A renewal test disagrees about motion, cost, timing or eligibility | `docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md` (local after Part 1 Group 4) | **Scope and decisions**, lines 46-73 | The live motion, lifecycle and target contracts contradict each other | Recover the 20-60 s policy, the 1/3/5 weights, no instant refill and the nearest-target tie-break rationale. |
 | Routine backup still refuses because of an old source hash or an unrelated historical file | [src/tests/multilayer/support/artifact_preservation.py](../../../../src/tests/multilayer/support/artifact_preservation.py) | `cleanup_operation`, lines 298-352, then `verify_cleanup_inputs`, lines 213-295 | The new backup path still reaches historical auditing | Find the remaining coupling and remove it from the routine path; never hide a real failed backup. |
 | A cold build imports Python modules from another checkout or lacks runtime assets | [docs/zz-reach2/upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md](m2o23-4-come-space-b-integration-handoff.md) | **Supported reconstruction boundary**, lines 59-79 | The public build and staging helpers cannot produce their declared prerequisites | Diagnose `_pth`, distribution and profile ownership without archived executables. |
@@ -536,7 +536,7 @@ This is **not an execution reading queue** and must not be preloaded after a con
 
 | File name | Sections or Line Ranges used while planning | Planning contribution |
 | --- | --- | --- |
-| [docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md](m2o27-merge-runtime-qualification-oct26.md) | Groups 19-36, lines 99-567; Consult on Demand 569-583 | Supplied the runtime and qualification sequence, renumbered +4 (Groups 19-36 became 23-41, with Group 36 split into 40-41), adapted to Linux and the real merge commit. |
+| `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md` (deleted 2026-10-28) | Groups 19-36, lines 99-567; Consult on Demand 569-583 | Supplied the runtime and qualification sequence, renumbered +4 (Groups 19-36 became 23-41, with Group 36 split into 40-41), adapted to Linux and the real merge commit. |
 | [docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md](m2o28-1-merge-oct28.md) | **Conflict decisions and merge contract**; **Part 1 handoff to Part 2** | The upstream decisions and the entry state of this part. |
 | `S:src/tests/multilayer/acceptance/space_lifecycle_peer_checks.py` | `launch` 29-86; `opportunities`/`compare_peer` 121-162 | Showed the peer harness runs `openttd_test` endpoints over loopback, which makes Linux peers feasible once the executable path is portable. |
 | `S:src/tests/multilayer/acceptance/space_fixes_checks.py` | `run` 41-200; `main` 202-235 | Separated the headless mining scenarios (Linux) from the screen-based layout, shortcut and construction scenarios (Windows). |

@@ -66,7 +66,7 @@ The plans in both branches were sorted by file date and checked against commit t
 | 3 | `0119308a` (`530daca23b`) | D | 2026-10-25 04:51:36 +0100 | M2O23-1..4 complete: underground/Tube/geothermal, writer 441 + MLLN, the 128-family contract, shared UI, art. |
 | 4 | `462cc088` (`53368602c7`) | S | 2026-10-26 07:41:57 +0100 | `r2sff1-space-fixes-features-1.md` Groups 1-34 and r2df updates: construction pages/waits, shortcuts, sparse renewal, typed cargo origins, mining policies, writer 445. |
 | 5 | `66713bdf` (`3d45ad4a4c`) | S | 2026-10-26 09:19:04 +0100 | Tolerant `clean.ps1`, three cleanup check scripts, and the policy note in `r2fc-file-cleanup3.md` (**Current cleanup policy — user correction, 2026-10-26**). |
-| 6 | `a3c7bc6c` | D | 2026-10-26 20:14:22 +0100 | Merge preparations: [m2o26](m2o26-merge-source-save-compatibility-oct26.md) and [m2o27](m2o27-merge-runtime-qualification-oct26.md), Groups 1-2 executed on Windows (`package_transfer.stage_donor_source`). |
+| 6 | `a3c7bc6c` | D | 2026-10-26 20:14:22 +0100 | Merge preparations: the m2o26 and m2o27 merge plans (deleted 2026-10-28; in Git history at `d49c3596`), Groups 1-2 executed on Windows (`package_transfer.stage_donor_source`). |
 | 7 | `7a66e52f` | D | 2026-10-26 20:29:50 +0100 | Took S's `clean.ps1` ("the bad one"). |
 | 8 | `75598d9f` through `d49c3596` | D | 2026-10-27 12:15 – 2026-10-28 08:16 +0000 | [r2lbf](r2lbf-linux-build-fixes.md): 30 commits, all 112 tasks; GCC/Clang 1361/1361, Dedicated 1360/1360. |
 
@@ -82,7 +82,7 @@ A `git archive` export of S was built in the session scratchpad, with the r2lbf 
 
 ### Relationship to the October 26 plans
 
-[m2o26](m2o26-merge-source-save-compatibility-oct26.md) (Groups 1-18, Groups 1-2 done on Windows) and [m2o27](m2o27-merge-runtime-qualification-oct26.md) (Groups 19-36, unstarted) were reviewed in full. Their decisions are adopted, with these enhancements; for this workspace, this plan and [Part 2](m2o28-2-merge-oct28.md) are the execution authority:
+The October 26 plans m2o26 (Groups 1-18, Groups 1-2 done on Windows) and m2o27 (Groups 19-36, unstarted) were reviewed in full, then deleted on 2026-10-28 at the user's request. Read them with `git show d49c3596:docs/zz-reach2/upgrades/2026-10/<name>.md`. Their decisions are adopted with these enhancements, and this plan and [Part 2](m2o28-2-merge-oct28.md) are the only execution authority:
 
 1. **Real Git merge commit** (user decision, 2026-10-28) instead of a file-level integration. History keeps both parents, and later `git merge` of S updates is incremental.
 2. **Linux first, Windows handoff.** GCC and Clang build and test here, and tests run right after the merge commit (Group 8) instead of waiting for a first combined build in m2o26/m2o27's Group 27. MSVC Debug/RelWithDebInfo, the native pipeline and PowerShell checks go to the Windows handoff in Part 2.
@@ -153,7 +153,7 @@ Shared execution rules for every group:
 
 _Applies to Group 1._
 
-**Entry gate:** the checkout is on `mlm-mlv` at `d49c3596`, or at a descendant that only adds this plan pair and the status notes in the m2o26/m2o27 plans; `git status --short` shows nothing else; and `origin/mlm-mlv-2sp` resolves to `66713bdf`. Verify with `git rev-parse` and `git status`. If either pin drifted, stop 1.2-1.6, refresh the forecast and this plan's counts, and ask the user if new commits change a decision; 1.1 may continue as the drift record. Forbidden: merging another commit than the pinned S tip, or continuing on a dirty tree by stashing someone's work.
+**Entry gate:** the checkout is on `mlm-mlv` at `d49c3596`, or at a descendant whose only changes are planning Markdown (this plan pair, and the deletion of the October 26 plans); `git status --short` shows nothing else; and `origin/mlm-mlv-2sp` resolves to `66713bdf`. Verify with `git rev-parse` and `git status`. If either pin drifted, stop 1.2-1.6, refresh the forecast and this plan's counts, and ask the user if new commits change a decision; 1.1 may continue as the drift record. Forbidden: merging another commit than the pinned S tip, or continuing on a dirty tree by stashing someone's work.
 
 | File name | Line Ranges | Description |
 | --- | --- | --- |
@@ -169,7 +169,7 @@ Produces the integration branch, the disposition inventory, the forecast record 
 
 - [ ] **1.1** Run `git fetch origin mlm-mlv-2sp mlm-mlv` (read-only) and recheck the pins: `git rev-parse mlm-mlv origin/mlm-mlv origin/mlm-mlv-2sp`, `git merge-base mlm-mlv origin/mlm-mlv-2sp` and `git status --short`. Record the values. On drift, follow the entry gate.
 
-- [ ] **1.2** Create the local integration branch: `git switch -c merge-2sp-oct28 mlm-mlv`. If the plan pair and the m2o26/m2o27 status notes are not committed yet, commit exactly those four files as the branch's first commit. Record that the branch has no upstream, and do not set one.
+- [ ] **1.2** Create the local integration branch: `git switch -c merge-2sp-oct28 mlm-mlv`. If planning Markdown changes (this plan pair, the deletion of the October 26 plans) are not committed yet, commit exactly those as the branch's first commit. Record that the branch has no upstream, and do not set one.
 
 - [ ] **1.3** Write the path inventory to `test-cache/merge-oct28/dispositions.tsv` from `git diff --name-status -M <base> mlm-mlv` and `git diff --name-status -M <base> origin/mlm-mlv-2sp`. Each path gets one category: `shared-conflict` (23), `shared-clean-review` (17), `S-only` (182) or `D-only` (5,286). Flag six S-only paths as `policy` for Part 2 Group 30: `src/tests/multilayer/support/cleanup_check.ps1`, `cleanup_check-1.ps1`, `cleanup_check-2.ps1`, `cleanup_fixture.ps1` and the two `r2fc*-file-cleanup3.md` plans. Confirm 0 renames and 0 deletions on S.
 
@@ -871,7 +871,7 @@ These are conditional sources, not prerequisites. Read a row only after its trig
 
 | Trigger | File name | Start at | Expand only when | Consultation purpose |
 | --- | --- | --- | --- | --- |
-| A conflict block's intent is unclear from both sides' code | [docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md](m2o26-merge-source-save-compatibility-oct26.md) | **Conflict decisions and merge contract**, lines 108-141 | The decision table in this plan does not name the boundary | Recover the October 26 reasoning for that boundary. This plan's decision table wins wherever they differ. |
+| A conflict block's intent is unclear from both sides' code | `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md` (deleted; read with `git show`) | **Conflict decisions and merge contract**, lines 108-141 | The decision table in this plan does not name the boundary | Recover the October 26 reasoning for that boundary. This plan's decision table wins wherever they differ. |
 | The classifier cannot tell an empty or mixed 441 candidate apart | [src/saveload/save_lineage.cpp](../../../../src/saveload/save_lineage.cpp) | `ClassifySaveDialect`, lines 138-214 | The Group 9 truth table and the observed marker/column facts disagree | Find the existing ambiguity and refusal rules. This never permits guessing an origin or granting a capability. |
 | A retained source SHA or alias does not resolve | [docs/zz-reach2/upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md](m2o23-4-come-space-b-integration-handoff.md) | **Current continuation and player review**, lines 45-57 | The retention journal still lacks the exact selected original | Recover the explicit original selection and the protected-gameplay boundary; a nearby file or date is no substitute. |
 | A Group 3 producer needs a missing high-ID or lifecycle predecessor | `S:docs/zz-reach2/upgrades/2026-10/r2sff1-z-m-high-id-peers.md` | Opening section, lines 6-38; then **Native source and no-op transport verified**, lines 50-85 | The named native harness cannot rebuild the input | Recover the declared-prefix versus earned-event facts and the original preparation order. |
@@ -886,8 +886,8 @@ This is **not an execution reading queue** and must not be preloaded after a con
 
 | File name | Sections or Line Ranges used while planning | Planning contribution |
 | --- | --- | --- |
-| [docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md](m2o26-merge-source-save-compatibility-oct26.md) | Whole plan reviewed; **Conflict decisions and merge contract** 108-141; Groups 1-18 at 162-732 | Supplied the adopted decisions and the codec/classifier/adoption sequence that became Groups 9-22 (renumbered +4), enhanced with the pending gate and merge-commit mechanics. |
-| [docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md](m2o27-merge-runtime-qualification-oct26.md) | Whole plan reviewed; Groups 19-36 at 99-567 | Supplied the runtime and qualification sequence that Part 2 adapts to Linux. |
+| `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md` (deleted 2026-10-28) | Whole plan reviewed; **Conflict decisions and merge contract** 108-141; Groups 1-18 at 162-732 | Supplied the adopted decisions and the codec/classifier/adoption sequence that became Groups 9-22 (renumbered +4), enhanced with the pending gate and merge-commit mechanics. |
+| `d49c3596:docs/zz-reach2/upgrades/2026-10/m2o27-merge-runtime-qualification-oct26.md` (deleted 2026-10-28) | Whole plan reviewed; Groups 19-36 at 99-567 | Supplied the runtime and qualification sequence that Part 2 adapts to Linux. |
 | [docs/zz-reach2/upgrades/2026-10/m2o26-a-execution-notes.md](m2o26-a-execution-notes.md) | **Group 1 completed** 7-15; **Group 2 completed** 17-37 | Showed which Windows outputs exist only on the other machine, and that S's code was built there but never run. |
 | `S:docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md` | **Scope and decisions** 46-73; Area headings 82-890 | Mapped S's feature eras and groups to the conflict paths. |
 | `S:docs/zz-reach2/upgrades/2026-10/r2sff1-z-o-final-handoff.md` | 14-23; **Verified evidence** 44-70; **Reproduction** 71-116; **Limits and remaining ownership** 118-134 | Identified the eras, the harnesses and the cache-dependent evidence. |

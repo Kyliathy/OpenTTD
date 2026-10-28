@@ -3,7 +3,7 @@
 @file package_transfer.py Explicit source transfer and cold staging boundary.
 @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group29.
 @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
-@see docs/zz-reach2/upgrades/2026-10/m2o26-merge-source-save-compatibility-oct26.md Group2.
+@see docs/zz-reach2/upgrades/2026-10/m2o26-a-execution-notes.md Group 2 (the m2o26 plan itself is in Git history at d49c3596).
 Ignore rules never select transfer contents. The actual cleaner supplies exact
 generated exclusions; save export and required-input checks precede staging.
 The separate donor-source entry copies only explicitly pinned inputs and never
