@@ -9,6 +9,7 @@
  * @file saveload.cpp All actions handling saving and loading goes on in this file.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; historical natural freight retains a joined preview even after all Space hulls/sites disappear.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 4 and 10; the interim writer and its capability context.
  *
  * The general actions are as follows for saving a game (loading is analogous):
  * <ol>
@@ -289,9 +290,10 @@ bool SlHasSaveCapability(SaveCapability capability)
 	if (_sl.lineage) return HasSaveCapability(*_sl.lineage, capability);
 	// Outside a load, serialization and synthetic pointer cleanup describe the
 	// current writer, never the dialect/version of a previously copied candidate.
-	const auto writer_version = to_underlying(SAVEGAME_VERSION);
-	const auto dialect = writer_version == MERGED_SAVE_LINEAGE_VERSION ? SaveDialect::Merged : SaveDialect::DestinationA;
-	return HasSaveCapability({SaveLineageStatus::Accepted, dialect, writer_version}, capability);
+	// The writer is merged 441 (the static_assert beside SAVEGAME_VERSION holds it)
+	// until m2o28-1-merge-oct28.md Group 22 activates 446, so the five Space fixes
+	// capabilities stay off when saving.
+	return HasSaveCapability({SaveLineageStatus::Accepted, SaveDialect::Merged, to_underlying(SAVEGAME_VERSION)}, capability);
 }
 
 /** @copydoc IsSavegameVersionBefore */

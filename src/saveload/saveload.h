@@ -20,7 +20,7 @@
 std::optional<SaveLineageResult> GetLoadCapabilities();
 
 /** Query a branch-specific serialization feature in the bound load or current writer.
- * @param capability Exact A/B feature; unknown future values refuse.
+ * @param capability Exact A, B or Space fixes feature; unknown future values refuse.
  * @return Accepted original support during loading, otherwise support in the current writer contract. This grants no gameplay rights.
  */
 bool SlHasSaveCapability(SaveCapability capability);

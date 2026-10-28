@@ -332,10 +332,8 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 
 }
 
-/** The closed m2o28 Group 9 matrix: who carries the five Space fixes eras, and what else each source keeps.
- * Pending until Group 10 replaces the positional capability arithmetic, hence `[!mayfail]`.
- */
-TEST_CASE("Save lineage freezes the Space fixes source-format matrix", "[save-lineage][!mayfail]")
+/** The closed m2o28 Group 9 matrix: who carries the five Space fixes eras, and what else each source keeps. */
+TEST_CASE("Save lineage freezes the Space fixes source-format matrix", "[save-lineage]")
 {
 	for (const auto &row : SPACE_FIXES_MATRIX) {
 		const auto source = AcceptedSource(row.dialect, row.version);
@@ -350,5 +348,50 @@ TEST_CASE("Save lineage freezes the Space fixes source-format matrix", "[save-li
 			const bool carried = row.dialect == SaveDialect::Merged || expected.dialect == SaveDialect::DestinationA;
 			CHECK(HasSaveCapability(source, expected.capability) == carried);
 		}
+	}
+}
+
+/** Each Space fixes era starts at its own version, only inside that writer's range, and never by position. */
+TEST_CASE("Save lineage bounds every Space fixes introduction and refuses foreign versions", "[save-lineage]")
+{
+	// Each introduction at n-1 and n. For 441 the n-1 source is S440, which that
+	// writer never produced (A440 was its starting point), so it grants nothing.
+	for (const auto &expected : CAPABILITY_EXPECTATIONS) {
+		if (expected.dialect != SaveDialect::SpaceFixes) continue;
+		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::SpaceFixes, expected.first_version - 1), expected.capability));
+		CHECK(HasSaveCapability(AcceptedSource(SaveDialect::SpaceFixes, expected.first_version), expected.capability));
+	}
+	// Both meanings of 441: the merged A+B writer lacks typed origins, S441 has them,
+	// and both keep A's supply book while only the merged writer keeps B's.
+	const auto merged441 = AcceptedSource(SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION);
+	const auto space441 = AcceptedSource(SaveDialect::SpaceFixes, 441);
+	CHECK_FALSE(HasSaveCapability(merged441, SaveCapability::AsteroidCargoOrigins));
+	CHECK(HasSaveCapability(space441, SaveCapability::AsteroidCargoOrigins));
+	CHECK(HasSaveCapability(merged441, SaveCapability::SurfaceSupplyOrdersA));
+	CHECK(HasSaveCapability(space441, SaveCapability::SurfaceSupplyOrdersA));
+	CHECK(HasSaveCapability(merged441, SaveCapability::SurfaceSupplyOrdersB));
+	CHECK_FALSE(HasSaveCapability(space441, SaveCapability::SurfaceSupplyOrdersB));
+	// A version outside its writer's closed range borrows no other writer's meaning:
+	// S446, merged 442-445 and 447, A441 and B435 were never written.
+	const SaveLineageResult foreign[] = {
+		AcceptedSource(SaveDialect::SpaceFixes, 446), AcceptedSource(SaveDialect::Merged, 442),
+		AcceptedSource(SaveDialect::Merged, 445), AcceptedSource(SaveDialect::Merged, 447),
+		AcceptedSource(SaveDialect::DestinationA, 441), AcceptedSource(SaveDialect::DonorB, 435),
+		AcceptedSource(SaveDialect::Shared, 441), AcceptedSource(static_cast<SaveDialect>(200), 441),
+	};
+	for (const auto &source : foreign) {
+		for (const auto &expected : CAPABILITY_EXPECTATIONS) CHECK_FALSE(HasSaveCapability(source, expected.capability));
+	}
+	// A refused attempt grants nothing even when it names a Space fixes writer.
+	for (auto status : {SaveLineageStatus::Ambiguous, SaveLineageStatus::Corrupt, SaveLineageStatus::Unsupported}) {
+		CHECK_FALSE(HasSaveCapability({status, SaveDialect::SpaceFixes, 445}, SaveCapability::SpaceSurveyDeparture));
+		CHECK_FALSE(HasSaveCapability({status, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION}, SaveCapability::AsteroidCargoOrigins));
+	}
+	// The next appended value and any unknown value have no rule in any writer, so a
+	// future append cannot silently become available in old 441 or in 446.
+	for (const auto unknown : {static_cast<SaveCapability>(SaveCapability::Count), static_cast<SaveCapability>(255)}) {
+		CHECK_FALSE(HasSaveCapability(merged441, unknown));
+		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION), unknown));
+		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::SpaceFixes, 445), unknown));
 	}
 }

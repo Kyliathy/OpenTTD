@@ -2,6 +2,7 @@
 /** @file save_lineage.cpp Pure preflight policy for the two preserved save histories.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 10; explicit per-capability rules for every writer.
  */
 #ifndef SAVE_LINEAGE_STANDALONE
 #include "../stdafx.h"
@@ -213,16 +214,114 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	return result(SaveLineageStatus::Ambiguous);
 }
 
+/** First post-fork envelope version of both historical branches; 424 and older is shared history. */
+static constexpr uint16_t FIRST_DIVERGENT_VERSION = 425;
+static constexpr uint16_t LAST_DESTINATION_A_VERSION = 440; ///< Last version the historical destination writer produced.
+static constexpr uint16_t LAST_DONOR_B_VERSION = 434; ///< Last version the historical donor writer produced.
+static constexpr uint16_t FIRST_SPACE_FIXES_VERSION = 441; ///< First Space fixes era; that writer descends from A440.
+static constexpr uint16_t LAST_SPACE_FIXES_VERSION = 445; ///< Last version the Space fixes writer produced.
+
+/** One capability's availability in every writer, looked up by capability and never by enum position.
+ * A first version of zero means that writer never had the feature at any version.
+ */
+struct CapabilityRule {
+	SaveCapability capability; ///< The feature this row describes.
+	uint16_t first_a; ///< First historical DestinationA version, or 0.
+	uint16_t first_b; ///< First historical DonorB version, or 0.
+	uint16_t first_space; ///< First SpaceFixes version, or 0. A features start at 441 because that writer began from A440.
+	bool merged441; ///< Carried by merged 441 with MLLN schema 1, whose meaning is frozen.
+	bool merged446; ///< Carried by merged 446 with MLLN schema 2, the combined writer of m2o28 Group 22.
+};
+
+/** Source-defined availability of every capability. Appending a capability requires a row here; the
+ * static_asserts below reject a missing or duplicated row, and each row chooses its merged 441 value explicitly.
+ */
+static constexpr CapabilityRule CAPABILITY_RULES[] = {
+	{SaveCapability::OrbitalAssemblyFacilities, 425, 0, 441, true, true},
+	{SaveCapability::OrbitalManufacturingReservations, 426, 0, 441, true, true},
+	{SaveCapability::OrbitalManufacturingMaterialization, 427, 0, 441, true, true},
+	{SaveCapability::OrbitalManufacturingClones, 428, 0, 441, true, true},
+	{SaveCapability::SpaceReplacementSettlement, 429, 0, 441, true, true},
+	{SaveCapability::SpaceOrderedActions, 430, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerCommissioning, 431, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerMissions, 432, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerSupplies, 433, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerDescents, 434, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerOnboardServices, 435, 0, 441, true, true},
+	{SaveCapability::SpaceHeavyMinerContainedServices, 436, 0, 441, true, true},
+	{SaveCapability::SpaceCargoDimensions, 437, 0, 441, true, true},
+	{SaveCapability::OrbitalRecipeProcessing, 438, 0, 441, true, true},
+	{SaveCapability::CompanySupplyPackets, 439, 0, 441, true, true},
+	{SaveCapability::SurfaceSupplyOrdersA, 440, 0, 441, true, true},
+	{SaveCapability::TBMFaceTransfer, 0, 425, 0, true, true},
+	{SaveCapability::SurfaceSupplyOrdersB, 0, 426, 0, true, true},
+	{SaveCapability::GeothermalGenerators, 0, 427, 0, true, true},
+	{SaveCapability::UtilityHeatConversion, 0, 428, 0, true, true},
+	{SaveCapability::GeothermalGeneratorOperation, 0, 429, 0, true, true},
+	{SaveCapability::GeothermalMagmaLoop, 0, 430, 0, true, true},
+	{SaveCapability::UtilityTownService, 0, 431, 0, true, true},
+	{SaveCapability::UtilityLocalElectricalFeed, 0, 432, 0, true, true},
+	{SaveCapability::TubeGeothermalSources, 0, 433, 0, true, true},
+	{SaveCapability::TubeGeothermalBindings, 0, 434, 0, true, true},
+	{SaveCapability::AsteroidCargoOrigins, 0, 0, 441, false, true},
+	{SaveCapability::AsteroidFieldLifecycle, 0, 0, 442, false, true},
+	{SaveCapability::SpaceMiningContinuation, 0, 0, 443, false, true},
+	{SaveCapability::SpaceLegacyDeparture, 0, 0, 444, false, true},
+	{SaveCapability::SpaceSurveyDeparture, 0, 0, 445, false, true},
+};
+
+/** Check at compile time that every declared capability has exactly one rule.
+ * @return True when each value below Count occurs once in CAPABILITY_RULES.
+ */
+static constexpr bool EveryCapabilityHasOneRule()
+{
+	// Coverage only: walk the declared values and count their rows. The lookup in
+	// HasSaveCapability still matches by capability, so row order carries no meaning.
+	for (uint8_t value = 0; value < static_cast<uint8_t>(SaveCapability::Count); ++value) {
+		if (std::ranges::count(CAPABILITY_RULES, static_cast<SaveCapability>(value), &CapabilityRule::capability) != 1) return false;
+	}
+	return true;
+}
+static_assert(std::size(CAPABILITY_RULES) == static_cast<size_t>(SaveCapability::Count));
+static_assert(EveryCapabilityHasOneRule());
+
+/** Check that a writer really produced an envelope version before any rule is consulted.
+ * @param dialect Accepted original writer.
+ * @param version Unchanged original envelope version.
+ * @return True only inside that writer's closed range; Shared history has no post-fork capability.
+ */
+static bool WriterProducedVersion(SaveDialect dialect, uint16_t version)
+{
+	switch (dialect) {
+		case SaveDialect::DestinationA: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DESTINATION_A_VERSION;
+		case SaveDialect::DonorB: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DONOR_B_VERSION;
+		case SaveDialect::SpaceFixes: return version >= FIRST_SPACE_FIXES_VERSION && version <= LAST_SPACE_FIXES_VERSION;
+		// The merged writer has exactly two allocations; 442-445 are Space fixes numbers, never merged ones.
+		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION || version == CURRENT_MERGED_SAVE_VERSION;
+		case SaveDialect::Shared: return false;
+	}
+	return false; // A value outside the declared dialects names no writer.
+}
+
 /** @copydoc HasSaveCapability */
 bool HasSaveCapability(const SaveLineageResult &result, SaveCapability capability)
 {
-	const auto index = static_cast<uint8_t>(capability);
-	// Refusals and future enum values grant nothing, even if a caller retained a
-	// previous successful dialect alongside this rejected attempt's version.
-	if (result.status != SaveLineageStatus::Accepted || index >= static_cast<uint8_t>(SaveCapability::Count)) return false;
-	if (result.dialect == SaveDialect::Merged) return result.original_version == MERGED_SAVE_LINEAGE_VERSION;
-	const bool destination = index < static_cast<uint8_t>(SaveCapability::TBMFaceTransfer);
-	const auto dialect = destination ? SaveDialect::DestinationA : SaveDialect::DonorB;
-	const uint16_t introduced = 425 + (destination ? index : index - static_cast<uint8_t>(SaveCapability::TBMFaceTransfer));
-	return result.dialect == dialect && result.original_version >= introduced && result.original_version <= (destination ? 440 : 434);
+	// Refusals grant nothing, even if a caller retained a previous successful
+	// dialect alongside this rejected attempt's version. A version outside the
+	// writer's own range would otherwise borrow another writer's meaning.
+	if (result.status != SaveLineageStatus::Accepted || !WriterProducedVersion(result.dialect, result.original_version)) return false;
+	const auto rule = std::ranges::find(CAPABILITY_RULES, capability, &CapabilityRule::capability);
+	if (rule == std::end(CAPABILITY_RULES)) return false; // A future enum value has no rule yet and grants nothing.
+	const auto version = result.original_version;
+	switch (result.dialect) {
+		// Historical writers gained features in order: a nonzero introduction at or
+		// below this file's version means the file carries the feature's wire.
+		case SaveDialect::DestinationA: return rule->first_a != 0 && version >= rule->first_a;
+		case SaveDialect::DonorB: return rule->first_b != 0 && version >= rule->first_b;
+		case SaveDialect::SpaceFixes: return rule->first_space != 0 && version >= rule->first_space;
+		// Merged membership is a fixed set per allocation, not a numeric threshold.
+		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION ? rule->merged441 : rule->merged446;
+		case SaveDialect::Shared: return false;
+	}
+	return false;
 }
