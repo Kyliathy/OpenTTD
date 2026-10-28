@@ -135,13 +135,14 @@ TEST_CASE("Copied legacy CAPA qualification uses only same-file mineral metadata
 	data.native_cargo_packet_rows.push_back({CargoPacketID{0}, 2, Source{SourceID{0}, SourceType::Asteroid}, Money{9},
 		TileIndex{to_underlying(MapLayer::Space) * 64 * 64 + 100}, StationID::Invalid()});
 	data.native_station_cargo_refs.push_back(1);
+	data.native_cargo_owner_rows.push_back({1, CargoType{0}, StationID{0}}); // The reader writes one owner row per reference (m2o28 Group 19).
 	const auto original_pool = CargoPacket::GetNumItems();
 	REQUIRE(ValidateSpaceCargoPreviewOwners(data)); REQUIRE(NormalizeLegacyAsteroidCargoPreview(data));
 	CHECK(data.native_cargo_packet_rows[0].source == Source::FromAsteroid(0, CargoLabel{"NORE"}));
 	CHECK(data.native_cargo_packet_rows[0].legacy_asteroid_origin); CHECK(ValidateSpaceCargoPreviewOwners(data));
 	CHECK(NormalizeLegacyAsteroidCargoPreview(data)); CHECK(CargoPacket::GetNumItems() == original_pool);
 	data.native_cargo_packet_rows[0].legacy_asteroid_origin = false;
-	CHECK_FALSE(ValidateSpaceAsteroidCargoPreview(data)); CHECK_FALSE(NormalizeLegacyAsteroidCargoPreview(data));
+	CHECK_FALSE(ValidateSpaceCargoPreviewOwners(data)); CHECK_FALSE(NormalizeLegacyAsteroidCargoPreview(data));
 	data.native_cargo_packet_rows[0].source = Source{SourceID{0}, SourceType::Asteroid}; data.asteroid_body_rows.clear();
 	CHECK_FALSE(NormalizeLegacyAsteroidCargoPreview(data)); CHECK_FALSE(data.native_cargo_packet_rows[0].source.GetAsteroidOrigin());
 }

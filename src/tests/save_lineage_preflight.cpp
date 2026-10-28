@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 13 and 17B; real development-build 445 originals refuse without touching the world.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 19; every merged copied field resets between candidates.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 20; preview sequences through the one copied owner join.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -18,6 +19,10 @@
 #include "../fileio_func.h"
 #include "../table/strings.h"
 #include "../surface_supply_order_runtime.h"
+#include "../multilayer_content.h"
+#include "../map_func.h"
+#include "../gfx_func.h"
+#include "layer_save_fixture.h"
 
 /** Exact immutable catalogue original, including an independently recorded SHA256-bound explicit origin. */
 struct PreflightOriginal {
@@ -703,6 +708,127 @@ TEST_CASE("Candidate previews discard failed transport across original lineages"
 	const auto space = OriginalForPreflight("A", 440);
 	REQUIRE(LoadWithFilter(EnvelopeNetworkReader(space.bytes), space.hint, true) == SaveLoadResult::Ok);
 	CHECK(CaptureCandidateLiveState() == installed);
+}
+
+/** Running-world facts a preview must never change: native state plus profile and stacked geometry. */
+struct PreviewWorldFacts {
+	CandidateLiveState live; ///< Accounts, packets, RNG, domains, tick and camera.
+	MultiLayerGameplayProfileID profile; ///< Running world's selected profile.
+	uint16_t profile_version; ///< Its exact contract version.
+	std::array<uint, 3> geometry; ///< Plane width, plane height and layer count.
+	/** @param other Independently recaptured facts. @return Exact equality. */
+	bool operator==(const PreviewWorldFacts &other) const = default;
+};
+
+/** @return The running world's preview-invariant facts, read from the native owners only. */
+static PreviewWorldFacts CapturePreviewWorldFacts()
+{
+	const auto &profile = GetCurrentMultiLayerProfileSelection();
+	return {CaptureCandidateLiveState(), profile.id, profile.version, {Map::SizeX(), Map::SizeY(), Map::LayerCount()}};
+}
+
+/** @return Whether the kept refusal reason comes from the copied owner join, with or without the paid book. */
+static bool IsOwnerJoinRefusal()
+{
+	const std::string_view reason = _load_check_data.error_msg;
+	return reason.find("ownership") != std::string_view::npos || reason.find("custody") != std::string_view::npos;
+}
+
+/** A, development-build and merged candidates alternate with malformed custody against one running world (m2o28 Group 20).
+ * A433 holds natural freight, paid supply and ordinary trains, so every refusal below runs through the one owner join.
+ */
+TEST_CASE("Owner-join previews alternate lineages and refuse malformed custody without touching the world", "[save-candidate-lifecycle]")
+{
+	TubePrototypeRig rig; rig.BuyCapsule(); PreflightContentCatalogue catalogue(rig.ActivatedContent());
+	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
+	const auto cache = root / "test-cache/merge-oct28/group20"; std::filesystem::create_directories(cache);
+	// The running world itself is the merged candidate: the current writer saves it.
+	const auto merged_path = cache / "running-world-merged.sav";
+	{
+		// The headless world has no cursor; the writer's busy toggle needs one entry that is neither mouse nor ZZZ.
+		const auto cursor = _cursor.sprites; _cursor.sprites.assign(1, CursorSprite{0, PAL_NONE, 0, 0});
+		LayerSaveContent content(rig.ActivatedContent(), true); // The file names the world's actual package, as a real save does.
+		const auto saved = SaveWithFilter(std::make_shared<LayerSaveFileSink>(merged_path), false);
+		_cursor.sprites = cursor; REQUIRE(saved == SaveLoadResult::Ok);
+	}
+	std::ifstream merged_file(merged_path, std::ios::binary); REQUIRE(merged_file.good());
+	const std::vector<uint8_t> merged{std::istreambuf_iterator<char>{merged_file}, std::istreambuf_iterator<char>{}};
+	const auto installed = CapturePreviewWorldFacts();
+	const auto space = OriginalForPreflight("A", 433);
+	/** @return Whether the A433 original previews, leaving the world exactly as installed. */
+	const auto accept_space = [&] {
+		const auto result = LoadWithFilter(EnvelopeNetworkReader(space.bytes), space.hint, true); INFO(_load_check_data.error_msg);
+		CHECK(CapturePreviewWorldFacts() == installed); CHECK_FALSE(GetLoadCapabilities().has_value());
+		return result == SaveLoadResult::Ok;
+	};
+	/** @param bytes Malformed copy. @return Whether it refused through the owner join, kept its reason, cleared its data and left the world alone. */
+	const auto refuse = [&](std::span<const uint8_t> bytes) {
+		const auto result = LoadWithFilter(EnvelopeNetworkReader(bytes), std::nullopt, true); INFO(_load_check_data.error_msg);
+		CheckDiscardedLoadCandidate(); CHECK(CapturePreviewWorldFacts() == installed);
+		return result == SaveLoadResult::Error && IsOwnerJoinRefusal();
+	};
+	REQUIRE(accept_space());
+	const auto natural = std::ranges::count(_load_check_data.native_cargo_packet_rows, SourceType::Asteroid, [](const auto &row) { return row.source.type; });
+	REQUIRE(natural > 0); REQUIRE_FALSE(_load_check_data.native_cargo_owner_rows.empty());
+	const auto owners = _load_check_data.native_cargo_owner_rows; const auto packets = _load_check_data.native_cargo_packet_rows;
+	// A development build's typed-origin file refuses before any native read.
+	const auto development = DevelopmentBuildOriginals().front();
+	CHECK(LoadWithFilter(EnvelopeNetworkReader(development.bytes), std::nullopt, true) == SaveLoadResult::Error);
+	CheckDiscardedLoadCandidate(); CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME);
+	CHECK(CapturePreviewWorldFacts() == installed);
+	/** @return Whether the running world's merged save previews from its own marker, leaving the world exactly as installed. */
+	const auto accept_merged = [&] {
+		const auto result = LoadWithFilter(EnvelopeNetworkReader(merged), std::nullopt, true); INFO(_load_check_data.error_msg);
+		CHECK(_load_check_data.error_msg.empty()); CHECK(CapturePreviewWorldFacts() == installed);
+		return result == SaveLoadResult::Ok;
+	};
+	// The merged file previews from its own marker and lends nothing to the next candidate.
+	REQUIRE(accept_merged());
+	CHECK(_load_check_data.native_cargo_packet_rows.size() == CargoPacket::GetNumItems()); CHECK(CapturePreviewWorldFacts() == installed);
+	const auto original = EnvelopeReplay(std::make_shared<EnvelopeTestReader>(space.bytes)); const auto chunks = SupplyWireChunks(original);
+	SECTION("Natural source produced outside the Space plane") {
+		auto bytes = original; const auto &capa = SupplyWireFind(chunks, "CAPA");
+		const auto type = SupplyWireColumn(bytes, capa, "source_type"), tile = SupplyWireColumn(bytes, capa, "source_xy");
+		bool changed = false;
+		// Move one actual natural packet's production tile to the Surface; its body and container stay.
+		for (size_t index = 1; index < capa.rows.size() && !changed; ++index) {
+			const auto &row = capa.rows[index];
+			if (row.end == row.payload || bytes[row.payload + type] != to_underlying(SourceType::Asteroid)) continue;
+			SupplyWireSet(bytes, row.payload + tile, 272, 4); changed = true;
+		}
+		REQUIRE(changed);
+		CHECK(refuse(EnvelopeStream(std::move(bytes), "OTTN", 433)));
+	}
+	SECTION("A copied station or carrier duplicates another owner's packets") {
+		size_t refused = 0;
+		/** @param chunk Original owner family. @param row Its row to copy. @param index Fresh one-byte sparse index, or no value for an ordered table. */
+		const auto duplicate = [&](const SupplyWireChunk &chunk, const SupplyWireRow &row, std::optional<uint8_t> index) {
+			auto bytes = original;
+			std::vector<uint8_t> copy(bytes.begin() + row.prefix, bytes.begin() + row.end);
+			if (index) copy[row.payload - row.prefix] = *index; // Same one-byte gamma width, so the row length is unchanged.
+			bytes.insert(bytes.begin() + chunk.end - 1, copy.begin(), copy.end()); // Before the family terminator.
+			const auto malformed = EnvelopeStream(std::move(bytes), "OTTN", 433);
+			// A copy of an empty owner aliases nothing; one that holds packets gives them a second owner.
+			if (LoadWithFilter(EnvelopeNetworkReader(malformed), std::nullopt, true) == SaveLoadResult::Ok) { CHECK(CapturePreviewWorldFacts() == installed); return; }
+			INFO(_load_check_data.error_msg); CHECK(IsOwnerJoinRefusal()); CheckDiscardedLoadCandidate(); CHECK(CapturePreviewWorldFacts() == installed);
+			++refused;
+		};
+		// Every station row is copied as the next ordered station.
+		const auto &stations = SupplyWireFind(chunks, "STNN");
+		for (size_t index = 1; index < stations.rows.size(); ++index) duplicate(stations, stations.rows[index], std::nullopt);
+		// Every ordinary train row is copied under a fresh sparse index.
+		const auto &vehicles = SupplyWireFind(chunks, "VEHS");
+		for (size_t index = 1; index < vehicles.rows.size(); ++index) {
+			const auto &row = vehicles.rows[index];
+			if (row.end - row.payload < 2 || original[row.payload] >= 0x7F || original[row.payload + 1] != to_underlying(VehicleType::Train)) continue;
+			duplicate(vehicles, row, uint8_t{0x7F});
+		}
+		CHECK(refused > 0);
+	}
+	// The A original previews again with exactly its own facts, after every refusal.
+	REQUIRE(accept_space());
+	CHECK(_load_check_data.native_cargo_packet_rows.size() == packets.size()); CHECK(_load_check_data.native_cargo_owner_rows.size() == owners.size());
+	REQUIRE(accept_merged());
 }
 
 /** Clear() resets every field the merge added, so no previous candidate can lend copied evidence to the next. */

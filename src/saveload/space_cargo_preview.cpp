@@ -4,7 +4,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group10B; processor stock roles use same-file labels only.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; hauler refits/capacity join original same-file physical packets.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group21; copied asteroid-origin join and legacy normalization.
- * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 4; both joins read the one copied owner-row record.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 4 and 20; one copied owner join applies the paid-supply and asteroid-origin policies at the same point.
  * The temporary reference set validates exclusivity; it cannot reserve, move, consume or create physical cargo.
  */
 #include "../stdafx.h"
@@ -15,7 +15,6 @@
 #include "../orbital_recipe.h"
 #include "../asteroid_cargo.h"
 #include <set>
-#include <map>
 #include "../safeguards.h"
 
 /** @param rows Same-file configured cargo slots in serialized order. @return Whether binary label lookup is safe without normalizing corrupt ordering or consulting live CargoSpec. */
@@ -31,25 +30,26 @@ static bool ValidateCargoMeaningRows(std::span<const NativeCargoDimensionPreview
 	return true;
 }
 
-/** Adapt the fixed supply-label API to the asteroid-origin join, which distinguishes a known label from absence.
- * @param supply Fixed compartment or service-berth slot.
- * @return The slot's immutable label, or no value for a slot outside the defined supplies, where the public API returns CT_INVALID.
- */
-static std::optional<CargoLabel> GetOptionalSpaceSupplyLabel(SpaceSupply supply)
-{
-	const CargoLabel label = GetSpaceSupplyLabel(supply);
-	return label == CT_INVALID ? std::nullopt : std::optional{label};
-}
-
 /** @copydoc ValidateSpaceCargoPreviewOwners */
 bool ValidateSpaceCargoPreviewOwners(const LoadCheckData &data, SurfaceSupplyCustodyCheck *supply)
 {
 	// Every native owner family must come from this same checked file; a prior preview or active-world inventory cannot fill an absent table.
 	if (!data.native_cargo_packets_present || !data.native_vehicle_cargo_present || !data.native_station_cargo_present) return false;
+	/** @param row Original copied packet metadata. @return Whether its natural domain needs the historical-origin policy. */
+	const auto is_asteroid = [](const auto &row) { return row.source.type == SourceType::Asteroid; };
+	// One traversal serves two policies at the same admission point (m2o28 Group 20):
+	// paid-supply custody when `supply` is given, and asteroid-origin agreement whenever
+	// natural packets exist. Either one needs the detailed per-container meanings.
+	const bool natural = std::ranges::any_of(data.native_cargo_packet_rows, is_asteroid);
+	const bool detailed = supply != nullptr || natural;
+	// The origin policy's binary lookups need this candidate's bounded, ordered rows;
+	// a malformed optional family cannot substitute another file's meaning.
+	if (natural && ((!data.native_cargo_dimensions_present && !data.native_cargo_dimension_rows.empty()) ||
+		!ValidateCargoMeaningRows(data.native_cargo_dimension_rows) || !ValidateAsteroidIdentityRecords(data.asteroid_body_rows, data.asteroid_next_body_id))) return false;
 	std::set<CargoPacketID> owned;
 	std::array<CargoLabel, NUM_CARGO> labels; labels.fill(CT_INVALID);
-	// m2o28 Group 20: decide whether these labels must also be prepared for asteroid-only candidates; today the
-	// asteroid-origin join below reads the same-file CDIM rows itself.
+	// Paid-supply meanings: the source's configured CDIM where it serialized one,
+	// otherwise its explicitly admitted original label table.
 	if (supply != nullptr) {
 		if (data.native_cargo_dimensions_present && !data.native_cargo_dimension_rows.empty()) { // Classic's original empty CDIM carries no configured meanings; its explicit vanilla climate remains the only available definition evidence.
 			// Original configured meanings take precedence where this source
@@ -65,121 +65,15 @@ bool ValidateSpaceCargoPreviewOwners(const LoadCheckData &data, SurfaceSupplyCus
 			labels = *original;
 		}
 	}
-	/** @param cargo Actual saved container slot. @return Candidate-owned configured/pinned meaning, never a receipt or live CargoSpec lookup. */
+	/** @param cargo Actual saved container slot. @return Candidate-owned configured/pinned meaning for paid-supply custody, never a receipt or live CargoSpec lookup. */
 	const auto label = [&](CargoType cargo) { return cargo < NUM_CARGO ? labels[cargo] : CT_INVALID; };
-	/** @param packet Actual same-file held identity. @param meaning Owner's declared cargo. @param station Original goods queue or Invalid. @return Whole optional shared custody agreement. */
-	const auto admit = [&](CargoPacketID packet, CargoLabel meaning, StationID station = StationID::Invalid()) {
-		if (supply == nullptr) return true;
-		// Void native slots cannot supply physical material, even when another
-		// receipt happens to name the desired construction supply.
-		return meaning != CT_INVALID && !meaning.Empty() && supply->AddOwned(packet, meaning, station);
-	};
-	/** @param packet Original raw native packet ID. @return Whether its actual positive same-file row has not already financed another container. */
-	auto add = [&](CargoPacketID packet) {
-		const auto row = std::ranges::lower_bound(data.native_cargo_packet_rows, packet, {}, &NativeCargoPacketPreview::packet);
-		return packet < CargoPacketID::End() && row != data.native_cargo_packet_rows.end() && row->packet == packet && row->quantity != 0 && owned.insert(packet).second;
-	};
-	/** @param references Original serialized SLE references, encoded as index+1. @param meaning Actual typed hull meaning, or empty for aggregate lists joined separately. @return Whether this complete native container has unique existing packets and any requested custody agreement. */
-	auto native = [&](std::span<const uint32_t> references, CargoLabel meaning = {}) {
-		// A null native reference is not a cargo packet. Decode only after admitting its original pool bound; no pointer or replacement packet is created.
-		for (const auto reference : references) {
-			if (reference == 0 || reference > CargoPacketID::End().base() || !add(CargoPacketID{reference - 1})) return false;
-			if (!meaning.Empty() && !admit(CargoPacketID{reference - 1}, meaning)) return false; // Only a typed actual hull supplies this additional custody observation; aggregate native lists are joined separately below.
-		}
-		return true;
-	};
-	/** @param references Original feature container's raw packet/next-hop pairs. @param meaning Its actual declared/configured cargo label. @return Whether every physical reference remains exclusive and satisfies any requested paid custody across native/feature owners. */
-	auto feature = [&](const auto &references, CargoLabel meaning) {
-		// Next-hop routing never creates another inventory owner for a packet already held by a station, vehicle, module or paid job.
-		for (const auto &[packet, hop] : references) { (void)hop; if (!add(packet) || !admit(packet, meaning)) return false; }
-		return true;
-	};
-	// Ordinary stock and all actual carrier classes participate before Space jobs, closing aliases hidden outside the native Space subset.
-	if (!native(data.native_station_cargo_refs) || !native(data.native_ordinary_vehicle_cargo_refs)) return false;
-	if (supply != nullptr) {
-		if (data.native_cargo_owner_rows.size() != owned.size()) return false;
-		std::set<CargoPacketID> typed;
-		// Aggregate native references and detailed saved queue/slot evidence
-		// must describe exactly the same owners, once each, before Space joins.
-		for (const auto &row : data.native_cargo_owner_rows) {
-			if (row.reference == 0) return false;
-			const CargoPacketID id{row.reference - 1};
-			if (!owned.contains(id) || !typed.insert(id).second || !admit(id, label(row.cargo), row.station)) return false;
-		}
-	}
-	for (const auto &row : data.native_space_vehicle_rows) if (!native(row.cargo_packet_refs, label(row.freight_cargo))) return false;
-	// Surface handling has its own actual packet container; membership in a launch hub does not leave those same units in station stock.
-	for (const auto &row : data.surface_handling_rows) if (!feature(row.packets, label(row.cargo))) return false;
-	// Every manifest compartment remains separate from the hull's ordinary freight and from all contained service reservations.
-	for (const auto &row : data.space_manifest_rows) {
-		for (size_t slot = 0; slot < row.supplies.size(); ++slot) if (!feature(row.supplies[slot], GetSpaceSupplyLabel(static_cast<SpaceSupply>(slot)))) return false;
-	}
-	// Blueprint material, operational stock, both service berths and optional manufacturing batches all join the same original packet exclusivity check.
-	for (const auto &row : data.space_structure_rows) {
-		const auto *definition = GetSpaceConstructionDefinition(row.state.kind);
-		if (supply != nullptr && definition == nullptr) return false; // Typed paid-supply custody needs the real recipe; the existing identity-only join does not validate unrelated role metadata.
-		for (size_t slot = 0; slot < row.inputs.size(); ++slot) {
-			if (supply == nullptr) { if (!feature(row.inputs[slot], {})) return false; continue; }
-			if (slot >= definition->inputs.size()) { if (!row.inputs[slot].empty()) return false; continue; }
-			if (!feature(row.inputs[slot], definition->inputs[slot].label)) return false;
-		}
-		if (!row.module) continue;
-		for (CargoType cargo : EnumRange(NUM_CARGO)) if (!feature(row.module->stock[cargo], label(cargo))) return false;
-		for (const auto *job : row.module->GetServiceJobs()) {
-			for (size_t slot = 0; slot < job->inputs.size(); ++slot) if (!feature(job->inputs[slot], GetSpaceSupplyLabel(static_cast<SpaceSupply>(slot + 1)))) return false;
-		}
-		if (row.module->manufacture) {
-			const auto &job = *row.module->manufacture;
-			const auto *recipe = GetSpaceVehicleConstruction(job.model);
-			if (supply != nullptr && recipe == nullptr) return false; // Preserve the identity-only caller's existing scope while requiring the actual recipe for paid-custody labels.
-			// Only declared recipe inputs are physical; spare saved slots cannot
-			// hide cargo outside the shared global owner/custody check.
-			for (size_t slot = 0; slot < job.inputs.size(); ++slot) {
-				if (supply == nullptr) { if (!feature(job.inputs[slot], {})) return false; continue; }
-				if (slot >= recipe->inputs.size()) { if (!job.inputs[slot].empty()) return false; continue; }
-				if (!feature(job.inputs[slot], recipe->inputs[slot].label)) return false;
-			}
-		}
-	}
-	// Only the original descent job holds released freight; a paid shell or cached quantity cannot create another copy elsewhere.
-	for (const auto &row : data.space_descent_rows) if (!feature(row.packets, label(row.cargo))) return false;
-	// Allocated asteroid freight must have one actual candidate owner. Orphans
-	// cannot become historical reserve merely because their source body retired.
-	for (const auto &packet : data.native_cargo_packet_rows) {
-		if (!packet.source.IsCanonical() || (packet.source.type == SourceType::Asteroid && !owned.contains(packet.packet))) return false;
-	}
-	return ValidateSpaceAsteroidCargoPreview(data);
-}
-
-/** @copydoc ValidateSpaceAsteroidCargoPreview */
-bool ValidateSpaceAsteroidCargoPreview(const LoadCheckData &data)
-{
-	// Independent family validators own ordinary recipe/role admission. This
-	// historical-origin join has no additional requirements when no natural
-	// packets exist; ownership-only fixtures need no fabricated asteroid field.
-	/** @param row Original copied packet metadata. @return Whether its natural domain requires this historical-origin join. */
-	const auto is_asteroid = [](const auto &row) { return row.source.type == SourceType::Asteroid; };
-	if (std::ranges::none_of(data.native_cargo_packet_rows, is_asteroid)) return true;
-	// Both binary lookup inputs must be this candidate's bounded, ordered rows;
-	// a malformed optional family cannot substitute another file's meaning.
-	if ((!data.native_cargo_dimensions_present && !data.native_cargo_dimension_rows.empty()) ||
-		!ValidateCargoMeaningRows(data.native_cargo_dimension_rows) ||
-		!ValidateAsteroidIdentityRecords(data.asteroid_body_rows, data.asteroid_next_body_id)) return false;
-	std::map<uint32_t, CargoType> ordinary_meanings;
-	// This temporary join contains only original ordinary station/carrier meanings, taken from the same copied
-	// owner rows the supply custody check uses; it cannot allocate packets or supply labels from an active CargoSpec table.
-	for (const auto &row : data.native_cargo_owner_rows) {
-		if (row.reference == 0 || row.reference > CargoPacketID::End().base() || row.cargo >= NUM_CARGO ||
-			!ordinary_meanings.emplace(row.reference, row.cargo).second) return false;
-	}
-	std::set<uint32_t> used_meanings;
-	/** @param cargo Same-file container slot. @return Same-file configured meaning, or explicit absence in old/incomplete metadata. */
-	auto meaning = [&](CargoType cargo) -> std::optional<CargoLabel> {
+	/** @param cargo Same-file container slot. @return Its configured CDIM meaning for the origin policy, or explicit absence in old or incomplete metadata. */
+	const auto meaning = [&](CargoType cargo) -> std::optional<CargoLabel> {
 		const auto found = std::ranges::lower_bound(data.native_cargo_dimension_rows, cargo, {}, &NativeCargoDimensionPreview::cargo);
 		return found != data.native_cargo_dimension_rows.end() && found->cargo == cargo ? std::optional{found->label} : std::nullopt;
 	};
-	/** @param id Original packet ID. @param label Container's actual same-file or immutable recipe label. @return Whether its natural origin/production geometry agrees, without conferring any ownership beyond the separate global join. */
-	auto packet = [&](CargoPacketID id, std::optional<CargoLabel> label) {
+	/** @param id Original packet ID. @param container Container's actual same-file or immutable recipe meaning, or absence. @return Whether a natural packet's issued origin, production geometry and container agree; other canonical packets pass. */
+	const auto origin_agrees = [&](CargoPacketID id, std::optional<CargoLabel> container) {
 		const auto found = std::ranges::lower_bound(data.native_cargo_packet_rows, id, {}, &NativeCargoPacketPreview::packet);
 		// Every referenced original packet needs a real row before its source can
 		// be classified; no missing row is interpreted as ordinary harmless cargo.
@@ -193,62 +87,120 @@ bool ValidateSpaceAsteroidCargoPreview(const LoadCheckData &data)
 			found->first_station != StationID::Invalid()) return false;
 		const uint64_t plane = uint64_t{data.map_size_x} * data.map_size_y;
 		if (uint64_t{found->source_tile.base()} / plane != to_underlying(MapLayer::Space)) return false;
-		if (label) return *label == origin->mineral;
+		if (container) return *container == origin->mineral;
 		// Old source eras had no configured-dimension family. Preserve their
 		// native-only ordinal check without guessing from the open world's cargo;
 		// a modern typed origin or present-but-missing CDIM row cannot use it.
 		return (!found->source.GetAsteroidOrigin() || found->legacy_asteroid_origin) && !data.native_cargo_dimensions_present;
 	};
-	/** @param references Encoded native IDs+1. @param label Known Space-hull cargo meaning, or absence for ordinary rows using their captured meanings. @param ordinary Whether these references use the ordinary station/carrier meaning join. @return Whether all original packet meanings validate. */
-	auto native = [&](std::span<const uint32_t> references, std::optional<CargoLabel> label, bool ordinary) {
+	/** Apply both semantic policies to one held packet; ownership is counted separately, exactly once.
+	 * @param packet Actual same-file held identity.
+	 * @param supply_meaning Owner's cargo for paid-supply custody.
+	 * @param origin_meaning Owner's cargo for the origin policy, or absence.
+	 * @param station Original goods queue or Invalid.
+	 * @return Whether every requested policy accepts this packet in this container.
+	 */
+	const auto admit = [&](CargoPacketID packet, CargoLabel supply_meaning, std::optional<CargoLabel> origin_meaning, StationID station = StationID::Invalid()) {
+		// Void native slots cannot supply physical material, even when another
+		// receipt happens to name the desired construction supply.
+		if (supply != nullptr && (supply_meaning == CT_INVALID || supply_meaning.Empty() || !supply->AddOwned(packet, supply_meaning, station))) return false;
+		return !natural || origin_agrees(packet, origin_meaning);
+	};
+	/** @param packet Original raw native packet ID. @return Whether its actual positive same-file row has not already been counted for another container. */
+	auto add = [&](CargoPacketID packet) {
+		const auto row = std::ranges::lower_bound(data.native_cargo_packet_rows, packet, {}, &NativeCargoPacketPreview::packet);
+		return packet < CargoPacketID::End() && row != data.native_cargo_packet_rows.end() && row->packet == packet && row->quantity != 0 && owned.insert(packet).second;
+	};
+	/** @param references Original serialized SLE references, encoded as index+1. @return Whether every reference names an existing packet held nowhere else. */
+	auto count = [&](std::span<const uint32_t> references) {
+		// A null native reference is not a cargo packet. Decode only after admitting its original pool bound; no pointer or replacement packet is created.
 		for (const auto reference : references) {
-			if (reference == 0 || reference > CargoPacketID::End().base()) return false;
-			auto expected = label;
-			if (ordinary) {
-				const auto found = ordinary_meanings.find(reference);
-				if (found != ordinary_meanings.end()) {
-					used_meanings.insert(reference);
-					expected = meaning(found->second);
-				}
-			}
-			if (!packet(CargoPacketID{reference - 1}, expected)) return false;
+			if (reference == 0 || reference > CargoPacketID::End().base() || !add(CargoPacketID{reference - 1})) return false;
 		}
 		return true;
 	};
-	/** @param references Original feature packet/next-hop pairs. @param label That owner's actual same-file or immutable recipe label. @return Whether each existing packet carries compatible natural meaning. */
-	auto feature = [&](const auto &references, std::optional<CargoLabel> label) {
-		for (const auto &[id, hop] : references) { (void)hop; if (!packet(id, label)) return false; }
+	/** @param references Space hull references, encoded as index+1. @param cargo The hull's own saved cargo slot. @return Whether each packet is exclusive and accepted by both policies. */
+	auto hull = [&](std::span<const uint32_t> references, CargoType cargo) {
+		if (!count(references)) return false;
+		for (const auto reference : references) {
+			if (detailed && !admit(CargoPacketID{reference - 1}, label(cargo), meaning(cargo))) return false;
+		}
 		return true;
 	};
-	// Ordinary station/carrier packets use captured slot meanings. Space hulls,
-	// handling and descent records already carry their own original cargo slot.
-	if (!native(data.native_station_cargo_refs, std::nullopt, true) || !native(data.native_ordinary_vehicle_cargo_refs, std::nullopt, true)) return false;
-	if (used_meanings.size() != ordinary_meanings.size()) return false;
-	for (const auto &row : data.native_space_vehicle_rows) if (!native(row.cargo_packet_refs, meaning(row.freight_cargo), false)) return false;
-	for (const auto &row : data.surface_handling_rows) if (!feature(row.packets, meaning(row.cargo))) return false;
-	for (const auto &row : data.space_descent_rows) if (!feature(row.packets, meaning(row.cargo))) return false;
-	// Fixed supply/recipe labels are immutable definitions, not runtime cargo
-	// ordinals. Every physical reservation remains with its original container.
-	for (const auto &row : data.space_manifest_rows) for (uint slot = 0; slot < row.supplies.size(); ++slot)
-		if (!feature(row.supplies[slot], GetOptionalSpaceSupplyLabel(static_cast<SpaceSupply>(slot)))) return false;
+	/** @param references Feature container's raw packet/next-hop pairs. @param supply_meaning Its cargo for paid custody. @param origin_meaning Its cargo for the origin policy, or absence. @return Whether every physical reference is exclusive and accepted. */
+	auto feature = [&](const auto &references, CargoLabel supply_meaning, std::optional<CargoLabel> origin_meaning) {
+		// Next-hop routing never creates another inventory owner for a packet already held by a station, vehicle, module or paid job.
+		for (const auto &[packet, hop] : references) {
+			(void)hop;
+			if (!add(packet) || (detailed && !admit(packet, supply_meaning, origin_meaning))) return false;
+		}
+		return true;
+	};
+	/** @param references Feature container's raw packet/next-hop pairs. @param slot The container's cargo slot. @return Whether every reference is exclusive and accepted with that slot's meanings. */
+	auto slot_feature = [&](const auto &references, CargoType slot) { return feature(references, label(slot), meaning(slot)); };
+	/** @param references Feature container's raw packet/next-hop pairs. @param immutable Fixed recipe or supply label. @return Whether every reference is exclusive and accepted with that label. */
+	auto fixed_feature = [&](const auto &references, CargoLabel immutable) {
+		return feature(references, immutable, immutable == CT_INVALID ? std::nullopt : std::optional{immutable});
+	};
+	// Ordinary stock and all actual carrier classes participate before Space jobs, closing aliases hidden outside the native Space subset.
+	if (!count(data.native_station_cargo_refs) || !count(data.native_ordinary_vehicle_cargo_refs)) return false;
+	if (detailed) {
+		if (data.native_cargo_owner_rows.size() != owned.size()) return false;
+		std::set<CargoPacketID> typed;
+		// Aggregate native references and detailed saved queue/slot evidence
+		// must describe exactly the same owners, once each, before Space joins.
+		for (const auto &row : data.native_cargo_owner_rows) {
+			// A saved queue or carrier slot outside the cargo table names no meaning
+			// for either policy, even where the packet itself is ordinary cargo.
+			if (row.reference == 0 || row.cargo >= NUM_CARGO) return false;
+			const CargoPacketID id{row.reference - 1};
+			if (!owned.contains(id) || !typed.insert(id).second || !admit(id, label(row.cargo), meaning(row.cargo), row.station)) return false;
+		}
+	}
+	for (const auto &row : data.native_space_vehicle_rows) if (!hull(row.cargo_packet_refs, row.freight_cargo)) return false;
+	// Surface handling has its own actual packet container; membership in a launch hub does not leave those same units in station stock.
+	for (const auto &row : data.surface_handling_rows) if (!slot_feature(row.packets, row.cargo)) return false;
+	// Every manifest compartment remains separate from the hull's ordinary freight and from all contained service reservations.
+	for (const auto &row : data.space_manifest_rows) {
+		for (size_t slot = 0; slot < row.supplies.size(); ++slot) if (!fixed_feature(row.supplies[slot], GetSpaceSupplyLabel(static_cast<SpaceSupply>(slot)))) return false;
+	}
+	// Blueprint material, operational stock, both service berths and optional manufacturing batches all join the same original packet exclusivity check.
 	for (const auto &row : data.space_structure_rows) {
-		const auto *construction = GetSpaceConstructionDefinition(row.state.kind);
-		if (construction == nullptr) return false;
-		for (uint slot = 0; slot < row.inputs.size(); ++slot)
-			if (!feature(row.inputs[slot], construction->inputs[slot].label)) return false;
+		const auto *definition = GetSpaceConstructionDefinition(row.state.kind);
+		if (detailed && definition == nullptr) return false; // Typed custody and origin checks need the real recipe; the identity-only join does not validate unrelated role metadata.
+		// Each saved input slot: identity only, or, with detailed meanings, its declared
+		// recipe label; slots beyond the recipe must be empty rather than unlabelled.
+		for (size_t slot = 0; slot < row.inputs.size(); ++slot) {
+			if (!detailed) { if (!feature(row.inputs[slot], {}, std::nullopt)) return false; continue; }
+			if (slot >= definition->inputs.size()) { if (!row.inputs[slot].empty()) return false; continue; }
+			if (!fixed_feature(row.inputs[slot], definition->inputs[slot].label)) return false;
+		}
 		if (!row.module) continue;
-		for (CargoType cargo : EnumRange(NUM_CARGO)) if (!feature(row.module->stock[cargo], meaning(cargo))) return false;
-		for (const auto *job : row.module->GetServiceJobs()) for (uint slot = 0; slot < job->inputs.size(); ++slot)
-			if (!feature(job->inputs[slot], GetOptionalSpaceSupplyLabel(static_cast<SpaceSupply>(slot + 1)))) return false;
+		for (CargoType cargo : EnumRange(NUM_CARGO)) if (!slot_feature(row.module->stock[cargo], cargo)) return false;
+		for (const auto *job : row.module->GetServiceJobs()) {
+			for (size_t slot = 0; slot < job->inputs.size(); ++slot) if (!fixed_feature(job->inputs[slot], GetSpaceSupplyLabel(static_cast<SpaceSupply>(slot + 1)))) return false;
+		}
 		if (row.module->manufacture) {
 			const auto &job = *row.module->manufacture;
 			const auto *recipe = GetSpaceVehicleConstruction(job.model);
-			if (recipe == nullptr || recipe->inputs.size() > job.inputs.size()) return false;
-			for (uint slot = 0; slot < job.inputs.size(); ++slot) {
+			// A retained paid job needs its exact immutable recipe whenever meanings are checked,
+			// and the recipe cannot have more inputs than the real owner can hold.
+			if (detailed && (recipe == nullptr || recipe->inputs.size() > job.inputs.size())) return false;
+			// Only declared recipe inputs are physical; spare saved slots cannot
+			// hide cargo outside the shared global owner/custody check.
+			for (size_t slot = 0; slot < job.inputs.size(); ++slot) {
+				if (!detailed) { if (!feature(job.inputs[slot], {}, std::nullopt)) return false; continue; }
 				if (slot >= recipe->inputs.size()) { if (!job.inputs[slot].empty()) return false; continue; }
-				if (!feature(job.inputs[slot], recipe->inputs[slot].label)) return false;
+				if (!fixed_feature(job.inputs[slot], recipe->inputs[slot].label)) return false;
 			}
 		}
+	}
+	// Only the original descent job holds released freight; a paid shell or cached quantity cannot create another copy elsewhere.
+	for (const auto &row : data.space_descent_rows) if (!slot_feature(row.packets, row.cargo)) return false;
+	// Allocated asteroid freight must have one actual candidate owner. Orphans
+	// cannot become historical reserve merely because their source body retired.
+	for (const auto &packet : data.native_cargo_packet_rows) {
+		if (!packet.source.IsCanonical() || (packet.source.type == SourceType::Asteroid && !owned.contains(packet.packet))) return false;
 	}
 	return true;
 }

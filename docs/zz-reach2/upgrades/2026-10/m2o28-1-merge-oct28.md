@@ -859,6 +859,8 @@ _Applies to Groups 19-20._
 
 Execution evidence: see **Group 19** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass 481/481.
 
+Context has compacted 1 times while executing this group.
+
 ### Group 20 - Compose copied custody, provenance and continuation checks
 
 ```mermaid
@@ -876,13 +878,17 @@ flowchart LR
 
 {{HARD}}
 
-- [ ] **20.1** Generalize label preparation and detailed owner admission in `ValidateSpaceCargoPreviewOwners`, so they run whenever asteroid validation needs them, even with `supply == nullptr`. Use same-file CDIM, or the existing explicitly admitted legacy-label route.
+- [X] **20.1** Generalize label preparation and detailed owner admission in `ValidateSpaceCargoPreviewOwners`, so they run whenever asteroid validation needs them, even with `supply == nullptr`. Use same-file CDIM, or the existing explicitly admitted legacy-label route.
 
-- [ ] **20.2** Apply asteroid-origin checks at the same `admit(packet, meaning, station)` point as the supply checks. Keep exactly-once reference accounting separate from semantic admission, so detailed owner rows never count a packet twice. Validate manufacture/recipe slots and orphan asteroid CAPA rows as well as ordinary carriers.
+- [X] **20.2** Apply asteroid-origin checks at the same `admit(packet, meaning, station)` point as the supply checks. Keep exactly-once reference accounting separate from semantic admission, so detailed owner rows never count a packet twice. Validate manufacture/recipe slots and orphan asteroid CAPA rows as well as ordinary carriers.
 
-- [ ] **20.3** Join copied sparse IDs and frontier, mineral, original Space geometry, leases, generation cursors and mission/queue facts before legacy preview normalization. Adapt S's `NormalizeLegacyAsteroidCargoPreview` to the unified facts, keeping its preflight-before-change behavior.
+- [X] **20.3** Join copied sparse IDs and frontier, mineral, original Space geometry, leases, generation cursors and mission/queue facts before legacy preview normalization. Adapt S's `NormalizeLegacyAsteroidCargoPreview` to the unified facts, keeping its preflight-before-change behavior.
 
-- [ ] **20.4** Add preview sequences that alternate a valid A file, an invalid S file and a valid merged file, plus malformed duplicate-owner, source and lease cases, all against a running world. Assert that native cash, RNG, profile, geometry and containers stay unchanged, and that a rejected candidate's error is kept while its data is cleared.
+- [X] **20.4** Add preview sequences that alternate a valid A file, an invalid S file and a valid merged file, plus malformed duplicate-owner, source and lease cases, all against a running world. Assert that native cash, RNG, profile, geometry and containers stay unchanged, and that a rejected candidate's error is kept while its data is cleared.
+
+  Plan change, 2026-10-28: a merged file with natural packets, and therefore the lease case, needs writer 446 (merged 441 refuses typed origins, and only 446 carries `SpaceMiningContinuation`, the capability under which copied leases are joined). Group 20 uses the running world's own merged 441 save; the natural-packet merged file and its lease cases move to 22.4.
+
+Execution evidence: see **Group 20** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). Focused GCC 59/59; CTest save/preview subset GCC and Clang 591/591.
 
 ### Area Mandatory Reading - Native adoption and current writer activation
 
@@ -937,7 +943,7 @@ Groups 15-21 are done and the burn-down holds only the `saveload.h` definitions.
 
 - [ ] **22.3** Keep the old merged 441 family fixture, and add a 446 contract through the existing fixture/reader owner. S added fields inside existing owners, so derive the exact family names and framing from the source owners: do not assume new chunk names or counts, and never accept whatever the writer emits as the expectation.
 
-- [ ] **22.4** Add writer tests: required empty families, the exact marker, the full CAPA/ASTR/SPOR/VEHS fields, and paused second-save equality. Label original-to-current conversions separately from current-to-current identity.
+- [ ] **22.4** Add writer tests: required empty families, the exact marker, the full CAPA/ASTR/SPOR/VEHS fields, and paused second-save equality. Label original-to-current conversions separately from current-to-current identity. Also extend Group 20's preview sequence (`Owner-join previews alternate lineages ...` in `save_lineage_preflight.cpp`) with a merged 446 file holding natural packets and a mining lease, plus its malformed lease cases: two bodies leased to one hull, and a Mining hull without its lease.
 
 - [ ] **22.5** Run the milestone suites: full CTest in GCC and Clang and the ten focused executables. Every class (b) entry in the pending ledger must now pass. Record the counts, and mark any case still failing as a Part 1 defect with its owning group reopened.
 

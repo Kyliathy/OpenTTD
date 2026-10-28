@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; candidate-only historical origins and mineral joins.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group 9CD
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; same-file hauler cargo meanings, capacities and whole-packet mass.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 20; the asteroid-origin walk folded into the one owner join.
  * This validation boundary owns no inventory, packet, vehicle, station, work or utility account.
  */
 #ifndef SAVELOAD_SPACE_CARGO_PREVIEW_H
@@ -12,14 +13,15 @@ struct LoadCheckData;
 class SurfaceSupplyCustodyCheck;
 
 /** Join original copied references to their same-file physical packet identities without consulting runtime pools.
+ * One traversal of every copied container counts each packet exactly once and applies two policies at the same
+ * admission point (m2o28 Group 20): paid-supply custody when `supply` is given, and asteroid-origin agreement
+ * (issued origin, Space production geometry, container meaning) whenever the file holds natural packets.
+ * Genuine old files without CDIM keep their original full-load-only cargo-slot check; modern typed origins need explicit candidate labels.
  * @param data Complete unpublished native/feature metadata from one checked file, including legitimately empty native families.
  * @param supply Optional shared paid-supply check; every actual container additionally contributes its own same-file label/queue. No live cargo registry is consulted.
- * @return Whether every referenced packet exists with positive quantity and belongs to exactly one inspected container. Original family validators retain recipe/quantity/role admission.
+ * @return Whether every referenced packet exists with positive quantity, belongs to exactly one inspected container and is accepted by each policy. Original family validators retain recipe/quantity/role admission.
  */
 bool ValidateSpaceCargoPreviewOwners(const LoadCheckData &data, SurfaceSupplyCustodyCheck *supply = nullptr);
-
-/** @param data Complete unpublished same-file body/packet/container metadata. @return Whether referenced asteroid packets' issued origins, production geometry and container labels agree without live-world lookup. ValidateSpaceCargoPreviewOwners separately rejects duplicate/orphan packets. Genuine old files without CDIM retain their original full-load-only cargo-slot check; modern typed origins require explicit candidate labels. */
-bool ValidateSpaceAsteroidCargoPreview(const LoadCheckData &data);
 /** @param data Complete genuine older candidate after its existing body/cargo semantic checks. @return Whether all legacy packet origins resolve before any copied row changes; only those same-file rows normalize, with an explicit legacy receipt preserving pre-CDIM admission. No active-world packet, company, cargo definition or field is consulted. */
 bool NormalizeLegacyAsteroidCargoPreview(LoadCheckData &data);
 

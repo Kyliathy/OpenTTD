@@ -179,8 +179,10 @@ These sites read the accepted dialect directly instead of a pending enumerator. 
 
 | Done | File | Line | Current rule | Owner |
 | --- | --- | --- | --- | --- |
-| [ ] | `src/saveload/surface_supply_order_sl.cpp` | 120 | Fixed or tagged SSOR accepted only for `DestinationA` and `Merged` | 13 (classifier), 21 (load order) |
-| [ ] | `src/saveload/surface_supply_order_sl.cpp` | 260 | `legacy_a_supply_wire = dialect == DestinationA` (copied preview) | 13, 20 |
+| [X] | `src/saveload/surface_supply_order_sl.cpp` | 120 | Fixed or tagged SSOR accepted only for `DestinationA` and `Merged` | 13 (classifier), 21 (load order) |
+| [X] | `src/saveload/surface_supply_order_sl.cpp` | 260 | `legacy_a_supply_wire = dialect == DestinationA` (copied preview) | 13, 20 |
+
+Both rows closed in Group 20 without a code change: Group 17B removed `SaveDialect::SpaceFixes`, so development-build files refuse in `DoLoad` before any chunk reader runs, and these two sites only ever see A, B or merged sources.
 
 **9.2** `src/saveload/save_lineage.h` appends `SaveDialect::SpaceFixes` (the S writer, 441-445 without MLLN) and five capabilities before `Count`: `AsteroidCargoOrigins`, `AsteroidFieldLifecycle`, `SpaceMiningContinuation`, `SpaceLegacyDeparture` and `SpaceSurveyDeparture`. It adds `CURRENT_MERGED_SAVE_VERSION = 446` and `CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2` beside the frozen 441/schema 1 constants. They stay reserved: nothing reads them until Groups 13 and 22. No code switches over `SaveDialect`, so the append needs no other edits.
 
@@ -687,4 +689,30 @@ Results (`logs/merge-oct28/group19/`):
 - `[save-candidate-lifecycle]`: 2 cases, 10,764 assertions.
 - `[save-lineage-preflight]`: 4 cases, 3,048 assertions.
 - Subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Cc]andidate|[Dd]iscard|[Rr]efus"`: GCC 481/481, Clang 481/481.
+
+## Group 20
+
+**20.1-20.2** `ValidateSpaceCargoPreviewOwners` (`space_cargo_preview.cpp`) is now the one copied owner join. S's separate walk `ValidateSpaceAsteroidCargoPreview` is gone from the header and the source, together with its private owner-meaning map and the `GetOptionalSpaceSupplyLabel` adapter.
+
+- `natural` (any `SourceType::Asteroid` row) or a paid book (`supply != nullptr`) switches on `detailed` mode. Natural packets alone now request the per-container meanings, so a candidate without a paid book is judged in every container.
+- In natural mode, the CDIM rows and the sparse identity records (`ValidateAsteroidIdentityRecords`) are validated once before any lookup.
+- The paid-supply labels (CDIM, or the explicitly admitted legacy label table) are prepared only when there is a book; the origin policy reads its own optional CDIM meaning, so genuine old no-CDIM files keep S's full-load-only ordinal rule.
+- One `admit(packet, supply_meaning, origin_meaning, station)` applies the supply policy, then the origin policy. Ownership is counted separately by `add`/`count`, once per packet. Ordinary station and carrier references are admitted only through their owner rows, which must match the aggregate references one to one (Group 19 made the readers guarantee that). Space hulls, handling, manifests, structure inputs, module stock, service berths, manufacture inputs and descents admit each reference once.
+- New refusals in detailed mode: an owner row whose slot is outside the cargo table, a structure input slot beyond its recipe that is not empty (S indexed past the recipe here), and a structure kind with no real recipe. Manufacture keeps D's spare-slot rule.
+- The orphan loop for natural packets is unchanged.
+
+**20.3** Order, checked in `saveload.cpp`'s load-check block: `ValidateSpaceOrderLoadPreview` (mission, queue, lease, frontier, mineral, Space bounds and generation cursors through `ValidateSpaceMiningContinuationPreview`, under `SpaceMiningContinuation`) → knowledge → dimensions → `ValidateSpaceCargoPreviewOwners` → `NormalizeLegacyAsteroidCargoPreview`. The join runs before normalization, and normalization still resolves every row before changing any (its `upgrades` vector). It reads the unified `NativeCargoPacketPreview` rows (`legacy_asteroid_origin`), so no adaptation was needed.
+
+**20.4** Tests:
+
+- `asteroid_cargo_validation.cpp`, `One copied owner join judges natural origins in every container without a paid book` (26 assertions): out-of-table owner slot, one owner row describing a packet twice, owner rows that do not match the references, processor stock under a slot with a different meaning, natural material in a construction input or a service berth, a manufacture spare slot and a Steel recipe slot, and an unknown structure kind. Every case is refused and the native packet pool is untouched.
+- Same file, `Paid-supply custody and natural origin share one admission per packet` (6 assertions): with a real `SurfaceSupplyCustodyCheck`, a natural hull packet, ordinary freight and natural processor stock pass, and the final allocated pass leaves the check `Valid()`. The check refuses a repeated owner, so this proves each packet was admitted once. With a contradicting CDIM meaning, the supply policy alone would accept the unpaid natural packet; the origin policy at the same point refuses.
+- `save_lineage_preflight.cpp`, `Owner-join previews alternate lineages and refuse malformed custody without touching the world` (149,381 assertions). The running world is a `TubePrototypeRig` with a capsule. The test saves that world with the current writer (merged 441, MLLN) into `test-cache/merge-oct28/group20/running-world-merged.sav`, then previews: A433 (natural freight, paid supply, eight stations) → the development-build typed-origin 445 file (`DEVELOPMENT_SAVEGAME` kept, data cleared) → the merged file, and then one of two malformed A433 copies:
+  - Source: one natural packet's `source_xy` moved to a Surface tile.
+  - Duplicate owner: each station row copied as the next station, and each train row copied under sparse index 127. Copies of owners that hold packets give those packets a second owner. A433's trains hold none, and its loaded stations are refused.
+  Every refusal is checked to come from the owner join ("ownership" or "custody" in the kept reason) and to clear the candidate (`CheckDiscardedLoadCandidate`). The A433 and merged previews then pass again with A433's original packet and owner-row counts. After every step the world's accounts, packets, RNG, domains, tick, camera, profile and geometry are unchanged (`PreviewWorldFacts`).
+- The headless test world has no cursor sprite, and the writer toggles the busy cursor, so the test gives `_cursor` one neutral entry around the save and restores it. `LayerSaveContent` names the real package in the saved file, so the merged preview finds it.
+- Plan change: a merged file with natural packets needs writer 446, and copied leases are joined only under `SpaceMiningContinuation` (446). These cases move to 22.4.
+
+Results (`logs/merge-oct28/group20/`): GCC and Clang builds without warnings. The focused set is 59 cases, one process each through `test-cache/merge-oct28/run_cases.sh`, which runs from the build directory as CTest does. It covers `[asteroid-cargo-*]`, `[heavy-joined-validation]`, the supply custody tags, `[save-candidate-lifecycle]`, `[save-lineage-preflight]`, `[save-space-lineage-*]`, `[space-mining-wire]` and `[save-supply-wire-*]`. GCC passes 59/59 with 380,638 assertions, and Clang 59/59. CTest subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Cc]andidate|[Dd]iscard|[Rr]efus|[Oo]wner|[Cc]ustody|[Aa]steroid"`: GCC 591/591 and Clang 591/591.
 
