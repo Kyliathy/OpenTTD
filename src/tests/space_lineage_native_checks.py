@@ -3,6 +3,7 @@
 @file space_lineage_native_checks.py
 @see docs/zz-reach2/architecture/savegame/archi-savegame.md
 @see docs/zz-reach2/upgrades/2026-10/m2o23-3-come-space.md Group42.
+@see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 21; --late-failures refuses malformed copies late in a full load, then recovers.
 Reports/transcripts live in test-cache/merge-supply. Existing runner receipts and
 isolated process homes remain under mlm/reviews/space/space-lineage-original and
 mlm/runtime. Optional44successors stay in test-cache/merge-supply; no original
@@ -24,18 +25,42 @@ from artifact_paths import create_run_context
 from runner import run_native
 
 
-def execute(configuration, epoch, roundtrip, canonical, first_tick):
+def walk(value):
+    """Yield every object nested in a JSON value.
+
+    @param value Parsed catalogue.
+    @return Generator over each dictionary, outermost first.
+    """
+    if isinstance(value, dict):
+        yield value
+        for item in value.values():
+            yield from walk(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from walk(item)
+
+
+def execute(configuration, epoch, roundtrip, canonical, first_tick, late_failures, build="build"):
     """Run one exact original through full reconstruction and its copied receipt comparison.
 
     @param configuration Current Debug or RelWithDebInfo selected native test target.
-    @param epoch Explicit A426-438catalogue epoch or donor-space426, never a header transformation or filename-derived version.
+    @param epoch Explicit A426-438catalogue epoch, donor-space426, or heavy-440 (the catalogued A440 demo), never a header transformation or filename-derived version.
     @param roundtrip True writes and reconstructs a new441successor and second save without advancing original work.
     @param canonical True compares every independently required merged family and its exact bytes across both saves.
     @param first_tick True additionally compares one actual original-first and merged-reload-first native tick over all saved owners.
+    @param late_failures True refuses malformed copies late in a full load and reloads the source after each (m2o28 Group 21).
+    @param build Single-configuration build tree, relative to the repository, used when no multi-configuration executable exists.
     @return Original native status, with completion requiring the actual post-load observation marker.
     """
     donor = epoch == "donor-space426"
-    if donor:
+    demo = epoch == "heavy-440"
+    # Malformed copies cannot carry a digest hint, so late failures need a
+    # source that its own bytes identify: A440 is beyond every colliding era.
+    assert not late_failures or (demo and not roundtrip)
+    if demo:
+        checkpoints = json.loads((ROOT / "src/tests/fixtures/demos/space/current-checkpoints.json").read_text(encoding="utf-8"))
+        original = next(row for row in walk(checkpoints) if row.get("path") == "src/tests/fixtures/demos/space/space-heavy-440.sav")
+    elif donor:
         manifest = json.loads((ROOT / "src/tests/fixtures/multilayer-inputs.json").read_text(encoding="utf-8"))
         alias = "donor/openttd3-75ea75718f/mlm/reviews/surface-supply/space-custody/20261016-182906-4998e57e76/saves/space-mining-continued-405.sav"
         original = manifest["inputs"][alias]
@@ -56,6 +81,8 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick):
     context.prepare_runtime()
     (context.runtime_dir / "scripts/game_start.scr").write_text("space_lineage_test\n", encoding="utf-8")
     executable = ROOT / "build" / configuration / "openttd_tube_test.exe"
+    if not executable.is_file():
+        executable = ROOT / build / "openttd_tube_test"  # Single-configuration (Ninja) build trees.
     cache = ROOT / "test-cache/merge-supply"
     cache.mkdir(parents=True, exist_ok=True)
     prefix = ("group44-space-" if roundtrip else "group42-native-") + epoch
@@ -65,6 +92,8 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick):
     if first_tick:
         assert roundtrip and canonical
         prefix += "-first-tick"
+    if late_failures:
+        prefix = "m2o28-group21-late-failures-" + epoch
     terminal, stdout = cache / (prefix + "-verified.txt"), cache / (prefix + "-stdout.log")
     environment = dict(os.environ, OTTD_TEST_CONFIGURATION=configuration, OTTD_SPACE_LINEAGE_SOURCE=str(source))
     successor = cache / (prefix + ".sav")
@@ -72,9 +101,11 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick):
         environment["OTTD_SPACE_LINEAGE_OUTPUT"] = str(successor)
     if first_tick:
         environment["OTTD_MERGED_FIRST_TICK"] = "1"
+    if late_failures:
+        environment["OTTD_SPACE_LINEAGE_LATE_FAILURES"] = "1"
     if donor:
         environment["OTTD_SPACE_LINEAGE_DONOR_SPACE"] = "1"
-    else:
+    elif not demo:
         # Native startup has no hint option. An independently identifiable
         # original provides only the initial runtime; the observer then loads
         # this exact A source through the scoped digest-bound native API.
@@ -93,6 +124,8 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick):
     complete = result.returncode == 0 and "SPACE_LINEAGE_NATIVE" in transcript
     if first_tick:
         complete = complete and "MERGED_FIRST_TICK_NATIVE" in transcript
+    if late_failures:
+        complete = complete and "SPACE_LATE_FAILURES" in transcript
     report = dict(_documentation=__doc__, complete=complete, epoch=epoch, original=before,
                   executable=identity(executable), terminal=identity(terminal), stdout=identity(stdout),
                   native_processes=[identity(path) for path in sorted(context.reports.glob("native-*.json"))])
@@ -131,9 +164,11 @@ def main():
     parser.add_argument("--roundtrip", action="store_true")
     parser.add_argument("--canonical", action="store_true")
     parser.add_argument("--first-tick", action="store_true")
-    parser.add_argument("--epoch", choices=("426", "427", "428", "429", "431", "434", "436", "437", "438", "donor-space426"), required=True)
+    parser.add_argument("--late-failures", action="store_true", help="Refuse malformed copies late in a full load, then reload the source (heavy-440 only)")
+    parser.add_argument("--build", default="build", help="Single-configuration build tree, for example build-clang")
+    parser.add_argument("--epoch", choices=("426", "427", "428", "429", "431", "434", "436", "437", "438", "donor-space426", "heavy-440"), required=True)
     args = parser.parse_args()
-    return execute(args.configuration, args.epoch, args.roundtrip, args.canonical, args.first_tick)
+    return execute(args.configuration, args.epoch, args.roundtrip, args.canonical, args.first_tick, args.late_failures, args.build)
 
 
 if __name__ == "__main__":

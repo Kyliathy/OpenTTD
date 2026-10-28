@@ -381,9 +381,13 @@ flowchart LR
 
 - [ ] **33.1** Run malformed-source cases: missing, duplicate or wrong-kind MLLN and feature families; incomplete origin pairs; source-label mismatch; impossible issuance or credit history; invalid policy, intent, generation or lease; and partial source-owned records. Ambiguous originals and corrupt modern files refuse, with no fallback and no invented history.
 
+  Plan change, 2026-10-28 (from Part 1 Group 21): the incoming branch's malformed-file harnesses `asteroid_cargo_wire_checks.py`, `asteroid_field_wire_checks.py` and `legacy_departure_wire_checks.py` (in `src/tests/multilayer/acceptance/`) still assert source version 442 or later and expect development-build checkpoints. Rebase each onto a merged 446 source, or retire it where a 446 case already covers it.
+
 - [ ] **33.2** Alternate valid and invalid detached previews and preflight loads. Snapshot the open world's cash, RNG, profile, geometry, packet ownership and copied staging before each attempt. A preflight refusal keeps the open world, clears partial copied data while keeping its error, and allows the next valid candidate.
 
 - [ ] **33.3** Trigger a failure after native adoption starts, check the `SaveOrLoadResult::ReInit` path, and then load a valid file. Staging, pools and caches reset with no stale references; do not require the old world back after destructive initialization.
+
+  Part 1 Group 21 added `python3 -B src/tests/space_lineage_native_checks.py --epoch heavy-440 --late-failures` (three late refusals on the A440 demo, each followed by a clean reload). Extend it to a merged 446 source rather than writing a second harness.
 
 ### Group 34 - Qualify mixed cargo custody and paid ground continuations
 

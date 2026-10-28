@@ -716,3 +716,38 @@ Results (`logs/merge-oct28/group19/`):
 
 Results (`logs/merge-oct28/group20/`): GCC and Clang builds without warnings. The focused set is 59 cases, one process each through `test-cache/merge-oct28/run_cases.sh`, which runs from the build directory as CTest does. It covers `[asteroid-cargo-*]`, `[heavy-joined-validation]`, the supply custody tags, `[save-candidate-lifecycle]`, `[save-lineage-preflight]`, `[save-space-lineage-*]`, `[space-mining-wire]` and `[save-supply-wire-*]`. GCC passes 59/59 with 380,638 assertions, and Clang 59/59. CTest subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Cc]andidate|[Dd]iscard|[Rr]efus|[Oo]wner|[Cc]ustody|[Aa]steroid"`: GCC 591/591 and Clang 591/591.
 
+
+## Group 21
+
+**21.1** The acceptance block in `AfterLoadGame` (`afterload.cpp`), from `AfterLoadCompanyStats` to `AfterLoadStoryBook`, was compared call by call with D (`origin/mlm-mlv`) and S (`origin/mlm-mlv-2sp`); the call lists are in `test-cache/merge-oct28/afterload-*.txt`. HEAD is D's list with exactly one insertion: `NormalizeLegacyAsteroidCargoPackets`, under `!SlHasSaveCapability(AsteroidCargoOrigins)`, right after `AcceptLoadedAsteroidField` and before launch centers, hubs, handling, orders, knowledge, pods, manifests, transitions, production, dimensions, descents and structures. D's TBM, exchange, spoil, mine, processor, utility, recipe, supply, service, approach, fleet, Tube and geothermal order is unchanged. S's own list differs only by the B-side machinery D brought.
+
+**21.2** Audit by the named calls:
+
+- `AcceptLoadedSpaceCargoDimensions` runs after NewGRF reconstruction, so real cargo definitions exist.
+- `ValidateSpaceVehicles` (queues, leases, physical custody through `VisitNativeCargoPackets`, production links) is the last Space check.
+- Nothing in the block issues a command, a payment, a target selection or a tick. The 21.4 recovery checks confirm this: after each reload the tick, accounts, packets, RNG and domain digests equal the first load's.
+
+**21.3** Gap found and fixed. A failed full load runs every chunk handler's `FixPointers` in the null pass (`SlError` → `SlNullPointers`). D's B-side owners (supply, utility, Tube power and vehicles, geothermal generators, risers and Tube sources) reset there. The Space handlers ASTR, SPKN and SPOR returned early. So a late refusal left the installed asteroid field, the staged knowledge, the Space order candidate and the generation issuer in place until the next `InitializeGame`. They now reset in the same pass: ASTR calls `ResetAsteroidField()` (field, index and both stagings), SPKN `ResetAsteroidLoadStaging()`, and SPOR `ResetSpaceOrders()` (issuer and candidate). Initialization (`ResetMultiLayerStateSchema` in `InitializeGame`) and success (each `AcceptLoaded*` clears its staging) already cleared them. `ScopedLoadLineage` is unchanged, and `SlNullPointers` already drops the lineage. Commit `3175609b`.
+
+**21.4** `space_lineage_native.cpp` gained `CheckSpaceLateFailures`, run by `python3 -B src/tests/space_lineage_native_checks.py --configuration RelWithDebInfo --epoch heavy-440 --late-failures`. The harness now has the `heavy-440` epoch (`src/tests/fixtures/demos/space/space-heavy-440.sav`, SHA256 checked against `current-checkpoints.json`; A440 needs no digest hint, which the malformed copies could not carry) and falls back to `build/openttd_tube_test` on single-configuration trees. With the A440 world loaded, three malformed copies are each previewed, fully loaded, and then followed by a full reload of the source:
+
+| Failure | Malformation | Copied preview | Full load |
+| --- | --- | --- | --- |
+| After field install | One natural packet's CAPA `source_id` set to the field's `next_body_id` (never issued) | Error | ReInit, "Invalid legacy asteroid cargo origin" |
+| After packet upgrade | The VEHS row of an idle, unleased, empty hull removed | Error | ReInit, "Invalid native Space order ownership" |
+| After queue install | ASTR re-encoded through its own codec era with a free body leased to a hull that is not mining | accepted (see below) | ReInit, "Invalid native Space fleet" |
+
+After each ReInit, the test checks that the asteroid field is empty, the order issuer is 1 and there is no load lineage. The source then reloads with the same field, fleet, orders and structure digests, packets, accounts, domains, tick and RNG. Result: 1 case, 43,379 assertions, passed (`logs/merge-oct28/group21/late-failures-gcc-5.log`).
+
+The fix was then reverted locally and the run repeated (`late-failures-gcc-without-reset.log`). All three cases failed `GetAsteroidField() == AsteroidField{}`, and the third also left the issuer at 9. The fix was restored. The existing A437 mode still passes (84 assertions).
+
+The A440 demo holds no lease, so the lease case adds a foreign one. A genuine A440 copied preview has no lease join (only 446 joins leases, under `SpaceMiningContinuation`), so that preview accepts the copy. The full loader's final join refuses it. 22.4 covers 446 lease previews.
+
+The incoming branch's malformed-file harnesses (`asteroid_cargo_wire_checks.py`, `asteroid_field_wire_checks.py`, `legacy_departure_wire_checks.py`) still assert source version 442 or later. That is recorded as a plan change in Part 2 Group 33.1.
+
+Results (`logs/merge-oct28/group21/`):
+
+- `openttd_test` builds without warnings in GCC and Clang. `openttd_tube_test` builds in both; its warnings are all in existing tube and TBM fixture headers, none in the files changed here.
+- Focused GCC cases: 32/32.
+- CTest save/preview subset (the Group 20 regex): GCC 591/591, Clang 591/591.
+- Late failures: GCC and Clang (`--build build-clang`) both pass 1 case with 43,379 assertions.

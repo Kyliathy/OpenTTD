@@ -923,13 +923,15 @@ flowchart TD
 
 {{HARD}}
 
-- [ ] **21.1** Audit the `AfterLoadGame` block by its named calls. The capability-gated normalization from 16.3 sits right after `AcceptLoadedAsteroidField` and before dependent manifests and fleet checks. D's TBM, exchange, processor, utility, recipe, canonical supply and Tube/geothermal order stays.
+- [X] **21.1** Audit the `AfterLoadGame` block by its named calls. The capability-gated normalization from 16.3 sits right after `AcceptLoadedAsteroidField` and before dependent manifests and fleet checks. D's TBM, exchange, processor, utility, recipe, canonical supply and Tube/geothermal order stays.
 
-- [ ] **21.2** Finish the dependency join only after real cargo definitions and Space owners exist. No normal tick, selection, payment or free service may run during adoption.
+- [X] **21.2** Finish the dependency join only after real cargo definitions and Space owners exist. No normal tick, selection, payment or free service may run during adoption.
 
-- [ ] **21.3** Clear new field, mission and scratch staging on initialization, success and failure, and keep the `ScopedLoadLineage` lifetime. A preflight or LoadCheck Error keeps the open world; a late native failure goes through `ReInit`, leaves no usable partial world, and lets a later valid load succeed.
+- [X] **21.3** Clear new field, mission and scratch staging on initialization, success and failure, and keep the `ScopedLoadLineage` lifetime. A preflight or LoadCheck Error keeps the open world; a late native failure goes through `ReInit`, leaves no usable partial world, and lets a later valid load succeed.
 
-- [ ] **21.4** Add controlled failure cases after field install, packet upgrade, queue install and the final custody join. Assert the correct Error or ReInit boundary, cleared staging and a successful next valid load.
+- [X] **21.4** Add controlled failure cases after field install, packet upgrade, queue install and the final custody join. Assert the correct Error or ReInit boundary, cleared staging and a successful next valid load.
+
+Execution evidence: see **Group 21** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). The ASTR, SPKN and SPOR null passes now revoke their state. `space_lineage_native_checks.py --epoch heavy-440 --late-failures` passes in GCC and Clang (43,379 assertions each) and fails without the fix. CTest save/preview subset: GCC and Clang 591/591.
 
 ### Group 22 - Activate writer 446 and retire the pending gate
 

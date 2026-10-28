@@ -2,6 +2,7 @@
 /** @file space_lineage_native.cpp Original native Space reconstruction and independent copied receipt comparisons.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-3-come-space.md Group42.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 21; late native failures after field install, packet upgrade and queue install.
  * Default observation performs no simulation work, command or purchase. Optional44qualification writes new test-cache successors; explicit46first-tick mode advances only isolated component copies.
  */
 #include "../stdafx.h"
@@ -17,7 +18,15 @@
 #include "../fios.h"
 #include "test_artifact_paths.h"
 #include "layer_save_fixture.h"
+#include "save_candidate_lifecycle_fixture.h"
+#include "save_envelope_fixture.h"
+#include "save_envelope_chunks.h"
+#include "save_supply_wire_fixture.h"
+#include "../asteroid.h"
+#include "../space_orders.h"
+#include "../saveload/asteroid_field_sl.h"
 #include <charconv>
+#include <fstream>
 #include "../safeguards.h"
 
 static std::function<void()> *space_lineage_observer = nullptr; ///< Invocation callback only, never a Space owner or source of elapsed work.
@@ -157,6 +166,122 @@ static void CheckMergedSpaceSuccessor(const char *output)
 	CheckOriginalSpaceReceipts(production, structures, history);
 }
 
+/** One malformed copy of the loaded source that the full loader must refuse at a known stage. */
+struct SpaceLateFailure {
+	std::string_view point; ///< The install step the refusal comes after.
+	std::string_view reason; ///< Expected native refusal text.
+	bool preview_refuses; ///< Whether this source's copied preview also judges the changed fact.
+	std::vector<uint8_t> bytes; ///< Complete uncompressed stream at the original version.
+};
+
+/** @param payload Original ASTR payload. @return The one layout that decodes it and re-encodes it byte for byte, or no value. */
+static std::optional<AsteroidFieldWireEra> FindAsteroidFieldEra(std::span<const uint8_t> payload)
+{
+	// The source's own era is the one whose codec reproduces its exact bytes.
+	for (const auto era : {AsteroidFieldWireEra::Preview, AsteroidFieldWireEra::NativeMining, AsteroidFieldWireEra::StarterInputs,
+			AsteroidFieldWireEra::Lifecycle, AsteroidFieldWireEra::SurveyDeparture}) {
+		const auto field = DecodeAsteroidField(payload, era); if (!field) continue;
+		const auto encoded = EncodeAsteroidField(*field, era);
+		if (encoded && std::ranges::equal(*encoded, payload)) return era;
+	}
+	return std::nullopt;
+}
+
+/** @param row One sparse-table row. @param bytes Its stream. @return The row's native pool index. */
+static uint32_t SparseRowIndex(const SupplyWireRow &row, std::span<const uint8_t> bytes)
+{
+	size_t cursor = row.payload;
+	/** @return The next index byte, bounded by the row. */
+	const auto read = [&]() { REQUIRE(cursor < row.end); return bytes[cursor++]; };
+	return static_cast<uint32_t>(ReadSaveGamma(read));
+}
+
+/** Refuse three malformed copies of the loaded source late in a full load, then recover with the source (m2o28 Group 21).
+ * Each copy fails after one more install step has run: the field, the legacy packet upgrade, the queues. Each refusal
+ * must be a ReInit that leaves no field, order issuer or load lineage behind, and the unchanged source must load again
+ * with its exact fleet, orders, structures, field, packets, accounts and RNG.
+ * @param source The loaded genuine original; it must be identifiable without a digest hint, because the copies cannot carry one.
+ */
+static void CheckSpaceLateFailures(const char *source)
+{
+	const auto baseline = CaptureCandidateLiveState(); const auto field = GetAsteroidField();
+	const auto fleet = ComputeSpaceVehicleDigest(), orders = ComputeSpaceOrdersDigest(), structures = ComputeSpaceStructureDigest();
+	std::ifstream file(source, std::ios::binary); REQUIRE(file.good());
+	const std::vector<uint8_t> raw{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}}; REQUIRE(raw.size() > 8);
+	const uint16_t version = static_cast<uint16_t>(raw[4] << 8 | raw[5]);
+	const auto original = EnvelopeReplay(std::make_shared<EnvelopeTestReader>(raw)); const auto chunks = SupplyWireChunks(original);
+	std::vector<SpaceLateFailure> cases;
+	{
+		// After the field install: one natural packet names a body this field never
+		// issued, so the legacy packet upgrade cannot resolve its mineral.
+		auto bytes = original; const auto &capa = SupplyWireFind(chunks, "CAPA");
+		const auto type = SupplyWireColumn(bytes, capa, "source_type"), id = SupplyWireColumn(bytes, capa, "source_id");
+		REQUIRE(field.next_body_id < MAX_ORBITAL_BODIES); bool changed = false;
+		for (size_t index = 1; index < capa.rows.size() && !changed; ++index) {
+			const auto &row = capa.rows[index];
+			if (row.end == row.payload || bytes[row.payload + type] != to_underlying(SourceType::Asteroid)) continue;
+			SupplyWireSet(bytes, row.payload + id, field.next_body_id, 2); changed = true;
+		}
+		REQUIRE(changed);
+		cases.push_back({"field install", "Invalid legacy asteroid cargo origin", true, std::move(bytes)});
+	}
+	{
+		// After the packet upgrade: one idle, unleased, empty hull disappears from
+		// VEHS, so its saved queue has no native owner when the queues install.
+		const SpaceVehicle *idle = nullptr;
+		for (const auto *craft : SpaceVehicle::Iterate()) {
+			/** @param body Field record. @return Whether it leases this hull. */
+			const bool leased = std::ranges::any_of(field.bodies, [&](const AsteroidBody &body) { return body.mining_slot == craft->index; });
+			if (craft->cargo.TotalCount() == 0 && !leased && craft->mission.phase != SpaceMissionPhase::Mining) { idle = craft; break; }
+		}
+		REQUIRE(idle != nullptr);
+		const auto &vehicles = SupplyWireFind(chunks, "VEHS");
+		const auto row = std::ranges::find_if(vehicles.rows.begin() + 1, vehicles.rows.end(),
+			/** @param row Sparse VEHS row. @return Whether it holds the chosen hull. */
+			[&](const SupplyWireRow &row) { return row.end != row.payload && SparseRowIndex(row, original) == idle->index.base(); });
+		REQUIRE(row != vehicles.rows.end());
+		auto bytes = original; bytes.erase(bytes.begin() + row->prefix, bytes.begin() + row->end);
+		cases.push_back({"packet upgrade", "Invalid native Space order ownership", true, std::move(bytes)});
+	}
+	{
+		// After the queue install: an unleased body gains a lease held by a hull that
+		// is not mining. The field itself accepts any in-range hull; only the final
+		// fleet and custody join checks the lease against its miner.
+		const auto &astr = SupplyWireFind(chunks, "ASTR");
+		const std::span<const uint8_t> payload(original.begin() + astr.payload, original.begin() + astr.end);
+		const auto era = FindAsteroidFieldEra(payload); REQUIRE(era.has_value());
+		auto changed = *DecodeAsteroidField(payload, *era);
+		const SpaceVehicle *holder = nullptr;
+		for (const auto *craft : SpaceVehicle::Iterate()) if (craft->mission.phase != SpaceMissionPhase::Mining) { holder = craft; break; }
+		const auto free = std::ranges::find(changed.bodies, VehicleID::Invalid(), &AsteroidBody::mining_slot);
+		REQUIRE(holder != nullptr); REQUIRE(free != changed.bodies.end()); free->mining_slot = holder->index;
+		const auto encoded = EncodeAsteroidField(changed, *era); REQUIRE(encoded.has_value());
+		const auto chunk = EnvelopeRiffChunk("ASTR", *encoded);
+		auto bytes = original; bytes.erase(bytes.begin() + astr.begin, bytes.begin() + astr.end);
+		bytes.insert(bytes.begin() + astr.begin, chunk.begin(), chunk.end());
+		cases.push_back({"queue install", "Invalid native Space fleet", false, std::move(bytes)});
+	}
+	for (auto &failure : cases) {
+		INFO(failure.point);
+		const auto malformed = EnvelopeStream(std::move(failure.bytes), "OTTN", version);
+		const auto preview = LoadWithFilter(EnvelopeNetworkReader(malformed), std::nullopt, true);
+		if (failure.preview_refuses) { CHECK(preview == SaveLoadResult::Error); CheckDiscardedLoadCandidate(); }
+		REQUIRE(LoadWithFilter(EnvelopeNetworkReader(malformed)) == SaveLoadResult::ReInit);
+		const auto reason = GetSaveLoadErrorMessage().GetDecodedString(); INFO(reason);
+		CHECK(reason.find(failure.reason) != std::string::npos);
+		// The null pass revoked the staged and installed Space state; nothing is lent to the next load.
+		CHECK(GetAsteroidField() == AsteroidField{}); CHECK(GetNextSpaceVehicleGeneration() == 1); CHECK_FALSE(GetLoadCapabilities().has_value());
+		REQUIRE(SaveOrLoad(source, SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
+		CHECK(GetAsteroidField() == field); CHECK(ComputeSpaceVehicleDigest() == fleet); CHECK(ComputeSpaceOrdersDigest() == orders);
+		CHECK(ComputeSpaceStructureDigest() == structures);
+		const auto recovered = CaptureCandidateLiveState();
+		CHECK(recovered.packets == baseline.packets); CHECK(recovered.accounts == baseline.accounts); CHECK(recovered.domains == baseline.domains);
+		CHECK(recovered.tick == baseline.tick); CHECK(recovered.random[0] == baseline.random[0]); CHECK(recovered.random[1] == baseline.random[1]);
+		fmt::print("SPACE_LATE_FAILURE point=\"{}\" preview_refused={} reason=\"{}\"\n", failure.point, preview == SaveLoadResult::Error, reason);
+	}
+	fmt::print("SPACE_LATE_FAILURES cases={}\n", cases.size()); // The Catch result, not this line, says whether every check held.
+}
+
 /** Qualify one genuine original through actual full loading before its read-only post-load comparison. */
 TEST_CASE("Native original Space lineages preserve constructed and retired receipts", "[.space-lineage-native]")
 {
@@ -188,6 +313,7 @@ TEST_CASE("Native original Space lineages preserve constructed and retired recei
 				CHECK(_load_check_data.space_production_present);
 			}
 			CHECK(CountOriginalNativeSpaceCraft() == craft_count);
+			if (std::getenv("OTTD_SPACE_LINEAGE_LATE_FAILURES") != nullptr) { REQUIRE_FALSE(hint.has_value()); CheckSpaceLateFailures(source); }
 			if (const char *output = std::getenv("OTTD_SPACE_LINEAGE_OUTPUT")) {
 				CheckMergedSpaceSuccessor(output);
 				if (std::getenv("OTTD_MERGED_FIRST_TICK") != nullptr) CheckFirstNativeTick(source, hint, output);
