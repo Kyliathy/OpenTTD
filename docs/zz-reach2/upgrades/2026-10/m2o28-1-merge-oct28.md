@@ -569,13 +569,15 @@ enum class SupplyColumnEncoding : uint8_t { Absent, LegacyU32Bool, CanonicalU64U
 
 {{HARD}}
 
-- [ ] **11.1** Extend `SaveWireFacts` with separate observed facts. The CAPA supply-column encoding distinguishes absent, legacy U32/Bool, canonical U64/U8 and malformed. Asteroid-column completeness distinguishes absent, exactly two U32 keys, and malformed. Keep the existing facts compatible until their callers move.
+- [X] **11.1** Extend `SaveWireFacts` with separate observed facts. The CAPA supply-column encoding distinguishes absent, legacy U32/Bool, canonical U64/U8 and malformed. Asteroid-column completeness distinguishes absent, exactly two U32 keys, and malformed. Keep the existing facts compatible until their callers move.
 
-- [ ] **11.2** In `CheckSelectedColumns`, count names and validate wire types before rows, including an empty CAPA. Take facts from the descriptors, never from `original_version == 441`. Reject half pairs, duplicate keys and wrong widths.
+- [X] **11.2** In `CheckSelectedColumns`, count names and validate wire types before rows, including an empty CAPA. Take facts from the descriptors, never from `original_version == 441`. Reject half pairs, duplicate keys and wrong widths.
 
-- [ ] **11.3** In `ReadRiff`, record MLLN magic/schema/writer only after exact eight-byte framing. Allow exactly 441/schema 1 and the reserved 446/schema 2; flag any other tuple as malformed, with no legacy fallback. The observation must work when MLLN follows CAPA or SSOR.
+- [X] **11.3** In `ReadRiff`, record MLLN magic/schema/writer only after exact eight-byte framing. Allow exactly 441/schema 1 and the reserved 446/schema 2; flag any other tuple as malformed, with no legacy fallback. The observation must work when MLLN follows CAPA or SSOR.
 
-- [ ] **11.4** Add detached scanner fixtures for D441, S441 and S445 (from Group 3's `donor445/`, or synthetic), a synthetic 446, an empty CAPA, and reordered MLLN/CAPA chunks. Assert bounded work, an unchanged raw digest and header, and rewind on both success and failure.
+- [X] **11.4** Add detached scanner fixtures for D441, S441 and S445 (from Group 3's `donor445/`, or synthetic), a synthetic 446, an empty CAPA, and reordered MLLN/CAPA chunks. Assert bounded work, an unchanged raw digest and header, and rewind on both success and failure.
+
+Execution evidence: see **Group 11** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). Synthetic fixtures live in `src/tests/save_envelope_cargo_columns.cpp`; the real donor 445 scan runs when `OTTD_DONOR445_DIR` names the directory.
 
 ### Group 12 - Observe SSOR and the incoming family shapes without world state
 

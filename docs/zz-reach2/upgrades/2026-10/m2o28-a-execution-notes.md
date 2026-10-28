@@ -226,3 +226,41 @@ GCC: `ninja -C build openttd_test openttd`, 299 steps in 11 min 49 s, exit 0. It
 
 Clang: `ninja -C build-clang openttd_test`, 298 steps in 9 min 45 s, exit 0. It printed 113 warnings, none in a file this group touched. Lineage subset 20/20 and save-load subset 53/53 passed (`logs/merge-oct28/group10/ctest-clang-{lineage,saveload}.log`). There are no GCC/Clang differences.
 
+## Group 11
+
+**11.1** Commit `463c6626`. `save_lineage.h` adds `SupplyColumnEncoding {Absent, LegacyU32Bool, CanonicalU64U8, Malformed}`. `SaveWireFacts` gains two fields with inert defaults: `cargo_supply_encoding` and `asteroid_origin_columns` (a `SaveEvidenceState`). `supply_columns` and `merged_cargo_valid` stay, now derived from the new observation:
+
+- legacy pair → `supply_columns` Complete;
+- malformed pair → `supply_columns` Malformed;
+- canonical pair → `merged_cargo_valid`, and the merged packet columns become required.
+
+The classifier's malformed-first rule now also refuses either new observation when it is Malformed.
+
+**11.2** `CheckSelectedColumns` reads both pairs from the CAPA descriptor through `ObserveSupplyColumns` and `ObserveAsteroidOriginColumns`, never from `original_version == 441`.
+
+- Native type codes: U32/I8 for legacy B, U64/U8 for merged, U32/U32 for the asteroid key.
+- A half pair or any other widths is recorded as Malformed. It no longer throws, so the classifier refuses it as Corrupt.
+- Duplicate names still throw in `ReadColumns`.
+- Behaviour change in existing tests: three cases that expected a thrown `SaveFramingError` (half pair, mixed pair, legacy envelope with a merged marker) now check the Malformed fact and a Corrupt classification. Both paths refuse the load with `STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE`.
+
+**11.3** `ReadRiff`'s MLLN case keeps `exact(8)`: a wrong length is still a framing error. After that it records the tuple. Only `(441, schema 1)` and `(446, schema 2)` with magic MLN1 and `writer == original_version` stay Valid; any other tuple marks the family Malformed. The envelope version is known before any chunk, so the result does not depend on chunk order.
+
+The SSOR branch still chooses its decoder from `original_version == 441`. Group 12.1 removes that. So a synthetic S441 *with* SSOR is not yet scannable, and the Group 11 fixtures leave SSOR out.
+
+**11.4** `src/tests/save_envelope_cargo_columns.cpp` (registered in `openttd_test` and `openttd_tube_test`) builds every stream byte by byte. It has four cases:
+
+- each writer's columns and marker: D441, S441, S445, 446, legacy B434, empty versus populated CAPA, marker first versus last;
+- malformed pairs and six bad marker tuples, plus a short marker as a framing error;
+- exact work ceilings passing and one less failing for fields, rows and chunks, with every truncation of two streams refusing and rewinding;
+- an optional real-save scan.
+
+`Observe` checks that the reader is rewound, the input is unchanged and the digest equals SHA-256 of the input.
+
+Results (GCC, `logs/merge-oct28/group11/`):
+
+- `ninja -C build openttd_test` took 11 min 58 s, exit 0, with no warnings in the touched files.
+- `ctest -R "Save envelope|Save lineage|Native lineage|Original|Native scalar|supply wire|merged|Merged|copied|Copied"`: 65/65 passed (`ctest-gcc.{log,xml}`).
+- `OTTD_DONOR445_DIR=$PWD/test-cache/merge-oct28/donor445 build/openttd_test "Save envelope observes typed CAPA columns in real donor 445 saves"` scanned all 28 real S445 saves (169 assertions, `donor445-scan.log`). Each is version 445, with typed asteroid columns, no supply pair and no MLLN.
+
+Clang is deferred to the Group 13 close, because each header change rebuilds about 300 objects.
+
