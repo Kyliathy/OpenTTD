@@ -158,11 +158,11 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 
 | Done | File | Lines | Gate | Owner |
 | --- | --- | --- | --- | --- |
-| [ ] | `src/saveload/cargopacket_sl.cpp` | 163-164, 256-257 | CAPA `asteroid_body`/`asteroid_mineral` columns (native and copied descriptors) | 15 |
-| [ ] | `src/saveload/cargo_source_sl.cpp` | 29, 59 | `DecodeCargoPacketSource` legacy-or-typed branch and the schema check | 15 |
-| [ ] | `src/saveload/cargo_source_sl.h` | 48 | `IsValidCargoPacketSource` typed-origin acceptance | 15 |
-| [ ] | `src/tests/asteroid_cargo_wire.cpp` | 25-107 (15 sites) | Pure codec cases that pass `AsteroidCargoOrigins` straight to the codec | 15 |
-| [ ] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
+| [X] | `src/saveload/cargopacket_sl.cpp` | 163-164, 256-257 | CAPA `asteroid_body`/`asteroid_mineral` columns (native and copied descriptors) | 15 |
+| [X] | `src/saveload/cargo_source_sl.cpp` | 29, 59 | `DecodeCargoPacketSource` legacy-or-typed branch and the schema check | 15 |
+| [X] | `src/saveload/cargo_source_sl.h` | 48 | `IsValidCargoPacketSource` typed-origin acceptance | 15 |
+| [X] | `src/tests/asteroid_cargo_wire.cpp` | 25-107 (15 sites) | Pure codec cases that pass `AsteroidCargoOrigins` straight to the codec | 15 |
+| [X] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
 | [ ] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
 | [ ] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
 | [ ] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
@@ -421,3 +421,51 @@ Results (`logs/merge-oct28/group14/`):
 - `ctest -R "[Aa]steroid|[Ss]ource|[Ss]upply|[Cc]argo|[Pp]acket|[Mm]anifest|[Ss]ervice"`: 312/312 (`ctest-gcc.{log,xml}`).
 - Clang incremental build and the same subset: 312/312 (`ctest-clang.log`).
 
+## Group 15
+
+**15.1** Commit `3882a7ce`. `cargo_source_sl.h` adds `CargoSourceFormat {version, typed_asteroid_origins}`:
+
+- `FromLineage(result)` takes the envelope version and `HasSaveCapability(result, AsteroidCargoOrigins)`.
+- `Current()` takes `_sl_version` and `SlHasSaveCapability(AsteroidCargoOrigins)`. That is the bound lineage while loading, and the writer while saving, because a save sets `_sl_version = SAVEGAME_VERSION` and binds no lineage.
+- A one-argument implicit constructor from a shared-era `SaveLoadVersion` keeps D's and S's shared-gate tests readable (TableChunks, SpaceMiningVehicles, CompanySupplyPackets, SurfaceSupplyOrders), with `typed_asteroid_origins = false`. It asserts the version is not `MaxVersion`, which every pending Space fixes name equals.
+- `IsValidCargoPacketSource`, `DecodeCargoPacketSource` and `ValidateCargoPacketSourceSchema` take the format. Their typed-origin branch reads `format.typed_asteroid_origins`; no version comparison decides it.
+
+**15.2** Both CAPA descriptors (native and LoadCheck) declare `asteroid_body`/`asteroid_mineral` with the default version range plus `.WithCapability(SaveCapability::AsteroidCargoOrigins)`.
+
+- The B U32/Bool and merged U64/U8 supply rows are unchanged.
+- On save the writer is merged 441, which lacks the capability, so the columns are not written. The typed-origin save refusal stays pending until Group 22 (pending ledger).
+- `CheckCargoPacketSourceFields` still sees every header key, including unknown skipped ones, and calls the schema check with `Current()`.
+- Wrong widths and half pairs on a merged 441 or legacy file are already refused at preflight by Group 11's descriptor observations, before any native handler runs.
+- The dead `extern _sl_version` and `extern SAVEGAME_VERSION` lines in `cargopacket_sl.cpp` were removed; `cargo_source_sl.cpp` now declares `_sl_version` the same way `vehicle_sl.cpp` does.
+
+**15.3** Verified, not changed:
+
+- `_cargo_source_asteroid_wire = {}` already runs before every native and copied `SlObject`, and Save fills it from the packet.
+- `SlIterateArray` yields no row for a pool hole, so a hole never reaches `SlObject` or the decoder, and the next real row starts from a reset scratch.
+- Copied rows keep `source_xy`, `source` (first station) and D's receipt and departure fields.
+- Decoding runs after the identity and quantity checks in both paths.
+
+**15.4** Tests:
+
+- The pending-era arguments in `asteroid_cargo_wire.cpp` now name `AcceptedFormat(SaveDialect::SpaceFixes, 441)`.
+- `asteroid_cargo_native.cpp:215` judges loaded packets against the combined writer's format, `FromLineage({Accepted, Merged, 446})`.
+- New case `CAPA source format follows the accepted writer, never the number`:
+  - typed schemas pass only for S441-445 and merged 446; merged 441 and B434 forbid them; half pairs refuse everywhere;
+  - a high ID decodes only where typed origins exist;
+  - merged 441 keeps D's legacy scalar for the later upgrade;
+  - an ordinary source with a payload refuses in every format;
+  - bought supplies are refused for historical B.
+- New case `CAPA rows of real Space fixes 445 saves decode through the accepted format` (23,418 assertions). For each committed S445 original it:
+  - decompresses the file with a fresh codec and parses CAPA from its own descriptor;
+  - checks the schema passes as S445 and fails as merged 441;
+  - checks every real row decodes as S445, and every typed row refuses as merged 441.
+  This is the "reading Group 3's S445 files" check of 15.5 at codec level. Full native reading of 442-445 needs MaxVersion > 445, which arrives with Group 22, and `DoLoad` refuses SpaceFixes as pending until Group 21.
+- Raw departure 2 and a U64 receipt above `UINT32_MAX` stay covered by D's merged refusal fixture (`save_merged_refusal_fixture.h` faults 18 and 19) inside the subset below.
+
+**15.5** Burn-down rows ticked: the CAPA descriptors, the codec `.cpp`/`.h`, the wire tests and the native line 215. Only Group 16's two normalization gates still name `AsteroidCargoOrigins` outside `saveload.h`.
+
+GCC (`logs/merge-oct28/group15/`): `ctest -R "[Aa]steroid|[Ss]ource|[Ss]upply|[Cc]argo|[Pp]acket|Save envelope|Save lineage|Native lineage|Native preflight|Original|[Cc]opied|[Mm]erged"` passed 320/320 (`ctest-gcc.{log,xml}`).
+
+The first build caught a real `-Wdangling-reference` in the new real-file case: `SupplyWireFind` returns a reference into the chunk vector, so that vector is now kept in a local.
+
+Clang: incremental `ninja -C build-clang openttd_test` (10 steps) exit 0 with no warnings; the same subset passed 320/320 (`ctest-clang.log`).

@@ -694,15 +694,17 @@ _cargo_source_asteroid_wire = {}; // body = UINT32_MAX, mineral = 0
 
 {{HARD}}
 
-- [ ] **15.1** Make the pure codec and schema helpers in `cargo_source_sl.h/.cpp` consume the accepted `SaveLineageResult`, or a small context the lineage owner derives. Keep numeric versions only for unambiguous shared pre-fork gates (`TableChunks`, `SpaceMiningVehicles`, `CompanySupplyPackets`). Modern asteroid fields use `HasSaveCapability(…, SaveCapability::AsteroidCargoOrigins)`.
+- [X] **15.1** Make the pure codec and schema helpers in `cargo_source_sl.h/.cpp` consume the accepted `SaveLineageResult`, or a small context the lineage owner derives. Keep numeric versions only for unambiguous shared pre-fork gates (`TableChunks`, `SpaceMiningVehicles`, `CompanySupplyPackets`). Modern asteroid fields use `HasSaveCapability(…, SaveCapability::AsteroidCargoOrigins)`.
 
-- [ ] **15.2** Change the native and LoadCheck CAPA descriptors to `.WithCapability(SaveCapability::AsteroidCargoOrigins)` instead of the pending enumerator. Keep the historical B U32/Bool versus merged U64/U8 widths, and admit the two typed U32 fields only for S or 446 sources. Check the actual header counts and types, including unknown skipped keys and empty tables.
+- [X] **15.2** Change the native and LoadCheck CAPA descriptors to `.WithCapability(SaveCapability::AsteroidCargoOrigins)` instead of the pending enumerator. Keep the historical B U32/Bool versus merged U64/U8 widths, and admit the two typed U32 fields only for S or 446 sources. Check the actual header counts and types, including unknown skipped keys and empty tables.
 
-- [ ] **15.3** Reset `_cargo_source_asteroid_wire` before every native and copied row, and fill it from the packet before save. Decode the scalar source plus scratch only after row validation, and keep the source tile, first station and D's receipt/departure fields in the copied packet. An empty CAPA hole must not carry the previous packet's origin.
+- [X] **15.3** Reset `_cargo_source_asteroid_wire` before every native and copied row, and fill it from the packet before save. Decode the scalar source plus scratch only after row validation, and keep the source tile, first station and D's receipt/departure fields in the copied packet. An empty CAPA hole must not carry the previous packet's origin.
 
-- [ ] **15.4** Add codec cases for both 441 dialects, original B, S445/446, a high ID, an ordinary source with an illicit asteroid payload, absent/half/duplicate/wrong-width pairs, raw departure 2 and a U64 receipt above `UINT32_MAX`. The same context drives native and copied paths.
+- [X] **15.4** Add codec cases for both 441 dialects, original B, S445/446, a high ID, an ordinary source with an illicit asteroid payload, absent/half/duplicate/wrong-width pairs, raw departure 2 and a U64 receipt above `UINT32_MAX`. The same context drives native and copied paths.
 
-- [ ] **15.5** Tick the CAPA and `cargo_source_sl` rows of the 9.1 burn-down, and update the pending tests in `src/tests/asteroid_cargo_wire.cpp` and `src/tests/asteroid_cargo_native.cpp` from enumerator arguments to lineage contexts. Rerun their files in GCC and Clang. Reading Group 3's S445 files must now pass; round trips of new typed origins stay pending until Group 22.
+- [X] **15.5** Tick the CAPA and `cargo_source_sl` rows of the 9.1 burn-down, and update the pending tests in `src/tests/asteroid_cargo_wire.cpp` and `src/tests/asteroid_cargo_native.cpp` from enumerator arguments to lineage contexts. Rerun their files in GCC and Clang. Reading Group 3's S445 files must now pass; round trips of new typed origins stay pending until Group 22.
+
+Execution evidence: see **Group 15** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass 320/320. The S445 files are read at codec level (every real CAPA row decodes). Native reading of 442-445 waits for Group 22's MaxVersion, and the Group 13 pending refusal holds until Group 21.
 
 ### Group 16 - Use one native custody traversal and a qualified legacy upgrade
 
