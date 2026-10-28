@@ -3,6 +3,7 @@
 
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group32.
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group32B; actual high-ID source/holding inputs.
+@see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8: the native executable resolves on Linux single-configuration builds too.
 Uses the original probe_replay_checks-2.py native socket pattern. All private
 runtime/captures/saves are under test-cache/space-fixes; logs and hash-bound
 receipts under logs/space-fixes. Every child has a110-second process deadline.
@@ -19,7 +20,7 @@ import time
 
 from asteroid_cargo_roundtrip_checks import compare as compare_packets
 from asteroid_field_wire_checks import compare as compare_field
-from space_fixes_checks import ROOT, identity
+from space_fixes_checks import ROOT, identity, native_executable
 from space_legacy_compatibility_checks import field_snapshot
 from space_mining_wire_checks import compare as compare_orders
 
@@ -73,7 +74,7 @@ def launch(args, mode, source, port, epoch, issuance):
         options["startupinfo"] = startup
     log = ROOT / "logs/space-fixes" / (args.run + "-" + mode + ".log")
     sink = log.open("w", encoding="utf-8")
-    executable = ROOT / "build" / args.configuration / "openttd_test.exe"
+    executable = native_executable(args.configuration, "openttd_test")
     process = subprocess.Popen([str(executable), "[.space-lifecycle-peers]", "--warn", "NoTests"], cwd=runtime,
                                env=environment, stdout=sink, stderr=subprocess.STDOUT, **options)
     child = {"process": process, "output": output, "log": log, "sink": sink,

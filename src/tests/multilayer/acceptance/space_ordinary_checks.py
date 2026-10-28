@@ -2,6 +2,7 @@
 """Load/resave or continue an immutable demo through the ordinary game executable.
 
 Owner: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group31.
+@see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8: the native executable resolves on Linux single-configuration builds too.
 Uses space_demo_checks.ordinary's native null-driver/exit-save pattern while
 keeping all transient files under test-cache/space-fixes and logs/space-fixes.
 There is no test observer, assigned world state, private simulation clock or
@@ -15,7 +16,7 @@ import shutil
 import subprocess
 import time
 
-from space_fixes_checks import ROOT, TEMPLATES, identity
+from space_fixes_checks import ROOT, TEMPLATES, identity, native_executable
 
 
 def main():
@@ -69,7 +70,7 @@ def main():
     else:
         commands += f'save "{saved.with_suffix("").as_posix()}"\nquit\n'
     (runtime / "scripts/game_start.scr").write_text(commands, encoding="utf-8")
-    executable = ROOT / "build" / args.configuration / "openttd.exe"
+    executable = native_executable(args.configuration, "openttd")
     log = ROOT / "logs/space-fixes" / (args.run + ".log")
     ticks = 3000 if args.mode == "advance" else 2
     started = time.monotonic()

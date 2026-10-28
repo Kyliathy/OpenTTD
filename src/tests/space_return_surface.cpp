@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_return_surface.cpp Real mined freight and native shell/recovery admission for nearest Surface returns.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8; footprint lifetime fix (r2lbf R6 shape) for GCC/Clang.
  * Center metadata, completed shell receipts and legacy15's initial allowance are declared unit inputs; no paid procurement is claimed.
  */
 #include "../stdafx.h"
@@ -36,7 +37,9 @@ public:
 		center->facilities.Set(StationFacility::LaunchCenter);
 		// This is explicit facility metadata, as in descent_custody.cpp. Each
 		// original footprint cell belongs to the actual isolated Station owner.
-		for (const auto cell : *GetLaunchCenterFootprint(tile, 0)) {
+		// Copy the area first: a range-for over the dereferenced optional temporary would read it after destruction.
+		const auto footprint = *GetLaunchCenterFootprint(tile, 0);
+		for (const auto cell : footprint) {
 			MakeStation(cell, center->owner, center->index, StationType::LaunchCenter, 0); center->spread.Add(cell);
 		}
 		MakeRiver(TileAddXY(tile, 0, -1), 0); InstallNewLaunchCenter(*center, tile, 0);

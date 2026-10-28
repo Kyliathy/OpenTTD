@@ -11,6 +11,7 @@
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group30B: actual policy input and original native work/cargo.
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups31B/31C: original roles, actual returns and bounded receiver preparation.
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group31E: earned lifecycle phases and production scheduler observation.
+@see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8: native executables resolve on single- and multi-configuration builds.
 """
 
 import argparse
@@ -26,6 +27,21 @@ import time
 
 ROOT = Path(__file__).resolve().parents[4]
 TEMPLATES = ROOT / "src/tests/fixtures/config/multilayer/retained/build"
+
+
+def native_executable(configuration, name):
+    """Find one native build product for this host's generator layout.
+
+    Multi-configuration generators (Visual Studio) write build/<configuration>/<name>.exe; single-configuration
+    generators (Ninja, used on Linux) write build/<name>. The first existing layout wins, so a Windows checkout keeps
+    its exact original path and a Linux build needs no copied or renamed binary.
+    @param configuration Requested native configuration, such as RelWithDebInfo or Debug.
+    @param name Target name without any platform suffix, such as openttd_space_fixes_test.
+    @return Path of the executable to run; the multi-configuration path when neither exists, so errors name it.
+    """
+    windows = ROOT / "build" / configuration / (name + ".exe")
+    single = ROOT / "build" / name
+    return single if not windows.is_file() and single.is_file() else windows
 
 
 def identity(path):
@@ -84,7 +100,7 @@ def run(args):
     (runtime / "scripts/game_start.scr").write_text(
         "# Owner: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md\n"
         "pause\nspace_fixes_observe\nquit\n", encoding="utf-8")
-    executable = ROOT / "build" / args.configuration / "openttd_space_fixes_test.exe"
+    executable = native_executable(args.configuration, "openttd_space_fixes_test")
     environment = dict(os.environ, OTTD_SPACE_FIXES_SOURCE=str(source),
                        OTTD_SPACE_FIXES_CONFIG=str(config), OTTD_SPACE_FIXES_OUTPUT=str(output),
                        OTTD_SPACE_FIXES_RESOLUTION=args.resolution)

@@ -2,6 +2,7 @@
 """Run one bounded native lifecycle/storage component case.
 
 @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group33.
+@see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8: the native executable resolves on Linux single-configuration builds too.
 One case per invocation keeps every native child below110 seconds. Diagnostic
 time describes these components only. Logs belong in logs/space-fixes and the
 native operation/storage sample in test-cache/space-fixes.
@@ -13,7 +14,7 @@ import re
 import subprocess
 import time
 
-from space_fixes_checks import ROOT, identity
+from space_fixes_checks import ROOT, identity, native_executable
 
 
 def main():
@@ -31,7 +32,7 @@ def main():
     output = ROOT / "test-cache/space-fixes" / args.run
     output.mkdir(parents=True, exist_ok=False)
     sample = output / "native-lifecycle-work.json"
-    executable = ROOT / "build" / args.configuration / "openttd_space_fixes_test.exe"
+    executable = native_executable(args.configuration, "openttd_space_fixes_test")
     log = ROOT / "logs/space-fixes" / (args.run + ".log")
     environment = dict(os.environ, OTTD_ASTEROID_WORK_CASE=args.case, OTTD_LIFECYCLE_WORK_OUTPUT=str(sample))
     started = time.monotonic()
