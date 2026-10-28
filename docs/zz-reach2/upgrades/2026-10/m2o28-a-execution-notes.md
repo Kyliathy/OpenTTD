@@ -171,8 +171,8 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 | [X] | `src/tests/asteroid_cargo_native.cpp` | 87 | Copied mission decision check at `SpaceMiningContinuation` | 18 |
 | [X] | `src/tests/space_mining_wire.cpp` | 157-162 | Continuation-schema absence case (the pending CTest failure) | 18 |
 | [X] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
-| [ ] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
-| [ ] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
+| [X] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
+| [X] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
 | [X] | `src/saveload/saveload.cpp` | `DoLoad` preflight (added in Group 13; retired in Group 17B) | Pending refusal of admitted `SaveDialect::SpaceFixes` files (`TOO_NEW_SAVEGAME`, "admitted but not yet readable") | 21 (lift once 15-20 read every era; 442-445 also need 22's MaxVersion) |
 
 These sites read the accepted dialect directly instead of a pending enumerator. Once the classifier admits S files, `SaveDialect::SpaceFixes` must reach them as the A-fixed supply wire:
@@ -751,3 +751,48 @@ Results (`logs/merge-oct28/group21/`):
 - Focused GCC cases: 32/32.
 - CTest save/preview subset (the Group 20 regex): GCC 591/591, Clang 591/591.
 - Late failures: GCC and Clang (`--build build-clang`) both pass 1 case with 43,379 assertions.
+
+## Group 22
+
+**Entry gate.** `git grep` finds no use of the five pending `SaveLoadVersion` names outside their own definitions (the same names in `SaveCapability` are the capability enum and stay). The burn-down holds only the `saveload.h` and `saveload.cpp` rows, which this group closes.
+
+**22.1** Writer activated:
+
+- `saveload.h` appends `SpaceMiningLifecycle = CURRENT_MERGED_SAVE_VERSION` (446) after `MergedLineage`, so `SAVEGAME_VERSION` is 446. The five pending enumerators and their interim comment are deleted, and 442-445 are never allocated. The plan's working name `CombinedSpaceFixes` was not used, because Group 22B removes branch-style names; the version is named by what it adds.
+- `saveload.cpp` asserts `SAVEGAME_VERSION == SpaceMiningLifecycle` and that its value is `CURRENT_MERGED_SAVE_VERSION`.
+- `SlHasSaveCapability` keeps its writer context `{Accepted, Merged, SAVEGAME_VERSION}`, which now grants every A, B and Space capability; only its comment changed.
+- `GetMergedNetworkRevisionSuffix` uses `CURRENT_MERGED_SAVE_VERSION`. `merged_command_compatibility.cpp` expects `+m446c224p`.
+
+**22.2** `save_lineage_sl.cpp`: MLLN `Save` writes `MLN1`, schema 2, writer 446. `Read` (Load and LoadCheck) accepts exactly (441, 1) or (446, 2), and the marker's writer must equal the admitted envelope version (`MergedLineageSchema`). There is no `>= 441` shortcut and no other schema. The classifier and the detached inspector already held the same two tuples (Groups 10-11).
+
+**22.3** Family contract:
+
+- The incoming branch's diff from the merge base adds no chunk handler, so 446 has exactly 441's 128 family names and framing kinds.
+- New `src/tests/fixtures/saveload/merged-446-family-set.json` takes `merged-family-set.json` (441, unchanged) as its `base`. It declares only the 446 differences: the MLLN tuple, the two CAPA columns `asteroid_body` and `asteroid_mineral` (U32), and the fourteen VEHS `mission.continuation.*` columns with their file types. It names the ASTR and SPOR layout changes, which their own codec tests own.
+- `savegame_tables.py`: `merged_contract(version)` selects the contract, `merged_world_chunks` checks the marker payload and every declared column (exactly once, any nesting depth, exact kind), and `complete_world` accepts both versions.
+- Checked on a real 446 save: accepted, 128 families. Copies with a crossed marker (schema 1 at 446) and a renamed CAPA column are refused (`test-cache/merge-oct28/group22/reader-*.sav`).
+
+**22.4** Writer tests (`save_lineage_preflight.cpp`):
+
+- `Writer 446 emits its exact marker, Space columns and an identical second save` (6,785 assertions) covers current-to-current identity. Two uncompressed saves of the same paused rig world are byte-identical, and saving changes no live state. The envelope is 446, and the file's own facts are the exact tuple, typed-origin columns, canonical U64/U8 supply links and the tagged book. It classifies as merged 446 with the five Space capabilities and both supply capabilities. MLLN, ASTR, SPKN, SPOR, CAPA, VEHS, SSOR and CDIM are each present once, even though the world is empty. The MLLN payload is exactly `MLN1 00 02 01 BE`, the two CAPA columns are adjacent, and the file previews with the world unchanged. `SaveRunningWorld` is shared with the Group 20 sequence.
+- `Merged 446 natural previews refuse malformed leases without touching the world` (28,815 assertions) is the 20.4 extension. The fixture `src/tests/fixtures/saveload/merged-446/mining-working-446.sav` (with `catalogue.json`: producer command, input and executable identities) is a real native load-and-save of the retained shared-era working-miner demo by `space_fixes_checks.py --cargo-origin`: 3 packets, 2 natural, preview, unchanged world and resave all true. In the test it previews between A433 and the development-build file, every natural packet carries its typed origin with no legacy receipt, and its lease rows are stable. ASTR is decoded through the survey-departure era, changed and re-encoded in two copies: a mining hull without its lease, and two bodies leased to one hull. Both refuse with the copied lease join's reason, the candidate is cleared, and the world is unchanged.
+- Original-to-current conversion is qualified separately by the native harnesses (22.5).
+
+**22.5** Milestone suites (`logs/merge-oct28/group22/`):
+
+- Full CTest, GCC: 1525/1525.
+- The ten focused executables (`test-cache/linux-baseline/run_focused.sh build`): all build and return 0. The JUnit `tests` attributes count assertions: surface supply 247,222; surface capital 550; processor contract 2,457; ground art 0; ground consumer 208,547; ground viewport 0; tube 4,319,276; Space art 29,073; merge contract 951,965; Space fixes 534,864. All have zero failures, and Space fixes no longer has its baseline class (b) failure.
+- Pending ledger: the last class (b) item is cleared. With writer 446, `space_ordinary_checks.py --source src/tests/fixtures/demos/space/space-heavy-440.sav --mode load` and `--mode advance` both save. The saves are 446 files of 16,796 and 16,852 bytes, all 128 families meet the 446 contract, and the advanced save reloads in the game (exit 0). Before, saving refused with "Invalid native cargo source for saving".
+- Original-to-current conversion (`space_lineage_native_checks.py --roundtrip --canonical`): A437 → 446 and the shared-donor B426 → 446 both complete. Native Space digests and copied receipts are equal, and the second save matches the successor byte for byte over all 128 families. The report's `migration_receipt` labels the conversion (original version to 446) separately from the 446 → 446 identity. `merged_supply_receipts.merged_book` now accepts each merged writer's own marker tuple; it had asserted 441.
+- Four more Python oracles still assume the current writer is 441 (listed in Part 2 Group 24.1); Part 2 owns them.
+- Full CTest, Clang: 1525/1525. A first Clang run failed the four `regression_*` entries with "No available language packs": `build-clang/openttd` predated Group 17B's new language string. After rebuilding `openttd`, all pass. GCC was rebuilt the same way and rerun on the final tree: 1525/1525, no warnings in the rebuilt units.
+- Two stale code comments that still said "until Group 22" (ASTR and VEHS save) now describe writer 446.
+
+**22.6** Part 1 hand-off state:
+
+- One writer (merged 446, MLLN schema 2, all A, B and Space capabilities).
+- One loader that reads exactly: shared, A and B originals; merged 441 (schema 1, no typed origins); and merged 446 (schema 2, typed origins). Development-build 441-445 files without a marker are refused with their own message (17B).
+- Every Space field is read and written by capability, never by version number. The burn-down table and the pending ledger are both empty.
+- Copied previews use one owner join (20), late native failures revoke all Space staging (21), and the 446 family contract is checked by its own reader (22.3).
+- Still open for Part 2: the Python oracles listed in Part 2 Group 24.1, the incoming branch's malformed-file harnesses (Part 2 Group 33.1), and Group 22B's vocabulary rename, which comes first.
+- Nothing is pushed.

@@ -133,15 +133,18 @@ def original_book(path, origin):
     return version, dict(next_id=next_id, day=day, rows=rows)
 
 
+MERGED_MARKER_SCHEMAS = {441: 1, 446: 2}  # Each merged writer's one MLLN schema (m2o28-1-merge-oct28.md Group 22).
+
+
 def merged_book(path):
     """Read the explicit new marker and tagged receipt contract independently.
 
-    @param path New invocation-owned441successor or its second native save.
-    @return Original441version, normalized exact book and actual raw SSORpayload for stable second-save comparison.
+    @param path New invocation-owned merged (441 or 446) successor or its second native save.
+    @return Merged writer version, normalized exact book and actual raw SSORpayload for stable second-save comparison.
     """
     version, chunks = selected_chunks(path)
-    assert version == 441 and chunks[b"MLLN"][0] == 0 and b"SSOH" not in chunks
-    assert struct.unpack(">IHH", chunks[b"MLLN"][1]) == (0x4D4C4E31, 1, 441)
+    assert version in MERGED_MARKER_SCHEMAS and chunks[b"MLLN"][0] == 0 and b"SSOH" not in chunks
+    assert struct.unpack(">IHH", chunks[b"MLLN"][1]) == (0x4D4C4E31, MERGED_MARKER_SCHEMAS[version], version)
     kind, payload = chunks[b"SSOR"]
     assert kind == 0
     magic, schema, next_id, day, count = struct.unpack_from(">IHQiH", payload)

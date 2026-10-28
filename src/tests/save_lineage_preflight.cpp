@@ -4,6 +4,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 13 and 17B; real development-build 445 originals refuse without touching the world.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 19; every merged copied field resets between candidates.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 20; preview sequences through the one copied owner join.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 22; the merged 446 writer.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -16,6 +17,7 @@
 #include "../saveload/saveload_func.h"
 #include "../saveload/saveload.h"
 #include "../core/random_func.hpp"
+#include "../core/backup_type.hpp"
 #include "../fileio_func.h"
 #include "../table/strings.h"
 #include "../surface_supply_order_runtime.h"
@@ -23,6 +25,9 @@
 #include "../map_func.h"
 #include "../gfx_func.h"
 #include "layer_save_fixture.h"
+#include "save_envelope_chunks.h"
+#include "../asteroid.h"
+#include "../saveload/asteroid_field_sl.h"
 
 /** Exact immutable catalogue original, including an independently recorded SHA256-bound explicit origin. */
 struct PreflightOriginal {
@@ -734,6 +739,64 @@ static bool IsOwnerJoinRefusal()
 	return reason.find("ownership") != std::string_view::npos || reason.find("custody") != std::string_view::npos;
 }
 
+/** Save the running fixture world with the current writer, as a real game would.
+ * @param rig The running world; its activated package is named in the file.
+ * @param path Invocation-owned test-cache destination.
+ * @param format Savegame compression; "none" makes two saves comparable byte for byte, empty keeps the default.
+ * @return The file's exact bytes.
+ */
+static std::vector<uint8_t> SaveRunningWorld(TubePrototypeRig &rig, const std::filesystem::path &path, std::string_view format = {})
+{
+	// The headless world has no cursor; the writer's busy toggle needs one entry that is neither mouse nor ZZZ.
+	const auto cursor = _cursor.sprites; _cursor.sprites.assign(1, CursorSprite{0, PAL_NONE, 0, 0});
+	SaveLoadResult saved;
+	{
+		LayerSaveContent content(rig.ActivatedContent(), true);
+		AutoRestoreBackup compression(_savegame_format, format.empty() ? _savegame_format : std::string{format});
+		saved = SaveWithFilter(std::make_shared<LayerSaveFileSink>(path), false);
+	}
+	_cursor.sprites = cursor; REQUIRE(saved == SaveLoadResult::Ok);
+	std::ifstream file(path, std::ios::binary); REQUIRE(file.good());
+	return {std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+}
+
+/** The current writer emits merged 446: its exact marker and Space columns, every required family even when empty, and a
+ * byte-identical second save of the same paused world (m2o28 Group 22). This is current-to-current identity; conversions
+ * from original files are qualified separately by the native lineage harness.
+ */
+TEST_CASE("Writer 446 emits its exact marker, Space columns and an identical second save", "[save-lineage-writer]")
+{
+	TubePrototypeRig rig; rig.BuyCapsule(); PreflightContentCatalogue catalogue(rig.ActivatedContent());
+	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
+	const auto cache = root / "test-cache/merge-oct28/group22"; std::filesystem::create_directories(cache);
+	const auto installed = CaptureCandidateLiveState();
+	const auto first = SaveRunningWorld(rig, cache / "writer-446.sav", "none");
+	const auto second = SaveRunningWorld(rig, cache / "writer-446-again.sav", "none");
+	CHECK(first == second); CHECK(CaptureCandidateLiveState() == installed); // Saving changes nothing it writes.
+	REQUIRE(first.size() > 8); CHECK((first[4] << 8 | first[5]) == CURRENT_MERGED_SAVE_VERSION);
+	// The file's own bytes name the writer: exact tuple, typed origins, canonical supply links and the tagged book.
+	const auto facts = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(first));
+	CHECK(facts.marker_magic == MERGED_SAVE_LINEAGE_MAGIC); CHECK(facts.marker_schema == CURRENT_MERGED_SAVE_LINEAGE_SCHEMA);
+	CHECK(facts.marker_writer_version == CURRENT_MERGED_SAVE_VERSION); CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
+	CHECK(facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8); CHECK(facts.supply_book_shape == SupplyBookShape::Tagged);
+	const auto result = ClassifySaveDialect(facts);
+	CHECK(result.status == SaveLineageStatus::Accepted); CHECK(result.dialect == SaveDialect::Merged); CHECK(result.original_version == CURRENT_MERGED_SAVE_VERSION);
+	for (const auto capability : {SaveCapability::AsteroidCargoOrigins, SaveCapability::AsteroidFieldLifecycle, SaveCapability::SpaceMiningContinuation,
+			SaveCapability::SpaceLegacyDeparture, SaveCapability::SpaceSurveyDeparture, SaveCapability::SurfaceSupplyOrdersA, SaveCapability::SurfaceSupplyOrdersB}) {
+		INFO(to_underlying(capability)); CHECK(HasSaveCapability(result, capability));
+	}
+	const auto stream = EnvelopeReplay(std::make_shared<EnvelopeTestReader>(first)); const auto chunks = SupplyWireChunks(stream);
+	// Every Space owner is written even when this world has no field, survey, queue or packet.
+	for (const std::string_view family : {"MLLN", "ASTR", "SPKN", "SPOR", "CAPA", "VEHS", "SSOR", "CDIM"}) { INFO(family); SupplyWireFind(chunks, family); }
+	const auto &marker = SupplyWireFind(chunks, "MLLN");
+	CHECK(std::vector<uint8_t>(stream.begin() + marker.payload, stream.begin() + marker.end) == std::vector<uint8_t>{'M', 'L', 'N', '1', 0, 2, 0x01, 0xBE});
+	const auto &capa = SupplyWireFind(chunks, "CAPA");
+	CHECK(SupplyWireColumn(stream, capa, "asteroid_mineral") == SupplyWireColumn(stream, capa, "asteroid_body") + 4); // Two adjacent U32 columns.
+	// The file previews through its own marker and leaves the world exactly as it was.
+	CHECK(LoadWithFilter(EnvelopeNetworkReader(first), std::nullopt, true) == SaveLoadResult::Ok);
+	CHECK(CaptureCandidateLiveState() == installed); CHECK_FALSE(GetLoadCapabilities().has_value());
+}
+
 /** A, development-build and merged candidates alternate with malformed custody against one running world (m2o28 Group 20).
  * A433 holds natural freight, paid supply and ordinary trains, so every refusal below runs through the one owner join.
  */
@@ -743,16 +806,7 @@ TEST_CASE("Owner-join previews alternate lineages and refuse malformed custody w
 	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
 	const auto cache = root / "test-cache/merge-oct28/group20"; std::filesystem::create_directories(cache);
 	// The running world itself is the merged candidate: the current writer saves it.
-	const auto merged_path = cache / "running-world-merged.sav";
-	{
-		// The headless world has no cursor; the writer's busy toggle needs one entry that is neither mouse nor ZZZ.
-		const auto cursor = _cursor.sprites; _cursor.sprites.assign(1, CursorSprite{0, PAL_NONE, 0, 0});
-		LayerSaveContent content(rig.ActivatedContent(), true); // The file names the world's actual package, as a real save does.
-		const auto saved = SaveWithFilter(std::make_shared<LayerSaveFileSink>(merged_path), false);
-		_cursor.sprites = cursor; REQUIRE(saved == SaveLoadResult::Ok);
-	}
-	std::ifstream merged_file(merged_path, std::ios::binary); REQUIRE(merged_file.good());
-	const std::vector<uint8_t> merged{std::istreambuf_iterator<char>{merged_file}, std::istreambuf_iterator<char>{}};
+	const auto merged = SaveRunningWorld(rig, cache / "running-world-merged.sav");
 	const auto installed = CapturePreviewWorldFacts();
 	const auto space = OriginalForPreflight("A", 433);
 	/** @return Whether the A433 original previews, leaving the world exactly as installed. */
@@ -829,6 +883,73 @@ TEST_CASE("Owner-join previews alternate lineages and refuse malformed custody w
 	REQUIRE(accept_space());
 	CHECK(_load_check_data.native_cargo_packet_rows.size() == packets.size()); CHECK(_load_check_data.native_cargo_owner_rows.size() == owners.size());
 	REQUIRE(accept_merged());
+}
+
+/** @return The committed merged 446 original listed in src/tests/fixtures/saveload/merged-446/catalogue.json, checked against its catalogued size and digest. */
+static DevelopmentBuildOriginal MergedCurrentOriginal()
+{
+	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
+	std::ifstream input(root / "src/tests/fixtures/saveload/merged-446/catalogue.json"); REQUIRE(input.good());
+	const auto catalogue = nlohmann::json::parse(input);
+	const auto &row = catalogue.at("originals").at(0);
+	DevelopmentBuildOriginal original{root / row.at("path").get<std::string>(), {}, row.at("sha256").get<std::string>()};
+	std::ifstream file(original.path, std::ios::binary); REQUIRE(file.good());
+	original.bytes.assign(std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{});
+	REQUIRE(original.bytes.size() == row.at("bytes").get<size_t>());
+	REQUIRE(EnvelopeDigest(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(original.bytes)).source_digest) == original.sha256);
+	return original;
+}
+
+/** A merged 446 file with natural freight and a real mining lease previews between other lineages, and its malformed
+ * lease copies refuse through the copied lease join without touching the running world (m2o28 Groups 20 and 22).
+ */
+TEST_CASE("Merged 446 natural previews refuse malformed leases without touching the world", "[save-candidate-lifecycle]")
+{
+	TubePrototypeRig rig; rig.BuyCapsule(); PreflightContentCatalogue catalogue(rig.ActivatedContent());
+	const auto installed = CapturePreviewWorldFacts();
+	const auto current = MergedCurrentOriginal();
+	/** @return Whether the merged 446 original previews, leaving the world exactly as installed. */
+	const auto accept_current = [&] {
+		const auto result = LoadWithFilter(EnvelopeNetworkReader(current.bytes), std::nullopt, true); INFO(_load_check_data.error_msg);
+		CHECK(CapturePreviewWorldFacts() == installed); CHECK_FALSE(GetLoadCapabilities().has_value());
+		return result == SaveLoadResult::Ok;
+	};
+	REQUIRE(accept_current());
+	const auto packets = _load_check_data.native_cargo_packet_rows; const auto leases = _load_check_data.asteroid_mining_leases;
+	REQUIRE_FALSE(leases.empty());
+	const auto natural = std::ranges::count_if(packets, [](const auto &row) { return row.source.type == SourceType::Asteroid; });
+	REQUIRE(natural > 0);
+	// Every natural packet carries its typed origin in the file itself; none needed the legacy upgrade.
+	for (const auto &row : packets) if (row.source.type == SourceType::Asteroid) { CHECK(row.source.GetAsteroidOrigin()); CHECK_FALSE(row.legacy_asteroid_origin); }
+	// Alternate with an A original and a development-build file before the malformed copies.
+	const auto space = OriginalForPreflight("A", 433);
+	REQUIRE(LoadWithFilter(EnvelopeNetworkReader(space.bytes), space.hint, true) == SaveLoadResult::Ok); CHECK(CapturePreviewWorldFacts() == installed);
+	const auto development = DevelopmentBuildOriginals().front();
+	CHECK(LoadWithFilter(EnvelopeNetworkReader(development.bytes), std::nullopt, true) == SaveLoadResult::Error);
+	CheckDiscardedLoadCandidate(); CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME);
+	REQUIRE(accept_current()); CHECK(_load_check_data.asteroid_mining_leases == leases);
+	const auto original = EnvelopeReplay(std::make_shared<EnvelopeTestReader>(current.bytes)); const auto chunks = SupplyWireChunks(original);
+	const auto &astr = SupplyWireFind(chunks, "ASTR");
+	const std::span<const uint8_t> payload(original.begin() + astr.payload, original.begin() + astr.end);
+	auto field = DecodeAsteroidField(payload, AsteroidFieldWireEra::SurveyDeparture); REQUIRE(field.has_value());
+	const auto leased = std::ranges::find_if(field->bodies, [](const AsteroidBody &body) { return body.mining_slot != VehicleID::Invalid(); });
+	REQUIRE(leased != field->bodies.end());
+	SECTION("A mining hull without its lease") { leased->mining_slot = VehicleID::Invalid(); }
+	SECTION("Two bodies leased to one hull") {
+		const auto free = std::ranges::find(field->bodies, VehicleID::Invalid(), &AsteroidBody::mining_slot);
+		REQUIRE(free != field->bodies.end()); free->mining_slot = leased->mining_slot;
+	}
+	const auto encoded = EncodeAsteroidField(*field, AsteroidFieldWireEra::SurveyDeparture); REQUIRE(encoded.has_value());
+	const auto chunk = EnvelopeRiffChunk("ASTR", *encoded);
+	auto bytes = original; bytes.erase(bytes.begin() + astr.begin, bytes.begin() + astr.end);
+	bytes.insert(bytes.begin() + astr.begin, chunk.begin(), chunk.end());
+	const auto malformed = EnvelopeStream(std::move(bytes), "OTTN", CURRENT_MERGED_SAVE_VERSION);
+	CHECK(LoadWithFilter(EnvelopeNetworkReader(malformed), std::nullopt, true) == SaveLoadResult::Error);
+	INFO(_load_check_data.error_msg); CHECK(_load_check_data.error_msg.find("lease") != std::string::npos);
+	CheckDiscardedLoadCandidate(); CHECK(CapturePreviewWorldFacts() == installed);
+	// The original previews again with exactly its own packets and leases.
+	REQUIRE(accept_current());
+	CHECK(_load_check_data.native_cargo_packet_rows.size() == packets.size()); CHECK(_load_check_data.asteroid_mining_leases == leases);
 }
 
 /** Clear() resets every field the merge added, so no previous candidate can lend copied evidence to the next. */

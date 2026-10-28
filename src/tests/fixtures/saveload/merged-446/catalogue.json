@@ -1,0 +1,25 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 22; architecture: docs/zz-reach2/architecture/savegame/archi-savegame.md. A real save written by the merged 446 writer, copied byte for byte from the native producer's test-cache output. Its input is the retained shared-era working-miner demo, fully loaded and saved by the native engine; it is the merged counterpart of space-fixes-445/typed-origin-packets-445.sav. Paths are provenance only; classification reads the bytes. Rebuild with the producer command below.",
+  "schema_version": 1,
+  "producer": {
+    "command": "python3 -B src/tests/multilayer/acceptance/space_fixes_checks.py --source src/tests/fixtures/demos/space/space-mining-working-405.sav --cargo-origin --run m2o28-g22-origin-405",
+    "output": "test-cache/space-fixes/m2o28-g22-origin-405/cargo-origins-current.sav",
+    "input": {
+      "path": "src/tests/fixtures/demos/space/space-mining-working-405.sav",
+      "sha256": "dc5f93d90a2f21d8f5dca2f76bef10fc6ab4e0578907cf5e8bbb44db761a0fe5"
+    },
+    "executable": {
+      "path": "build/openttd_space_fixes_test",
+      "sha256": "02cf940e9baa5c1ca1047eea66fd5eda8659653f1358f221fc731a2667e0ae90"
+    }
+  },
+  "originals": [
+    {
+      "path": "src/tests/fixtures/saveload/merged-446/mining-working-446.sav",
+      "version": 446,
+      "bytes": 15180,
+      "sha256": "bfc727bcdc5fc1630555d980845435c41b10dfa244dd9fe2f170bb483bbd9c07",
+      "purpose": "Merged 446 CAPA packets with typed asteroid origins (three packets, two natural) beside a working miner's ASTR lease."
+    }
+  ]
+}

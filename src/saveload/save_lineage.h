@@ -85,14 +85,13 @@ inline constexpr uint16_t MERGED_SAVE_LINEAGE_VERSION = 441;
 inline constexpr uint32_t MERGED_SAVE_LINEAGE_MAGIC = 0x4D4C4E31; ///< Network-order MLN1 payload marker inside MLLN; shared by every merged schema.
 inline constexpr uint16_t MERGED_SAVE_LINEAGE_SCHEMA = 1; ///< MLLN schema written by merged 441.
 
-/** Reserved combined writer that adds the five Space eras; m2o28-1-merge-oct28.md Group 22 activates it.
- * Until then nothing writes 446 and the writer context stays at merged 441. The Space eras are capabilities
- * of merged 446, never `SaveLoadVersion` values: `MergedLineage = 441` keeps its meaning, and Group 22
- * deletes the pending enumerators that `saveload.h` keeps after `MaxVersion` in the meantime. Files that a
- * development build wrote at 441-445 without a marker are not read (m2o28 Group 17B).
+/** The current writer, `SaveLoadVersion::SpaceMiningLifecycle`; m2o28-1-merge-oct28.md Group 22 activated it.
+ * It adds the five Space capabilities to everything merged 441 carries. They are capabilities of merged 446,
+ * never `SaveLoadVersion` values, and `MergedLineage = 441` keeps its meaning. Files that a development build
+ * wrote at 441-445 without a marker are not read (m2o28 Group 17B).
  */
 inline constexpr uint16_t CURRENT_MERGED_SAVE_VERSION = 446;
-inline constexpr uint16_t CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2; ///< MLLN schema reserved for merged 446; schema 1 stays bound to 441.
+inline constexpr uint16_t CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2; ///< MLLN schema written by merged 446; schema 1 stays bound to 441.
 
 /** Detached evidence for exactly one original byte stream; no game references are retained. */
 struct SaveWireFacts {

@@ -52,7 +52,7 @@ NetworkServerGameInfo _network_game_info; ///< Information about our game.
  */
 static std::string_view GetMergedNetworkRevisionSuffix()
 {
-	static const std::string suffix = fmt::format("+m{}c{}p{}", MERGED_SAVE_LINEAGE_VERSION,
+	static const std::string suffix = fmt::format("+m{}c{}p{}", CURRENT_MERGED_SAVE_VERSION, // The current writer (m2o28 Group 22).
 		to_underlying(Commands::End), GetMultiLayerContentProfile(MultiLayerGameplayProfileID::MultilayerIndustry)->required_content->version);
 	return suffix;
 }

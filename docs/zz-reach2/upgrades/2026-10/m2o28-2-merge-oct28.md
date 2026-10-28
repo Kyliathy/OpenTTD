@@ -93,6 +93,8 @@ _Applies to Groups 23-24._
 
 - [ ] **24.1** Add explicit 441/446 contract dispatch to `merged_world_chunks` and `complete_world`. Select S441-445 only from admitted marker/schema facts and S's source-family contract, never from the outer number 441 alone. Keep the unknown, duplicate, missing and wrong-kind refusals.
 
+  Plan change, 2026-10-28 (from Part 1 Group 22): `merged_world_chunks` and `complete_world` already dispatch by version through `merged_contract` (`savegame_tables.py`), with `merged-446-family-set.json` based on the unchanged 441 fixture; `merged_supply_receipts.merged_book` accepts (441, 1) and (446, 2). Still assuming the current writer is 441: `surface_gateway_core_ledger.py` (`version in (440, 441)`), `space_checkpoint_foundation.py` (440/441 closure), `space_checkpoint_load.py` (`versions == (440, 441, 441)`) and `space_checkpoint_migration.py` (440-to-441 exceptions only; 446 also changes CAPA, ASTR, SPKN, SPOR and VEHS). 24.1-24.3 own them.
+
 - [ ] **24.2** Update S's Python CAPA, ASTR and order readers and their mutation helpers for the combined fields and correct byte offsets, without weakening S-only comparisons. Check fields by named descriptors or explicit era layouts; do not copy old offset assumptions into 446.
 
 - [ ] **24.3** Keep paused 446 save/reload/save comparisons byte-exact over every required family. Original migration comparisons use only the documented structural transforms (including the old origin upgrade and absent lifecycle defaults); they never normalize away whole owners or changed cash, RNG or custody.

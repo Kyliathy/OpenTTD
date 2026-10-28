@@ -1,0 +1,26 @@
+{
+  "_documentation": "Merged 446 transport family contract for m2o28-1-merge-oct28.md Group 22; docs/zz-reach2/architecture/savegame/archi-savegame.md. Derived from the merged 441 contract (base) and the source of the added Space owners: the incoming branch's diff from the merge base (9f36af95..66713bdf) adds no chunk handler, so the family names and framing kinds are exactly 441's. 446 differs only inside existing owners: the MLLN tuple, the CAPA and VEHS columns below, and the ASTR (survey-departure trailer) and SPOR (15-byte mining-policy rows) layouts, which their own codec tests own. Never generated from writer output. Fixture expectations only, no runtime registry.",
+  "schema": 1,
+  "merged_version": 446,
+  "base": "src/tests/fixtures/saveload/merged-family-set.json",
+  "marker": {"family": "MLLN", "magic": "MLN1", "schema": 2, "writer": 446},
+  "table_columns": {
+    "CAPA": {"asteroid_body": 6, "asteroid_mineral": 6},
+    "VEHS": {
+      "mission.continuation.phase": 2,
+      "mission.continuation.mineral": 6,
+      "mission.continuation.previous_body": 6,
+      "mission.continuation.effective_present": 2,
+      "mission.continuation.effective_kind": 2,
+      "mission.continuation.effective_id": 6,
+      "mission.continuation.effective_generation": 8,
+      "mission.continuation.departure_present": 2,
+      "mission.continuation.departure_x": 5,
+      "mission.continuation.departure_y": 5,
+      "mission.continuation.retry_ticks": 4,
+      "mission.continuation.waiting": 2,
+      "mission.continuation.route_cursor": 2,
+      "mission.continuation.travel_ticks": 6
+    }
+  }
+}

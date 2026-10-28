@@ -939,17 +939,19 @@ Groups 15-21 are done and the burn-down holds only the `saveload.h` definitions.
 
 {{HARD}}
 
-- [ ] **22.1** Activate the writer. Append `CombinedSpaceFixes = CURRENT_MERGED_SAVE_VERSION` (446) after `MergedLineage` in `SaveLoadVersion`, so `SAVEGAME_VERSION` becomes 446, and delete the five pending enumerators and their comment. Move the 4.2 `static_assert` to the new enumerator. 442-445 stay unused numbers, never live enumerators, so no generic comparison can reach them. Switch `GetMergedNetworkRevisionSuffix` to `CURRENT_MERGED_SAVE_VERSION`, and update the expectation in `src/tests/merged_command_compatibility.cpp` to `+m446c224p`.
+- [X] **22.1** Activate the writer. Append `CombinedSpaceFixes = CURRENT_MERGED_SAVE_VERSION` (446) (done as `SpaceMiningLifecycle`, named by content ahead of 22B) after `MergedLineage` in `SaveLoadVersion`, so `SAVEGAME_VERSION` becomes 446, and delete the five pending enumerators and their comment. Move the 4.2 `static_assert` to the new enumerator. 442-445 stay unused numbers, never live enumerators, so no generic comparison can reach them. Switch `GetMergedNetworkRevisionSuffix` to `CURRENT_MERGED_SAVE_VERSION`, and update the expectation in `src/tests/merged_command_compatibility.cpp` to `+m446c224p`.
 
-- [ ] **22.2** Make MLLN Save write the eight-byte 446/schema 2 tuple, and make Load and LoadCheck compare exactly against the admitted historical or current tuple: no `>= 441` shortcut and no other schema. The `SlHasSaveCapability` writer context now grants all five capabilities.
+- [X] **22.2** Make MLLN Save write the eight-byte 446/schema 2 tuple, and make Load and LoadCheck compare exactly against the admitted historical or current tuple: no `>= 441` shortcut and no other schema. The `SlHasSaveCapability` writer context now grants all five capabilities.
 
-- [ ] **22.3** Keep the old merged 441 family fixture, and add a 446 contract through the existing fixture/reader owner. S added fields inside existing owners, so derive the exact family names and framing from the source owners: do not assume new chunk names or counts, and never accept whatever the writer emits as the expectation.
+- [X] **22.3** Keep the old merged 441 family fixture, and add a 446 contract through the existing fixture/reader owner. S added fields inside existing owners, so derive the exact family names and framing from the source owners: do not assume new chunk names or counts, and never accept whatever the writer emits as the expectation.
 
-- [ ] **22.4** Add writer tests: required empty families, the exact marker, the full CAPA/ASTR/SPOR/VEHS fields, and paused second-save equality. Label original-to-current conversions separately from current-to-current identity. Also extend Group 20's preview sequence (`Owner-join previews alternate lineages ...` in `save_lineage_preflight.cpp`) with a merged 446 file holding natural packets and a mining lease, plus its malformed lease cases: two bodies leased to one hull, and a Mining hull without its lease.
+- [X] **22.4** Add writer tests: required empty families, the exact marker, the full CAPA/ASTR/SPOR/VEHS fields, and paused second-save equality. Label original-to-current conversions separately from current-to-current identity. Also extend Group 20's preview sequence (`Owner-join previews alternate lineages ...` in `save_lineage_preflight.cpp`) with a merged 446 file holding natural packets and a mining lease, plus its malformed lease cases: two bodies leased to one hull, and a Mining hull without its lease.
 
-- [ ] **22.5** Run the milestone suites: full CTest in GCC and Clang and the ten focused executables. Every class (b) entry in the pending ledger must now pass. Record the counts, and mark any case still failing as a Part 1 defect with its owning group reopened.
+- [X] **22.5** Run the milestone suites: full CTest in GCC and Clang and the ten focused executables. Every class (b) entry in the pending ledger must now pass. Record the counts, and mark any case still failing as a Part 1 defect with its owning group reopened.
 
-- [ ] **22.6** Commit, and update the notes with the Part 1 handoff state. Do not push.
+- [X] **22.6** Commit, and update the notes with the Part 1 handoff state. Do not push.
+
+Execution evidence: see **Group 22** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). Full CTest GCC 1525/1525 and Clang 1525/1525; the ten focused executables pass; the pending ledger is empty; A437 and B426 convert to 446 with byte-identical second saves over all 128 families.
 
 ### Group 22B - Rename the lineage vocabulary to format names
 

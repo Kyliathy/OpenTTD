@@ -25,6 +25,11 @@ from artifact_paths import create_run_context
 from runner import run_native
 
 
+# Catalogued demo sources whose own bytes identify them (A440 lies beyond every colliding era), so no digest hint is
+# needed. The original-receipt comparison needs the production family, so shared-era sources below 426 do not fit here.
+DEMOS = {"heavy-440": ("src/tests/fixtures/demos/space/current-checkpoints.json", "src/tests/fixtures/demos/space/space-heavy-440.sav")}
+
+
 def walk(value):
     """Yield every object nested in a JSON value.
 
@@ -44,7 +49,7 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick, late_failure
     """Run one exact original through full reconstruction and its copied receipt comparison.
 
     @param configuration Current Debug or RelWithDebInfo selected native test target.
-    @param epoch Explicit A426-438catalogue epoch, donor-space426, or heavy-440 (the catalogued A440 demo), never a header transformation or filename-derived version.
+    @param epoch Explicit A426-438catalogue epoch, donor-space426, or a catalogued demo (heavy-440), never a header transformation or filename-derived version.
     @param roundtrip True writes and reconstructs a new441successor and second save without advancing original work.
     @param canonical True compares every independently required merged family and its exact bytes across both saves.
     @param first_tick True additionally compares one actual original-first and merged-reload-first native tick over all saved owners.
@@ -53,13 +58,14 @@ def execute(configuration, epoch, roundtrip, canonical, first_tick, late_failure
     @return Original native status, with completion requiring the actual post-load observation marker.
     """
     donor = epoch == "donor-space426"
-    demo = epoch == "heavy-440"
+    demo = epoch in DEMOS
     # Malformed copies cannot carry a digest hint, so late failures need a
     # source that its own bytes identify: A440 is beyond every colliding era.
-    assert not late_failures or (demo and not roundtrip)
+    assert not late_failures or (epoch == "heavy-440" and not roundtrip)
     if demo:
-        checkpoints = json.loads((ROOT / "src/tests/fixtures/demos/space/current-checkpoints.json").read_text(encoding="utf-8"))
-        original = next(row for row in walk(checkpoints) if row.get("path") == "src/tests/fixtures/demos/space/space-heavy-440.sav")
+        catalogue_path, save_path = DEMOS[epoch]
+        checkpoints = json.loads((ROOT / catalogue_path).read_text(encoding="utf-8"))
+        original = next(row for row in walk(checkpoints) if row.get("path") == save_path)
     elif donor:
         manifest = json.loads((ROOT / "src/tests/fixtures/multilayer-inputs.json").read_text(encoding="utf-8"))
         alias = "donor/openttd3-75ea75718f/mlm/reviews/surface-supply/space-custody/20261016-182906-4998e57e76/saves/space-mining-continued-405.sav"
@@ -166,7 +172,7 @@ def main():
     parser.add_argument("--first-tick", action="store_true")
     parser.add_argument("--late-failures", action="store_true", help="Refuse malformed copies late in a full load, then reload the source (heavy-440 only)")
     parser.add_argument("--build", default="build", help="Single-configuration build tree, for example build-clang")
-    parser.add_argument("--epoch", choices=("426", "427", "428", "429", "431", "434", "436", "437", "438", "donor-space426", "heavy-440"), required=True)
+    parser.add_argument("--epoch", choices=("426", "427", "428", "429", "431", "434", "436", "437", "438", "donor-space426", *DEMOS), required=True)
     args = parser.parse_args()
     return execute(args.configuration, args.epoch, args.roundtrip, args.canonical, args.first_tick, args.late_failures, args.build)
 

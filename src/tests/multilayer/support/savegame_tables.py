@@ -193,21 +193,55 @@ def owned_chunks(path):
     return version, owners
 
 
+MERGED_CONTRACTS = {441: "src/tests/fixtures/saveload/merged-family-set.json",
+                    446: "src/tests/fixtures/saveload/merged-446-family-set.json"}
+
+
+def merged_contract(version):
+    """Load the independently specified family contract of one merged writer version.
+
+    @param version Actual envelope version of a merged save.
+    @return Contract with its complete family map; a contract with a base takes the base's families (m2o28 Group 22).
+    """
+    import json
+    if version not in MERGED_CONTRACTS:
+        raise ValueError("no merged family contract for this version")
+    contract = json.loads((ROOT / MERGED_CONTRACTS[version]).read_text(encoding="utf-8"))
+    assert contract["schema"] == 1 and contract["merged_version"] == version
+    if "base" in contract:
+        base = json.loads((ROOT / contract["base"]).read_text(encoding="utf-8"))
+        assert base["schema"] == 1 and "base" not in base
+        contract = dict(contract, families=base["families"])
+    return contract
+
+
+def flat_table_fields(header, prefix=""):
+    """Name every field of a table header, nested ones by their dotted path.
+
+    @param header Parsed descriptors from table_header.
+    @param prefix Parent path.
+    @return Pairs of full path and saved field kind.
+    """
+    result = []
+    for name, kind, nested in header:
+        result.append((prefix + name, kind))
+        if nested:
+            result.extend(flat_table_fields(nested, prefix + name + "."))
+    return result
+
+
 def merged_world_chunks(path):
     """Read the complete independently specified merged family set, including empty and ordinary owners.
 
-    @param path Actual new441save; original A/B files retain their own separate readers.
+    @param path Actual new merged save (441 or 446); original A/B files retain their own separate readers.
     @return Unique name to exact raw transport, requiring every original-derived family and its exact framing kind.
     Counts121/126remain dated original observations. This compares explicit names
     and kinds against the fixture derived from unchanged originals plus allocated
     marker/tagged-wire decisions, never a list generated from a current output.
     No whole owner (including VIEW, GLOG, RNG, packets or accounts) is excluded.
     """
-    import json
-    contract = json.loads((ROOT / "src/tests/fixtures/saveload/merged-family-set.json").read_text(encoding="utf-8"))
-    assert contract["schema"] == 1
     version, stream = read_stream(path)
-    assert version == contract["merged_version"]
+    contract = merged_contract(version)
     rows = chunks(stream)
     owners = {row["name"].decode("ascii"): row for row in rows}
     assert len(owners) == len(rows), "duplicate merged owner"
@@ -216,6 +250,16 @@ def merged_world_chunks(path):
     # replacement TABLEcannot stand in for a required RIFF or missing paid history.
     for name, kind in contract["families"].items():
         assert owners[name]["kind"] == kind, (name, "changed merged framing")
+    marker = contract.get("marker")
+    if marker:
+        expected = marker["magic"].encode("ascii") + marker["schema"].to_bytes(2, "big") + marker["writer"].to_bytes(2, "big")
+        assert owners[marker["family"]]["payload"] == expected, "changed merged lineage marker"
+    # Each declared column exists exactly once, at any nesting depth, with its declared kind.
+    for name, columns in contract.get("table_columns", {}).items():
+        fields = flat_table_fields(table_header(Reader(owners[name]["rows"][0])))
+        for column, kind in columns.items():
+            found = [field_kind for path, field_kind in fields if path == column or path.endswith("." + column)]
+            assert found == [kind], (name, column, found, "changed merged column")
     return {name.encode("ascii"): row["raw"] for name, row in owners.items()}
 
 
@@ -270,8 +314,8 @@ def complete_world(path):
     owners = {row["name"]: row for row in rows}
     if len(owners) != len(rows):
         raise ValueError("duplicate complete-world owner")
-    if version == 441:
-        contract = json.loads((ROOT / "src/tests/fixtures/saveload/merged-family-set.json").read_text(encoding="utf-8"))
+    if version in MERGED_CONTRACTS:
+        contract = merged_contract(version)
         expected = {name.encode("ascii"): kind for name, kind in contract["families"].items()}
         # The independent original-derived family set, not a current output's
         # count, defines merged completeness and framing, including empty owners.

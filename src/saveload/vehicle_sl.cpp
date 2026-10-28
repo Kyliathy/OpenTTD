@@ -1187,8 +1187,8 @@ public:
 		if (v->type != VehicleType::Space) return;
 		const auto &craft = *static_cast<SpaceVehicle *>(v);
 		if (!ValidateNativeSpaceMiningContinuation(craft)) SlErrorCorrupt("Invalid mining continuation on save");
-		// A writer without the continuation fields (merged 441, until m2o28 Group 22)
-		// cannot hold this intent; refuse rather than write a file that drops it.
+		// A writer without the continuation fields cannot hold this intent and refuses
+		// rather than write a file that drops it; merged 446 has them (m2o28 Group 22).
 		if (!SlHasSaveCapability(SaveCapability::SpaceMiningContinuation) && craft.mission.continuation != SpaceMiningContinuationState{}) SlErrorCorrupt("Mining continuation needs the combined writer");
 		_space_mining_wire = EncodeSpaceMiningContinuation(craft.mission.continuation); SlObject(v, this->GetDescription());
 	}

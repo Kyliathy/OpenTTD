@@ -104,9 +104,10 @@
 #include "../safeguards.h"
 
 extern const SaveLoadVersion SAVEGAME_VERSION{to_underlying(SaveLoadVersion::MaxVersion) - 1}; ///< Current savegame version of OpenTTD.
-/* m2o28-1-merge-oct28.md Group 4: the writer is the last real enumerator before MaxVersion. The incoming eras now sit
- * after MaxVersion as pending names; this check fails the build if a reorder ever makes one of them the writer. */
-static_assert(SAVEGAME_VERSION == SaveLoadVersion::MergedLineage);
+/* m2o28-1-merge-oct28.md Group 22: the writer is merged 446, the last enumerator before MaxVersion. These checks fail
+ * the build if an enumerator is ever appended without moving the writer and its MLLN tuple together. */
+static_assert(SAVEGAME_VERSION == SaveLoadVersion::SpaceMiningLifecycle);
+static_assert(to_underlying(SaveLoadVersion::SpaceMiningLifecycle) == CURRENT_MERGED_SAVE_VERSION);
 
 SavegameType _savegame_type; ///< type of savegame we are loading
 FileToSaveLoad _file_to_saveload; ///< File to save or load in the openttd loop.
@@ -291,9 +292,8 @@ bool SlHasSaveCapability(SaveCapability capability)
 	if (_sl.lineage) return HasSaveCapability(*_sl.lineage, capability);
 	// Outside a load, serialization and synthetic pointer cleanup describe the
 	// current writer, never the dialect/version of a previously copied candidate.
-	// The writer is merged 441 (the static_assert beside SAVEGAME_VERSION holds it)
-	// until m2o28-1-merge-oct28.md Group 22 activates 446, so the five Space
-	// capabilities stay off when saving.
+	// The writer is merged 446 (the static_assert beside SAVEGAME_VERSION holds it),
+	// so saving grants every A, B and Space capability (m2o28 Group 22).
 	return HasSaveCapability({SaveLineageStatus::Accepted, SaveDialect::Merged, to_underlying(SAVEGAME_VERSION)}, capability);
 }
 

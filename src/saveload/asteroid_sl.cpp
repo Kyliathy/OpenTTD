@@ -107,9 +107,9 @@ struct ASTRChunkHandler : ChunkHandler {
 	{
 		const auto &field = GetAsteroidField();
 		CheckField(&field, Map::SizeX(), Map::SizeY(), CaptureMultiLayerStateSchema().feature_flags, CaptureMultiLayerStateSchema().orbital_seed);
-		// The writer's own layout. Until m2o28 Group 22 activates writer 446 this is
-		// StarterInputs, which refuses a field whose lifecycle state it cannot hold
-		// rather than writing a file this build could not load again.
+		// The writer's own layout: SurveyDeparture for merged 446 (m2o28 Group 22).
+		// An older layout refuses a field whose lifecycle state it cannot hold rather
+		// than write a file this build could not load again.
 		const auto encoded = EncodeAsteroidField(field, SelectAsteroidFieldWireEra());
 		if (!encoded) SlErrorCorrupt("Invalid current asteroid field on save, or field state this writer's layout cannot hold");
 		SlSetLength(encoded->size());

@@ -50,7 +50,7 @@ TEST_CASE("Merged native network identity refuses original and stale protocol pe
 {
 	const std::string current(GetNetworkRevisionString());
 	REQUIRE(current.size() < NETWORK_REVISION_LENGTH); REQUIRE(IsNetworkCompatibleVersion(current));
-	const auto marker = current.find("+m441c224p"); REQUIRE(marker != std::string::npos);
+	const auto marker = current.find("+m446c224p"); REQUIRE(marker != std::string::npos);
 	CHECK_FALSE(IsNetworkCompatibleVersion(current.substr(0, marker))); // Same actual hash, original protocol.
 	std::string stale = current; stale[marker + 2] = '0'; CHECK_FALSE(IsNetworkCompatibleVersion(stale));
 	stale = current; stale[marker + 6] = '0'; CHECK_FALSE(IsNetworkCompatibleVersion(stale));
