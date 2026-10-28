@@ -529,13 +529,15 @@ struct CapabilityRule {
 
 {{HARD}}
 
-- [ ] **10.1** Replace the index arithmetic in `HasSaveCapability` with explicit per-capability rules: original A/B introduction where it applies, S availability, and merged 441/446 membership. An unknown capability, an unsupported dialect or version, or a status other than Accepted grants nothing. A future append must never silently become available in old 441.
+- [X] **10.1** Replace the index arithmetic in `HasSaveCapability` with explicit per-capability rules: original A/B introduction where it applies, S availability, and merged 441/446 membership. An unknown capability, an unsupported dialect or version, or a status other than Accepted grants nothing. A future append must never silently become available in old 441.
 
-- [ ] **10.2** Make the Group 9 truth table pass and keep every existing shared/A/B boundary test. Test each new introduction at n-1/n, both 441 dialects, and an invalid future capability.
+- [X] **10.2** Make the Group 9 truth table pass and keep every existing shared/A/B boundary test. Test each new introduction at n-1/n, both 441 dialects, and an invalid future capability.
 
-- [ ] **10.3** Adapt `SlHasSaveCapability`. The writer context reports merged 441 until Group 22 activates 446, and the load context answers from the accepted source. Keep `DestinationVersionCapability` for the original A425-440 meanings. Do not add pending enumerators to its switch: consumers move to capabilities in Groups 15-18.
+- [X] **10.3** Adapt `SlHasSaveCapability`. The writer context reports merged 441 until Group 22 activates 446, and the load context answers from the accepted source. Keep `DestinationVersionCapability` for the original A425-440 meanings. Do not add pending enumerators to its switch: consumers move to capabilities in Groups 15-18.
 
-- [ ] **10.4** Check that `GetLoadCapabilities` and `ScopedLoadLineage` keep the original envelope version and clear between attempts. Run `ctest -R "save-lineage|lineage"` in GCC and Clang and record the results.
+- [X] **10.4** Check that `GetLoadCapabilities` and `ScopedLoadLineage` keep the original envelope version and clear between attempts. Run `ctest -R "save-lineage|lineage"` in GCC and Clang and record the results.
+
+Execution evidence: see **Group 10** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass the lineage subset (20/20) and the wider save-load subset (53/53).
 
 ### Area Mandatory Reading - Detached evidence collection and classification
 

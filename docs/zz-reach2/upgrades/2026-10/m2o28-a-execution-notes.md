@@ -223,3 +223,6 @@ GCC: `ninja -C build openttd_test openttd`, 299 steps in 11 min 49 s, exit 0. It
 
 - `ctest -R "save-lineage|lineage"`: 20/20 passed. These are the 7 policy cases, the 4 native lineage cases and 9 utility-lineage cases (`logs/merge-oct28/group10/ctest-gcc-lineage.{log,xml}`).
 - Wider save-load subset `-R "Original|Native scalar|supply wire|merged|Merged|Save envelope|copied|Copied"`: 53/53 passed (`ctest-gcc-saveload.log`).
+
+Clang: `ninja -C build-clang openttd_test`, 298 steps in 9 min 45 s, exit 0. It printed 113 warnings, none in a file this group touched. Lineage subset 20/20 and save-load subset 53/53 passed (`logs/merge-oct28/group10/ctest-clang-{lineage,saveload}.log`). There are no GCC/Clang differences.
+
