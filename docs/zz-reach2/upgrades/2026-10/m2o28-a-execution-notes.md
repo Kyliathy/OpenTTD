@@ -164,7 +164,7 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 | [X] | `src/tests/asteroid_cargo_wire.cpp` | 25-107 (15 sites) | Pure codec cases that pass `AsteroidCargoOrigins` straight to the codec | 15 |
 | [X] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
 | [X] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
-| [ ] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
+| [X] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
 | [ ] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
 | [ ] | `src/saveload/space_mining_sl.cpp` | 62 | Continuation schema decoder | 18 |
 | [ ] | `src/saveload/vehicle_sl.cpp` | 1136-1149, 1295 | VEHS `mission.continuation.*` columns and the missing-schema refusal | 18 |
@@ -524,4 +524,60 @@ Results (`logs/merge-oct28/group16/`):
 - The `[asteroid-cargo-custody]` tag: 3 cases, 999 assertions.
 - Wide subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid|[Ss]ource|[Cc]argo|[Pp]acket|[Cc]ustody"`: GCC 519/519 (`ctest-gcc.{log,xml}`), Clang 519/519 (`ctest-clang.log`), no new warnings.
 - The first builds had three compile errors in the new test: a missing `space_mining_tuning.h`, a brace-initialized comparison, and the station-to-station `Move` taking no tile. All are fixed.
+
+## Group 17
+
+**Defect found first.** The interim merged-441 writer wrote S's newest ASTR layout, with the 62-byte lifecycle trailer, into a 441 file, and a merged-441 reader expects StarterInputs. Reproduction: the Group 8 resave of `space-factory-440.sav` (`test-cache/space-fixes/m28-smoke2-factory-load/ordinary-current.sav`) fails to reload with "Invalid asteroid field lifecycle or record" (`logs/space-fixes/m28-astr-reload.log`). This has been the case since the merge commit.
+
+**17.1** `asteroid_sl.cpp` gains one owner-local `SelectAsteroidFieldWireEra()`:
+
+- the shared numeric gates `SpaceMiningVehicles` (405) and `AsteroidStarterInputs` (424) stay;
+- without `AsteroidFieldLifecycle` the era is StarterInputs (merged 441);
+- with it, the era is SurveyDeparture if `SpaceSurveyDeparture` is also present, otherwise Lifecycle.
+
+While saving, `IsSavegameVersionBefore` sees the writer version and `SlHasSaveCapability` the writer context, so the same selector names the writer's own layout.
+
+**17.2** The selector is used three times:
+
+- ASTR native `Read` and LoadCheck share it, with the bounded length check kept before allocation.
+- `Save` uses it too.
+- SPKN's sparse/dense choice uses `SlHasSaveCapability(AsteroidFieldLifecycle)`; the next-ID and knowledge semantics are unchanged.
+
+`EncodeAsteroidField(field, era = SurveyDeparture)` takes the era:
+
+- It refuses eras before StarterInputs and unknown eras.
+- It omits the lifecycle trailer below Lifecycle.
+- Any layout older than the current one goes through `ProveOlderAsteroidLayout`. That decodes the bytes with the same layout, re-encodes both fields in the current layout and compares bytes. Survey knowledge (an SPKN concern) and the derived lookup do not take part.
+- `AsteroidField::operator==` could not be used for this: it also compares knowledge and the raw body-vector order, which retirement permutes.
+
+Behaviour that follows:
+
+- A Space world whose field is still dense with seed-derived renewal saves at 441 and reloads exactly.
+- After the first asteroid exit, the 441 writer refuses ("field state this writer's layout cannot hold") instead of writing an unreadable file. That stays pending until Group 22's writer 446 (pending ledger).
+- Elapsed time alone does not change the state: an unarmed renewal timer stays at zero.
+
+**17.3** `asteroid_field_wire.cpp` adds `ASTR writer layouts are lossless or refuse`:
+
+- the default and Lifecycle eras give the current bytes;
+- StarterInputs gives the current bytes minus the trailer, and decodes to the same field;
+- survey knowledge does not block StarterInputs;
+- an advanced unarmed timer is unchanged;
+- a retired body refuses StarterInputs but encodes as Lifecycle and keeps its renewal;
+- Preview, NativeMining and End write nothing;
+- the inactive field encodes in every writer era.
+
+S's existing cases already cover every era's exact trailer and row extents, unearned credit, sparse high IDs, absent-history defaults and the RNG words. The ASTR/SPKN burn-down row is ticked.
+
+**Evidence** (`logs/merge-oct28/group17/`):
+
+- `[asteroid-field-wire]`: 5 cases, 285 assertions.
+- Subset `-R "[Aa]steroid|ASTR|SPKN|[Ss]urvey|[Kk]nowledge|[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Ss]pace fixes"`: GCC 376/376, Clang 376/376.
+- Application: a fresh resave of `space-factory-440.sav` now reloads past ASTR. It stops at SPOR ("Invalid Space order count"), the same writer-era mismatch for order rows (14 versus 15 bytes). That is Group 18's to fix.
+
+**User decisions recorded during this group:**
+
+- Saves written by the incoming dev build (S 441-445) need not load.
+- The lineage vocabulary is renamed to format names after Group 22.
+
+The plan is amended below, as Group 17B and in the Group 18-22 text.
 

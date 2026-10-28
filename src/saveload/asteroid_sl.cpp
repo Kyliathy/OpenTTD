@@ -7,6 +7,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups12/22/26; ID-ordered bodies, complete renewal, same-file disclosure and source-qualified ownerless departure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group2
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 17; one capability-based era selector for Read, LoadCheck, Save and SPKN.
  */
 #include "../stdafx.h"
 #include "saveload.h"
@@ -19,6 +20,21 @@
 #include "../safeguards.h"
 
 static std::optional<AsteroidField> _staged_asteroids;
+
+/** Choose the ASTR layout of the file being loaded, or of the current writer while saving.
+ * The shared pre-fork eras keep their numeric gates. The two Space fixes eras need their capabilities:
+ * 441 is StarterInputs for both merged 441 and S441, S442-444 add the lifecycle trailer, and S445 and
+ * merged 446 also admit ownerless surveys. While saving, the numeric gates see the writer version and
+ * the capabilities the writer context, so the writer emits exactly its own layout.
+ * @return The single layout that decoding or encoding must use.
+ */
+static AsteroidFieldWireEra SelectAsteroidFieldWireEra()
+{
+	if (IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles)) return AsteroidFieldWireEra::Preview;
+	if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidStarterInputs)) return AsteroidFieldWireEra::NativeMining;
+	if (!SlHasSaveCapability(SaveCapability::AsteroidFieldLifecycle)) return AsteroidFieldWireEra::StarterInputs;
+	return SlHasSaveCapability(SaveCapability::SpaceSurveyDeparture) ? AsteroidFieldWireEra::SurveyDeparture : AsteroidFieldWireEra::Lifecycle;
+}
 static std::optional<std::vector<AsteroidKnowledgeRecord>> _staged_knowledge;
 
 /** Clear pending field/disclosure authority before another load or preview operation. */
@@ -89,8 +105,11 @@ struct ASTRChunkHandler : ChunkHandler {
 	{
 		const auto &field = GetAsteroidField();
 		CheckField(&field, Map::SizeX(), Map::SizeY(), CaptureMultiLayerStateSchema().feature_flags, CaptureMultiLayerStateSchema().orbital_seed);
-		const auto encoded = EncodeAsteroidField(field);
-		if (!encoded) SlErrorCorrupt("Invalid current asteroid field on save");
+		// The writer's own layout. Until m2o28 Group 22 activates writer 446 this is
+		// StarterInputs, which refuses a field whose lifecycle state it cannot hold
+		// rather than writing a file this build could not load again.
+		const auto encoded = EncodeAsteroidField(field, SelectAsteroidFieldWireEra());
+		if (!encoded) SlErrorCorrupt("Invalid current asteroid field on save, or field state this writer's layout cannot hold");
 		SlSetLength(encoded->size());
 		// The complete field was validated before writing. Original scalar byte
 		// order is retained; no derived lookup, host struct or optional is copied.
@@ -100,10 +119,7 @@ struct ASTRChunkHandler : ChunkHandler {
 	AsteroidField Read() const
 	{
 		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidField)) SlErrorCorrupt("Unexpected asteroid family in old save");
-		const auto era = IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles) ? AsteroidFieldWireEra::Preview :
-			IsSavegameVersionBefore(SaveLoadVersion::AsteroidStarterInputs) ? AsteroidFieldWireEra::NativeMining :
-			IsSavegameVersionBefore(SaveLoadVersion::AsteroidFieldLifecycle) ? AsteroidFieldWireEra::StarterInputs :
-			IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyDeparture) ? AsteroidFieldWireEra::Lifecycle : AsteroidFieldWireEra::SurveyDeparture;
+		const auto era = SelectAsteroidFieldWireEra();
 		const auto length = SlGetFieldLength();
 		// Bound transport allocation first; the pure decoder then validates exact
 		// counts and every row before allocating any body/survey records.
@@ -176,7 +192,7 @@ struct SPKNChunkHandler : ChunkHandler {
 	std::vector<AsteroidKnowledgeRecord> Read() const
 	{
 		const auto length = SlGetFieldLength();
-		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::AsteroidFieldLifecycle);
+		const bool lifecycle = SlHasSaveCapability(SaveCapability::AsteroidFieldLifecycle); // Sparse full-width IDs arrive with the lifecycle era.
 		const uint32_t maximum = lifecycle ? MAX_ORBITAL_BODIES : GetMultiLayerAsteroidPopulation(4096, 4096, 2);
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge) || length < 2 || length > 2 + 12 * maximum) SlErrorCorrupt("Invalid asteroid survey knowledge length");
 		const auto count = ReadUnsigned(2); if (length != 2 + 12 * count || count > maximum) SlErrorCorrupt("Invalid asteroid survey knowledge count");

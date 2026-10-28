@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_field_wire.cpp Pure original-owner ASTR checkpoints, legacy layouts and bounded malformed payloads.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group22.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 17; each writer era is lossless or refuses.
  * Aggregate sparse history and staged candidate bodies are declared codec inputs; no executed gameplay departure, spawn or paid procurement is claimed.
  */
 #include "../stdafx.h"
@@ -142,3 +143,47 @@ TEST_CASE("ASTR current transport rejects malformed counts identities and renewa
 		CHECK(ComputeAsteroidFieldDigest(*decoded) != ComputeAsteroidFieldDigest(field));
 	}
 }
+
+/** A writer emits only its own layout: an older one is accepted only when it reproduces the field exactly. */
+TEST_CASE("ASTR writer layouts are lossless or refuse", "[asteroid-field-wire]")
+{
+	auto field = CodecField();
+	const auto current = EncodeAsteroidField(field); REQUIRE(current);
+	CHECK(EncodeAsteroidField(field, AsteroidFieldWireEra::SurveyDeparture) == current); // The default is the current layout.
+	CHECK(EncodeAsteroidField(field, AsteroidFieldWireEra::Lifecycle) == current); // Same bytes; only no-target surveys differ in admission.
+	// A freshly generated field is dense, in band and carries the seed's renewal
+	// state, so the StarterInputs layout (merged 441) holds it completely.
+	const auto starter = EncodeAsteroidField(field, AsteroidFieldWireEra::StarterInputs); REQUIRE(starter);
+	CHECK(starter->size() == current->size() - ASTEROID_LIFECYCLE_WIRE_BYTES);
+	CHECK(std::equal(starter->begin(), starter->end(), current->begin())); // The older layout is the current one minus its trailer.
+	const auto reread = DecodeAsteroidField(*starter, AsteroidFieldWireEra::StarterInputs); REQUIRE(reread);
+	CHECK(*reread == field);
+	// Survey knowledge belongs to SPKN, not ASTR: it never blocks the older layout.
+	auto surveyed = field; surveyed.knowledge.push_back({field.bodies.front().id, uint64_t{1}});
+	CHECK(EncodeAsteroidField(surveyed, AsteroidFieldWireEra::StarterInputs) == starter);
+	CHECK(reread->renewal == MakeAsteroidRenewalState(field.seed)); // Nothing regenerated: the seed already gave this state.
+	// Elapsed opportunities alone change nothing: the timer stays unarmed until a
+	// body exits, so the field remains representable in StarterInputs.
+	auto ticking = field;
+	const auto advanced = AdvanceAsteroidRenewalTimer(ticking.renewal, ticking.next_body_id); REQUIRE(advanced);
+	ticking.renewal = *advanced;
+	CHECK(ticking.renewal == field.renewal);
+	CHECK(EncodeAsteroidField(ticking, AsteroidFieldWireEra::StarterInputs) == starter);
+	// The first exit earns credit and leaves a gap in the dense IDs: StarterInputs
+	// cannot hold that, so the writer refuses instead of dropping it.
+	auto retired = field;
+	RetireCodecBody(retired, retired.bodies.front().id);
+	CHECK_FALSE(EncodeAsteroidField(retired, AsteroidFieldWireEra::StarterInputs));
+	const auto lifecycle = EncodeAsteroidField(retired, AsteroidFieldWireEra::Lifecycle); REQUIRE(lifecycle);
+	CHECK(DecodeAsteroidField(*lifecycle, AsteroidFieldWireEra::Lifecycle)->renewal == retired.renewal);
+	// No writer emits a pre-StarterInputs layout, and an unknown era writes nothing.
+	for (const auto era : {AsteroidFieldWireEra::Preview, AsteroidFieldWireEra::NativeMining, AsteroidFieldWireEra::End}) {
+		CHECK_FALSE(EncodeAsteroidField(field, era));
+	}
+	// The inactive field is representable in every writer layout.
+	for (const auto era : {AsteroidFieldWireEra::StarterInputs, AsteroidFieldWireEra::Lifecycle, AsteroidFieldWireEra::SurveyDeparture}) {
+		const auto inactive = EncodeAsteroidField(AsteroidField{}, era); REQUIRE(inactive);
+		CHECK(DecodeAsteroidField(*inactive, era) == AsteroidField{});
+	}
+}
+

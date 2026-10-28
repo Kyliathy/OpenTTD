@@ -760,11 +760,13 @@ return SlHasSaveCapability(SaveCapability::SpaceSurveyDeparture) ? AsteroidField
 
 {{HARD}}
 
-- [ ] **17.1** Create one owner-local ASTR era selector. Keep the Preview, NativeMining and StarterInputs shared gates; choose Lifecycle and SurveyDeparture only with their capabilities. D441 and S441 are StarterInputs, S442-444 Lifecycle, S445 and 446 SurveyDeparture.
+- [X] **17.1** Create one owner-local ASTR era selector. Keep the Preview, NativeMining and StarterInputs shared gates; choose Lifecycle and SurveyDeparture only with their capabilities. D441 and S441 are StarterInputs, S442-444 Lifecycle, S445 and 446 SurveyDeparture.
 
-- [ ] **17.2** Use the selector in native Read and LoadCheck, keeping the bounded maximum before any body allocation. Move SPKN's sparse/current count and identity joins to the same capability; keep the next-ID and knowledge semantics, and keep empty and Classic files valid.
+- [X] **17.2** Use the selector in native Read and LoadCheck, keeping the bounded maximum before any body allocation. Move SPKN's sparse/current count and identity joins to the same capability; keep the next-ID and knowledge semantics, and keep empty and Classic files valid.
 
-- [ ] **17.3** Add pure codec fixtures for every era: exact trailer and row extent, impossible earned-credit history, sparse high IDs, missing knowledge/body joins and absent-history defaults. Original velocities, reserves, private RNG and frontier are never regenerated. Tick the ASTR/SPKN burn-down rows.
+- [X] **17.3** Add pure codec fixtures for every era: exact trailer and row extent, impossible earned-credit history, sparse high IDs, missing knowledge/body joins and absent-history defaults. Original velocities, reserves, private RNG and frontier are never regenerated. Tick the ASTR/SPKN burn-down rows.
+
+Execution evidence: see **Group 17** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). The writer now emits its own ASTR layout and proves it lossless. That fixed a real interim defect: a merged-441 resave of a Space world could not be reloaded. GCC and Clang both pass 376/376.
 
 ### Group 18 - Adapt SPOR, VEHS and departure references as one mission contract
 
