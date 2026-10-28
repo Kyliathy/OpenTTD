@@ -49,3 +49,17 @@ Short facts that later groups need, so a resumed session does not have to redisc
 **2.6** Ledger: `test-cache/merge-oct28/s-reference-ledger.tsv`. All 46 failures are class **D-fixed**: each one's test file or fixture (`underground_depot_fixture.h`, `tbm_fixture.h`, the Tube environment) was changed on D after the base, by M2O23 (`99d8aa5a`, `0119308a`) or r2lbf, and S never touched any of them. No failure is in an S-only case; there are no S-Linux and no S-behavior failures. A fourth class, D-fixed, was needed beside the plan's three: the failures are base-era defects D already repaired, so for Group 8 they mean "expected to pass once merged".
 
 **Disk:** after 2.3 only 2.3 GiB were free (the reference `build/` is 6.5 GiB). `build-dedicated/` (6.1 GiB of build outputs, only a generated `regression/regression.cfg` copy inside) was deleted; Part 2 Group 31 rebuilds it from scratch anyway. 8.3 GiB free afterwards.
+
+## Group 3
+
+All producers ran headless on Linux with the null video driver, from the export root, with `GIT_CEILING_DIRECTORIES` set as in Group 2. Driver logs are in `logs/merge-oct28/donor445/<run>-driver.log`; each native log and run directory stays in the export (`logs/space-fixes/<run>.log`, `test-cache/space-fixes/<run>/`).
+
+**3.1** Export-only patch to `space_fixes_checks.py`: when `build/<Configuration>/openttd_space_fixes_test.exe` is absent, use `build/openttd_space_fixes_test` (Ninja is single-configuration). Group 8.1 applies the merged-tree form. Results, all exit 0: `--asteroid-preview` on 405 (137 assertions) and 418; `--cargo-origin` on 405 (3 packets, 2 natural; preview, unchanged and resave all true; 112 assertions) and 418 (16 packets; 406 assertions). Each `--cargo-origin` run wrote a fresh `cargo-origins-current.sav`.
+
+**3.2** From retained `space-heavy-440.sav`: `edit` (2,901 assertions) → `continue` (7,486 assertions; before-departure, after-departure, retarget, return-travel and after-unload saves). Light role: `edit-light` (2,860) → `continue-light` (10,214). S's own record had 7,485 assertions for the heavy continuation; the one-assertion difference is in a fresh run, not a failure.
+
+**3.3** `lifecycle` and `lifecycle-hidden` from `m28-continue-heavy/policy-before-departure.sav`: each 107,904 assertions, 1,596 ordinary opportunities, armed delay 1,446, one birth. This matches S's lifecycle record of 1,596 opportunities. All five phase saves are **byte-identical** between the visible and hidden runs. `prepare-high-id` from the after-credit save: 22,071 assertions; 65,526 declared historical turnovers (the declared-prefix limitation stays), then native birth 65536, 4 extracted units, 3,664 opportunities, funded countdown 2,221.
+
+**3.4** `python3 -I test-cache/merge-oct28/collect_donor445.py test-cache/merge-oct28/s-reference test-cache/merge-oct28/donor445 66713bdf 079181de` copied **28 saves** (all `OTTX`, outer version **445**) with `test-cache/merge-oct28/donor445/manifest.json`: per save its run, producer source and arguments, output SHA256 and the executable SHA256 (`openttd_space_fixes_test` `d49e28c2…`). Nothing was written to the tracked retention journal.
+
+**3.5** No producer failed and none needed a real video driver, so no Windows-handoff row comes from this group. These are contemporary reconstructions from retained 405/418/440 originals; historical S441-444 originals stay unavailable and unverified.

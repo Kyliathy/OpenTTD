@@ -236,6 +236,8 @@ Execution evidence: [Group 2 record](m2o28-a-execution-notes.md#group-2). Build 
 
 Replays m2o26 Group 3 on Linux, with the S reference binaries from Group 2. It gives fresh S445 saves for the migration fixtures of Groups 13-22; it cannot recreate the lost historical 441-444 originals.
 
+Execution evidence: [Group 3 record](m2o28-a-execution-notes.md#group-3). Every producer passed headless; 28 fresh 445 saves with a manifest in `test-cache/merge-oct28/donor445/`.
+
 Producer chain (each step reads the previous step's actual output under a fresh run ID):
 
 ```mermaid
@@ -249,15 +251,15 @@ flowchart LR
 
 {{HARD}}
 
-- [ ] **3.1** In the export only, make `space_fixes_checks.py` find the Linux executable (`build/openttd_space_fixes_test` when `build/<Configuration>/…exe` is absent). Then run `--asteroid-preview` and `--cargo-origin` from the retained `space-mining-working-405.sav` and `space-module-work-418.sav`, and bind source and output hashes. Record the patch: Group 8 applies a platform-aware form to the merged tree.
+- [X] **3.1** In the export only, make `space_fixes_checks.py` find the Linux executable (`build/openttd_space_fixes_test` when `build/<Configuration>/…exe` is absent). Then run `--asteroid-preview` and `--cargo-origin` from the retained `space-mining-working-405.sav` and `space-module-work-418.sav`, and bind source and output hashes. Record the patch: Group 8 applies a platform-aware form to the merged tree.
 
-- [ ] **3.2** From retained `space-heavy-440.sav`, run `--mining-controls edit`, then `continue` on the new `policy-current.sav`. Keep the before-departure, retarget and unload phase saves. Run the light role (`edit-light`, `continue-light`) separately.
+- [X] **3.2** From retained `space-heavy-440.sav`, run `--mining-controls edit`, then `continue` on the new `policy-current.sav`. Keep the before-departure, retarget and unload phase saves. Run the light role (`edit-light`, `continue-light`) separately.
 
-- [ ] **3.3** Run `lifecycle` and `lifecycle-hidden` from the same before-departure save and keep the five phase saves. Feed `policy-lifecycle-after-credit.sav` to `prepare-high-id`, and record its declared issuance-prefix limitation.
+- [X] **3.3** Run `lifecycle` and `lifecycle-hidden` from the same before-departure save and keep the five phase saves. Feed `policy-lifecycle-after-credit.sav` to `prepare-high-id`, and record its declared issuance-prefix limitation.
 
-- [ ] **3.4** Copy the selected outputs into `test-cache/merge-oct28/donor445/` with `manifest.json`: source hash, run ID, producer arguments, output hash, binary hash and the S tree hash. Do not write them into the tracked retention journal; Part 2 Group 32 decides on promotion.
+- [X] **3.4** Copy the selected outputs into `test-cache/merge-oct28/donor445/` with `manifest.json`: source hash, run ID, producer arguments, output hash, binary hash and the S tree hash. Do not write them into the tracked retention journal; Part 2 Group 32 decides on promotion.
 
-- [ ] **3.5** When a producer needs a real video driver or fails headless, record the exact case and error as a Windows-handoff item (Part 2 Group 41) and continue the chain where its inputs still exist. The reference is supplementary: its gaps do not block Groups 4-22. Saves the producers did not make are never invented, and a header is never rewritten.
+- [X] **3.5** When a producer needs a real video driver or fails headless, record the exact case and error as a Windows-handoff item (Part 2 Group 41) and continue the chain where its inputs still exist. The reference is supplementary: its gaps do not block Groups 4-22. Saves the producers did not make are never invented, and a header is never rewritten.
 
 ### Area Mandatory Reading - Merge commit resolution
 
