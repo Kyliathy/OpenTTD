@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_identity.cpp Sparse field identity tests without high-ID native cargo or live retirement.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group12.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-2-merge-oct28.md Group 23; every saved renewal field reaches the field diagnostic.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -157,3 +158,32 @@ TEST_CASE("Asteroid install reset and old-reader cursor migration rebuild lookup
 	CHECK_FALSE(InstallAsteroidField(invalid));
 	CHECK(GetAsteroidField() == *generated);
 }
+
+/** Each saved renewal ledger field, and the sparse issuer, changes the field diagnostic; an equal ledger does not (m2o28 Group 23). */
+TEST_CASE("Asteroid renewal diagnostics change with every saved ledger field", "[asteroid-identity]")
+{
+	auto base = SparseIdentityFixture(); base.seed = 8;
+	// The fixture's ledger is the pristine seeding for seed 8; one pending credit makes it an evolved ledger.
+	REQUIRE(base.renewal == MakeAsteroidRenewalState(base.seed));
+	base.renewal.credits = 1;
+	const auto digest = ComputeAsteroidFieldDigest(base);
+	CHECK(ComputeAsteroidFieldDigest(base) == digest); // Deterministic.
+	/** @param mutate One saved-field change. @return Whether the diagnostic of the changed copy differs. */
+	const auto changes = [&](auto mutate) { auto copy = base; mutate(copy); return ComputeAsteroidFieldDigest(copy) != digest; };
+	for (size_t size = 0; size < base.renewal.exited_by_size.size(); ++size) {
+		INFO(size); CHECK(changes([&](AsteroidField &f) { ++f.renewal.exited_by_size[size]; }));
+	}
+	CHECK(changes([](AsteroidField &f) { ++f.renewal.credits; }));
+	CHECK(changes([](AsteroidField &f) { f.renewal.ticks_remaining += 1; }));
+	CHECK(changes([](AsteroidField &f) { f.renewal.last_exit = AsteroidExitMetadata{AsteroidSize::Large, AsteroidClass::Rich}; }));
+	for (size_t word = 0; word < 2; ++word) {
+		INFO(word);
+		CHECK(changes([&](AsteroidField &f) { f.renewal.timer_rng.state[word] ^= 1; }));
+		CHECK(changes([&](AsteroidField &f) { f.renewal.candidate_rng.state[word] ^= 1; }));
+	}
+	CHECK(changes([](AsteroidField &f) { ++f.next_body_id; }));
+	// Equivalent storage order is not saved meaning.
+	auto reordered = base; std::ranges::reverse(reordered.bodies); REQUIRE(RebuildAsteroidBodyLookup(reordered));
+	CHECK(ComputeAsteroidFieldDigest(reordered) == digest);
+}
+

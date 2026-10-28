@@ -835,3 +835,20 @@ Left as they are: fixture provenance labels (`"origin": "A"`/`"B"` in the catalo
 **22B.3** `docs/zz-reach2/architecture/savegame/archi-savegame.md` opens with **One save system**: one writer (446, MLLN schema 2, 128 families), capability-based schema, one loader with its bounded preflight, and a five-row table of the format families it imports and what each holds, plus what is refused. The section on the Space fields is now "Asteroid origins, lifecycle and continuation (Unified 446)", explaining that 441-445 were development-build numbers that this build refuses. The version-word section names the current last enumerator. The older sections are marked as dated records that keep the names of their time.
 
 **22B.4** GCC and Clang build `openttd` and `openttd_test`. No new warnings appear in the renamed units; one existing `-Wsign-compare` on an unchanged line of `surface_supply_departure.cpp` remains. Full CTest: GCC 1525/1525, Clang 1525/1525. The standalone lineage policy build (`-DSAVE_LINEAGE_STANDALONE`, `-Wall -Wextra`) has no warnings and passes 10 cases with 1,333 assertions.
+
+## Group 23
+
+**23.1** D's `CargoPacket::ComputePoolDigest` (`cargopacket.cpp`), which is also the canonical `CargoPacketRoot`, hashed only `source.type` and `source.id`. It now calls `AppendCargoSourceDigest`. Legacy and ordinary sources emit exactly the old type-then-ID stream, so the diagnostics of older worlds are unchanged; typed origins add the marker, body and four label bytes. The manifest, structure and fleet digests already used the helper (from S). The descent and Surface-handling digests hash no packet source at all, the same in S and D. Their packets' provenance is covered by the pool digest, so those roots keep their accepted streams.
+
+**23.2** Audit, no change needed:
+- `ComputeAsteroidFieldDigest` hashes the sparse issuer frontier, the per-size exit counters, credits, timer, latest exit, and both words of both renewal streams, once the ledger differs from its pristine seeding.
+- `ComputeSpaceVehicleDigest` hashes every continuation field (phase, mineral, previous body, effective target with kind, ID and generation, departure, retry, wait, route cursor, travel ticks) once the intent is not default.
+- `ComputeSpaceOrdersDigest` hashes every configured Mine policy (non-default only, so old streams stay).
+
+**23.3** Mutation tests:
+- `asteroid_identity.cpp`, `Asteroid renewal diagnostics change with every saved ledger field`: each counter, credits, timer, last exit, each word of both streams and `next_body_id` changes the digest; reversing the body vector does not.
+- `asteroid_cargo_validation.cpp`, `Packet pool diagnostic includes full provenance`: real pool packets, with body and mineral sensitivity, determinism, and nothing left after free.
+- `space_mining_policy.cpp`, `Fleet and order diagnostics change with every saved mining intent field`: each continuation field, the target generation, and the Mine policy, with restore returning the original digests.
+- Camera independence stays covered by `[multilayer-state-digest]`.
+
+**23.4** GCC: `run_cases.sh` over `[asteroid-identity]`, `[asteroid-cargo-validation]`, `[space-mining-policy]`, `[multilayer-state-digest]` and `[surface-supply-merged-digest]` passes 20/20, and full CTest passes 1528/1528. Clang: not run; the session stopped during the Clang rebuild. Run `ninja -C build-clang openttd_test` and full CTest first (handover step 1).

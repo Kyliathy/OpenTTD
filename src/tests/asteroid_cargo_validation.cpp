@@ -7,6 +7,7 @@
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid_cargo.h"
 #include "../cargo_source_digest.h"
+#include "../cargopacket.h"
 #include "../fios.h"
 #include "../saveload/space_cargo_preview.h"
 #include "../multilayer_space_content.h"
@@ -181,3 +182,23 @@ TEST_CASE("Source digest includes complete modern provenance without changing le
 	CHECK(original != stream(Source::FromAsteroid(131'072, CargoLabel{"NORE"})));
 	CHECK(original != stream(Source::FromAsteroid(65'536, CargoLabel{"WICE"})));
 }
+
+/** The packet pool diagnostic, which is also the canonical CargoPacketRoot, carries a typed origin's body and mineral (m2o28 Group 23). */
+TEST_CASE("Packet pool diagnostic includes full provenance", "[asteroid-cargo-validation]")
+{
+	const auto empty = CargoPacket::ComputePoolDigest();
+	/** @param source Packet provenance. @return The pool diagnostic with exactly one five-unit packet of that source. */
+	const auto digest_with = [](const Source &source) {
+		REQUIRE(CargoPacket::CanAllocateItem());
+		std::unique_ptr<CargoPacket> packet{CargoPacket::Create(StationID::Invalid(), uint16_t{5}, source)};
+		return CargoPacket::ComputePoolDigest();
+	};
+	const auto ordinary = digest_with(Source{SourceID{1}, SourceType::Town});
+	const auto natural = digest_with(Source::FromAsteroid(7, CargoLabel{"NORE"}));
+	CHECK(ordinary != empty); CHECK(natural != ordinary);
+	CHECK(digest_with(Source::FromAsteroid(7, CargoLabel{"NORE"})) == natural); // Deterministic, and the freed slot leaves nothing behind.
+	CHECK(digest_with(Source::FromAsteroid(8, CargoLabel{"NORE"})) != natural); // Body.
+	CHECK(digest_with(Source::FromAsteroid(7, CargoLabel{"WICE"})) != natural); // Mineral.
+	CHECK(CargoPacket::ComputePoolDigest() == empty);
+}
+

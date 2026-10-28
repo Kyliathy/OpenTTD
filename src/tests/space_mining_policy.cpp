@@ -2,6 +2,7 @@
 /** @file space_mining_policy.cpp Inert policy defaults, checked edits, mineral pinning and cargo-preserving cancellation.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group17.
  * Group23 also exercises the registered command and its portable argument layout after matching persistence passes.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-2-merge-oct28.md Group 23; every saved intent and policy field reaches the fleet and order diagnostics.
  */
 #include "../stdafx.h"
 #include "probe_mining_fixture.h"
@@ -173,3 +174,37 @@ TEST_CASE("Active legacy mining can acquire explicit policy without restarting w
 	REQUIRE(CmdSetSpaceMiningPolicy(DoCommandFlag::Execute, craft.index, craft.generation, 0, SpaceMiningPolicy::LegacyReturn).Succeeded());
 	CHECK(craft.mission.continuation == SpaceMiningContinuationState{});
 }
+
+/** Each saved contained-intent field changes the fleet diagnostic, and a configured policy the order diagnostic; restoring
+ * the value restores the diagnostic (m2o28 Group 23).
+ */
+TEST_CASE("Fleet and order diagnostics change with every saved mining intent field", "[space-mining-policy]")
+{
+	ProbeExtractionRig rig; auto &craft = rig.Probe(4, false); AddPolicyMine(craft, 0);
+	const auto fleet = ComputeSpaceVehicleDigest(); const auto orders = ComputeSpaceOrdersDigest();
+	const auto saved = craft.mission.continuation;
+	/** @param mutate One saved-field change to the contained intent. @return Whether the fleet diagnostic differs, after which the intent is restored. */
+	const auto changes = [&](auto mutate) {
+		mutate(craft.mission.continuation); const bool changed = ComputeSpaceVehicleDigest() != fleet;
+		craft.mission.continuation = saved; return changed;
+	};
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.phase = MiningContinuationPhase::SeekMineral; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.mineral = CargoLabel{"NORE"}; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.previous_body = OrbitalBodyID{1}; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.effective_target = SpaceOrderTarget{SpaceOrderTargetKind::Body, 1, 0}; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.departure_point = SpacePoint{16, 16}; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.retry_ticks = 3; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.waiting = MiningContinuationWait::NoCompatibleAsteroid; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.route_cursor = 0; }));
+	CHECK(changes([](SpaceMiningContinuationState &c) { c.travel_ticks = 9; }));
+	// A target of another generation is a different incarnation.
+	auto with_target = saved; with_target.phase = MiningContinuationPhase::SeekMineral;
+	with_target.effective_target = SpaceOrderTarget{SpaceOrderTargetKind::Body, 1, 0};
+	craft.mission.continuation = with_target; const auto generation0 = ComputeSpaceVehicleDigest();
+	craft.mission.continuation.effective_target->generation = 1; CHECK(ComputeSpaceVehicleDigest() != generation0);
+	craft.mission.continuation = saved; CHECK(ComputeSpaceVehicleDigest() == fleet);
+	// A configured Mine policy is order state; the default keeps the old stream.
+	craft.space_orders.entries.front().mining_policy = SpaceMiningPolicy::FullLoadNearest; CHECK(ComputeSpaceOrdersDigest() != orders);
+	craft.space_orders.entries.front().mining_policy = SpaceMiningPolicy::LegacyReturn; CHECK(ComputeSpaceOrdersDigest() == orders);
+}
+

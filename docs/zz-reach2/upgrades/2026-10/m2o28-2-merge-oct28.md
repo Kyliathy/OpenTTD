@@ -2,6 +2,41 @@
 
 > **Plan change, 2026-10-28 (from Part 1 Group 17):** saves written by the incoming dev build (S 441-445) are not loaded; they refuse with their own message. Wherever this part asks to load, admit or classify "S441-445" or "Group 3's fresh donor 445 saves", read that as: assert the clean refusal, and use the same files only as examples of the typed-origin CAPA shape. Lineage vocabulary is renamed to format names in Part 1 Group 22B, so names such as `SpaceFixes`, `DestinationA` and `DonorB` below may appear under their new names.
 
+## Handover, 2026-10-28 (session stopped by the user)
+
+**Where we are.** Part 1 is complete (Groups 1-22 and 22B, all `[X]`). Part 2 is at **Group 23**: 23.1-23.3 are done, and 23.4 has GCC done; its Clang run did not finish before hand-off (see Group 23 below). Groups 24-41 have not started. Branch `merge-2sp-oct28`, all commits local, **nothing pushed** (the user's standing rule: no pushes until they say; Group 41.5 asks first). Never run `clean.ps1 -Apply` on this checkout.
+
+**State of the code.**
+- One writer: merged 446 (`SaveLoadVersion::SpaceMiningLifecycle`), MLLN `MLN1`/schema 2, 128 families (`src/tests/fixtures/saveload/merged-446-family-set.json` on top of the 441 contract).
+- One loader: `InspectSaveWireFacts` → `ClassifySaveFormat` → a lineage bound to the load. Format families (renamed in 22B): `SaveFormat::Base` (≤424), `Orbital` (425-440, was "A"), `Geothermal` (425-434, was "B"), `Unified` (441 schema 1, 446 schema 2). Capabilities `SurfaceSupplyOrdersFixed/Table` (were A/B), plus the five Space capabilities granted only to Unified 446.
+- Development-build saves (markerless 441-445) refuse with `STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME`; `src/tests/fixtures/saveload/space-fixes-445/` holds three real ones as refusal fixtures.
+- `docs/zz-reach2/architecture/savegame/archi-savegame.md` opens with **One save system**, including the table of importable formats.
+- Full CTest last green: GCC 1528/1528 after Group 23. Clang was 1525/1525 after 22B; the post-Group-23 run is recorded in Group 23.
+
+**Where the evidence is.** Per-group records are in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md) (Groups 9-23), and logs are in `logs/merge-oct28/group<N>/` (ignored). Useful tools under `test-cache/merge-oct28/` (ignored; recreate if lost):
+- `run_cases.sh <build> "<tags>" <log>` runs each Catch case in its own process from the build directory, as CTest does. Running several cases in one process gives false failures (`Engine::GetNumItems() == 0`).
+- `rename_22b.py` is the 22B rename map.
+- `afterload-*.txt` are the AfterLoadGame call lists compared in 21.1.
+
+**Harness commands that work on Linux.**
+- `python3 -B src/tests/space_lineage_native_checks.py --configuration RelWithDebInfo --epoch heavy-440 --late-failures [--build build-clang]` (Group 21).
+- `... --epoch 437|donor-space426 --roundtrip --canonical` (original → 446, byte-identical second save over 128 families).
+- `python3 -B src/tests/multilayer/acceptance/space_fixes_checks.py --source <save> --cargo-origin --run <id>` (produced `src/tests/fixtures/saveload/merged-446/mining-working-446.sav`).
+- `python3 -B src/tests/multilayer/acceptance/space_ordinary_checks.py --source <save> --mode load|advance --run <id>` (needs a current `build/openttd`).
+- `test-cache/linux-baseline/run_focused.sh <build> <logdir>` runs the ten focused executables. It deletes each executable afterwards, so rebuild `openttd_tube_test`/`openttd_space_fixes_test` before using their harnesses.
+- Native executables are `EXCLUDE_FROM_ALL`: `ninja -C build openttd_tube_test openttd_space_fixes_test`.
+- After a language-string change, also rebuild `openttd`, or CTest's `regression_*` entries fail with "No available language packs".
+
+**Next steps, in order.**
+1. If Group 23's Clang line below is not filled in, run `ninja -C build-clang openttd_test` and full CTest there, and record the count.
+2. Group 24: 24.1's dispatch already exists (`merged_contract` in `savegame_tables.py`). What remains is the four Python oracles that still assume the current writer is 441 (listed under 24.1): `surface_gateway_core_ledger.py`, `space_checkpoint_foundation.py`, `space_checkpoint_load.py`, and `space_checkpoint_migration.py`, which needs the documented 446 structural transforms for CAPA, ASTR, SPKN, SPOR and VEHS, not looser comparisons. Then 24.2-24.4.
+3. Groups 25-41 as planned. Group 33.1 must rebase or retire the incoming branch's malformed-file harnesses (`asteroid_cargo_wire_checks.py`, `asteroid_field_wire_checks.py`, `legacy_departure_wire_checks.py`), which still assert version 442 or later. Group 33.3 should extend `--late-failures` to a 446 source.
+
+**Known gaps worth remembering.**
+- A genuine Orbital 440 copied preview does not join mining leases; only 446 does, under `SpaceMiningContinuation`. The full loader's final fleet join refuses a bad lease (Group 21).
+- The writer-side refusals for older layouts (ASTR, SPOR, VEHS, CAPA at 441) are now unreachable, because the writer is always 446. They are harmless; Part 2 cleanup may remove them.
+- Descent and Surface-handling digests hash no packet source by design; the pool digest carries full provenance (Group 23).
+
 ## Global Mandatory Reading
 
 > **Execution protocol**
@@ -79,13 +114,15 @@ _Applies to Groups 23-24._
 
 {{MEDIUM}}
 
-- [ ] **23.1** Replace digest sites that hash only source type and ID with `AppendCargoSourceDigest`, starting with D's `CargoPacket::ComputePoolDigest` (`src/cargopacket.cpp`), then the manifest, fleet, descent, handling and stock consumers. Keep the receipt/departure, quantity, age, credit and source tile in their existing owner roots.
+- [X] **23.1** Replace digest sites that hash only source type and ID with `AppendCargoSourceDigest`, starting with D's `CargoPacket::ComputePoolDigest` (`src/cargopacket.cpp`), then the manifest, fleet, descent, handling and stock consumers. Keep the receipt/departure, quantity, age, credit and source tile in their existing owner roots.
 
-- [ ] **23.2** Audit the asteroid, `SpaceVehicle` and order roots for the issuer frontier, exit counters and latest exit, credit, timer, and both private renewal streams. Also include the mineral, effective target and generation, departure, retry, route cursor and travel budget. If a byte order changes, keep the explicit field encoding and version the diagnostic.
+- [X] **23.2** Audit the asteroid, `SpaceVehicle` and order roots for the issuer frontier, exit counters and latest exit, credit, timer, and both private renewal streams. Also include the mineral, effective target and generation, departure, retry, route cursor and travel budget. If a byte order changes, keep the explicit field encoding and version the diagnostic.
 
-- [ ] **23.3** Add mutation-sensitivity tests: changing each saved field changes the right diagnostic, while reordering equivalent sparse storage or moving the camera does not. Derived indexes, addresses, hash-bucket order and allocator state stay out of the digest.
+- [X] **23.3** Add mutation-sensitivity tests: changing each saved field changes the right diagnostic, while reordering equivalent sparse storage or moving the camera does not. Derived indexes, addresses, hash-bucket order and allocator state stay out of the digest.
 
 - [ ] **23.4** Run the affected cases (`[multilayer-state]`, the Space digest cases and the S peer-diagnostic cases) through CTest in GCC and Clang, and record them in the notes.
+
+Execution evidence (2026-10-28): see **Group 23** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC: the 20 digest-related cases pass, and full CTest passes 1528/1528. Clang: not run; the session stopped during the Clang rebuild. Run `ninja -C build-clang openttd_test` and full CTest first (handover step 1). The S peer-diagnostic cases are native peer harnesses run in Groups 36-37.
 
 ### Group 24 - Adapt the exact-family readers and independent comparison oracles
 

@@ -10,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; in-place legacy origin upgrade preserves the original packet owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md accepted-count unloading.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Group9.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-2-merge-oct28.md Group 23; the pool digest includes full packet provenance.
  */
 
 #include "stdafx.h"
@@ -21,6 +22,7 @@
 #include "order_type.h"
 #include "transport_tube_cargo.h"
 #include "surface_supply_order_runtime.h"
+#include "cargo_source_digest.h"
 
 #include "safeguards.h"
 
@@ -1054,7 +1056,9 @@ uint64_t CargoPacket::ComputePoolDigest()
 	for (const auto *packet : CargoPacket::Iterate()) {
 		field(packet->index.base()); field(packet->count); field(packet->periods_in_transit);
 		field(static_cast<uint64_t>(packet->feeder_share)); field(packet->source_xy.base()); field(packet->first_station.base());
-		field(to_underlying(packet->source.type)); field(packet->source.id);
+		// Full provenance: legacy and ordinary sources keep their exact type-then-ID
+		// stream; a typed asteroid origin adds its body and mineral (m2o28 Group 23).
+		AppendCargoSourceDigest(packet->source, field);
 		field(static_cast<uint16_t>(packet->travelled.x)); field(static_cast<uint16_t>(packet->travelled.y));
 		field(packet->company_supply_order); field(packet->company_supply_shipped);
 	}
