@@ -283,11 +283,13 @@ Line ranges for conflicted files are given for **D = stage 2** (`git show :2:<pa
 
 Produces resolved, staged save-version and cargo-packet files with the pending gate. Nothing is committed yet.
 
+Execution evidence: [Group 4 record](m2o28-a-execution-notes.md#group-4). Discovery: the packet preview orders S's origin fields before D's supply fields, because two S tests initialize it positionally.
+
 {{MEDIUM}}
 
-- [ ] **4.1** Run `git merge --no-ff --no-commit origin/mlm-mlv-2sp`. Record `git diff --name-only --diff-filter=U` (23 expected) and `git status --short | wc -l`. From now on, read S-only files locally.
+- [X] **4.1** Run `git merge --no-ff --no-commit origin/mlm-mlv-2sp`. Record `git diff --name-only --diff-filter=U` (23 expected) and `git status --short | wc -l`. From now on, read S-only files locally.
 
-- [ ] **4.2** Resolve `src/saveload/saveload.h` with the pending gate. Keep D's tail, put S's five names after `MaxVersion` with their original doc comments shortened to the era meaning, and keep r2lbf's `required_capability{}` default.
+- [X] **4.2** Resolve `src/saveload/saveload.h` with the pending gate. Keep D's tail, put S's five names after `MaxVersion` with their original doc comments shortened to the era meaning, and keep r2lbf's `required_capability{}` default.
 
   ```cpp
   	MergedLineage = MERGED_SAVE_LINEAGE_VERSION, ///< Saveload version: 441. ...
@@ -304,7 +306,7 @@ Produces resolved, staged save-version and cargo-packet files with the pending g
 
   Add `static_assert(SAVEGAME_VERSION == SaveLoadVersion::MergedLineage)` next to the `SAVEGAME_VERSION` definition, so an accidental reorder fails at compile time.
 
-- [ ] **4.3** Resolve `src/saveload/cargopacket_sl.cpp` (5 blocks) as the union:
+- [X] **4.3** Resolve `src/saveload/cargopacket_sl.cpp` (5 blocks) as the union:
   - `GetCargoPacketDesc` keeps D's supply columns and S's two asteroid U32 keys;
   - the native and LoadCheck handlers run both D's `CheckCargoPacketSourceFields` and S's `ValidateCargoPacketSourceSchema`;
   - S's `DecodeCargoPacketSource` decodes the source, and D's receipt/departure checks follow it;
@@ -312,47 +314,51 @@ Produces resolved, staged save-version and cargo-packet files with the pending g
 
   Keep the file header's `@see` lines from both sides.
 
-- [ ] **4.4** Resolve `src/cargopacket.h` (2 blocks). Keep both friend declarations (D's `AcceptLoadedSurfaceSupplyOrders` and S's `CAPAChunkHandler`) and S's `UpgradeLegacyAsteroidSource`, with D's member order and doc style.
+- [X] **4.4** Resolve `src/cargopacket.h` (2 blocks). Keep both friend declarations (D's `AcceptLoadedSurfaceSupplyOrders` and S's `CAPAChunkHandler`) and S's `UpgradeLegacyAsteroidSource`, with D's member order and doc style.
 
-- [ ] **4.5** Resolve the copied-preview conflicts in `src/fios.h`, `src/saveload/station_sl.cpp` (3), `src/saveload/vehicle_sl.cpp` (2) and `src/fios_gui.cpp`:
+- [X] **4.5** Resolve the copied-preview conflicts in `src/fios.h`, `src/saveload/station_sl.cpp` (3), `src/saveload/vehicle_sl.cpp` (2) and `src/fios_gui.cpp`:
   - extend D's `NativeCargoPacketPreview` with S's source fields;
   - keep D's `NativeCargoOwnerPreview` rows and remove `NativeCargoReferencePreview`, pointing S's readers at the owner rows;
   - keep S's bound check "Excessive native cargo meaning references";
   - `vehicle_sl.cpp` also keeps r2lbf's explicit instantiations and S's `WithSpaceMiningContinuation` and `CheckSpaceMiningContinuationHeader`.
 
-- [ ] **4.6** Resolve `src/saveload/space_cargo_preview.cpp`. Keep D's two-argument `feature()` with `GetSpaceSupplyLabel` labels, and adapt S's `ValidateSpaceAsteroidCargoPreview` to D's owner rows, so that asteroid checks run even when no paid supply exists. Leave a `// m2o28 Group 20` note where Group 20 generalizes label preparation.
+- [X] **4.6** Resolve `src/saveload/space_cargo_preview.cpp`. Keep D's two-argument `feature()` with `GetSpaceSupplyLabel` labels, and adapt S's `ValidateSpaceAsteroidCargoPreview` to D's owner rows, so that asteroid checks run even when no paid supply exists. Leave a `// m2o28 Group 20` note where Group 20 generalizes label preparation.
 
-- [ ] **4.7** For every file above: `grep -nE '^(<<<<<<<|=======|>>>>>>>)'` returns nothing, `git diff --check` is clean, and then `git add <file>`. Record each file's resolution in one line in the notes.
+- [X] **4.7** For every file above: `grep -nE '^(<<<<<<<|=======|>>>>>>>)'` returns nothing, `git diff --check` is clean, and then `git add <file>`. Record each file's resolution in one line in the notes.
 
 ### Group 5 - Resolve the Space runtime, command and Space GUI conflicts
 
+Execution evidence: [Group 5 record](m2o28-a-execution-notes.md#group-5).
+
 {{MEDIUM}}
 
-- [ ] **5.1** Resolve `src/space_manifest.h` and `src/space_manifest.cpp`. Keep D's `CargoLabel GetSpaceSupplyLabel(SpaceSupply)` and delete S's `std::optional<CargoLabel>` overload. Adapt every S-only caller found by `grep -rn "GetSpaceSupplyLabel" src` to compare with `CT_INVALID`; no caller may consult the current `CargoSpec` for an immutable label.
+- [X] **5.1** Resolve `src/space_manifest.h` and `src/space_manifest.cpp`. Keep D's `CargoLabel GetSpaceSupplyLabel(SpaceSupply)` and delete S's `std::optional<CargoLabel>` overload. Adapt every S-only caller found by `grep -rn "GetSpaceSupplyLabel" src` to compare with `CT_INVALID`; no caller may consult the current `CargoSpec` for an immutable label.
 
-- [ ] **5.2** Resolve `src/space_vehicle.cpp` (2 blocks). The function keeps S's public signature, `bool ValidateAsteroidPacketCustody(const AsteroidField &field)`, and D's `VisitNativeCargoPackets` body. Add S's checks inside the visitor: canonical source, typed origin resolved through `ResolveAsteroidCargoOrigin(source, field)`, exactly one owner per packet, and an owner for every allocated asteroid packet. The production-link validator passes `field`. Delete the hand-written owner walk.
+- [X] **5.2** Resolve `src/space_vehicle.cpp` (2 blocks). The function keeps S's public signature, `bool ValidateAsteroidPacketCustody(const AsteroidField &field)`, and D's `VisitNativeCargoPackets` body. Add S's checks inside the visitor: canonical source, typed origin resolved through `ResolveAsteroidCargoOrigin(source, field)`, exactly one owner per packet, and an owner for every allocated asteroid packet. The production-link validator passes `field`. Delete the hand-written owner walk.
 
-- [ ] **5.3** Resolve `src/command_type.h`. Keep D's list through `SetTubeVehicleGeothermalPower`, then `SetSpaceMiningPolicy`, then `End`. The new entry's comment says "m2o28 append 223; was 211 in the incoming r2sff1 branch". In `src/tests/merged_command_compatibility.cpp`, add `static_assert`s for 222 and 223, and update the network suffix expectation from `+m441c223p` to `+m441c224p`: `GetMergedNetworkRevisionSuffix` includes `Commands::End`, so old D and S peers already refuse. Confirm with `git grep -n "Commands::SetSpaceMiningPolicy"` that S code uses only the name, never the number.
+- [X] **5.3** Resolve `src/command_type.h`. Keep D's list through `SetTubeVehicleGeothermalPower`, then `SetSpaceMiningPolicy`, then `End`. The new entry's comment says "m2o28 append 223; was 211 in the incoming r2sff1 branch". In `src/tests/merged_command_compatibility.cpp`, add `static_assert`s for 222 and 223, and update the network suffix expectation from `+m441c223p` to `+m441c224p`: `GetMergedNetworkRevisionSuffix` includes `Commands::End`, so old D and S peers already refuse. Confirm with `git grep -n "Commands::SetSpaceMiningPolicy"` that S code uses only the name, never the number.
 
-- [ ] **5.4** Resolve `src/asteroid_gui.cpp`. Take S's `_space_survey_desc(WindowPosition::Automatic, "space_inspector", 560, 380, …)` and drop r2lbf's `"space_survey", 0, 0`. Record in the notes that the r2lbf key was never released, so no `windows.cfg` migration is needed, and add the `r2lbf-b-windows-handoff.md` update to the Group 40 list.
+- [X] **5.4** Resolve `src/asteroid_gui.cpp`. Take S's `_space_survey_desc(WindowPosition::Automatic, "space_inspector", 560, 380, …)` and drop r2lbf's `"space_survey", 0, 0`. Record in the notes that the r2lbf key was never released, so no `windows.cfg` migration is needed, and add the `r2lbf-b-windows-handoff.md` update to the Group 40 list.
 
-- [ ] **5.5** Resolve `docs/zz-reach2/upgrades/2026-10/d2sa-space-adventures.md` as a union: keep D's underground/Tube/geothermal guidance and S's construction/mining guidance, with no duplicated step and the D heading order. Group 40 reconciles the wording.
+- [X] **5.5** Resolve `docs/zz-reach2/upgrades/2026-10/d2sa-space-adventures.md` as a union: keep D's underground/Tube/geothermal guidance and S's construction/mining guidance, with no duplicated step and the D heading order. Group 40 reconciles the wording.
 
-- [ ] **5.6** Apply 4.7 to every Group 5 file.
+- [X] **5.6** Apply 4.7 to every Group 5 file.
 
 ### Group 6 - Resolve the GUI, settings and string conflicts
 
+Execution evidence: [Group 6 record](m2o28-a-execution-notes.md#group-6). Discovery: S's handler also avoided recreating Game Options on a repeated F2; `ShowOrRaiseGameOptions()` keeps that.
+
 {{MEDIUM}}
 
-- [ ] **6.1** Resolve `src/toolbar_gui.h` (2 blocks). Keep D's `MTHK_SHOW_MAP_LAYER_1..4` and delete S's `MTHK_LAYER_*`; resolve the header.
+- [X] **6.1** Resolve `src/toolbar_gui.h` (2 blocks). Keep D's `MTHK_SHOW_MAP_LAYER_1..4` and delete S's `MTHK_LAYER_*`; resolve the header.
 
-- [ ] **6.2** Resolve `src/toolbar_gui.cpp` (5 blocks):
+- [X] **6.2** Resolve `src/toolbar_gui.cpp` (5 blocks):
   - keep D's hotkey tables (`show_map_layer_surface` … `show_map_layer_space`, Alt+1..4, once per toolbar);
   - keep D's `OnHotkey` layer cases through `ShowMainViewportLayerInDisplayOrder`;
   - delete S's `MTHK_LAYER_*`, `MainToolbarEditorHotkeys::Layer*` and `map_layer_*` entries;
   - route Game Options through D's `ToggleHotkeyWindow(Get…HotkeyWindow(hotkey))` and remove S's `HandleWindowOpeningHotkey` calls, so one key event produces one action.
 
-- [ ] **6.3** Port S's safeguards into `ToggleHotkeyWindow`, keeping D's `IsWindowRaisedAsFarAsPossible` test. Then delete `HandleWindowOpeningHotkey` from `src/window.cpp` and `src/window_func.h`, and resolve the `window_func.h` header. Expected behavior:
+- [X] **6.3** Port S's safeguards into `ToggleHotkeyWindow`, keeping D's `IsWindowRaisedAsFarAsPossible` test. Then delete `HandleWindowOpeningHotkey` from `src/window.cpp` and `src/window_func.h`, and resolve the `window_func.h` header. Expected behavior:
   - with a modal progress active, the key does nothing;
   - with a modal window open, that window is raised and nothing else happens;
   - a pinned (`Sticky`) or `NoClose` target is raised and never closed.
@@ -367,9 +373,9 @@ Produces resolved, staged save-version and cargo-packet files with the pending g
   if (w->flags.Test(WindowFlag::Sticky) || w->window_desc.flags.Test(WindowDefaultFlag::NoClose)) return false; // raise
   ```
 
-- [ ] **6.4** Resolve `src/map_layer_gui.h`. Keep D's `ShowMainViewportLayerInDisplayOrder(uint)` and delete S's `SelectMainViewportLayer(MapLayer)` from the header and from `src/map_layer_gui.cpp`. Both were thin wrappers over `SetViewportLayer`. Adapt `src/tests/space_fixes_native.cpp:202`: its invalid-layer check becomes `CHECK_FALSE(ShowMainViewportLayerInDisplayOrder(MAX_MAP_LAYERS))`.
+- [X] **6.4** Resolve `src/map_layer_gui.h`. Keep D's `ShowMainViewportLayerInDisplayOrder(uint)` and delete S's `SelectMainViewportLayer(MapLayer)` from the header and from `src/map_layer_gui.cpp`. Both were thin wrappers over `SetViewportLayer`. Adapt `src/tests/space_fixes_native.cpp:202`: its invalid-layer check becomes `CHECK_FALSE(ShowMainViewportLayerInDisplayOrder(MAX_MAP_LAYERS))`.
 
-- [ ] **6.5** Resolve the settings set. Two duplicates merge **without** markers, so Git will not flag them:
+- [X] **6.5** Resolve the settings set. Two duplicates merge **without** markers, so Git will not flag them:
   - `src/settings_type.h` (conflict block): one `hotkey_toggles_window` with D's comment plus "pinned and non-closable windows are raised instead", and D's `escape_closes_window`;
   - `src/table/settings/gui_settings.ini`: resolve the header block, then delete the second `[SDTC_BOOL] var = gui.hotkey_toggles_window` block (forecast line 182; both have `def = true`) and keep D's block with its r2df comment (line 160) and `gui.escape_closes_window`;
   - `src/settingentry_gui.cpp`: keep D's `escape_closes_window` entry; `hotkey_toggles_window` is already listed once;
@@ -377,33 +383,35 @@ Produces resolved, staged save-version and cargo-packet files with the pending g
 
   Run strgen through the build and check that no string ID is defined twice.
 
-- [ ] **6.6** Resolve `src/main_gui.cpp`. Keep D's Ctrl+Alt Debug comment and shortcuts, and confirm that S's `HotkeyList::Load` migration in `src/hotkeys.cpp` (Alt+0/1/2 → Ctrl+Alt for `crash_game`, `money`, `update_coordinates`) matches D's global names. In `src/tests/multilayer/acceptance/space_fixes_checks.py:78`, change `map_layer_space` to `show_map_layer_space`.
+- [X] **6.6** Resolve `src/main_gui.cpp`. Keep D's Ctrl+Alt Debug comment and shortcuts, and confirm that S's `HotkeyList::Load` migration in `src/hotkeys.cpp` (Alt+0/1/2 → Ctrl+Alt for `crash_game`, `money`, `update_coordinates`) matches D's global names. In `src/tests/multilayer/acceptance/space_fixes_checks.py:78`, change `map_layer_space` to `show_map_layer_space`.
 
-- [ ] **6.7** Apply 4.7 to every Group 6 file. Then rerun the 1.5 removed-name grep over the merge result, and expect hits only in historical plan text.
+- [X] **6.7** Apply 4.7 to every Group 6 file. Then rerun the 1.5 removed-name grep over the merge result, and expect hits only in historical plan text.
 
 ### Group 7 - Review the clean merges, build and commit the merge
 
 Produces the merge commit. Its gate is a successful GCC build of the three main targets with no conflict markers; Group 8 owns the first full test run.
 
+Execution evidence: [Group 7 record](m2o28-a-execution-notes.md#group-7). Merge commit `aa91b303`; one frozen command-count test needed updating.
+
 {{HARD}}
 
-- [ ] **7.1** Review each of the 17 clean shared paths against both parents (`git diff HEAD -- <path>` and `git diff MERGE_HEAD -- <path>`):
+- [X] **7.1** Review each of the 17 clean shared paths against both parents (`git diff HEAD -- <path>` and `git diff MERGE_HEAD -- <path>`):
   - the four CMake lists: ten focused executables, `openttd_space_fixes_test` registered once with its MSVC runtime and links, and each new production or test unit once;
   - `src/saveload/afterload.cpp`: S's `NormalizeLegacyAsteroidCargoPackets` call stays right after `AcceptLoadedAsteroidField` and, under the pending gate, runs for every load, which is correct because no D441 file carries typed origins;
   - `src/saveload/saveload.cpp`: the same for `NormalizeLegacyAsteroidCargoPreview`;
   - `src/cargopacket.cpp`, `src/saveload/space_cargo_preview.h`, and `src/window.cpp`/`src/map_layer_gui.cpp` after 6.3/6.4;
   - the six docs, which Group 40 reconciles.
 
-- [ ] **7.2** Check the S-only callers of every API changed in Groups 4-6: `GetSpaceSupplyLabel`, the owner preview rows, `ValidateAsteroidPacketCustody`, the layer and window hotkey entries, and the command enum. Record the call-site list in the notes, and confirm with `git grep -nE "SaveLoadVersion::(AsteroidCargoOrigins|AsteroidFieldLifecycle|SpaceMiningContinuation|SpaceLegacyDeparture|SpaceSurveyDeparture)\b" -- src` that the pending-gate sites match the forecast: 32 production sites in 9 files and 23 in 3 test files.
+- [X] **7.2** Check the S-only callers of every API changed in Groups 4-6: `GetSpaceSupplyLabel`, the owner preview rows, `ValidateAsteroidPacketCustody`, the layer and window hotkey entries, and the command enum. Record the call-site list in the notes, and confirm with `git grep -nE "SaveLoadVersion::(AsteroidCargoOrigins|AsteroidFieldLifecycle|SpaceMiningContinuation|SpaceLegacyDeparture|SpaceSurveyDeparture)\b" -- src` that the pending-gate sites match the forecast: 32 production sites in 9 files and 23 in 3 test files.
 
-- [ ] **7.3** Build GCC in the existing `build/` tree: `ninja -C build -j4 -k 0 openttd openttd_test openttd_space_fixes_test`, logged to `logs/merge-oct28/merge/build-gcc.log`. Fix compile and link errors only inside the resolution and record each. A failure in S-only code that Group 2 also saw is not fixed here; record it for Group 8.
+- [X] **7.3** Build GCC in the existing `build/` tree: `ninja -C build -j4 -k 0 openttd openttd_test openttd_space_fixes_test`, logged to `logs/merge-oct28/merge/build-gcc.log`. Fix compile and link errors only inside the resolution and record each. A failure in S-only code that Group 2 also saw is not fixed here; record it for Group 8.
 
-- [ ] **7.4** Run the static checks:
+- [X] **7.4** Run the static checks:
   - no conflict markers in the whole tree: `git grep -nE '^(<<<<<<<|=======|>>>>>>>)( |$)' -- ':!*.md'`, then the Markdown files by hand;
   - `git diff --cached --check`;
   - `python3 -I test-cache/linux-baseline/check_swallowed_code.py` over every resolved C++ file. It is r2lbf's local helper; if it is absent, recreate it from r2lbf Group 17's description.
 
-- [ ] **7.5** Commit the merge with `git commit` and no `-m` shortcut that drops the default "Merge …" line. The message names both pins, the pending gate, command 223, the hotkey and preview consolidations and this plan's Groups 4-7, and ends with the attribution lines. Verify `git log --graph --oneline -4`: the first parent is the Group 1 tip (`d49c3596` plus planning commits) and `git rev-parse HEAD^2` is `66713bdf`. Do not push.
+- [X] **7.5** Commit the merge with `git commit` and no `-m` shortcut that drops the default "Merge …" line. The message names both pins, the pending gate, command 223, the hotkey and preview consolidations and this plan's Groups 4-7, and ends with the attribution lines. Verify `git log --graph --oneline -4`: the first parent is the Group 1 tip (`d49c3596` plus planning commits) and `git rev-parse HEAD^2` is `66713bdf`. Do not push.
 
 ### Area Mandatory Reading - Merged baseline
 

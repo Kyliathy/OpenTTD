@@ -63,3 +63,59 @@ All producers ran headless on Linux with the null video driver, from the export 
 **3.4** `python3 -I test-cache/merge-oct28/collect_donor445.py test-cache/merge-oct28/s-reference test-cache/merge-oct28/donor445 66713bdf 079181de` copied **28 saves** (all `OTTX`, outer version **445**) with `test-cache/merge-oct28/donor445/manifest.json`: per save its run, producer source and arguments, output SHA256 and the executable SHA256 (`openttd_space_fixes_test` `d49e28c2…`). Nothing was written to the tracked retention journal.
 
 **3.5** No producer failed and none needed a real video driver, so no Windows-handoff row comes from this group. These are contemporary reconstructions from retained 405/418/440 originals; historical S441-444 originals stay unavailable and unverified.
+
+## Group 4
+
+**4.1** `git merge --no-ff --no-commit origin/mlm-mlv-2sp` on `merge-2sp-oct28` (`logs/merge-oct28/merge-start.log`): 23 unmerged paths, 221 status entries (S's 222 paths minus the identical `clean.ps1`). The resolution helper `test-cache/merge-oct28/resolve.py <file> <block> <text>` replaces one numbered block and refuses a stale index; resolutions were applied from the last block upward.
+
+**4.2** `saveload.h`: D's tail stays (`MergedLineage = 441`, then `MaxVersion`); the five incoming names follow `MaxVersion` with value `MaxVersion` and a comment naming Groups 9-22 and the "no real games" rule. `required_capability{}` kept. `saveload.cpp` gained `static_assert(SAVEGAME_VERSION == SaveLoadVersion::MergedLineage)`.
+
+**4.3** `cargopacket_sl.cpp`, all five blocks as unions: D's four supply columns and S's two asteroid columns (still on the pending enumerator); `CheckCargoPacketSourceFields` runs D's checks and then S's `ValidateCargoPacketSourceSchema`; native and copied rows decode through `DecodeCargoPacketSource` (which already applies `IsValidCargoPacketSource`), then D's departure/link check; the copied descriptor carries both D's supply columns and S's `source_xy`/`source` columns.
+
+**4.4** `cargopacket.h`: both friends (`AcceptLoadedSurfaceSupplyOrders`, `CAPAChunkHandler`) and `UpgradeLegacyAsteroidSource`.
+
+**4.5** `NativeCargoReferencePreview` and `LoadCheckData::native_cargo_reference_rows` are gone; `NativeCargoOwnerPreview`/`native_cargo_owner_rows` serve both joins. S's bound check "Excessive native cargo meaning references" now guards the owner rows in `station_sl.cpp` and `vehicle_sl.cpp`. `vehicle_sl.cpp` keeps r2lbf's four instantiations and S's `CheckSpaceMiningContinuationHeader`. Discovery: two S tests (`asteroid_cargo_validation.cpp`, `asteroid_cargo_wire.cpp`) build `NativeCargoPacketPreview` positionally with the origin fields right after `feeder_share`, so the merged struct orders S's three fields before D's two supply fields (D only initializes the first two members positionally). S's `asteroid_cargo_validation.cpp` and `space_fixes_native.cpp` now use owner rows.
+
+**4.6** `space_cargo_preview.cpp`: D's descent line, then S's orphan-asteroid loop and `return ValidateSpaceAsteroidCargoPreview(data);`, and S's two functions, which read `native_cargo_owner_rows`. A local `GetOptionalSpaceSupplyLabel` adapts D's `CT_INVALID` label API to S's optional-label semantics at its two call sites. The Group 20 note sits at the label preparation.
+
+**4.7** Every Group 4 file: no markers, `git diff --check` clean, staged.
+
+## Group 5
+
+**5.1** D's `CargoLabel GetSpaceSupplyLabel(SpaceSupply)` kept, S's optional overload removed; the only S caller was the copied preview (4.6).
+
+**5.2** `ValidateAsteroidPacketCustody(const AsteroidField &field)` (S's signature, declared in `asteroid_cargo.h`) now runs on `VisitNativeCargoPackets` with S's checks inside the visitor (canonical source, `ResolveAsteroidCargoOrigin`, valid cargo, Space-plane pickup, no first station, label match). The final pool loop also refuses any non-canonical source. S's hand-written owner walk is gone. The `ValidateSpaceVehicles` call already passed `field`.
+
+**5.3** `SetSpaceMiningPolicy` appended after `SetTubeVehicleGeothermalPower` (223). `merged_command_compatibility.cpp`: `static_assert`s for 222/223 and the suffix expectation `+m441c224p`. S code uses the command only by name.
+
+**5.4** `asteroid_gui.cpp`: `"space_inspector", 560, 380`. The r2lbf key `"space_survey"` was never released, so no `windows.cfg` migration; Group 40 updates `r2lbf-b-windows-handoff.md`.
+
+**5.5** `d2sa-space-adventures.md`: one paragraph with both sides' facts; Group 40 rewords it for writer 446.
+
+**5.6** Checked per file as each was staged.
+
+## Group 6
+
+**6.1-6.2** `toolbar_gui.h/.cpp`: D's `MTHK_SHOW_MAP_LAYER_*`, `MainToolbarEditorHotkeys::ShowMapLayer*` and `show_map_layer_*` INI names. The S `case` lines that merged into both `OnHotkey` bodies without markers (`MTHK_LAYER_*`, `MainToolbarEditorHotkeys::Layer*`, `HandleWindowOpeningHotkey(GameOptions)`) were removed by hand, as was a duplicated `@param` doc line.
+
+**6.3** `ToggleHotkeyWindow` gained S's safeguards for every window-opening key: modal progress → handled, nothing happens; a modal window → it is raised; pinned or `NoClose` targets → raised, never closed. Discovery: S's handler also avoided **recreating** Game Options on a repeated F2 (D's path called `ShowGameOptions()`, which closes and rebuilds the window). `ShowOrRaiseGameOptions()` now raises an existing window or opens a new one, in both toolbars. `HandleWindowOpeningHotkey` was removed from `window.cpp` (taken from the index's merge result so no unrelated whitespace changed) and `window_func.h`.
+
+**6.4** `SelectMainViewportLayer` removed from `map_layer_gui.h/.cpp`; `space_fixes_native.cpp:202` now checks `CHECK_FALSE(ShowMainViewportLayerInDisplayOrder(MAX_MAP_LAYERS))`.
+
+**6.5** One `hotkey_toggles_window` member (D's comment plus the pinned/non-closable rule) and `escape_closes_window`; the unmarked second `[SDTC_BOOL] gui.hotkey_toggles_window` block in `gui_settings.ini` and S's unmarked string pair in `english.txt` were deleted; D's help text now names the raise-intact and pinned/non-closable behavior. The layer tooltips keep D's wording. No `STR_` ID is defined twice.
+
+**6.6** D's Ctrl+Alt comment kept; S's `HotkeyList::Load` migration names (`crash_game`, `money`, `update_coordinates`) match D's global hotkeys. `space_fixes_checks.py` custom hotkey now writes `show_map_layer_space`.
+
+**6.7** `git grep` finds the removed names only in planning documents. The seven header-only blocks were resolved by `test-cache/merge-oct28/resolve_headers.py` (D's description, every `@see` from both sides, plus an m2o28 line), with two duplicated `@see` lines removed afterwards.
+
+## Group 7
+
+**7.1** The 17 clean paths: the four CMake lists add only the incoming units and `openttd_space_fixes_test` (no repeats, checked in 1.5); `cargopacket.cpp` adds `UpgradeLegacyAsteroidSource`; `afterload.cpp` calls `NormalizeLegacyAsteroidCargoPackets` right after `AcceptLoadedAsteroidField` and `saveload.cpp` calls `NormalizeLegacyAsteroidCargoPreview`, both under the pending gate (so for every load, which is right for D441: it has no typed origins); `space_cargo_preview.h` declares the two incoming preview functions; `window.cpp`/`map_layer_gui.cpp` were edited in 6.3/6.4; `clean.ps1` is identical; the six docs wait for Group 40.
+
+**7.2** Pending-gate sites: 32 in production (9 files) and 23 in tests (3 files), as forecast. S-only callers of changed APIs were adapted during Groups 4-6: the copied preview, two S tests on owner rows, the layer test, the harness hotkey name.
+
+**7.3** `ninja -C build -j4 -k 0 openttd openttd_test openttd_space_fixes_test`: 1,187 edges in 31.6 min with **one** failure: `src/tests/transport_tube_provider_switch.cpp:265`, a D test that freezes `Commands::End == 223`. It now asserts `SetSpaceMiningPolicy == 223` and `End == 224`. The rebuild (`build-gcc-2.log`, 45 s) linked all three targets with 0 failures, including `openttd_test`'s POST_BUILD test discovery.
+
+**7.4** No conflict markers anywhere; `git diff --cached --check` clean; `check_swallowed_code.py HEAD` found 0 suspicious lines across the whole merge diff.
+
+**7.5** Merge commit `aa91b303`: first parent `a500f8ea` (descends from `d49c3596`), second parent `66713bdf`. Not pushed.
