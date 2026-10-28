@@ -2,6 +2,7 @@
 /** @file save_lineage_preflight.cpp Native load-entry refusals, copied replay and per-attempt branch lifetime.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 13 and 17B; real development-build 445 originals refuse without touching the world.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 19; every merged copied field resets between candidates.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -693,6 +694,43 @@ TEST_CASE("Candidate previews discard failed transport across original lineages"
 	CheckDiscardedLoadCandidate(); CHECK(CaptureCandidateLiveState() == installed);
 	REQUIRE(LoadWithFilter(EnvelopeNetworkReader(original.bytes), original.hint, true) == SaveLoadResult::Ok);
 	CHECK(CaptureCandidateLiveState() == installed);
+	// A development build's file between two valid previews refuses before any
+	// native read, keeps its own error, and lends nothing to the next candidate.
+	const auto development = DevelopmentBuildOriginals().front();
+	CHECK(LoadWithFilter(EnvelopeNetworkReader(development.bytes), std::nullopt, true) == SaveLoadResult::Error);
+	CheckDiscardedLoadCandidate(); CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME);
+	CHECK(CaptureCandidateLiveState() == installed);
+	const auto space = OriginalForPreflight("A", 440);
+	REQUIRE(LoadWithFilter(EnvelopeNetworkReader(space.bytes), space.hint, true) == SaveLoadResult::Ok);
+	CHECK(CaptureCandidateLiveState() == installed);
+}
+
+/** Clear() resets every field the merge added, so no previous candidate can lend copied evidence to the next. */
+TEST_CASE("Candidate preview reset clears every merged copied field", "[save-candidate-lifecycle]")
+{
+	LoadCheckData data;
+	// Give every merged field a non-default value, as a rich previous candidate would.
+	data.native_cargo_packet_rows.push_back({CargoPacketID{3}, 2, Source::FromAsteroid(7, CargoLabel{"NORE"}), Money{0}, TileIndex{5}, StationID::Invalid(), true, 9, 1});
+	data.native_cargo_owner_rows.push_back({4, CargoType{1}, StationID{2}});
+	data.asteroid_present = data.asteroid_active = data.asteroid_knowledge_present = true;
+	data.asteroid_next_body_id = 8; data.asteroid_body_count = 1;
+	data.asteroid_body_rows.push_back({OrbitalBodyID{7}, AsteroidClass::Metallic});
+	data.asteroid_mining_leases.emplace_back(OrbitalBodyID{7}, VehicleID{1});
+	data.asteroid_knowledge_rows.push_back({OrbitalBodyID{7}, uint64_t{1}});
+	data.next_launch_center_generation = 5;
+	data.native_space_vehicle_rows.emplace_back(); data.native_space_vehicle_rows.back().mining_continuation.retry_ticks = 3;
+	data.space_order_preview_rows.emplace_back();
+	data.native_cargo_dimensions_present = true; data.native_cargo_dimension_rows.push_back({CargoType{1}, CargoLabel{"NORE"}, 16});
+	data.legacy_a_supply_wire = data.legacy_b_supply_packet_fields_present = true;
+	data.Clear();
+	CHECK(data.native_cargo_packet_rows.empty()); CHECK(data.native_cargo_owner_rows.empty());
+	CHECK_FALSE(data.asteroid_present); CHECK_FALSE(data.asteroid_active); CHECK_FALSE(data.asteroid_knowledge_present);
+	CHECK(data.asteroid_next_body_id == 0); CHECK(data.asteroid_body_count == 0);
+	CHECK(data.asteroid_body_rows.empty()); CHECK(data.asteroid_mining_leases.empty()); CHECK(data.asteroid_knowledge_rows.empty());
+	CHECK(data.next_launch_center_generation == 1);
+	CHECK(data.native_space_vehicle_rows.empty()); CHECK(data.space_order_preview_rows.empty());
+	CHECK_FALSE(data.native_cargo_dimensions_present); CHECK(data.native_cargo_dimension_rows.empty());
+	CHECK_FALSE(data.legacy_a_supply_wire); CHECK_FALSE(data.legacy_b_supply_packet_fields_present);
 }
 
 /** Real files a development build wrote at 445 are Unsupported from their own bytes and refuse before any native read. */

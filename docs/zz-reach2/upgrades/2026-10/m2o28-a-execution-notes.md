@@ -656,3 +656,35 @@ Results (`logs/merge-oct28/group18/`):
 - `space-factory-440.sav` resaves and reloads (exit 0 both).
 - `space-heavy-440.sav` still refuses on save with "Invalid native cargo source for saving". That is the pending typed-origin item for Group 22, and the engine leaves a 0-byte file, as it already did before this group.
 
+## Group 19
+
+**19.1** Checked by reading:
+
+- `NativeCargoPacketPreview` (`fios.h`) carries the packet, quantity, source and feeder share; S's `source_tile`, `first_station` and `legacy_asteroid_origin`; and D's U64 `company_supply_order` and literal `company_supply_shipped` byte.
+- `NativeCargoOwnerPreview` is the only owner row. Group 4 removed the reference-only `NativeCargoReferencePreview`, and no consumer expects it.
+
+**19.2** Readers:
+
+- The station reader (`station_sl.cpp:776-780`) writes one owner row for every bucket reference.
+- The vehicle reader (`vehicle_sl.cpp:1418-1425`) writes one owner row for every ordinary-carrier reference.
+- So aggregate references and owner rows describe the same packets one-to-one in every real file. Group 20 relies on that.
+
+These `LoadCheckData` fields already exist with S's value types: `asteroid_body_rows`, `asteroid_next_body_id`, `asteroid_mining_leases`, `next_launch_center_generation`, and the per-row `mining_continuation`. No additions were needed.
+
+**19.3** `Clear()` audit: a scan of `LoadCheckData`'s 167 members against `LoadCheckData::Clear()` found every merged field reset.
+
+- `companies` is cleared without the `this->` prefix.
+- `grf_compatibility` is not reset in D or S either; it is recomputed on every load, as upstream does.
+
+Tests:
+
+- `CheckDiscardedLoadCandidate` (`save_candidate_lifecycle_fixture.h`) now also asserts that owner rows, Space vehicle rows, the asteroid field, body rows, the frontier, leases, the launch-center issuer and order rows are cleared after a refusal.
+- `Candidate previews discard failed transport across original lineages` appends a refused development-build original (with its `DEVELOPMENT_SAVEGAME` error kept and the world unchanged), then a valid A440 preview.
+- New case `Candidate preview reset clears every merged copied field` sets every merged field and checks `Clear()` restores each default.
+
+Results (`logs/merge-oct28/group19/`):
+
+- `[save-candidate-lifecycle]`: 2 cases, 10,764 assertions.
+- `[save-lineage-preflight]`: 4 cases, 3,048 assertions.
+- Subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Cc]andidate|[Dd]iscard|[Rr]efus"`: GCC 481/481, Clang 481/481.
+

@@ -76,5 +76,11 @@ inline void CheckDiscardedLoadCandidate()
 	CHECK(_load_check_data.utility_power_state.producers.empty()); CHECK(_load_check_data.tube_geothermal_state.sources.empty());
 	CHECK(_load_check_data.tube_vehicle_rows.empty()); CHECK(_load_check_data.space_production_rows.empty());
 	CHECK(_load_check_data.native_cargo_packet_rows.empty()); CHECK_FALSE(GetLoadCapabilities().has_value());
+	// Fields the merge added (m2o28 Group 19): owner rows, the sparse field, leases,
+	// issuers and mission rows must not survive a refused candidate either.
+	CHECK(_load_check_data.native_cargo_owner_rows.empty()); CHECK(_load_check_data.native_space_vehicle_rows.empty());
+	CHECK_FALSE(_load_check_data.asteroid_present); CHECK(_load_check_data.asteroid_body_rows.empty());
+	CHECK(_load_check_data.asteroid_next_body_id == 0); CHECK(_load_check_data.asteroid_mining_leases.empty());
+	CHECK(_load_check_data.next_launch_center_generation == 1); CHECK(_load_check_data.space_order_preview_rows.empty());
 }
 #endif /* TESTS_SAVE_CANDIDATE_LIFECYCLE_FIXTURE_H */

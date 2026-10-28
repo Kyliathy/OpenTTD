@@ -851,11 +851,13 @@ _Applies to Groups 19-20._
 
 {{MEDIUM}}
 
-- [ ] **19.1** Check the Group 4 result. `NativeCargoPacketPreview` carries S's production tile, first station and legacy-origin qualification as well as D's U64 receipt and literal shipment byte. Exactly one `NativeCargoOwnerPreview` exists, and no S consumer still expects a reference-only row.
+- [X] **19.1** Check the Group 4 result. `NativeCargoPacketPreview` carries S's production tile, first station and legacy-origin qualification as well as D's U64 receipt and literal shipment byte. Exactly one `NativeCargoOwnerPreview` exists, and no S consumer still expects a reference-only row.
 
-- [ ] **19.2** Make the station and vehicle LoadCheck readers describe the same physical packets in their aggregate references and their detailed owner rows. Add the sparse body rows/frontier, mining leases, launch-center issuer and contained mission fields to `LoadCheckData` with S's value types, where Groups 17-18 did not already.
+- [X] **19.2** Make the station and vehicle LoadCheck readers describe the same physical packets in their aggregate references and their detailed owner rows. Add the sparse body rows/frontier, mining leases, launch-center issuer and contained mission fields to `LoadCheckData` with S's value types, where Groups 17-18 did not already.
 
-- [ ] **19.3** Update `LoadCheckData::Clear`, the successful exit and the copied-failure reset for every appended field. Add shape/reset cases that alternate dialects, empty worlds, invalid candidates and a later valid candidate: no stale owner row may survive.
+- [X] **19.3** Update `LoadCheckData::Clear`, the successful exit and the copied-failure reset for every appended field. Add shape/reset cases that alternate dialects, empty worlds, invalid candidates and a later valid candidate: no stale owner row may survive.
+
+Execution evidence: see **Group 19** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass 481/481.
 
 ### Group 20 - Compose copied custody, provenance and continuation checks
 
