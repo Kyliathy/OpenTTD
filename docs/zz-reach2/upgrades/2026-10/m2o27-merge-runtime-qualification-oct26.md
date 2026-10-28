@@ -46,6 +46,8 @@
 
 ## Plan sequence and split boundary
 
+**Status, 2026-10-28:** for the Linux workspace, this merge is now planned and executed by [m2o28 Part 1](m2o28-1-merge-oct28.md) and [Part 2](m2o28-2-merge-oct28.md), which adopt these decisions with enhancements (a real Git merge commit, a pending save-version gate in that commit, Linux builds with a Windows handoff, and cleanup with automatic backup). This plan's tasks stay as the historical October 26 record; do not execute them alongside m2o28.
+
 The merge is planned in two files in this directory. Group and task numbers remain continuous across them; every unqualified group reference uses this shared numbering. This file split changes no implementation task, difficulty, checkbox, code sketch or diagram.
 
 | Plan | Groups | Responsibility |
