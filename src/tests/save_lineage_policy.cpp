@@ -2,6 +2,7 @@
 /** @file save_lineage_policy.cpp Detached ambiguity, corruption and capability cases.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the closed Space fixes capability matrix.
  * SAVE_LINEAGE_STANDALONE builds this pure Catch leaf without native game pools.
  * The ordinary native test target registers this leaf through src/tests/CMakeLists.txt.
  */
@@ -122,7 +123,9 @@ struct CapabilityExpectation {
 	uint16_t first_version; ///< Explicit original SaveLoadVersion value in the audited handoff.
 };
 
-/** Source-defined thresholds from both original enums; merged files contain their union. */
+/** Source-defined thresholds from all three original writers.
+ * Merged 441 contains the A and B union; merged 446 adds the five Space fixes eras.
+ */
 static constexpr CapabilityExpectation CAPABILITY_EXPECTATIONS[] = {
 	{SaveCapability::OrbitalAssemblyFacilities, SaveDialect::DestinationA, 425},
 	{SaveCapability::OrbitalManufacturingReservations, SaveDialect::DestinationA, 426},
@@ -150,8 +153,49 @@ static constexpr CapabilityExpectation CAPABILITY_EXPECTATIONS[] = {
 	{SaveCapability::UtilityLocalElectricalFeed, SaveDialect::DonorB, 432},
 	{SaveCapability::TubeGeothermalSources, SaveDialect::DonorB, 433},
 	{SaveCapability::TubeGeothermalBindings, SaveDialect::DonorB, 434},
+	{SaveCapability::AsteroidCargoOrigins, SaveDialect::SpaceFixes, 441},
+	{SaveCapability::AsteroidFieldLifecycle, SaveDialect::SpaceFixes, 442},
+	{SaveCapability::SpaceMiningContinuation, SaveDialect::SpaceFixes, 443},
+	{SaveCapability::SpaceLegacyDeparture, SaveDialect::SpaceFixes, 444},
+	{SaveCapability::SpaceSurveyDeparture, SaveDialect::SpaceFixes, 445},
 };
 static_assert(std::size(CAPABILITY_EXPECTATIONS) == static_cast<uint8_t>(SaveCapability::Count));
+
+/** The five appended capabilities, in the column order of the m2o28 Group 9 matrix. */
+static constexpr std::array<SaveCapability, 5> SPACE_FIXES_CAPABILITIES{
+	SaveCapability::AsteroidCargoOrigins, SaveCapability::AsteroidFieldLifecycle, SaveCapability::SpaceMiningContinuation,
+	SaveCapability::SpaceLegacyDeparture, SaveCapability::SpaceSurveyDeparture,
+};
+
+/** One source row of the closed matrix, written out literally rather than derived from the thresholds above. */
+struct SpaceFixesMatrixRow {
+	SaveDialect dialect; ///< Original writer of the source.
+	uint16_t version; ///< Unchanged original envelope version.
+	std::array<bool, 5> carries; ///< Typed origin, renewal, mining intent, unqueued departure, released survey return.
+};
+
+/** The closed source-format matrix from m2o28-1-merge-oct28.md Group 9. Any other source grants none of the five. */
+static constexpr SpaceFixesMatrixRow SPACE_FIXES_MATRIX[] = {
+	{SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION, {false, false, false, false, false}},
+	{SaveDialect::SpaceFixes, 441, {true, false, false, false, false}},
+	{SaveDialect::SpaceFixes, 442, {true, true, false, false, false}},
+	{SaveDialect::SpaceFixes, 443, {true, true, true, false, false}},
+	{SaveDialect::SpaceFixes, 444, {true, true, true, true, false}},
+	{SaveDialect::SpaceFixes, 445, {true, true, true, true, true}},
+	{SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION, {true, true, true, true, true}},
+};
+
+/** Name an admitted source directly, for writers the classifier does not admit yet.
+ * The capability policy is pure, so Groups 9-10 test it without wire facts; Group 13
+ * composes the classifier that produces these results from real bytes.
+ * @param dialect Original writer.
+ * @param version Unchanged original envelope version.
+ * @return An accepted classification of that writer and version.
+ */
+static SaveLineageResult AcceptedSource(SaveDialect dialect, uint16_t version)
+{
+	return {SaveLineageStatus::Accepted, dialect, version};
+}
 
 /** Every original numeric collision must retain the selected branch's feature meanings. */
 TEST_CASE("Save lineage separates every original A and B capability boundary", "[save-lineage]")
@@ -263,9 +307,12 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 	const auto result = ClassifySaveDialect(facts);
 	REQUIRE(result.status == SaveLineageStatus::Accepted);
 	CHECK(result.dialect == SaveDialect::Merged);
-	// Every currently known capability is supplied by the combined writer;
-	// unknown enum values still refuse independently of the complete marker.
-	for (uint8_t feature = 0; feature < static_cast<uint8_t>(SaveCapability::Count); ++feature) CHECK(HasSaveCapability(result, static_cast<SaveCapability>(feature)));
+	// The first combined writer supplies every A and B capability. The Space
+	// fixes eras came later; the matrix case checks that 441 lacks them.
+	for (const auto &expected : CAPABILITY_EXPECTATIONS) {
+		if (expected.dialect != SaveDialect::SpaceFixes) CHECK(HasSaveCapability(result, expected.capability));
+	}
+	// Unknown enum values still refuse independently of the complete marker.
 	CHECK_FALSE(HasSaveCapability(result, static_cast<SaveCapability>(255)));
 	facts.marker_magic ^= 1; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.marker_schema = 2; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
@@ -283,4 +330,25 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 	facts = Merged(); facts.merged_supply_next_id = 0; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.feature_flags |= 1U << 27; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 
+}
+
+/** The closed m2o28 Group 9 matrix: who carries the five Space fixes eras, and what else each source keeps.
+ * Pending until Group 10 replaces the positional capability arithmetic, hence `[!mayfail]`.
+ */
+TEST_CASE("Save lineage freezes the Space fixes source-format matrix", "[save-lineage][!mayfail]")
+{
+	for (const auto &row : SPACE_FIXES_MATRIX) {
+		const auto source = AcceptedSource(row.dialect, row.version);
+		// The five appended capabilities follow the literal row, not a version comparison.
+		for (size_t column = 0; column < SPACE_FIXES_CAPABILITIES.size(); ++column) {
+			CHECK(HasSaveCapability(source, SPACE_FIXES_CAPABILITIES[column]) == row.carries[column]);
+		}
+		// Every older capability: the merged writers carry the A and B union, while
+		// S441-445 descend from A440, so they keep all of A and none of B's ground features.
+		for (const auto &expected : CAPABILITY_EXPECTATIONS) {
+			if (expected.dialect == SaveDialect::SpaceFixes) continue; // Covered by the literal columns above.
+			const bool carried = row.dialect == SaveDialect::Merged || expected.dialect == SaveDialect::DestinationA;
+			CHECK(HasSaveCapability(source, expected.capability) == carried);
+		}
+	}
 }

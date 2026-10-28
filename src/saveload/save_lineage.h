@@ -2,6 +2,7 @@
 /** @file save_lineage.h Detached compatibility evidence for parallel save histories.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the incoming Space fixes eras as capability rules.
  * This boundary neither parses bytes nor initializes a world. The actual reader
  * must supply bounded same-file facts; filenames and live owners are not inputs.
  */
@@ -12,8 +13,17 @@
 #include <cstdint>
 #include <optional>
 
-/** Original wire interpretation; a merged result does not rewrite legacy versions. */
-enum class SaveDialect : uint8_t { Shared, DestinationA, DonorB, Merged };
+/** Original wire interpretation; a merged result does not rewrite legacy versions.
+ * Values are appended only: each one names a writer whose version numbers mean
+ * something different from every other writer's same numbers.
+ */
+enum class SaveDialect : uint8_t {
+	Shared, ///< Common history up to 424, before the branches diverged.
+	DestinationA, ///< The destination's own historical writer, 425-440.
+	DonorB, ///< The historical underground donor writer, 425-434.
+	Merged, ///< The combined writer that emits MLLN: 441 with schema 1, later 446 with schema 2.
+	SpaceFixes, ///< The incoming Space fixes writer, 441-445 without MLLN; A440 plus its own five eras.
+};
 
 /** Explicit admission result; refused/ambiguous files have no capabilities. */
 enum class SaveLineageStatus : uint8_t { Accepted, Ambiguous, Corrupt, Unsupported };
@@ -46,10 +56,21 @@ struct SaveChunkEvidence {
 	uint16_t schema = 0; ///< Actual versioned header schema; zero where the historical transport has none.
 };
 
-/** Proposed merged allocation; activation and complete serialization belong to Group44. */
+/** Frozen first merged allocation: the combined A+B writer, also `SaveLoadVersion::MergedLineage`.
+ * Its meaning never changes. It has every A and B capability and none of the Space fixes eras.
+ */
 inline constexpr uint16_t MERGED_SAVE_LINEAGE_VERSION = 441;
-inline constexpr uint32_t MERGED_SAVE_LINEAGE_MAGIC = 0x4D4C4E31; ///< Network-order MLN1 payload marker inside MLLN.
-inline constexpr uint16_t MERGED_SAVE_LINEAGE_SCHEMA = 1;
+inline constexpr uint32_t MERGED_SAVE_LINEAGE_MAGIC = 0x4D4C4E31; ///< Network-order MLN1 payload marker inside MLLN; shared by every merged schema.
+inline constexpr uint16_t MERGED_SAVE_LINEAGE_SCHEMA = 1; ///< MLLN schema written by merged 441.
+
+/** Reserved combined writer that adds the Space fixes eras; m2o28-1-merge-oct28.md Group 22 activates it.
+ * Until then nothing writes 446, the classifier refuses it, and the writer context stays at merged 441.
+ * The incoming branch's eras 441-445 are capability rules of `SaveDialect::SpaceFixes`, never
+ * `SaveLoadVersion` values: `MergedLineage = 441` keeps its meaning, and Group 22 deletes the pending
+ * enumerators that `saveload.h` keeps after `MaxVersion` in the meantime.
+ */
+inline constexpr uint16_t CURRENT_MERGED_SAVE_VERSION = 446;
+inline constexpr uint16_t CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2; ///< MLLN schema reserved for merged 446; schema 1 stays bound to 441.
 
 /** Detached evidence for exactly one original byte stream; no game references are retained. */
 struct SaveWireFacts {
@@ -89,7 +110,10 @@ struct SaveLineageResult {
 	uint16_t original_version = 0; ///< Always the input envelope version, including refusals.
 };
 
-/** Divergent post-fork features; existing pre425 gates keep their ordinary numeric semantics. */
+/** Divergent post-fork features; existing pre425 gates keep their ordinary numeric semantics.
+ * Values are appended only, and none is derived from its position: each has an explicit rule in
+ * `HasSaveCapability`, and `src/tests/save_lineage_policy.cpp` asserts one expectation per value.
+ */
 enum class SaveCapability : uint8_t {
 	OrbitalAssemblyFacilities, OrbitalManufacturingReservations, OrbitalManufacturingMaterialization,
 	OrbitalManufacturingClones, SpaceReplacementSettlement, SpaceOrderedActions,
@@ -98,7 +122,13 @@ enum class SaveCapability : uint8_t {
 	SpaceCargoDimensions, OrbitalRecipeProcessing, CompanySupplyPackets, SurfaceSupplyOrdersA,
 	TBMFaceTransfer, SurfaceSupplyOrdersB, GeothermalGenerators, UtilityHeatConversion,
 	GeothermalGeneratorOperation, GeothermalMagmaLoop, UtilityTownService,
-	UtilityLocalElectricalFeed, TubeGeothermalSources, TubeGeothermalBindings, Count,
+	UtilityLocalElectricalFeed, TubeGeothermalSources, TubeGeothermalBindings,
+	AsteroidCargoOrigins, ///< Space fixes 441: CAPA packets carry the full asteroid body ID and mineral label.
+	AsteroidFieldLifecycle, ///< Space fixes 442: ASTR/SPKN sparse issuance, lifecycle revision and renewal state.
+	SpaceMiningContinuation, ///< Space fixes 443: SPOR mining policy and VEHS contained mining intent.
+	SpaceLegacyDeparture, ///< Space fixes 444: an unordered legacy miner's local departure.
+	SpaceSurveyDeparture, ///< Space fixes 445: an ownerless survey's Return/Waiting after release.
+	Count,
 };
 
 /** Classify one complete set of detached transport facts without parsing or mutation.

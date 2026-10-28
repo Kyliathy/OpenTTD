@@ -151,3 +151,48 @@ All producers ran headless on Linux with the null video driver, from the export 
 The pure codec cases that pass a pending enumerator straight to a codec pass under the gate, as the plan expected.
 
 **8.8** `python3 -B src/tests/multilayer/acceptance/space_ordinary_checks.py --source <save> --mode <load|advance> --run <id>` (real `build/openttd` with the null video driver, paused save, `quit`). Results: `underground/mine-haulage-403.sav` load: exit 0, saved. `space/space-factory-440.sav` load: exit 0, saved. `space/space-heavy-440.sav` load and advance: both load, then saving refuses (the pending item above), with no crash and no corrupt file. The first attempt exposed an S harness defect: `space_ordinary_checks.py` wrote its log without creating `logs/space-fixes/`. It now creates the directory, as its sibling does (commit `31cc118d`).
+
+## Group 9
+
+**9.1** Pending-gate burn-down. Each row names a site that still compares a pending `SaveLoadVersion` enumerator, which equals `MaxVersion` under the Group 4 gate. Its owning group replaces the comparison with a capability query and ticks the row here. Rebuild the list with `grep -rn "SaveLoadVersion::\(AsteroidCargoOrigins\|AsteroidFieldLifecycle\|SpaceMiningContinuation\|SpaceLegacyDeparture\|SpaceSurveyDeparture\)" src`. Line numbers are as of commit `ec5f4c18`.
+
+| Done | File | Lines | Gate | Owner |
+| --- | --- | --- | --- | --- |
+| [ ] | `src/saveload/cargopacket_sl.cpp` | 163-164, 256-257 | CAPA `asteroid_body`/`asteroid_mineral` columns (native and copied descriptors) | 15 |
+| [ ] | `src/saveload/cargo_source_sl.cpp` | 29, 59 | `DecodeCargoPacketSource` legacy-or-typed branch and the schema check | 15 |
+| [ ] | `src/saveload/cargo_source_sl.h` | 48 | `IsValidCargoPacketSource` typed-origin acceptance | 15 |
+| [ ] | `src/tests/asteroid_cargo_wire.cpp` | 25-107 (15 sites) | Pure codec cases that pass `AsteroidCargoOrigins` straight to the codec | 15 |
+| [ ] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
+| [ ] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
+| [ ] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
+| [ ] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
+| [ ] | `src/saveload/space_mining_sl.cpp` | 62 | Continuation schema decoder | 18 |
+| [ ] | `src/saveload/vehicle_sl.cpp` | 1136-1149, 1295 | VEHS `mission.continuation.*` columns and the missing-schema refusal | 18 |
+| [ ] | `src/tests/asteroid_cargo_native.cpp` | 87 | Copied mission decision check at `SpaceMiningContinuation` | 18 |
+| [ ] | `src/tests/space_mining_wire.cpp` | 157-162 | Continuation-schema absence case (the pending CTest failure) | 18 |
+| [ ] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
+| [ ] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
+| [ ] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
+
+These sites read the accepted dialect directly instead of a pending enumerator. Once the classifier admits S files, `SaveDialect::SpaceFixes` must reach them as the A-fixed supply wire:
+
+| Done | File | Line | Current rule | Owner |
+| --- | --- | --- | --- | --- |
+| [ ] | `src/saveload/surface_supply_order_sl.cpp` | 120 | Fixed or tagged SSOR accepted only for `DestinationA` and `Merged` | 13 (classifier), 21 (load order) |
+| [ ] | `src/saveload/surface_supply_order_sl.cpp` | 260 | `legacy_a_supply_wire = dialect == DestinationA` (copied preview) | 13, 20 |
+
+**9.2** `src/saveload/save_lineage.h` appends `SaveDialect::SpaceFixes` (the S writer, 441-445 without MLLN) and five capabilities before `Count`: `AsteroidCargoOrigins`, `AsteroidFieldLifecycle`, `SpaceMiningContinuation`, `SpaceLegacyDeparture` and `SpaceSurveyDeparture`. It adds `CURRENT_MERGED_SAVE_VERSION = 446` and `CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2` beside the frozen 441/schema 1 constants. They stay reserved: nothing reads them until Groups 13 and 22. No code switches over `SaveDialect`, so the append needs no other edits.
+
+**9.3** `src/tests/save_lineage_policy.cpp`:
+
+- `CAPABILITY_EXPECTATIONS` gains five `SpaceFixes` rows at 441-445, so its `static_assert` on `Count` holds.
+- `SPACE_FIXES_MATRIX` writes the plan's seven-row matrix out literally.
+- The new case `Save lineage freezes the Space fixes source-format matrix` checks the five columns per row. It also checks every older capability: merged sources carry all of A and B, S sources all of A and none of B.
+- The merged-marker case now expects only the A/B capabilities, because merged 441 must lack the five.
+- The new case uses `AcceptedSource(dialect, version)` because the classifier cannot produce `SpaceFixes` or 446 before Group 13.
+- It is tagged `[!mayfail]` until Group 10.
+
+Quick check without the native tree: `g++ -std=c++20 -Wall -Wextra -DSAVE_LINEAGE_STANDALONE -Isrc src/tests/save_lineage_policy.cpp src/saveload/save_lineage.cpp -o test-cache/merge-oct28/lineage/policy`, then run it (11 s to compile, no warnings). Result: 6 cases, 5 passed and 1 failed as expected (131 matrix assertions, as forecast: the positional rule gives merged 441 the five, and gives S sources nothing).
+
+**9.4** The header comment on the reserved constants says that S's eras are capability rules of `SpaceFixes`, that `MergedLineage = 441` keeps its meaning, and that Group 22 deletes the pending enumerators. The comment on the frozen 441 constants, which still pointed at the old Group44 allocation plan, now says what 441 means.
+

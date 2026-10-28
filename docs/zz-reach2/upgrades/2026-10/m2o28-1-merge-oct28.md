@@ -472,6 +472,8 @@ _Applies to Groups 9-10._
 | [src/saveload/save_lineage_sl.cpp](../../../../src/saveload/save_lineage_sl.cpp) | 15-45 | `MLLNChunkHandler` writes the eight-byte marker (U32 magic, U16 schema, U16 writer). The same tuple tells 441/schema 1 from 446/schema 2 without a new chunk. |
 | [src/tests/save_lineage_policy.cpp](../../../../src/tests/save_lineage_policy.cpp) | 43-116; 118-154; 156-286 | The `Common`/`Destination`/`Donor`/`Merged` fact builders, the `CAPABILITY_EXPECTATIONS` table with its `static_assert` against `SaveCapability::Count`, and the five `[save-lineage]` cases. Appending capabilities breaks that `static_assert` until their expectation rows exist, which is how Group 9 proves every capability has a rule. |
 
+Context has compacted 1 times while executing this group.
+
 ### Group 9 - Freeze the finite source-format matrix
 
 Produces named constants, appended capability declarations and a truth-table test. The writer stays at 441.
@@ -490,18 +492,20 @@ Closed matrix for the five appended capabilities (older shared/A/B behavior keep
 
 {{MEDIUM}}
 
-- [ ] **9.1** Turn the 7.2 grep into the burn-down table in the notes: each pending-gate site, its file, and the group that replaces it (CAPA and `cargo_source_sl` 15; legacy normalization in `afterload.cpp`/`saveload.cpp` 16 and 21; ASTR/SPKN in `asteroid_sl.cpp` 17; SPOR/VEHS in `space_order_sl.cpp`, `space_mining_sl.cpp` and `vehicle_sl.cpp` 18). Every later group ticks its rows.
+- [X] **9.1** Turn the 7.2 grep into the burn-down table in the notes: each pending-gate site, its file, and the group that replaces it (CAPA and `cargo_source_sl` 15; legacy normalization in `afterload.cpp`/`saveload.cpp` 16 and 21; ASTR/SPKN in `asteroid_sl.cpp` 17; SPOR/VEHS in `space_order_sl.cpp`, `space_mining_sl.cpp` and `vehicle_sl.cpp` 18). Every later group ticks its rows.
 
-- [ ] **9.2** Append `AsteroidCargoOrigins`, `AsteroidFieldLifecycle`, `SpaceMiningContinuation`, `SpaceLegacyDeparture` and `SpaceSurveyDeparture` to `SaveCapability` (before `Count`), and `SpaceFixes` to `SaveDialect`. Keep every existing value. Add `CURRENT_MERGED_SAVE_VERSION = 446` and `CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2` next to the frozen 441/schema 1 constants, documented as reserved until Group 22.
+- [X] **9.2** Append `AsteroidCargoOrigins`, `AsteroidFieldLifecycle`, `SpaceMiningContinuation`, `SpaceLegacyDeparture` and `SpaceSurveyDeparture` to `SaveCapability` (before `Count`), and `SpaceFixes` to `SaveDialect`. Keep every existing value. Add `CURRENT_MERGED_SAVE_VERSION = 446` and `CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2` next to the frozen 441/schema 1 constants, documented as reserved until Group 22.
 
-- [ ] **9.3** Freeze the matrix above in `src/tests/save_lineage_policy.cpp`, adding the five rows to `CAPABILITY_EXPECTATIONS` so its `static_assert` holds:
+- [X] **9.3** Freeze the matrix above in `src/tests/save_lineage_policy.cpp`, adding the five rows to `CAPABILITY_EXPECTATIONS` so its `static_assert` holds:
   - D441 has every existing merged capability and none of the five;
   - S441-445 inherit the A440 features, never B-only ground features, and gain the five cumulatively;
   - combined 446 has the union.
 
   The cases compile now and stay pending until Group 10.
 
-- [ ] **9.4** Document in `save_lineage.h` that S's eras are capability rules, not `SaveLoadVersion` values: `MergedLineage = 441` stays, the writer moves to 446 in Group 22, and the pending enumerators are deleted then.
+- [X] **9.4** Document in `save_lineage.h` that S's eras are capability rules, not `SaveLoadVersion` values: `MergedLineage = 441` stays, the writer moves to 446 in Group 22, and the pending enumerators are deleted then.
+
+Execution evidence: see **Group 9** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). The matrix case is tagged `[!mayfail]` until Group 10; the standalone policy build reports 5 cases passed and the matrix case failing as expected.
 
 ### Group 10 - Implement capability selection without parsing
 
