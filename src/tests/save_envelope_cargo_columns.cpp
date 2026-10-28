@@ -181,7 +181,8 @@ TEST_CASE("Save envelope observes typed CAPA columns in real donor 445 saves", "
 #else
 	size_t scanned = 0;
 	// Each real S445 file must show the incoming writer's shape: typed origin
-	// columns, no supply pair and no merged marker. Its outer number is unchanged.
+	// columns, no supply pair, no merged marker and a fixed SSOR book. Its outer
+	// number is unchanged.
 	for (const auto &entry : std::filesystem::recursive_directory_iterator(directory)) {
 		if (!entry.is_regular_file() || entry.path().extension() != ".sav") continue;
 		INFO(entry.path().string());
@@ -193,6 +194,7 @@ TEST_CASE("Save envelope observes typed CAPA columns in real donor 445 saves", "
 		CHECK(facts.cargo_supply_encoding == SupplyColumnEncoding::Absent);
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Absent);
+		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed); // Group 12: the A440-derived fixed book, read by shape.
 		CHECK(reader->position == 0);
 		++scanned;
 	}

@@ -264,3 +264,54 @@ Results (GCC, `logs/merge-oct28/group11/`):
 
 Clang is deferred to the Group 13 close, because each header change rebuilds about 300 objects.
 
+## Group 12
+
+**12.1-12.2** Commit `e185eb8c`. `ReadRiff`'s SSOR case calls `ObserveSupplyBook`, which never looks at the version or at MLLN.
+
+- It reads a header-sized prefix (20 bytes, `MERGED_SURFACE_SUPPLY_HEADER_SIZE`).
+- The fixed A440 shape fits when the little-endian count at bytes 12-13 is at most 16384 and the extent is exactly 14 + 53 * n.
+- The SSM1 signature is the first word in network order. Only when it is present does the streaming `InspectMergedSurfaceSupplyOrders` run, with a reader that replays the prefix and then continues from the payload. No payload-sized buffer and no receipt vector exist.
+- The result goes into `SaveWireFacts::supply_book_shape`:
+  - both readings validate → `Ambiguous`;
+  - only the tagged book validates → `Tagged`;
+  - signature present but the book is invalid → `Malformed` (it never falls back to the fixed reading);
+  - no signature and no fixed fit → `Malformed`;
+  - otherwise → `Fixed`.
+- `merged_supply_valid` and `merged_supply_next_id` are set whenever the tagged book validates.
+- The classifier's malformed-first rule refuses `Malformed` and `Ambiguous`. The positive shape requirements (merged needs Tagged, A/S need Fixed) belong to Group 13.
+
+**Risk:** a real merged book whose bytes also satisfy the fixed equation would be refused as Ambiguous. That needs `20 + 54a + 39b == 14 + 53n`, with n taken from the frontier's low 16 bits byte-swapped. It is rare, but possible for some frontiers. The fixture `OverlappingBook()` is one such case: 8 LegacyB rows with next ID 0x600. Group 13 decides whether a valid marker settles this overlap or the plan's refusal stands.
+
+**12.3** Inventory of S-only schema changes, by family:
+
+| Family | Era | Change |
+| --- | --- | --- |
+| CAPA | 441 | Adds `asteroid_body` and `asteroid_mineral` (U32). Observed in Group 11. |
+| ASTR | 442 | Adds the 62-byte lifecycle trailer (`ASTEROID_LIFECYCLE_WIRE_BYTES`) and sparse body IDs. The era maximum comes from `GetAsteroidFieldWireMaximum`. |
+| ASTR | 445 | Survey records may carry no target (ownerless return/waiting). |
+| SPKN | 442 | Sorted, full-width sparse IDs, bounded by `MAX_ORBITAL_BODIES` instead of the dense population. |
+| SPOR | 443 | Order rows grow from 14 to 15 bytes (the policy byte). |
+| SPOR | 444 | Admits unqueued legacy departure. |
+| VEHS | 443 | Adds the 14 `mission.continuation.*` columns. |
+| SDEF | all | S writes content version 3, as A440 does. |
+
+None of these is needed to decide the writer. Typed CAPA columns (Group 11) and the fixed SSOR (Group 12) identify S441-445 positively, and each family's era is validated by its native decoder once the source is known. So no ASTR/SPKN/SPOR/VEHS fact was added.
+
+**12.4** VEHS is not inspected, so its conditional nested-schema path is not needed, and there are no non-Space vehicle cases to add.
+
+**12.5** `src/tests/save_envelope_supply_book.cpp` holds five cases:
+
+- fixed SSOR read by shape in A440, S441 (marker-free, CAPA first or last) and S445, with every truncation rewinding;
+- tagged SSOR in D441 and 446 with the marker first or last, plus an empty tagged book;
+- historical B `SSOH` + `SSOR` TABLE kept outside the RIFF shapes;
+- signature collisions: fixed-shaped books starting with SSM1 become Malformed, and the true overlap becomes Ambiguous;
+- refusals: too short, missing records, count 16385, a truncated or over-long tagged book (all Malformed), plus duplicate SSOR, an over-claimed RIFF length and SSOR as a sparse array (framing errors with rewind).
+
+The byte-level builders now live in `src/tests/save_envelope_chunks.h`, shared with Group 11's file. `save_lineage_policy.cpp` refuses `Malformed` and `Ambiguous` on complete merged and A440 facts, and accepts `Tagged` and `Fixed` there.
+
+Results (GCC, `logs/merge-oct28/group12/`):
+
+- Build: 12 min 4 s, exit 0, no warnings in the touched files.
+- The focused subset (the Group 11 pattern plus `Merged supply`): 70/70 passed (`ctest-gcc.{log,xml}`).
+- With the donor scan extended to the SSOR shape, all 28 real S445 saves read as `Fixed` (197 assertions, `donor445-scan.log`).
+

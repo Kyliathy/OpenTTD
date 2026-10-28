@@ -585,15 +585,17 @@ Group 11 facts exist. The public streaming supply decoder and S's codec constant
 
 {{HARD}}
 
-- [ ] **12.1** Remove the numeric 441 decoder choice in `ReadRiff`'s SSOR handling. Read a fixed bounded prefix and keep the original fixed-shape facts: 14-byte header, little-endian count, exact 14+53·n extent. Use a prefix-replay adapter for the SSM1 streaming inspector. Never allocate the whole SSOR payload or build receipt vectors during preflight.
+- [X] **12.1** Remove the numeric 441 decoder choice in `ReadRiff`'s SSOR handling. Read a fixed bounded prefix and keep the original fixed-shape facts: 14-byte header, little-endian count, exact 14+53·n extent. Use a prefix-replay adapter for the SSM1 streaming inspector. Never allocate the whole SSOR payload or build receipt vectors during preflight.
 
-- [ ] **12.2** Record fixed and tagged validity explicitly, never guessing from MLLN arrival order. Keep any signature overlap as an ambiguity for Group 13 to refuse. A malformed recognized tagged payload never falls through to an older parser. Add a synthetic prefix-collision case.
+- [X] **12.2** Record fixed and tagged validity explicitly, never guessing from MLLN arrival order. Keep any signature overlap as an ambiguity for Group 13 to refuse. A malformed recognized tagged payload never falls through to an older parser. Add a synthetic prefix-collision case.
 
-- [ ] **12.3** Inventory S-only ASTR, SPKN, SPOR and VEHS schema changes, and record only the bounded presence/shape facts that modern classification needs. Reuse the exact constants and keys from S's codecs. Field, mission, lease and custody validation stays in Groups 17-20.
+- [X] **12.3** Inventory S-only ASTR, SPKN, SPOR and VEHS schema changes, and record only the bounded presence/shape facts that modern classification needs. Reuse the exact constants and keys from S's codecs. Field, mission, lease and custody validation stays in Groups 17-20.
 
-- [ ] **12.4** If VEHS nested fields are inspected, add a bounded schema/header-only path; never reuse the flat selected-table path, which assumes TABLE mode 3 and flat scalar rows. Test non-Space vehicle variants and Classic data with absent fields.
+- [X] **12.4** If VEHS nested fields are inspected, add a bounded schema/header-only path; never reuse the flat selected-table path, which assumes TABLE mode 3 and flat scalar rows. Test non-Space vehicle variants and Classic data with absent fields.
 
-- [ ] **12.5** Add fixtures for A440/S441 fixed SSOR, historical B TABLE+SSOH, D441/446 tagged SSOR, truncated or oversized chunks, duplicates and wrong framing. Marker-first and marker-last must give the same observations.
+- [X] **12.5** Add fixtures for A440/S441 fixed SSOR, historical B TABLE+SSOH, D441/446 tagged SSOR, truncated or oversized chunks, duplicates and wrong framing. Marker-first and marker-last must give the same observations.
+
+Execution evidence: see **Group 12** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). 12.3's inventory found that classification needs no ASTR/SPKN/SPOR/VEHS fact, so 12.4's conditional VEHS inspection was not added.
 
 ### Group 13 - Compose classifier decisions and the load preflight gate
 
