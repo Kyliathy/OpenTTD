@@ -196,3 +196,30 @@ Quick check without the native tree: `g++ -std=c++20 -Wall -Wextra -DSAVE_LINEAG
 
 **9.4** The header comment on the reserved constants says that S's eras are capability rules of `SpaceFixes`, that `MergedLineage = 441` keeps its meaning, and that Group 22 deletes the pending enumerators. The comment on the frozen 441 constants, which still pointed at the old Group44 allocation plan, now says what 441 means.
 
+
+## Group 10
+
+**10.1** Commit `074285ff`. `HasSaveCapability` now uses one `CapabilityRule` row per capability: first A, first B and first Space fixes version, plus merged 441 and merged 446 membership. It looks the row up by capability, never by enum position.
+
+- Two `static_assert`s, one on the table size and one on each value occurring exactly once, force a row for every future append. That row must choose its merged 441 value explicitly.
+- `WriterProducedVersion` first checks each writer's closed range: A 425-440, B 425-434, Space fixes 441-445, merged exactly 441 or 446, Shared none. A version outside that range grants nothing.
+- Space fixes rows give every A capability from 441, because that writer began from A440. They give no B capability.
+
+**10.2** The Group 9 matrix case is no longer `[!mayfail]`. A new case covers:
+
+- each Space fixes introduction at n-1/n;
+- both 441 dialects;
+- foreign versions (S446, merged 442/445/447, A441, B435, Shared, an undeclared dialect value);
+- refused statuses;
+- `Count` and 255 as unknown capabilities.
+
+Standalone build: 7 cases, 1,459 assertions, all passed.
+
+**10.3** `SlHasSaveCapability`'s writer context is now always `{Accepted, Merged, SAVEGAME_VERSION}`. The `DestinationA` fallback was dead code, because the Group 4 `static_assert` pins the writer to 441. So the five Space fixes capabilities stay off when saving until Group 22. The load context still answers from the bound lineage. `DestinationVersionCapability` is unchanged and has no pending enumerators.
+
+**10.4** `ScopedLoadLineage` clears `_sl.lineage` on construction and destruction, and `SlNullPointers` clears it on failure cleanup. `Bind` stores the classifier result unchanged, so `original_version` stays the envelope version. `GetLoadCapabilities` returns that stored value.
+
+GCC: `ninja -C build openttd_test openttd`, 299 steps in 11 min 49 s, exit 0. Its 308 warnings are all in files this group did not touch.
+
+- `ctest -R "save-lineage|lineage"`: 20/20 passed. These are the 7 policy cases, the 4 native lineage cases and 9 utility-lineage cases (`logs/merge-oct28/group10/ctest-gcc-lineage.{log,xml}`).
+- Wider save-load subset `-R "Original|Native scalar|supply wire|merged|Merged|Save envelope|copied|Copied"`: 53/53 passed (`ctest-gcc-saveload.log`).
