@@ -367,3 +367,57 @@ GCC results (`logs/merge-oct28/group13/`):
 - Focused subset: 74/74 (`ctest-gcc.{log,xml}`).
 - A wider save/load subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid"`: 369/369 (`ctest-gcc-wide.{log,xml}`).
 - Donor scan: all 28 saves classify as SpaceFixes 445 (253 assertions, `donor445-scan.log`).
+
+Clang (Groups 11-13 together; deferred from Group 11):
+
+- `ninja -C build-clang openttd_test` took 10 min 2 s, exit 0, with no warnings in the touched files.
+- Focused subset: 74/74. Wide save/load subset: 369/369 (`logs/merge-oct28/group13/ctest-clang{,-wide}.log`).
+- There are no GCC/Clang differences.
+
+## Group 14
+
+The merge commit already carried the value union, so this group adds proof. Commit `e1c630dd`, plus the pool-check fix below, adds three cases to `src/tests/asteroid_cargo_origin.cpp`:
+
+- **14.1** `Merged source values keep asteroid identity beside ordinary and company-supply sources` checks:
+  - 65536 against body 0, and body 0 as a real origin;
+  - the mineral as part of the identity;
+  - the invalid sentinel equal to `Source{Invalid, Asteroid}`;
+  - ordinary equality across domains;
+  - a CompanySupply source next to asteroid cargo, with no payload and not mergeable with it;
+  - `SetIndex` on legacy and typed asteroid sources changing nothing;
+  - `CargoPacket::InvalidateAllFrom(company supply)` never touching asteroid packets.
+- **14.3** `Legacy asteroid upgrade refuses invalid, ordinary and already-typed mismatches`:
+  - invalid, Industry, CompanySupply, an empty mineral, and a typed source with another mineral all refuse unchanged;
+  - a real legacy ID upgrades once, a repeat agrees, and quantity and credit stay the same.
+  - The two friend hooks keep their existing owners and tests:
+    - `AcceptLoadedSurfaceSupplyOrders` normalizes linked B purpose at `surface_supply_order_runtime.cpp:404`, covered by `surface_supply_adoption.cpp`;
+    - `CAPAChunkHandler` installs decoded sources, covered by the native CAPA round trips. Its capability gating is Group 15.
+- **14.4** `Native packet split, merge and reduce keep every merged packet fact`:
+  - the historical-restore constructor gives age 7 and credit 100, and both survive Split (4/6, credit summing to 100), Merge (back to 10/100) and Reduce (7/70);
+  - a CompanySupply packet with receipt 2^32+5 and departure 1, and a typed 65536 origin, keep source, receipt and raw departure on every fragment after Split, Merge and Reduce.
+  - The first run aborted on the debug pool check (`pool_func.hpp:119 checked != 0`). `Split` calls `CanAllocateItem()` itself and resets the pre-check, so the case now re-checks before its later creations.
+
+**14.2** Label API audit. `GetSpaceSupplyLabel` has three callers:
+
+- `GetSpaceSupplyCargo` guards with `supply < End`.
+- The preview owner join in `space_cargo_preview.cpp:115,129` passes the label to `admit`, which refuses `CT_INVALID` and empty labels.
+- The asteroid-origin join adapts it through `GetOptionalSpaceSupplyLabel` (`CT_INVALID` → no label).
+
+The runtime callers of `GetSpaceSupplyCargo` all check `IsValidCargoType` before indexing, and their execute paths follow the same preflight:
+
+- `space_manifest.cpp:110,260`
+- `space_structure.cpp:443`
+- `orbital_service.cpp:155,423-455,473`
+- `orbital_freight.cpp:63-101`
+- `cargo_custody.cpp:86,112`
+
+None reads the current `CargoSpec` for a compartment label; the labels are the fixed PROP/RFMT/ELEC table.
+
+One exception: the GUI draw at `space_structure_gui.cpp:719` indexes `module.stock[GetSpaceSupplyCargo(...)]` with no check. The line is identical in D (`d49c3596`, line 489) and S (line 716), so the merge did not introduce it. It is left for Part 2's runtime work.
+
+Results (`logs/merge-oct28/group14/`):
+
+- GCC incremental build, exit 0.
+- `ctest -R "[Aa]steroid|[Ss]ource|[Ss]upply|[Cc]argo|[Pp]acket|[Mm]anifest|[Ss]ervice"`: 312/312 (`ctest-gcc.{log,xml}`).
+- Clang incremental build and the same subset: 312/312 (`ctest-clang.log`).
+

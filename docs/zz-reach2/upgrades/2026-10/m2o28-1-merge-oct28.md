@@ -621,11 +621,11 @@ flowchart TD
 
 {{HARD}}
 
-- [ ] **13.1** Extract the pre-441 A/B logic as an owner-local legacy path, keeping its family, count and history-bit rules and exact-digest hint semantics. Add a modern branch before it: a recognized marker selects only its exact merged version. A markerless 441-445 may select `SpaceFixes` only with positive typed-CAPA evidence, complete A-derived fixed-supply/content evidence, and no B-only or merged-only evidence.
+- [X] **13.1** Extract the pre-441 A/B logic as an owner-local legacy path, keeping its family, count and history-bit rules and exact-digest hint semantics. Add a modern branch before it: a recognized marker selects only its exact merged version. A markerless 441-445 may select `SpaceFixes` only with positive typed-CAPA evidence, complete A-derived fixed-supply/content evidence, and no B-only or merged-only evidence.
 
-- [ ] **13.2** Implement `CompatibleSpaceFixes` inside the classifier owner from the Group 9 rules. Do not call `CompatibleA` unchanged: it accepts fixed SSOR only at exactly 440 and rejects B-style columns. Reuse the common checks explicitly.
+- [X] **13.2** Implement `CompatibleSpaceFixes` inside the classifier owner from the Group 9 rules. Do not call `CompatibleA` unchanged: it accepts fixed SSOR only at exactly 440 and rejects B-style columns. Reuse the common checks explicitly.
 
-- [ ] **13.3** Keep classification closed:
+- [X] **13.3** Keep classification closed:
   - malformed evidence wins;
   - 446 without its marker refuses, and a marker on an S version refuses;
   - conflicting supply or typed layouts refuse;
@@ -634,7 +634,9 @@ flowchart TD
 
   - _Plan change during execution (Group 13):_ an SSOR overlap (Group 12's `Ambiguous`) is settled by the writer instead of always refused. A marked merged file takes its tagged book, because the marker selects that decoder. A markerless file refuses, because no markerless writer wrote the SSM1 signature. Always refusing would make a genuine D441 save unloadable whenever its issuer frontier is a multiple of 256 and its row count also fits the fixed equation, for example frontier 1536 with exactly 8 legacy rows. That is a regression from D. The fixture `OverlappingBook()` in `save_envelope_supply_book.cpp` is such a book.
 
-- [ ] **13.4** Wire the result into `DoLoad` preflight without moving world initialization earlier. Add both 441 classifications, S442-445 (Group 3 outputs where available), synthetic 446, and Classic/no-field cases, plus an unchanged-open-world refusal test. At this point S445 files classify as accepted, but their eras still decode as pending until Groups 15-21.
+- [X] **13.4** Wire the result into `DoLoad` preflight without moving world initialization earlier. Add both 441 classifications, S442-445 (Group 3 outputs where available), synthetic 446, and Classic/no-field cases, plus an unchanged-open-world refusal test. At this point S445 files classify as accepted, but their eras still decode as pending until Groups 15-21.
+
+Execution evidence: see **Group 13** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass the focused subset (74/74) and the wide save/load subset (369/369). `DoLoad` refuses admitted Space fixes files as pending; that burn-down row belongs to Group 21.
 
 ### Area Mandatory Reading - Native source values and physical packet custody
 
@@ -667,13 +669,15 @@ CHECK(high.GetAsteroidOrigin()->body == 65536);
 
 {{MEDIUM}}
 
-- [ ] **14.1** Add cases next to S's `src/tests/asteroid_cargo_origin.cpp` for ID 65536 versus 0, the immutable mineral, the invalid sentinel, ordinary source equality, a CompanySupply source next to an asteroid source, and refusal of a generic asteroid-index rewrite.
+- [X] **14.1** Add cases next to S's `src/tests/asteroid_cargo_origin.cpp` for ID 65536 versus 0, the immutable mineral, the invalid sentinel, ordinary source equality, a CompanySupply source next to an asteroid source, and refusal of a generic asteroid-index rewrite.
 
-- [ ] **14.2** Prove the label API: every caller of `GetSpaceSupplyLabel` treats `CT_INVALID` as unsupported, and none reads the current `CargoSpec` for an immutable compartment label. Include the pure preview and the receiver/service code.
+- [X] **14.2** Prove the label API: every caller of `GetSpaceSupplyLabel` treats `CT_INVALID` as unsupported, and none reads the current `CargoSpec` for an immutable compartment label. Include the pure preview and the receiver/service code.
 
-- [ ] **14.3** Test both controlled `CargoPacket` hooks. CAPA decoding may install an admitted source; canonical supply adoption may normalize its original purpose. `UpgradeLegacyAsteroidSource` refuses invalid, non-asteroid or already-typed input.
+- [X] **14.3** Test both controlled `CargoPacket` hooks. CAPA decoding may install an admitted source; canonical supply adoption may normalize its original purpose. `UpgradeLegacyAsteroidSource` refuses invalid, non-asteroid or already-typed input.
 
-- [ ] **14.4** Add packet-operation coverage showing that split, merge and Reduce keep the source, receipt link, raw departure, age, credit and quantity.
+- [X] **14.4** Add packet-operation coverage showing that split, merge and Reduce keep the source, receipt link, raw departure, age, credit and quantity.
+
+Execution evidence: see **Group 14** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). Three cases were added to `src/tests/asteroid_cargo_origin.cpp`. GCC and Clang both pass 312/312.
 
 ### Group 15 - Compose the CAPA codec and the row-scratch lifecycle
 

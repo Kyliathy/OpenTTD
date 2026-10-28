@@ -242,6 +242,7 @@ TEST_CASE("Native packet split, merge and reduce keep every merged packet fact",
 	// A bought supply with a receipt above UINT32_MAX and its departure flag, and a
 	// typed asteroid origin: every operation keeps the exact facts on every part.
 	const uint64_t receipt = (uint64_t{1} << 32) + 5;
+	REQUIRE(CargoPacket::CanAllocateItem(2)); // Split consumed the earlier pool check; the debug pool needs a fresh one.
 	std::unique_ptr<CargoPacket> linked{CargoPacket::Create(StationID::Invalid(), uint16_t{9}, Source{CompanyID{0}, SourceType::CompanySupply})};
 	REQUIRE(linked->RestoreCompanySupplyOrder(receipt, true));
 	std::unique_ptr<CargoPacket> mined{CargoPacket::Create(StationID::Invalid(), uint16_t{9}, Source::FromAsteroid(65'536, CargoLabel{"NORE"}))};
