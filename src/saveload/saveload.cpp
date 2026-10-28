@@ -281,7 +281,7 @@ static std::optional<SaveCapability> DestinationVersionCapability(SaveLoadVersio
 		case SaveLoadVersion::SpaceCargoDimensions: return SaveCapability::SpaceCargoDimensions;
 		case SaveLoadVersion::OrbitalRecipeProcessing: return SaveCapability::OrbitalRecipeProcessing;
 		case SaveLoadVersion::CompanySupplyPackets: return SaveCapability::CompanySupplyPackets;
-		case SaveLoadVersion::SurfaceSupplyOrders: return SaveCapability::SurfaceSupplyOrdersA;
+		case SaveLoadVersion::SurfaceSupplyOrders: return SaveCapability::SurfaceSupplyOrdersFixed;
 		default: return std::nullopt;
 	}
 }
@@ -291,10 +291,10 @@ bool SlHasSaveCapability(SaveCapability capability)
 {
 	if (_sl.lineage) return HasSaveCapability(*_sl.lineage, capability);
 	// Outside a load, serialization and synthetic pointer cleanup describe the
-	// current writer, never the dialect/version of a previously copied candidate.
+	// current writer, never the format/version of a previously copied candidate.
 	// The writer is merged 446 (the static_assert beside SAVEGAME_VERSION holds it),
 	// so saving grants every A, B and Space capability (m2o28 Group 22).
-	return HasSaveCapability({SaveLineageStatus::Accepted, SaveDialect::Merged, to_underlying(SAVEGAME_VERSION)}, capability);
+	return HasSaveCapability({SaveLineageStatus::Accepted, SaveFormat::Unified, to_underlying(SAVEGAME_VERSION)}, capability);
 }
 
 /** @copydoc IsSavegameVersionBefore */
@@ -518,7 +518,7 @@ static void SlNullPointers()
 {
 	_sl.action = SaveLoadAction::Null;
 	// Failure cleanup describes the current in-memory schema rather than the
-	// refused original wire dialect; no original capability survives into it.
+	// refused original wire format; no original capability survives into it.
 	_sl.lineage.reset();
 
 	/* We don't want any savegame conversion code to run
@@ -3517,12 +3517,12 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		std::array<uint8_t, 8> original_header{};
 		if (raw->Read(original_header.data(), original_header.size()) != original_header.size()) throw SaveFramingError("Truncated save envelope");
 		facts = InspectSaveWireFacts(raw, {}, true);
-		capabilities = ClassifySaveDialect(facts, origin);
+		capabilities = ClassifySaveFormat(facts, origin);
 		if (capabilities.status == SaveLineageStatus::Ambiguous) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_AMBIGUOUS_LINEAGE);
 		// Unsupported means either a later writer or a development build's own numbers
 		// at or below the current writer; the player sees which one it is.
 		if (capabilities.status == SaveLineageStatus::Unsupported) return ReportSavePreflightRefusal(load_check, facts.original_version > CURRENT_MERGED_SAVE_VERSION ? STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME : STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME);
-		if (capabilities.status != SaveLineageStatus::Accepted) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Required original branch transport is missing or inconsistent");
+		if (capabilities.status != SaveLineageStatus::Accepted) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Its format markers are missing or do not agree");
 		if (facts.original_version > to_underlying(SAVEGAME_VERSION)) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
 		// Native patchpack reservations remain unsupported even if their outer
 		// framing is readable; preflight refusal must not null the running world's pointers.

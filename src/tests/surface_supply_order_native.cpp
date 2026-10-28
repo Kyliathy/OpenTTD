@@ -308,7 +308,7 @@ TEST_CASE("Native Surface order files preserve metadata and actual paid continua
 			} else if (phase == "legacy-b-inspect" || phase == "merged-b-roundtrip") {
 				const auto book = CaptureSurfaceSupplyOrders();
 				REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
-				REQUIRE(_load_check_data.legacy_b_supply_packet_fields_present);
+				REQUIRE(_load_check_data.table_supply_packet_fields_present);
 				CHECK(book == _load_check_data.surface_supply_orders.snapshot);
 				CHECK(CargoPacket::GetNumItems() == _load_check_data.native_cargo_packet_rows.size());
 				size_t linked = 0;
@@ -319,7 +319,7 @@ TEST_CASE("Native Surface order files preserve metadata and actual paid continua
 					const auto &rows = _load_check_data.native_cargo_packet_rows;
 					const auto raw = std::ranges::lower_bound(rows, packet->index, {}, &NativeCargoPacketPreview::packet);
 					REQUIRE(raw != rows.end()); REQUIRE(raw->packet == packet->index);
-					const auto expected = ProjectLegacyBSupplyPacket({raw->packet, raw->quantity, raw->source, raw->feeder_share,
+					const auto expected = ProjectTableSupplyPacket({raw->packet, raw->quantity, raw->source, raw->feeder_share,
 						raw->company_supply_order, raw->company_supply_shipped != 0}, book);
 					REQUIRE(expected.has_value());
 					CHECK(packet->Count() == expected->quantity); CHECK(packet->GetSource() == expected->source);

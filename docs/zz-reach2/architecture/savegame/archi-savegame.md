@@ -1,5 +1,25 @@
 # Savegame subsystem
 
+## One save system
+
+Updated 2026-10-28 ([m2o28 Group 22B](../../upgrades/2026-10/m2o28-1-merge-oct28.md)). The game has one multi-layer map and one save system covering the surface, the underground layers and Space. There is one writer, one current schema and one loader. Older files are imported through a bounded table of historical formats. Nothing in the format, the loader or the player-facing messages refers to how the code was developed.
+
+- **Writer.** Every save is version 446 (`SaveLoadVersion::SpaceMiningLifecycle`). It carries the 8-byte MLLN marker (`MLN1`, schema 2, writer 446) and the complete set of 128 chunk families, empty ones included, frozen by `src/tests/fixtures/saveload/merged-446-family-set.json` on top of the 441 contract it extends. Two saves of the same paused world are byte-identical.
+- **Schema.** Features are `SaveCapability` values of a file's format family, never version numbers. `SaveLoad::WithCapability` gates a field on its capability, so the writer emits exactly the fields its own format holds, and a reader takes exactly the fields the file's format holds.
+- **Loader.** `InspectSaveWireFacts` reads bounded facts from the file's own bytes before anything is initialized. `ClassifySaveFormat` names its family (`SaveFormat`) from those facts, plus an exact-digest hint only where the bytes are ambiguous. The load is then bound to that result for its whole lifetime. Refusals before initialization keep the open world; a failure after native adoption returns `ReInit` and every owner revokes its staged state in the null pass.
+
+| Format family | Versions | Identified by | Holds |
+| --- | --- | --- | --- |
+| `Base` | up to 424 | version | The common multi-layer format: four-layer map, geology, excavation, TBM and early Space |
+| `Orbital` | 425-440 | version, or an exact-digest hint at 425-434 | Orbital and Space manufacturing, heavy miners, orbital recipes, the fixed RIFF supply book |
+| `Geothermal` | 425-434 | version, or an exact-digest hint at 425-434 | Geothermal generators, heat conversion, Tube geothermal power, the TABLE supply book with SSOH |
+| `Unified` | 441 | MLLN schema 1 | Everything above, the tagged supply book and widened CAPA links; no typed asteroid origins |
+| `Unified` | 446 | MLLN schema 2 | The 441 contents plus typed asteroid cargo origins, the asteroid field lifecycle, mining policy and contained intent, and legacy and survey departures (the five Space capabilities) |
+
+Refused: any file above 446 (too new); markerless 441-445 files written by a development build (their own message, STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME); an unmarked 446; any marker other than exactly (441, 1) or (446, 2); and 425-434 files whose bytes cannot tell the two families apart and come without a matching digest hint ("Unrecognised savegame format").
+
+The sections below are dated records of how each family's fields arrived. They keep the names of their time: "A" is the Orbital family, "B" the Geothermal family, and "merged" or "441" the Unified family.
+
 **Current merged qualification,2026-10-25.** Writer441and its explicit lineage/capability dispatch are delivered. Exact shared403/A438–440/B434originals, merged full/copy/reload/second-save boundaries and128-family comparisons are qualified through the [four-plan handoff](../../upgrades/2026-10/m2o23-4-come-space-b-integration-handoff.md). TaggedNative/LegacyBSSORand widenedCAPAretain one supply/custody owner. Real peers and isolated current native/ordinary restores are separate actual observations. Original Space seals remain unchanged; [historical storage/reconstruction](../archi-historical-debug.md) owns their durable/current evidence roles. Dated older-version sections below remain compatibility history rather than a current writer selection.
 
 TBM update,2026-10-09: versions395/396 extend the existing TBMP phase byte for resumable parking and deferred final release. Earlier phase values and394 work-rate migration remain intact; preview/full readers reject phases newer than the file's version. Cancellation now preserves accepted work and claims until physical withdrawal and real cargo settlement. Released machines remain ordinary saved native vehicles after their controller is removed. Actual395 parking and396 pending/released/connected files, including same-machine reuse, are recorded in [R2TBMF P](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-p-parking-notes.md) and [R2TBMF R](../../../zz-rhr/upgrades/2026-10/tbm-fixes/r2tbmf-r-release-notes.md#group7b-closure). Cargo quantities remain whole units.
@@ -14,7 +34,7 @@ A save is a small uncompressed header, a compressed blob, and inside that blob a
 
 There is a second, separate loader for the original Transport Tycoon games. It is not this container. It is covered below because `SaveOrLoad` still sends those files through `AfterLoadGame`.
 
-## Detached parallel-history inspection
+## Detached historical-format inspection (dated record)
 
 The2026-10 merge adds `src/saveload/save_envelope.h/.cpp` beside the pure
 `save_lineage.h/.cpp` policy. `InspectSaveWireFacts` accepts the original rewindable
@@ -254,7 +274,7 @@ The four bytes after the tag are one big-endian `uint32_t`, not a free-standing 
 
 `SaveFileToDisk` shifts `SAVEGAME_VERSION` left by 16, so a current save stores minor 0 and a zero low byte. The minor is still loaded. `IsSavegameVersionBefore(major, minor)` compares it when the major matches and the caller passes a non-zero minor. That matters below `SaveLoadVersion::RemoveMinorVersion` (the header comment records that as saveload version 18). The comment in `DetermineSaveLoadFormat` says the minor is no longer saved as a meaningful value, and that the four historical cases that still need it cannot simply be deleted. `IsSavegameVersionBefore` with the default minor argument ignores `_sl_minor_version`.
 
-`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). The enumerator immediately before `MaxVersion` is `LayerPortalWork`, version 375, following frozen passes (374), sparse jobs (373), geology (372), metadata (371), Deep Underground (370) and Map Layers (369). [R2MLVS2](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) owns the tested geological descriptors and evidence. Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. Existing numeric values must not be reordered.
+`SAVEGAME_VERSION` is `to_underlying(SaveLoadVersion::MaxVersion) - 1` (`saveload.cpp`). Today the enumerator immediately before `MaxVersion` is `SpaceMiningLifecycle`, version 446, after `MergedLineage` (441); 442-445 are never allocated, and two `static_assert`s tie the writer to `CURRENT_MERGED_SAVE_VERSION`. When this section was first written it was `LayerPortalWork`, version 375, following frozen passes (374), sparse jobs (373), geology (372), metadata (371), Deep Underground (370) and Map Layers (369). [R2MLVS2](../../upgrades/2026-10/r2mlvs2-geology-and-excavation.md) owns the tested geological descriptors and evidence. Adding a format revision means inserting a new enumerator immediately before `MaxVersion`. Existing numeric values must not be reordered.
 
 `DetermineSaveLoadFormat` then rejects two ranges:
 
@@ -311,7 +331,10 @@ ordinary resave, malformed full loads and valid/corrupt/valid previews; evidence
 is in `logs/space-content-orders-verification.json`. Whole-plan network/art and
 all unfinished business-action acceptance remain pending in Plans8-16.
 
-## Current asteroid origins, lifecycle and continuation (441-445)
+## Asteroid origins, lifecycle and continuation (Unified 446)
+
+Since m2o28 Group 22 these fields are the five Space capabilities of the Unified 446 format: `AsteroidCargoOrigins`, `AsteroidFieldLifecycle`, `SpaceMiningContinuation`, `SpaceLegacyDeparture` and `SpaceSurveyDeparture`. The development build that first wrote them numbered them 441-445 without a marker; this build refuses those files rather than reading them. The paragraphs below record the contents under their original era numbers.
+
 
 [R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md) keeps the original
 ASTR/SPKN, CAPA, VEHS and SPOR owners.441 adds full32-bit immutable asteroid

@@ -10,7 +10,7 @@
 #include "safeguards.h"
 
 /** Frozen merged receipt discriminants; unavailable original B facts are never fabricated as Native evidence. */
-enum class MergedSupplyReceiptTag : uint8_t { Native = 1, LegacyB = 2 };
+enum class MergedSupplyReceiptTag : uint8_t { Native = 1, Table = 2 }; ///< Wire tags; Table marks a finite receipt imported from the TABLE book (m2o28 Group 22B renamed it from LegacyB, value unchanged).
 
 /** Check raw-representable evidence without borrowing current price or gameplay rights.
  * @param record One exact canonical receipt after raw boolean/tag admission.
@@ -69,7 +69,7 @@ static std::optional<SurfaceSupplyOrderTransport> ReadMergedSupplyWire(size_t le
 		const auto size = tag == MergedSupplyReceiptTag::Native ? MERGED_SURFACE_SUPPLY_NATIVE_SIZE : MERGED_SURFACE_SUPPLY_LEGACY_SIZE;
 		// Unknown tags and truncated variant payloads refuse before any tag can
 		// default to Native or erase unavailable original B evidence.
-		if ((tag != MergedSupplyReceiptTag::Native && tag != MergedSupplyReceiptTag::LegacyB) || remaining < size - 1) return std::nullopt;
+		if ((tag != MergedSupplyReceiptTag::Native && tag != MergedSupplyReceiptTag::Table) || remaining < size - 1) return std::nullopt;
 		SurfaceSupplyOrderRecord record; record.id = read(8); record.owner = CompanyID{static_cast<uint8_t>(read(1))};
 		record.origin = StationID{static_cast<uint16_t>(read(2))};
 		for (auto &byte : record.label) byte = static_cast<uint8_t>(read(1));
@@ -84,7 +84,7 @@ static std::optional<SurfaceSupplyOrderTransport> ReadMergedSupplyWire(size_t le
 			native.issued_packet = CargoPacketID{static_cast<uint32_t>(read(4))};
 			if (++native_count > MAX_SURFACE_SUPPLY_RECORDS) return std::nullopt;
 		} else {
-			LegacyBSupplyReceipt legacy; const auto price = read(8); if (price > INT64_MAX) return std::nullopt;
+			TableSupplyReceipt legacy; const auto price = read(8); if (price > INT64_MAX) return std::nullopt;
 			legacy.unit_price = Money{static_cast<int64_t>(price)}; legacy.calendar_date = std::bit_cast<int32_t>(static_cast<uint32_t>(read(4)));
 			legacy.refunded = static_cast<uint16_t>(read(2)); legacy.dispatched = static_cast<uint16_t>(read(2)); const auto closed = read(1);
 			if (closed > 1) return std::nullopt;
@@ -141,7 +141,7 @@ std::optional<std::vector<uint8_t>> EncodeMergedSurfaceSupplyOrders(const Surfac
 		// Invalid variants, duplicate/reissued identities and malformed scalar
 		// history must refuse the whole output rather than publish partial bytes.
 		if (record.id <= previous || record.id >= snapshot.next_id || !ValidMergedSupplyScalars(record)) return std::nullopt;
-		previous = record.id; write(to_underlying(record.Native() != nullptr ? MergedSupplyReceiptTag::Native : MergedSupplyReceiptTag::LegacyB), 1);
+		previous = record.id; write(to_underlying(record.Native() != nullptr ? MergedSupplyReceiptTag::Native : MergedSupplyReceiptTag::Table), 1);
 		write(record.id, 8); write(record.owner.base(), 1); write(record.origin.base(), 2);
 		for (const auto byte : record.label) write(byte, 1);
 		write(record.quantity, 2); write(static_cast<uint32_t>(record.purchase_day.base()), 4);

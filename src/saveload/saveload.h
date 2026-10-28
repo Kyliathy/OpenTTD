@@ -14,7 +14,7 @@
 #include "save_lineage.h" // archi-savegame.md: detached policy and per-attempt native load binding; writer activation remains separate.
 
 /** Read the accepted lineage of this native load/check attempt only.
- * @return Original dialect/version during chunk parsing and afterload validation, or no value outside that attempt, including every refusal/error exit.
+ * @return Original format/version during chunk parsing and afterload validation, or no value outside that attempt, including every refusal/error exit.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  */
 std::optional<SaveLineageResult> GetLoadCapabilities();

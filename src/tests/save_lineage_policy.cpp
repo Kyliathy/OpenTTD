@@ -79,7 +79,7 @@ static SaveWireFacts Destination(uint16_t version)
 static SaveWireFacts Donor(uint16_t version)
 {
 	auto facts = Common(version);
-	if (version == 425) facts.payload_dialect = SavePayloadDialect::DonorB;
+	if (version == 425) facts.payload_format = SavePayloadFormat::Geothermal;
 	if (version >= 426) {
 		facts.supply_columns = SaveSupplyColumns::Complete;
 		AddChunk(facts, SaveLineageFamily::SupplyHeader, SaveEvidenceKind::Riff, 12, 1);
@@ -150,45 +150,45 @@ static SaveWireFacts DevelopmentBuild(uint16_t version)
 /** Independent source-enum expectation; do not derive thresholds from capability ordinals. */
 struct CapabilityExpectation {
 	SaveCapability capability; ///< Named historical feature, independent of declaration order.
-	SaveDialect dialect; ///< Only this original branch introduced the feature.
+	SaveFormat format; ///< Only this original branch introduced the feature.
 	uint16_t first_version; ///< Explicit original SaveLoadVersion value in the audited handoff.
 };
 
 /** Source-defined thresholds from the historical writers and the merged writer.
- * Merged 441 contains the A and B union; merged 446 adds the five Space eras, listed with dialect Merged.
+ * Merged 441 contains the A and B union; merged 446 adds the five Space eras, listed with format Merged.
  */
 static constexpr CapabilityExpectation CAPABILITY_EXPECTATIONS[] = {
-	{SaveCapability::OrbitalAssemblyFacilities, SaveDialect::DestinationA, 425},
-	{SaveCapability::OrbitalManufacturingReservations, SaveDialect::DestinationA, 426},
-	{SaveCapability::OrbitalManufacturingMaterialization, SaveDialect::DestinationA, 427},
-	{SaveCapability::OrbitalManufacturingClones, SaveDialect::DestinationA, 428},
-	{SaveCapability::SpaceReplacementSettlement, SaveDialect::DestinationA, 429},
-	{SaveCapability::SpaceOrderedActions, SaveDialect::DestinationA, 430},
-	{SaveCapability::SpaceHeavyMinerCommissioning, SaveDialect::DestinationA, 431},
-	{SaveCapability::SpaceHeavyMinerMissions, SaveDialect::DestinationA, 432},
-	{SaveCapability::SpaceHeavyMinerSupplies, SaveDialect::DestinationA, 433},
-	{SaveCapability::SpaceHeavyMinerDescents, SaveDialect::DestinationA, 434},
-	{SaveCapability::SpaceHeavyMinerOnboardServices, SaveDialect::DestinationA, 435},
-	{SaveCapability::SpaceHeavyMinerContainedServices, SaveDialect::DestinationA, 436},
-	{SaveCapability::SpaceCargoDimensions, SaveDialect::DestinationA, 437},
-	{SaveCapability::OrbitalRecipeProcessing, SaveDialect::DestinationA, 438},
-	{SaveCapability::CompanySupplyPackets, SaveDialect::DestinationA, 439},
-	{SaveCapability::SurfaceSupplyOrdersA, SaveDialect::DestinationA, 440},
-	{SaveCapability::TBMFaceTransfer, SaveDialect::DonorB, 425},
-	{SaveCapability::SurfaceSupplyOrdersB, SaveDialect::DonorB, 426},
-	{SaveCapability::GeothermalGenerators, SaveDialect::DonorB, 427},
-	{SaveCapability::UtilityHeatConversion, SaveDialect::DonorB, 428},
-	{SaveCapability::GeothermalGeneratorOperation, SaveDialect::DonorB, 429},
-	{SaveCapability::GeothermalMagmaLoop, SaveDialect::DonorB, 430},
-	{SaveCapability::UtilityTownService, SaveDialect::DonorB, 431},
-	{SaveCapability::UtilityLocalElectricalFeed, SaveDialect::DonorB, 432},
-	{SaveCapability::TubeGeothermalSources, SaveDialect::DonorB, 433},
-	{SaveCapability::TubeGeothermalBindings, SaveDialect::DonorB, 434},
-	{SaveCapability::AsteroidCargoOrigins, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION},
-	{SaveCapability::AsteroidFieldLifecycle, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION},
-	{SaveCapability::SpaceMiningContinuation, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION},
-	{SaveCapability::SpaceLegacyDeparture, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION},
-	{SaveCapability::SpaceSurveyDeparture, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION},
+	{SaveCapability::OrbitalAssemblyFacilities, SaveFormat::Orbital, 425},
+	{SaveCapability::OrbitalManufacturingReservations, SaveFormat::Orbital, 426},
+	{SaveCapability::OrbitalManufacturingMaterialization, SaveFormat::Orbital, 427},
+	{SaveCapability::OrbitalManufacturingClones, SaveFormat::Orbital, 428},
+	{SaveCapability::SpaceReplacementSettlement, SaveFormat::Orbital, 429},
+	{SaveCapability::SpaceOrderedActions, SaveFormat::Orbital, 430},
+	{SaveCapability::SpaceHeavyMinerCommissioning, SaveFormat::Orbital, 431},
+	{SaveCapability::SpaceHeavyMinerMissions, SaveFormat::Orbital, 432},
+	{SaveCapability::SpaceHeavyMinerSupplies, SaveFormat::Orbital, 433},
+	{SaveCapability::SpaceHeavyMinerDescents, SaveFormat::Orbital, 434},
+	{SaveCapability::SpaceHeavyMinerOnboardServices, SaveFormat::Orbital, 435},
+	{SaveCapability::SpaceHeavyMinerContainedServices, SaveFormat::Orbital, 436},
+	{SaveCapability::SpaceCargoDimensions, SaveFormat::Orbital, 437},
+	{SaveCapability::OrbitalRecipeProcessing, SaveFormat::Orbital, 438},
+	{SaveCapability::CompanySupplyPackets, SaveFormat::Orbital, 439},
+	{SaveCapability::SurfaceSupplyOrdersFixed, SaveFormat::Orbital, 440},
+	{SaveCapability::TBMFaceTransfer, SaveFormat::Geothermal, 425},
+	{SaveCapability::SurfaceSupplyOrdersTable, SaveFormat::Geothermal, 426},
+	{SaveCapability::GeothermalGenerators, SaveFormat::Geothermal, 427},
+	{SaveCapability::UtilityHeatConversion, SaveFormat::Geothermal, 428},
+	{SaveCapability::GeothermalGeneratorOperation, SaveFormat::Geothermal, 429},
+	{SaveCapability::GeothermalMagmaLoop, SaveFormat::Geothermal, 430},
+	{SaveCapability::UtilityTownService, SaveFormat::Geothermal, 431},
+	{SaveCapability::UtilityLocalElectricalFeed, SaveFormat::Geothermal, 432},
+	{SaveCapability::TubeGeothermalSources, SaveFormat::Geothermal, 433},
+	{SaveCapability::TubeGeothermalBindings, SaveFormat::Geothermal, 434},
+	{SaveCapability::AsteroidCargoOrigins, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION},
+	{SaveCapability::AsteroidFieldLifecycle, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION},
+	{SaveCapability::SpaceMiningContinuation, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION},
+	{SaveCapability::SpaceLegacyDeparture, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION},
+	{SaveCapability::SpaceSurveyDeparture, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION},
 };
 static_assert(std::size(CAPABILITY_EXPECTATIONS) == static_cast<uint8_t>(SaveCapability::Count));
 
@@ -206,27 +206,27 @@ static bool IsSpaceCapability(const CapabilityExpectation &expected)
 
 /** One source row of the closed matrix, written out literally rather than derived from the thresholds above. */
 struct SourceMatrixRow {
-	SaveDialect dialect; ///< Original writer of the source.
+	SaveFormat format; ///< Original writer of the source.
 	uint16_t version; ///< Unchanged original envelope version.
 	std::array<bool, 5> carries; ///< Typed origin, renewal, mining intent, unqueued departure, released survey return.
 };
 
 /** The closed source-format matrix (m2o28 Group 9, reduced in Group 17B): any other source grants none of the five. */
 static constexpr SourceMatrixRow SOURCE_MATRIX[] = {
-	{SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION, {false, false, false, false, false}},
-	{SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION, {true, true, true, true, true}},
+	{SaveFormat::Unified, MERGED_SAVE_LINEAGE_VERSION, {false, false, false, false, false}},
+	{SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION, {true, true, true, true, true}},
 };
 
 /** Name an admitted source directly, for writers the classifier does not admit yet.
  * The capability policy is pure, so Groups 9-10 test it without wire facts; Group 13
  * composes the classifier that produces these results from real bytes.
- * @param dialect Original writer.
+ * @param format Original writer.
  * @param version Unchanged original envelope version.
  * @return An accepted classification of that writer and version.
  */
-static SaveLineageResult AcceptedSource(SaveDialect dialect, uint16_t version)
+static SaveLineageResult AcceptedSource(SaveFormat format, uint16_t version)
 {
-	return {SaveLineageStatus::Accepted, dialect, version};
+	return {SaveLineageStatus::Accepted, format, version};
 }
 
 /** Every original numeric collision must retain the selected branch's feature meanings. */
@@ -236,27 +236,27 @@ TEST_CASE("Save lineage separates every original A and B capability boundary", "
 	// pure-policy case and deliberately does not claim a fabricated native save.
 	for (uint16_t version = 425; version <= 440; ++version) {
 		auto facts = Destination(version);
-		const auto result = ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest});
+		const auto result = ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Orbital, facts.source_digest});
 		REQUIRE(result.status == SaveLineageStatus::Accepted);
-		CHECK(result.dialect == SaveDialect::DestinationA);
+		CHECK(result.format == SaveFormat::Orbital);
 		CHECK(result.original_version == version);
 		// Check the entire divergent vocabulary so a B enum with the same number
 		// cannot accidentally become enabled by an A version comparison.
 		for (const auto &expected : CAPABILITY_EXPECTATIONS) {
 			CHECK(HasSaveCapability(result, expected.capability) ==
-				(expected.dialect == SaveDialect::DestinationA && version >= expected.first_version));
+				(expected.format == SaveFormat::Orbital && version >= expected.first_version));
 		}
 	}
 	// B's original thresholds enable only its delivered underground meanings;
 	// the same numeric versions must not enable A's later Space features.
 	for (uint16_t version = 425; version <= 434; ++version) {
-		const auto result = ClassifySaveDialect(Donor(version));
+		const auto result = ClassifySaveFormat(Donor(version));
 		REQUIRE(result.status == SaveLineageStatus::Accepted);
-		CHECK(result.dialect == SaveDialect::DonorB);
+		CHECK(result.format == SaveFormat::Geothermal);
 		// Cover the whole vocabulary, including every A capability that stays off.
 		for (const auto &expected : CAPABILITY_EXPECTATIONS) {
 			CHECK(HasSaveCapability(result, expected.capability) ==
-				(expected.dialect == SaveDialect::DonorB && version >= expected.first_version));
+				(expected.format == SaveFormat::Geothermal && version >= expected.first_version));
 		}
 	}
 }
@@ -264,23 +264,23 @@ TEST_CASE("Save lineage separates every original A and B capability boundary", "
 /** Shared history is unchanged; ambiguous common-layout originals require an exact origin. */
 TEST_CASE("Save lineage keeps shared history and refuses guessed legacy origins", "[save-lineage]")
 {
-	CHECK(ClassifySaveDialect(Common(424)).dialect == SaveDialect::Shared);
+	CHECK(ClassifySaveFormat(Common(424)).format == SaveFormat::Base);
 	// Empty/common owner layouts remain ambiguous throughout the colliding era;
 	// lack of B's later family cannot itself prove that the source was A.
 	for (uint16_t version = 425; version <= 430; ++version) {
 		auto facts = Common(version);
-		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Ambiguous);
-		auto hint = SaveOriginHint{SaveDialect::DestinationA, facts.source_digest};
-		CHECK(ClassifySaveDialect(facts, hint).dialect == SaveDialect::DestinationA);
+		CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Ambiguous);
+		auto hint = SaveOriginHint{SaveFormat::Orbital, facts.source_digest};
+		CHECK(ClassifySaveFormat(facts, hint).format == SaveFormat::Orbital);
 		hint.source_digest[31] ^= 1;
-		CHECK(ClassifySaveDialect(facts, hint).status == SaveLineageStatus::Ambiguous);
+		CHECK(ClassifySaveFormat(facts, hint).status == SaveLineageStatus::Ambiguous);
 		facts.source_digest.fill(0); hint.source_digest.fill(0);
-		CHECK(ClassifySaveDialect(facts, hint).status == SaveLineageStatus::Ambiguous);
+		CHECK(ClassifySaveFormat(facts, hint).status == SaveLineageStatus::Ambiguous);
 	}
 	auto facts = Common(425);
-	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).dialect == SaveDialect::DonorB);
+	CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Geothermal, facts.source_digest}).format == SaveFormat::Geothermal);
 	facts.original_version = 426;
-	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Geothermal, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 }
 
 /** A present B marker or field prevents a broken B save from falling through to A. */
@@ -294,78 +294,78 @@ TEST_CASE("Save lineage rejects missing or contradictory B families", "[save-lin
 		SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows}) {
 		auto facts = Donor(434);
 		Evidence(facts, family) = {};
-		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+		CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Orbital, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	}
 	auto facts = Donor(426);
 	Evidence(facts, SaveLineageFamily::SupplyOrders).kind = SaveEvidenceKind::Riff;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Donor(434); facts.space_content_version = 3;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Donor(426); facts.supply_columns = SaveSupplyColumns::Malformed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Donor(427); Evidence(facts, SaveLineageFamily::GeneratorHeader).schema = 2;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Donor(434); Evidence(facts, SaveLineageFamily::TubeSourceRows).records = 1;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Donor(426); facts.feature_flags |= 0x01000000;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Common(425); AddChunk(facts, SaveLineageFamily::SupplyOrders, SaveEvidenceKind::Table, 0);
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 }
 
 /** Wire failures and premature later meaning refuse before normal native initialization. */
 TEST_CASE("Save lineage rejects malformed A transport and future capability guesses", "[save-lineage]")
 {
 	auto facts = Destination(440); facts.framing_complete = false;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(440); Evidence(facts, SaveLineageFamily::SupplyOrders).length = 15;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(437); Evidence(facts, SaveLineageFamily::CargoDimensions).kind = SaveEvidenceKind::Table;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(438); Evidence(facts, SaveLineageFamily::OrbitalRecipes).state = SaveEvidenceState::Malformed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Common(425); facts.space_content_version = 3;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(440); facts.original_version = 447;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported);
 	// A markerless 442 is a development build's number, never read (m2o28 Group 17B).
 	facts = Destination(440); facts.original_version = 442;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported);
 	// Malformed CAPA descriptor observations win over every version or hint rule.
 	facts = Destination(440); facts.cargo_supply_encoding = SupplyColumnEncoding::Malformed;
-	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Orbital, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	facts = Destination(440); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
-	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Orbital, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	// An SSOR that fits no book refuses even where the rest is complete. An
 	// overlap of both books is settled by the writer: the marker selects the
 	// tagged book, while no markerless writer ever wrote the SSM1 signature.
 	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Malformed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Malformed;
-	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Orbital, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Ambiguous;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Accepted);
 	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Ambiguous;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = DevelopmentBuild(441); facts.supply_book_shape = SupplyBookShape::Ambiguous;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported); // Never read, whatever its book.
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported); // Never read, whatever its book.
 	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Fixed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // The marked writer needs its tagged book.
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt); // The marked writer needs its tagged book.
 	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Tagged;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // A440 never wrote SSM1.
-	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Common(425)), SaveCapability::TBMFaceTransfer));
-	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Destination(440)), static_cast<SaveCapability>(255)));
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt); // A440 never wrote SSM1.
+	CHECK_FALSE(HasSaveCapability(ClassifySaveFormat(Common(425)), SaveCapability::TBMFaceTransfer));
+	CHECK_FALSE(HasSaveCapability(ClassifySaveFormat(Destination(440)), static_cast<SaveCapability>(255)));
 }
 
 /** The explicit marker grants only the fully supplied merged transport, never gameplay ownership. */
 TEST_CASE("Save lineage validates the reserved merged marker and complete family boundary", "[save-lineage]")
 {
 	auto facts = Merged();
-	const auto result = ClassifySaveDialect(facts);
+	const auto result = ClassifySaveFormat(facts);
 	REQUIRE(result.status == SaveLineageStatus::Accepted);
-	CHECK(result.dialect == SaveDialect::Merged);
+	CHECK(result.format == SaveFormat::Unified);
 	// The first combined writer supplies every A and B capability. The Space
 	// eras came later with 446; the matrix case checks that 441 lacks them.
 	for (const auto &expected : CAPABILITY_EXPECTATIONS) {
@@ -373,21 +373,21 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 	}
 	// Unknown enum values still refuse independently of the complete marker.
 	CHECK_FALSE(HasSaveCapability(result, static_cast<SaveCapability>(255)));
-	facts.marker_magic ^= 1; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.marker_schema = 2; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.marker_writer_version = 440; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.original_version = 440; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.merged_supply_valid = false; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.merged_cargo_valid = false; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); Evidence(facts, SaveLineageFamily::GeneratorRows) = {}; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.feature_flags = 0x01000000; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts.marker_magic ^= 1; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.marker_schema = 2; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.marker_writer_version = 440; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.original_version = 440; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.merged_supply_valid = false; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.merged_cargo_valid = false; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); Evidence(facts, SaveLineageFamily::GeneratorRows) = {}; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.feature_flags = 0x01000000; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	// Issuance history can outlive terminal rows. Neither an omitted marker nor
 	// a fabricated paid-history bit may replace the actual canonical frontier.
-	facts = Merged(); facts.merged_supply_next_id = 2; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts.feature_flags |= 1U << 23; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
-	facts.merged_supply_next_id = 1; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.merged_supply_next_id = 0; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Merged(); facts.feature_flags |= 1U << 27; CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.merged_supply_next_id = 2; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts.feature_flags |= 1U << 23; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Accepted);
+	facts.merged_supply_next_id = 1; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.merged_supply_next_id = 0; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.feature_flags |= 1U << 27; CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 
 }
 
@@ -395,7 +395,7 @@ TEST_CASE("Save lineage validates the reserved merged marker and complete family
 TEST_CASE("Save lineage freezes the merged 441 and 446 capability matrix", "[save-lineage]")
 {
 	for (const auto &row : SOURCE_MATRIX) {
-		const auto source = AcceptedSource(row.dialect, row.version);
+		const auto source = AcceptedSource(row.format, row.version);
 		// The five Space capabilities follow the literal row, not a version comparison.
 		for (size_t column = 0; column < SPACE_CAPABILITIES.size(); ++column) {
 			CHECK(HasSaveCapability(source, SPACE_CAPABILITIES[column]) == row.carries[column]);
@@ -410,56 +410,56 @@ TEST_CASE("Save lineage freezes the merged 441 and 446 capability matrix", "[sav
 /** The Space eras exist only in merged 446; no historical writer, other number or refused attempt has them. */
 TEST_CASE("Save lineage grants the Space eras only to merged 446", "[save-lineage]")
 {
-	const auto merged441 = AcceptedSource(SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION);
-	const auto merged446 = AcceptedSource(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION);
+	const auto unified441 = AcceptedSource(SaveFormat::Unified, MERGED_SAVE_LINEAGE_VERSION);
+	const auto unified446 = AcceptedSource(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION);
 	// Each Space capability against both merged allocations and the last historical files.
 	for (const auto capability : SPACE_CAPABILITIES) {
-		CHECK_FALSE(HasSaveCapability(merged441, capability));
-		CHECK(HasSaveCapability(merged446, capability));
-		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::DestinationA, 440), capability));
-		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::DonorB, 434), capability));
+		CHECK_FALSE(HasSaveCapability(unified441, capability));
+		CHECK(HasSaveCapability(unified446, capability));
+		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveFormat::Orbital, 440), capability));
+		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveFormat::Geothermal, 434), capability));
 	}
 	// A version outside its writer's closed range borrows no other writer's meaning:
 	// merged 442-445 and 447, A441 and B435 were never written by those writers.
 	const SaveLineageResult foreign[] = {
-		AcceptedSource(SaveDialect::Merged, 442), AcceptedSource(SaveDialect::Merged, 445),
-		AcceptedSource(SaveDialect::Merged, 447), AcceptedSource(SaveDialect::DestinationA, 441),
-		AcceptedSource(SaveDialect::DonorB, 435), AcceptedSource(SaveDialect::Shared, 441),
-		AcceptedSource(static_cast<SaveDialect>(200), 446),
+		AcceptedSource(SaveFormat::Unified, 442), AcceptedSource(SaveFormat::Unified, 445),
+		AcceptedSource(SaveFormat::Unified, 447), AcceptedSource(SaveFormat::Orbital, 441),
+		AcceptedSource(SaveFormat::Geothermal, 435), AcceptedSource(SaveFormat::Base, 441),
+		AcceptedSource(static_cast<SaveFormat>(200), 446),
 	};
 	for (const auto &source : foreign) {
 		for (const auto &expected : CAPABILITY_EXPECTATIONS) CHECK_FALSE(HasSaveCapability(source, expected.capability));
 	}
 	// A refused attempt grants nothing even when it names merged 446.
 	for (auto status : {SaveLineageStatus::Ambiguous, SaveLineageStatus::Corrupt, SaveLineageStatus::Unsupported}) {
-		CHECK_FALSE(HasSaveCapability({status, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION}, SaveCapability::AsteroidCargoOrigins));
+		CHECK_FALSE(HasSaveCapability({status, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION}, SaveCapability::AsteroidCargoOrigins));
 	}
 	// The next appended value and any unknown value have no rule, so a future
 	// append cannot silently become available in old 441 or in 446.
 	for (const auto unknown : {static_cast<SaveCapability>(SaveCapability::Count), static_cast<SaveCapability>(255)}) {
-		CHECK_FALSE(HasSaveCapability(merged441, unknown));
-		CHECK_FALSE(HasSaveCapability(merged446, unknown));
+		CHECK_FALSE(HasSaveCapability(unified441, unknown));
+		CHECK_FALSE(HasSaveCapability(unified446, unknown));
 	}
 }
 
 /** Merged 441 is read from its marker and proofs; a markerless 441 is a development build's file and is not read. */
 TEST_CASE("Save lineage reads merged 441 and refuses a markerless 441", "[save-lineage]")
 {
-	const auto merged = ClassifySaveDialect(Merged());
+	const auto merged = ClassifySaveFormat(Merged());
 	REQUIRE(merged.status == SaveLineageStatus::Accepted);
-	CHECK(merged.dialect == SaveDialect::Merged); CHECK(merged.original_version == 441);
+	CHECK(merged.format == SaveFormat::Unified); CHECK(merged.original_version == 441);
 	CHECK_FALSE(HasSaveCapability(merged, SaveCapability::AsteroidCargoOrigins));
-	CHECK(ClassifySaveDialect(DevelopmentBuild(441)).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(DevelopmentBuild(441)).status == SaveLineageStatus::Unsupported);
 	// Typed origins inside a marked 441 contradict the frozen allocation, and a
 	// marker cannot adopt a development build's fixed book either.
 	auto facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Valid;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = DevelopmentBuild(441); AddChunk(facts, SaveLineageFamily::Marker, SaveEvidenceKind::Riff, 8);
 	facts.marker_magic = MERGED_SAVE_LINEAGE_MAGIC; facts.marker_schema = MERGED_SAVE_LINEAGE_SCHEMA; facts.marker_writer_version = 441;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	// Without its marker even the complete merged transport is just a 441 number.
 	facts = Merged(); Evidence(facts, SaveLineageFamily::Marker) = {};
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported);
 }
 
 /** Every markerless 441-445 is Unsupported whatever it contains; malformed evidence still refuses first as Corrupt. */
@@ -467,50 +467,50 @@ TEST_CASE("Save lineage refuses every markerless 441-445 as a development build"
 {
 	for (uint16_t version = 441; version <= 445; ++version) {
 		INFO(version);
-		CHECK(ClassifySaveDialect(DevelopmentBuild(version)).status == SaveLineageStatus::Unsupported);
+		CHECK(ClassifySaveFormat(DevelopmentBuild(version)).status == SaveLineageStatus::Unsupported);
 		auto classic = DevelopmentBuild(version); classic.space_content_version = 0;
-		CHECK(ClassifySaveDialect(classic).status == SaveLineageStatus::Unsupported);
+		CHECK(ClassifySaveFormat(classic).status == SaveLineageStatus::Unsupported);
 		// No legacy origin hint can turn these numbers into a historical writer.
 		auto hinted = DevelopmentBuild(version);
-		for (const auto dialect : {SaveDialect::DestinationA, SaveDialect::DonorB}) {
-			CHECK(ClassifySaveDialect(hinted, SaveOriginHint{dialect, hinted.source_digest}).status == SaveLineageStatus::Unsupported);
+		for (const auto format : {SaveFormat::Orbital, SaveFormat::Geothermal}) {
+			CHECK(ClassifySaveFormat(hinted, SaveOriginHint{format, hinted.source_digest}).status == SaveLineageStatus::Unsupported);
 		}
 		// Changing what the file carries does not make it readable.
 		hinted.asteroid_origin_columns = SaveEvidenceState::Absent;
-		CHECK(ClassifySaveDialect(hinted).status == SaveLineageStatus::Unsupported);
+		CHECK(ClassifySaveFormat(hinted).status == SaveLineageStatus::Unsupported);
 	}
 	// Malformed evidence is reported as corruption before the number is considered.
 	auto facts = DevelopmentBuild(443); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	facts = DevelopmentBuild(443); facts.framing_complete = false;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	// A legacy file at 440 or below cannot carry the merged-446 columns either.
 	facts = Destination(440); facts.asteroid_origin_columns = SaveEvidenceState::Valid;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 }
 
 /** The reserved combined writer is accepted only with its own marker tuple and typed origins; nothing unmarked or later. */
 TEST_CASE("Save lineage admits marked 446 and refuses every other modern tuple", "[save-lineage]")
 {
-	const auto current = ClassifySaveDialect(Merged446());
+	const auto current = ClassifySaveFormat(Merged446());
 	REQUIRE(current.status == SaveLineageStatus::Accepted);
-	CHECK(current.dialect == SaveDialect::Merged); CHECK(current.original_version == CURRENT_MERGED_SAVE_VERSION);
+	CHECK(current.format == SaveFormat::Unified); CHECK(current.original_version == CURRENT_MERGED_SAVE_VERSION);
 	CHECK(HasSaveCapability(current, SaveCapability::SpaceSurveyDeparture));
 	CHECK(HasSaveCapability(current, SaveCapability::TubeGeothermalBindings));
 	auto facts = Merged446(); facts.asteroid_origin_columns = SaveEvidenceState::Absent;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // 446 always declares typed origins.
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt); // 446 always declares typed origins.
 	facts = Merged446(); facts.marker_schema = MERGED_SAVE_LINEAGE_SCHEMA;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Schema 1 belongs to 441.
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt); // Schema 1 belongs to 441.
 	facts = Merged446(); Evidence(facts, SaveLineageFamily::Marker) = {};
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Unmarked 446.
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt); // Unmarked 446.
 	// A marker on any Space fixes era belongs to no writer, whatever it claims.
 	for (uint16_t version = 442; version <= 445; ++version) {
 		facts = Merged446(); facts.original_version = facts.marker_writer_version = version;
-		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+		CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 	}
 	facts = Merged446(); facts.original_version = facts.marker_writer_version = 447;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported);
 	facts = DevelopmentBuild(445); facts.original_version = 447;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported);
 }
 

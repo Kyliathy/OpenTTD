@@ -959,13 +959,13 @@ The user agreed to do this after Group 22. The goal: no branch concept in the co
 
 {{MEDIUM}}
 
-- [ ] **22B.1** Propose the names in the notes before renaming, for example a name per historical format family for `Shared`, `DestinationA`, `DonorB` and `Merged`, and per capability where needed. Keep each identifier's meaning exact.
+- [X] **22B.1** Propose the names in the notes before renaming, for example a name per historical format family for `Shared`, `DestinationA`, `DonorB` and `Merged`, and per capability where needed. Keep each identifier's meaning exact.
 
-- [ ] **22B.2** Rename across `save_lineage.*`, `saveload.cpp`, the codecs, `surface_supply_order_sl.cpp`, `multilayer_sl.cpp` and the tests, mechanically and in one commit. Include user-visible refusal details (for example "Required original branch transport is missing or inconsistent").
+- [X] **22B.2** Rename across `save_lineage.*`, `saveload.cpp`, the codecs, `surface_supply_order_sl.cpp`, `multilayer_sl.cpp` and the tests, mechanically and in one commit. Include user-visible refusal details (for example "Required original branch transport is missing or inconsistent").
 
-- [ ] **22B.3** Update `docs/zz-reach2/architecture/savegame/archi-savegame.md` to describe one save system: one writer, one schema and one loader, with a bounded table of historical formats it can import.
+- [X] **22B.3** Update `docs/zz-reach2/architecture/savegame/archi-savegame.md` to describe one save system: one writer, one schema and one loader, with a bounded table of historical formats it can import.
 
-- [ ] **22B.4** Build GCC and Clang and run the lineage and save/load subsets.
+- [X] **22B.4** Build GCC and Clang and run the lineage and save/load subsets.
 
 ## Part 1 handoff to Part 2
 

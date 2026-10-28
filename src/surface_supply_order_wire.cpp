@@ -92,8 +92,8 @@ std::optional<SurfaceSupplyOrderTransport> DecodeSurfaceSupplyOrders(std::span<c
 	return transport;
 }
 
-/** @copydoc ConvertLegacyBSupply */
-std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupplyTransport &original, const SurfaceSupplyRecordContext &same_file)
+/** @copydoc ConvertTableSupply */
+std::optional<SurfaceSupplyOrderSnapshot> ConvertTableSupply(const TableSupplyTransport &original, const SurfaceSupplyRecordContext &same_file)
 {
 	// An absent/malformed header or partial table cannot reset paid history to
 	// a fresh empty book. Admit the complete original bound before allocation.
@@ -113,15 +113,15 @@ std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupp
 		SurfaceSupplyOrderRecord record;
 		record.id = row.id; record.owner = CompanyID{row.owner}; record.origin = StationID{row.station};
 		record.label = row.label; record.quantity = row.quantity; record.purchase_day = TimerGameEconomy::Date{row.economy_day};
-		record.receipt = LegacyBSupplyReceipt{Money{row.unit_price}, row.calendar_date, row.refunded, row.dispatched, row.closed != 0};
+		record.receipt = TableSupplyReceipt{Money{row.unit_price}, row.calendar_date, row.refunded, row.dispatched, row.closed != 0};
 		candidate.records.push_back(record);
 	}
 	if (ValidateSurfaceSupplyRecords(candidate, same_file) != SurfaceSupplyRecordError::None) return std::nullopt;
 	return candidate;
 }
 
-/** @copydoc ProjectLegacyBSupplyPacket */
-std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot)
+/** @copydoc ProjectTableSupplyPacket */
+std::optional<SurfaceSupplyPacketFacts> ProjectTableSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot)
 {
 	if (original.source.IsCompanySupply()) return std::nullopt;
 	if (original.order == 0) {
@@ -138,8 +138,8 @@ std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupply
 	return original;
 }
 
-/** @copydoc ConvertLegacyASupply */
-std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyASupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file)
+/** @copydoc ConvertFixedSupply */
+std::optional<SurfaceSupplyOrderSnapshot> ConvertFixedSupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file)
 {
 	if (original.snapshot.records.size() > MAX_SURFACE_SUPPLY_RECORDS) return std::nullopt;
 	// A440 has no receipt tag. A caller cannot pass an imported/unknown row

@@ -78,8 +78,8 @@ void LoadCheckData::Clear()
 {
 	// Every copied procurement check must supply its own original order family, native economy day and map geometry; stale prior-file evidence grants no new pending/refund rights.
 	this->surface_supply_orders_present = false; this->surface_supply_orders = {};
-	this->legacy_a_supply_wire = false; this->legacy_b_supply_present.fill(false); this->legacy_b_supply = {}; // Each preview proves its own original wire family; no prior header/rows can lend legacy rights.
-	this->legacy_b_supply_packet_fields_present = false;
+	this->fixed_supply_wire = false; this->table_supply_present.fill(false); this->table_supply = {}; // Each preview proves its own original wire family; no prior header/rows can lend legacy rights.
+	this->table_supply_packet_fields_present = false;
 	this->native_map_dimensions_present = this->native_economy_date_present = false; this->native_economy_date = TimerGameEconomy::Date{0};
 	// Each preview must supply its own complete processing family and retired history; a valid previous file cannot lend paid work or presence to a missing/malformed next file.
 	this->orbital_recipes_present = false; this->orbital_recipe_rows.clear(); this->orbital_retired_recipe_batches.clear(); this->orbital_retired_discarded_paid_j = 0;

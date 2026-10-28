@@ -131,11 +131,11 @@ struct NativeStationOwnerPreview {
 /** Detached whole-file preview transport; copied identities and authority cannot mutate or supply owners from the current playable world. */
 struct LoadCheckData {
 	bool surface_supply_orders_present = false; ///< This exact file supplied the required current order family, including a legitimate empty book.
-	bool legacy_a_supply_wire = false; ///< Original A440 RIFF transport requires the detached A adapter; canonical tagged previews retain their separate contract.
+	bool fixed_supply_wire = false; ///< Original A440 RIFF transport requires the detached A adapter; canonical tagged previews retain their separate contract.
 	SurfaceSupplyOrderTransport surface_supply_orders; ///< Detached complete commitments/history only; preview never activates refunds, orders or stock.
-	std::array<bool, 2> legacy_b_supply_present{}; ///< Same-file original SSOH header and SSOR TABLE presence, including an empty paid-history book.
-	LegacyBSupplyTransport legacy_b_supply; ///< Original bounded B scalars, awaiting same-file conversion and complete packet custody; never live rights.
-	bool legacy_b_supply_packet_fields_present = false; ///< This copied CAPA actually supplied original order/shipped/purpose scalars; book staging alone cannot validate paid packet custody.
+	std::array<bool, 2> table_supply_present{}; ///< Same-file original SSOH header and SSOR TABLE presence, including an empty paid-history book.
+	TableSupplyTransport table_supply; ///< Original bounded B scalars, awaiting same-file conversion and complete packet custody; never live rights.
+	bool table_supply_packet_fields_present = false; ///< This copied CAPA actually supplied original order/shipped/purpose scalars; book staging alone cannot validate paid packet custody.
 	bool native_map_dimensions_present = false; ///< Original MAPS row, never default/previous-file geometry.
 	bool native_economy_date_present = false; ///< Original DATE economy_date field, not calendar/live time.
 	TimerGameEconomy::Date native_economy_date{0}; ///< Same-file native economy day for exact current allowance/reference joins.

@@ -21,9 +21,9 @@
  */
 static SurfaceSupplyOrderSnapshot DepartureHistory(const SurfaceSupplyRecordRig &rig)
 {
-	LegacyBSupplyOrderWire row{1, 0, 3, CargoLabel{"RFMT"}, 100,
+	TableSupplyOrderWire row{1, 0, 3, CargoLabel{"RFMT"}, 100,
 		TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), 100, 20, 40, 25, 1};
-	const auto converted = ConvertLegacyBSupply({1, 1, 2, {row}}, rig.context);
+	const auto converted = ConvertTableSupply({1, 1, 2, {row}}, rig.context);
 	REQUIRE(converted.has_value()); return *converted;
 }
 

@@ -58,11 +58,11 @@ TEST_CASE("Save envelope empty CAPA requires whole exact supply signatures", "[s
 	// other rule; it never reads as the historical absence of supply columns.
 	const auto half = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
 	CHECK(half.cargo_supply_encoding == SupplyColumnEncoding::Malformed); CHECK(half.supply_columns == SaveSupplyColumns::Malformed);
-	CHECK(ClassifySaveDialect(half).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(half).status == SaveLineageStatus::Corrupt);
 	fields.push_back({"company_supply_shipped", 1});
 	const auto complete = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
 	CHECK(complete.supply_columns == SaveSupplyColumns::Complete); CHECK(complete.cargo_supply_encoding == SupplyColumnEncoding::LegacyU32Bool);
-	CHECK(ClassifySaveDialect(complete).status == SaveLineageStatus::Corrupt); // Typed CAPA alone cannot invent the other common owners or a required B family.
+	CHECK(ClassifySaveFormat(complete).status == SaveLineageStatus::Corrupt); // Typed CAPA alone cannot invent the other common owners or a required B family.
 	fields.back().second = 2;
 	// A U32 link with a U8 flag belongs to no writer: recorded malformed, never narrowed or widened.
 	const auto mixed = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));

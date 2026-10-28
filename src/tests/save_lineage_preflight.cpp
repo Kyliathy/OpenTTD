@@ -55,7 +55,7 @@ static PreflightOriginal OriginalForPreflight(std::string_view origin, uint16_t 
 		std::ifstream file(result.path, std::ios::binary); REQUIRE(file.good());
 		result.bytes.assign(std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{});
 		REQUIRE(result.bytes.size() == row.at("bytes").get<size_t>());
-		result.hint.dialect = origin == "A" ? SaveDialect::DestinationA : SaveDialect::DonorB;
+		result.hint.format = origin == "A" ? SaveFormat::Orbital : SaveFormat::Geothermal;
 		const auto digest = EnvelopeHex(row.at("sha256").get<std::string>()); REQUIRE(digest.size() == result.hint.source_digest.size());
 		std::ranges::copy(digest, result.hint.source_digest.begin());
 		return result;
@@ -200,7 +200,7 @@ TEST_CASE("Native copied lineage is bound to each original attempt", "[save-line
 		// Every native read belongs to this exact accepted original, including
 		// later decoder refill; no earlier successful branch may leak into it.
 		for (const auto &seen : network->observed) {
-			CHECK(seen.status == SaveLineageStatus::Accepted); CHECK(seen.dialect == original.hint.dialect); CHECK(seen.original_version == 425);
+			CHECK(seen.status == SaveLineageStatus::Accepted); CHECK(seen.format == original.hint.format); CHECK(seen.original_version == 425);
 		}
 		CHECK_FALSE(GetLoadCapabilities().has_value());
 		CHECK(Vehicle::GetIfValid(id) == capsule); CHECK(Company::Get(_current_company)->money == cash);
@@ -209,7 +209,7 @@ TEST_CASE("Native copied lineage is bound to each original attempt", "[save-line
 	auto current_network = std::make_shared<ObservePreflightReader>(EnvelopeNetworkReader(current.bytes));
 	CHECK(LoadWithFilter(current_network, std::nullopt, true) == SaveLoadResult::Ok);
 	REQUIRE_FALSE(current_network->observed.empty());
-	CHECK(current_network->observed.back().dialect == SaveDialect::DestinationA);
+	CHECK(current_network->observed.back().format == SaveFormat::Orbital);
 	CHECK(current_network->observed.back().original_version == 440);
 	CHECK_FALSE(GetLoadCapabilities().has_value());
 	const auto original = OriginalForPreflight("A", 425);
@@ -229,8 +229,8 @@ TEST_CASE("Native lineage inspection retains explicit ancient LZO compatibility"
 	const auto facts = InspectSaveWireFacts(raw, {}, true);
 	CHECK(facts.original_version == 0); CHECK(facts.framing_complete); CHECK(facts.common_transport_valid);
 	CHECK(EnvelopeDigest(facts.source_digest) == "900c0f4f41f13a65ad9835177e529bc31f759af2b94cbc46af597760553149da");
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
-	CHECK(ClassifySaveDialect(facts).dialect == SaveDialect::Shared);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Accepted);
+	CHECK(ClassifySaveFormat(facts).format == SaveFormat::Base);
 	CHECK(raw->read_bytes == 0); CHECK_FALSE(GetLoadCapabilities().has_value());
 }
 #endif
@@ -284,10 +284,10 @@ TEST_CASE("Native scalar and descriptor gates preserve both original histories",
 		{SaveLoadVersion::SpaceCargoDimensions, SaveCapability::SpaceCargoDimensions, 437},
 		{SaveLoadVersion::OrbitalRecipeProcessing, SaveCapability::OrbitalRecipeProcessing, 438},
 		{SaveLoadVersion::CompanySupplyPackets, SaveCapability::CompanySupplyPackets, 439},
-		{SaveLoadVersion::SurfaceSupplyOrders, SaveCapability::SurfaceSupplyOrdersA, 440},
+		{SaveLoadVersion::SurfaceSupplyOrders, SaveCapability::SurfaceSupplyOrdersFixed, 440},
 	};
 	static constexpr std::pair<SaveCapability, uint16_t> b_features[]{
-		{SaveCapability::TBMFaceTransfer, 425}, {SaveCapability::SurfaceSupplyOrdersB, 426},
+		{SaveCapability::TBMFaceTransfer, 425}, {SaveCapability::SurfaceSupplyOrdersTable, 426},
 		{SaveCapability::GeothermalGenerators, 427}, {SaveCapability::UtilityHeatConversion, 428},
 		{SaveCapability::GeothermalGeneratorOperation, 429}, {SaveCapability::GeothermalMagmaLoop, 430},
 		{SaveCapability::UtilityTownService, 431}, {SaveCapability::UtilityLocalElectricalFeed, 432},
@@ -306,7 +306,7 @@ TEST_CASE("Native scalar and descriptor gates preserve both original histories",
 			/** @param active Actual original classification bound by the native DoLoad scope, not a test-created policy result. */
 			const std::function<void(const SaveLineageResult &)> observe = [&](const SaveLineageResult &active) {
 				CHECK(active.original_version == version);
-				CHECK(active.dialect == (version == 424 ? SaveDialect::Shared : original.hint.dialect));
+				CHECK(active.format == (version == 424 ? SaveFormat::Base : original.hint.format));
 				// A's newer fields and retirement intervals remain its own meaning.
 				// Every B original retains the shared pre425 Space layout regardless
 				// of the same numeric threshold's independent underground feature.
@@ -350,7 +350,7 @@ TEST_CASE("Native legacy supply wire conversion never publishes staged rights", 
 	const auto a = OriginalForPreflight("A", 440), b = OriginalForPreflight("B", 426);
 	CHECK(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(b.bytes)).source_digest == b.hint.source_digest);
 	CHECK(LoadWithFilter(EnvelopeNetworkReader(a.bytes), std::nullopt, true) == SaveLoadResult::Ok);
-	CHECK(_load_check_data.legacy_a_supply_wire);
+	CHECK(_load_check_data.fixed_supply_wire);
 	CHECK(_load_check_data.surface_supply_orders_present);
 	CHECK(_load_check_data.surface_supply_orders.saved_day == _load_check_data.native_economy_date);
 	SaveLoadResult partial;
@@ -363,11 +363,11 @@ TEST_CASE("Native legacy supply wire conversion never publishes staged rights", 
 	}
 	INFO(_load_check_data.error_msg);
 	CHECK(partial == SaveLoadResult::Ok);
-	CHECK(_load_check_data.legacy_b_supply_packet_fields_present);
-	CHECK(_load_check_data.legacy_b_supply_present[0]); CHECK(_load_check_data.legacy_b_supply_present[1]);
-	CHECK_FALSE(_load_check_data.legacy_a_supply_wire);
+	CHECK(_load_check_data.table_supply_packet_fields_present);
+	CHECK(_load_check_data.table_supply_present[0]); CHECK(_load_check_data.table_supply_present[1]);
+	CHECK_FALSE(_load_check_data.fixed_supply_wire);
 	CHECK(_load_check_data.surface_supply_orders_present); // Detached metadata and complete copied custody grant no live refund or inventory rights.
-	const auto legacy = _load_check_data.legacy_b_supply;
+	const auto legacy = _load_check_data.table_supply;
 	const auto converted = _load_check_data.surface_supply_orders.snapshot;
 	size_t linked = 0;
 	// Real original B packets keep invalid-Industry scalars in detached raw
@@ -376,7 +376,7 @@ TEST_CASE("Native legacy supply wire conversion never publishes staged rights", 
 	for (const auto &packet : _load_check_data.native_cargo_packet_rows) {
 		const SurfaceSupplyPacketFacts raw{packet.packet, packet.quantity, packet.source, packet.feeder_share,
 			packet.company_supply_order, packet.company_supply_shipped != 0};
-		const auto projected = ProjectLegacyBSupplyPacket(raw, converted); REQUIRE(projected.has_value());
+		const auto projected = ProjectTableSupplyPacket(raw, converted); REQUIRE(projected.has_value());
 		if (packet.company_supply_order == 0) { CHECK(*projected == raw); continue; }
 		++linked; CHECK(packet.source.type == SourceType::Industry); CHECK(packet.source.id == Source::Invalid);
 		CHECK(projected->source.IsCompanySupply()); CHECK(projected->source.id == Source::Invalid);
@@ -402,10 +402,10 @@ TEST_CASE("Native legacy supply wire conversion never publishes staged rights", 
 		CHECK(record.Legacy()->refunded == original.refunded); CHECK(record.Legacy()->dispatched == original.dispatched);
 	}
 	ResetSurfaceSupplyOrderLoadStaging();
-	CHECK(StageLoadedLegacyBSupplyRows(legacy.orders));
-	CHECK(StageLoadedLegacyBSupplyHeader(legacy.schema, legacy.count, legacy.next_order));
-	CHECK_FALSE(StageLoadedLegacyBSupplyHeader(legacy.schema, legacy.count, legacy.next_order));
-	CHECK_FALSE(StageLoadedLegacyBSupplyRows(legacy.orders));
+	CHECK(StageLoadedTableSupplyRows(legacy.orders));
+	CHECK(StageLoadedTableSupplyHeader(legacy.schema, legacy.count, legacy.next_order));
+	CHECK_FALSE(StageLoadedTableSupplyHeader(legacy.schema, legacy.count, legacy.next_order));
+	CHECK_FALSE(StageLoadedTableSupplyRows(legacy.orders));
 	CHECK_FALSE(StageLoadedSurfaceSupplyOrders({}, TimerGameEconomy::date));
 	CHECK_FALSE(AcceptLoadedSurfaceSupplyOrders(true)); // Detached staged bytes have no original native DATE/MAPS/packet observations and cannot install refund or cap rights.
 	ResetSurfaceSupplyOrderLoadStaging();
@@ -416,8 +416,8 @@ TEST_CASE("Native legacy supply wire conversion never publishes staged rights", 
 	// Returning to A must clear every preceding B component/proof flag; a stale
 	// header or row cannot validate a later absent family by accidental reuse.
 	CHECK(LoadWithFilter(EnvelopeNetworkReader(a.bytes), std::nullopt, true) == SaveLoadResult::Ok);
-	CHECK_FALSE(_load_check_data.legacy_b_supply_present[0]); CHECK_FALSE(_load_check_data.legacy_b_supply_present[1]);
-	CHECK_FALSE(_load_check_data.legacy_b_supply_packet_fields_present);
+	CHECK_FALSE(_load_check_data.table_supply_present[0]); CHECK_FALSE(_load_check_data.table_supply_present[1]);
+	CHECK_FALSE(_load_check_data.table_supply_packet_fields_present);
 }
 
 /** Malformed copies of genuine B426bytes refuse through the actual copied loader and cannot borrow the active world's owners or publish rights. */
@@ -563,7 +563,7 @@ TEST_CASE("Original Space family omissions and foreign capabilities refuse copie
 		bytes.insert(bytes.end() - 4, foreign.begin() + recipe.begin, foreign.begin() + recipe.end);
 	}
 	const auto cash = Company::Get(_current_company)->money; const auto book = CaptureSurfaceSupplyOrders(); const auto random = _random;
-	const auto malformed = EnvelopeStream(std::move(bytes), "OTTN", original.hint.dialect == SaveDialect::DonorB ? 426 : fault == 0 ? 438 : 437);
+	const auto malformed = EnvelopeStream(std::move(bytes), "OTTN", original.hint.format == SaveFormat::Geothermal ? 426 : fault == 0 ? 438 : 437);
 	CHECK(LoadWithFilter(EnvelopeNetworkReader(malformed), std::nullopt, true) == SaveLoadResult::Error);
 	CHECK(CaptureSurfaceSupplyOrders() == book); CHECK(Company::Get(_current_company)->money == cash);
 	CHECK(Vehicle::GetIfValid(capsule->index) == capsule); CHECK_FALSE(GetLoadCapabilities().has_value());
@@ -611,7 +611,7 @@ static PreflightOriginal OriginalMachineryBinding()
 	std::ifstream input(result.path, std::ios::binary); REQUIRE(input.good());
 	result.bytes.assign(std::istreambuf_iterator<char>{input}, std::istreambuf_iterator<char>{});
 	const auto digest = EnvelopeHex(row.at("sha256").get<std::string>()); REQUIRE(digest.size() == result.hint.source_digest.size());
-	result.hint.dialect = SaveDialect::DonorB; std::ranges::copy(digest, result.hint.source_digest.begin());
+	result.hint.format = SaveFormat::Geothermal; std::ranges::copy(digest, result.hint.source_digest.begin());
 	return result;
 }
 
@@ -677,7 +677,7 @@ TEST_CASE("Candidate previews discard failed transport across original lineages"
 	const std::array selections{std::pair{"B", uint16_t{434}}, std::pair{"A", uint16_t{440}}, std::pair{"B", uint16_t{427}},
 		std::pair{"A", uint16_t{438}}, std::pair{"B", uint16_t{425}}, std::pair{"A", uint16_t{425}}, std::pair{"B", uint16_t{434}}};
 	// Alternating genuine originals must prove their own complete presence,
-	// defaults and dialect on every selection, even after richer feature previews.
+	// defaults and format on every selection, even after richer feature previews.
 	for (const auto &[branch, version] : selections) {
 		INFO(branch); INFO(version); const auto original = OriginalForPreflight(branch, version);
 		REQUIRE(LoadWithFilter(EnvelopeNetworkReader(original.bytes), original.hint, true) == SaveLoadResult::Ok);
@@ -779,10 +779,10 @@ TEST_CASE("Writer 446 emits its exact marker, Space columns and an identical sec
 	CHECK(facts.marker_magic == MERGED_SAVE_LINEAGE_MAGIC); CHECK(facts.marker_schema == CURRENT_MERGED_SAVE_LINEAGE_SCHEMA);
 	CHECK(facts.marker_writer_version == CURRENT_MERGED_SAVE_VERSION); CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 	CHECK(facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8); CHECK(facts.supply_book_shape == SupplyBookShape::Tagged);
-	const auto result = ClassifySaveDialect(facts);
-	CHECK(result.status == SaveLineageStatus::Accepted); CHECK(result.dialect == SaveDialect::Merged); CHECK(result.original_version == CURRENT_MERGED_SAVE_VERSION);
+	const auto result = ClassifySaveFormat(facts);
+	CHECK(result.status == SaveLineageStatus::Accepted); CHECK(result.format == SaveFormat::Unified); CHECK(result.original_version == CURRENT_MERGED_SAVE_VERSION);
 	for (const auto capability : {SaveCapability::AsteroidCargoOrigins, SaveCapability::AsteroidFieldLifecycle, SaveCapability::SpaceMiningContinuation,
-			SaveCapability::SpaceLegacyDeparture, SaveCapability::SpaceSurveyDeparture, SaveCapability::SurfaceSupplyOrdersA, SaveCapability::SurfaceSupplyOrdersB}) {
+			SaveCapability::SpaceLegacyDeparture, SaveCapability::SpaceSurveyDeparture, SaveCapability::SurfaceSupplyOrdersFixed, SaveCapability::SurfaceSupplyOrdersTable}) {
 		INFO(to_underlying(capability)); CHECK(HasSaveCapability(result, capability));
 	}
 	const auto stream = EnvelopeReplay(std::make_shared<EnvelopeTestReader>(first)); const auto chunks = SupplyWireChunks(stream);
@@ -968,7 +968,7 @@ TEST_CASE("Candidate preview reset clears every merged copied field", "[save-can
 	data.native_space_vehicle_rows.emplace_back(); data.native_space_vehicle_rows.back().mining_continuation.retry_ticks = 3;
 	data.space_order_preview_rows.emplace_back();
 	data.native_cargo_dimensions_present = true; data.native_cargo_dimension_rows.push_back({CargoType{1}, CargoLabel{"NORE"}, 16});
-	data.legacy_a_supply_wire = data.legacy_b_supply_packet_fields_present = true;
+	data.fixed_supply_wire = data.table_supply_packet_fields_present = true;
 	data.Clear();
 	CHECK(data.native_cargo_packet_rows.empty()); CHECK(data.native_cargo_owner_rows.empty());
 	CHECK_FALSE(data.asteroid_present); CHECK_FALSE(data.asteroid_active); CHECK_FALSE(data.asteroid_knowledge_present);
@@ -977,7 +977,7 @@ TEST_CASE("Candidate preview reset clears every merged copied field", "[save-can
 	CHECK(data.next_launch_center_generation == 1);
 	CHECK(data.native_space_vehicle_rows.empty()); CHECK(data.space_order_preview_rows.empty());
 	CHECK_FALSE(data.native_cargo_dimensions_present); CHECK(data.native_cargo_dimension_rows.empty());
-	CHECK_FALSE(data.legacy_a_supply_wire); CHECK_FALSE(data.legacy_b_supply_packet_fields_present);
+	CHECK_FALSE(data.fixed_supply_wire); CHECK_FALSE(data.table_supply_packet_fields_present);
 }
 
 /** Real files a development build wrote at 445 are Unsupported from their own bytes and refuse before any native read. */
@@ -999,12 +999,12 @@ TEST_CASE("Native preflight refuses development-build originals without touching
 		CHECK(EnvelopeDigest(facts.source_digest) == original.sha256);
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed);
-		const auto result = ClassifySaveDialect(facts);
+		const auto result = ClassifySaveFormat(facts);
 		CHECK(result.status == SaveLineageStatus::Unsupported); CHECK(result.original_version == 445);
 		CHECK_FALSE(HasSaveCapability(result, SaveCapability::AsteroidCargoOrigins));
-		CHECK_FALSE(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersA));
+		CHECK_FALSE(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersFixed));
 		// A legacy hint naming a historical writer changes nothing for this number.
-		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).status == SaveLineageStatus::Unsupported);
+		CHECK(ClassifySaveFormat(facts, SaveOriginHint{SaveFormat::Geothermal, facts.source_digest}).status == SaveLineageStatus::Unsupported);
 		auto network = std::make_shared<ObservePreflightReader>(EnvelopeNetworkReader(original.bytes));
 		CHECK(LoadWithFilter(network) == SaveLoadResult::Error);
 		CHECK(network->observed.empty()); CHECK_FALSE(GetLoadCapabilities().has_value());

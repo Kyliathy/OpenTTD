@@ -41,15 +41,15 @@ struct MLLNChunkHandler final : ChunkHandler {
 		// Only an admitted merged envelope at 441 or 446 and exact RIFF framing may
 		// declare a closed capability contract; no legacy fallback and no range exist.
 		const auto schema = source ? MergedLineageSchema(source->original_version) : std::nullopt;
-		if (!source || source->dialect != SaveDialect::Merged || !schema ||
-			SlGetChunkType() != ChunkType::Riff || SlGetFieldLength() != 8) SlErrorCorrupt("Invalid merged lineage marker framing");
+		if (!source || source->format != SaveFormat::Unified || !schema ||
+			SlGetChunkType() != ChunkType::Riff || SlGetFieldLength() != 8) SlErrorCorrupt("Invalid save format marker framing");
 		std::array<uint32_t, 1> magic{}; std::array<uint16_t, 2> version{};
 		SlCopy<VarFileType::U32>(magic); SlCopy<VarFileType::U16>(version);
 		// The tuple is exactly (441, 1) or (446, 2) and names the envelope's own
 		// version: future or crossed schemas, downgraded versions and substituted
 		// identities refuse before any marker can stand in for missing owner evidence.
 		if (magic[0] != MERGED_SAVE_LINEAGE_MAGIC || version[0] != *schema ||
-			version[1] != source->original_version) SlErrorCorrupt("Invalid merged lineage marker identity");
+			version[1] != source->original_version) SlErrorCorrupt("Invalid save format marker identity");
 	}
 	/** Validate the admitted full-load marker without publishing any gameplay state. */
 	void Load() const override { this->Read(); }

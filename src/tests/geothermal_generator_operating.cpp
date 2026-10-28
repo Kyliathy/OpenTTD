@@ -196,7 +196,7 @@ TEST_CASE("Native generator driver leaves unrelated orbital-only utility state u
 	CHECK(ComputeUtilityPowerDigest() == before); CHECK_FALSE(HasUtilityHeatState()); CHECK_FALSE(IsUtilityHeatAllocated());
 }
 
-/** Coupled operating transport resolves original roles/carry without any wire-dialect interpretation or repair. */
+/** Coupled operating transport resolves original roles/carry without any wire-format interpretation or repair. */
 TEST_CASE("Native generator operating references refuse changed billing and shared roles", "[geothermal-generator-operating-references]")
 {
 	GeothermalGeneratorOperatingRig rig; rig.Operate(3);

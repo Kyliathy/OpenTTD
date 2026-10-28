@@ -35,9 +35,9 @@ public:
 		SurfaceSupplyRecordContext context;
 		context.profile = GetCurrentMultiLayerProfileSelection().id; context.width = Map::SizeX(); context.height = Map::SizeY();
 		context.companies[_current_company.base()] = true; context.stations = stations;
-		const LegacyBSupplyOrderWire row{1, _current_company.base(), this->station.base(), label, TimerGameEconomy::date.base(),
+		const TableSupplyOrderWire row{1, _current_company.base(), this->station.base(), label, TimerGameEconomy::date.base(),
 			TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), quantity, 0, dispatched, 25, 0};
-		const auto converted = ConvertLegacyBSupply({1, 1, 2, {row}}, context); REQUIRE(converted.has_value()); return *converted;
+		const auto converted = ConvertTableSupply({1, 1, 2, {row}}, context); REQUIRE(converted.has_value()); return *converted;
 	}
 	/** Supply explicit independent component DATE/MAPS declarations; this is not original-file decoding. */
 	void ObserveWorld() const

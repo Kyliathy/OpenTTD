@@ -18,64 +18,64 @@
 #include "../safeguards.h"
 
 /** Original B TABLE scalars retain their exact names/types before conversion; they own no native packets. */
-static const SaveLoad legacy_b_supply_desc[] = {
-	SaveLoad::Variable<VarFileType::U32>("id", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, id)),
-	SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, owner)),
-	SaveLoad::Variable<VarFileType::U16>("station", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, station)),
-	SaveLoad::Variable<VarFileType::U32>("label", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, label)),
-	SaveLoad::Variable<VarFileType::I32>("economy_day", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, economy_day)),
-	SaveLoad::Variable<VarFileType::I32>("calendar_date", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, calendar_date)),
-	SaveLoad::Variable<VarFileType::U16>("quantity", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, quantity)),
-	SaveLoad::Variable<VarFileType::I64>("unit_price", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, unit_price)),
-	SaveLoad::Variable<VarFileType::U16>("refunded", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, refunded)),
-	SaveLoad::Variable<VarFileType::U16>("dispatched", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, dispatched)),
-	SaveLoad::Variable<VarFileType::U8>("closed", SLE_OBJECT_ADDRESS(LegacyBSupplyOrderWire, closed)),
+static const SaveLoad table_supply_desc[] = {
+	SaveLoad::Variable<VarFileType::U32>("id", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, id)),
+	SaveLoad::Variable<VarFileType::U8>("owner", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, owner)),
+	SaveLoad::Variable<VarFileType::U16>("station", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, station)),
+	SaveLoad::Variable<VarFileType::U32>("label", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, label)),
+	SaveLoad::Variable<VarFileType::I32>("economy_day", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, economy_day)),
+	SaveLoad::Variable<VarFileType::I32>("calendar_date", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, calendar_date)),
+	SaveLoad::Variable<VarFileType::U16>("quantity", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, quantity)),
+	SaveLoad::Variable<VarFileType::I64>("unit_price", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, unit_price)),
+	SaveLoad::Variable<VarFileType::U16>("refunded", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, refunded)),
+	SaveLoad::Variable<VarFileType::U16>("dispatched", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, dispatched)),
+	SaveLoad::Variable<VarFileType::U8>("closed", SLE_OBJECT_ADDRESS(TableSupplyOrderWire, closed)),
 };
 
-/** Admit only the original B supply interpretation and its actual framing.
+/** Admit only the Geothermal format's TABLE supply interpretation and its actual framing.
  * @param kind Exact RIFF header or TABLE rows expected by this particular component.
  */
-static void RequireLegacyBSupplyKind(ChunkType kind)
+static void RequireTableSupplyKind(ChunkType kind)
 {
 	const auto source = GetLoadCapabilities();
 	// B's legacy components cannot be coerced into A or a merged canonical
 	// family; preflight identity does not replace checking actual replayed kind.
-	if (!source || source->dialect != SaveDialect::DonorB || !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB) || SlGetChunkType() != kind) SlErrorCorrupt("Wrong original supply dialect/chunk kind");
+	if (!source || source->format != SaveFormat::Geothermal || !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable) || SlGetChunkType() != kind) SlErrorCorrupt("Wrong table supply format/chunk kind");
 }
 
 /** Decode B's exact original paid rows without creating a receipt, quota or cargo owner.
  * @param preview Route unpublished scalars to copied same-file data, otherwise the sole runtime load candidate.
  */
-static void ReadLegacyBSupplyRows(bool preview)
+static void ReadTableSupplyRows(bool preview)
 {
-	RequireLegacyBSupplyKind(ChunkType::Table);
-	if (preview && _load_check_data.legacy_b_supply_present[1]) SlErrorCorrupt("Repeated copied legacy supply TABLE"); // Empty tables are unique original evidence too; a retry cannot replace paid history.
-	const auto description = SlTableHeader(legacy_b_supply_desc);
+	RequireTableSupplyKind(ChunkType::Table);
+	if (preview && _load_check_data.table_supply_present[1]) SlErrorCorrupt("Repeated copied legacy supply TABLE"); // Empty tables are unique original evidence too; a retry cannot replace paid history.
+	const auto description = SlTableHeader(table_supply_desc);
 	std::set<std::string> columns;
 	// Missing, repeated or foreign columns cannot default a valid tariff,
 	// closure or lifetime dispatch amount, even when this TABLE has no rows.
 	for (const auto &field : description) {
 		if (!columns.insert(field.name).second) SlErrorCorrupt("Repeated legacy supply column");
 	}
-	if (columns.size() != std::size(legacy_b_supply_desc)) SlErrorCorrupt("Changed legacy supply field count");
+	if (columns.size() != std::size(table_supply_desc)) SlErrorCorrupt("Changed legacy supply field count");
 	// Matching cardinality alone cannot admit a foreign replacement column;
 	// each original field must remain available before any paid row is decoded.
-	for (const auto &field : legacy_b_supply_desc) {
+	for (const auto &field : table_supply_desc) {
 		if (!columns.contains(field.name)) SlErrorCorrupt("Missing legacy supply field");
 	}
-	std::vector<LegacyBSupplyOrderWire> rows;
+	std::vector<TableSupplyOrderWire> rows;
 	// Source ordinal order and the original65535history ceiling are admitted
 	// before each allocation. An empty hole or repeated ID cannot become a new receipt.
 	for (int index = SlIterateArray(); index != -1; index = SlIterateArray()) {
 		if (index != static_cast<int>(rows.size()) || rows.size() >= MAX_LEGACY_SURFACE_SUPPLY_RECORDS) SlErrorCorrupt("Invalid legacy supply row ordinal/count");
-		LegacyBSupplyOrderWire row; SlObject(&row, description);
+		TableSupplyOrderWire row; SlObject(&row, description);
 		if (row.id != rows.size() + 1 || row.closed > 1) SlErrorCorrupt("Invalid legacy supply identity/closed encoding"); // Retained dense identities and literal closure must survive exactly, not a coercion/default.
 		rows.push_back(row);
 	}
 	if (preview) {
-		_load_check_data.legacy_b_supply.orders = std::move(rows);
-		_load_check_data.legacy_b_supply_present[1] = true;
-	} else if (!StageLoadedLegacyBSupplyRows(std::move(rows))) {
+		_load_check_data.table_supply.orders = std::move(rows);
+		_load_check_data.table_supply_present[1] = true;
+	} else if (!StageLoadedTableSupplyRows(std::move(rows))) {
 		SlErrorCorrupt("Repeated/mismatched native legacy supply rows");
 	}
 }
@@ -87,18 +87,18 @@ struct SSOHChunkHandler final : ChunkHandler {
 	/** @param preview Select copied transport, otherwise the sole unpublished full-file candidate. */
 	void Read(bool preview) const
 	{
-		RequireLegacyBSupplyKind(ChunkType::Riff);
+		RequireTableSupplyKind(ChunkType::Riff);
 		if (SlGetFieldLength() != 12) SlErrorCorrupt("Invalid legacy supply header length");
 		std::array<uint32_t, 3> header{}; SlCopy<VarFileType::U32>(header);
 		// Original schema/cardinality/frontier precede any row adoption; an
 		// absent or forged cursor cannot replenish old purchase/refund rights.
 		if (header[0] != 1 || header[1] > MAX_LEGACY_SURFACE_SUPPLY_RECORDS || header[2] != header[1] + 1) SlErrorCorrupt("Invalid legacy supply header bounds");
 		if (preview) {
-			if (_load_check_data.legacy_b_supply_present[0]) SlErrorCorrupt("Repeated copied legacy supply header");
-			auto &original = _load_check_data.legacy_b_supply;
+			if (_load_check_data.table_supply_present[0]) SlErrorCorrupt("Repeated copied legacy supply header");
+			auto &original = _load_check_data.table_supply;
 			original.schema = header[0]; original.count = header[1]; original.next_order = header[2];
-			_load_check_data.legacy_b_supply_present[0] = true;
-		} else if (!StageLoadedLegacyBSupplyHeader(header[0], header[1], header[2])) {
+			_load_check_data.table_supply_present[0] = true;
+		} else if (!StageLoadedTableSupplyHeader(header[0], header[1], header[2])) {
 			SlErrorCorrupt("Repeated/mismatched native legacy supply header");
 		}
 	}
@@ -117,9 +117,9 @@ static SurfaceSupplyOrderTransport ReadSurfaceSupplyOrderFamily()
 	// Original A440fixed and merged441tagged bytes share RIFFframing.
 	// The admitted lineage selects exactly one codec; legacy B TABLEdispatch
 	// remains separate and no mismatch may default to another paid-history era.
-	if (!source || (source->dialect != SaveDialect::DestinationA && source->dialect != SaveDialect::Merged) || SlGetChunkType() != ChunkType::Riff) SlErrorCorrupt("Wrong supply dialect/chunk kind");
+	if (!source || (source->format != SaveFormat::Orbital && source->format != SaveFormat::Unified) || SlGetChunkType() != ChunkType::Riff) SlErrorCorrupt("Wrong supply format/chunk kind");
 	const auto length = SlGetFieldLength();
-	const bool merged = source->dialect == SaveDialect::Merged;
+	const bool merged = source->format == SaveFormat::Unified;
 	const auto minimum = merged ? MERGED_SURFACE_SUPPLY_HEADER_SIZE : SURFACE_SUPPLY_WIRE_HEADER_SIZE;
 	const auto maximum = merged ? MAX_MERGED_SURFACE_SUPPLY_WIRE_SIZE : MAX_SURFACE_SUPPLY_WIRE_SIZE;
 	// A new family requires its actual era and complete bounded bytes before allocation; old files cannot acquire imported stock or paid history by appending a header.
@@ -137,13 +137,13 @@ std::optional<std::string> GetSurfaceSupplyOrderLoadPreviewError()
 {
 	auto &data = _load_check_data;
 	const auto source = GetLoadCapabilities();
-	const bool legacy_b = source && source->dialect == SaveDialect::DonorB && SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB);
-	if (legacy_b) {
+	const bool table_book = source && source->format == SaveFormat::Geothermal && SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable);
+	if (table_book) {
 		// Both original components are mandatory, even when no purchase ever
 		// existed. Header absence cannot masquerade as a fresh empty book.
-		if (!data.legacy_b_supply_present[0] || !data.legacy_b_supply_present[1]) return "Incomplete copied legacy supply family";
+		if (!data.table_supply_present[0] || !data.table_supply_present[1]) return "Incomplete copied legacy supply family";
 	} else if (!data.surface_supply_orders_present) {
-		if (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA)) return "Missing Surface supply order family";
+		if (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersFixed)) return "Missing Surface supply order family";
 		return std::nullopt;
 	}
 	// Independent original DATE/MAPS and the actual normal-station family must
@@ -170,23 +170,23 @@ std::optional<std::string> GetSurfaceSupplyOrderLoadPreviewError()
 		stations.push_back(view);
 	}
 	context.stations = stations;
-	if (legacy_b) {
+	if (table_book) {
 		// Same-file metadata must retain the exact original history declaration;
 		// closed orders remain history and an omitted MLMD is never empty policy.
-		if (data.multilayer_schema_version != 1 || ((data.multilayer_feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0) != (data.legacy_b_supply.next_order != 1)) return "Changed copied legacy supply metadata/history";
-		auto converted = ConvertLegacyBSupply(data.legacy_b_supply, context);
-		if (!converted) return "Invalid copied original B supply records";
+		if (data.multilayer_schema_version != 1 || ((data.multilayer_feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0) != (data.table_supply.next_order != 1)) return "Changed copied legacy supply metadata/history";
+		auto converted = ConvertTableSupply(data.table_supply, context);
+		if (!converted) return "Invalid copied table supply records";
 		data.surface_supply_orders = {std::move(*converted), data.native_economy_date};
 		data.surface_supply_orders_present = true;
-	} else if (data.legacy_a_supply_wire) {
-		auto converted = ConvertLegacyASupply(data.surface_supply_orders, context);
-		if (!converted) return "Invalid copied original A supply records";
+	} else if (data.fixed_supply_wire) {
+		auto converted = ConvertFixedSupply(data.surface_supply_orders, context);
+		if (!converted) return "Invalid copied fixed supply records";
 		data.surface_supply_orders.snapshot = std::move(*converted);
 	}
 	if (data.surface_supply_orders.saved_day != data.native_economy_date) return "Changed copied supply economy day";
 	// A copied paid book cannot conceal omitted CAPA link/shipped fields even
 	// when every retained order is closed or no physical packet remains.
-	if (legacy_b && !data.legacy_b_supply_packet_fields_present) return "Missing copied original B supply packet fields";
+	if (table_book && !data.table_supply_packet_fields_present) return "Missing copied table supply packet fields";
 	if (ValidateSurfaceSupplyRecords(data.surface_supply_orders.snapshot, context) != SurfaceSupplyRecordError::None) return "Invalid copied Surface supply order ownership/history";
 	// An empty paid book with entirely ordinary packets has no entitlement or
 	// non-paying purpose to join. Preserve native Classic/custom-content preview
@@ -205,7 +205,7 @@ std::optional<std::string> GetSurfaceSupplyOrderLoadPreviewError()
 		// and the literal departure scalar must survive unchanged as0/1.
 		if (row == data.native_cargo_packet_rows.end() || row->packet != id || row->company_supply_shipped > 1) return std::nullopt;
 		SurfaceSupplyPacketFacts facts{id, row->quantity, row->source, row->feeder_share, row->company_supply_order, row->company_supply_shipped != 0};
-		return legacy_b ? ProjectLegacyBSupplyPacket(facts, data.surface_supply_orders.snapshot) : std::optional{facts};
+		return table_book ? ProjectTableSupplyPacket(facts, data.surface_supply_orders.snapshot) : std::optional{facts};
 	};
 	SurfaceSupplyCustodyCheck check(data.surface_supply_orders.snapshot, context, lookup, data.native_cargo_packet_rows.size());
 	if (!ValidateSpaceCargoPreviewOwners(data, &check)) return "Invalid copied supply container custody";
@@ -244,20 +244,20 @@ struct SSORChunkHandler : ChunkHandler {
 	/** Stage one original full family; all native owners/date must reconstruct before adoption can expose any pending right. */
 	void Load() const override
 	{
-		if (SlGetChunkType() == ChunkType::Table) { ReadLegacyBSupplyRows(false); return; }
+		if (SlGetChunkType() == ChunkType::Table) { ReadTableSupplyRows(false); return; }
 		auto transport = ReadSurfaceSupplyOrderFamily();
-		if (!StageLoadedSurfaceSupplyOrders(std::move(transport.snapshot), transport.saved_day, GetLoadCapabilities()->dialect == SaveDialect::DestinationA)) SlErrorCorrupt("Repeated/invalid native Surface supply order staging");
+		if (!StageLoadedSurfaceSupplyOrders(std::move(transport.snapshot), transport.saved_day, GetLoadCapabilities()->format == SaveFormat::Orbital)) SlErrorCorrupt("Repeated/invalid native Surface supply order staging");
 	}
 	/** Copy only this candidate's original family; post-family admission resolves its own native facts without touching live owners.
 	 * @param length Framework-admitted extent; the shared original decoder independently bounds its exact payload.
 	 */
 	void LoadCheck([[maybe_unused]] size_t length) const override
 	{
-		if (SlGetChunkType() == ChunkType::Table) { ReadLegacyBSupplyRows(true); return; }
+		if (SlGetChunkType() == ChunkType::Table) { ReadTableSupplyRows(true); return; }
 		if (_load_check_data.surface_supply_orders_present) SlErrorCorrupt("Repeated copied Surface supply order family");
 		_load_check_data.surface_supply_orders = ReadSurfaceSupplyOrderFamily();
 		_load_check_data.surface_supply_orders_present = true;
-		_load_check_data.legacy_a_supply_wire = GetLoadCapabilities()->dialect == SaveDialect::DestinationA;
+		_load_check_data.fixed_supply_wire = GetLoadCapabilities()->format == SaveFormat::Orbital;
 	}
 	/** Failed native loading revokes partly adopted rights; successful pointer fixups leave adoption to the complete afterload join. */
 	void FixPointers() const override

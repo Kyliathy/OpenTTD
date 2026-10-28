@@ -102,10 +102,10 @@ void ResetSurfaceSupplyOrderLoadStaging();
 /** Stage one bounded native family without adopting orders, stock, money or cap rights.
  * @param snapshot Candidate file's complete original metadata.
  * @param saved_day Candidate family's original economy-day stamp, later joined to its actual DATE field.
- * @param legacy_a_wire True only for original A440 RIFF bytes, requiring the detached A adapter after same-file references load; canonical tagged callers keep false.
+ * @param fixed_wire True only for original A440 RIFF bytes, requiring the detached A adapter after same-file references load; canonical tagged callers keep false.
  * @return Whether a unique family within65535 total/16384 native rows was staged; duplicate/invalid-frontier transport leaves the installed book unchanged.
  */
-bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day, bool legacy_a_wire = false);
+bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day, bool fixed_wire = false);
 
 /** Stage the original B header without creating a live receipt, clock stamp or packet.
  * @param schema Original SSOH schema, exactly1.
@@ -113,24 +113,24 @@ bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGa
  * @param next_order Original never-issued frontier, exactly count+1.
  * @return Unique bounded unpublished evidence; duplicate/mixed transport refuses without replacing installed rights.
  */
-bool StageLoadedLegacyBSupplyHeader(uint32_t schema, uint32_t count, uint32_t next_order);
+bool StageLoadedTableSupplyHeader(uint32_t schema, uint32_t count, uint32_t next_order);
 
 /** Stage only B's original bounded TABLE rows; reference/clock/custody joins still precede adoption.
  * @param rows Complete original row order, never a native stock store or decoded active-world fallback.
  * @return Unique bounded unpublished transport; missing/mismatched header or semantics still refuse at whole-file acceptance.
  */
-bool StageLoadedLegacyBSupplyRows(std::vector<struct LegacyBSupplyOrderWire> rows);
+bool StageLoadedTableSupplyRows(std::vector<struct TableSupplyOrderWire> rows);
 
 /** Retain proof that this full file's original CAPA order/shipped columns and raw packet purpose were decoded.
  * @return First complete original packet-field observation; duplicates refuse. This is not complete custody or publication authority.
  */
-bool ObserveLoadedLegacyBSupplyPacketFields();
+bool ObserveLoadedTableSupplyPacketFields();
 
 /** Retain this original B file's explicit MLMD paid-history bit independently of its book rows.
  * @param present Exact original declaration, including false for a legitimately empty history.
  * @return First metadata observation; duplicate facts refuse and no receipt/clock/packet is created.
  */
-bool ObserveLoadedLegacyBSupplyHistory(bool present);
+bool ObserveLoadedTableSupplyHistory(bool present);
 
 /** Retain the original full loader's actual DATE economy field as independent same-file evidence.
  * @param day Economy date just read by the native DATE handler, never copied from a calendar/live-world fallback.

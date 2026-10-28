@@ -3549,7 +3549,7 @@ bool AfterLoadGame()
 	// Restore the sole private processing owners only after their exact native module and original utility identities have both admitted this same file.
 	if (!AcceptLoadedOrbitalRecipes()) SlErrorCorrupt("Invalid native orbital processing authority");
 	// Adopt only complete original order history/commitments after native profile, geometry, companies, stations and economy date agree; load issues no shipment or expense.
-	if (!AcceptLoadedSurfaceSupplyOrders(SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB))) SlErrorCorrupt("Invalid native Surface supply order authority");
+	if (!AcceptLoadedSurfaceSupplyOrders(SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersFixed) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable))) SlErrorCorrupt("Invalid native Surface supply order authority");
 	// Contained Core jobs bind original native craft and utility IDs only after both owners have accepted their save state.
 	if (!ValidateOrbitalServices()) SlErrorCorrupt("Invalid orbital Core service authority");
 	// Saved approach claims resolve only after native hulls, owned sites and body leases have all installed their original identities.

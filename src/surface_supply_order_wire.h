@@ -30,7 +30,7 @@ std::optional<std::vector<uint8_t>> EncodeSurfaceSupplyOrders(const SurfaceSuppl
 std::optional<SurfaceSupplyOrderTransport> DecodeSurfaceSupplyOrders(std::span<const uint8_t> bytes);
 
 /** Exact B table scalars before semantic conversion; invalid defaults expose omitted paid-history values. */
-struct LegacyBSupplyOrderWire {
+struct TableSupplyOrderWire {
 	uint32_t id = 0; ///< Original dense positive identity; conversion widens without remapping.
 	uint8_t owner = UINT8_MAX; ///< Original current company or explicit loss sentinel, never an invented purchaser.
 	uint16_t station = UINT16_MAX; ///< Original source or explicit source-loss sentinel.
@@ -40,17 +40,17 @@ struct LegacyBSupplyOrderWire {
 	int64_t unit_price = 0; ///< Frozen original tariff; no current-price or Q16 reconstruction is permitted.
 	uint8_t closed = 2; ///< Only the original0/1 encoding is valid; do not coerce other values to true.
 	/** @param other Original complete scalar row. @return Exact unchanged-input equality without native lookup. */
-	bool operator==(const LegacyBSupplyOrderWire &other) const = default;
+	bool operator==(const TableSupplyOrderWire &other) const = default;
 };
 
 /** B's complete same-file SSOH/SSOR scalar transport; no instance is a live order owner or stock store. */
-struct LegacyBSupplyTransport {
+struct TableSupplyTransport {
 	uint32_t schema = 0; ///< Original header schema1; the default cannot manufacture a valid absent family.
 	uint32_t count = UINT32_MAX; ///< Original declared row count, checked against the complete table before allocation.
 	uint32_t next_order = 0; ///< Original never-issued frontier, exactly count+1 for B's retained dense history.
-	std::vector<LegacyBSupplyOrderWire> orders; ///< Original table ordinal order; wire framing/column presence are checked by the caller.
+	std::vector<TableSupplyOrderWire> orders; ///< Original table ordinal order; wire framing/column presence are checked by the caller.
 	/** @param other Original detached family. @return Exact input equality, including declared bounds. */
-	bool operator==(const LegacyBSupplyTransport &other) const = default;
+	bool operator==(const TableSupplyTransport &other) const = default;
 };
 
 /** Convert B's already framed complete family into the sole canonical detached receipt representation.
@@ -60,7 +60,7 @@ struct LegacyBSupplyTransport {
  * This checks original schema/count/dense IDs/closed encoding before preserving every scalar and running shared receipt validation.
  * Cargo custody joins and publication remain separate mandatory afterload gates; a successful conversion grants neither.
  */
-std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupplyTransport &original, const SurfaceSupplyRecordContext &same_file);
+std::optional<SurfaceSupplyOrderSnapshot> ConvertTableSupply(const TableSupplyTransport &original, const SurfaceSupplyRecordContext &same_file);
 
 /** Project original B packet purpose for the subsequent complete custody check, without changing any packet.
  * @param original Actual decoded original packet scalars, with a literal validated departure flag.
@@ -68,7 +68,7 @@ std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyBSupply(const LegacyBSupp
  * @return Unchanged ordinary facts, or a CompanySupply projection only for an exact original invalid-Industry/zero-credit/nonzero legacy link. Contradictory purpose or absent receipt refuses.
  * This projection is not adoption: native mutation and copied success still require the complete shared ownership/finite-history join.
  */
-std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot);
+std::optional<SurfaceSupplyPacketFacts> ProjectTableSupplyPacket(SurfaceSupplyPacketFacts original, const SurfaceSupplyOrderSnapshot &snapshot);
 
 /** Project a decoded original A440 family to native evidence without changing its price, identity or Pending rights.
  * @param original Exact A440 decoded transport; the caller retains saved_day for the independent same-file DATE join.
@@ -76,6 +76,6 @@ std::optional<SurfaceSupplyPacketFacts> ProjectLegacyBSupplyPacket(SurfaceSupply
  * @return Whole validated native snapshot or no candidate; no installed book, stock, settlement or serialization version changes.
  * This is not a mixed-format decoder: legacy/unknown variants refuse, and full/copy loaders still own framing, clock and custody joins.
  */
-std::optional<SurfaceSupplyOrderSnapshot> ConvertLegacyASupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file);
+std::optional<SurfaceSupplyOrderSnapshot> ConvertFixedSupply(const SurfaceSupplyOrderTransport &original, const SurfaceSupplyRecordContext &same_file);
 
 #endif /* SURFACE_SUPPLY_ORDER_WIRE_H */

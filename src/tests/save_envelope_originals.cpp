@@ -35,10 +35,10 @@ TEST_CASE("Save envelope inspector retains exact A and B original identities", "
 		const auto &families = entry.at("facts").at("families");
 		CHECK(facts.feature_flags == families.at("MLMD").at("metadata").at("feature_flags").get<uint32_t>());
 		CHECK(facts.space_content_version == families.at("SDEF").at("content_version").get<uint16_t>());
-		SaveOriginHint hint{entry.at("origin") == "A" ? SaveDialect::DestinationA : SaveDialect::DonorB, facts.source_digest};
-		const auto result = ClassifySaveDialect(facts, hint);
+		SaveOriginHint hint{entry.at("origin") == "A" ? SaveFormat::Orbital : SaveFormat::Geothermal, facts.source_digest};
+		const auto result = ClassifySaveFormat(facts, hint);
 		CHECK(result.status == SaveLineageStatus::Accepted);
-		CHECK(result.dialect == (facts.original_version <= 424 ? SaveDialect::Shared : hint.dialect));
+		CHECK(result.format == (facts.original_version <= 424 ? SaveFormat::Base : hint.format));
 		CHECK(result.original_version == facts.original_version);
 	}
 	// Real deliberately incomplete donor families must refuse. Either bounded
@@ -48,7 +48,7 @@ TEST_CASE("Save envelope inspector retains exact A and B original identities", "
 		auto file = FileHandle::Open((root / entry.at("path").get<std::string>()).string(), "rb"); REQUIRE(file.has_value());
 		try {
 			const auto facts = InspectSaveWireFacts(CreateSaveFileReader(std::move(*file)));
-			CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+			CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Corrupt);
 		} catch (const SaveFramingError &) {
 			SUCCEED("Detached bounded framing refused the original malformed family");
 		}

@@ -253,7 +253,7 @@ def merged_world_chunks(path):
     marker = contract.get("marker")
     if marker:
         expected = marker["magic"].encode("ascii") + marker["schema"].to_bytes(2, "big") + marker["writer"].to_bytes(2, "big")
-        assert owners[marker["family"]]["payload"] == expected, "changed merged lineage marker"
+        assert owners[marker["family"]]["payload"] == expected, "changed save format marker"
     # Each declared column exists exactly once, at any nesting depth, with its declared kind.
     for name, columns in contract.get("table_columns", {}).items():
         fields = flat_table_fields(table_header(Reader(owners[name]["rows"][0])))

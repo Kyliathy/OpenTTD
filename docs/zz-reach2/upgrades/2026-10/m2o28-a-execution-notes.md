@@ -796,3 +796,42 @@ Results (`logs/merge-oct28/group21/`):
 - Copied previews use one owner join (20), late native failures revoke all Space staging (21), and the 446 family contract is checked by its own reader (22.3).
 - Still open for Part 2: the Python oracles listed in Part 2 Group 24.1, the incoming branch's malformed-file harnesses (Part 2 Group 33.1), and Group 22B's vocabulary rename, which comes first.
 - Nothing is pushed.
+
+## Group 22B
+
+**22B.1** Proposed names. Each historical format is named by what it holds, not by who wrote it; each identifier keeps its exact meaning:
+
+| Old | New | Meaning |
+| --- | --- | --- |
+| `SaveDialect` / `SavePayloadDialect` | `SaveFormat` / `SavePayloadFormat` | Which format family a file's bytes belong to |
+| `Shared` | `Base` | The common format up to 424 |
+| `DestinationA` | `Orbital` | 425-440: orbital and Space manufacturing, fixed RIFF supply book |
+| `DonorB` | `Geothermal` | 425-434: geothermal and Tube machinery, TABLE supply book |
+| `Merged` | `Unified` | 441 (schema 1) and 446 (schema 2): one format holding everything |
+| `.dialect`, `payload_dialect` | `.format`, `payload_format` | The same fields |
+| `CapabilityRule::first_a`, `first_b`, `merged441`, `merged446` | `first_orbital`, `first_geothermal`, `unified441`, `unified446` | The same columns |
+| `SaveCapability::SurfaceSupplyOrdersA` / `B` | `SurfaceSupplyOrdersFixed` / `SurfaceSupplyOrdersTable` | The fixed RIFF book and the TABLE book (with SSOH) |
+| `ConvertLegacyASupply`, `legacy_a_supply_wire`, `legacy_a_wire` | `ConvertFixedSupply`, `fixed_supply_wire`, `fixed_wire` | Fixed-book import |
+| `LegacyBSupply*`, `ConvertLegacyBSupply`, `ProjectLegacyBSupplyPacket`, `StageLoadedLegacyBSupply*`, `ObserveLoadedLegacyBSupply*`, `RequireLegacyBSupplyKind`, `ReadLegacyBSupplyRows`, `legacy_b_*`, receipt tag `LegacyB` | the same with `TableSupply` / `table_supply` / `Table` | TABLE-book import and its finite receipts; wire values unchanged |
+
+Player-visible text changes as well. `STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE` becomes "Unrecognised savegame format - {RAW_STRING}", and its detail "Required original branch transport is missing or inconsistent" becomes "Its format markers are missing or do not agree". Refusal details that say "lineage", "merged lineage", "original A/B" or "dialect" now say "format", "table supply" or "fixed supply".
+
+Left as they are: fixture provenance labels (`"origin": "A"`/`"B"` in the catalogues name which historical build produced a retained file), test case titles, and the dated plans. Wire bytes, the file's own version numbers and the MLN1 magic do not change.
+
+**22B.2** Rename applied as proposed:
+
+- A word-boundary, case-sensitive replacement (`test-cache/merge-oct28/rename_22b.py`) over the C++ sources, excluding `src/tests/fixtures/` (which holds historical source copies) and `src/3rdparty/`, changed 42 files.
+- Hand edits: `ClassifySaveDialect` → `ClassifySaveFormat`; the `SaveFormat` enum and its comments; the `save_lineage.cpp` constants (`BASE_FEATURE_FLAGS`, `GEOTHERMAL_FEATURE_FLAGS`, `LAST_ORBITAL_VERSION`, `LAST_GEOTHERMAL_VERSION`) and their branch wording; and `MergedSupplyReceiptTag::Table` (wire value 2, unchanged).
+- The Python supply-receipt helper's internal kind is now `"Table"`.
+- Comments that said "dialect" now say "format".
+- Player-visible text:
+  - `STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE` reads "Unrecognised savegame format - {RAW_STRING}"; its main detail is "Its format markers are missing or do not agree".
+  - The framing details say "format" instead of "lineage".
+  - The supply refusals say "table supply" or "fixed supply" instead of "original A/B".
+  - The marker refusals say "save format marker".
+  - The Magma-Loop and supply-metadata refusals say "for this save format".
+  - No player-visible string names a branch, a donor, a destination or a merge.
+
+**22B.3** `docs/zz-reach2/architecture/savegame/archi-savegame.md` opens with **One save system**: one writer (446, MLLN schema 2, 128 families), capability-based schema, one loader with its bounded preflight, and a five-row table of the format families it imports and what each holds, plus what is refused. The section on the Space fields is now "Asteroid origins, lifecycle and continuation (Unified 446)", explaining that 441-445 were development-build numbers that this build refuses. The version-word section names the current last enumerator. The older sections are marked as dated records that keep the names of their time.
+
+**22B.4** GCC and Clang build `openttd` and `openttd_test`. No new warnings appear in the renamed units; one existing `-Wsign-compare` on an unchanged line of `surface_supply_departure.cpp` remains. Full CTest: GCC 1525/1525, Clang 1525/1525. The standalone lineage policy build (`-DSAVE_LINEAGE_STANDALONE`, `-Wall -Wextra`) has no warnings and passes 10 cases with 1,333 assertions.

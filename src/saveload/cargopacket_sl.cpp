@@ -149,13 +149,13 @@ SaveLoadTable GetCargoPacketDesc()
 		SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(CargoPacket, feeder_share)),
 		SaveLoad::Variable<VarFileType::U8>("source_type", SLE_OBJECT_ADDRESS(CargoPacket, source.type), SaveLoadVersion::RemoveSubsidyStationBinding),
 		SaveLoad::Variable<VarFileType::U16>("source_id", SLE_OBJECT_ADDRESS(CargoPacket, source.id), SaveLoadVersion::RemoveSubsidyStationBinding),
-		// Original B links are U32; reserve the upper boundary before merged441
+		// Original B links are U32; reserve the upper boundary before unified441
 		// introduces canonical U64 under the same key. A439/440 never wrote these fields.
-		SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
-		SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+		SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
+		SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
 		// Merged canonical links retain U64identities and literal0/1departure bytes.
-		SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
-		SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+		SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
+		SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
 		// Typed asteroid origin (body, mineral) through per-row scratch. Only sources with the
 		// capability carry it: merged 446, never merged 441 (m2o28 Groups 15 and 17B).
 		SaveLoad::Variable<VarFileType::U32>("asteroid_body", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.body)).WithCapability(SaveCapability::AsteroidCargoOrigins),
@@ -180,7 +180,7 @@ static void CheckCargoPacketSourceFields(const std::vector<SaveLoad> &desc)
 	// book/table. A's original wire has no such columns and cannot impersonate B.
 	for (const std::string_view field : {"company_supply_order", "company_supply_shipped"}) {
 		const auto count = std::ranges::count(desc, field, &SaveLoad::name);
-		if (count != (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB) ? 1 : 0)) SlErrorCorrupt("Missing/contradictory supply packet field");
+		if (count != (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable) ? 1 : 0)) SlErrorCorrupt("Missing/contradictory supply packet field");
 	}
 	std::vector<std::string_view> fields; fields.reserve(desc.size());
 	// Preserve every original header key, including unknown/skipped fields, so
@@ -240,7 +240,7 @@ struct CAPAChunkHandler : ChunkHandler {
 			// receipt/custody proof; an invalid departure byte cannot become true.
 			if (cp->GetCompanySupplyShippedWire() > 1 || (cp->GetCompanySupplyOrder() == 0 && cp->HasCompanySupplyShipped())) SlErrorCorrupt("Invalid original supply departure/link");
 		}
-		if (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB) && !ObserveLoadedLegacyBSupplyPacketFields()) SlErrorCorrupt("Repeated original supply packet fields"); // Complete CAPA evidence is unique; a second family cannot replace provenance from the first.
+		if (SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable) && !ObserveLoadedTableSupplyPacketFields()) SlErrorCorrupt("Repeated original supply packet fields"); // Complete CAPA evidence is unique; a second family cannot replace provenance from the first.
 	}
 	/** Copy this file's original packet quantities/purpose/credit without allocating live cargo.
 	 * @param length Framework chunk extent; pre-table sources retain their original skipped preview.
@@ -256,11 +256,11 @@ struct CAPAChunkHandler : ChunkHandler {
 			SaveLoad::Variable<VarFileType::U32>("asteroid_body", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.body)).WithCapability(SaveCapability::AsteroidCargoOrigins),
 			SaveLoad::Variable<VarFileType::U32>("asteroid_mineral", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.mineral)).WithCapability(SaveCapability::AsteroidCargoOrigins),
 			SaveLoad::Variable<VarFileType::I64>("feeder_share", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, feeder_share)),
-			SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
-			SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+			SaveLoad::Variable<VarFileType::U32>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
+			SaveLoad::Variable<VarFileType::Bool>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MinVersion, SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
 			// Merged canonical links retain U64identities and literal0/1departure bytes.
-			SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
-			SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
+			SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
+			SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersTable),
 			// Same-file production tile and first station let the copied asteroid-origin check run without live pools.
 			SaveLoad::Variable<VarFileType::U32>("source_xy", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, source_tile)),
 			SaveLoad::Variable<VarFileType::U16>("source", SLE_OBJECT_ADDRESS(NativeCargoPacketPreview, first_station)),
@@ -286,7 +286,7 @@ struct CAPAChunkHandler : ChunkHandler {
 			rows.push_back(row);
 		}
 		_load_check_data.native_cargo_packets_present = true;
-		_load_check_data.legacy_b_supply_packet_fields_present = SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB);
+		_load_check_data.table_supply_packet_fields_present = SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable);
 	}
 };
 

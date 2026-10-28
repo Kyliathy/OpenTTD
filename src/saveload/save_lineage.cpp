@@ -13,13 +13,13 @@
 #include <algorithm>
 #include <utility>
 
-static constexpr uint32_t SHARED_FEATURE_FLAGS = 0x007FFFFF;
-static constexpr uint32_t DONOR_FEATURE_FLAGS = 0x07FFFFFF;
+static constexpr uint32_t BASE_FEATURE_FLAGS = 0x007FFFFF;
+static constexpr uint32_t GEOTHERMAL_FEATURE_FLAGS = 0x07FFFFFF;
 
-/** First post-fork envelope version of both historical branches; 424 and older is shared history. */
+/** First envelope version at which the Orbital and Geothermal formats differ; 424 and older is the Base format. */
 static constexpr uint16_t FIRST_DIVERGENT_VERSION = 425;
-static constexpr uint16_t LAST_DESTINATION_A_VERSION = 440; ///< Last version the historical destination writer produced.
-static constexpr uint16_t LAST_DONOR_B_VERSION = 434; ///< Last version the historical donor writer produced.
+static constexpr uint16_t LAST_ORBITAL_VERSION = 440; ///< Last version the Orbital format used.
+static constexpr uint16_t LAST_GEOTHERMAL_VERSION = 434; ///< Last version the Geothermal format used.
 static constexpr uint16_t FIRST_UNMARKED_DEVELOPMENT_VERSION = 441; ///< A development build wrote markerless files from here...
 static constexpr uint16_t LAST_UNMARKED_DEVELOPMENT_VERSION = 445; ///< ...to here; this build does not read them (m2o28 Group 17B).
 
@@ -87,17 +87,17 @@ static bool ConsistentHistoryFlags(const SaveWireFacts &facts, bool include_supp
 	return true;
 }
 
-/** Validate the legacy-A branch-specific framing without interpreting live owners.
+/** Validate the Orbital-specific framing without interpreting live owners.
  * @param facts Exact detached original facts.
  * @return Whether its A-era required/forbidden families and content revision agree.
  */
-static bool CompatibleA(const SaveWireFacts &facts)
+static bool CompatibleOrbital(const SaveWireFacts &facts)
 {
 	const auto version = facts.original_version;
 	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);
 	// B's columns/feature bits cannot be erased merely because its mandatory
 	// families are missing. They retain their original lineage and must refuse A.
-	if ((facts.feature_flags & ~SHARED_FEATURE_FLAGS) != 0 || facts.supply_columns != SaveSupplyColumns::Absent) return false;
+	if ((facts.feature_flags & ~BASE_FEATURE_FLAGS) != 0 || facts.supply_columns != SaveSupplyColumns::Absent) return false;
 	// Classic has no Space content; selected legacy/current Space keeps its own
 	// exact revision. This never upgrades an old paid receipt on admission.
 	if (facts.space_content_version != 0 && facts.space_content_version != (version >= 431 ? 3 : 2)) return false;
@@ -121,13 +121,13 @@ static bool CompatibleA(const SaveWireFacts &facts)
  * @param facts Exact detached original facts.
  * @return Whether every required pair/column set and source-era schema agrees.
  */
-static bool CompatibleB(const SaveWireFacts &facts)
+static bool CompatibleGeothermal(const SaveWireFacts &facts)
 {
 	const auto version = facts.original_version;
 	// B never wrote a later A envelope, content3, CDIM or SPRC; refusing these
-	// protects Space data from entering the donor's older interpretation.
+	// protects Space data from entering the Geothermal format's older interpretation.
 	if (version > 434 || (facts.space_content_version != 0 && facts.space_content_version != 2) || Present(facts, SaveLineageFamily::CargoDimensions) || Present(facts, SaveLineageFamily::OrbitalRecipes)) return false;
-	const uint32_t allowed = SHARED_FEATURE_FLAGS | (version >= 426 ? 0x00800000 : 0) | (version >= 427 ? 0x01000000 : 0) | (version >= 428 ? 0x02000000 : 0) | (version >= 433 ? 0x04000000 : 0);
+	const uint32_t allowed = BASE_FEATURE_FLAGS | (version >= 426 ? 0x00800000 : 0) | (version >= 427 ? 0x01000000 : 0) | (version >= 428 ? 0x02000000 : 0) | (version >= 433 ? 0x04000000 : 0);
 	if ((facts.feature_flags & ~allowed) != 0) return false;
 	if ((facts.supply_columns == SaveSupplyColumns::Complete) != (version >= 426)) return false;
 	// B did not have any SSOR transport before426, including an empty table.
@@ -183,16 +183,16 @@ static bool CompatibleMerged(const SaveWireFacts &facts)
 
 static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin);
 
-/** @copydoc ClassifySaveDialect */
-SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin)
+/** @copydoc ClassifySaveFormat */
+SaveLineageResult ClassifySaveFormat(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin)
 {
-	/** @param status Admission/refusal outcome. @param dialect Accepted interpretation, otherwise inert. @return Result retaining the unchanged original version. */
-	const auto result = [&](SaveLineageStatus status, SaveDialect dialect = SaveDialect::Shared) {
-		return SaveLineageResult{status, dialect, facts.original_version};
+	/** @param status Admission/refusal outcome. @param format Accepted interpretation, otherwise inert. @return Result retaining the unchanged original version. */
+	const auto result = [&](SaveLineageStatus status, SaveFormat format = SaveFormat::Base) {
+		return SaveLineageResult{status, format, facts.original_version};
 	};
 	// Any malformed observation refuses before an origin hint or numeric range
 	// can reinterpret it. Whole-envelope and common transport checks are mandatory.
-	if (!facts.framing_complete || !facts.common_transport_valid || facts.supply_columns == SaveSupplyColumns::Malformed || facts.payload_dialect == SavePayloadDialect::Malformed) return result(SaveLineageStatus::Corrupt);
+	if (!facts.framing_complete || !facts.common_transport_valid || facts.supply_columns == SaveSupplyColumns::Malformed || facts.payload_format == SavePayloadFormat::Malformed) return result(SaveLineageStatus::Corrupt);
 	// The descriptor-level CAPA observations (m2o28 Group 11) are malformed evidence
 	// too: a half supply pair or a narrowed asteroid key refuses whatever the version says.
 	if (facts.cargo_supply_encoding == SupplyColumnEncoding::Malformed || facts.asteroid_origin_columns == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
@@ -205,10 +205,10 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 		if (family.state == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
 	}
 	if (facts.original_version > CURRENT_MERGED_SAVE_VERSION) return result(SaveLineageStatus::Unsupported);
-	if ((facts.feature_flags & ~DONOR_FEATURE_FLAGS) != 0) return result(SaveLineageStatus::Corrupt);
+	if ((facts.feature_flags & ~GEOTHERMAL_FEATURE_FLAGS) != 0) return result(SaveLineageStatus::Corrupt);
 	// A marker is an explicit writer contract. It selects only its own merged
 	// allocation; a wrong placement never falls back to another writer's rules.
-	if (facts.Get(SaveLineageFamily::Marker).state != SaveEvidenceState::Absent) return result(CompatibleMerged(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::Merged);
+	if (facts.Get(SaveLineageFamily::Marker).state != SaveEvidenceState::Absent) return result(CompatibleMerged(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveFormat::Unified);
 	// The combined writer always marks 446; an unmarked 446 is no writer's file.
 	if (facts.original_version == CURRENT_MERGED_SAVE_VERSION) return result(SaveLineageStatus::Corrupt);
 	// A development build wrote markerless 441-445 files. One save system reads
@@ -221,29 +221,29 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 /** Classify a markerless file at 440 or below: shared history, historical A or historical B.
  * @param facts Exact detached original facts, already past the malformed-first checks.
  * @param origin Optional exact-digest hint; consulted only for common-layout ambiguity.
- * @return Accepted dialect, Ambiguous, or Corrupt; the version is kept unchanged.
+ * @return Accepted format, Ambiguous, or Corrupt; the version is kept unchanged.
  */
 static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin)
 {
-	/** @param status Admission/refusal outcome. @param dialect Accepted interpretation, otherwise inert. @return Result retaining the unchanged original version. */
-	const auto result = [&](SaveLineageStatus status, SaveDialect dialect = SaveDialect::Shared) {
-		return SaveLineageResult{status, dialect, facts.original_version};
+	/** @param status Admission/refusal outcome. @param format Accepted interpretation, otherwise inert. @return Result retaining the unchanged original version. */
+	const auto result = [&](SaveLineageStatus status, SaveFormat format = SaveFormat::Base) {
+		return SaveLineageResult{status, format, facts.original_version};
 	};
 	// No historical writer at or below 440 declared typed asteroid origins, the
 	// canonical U64/U8 supply pair or an SSM1 book. Any of them here is a forgery.
 	if (facts.asteroid_origin_columns != SaveEvidenceState::Absent || facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8 ||
 		facts.supply_book_shape == SupplyBookShape::Tagged || facts.supply_book_shape == SupplyBookShape::Ambiguous) return result(SaveLineageStatus::Corrupt);
 	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);
-	const bool a_evidence = facts.payload_dialect == SavePayloadDialect::DestinationA || facts.space_content_version == 3 ||
+	const bool orbital_evidence = facts.payload_format == SavePayloadFormat::Orbital || facts.space_content_version == 3 ||
 		Present(facts, SaveLineageFamily::CargoDimensions) || Present(facts, SaveLineageFamily::OrbitalRecipes) ||
 		(supply.state == SaveEvidenceState::Valid && supply.kind == SaveEvidenceKind::Riff);
-	const bool b_evidence = facts.payload_dialect == SavePayloadDialect::DonorB || (facts.feature_flags & ~SHARED_FEATURE_FLAGS) != 0 || facts.supply_columns == SaveSupplyColumns::Complete ||
+	const bool geothermal_evidence = facts.payload_format == SavePayloadFormat::Geothermal || (facts.feature_flags & ~BASE_FEATURE_FLAGS) != 0 || facts.supply_columns == SaveSupplyColumns::Complete ||
 		Present(facts, SaveLineageFamily::SupplyHeader) || (supply.state == SaveEvidenceState::Valid && supply.kind == SaveEvidenceKind::Table) ||
 		Present(facts, SaveLineageFamily::GeneratorHeader) || Present(facts, SaveLineageFamily::GeneratorRows) ||
 		Present(facts, SaveLineageFamily::ConversionHeader) || Present(facts, SaveLineageFamily::ConversionRows) ||
 		Present(facts, SaveLineageFamily::TubeSourceHeader) || Present(facts, SaveLineageFamily::TubeSourceRows);
-	if (a_evidence && b_evidence) return result(SaveLineageStatus::Corrupt); // Two incompatible owners cannot share one original envelope.
-	// Families cannot appear before their branch introduced them, even when a
+	if (orbital_evidence && geothermal_evidence) return result(SaveLineageStatus::Corrupt); // Two incompatible owners cannot share one original envelope.
+	// Families cannot appear before their format introduced them, even when a
 	// forged header claims an empty ledger that might otherwise look harmless.
 	const std::array<std::pair<SaveLineageFamily, uint16_t>, 7> introductions{{
 		{SaveLineageFamily::SupplyHeader, uint16_t{426}}, {SaveLineageFamily::GeneratorHeader, uint16_t{427}}, {SaveLineageFamily::GeneratorRows, uint16_t{427}},
@@ -254,22 +254,22 @@ static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::o
 		if (Present(facts, family) && facts.original_version < version) return result(SaveLineageStatus::Corrupt); // Source-era absence cannot acquire a future owner.
 	}
 	if (facts.original_version <= 424) {
-		if (a_evidence || b_evidence) return result(SaveLineageStatus::Corrupt); // Shared history predates every divergent transport meaning.
-		return result(SaveLineageStatus::Accepted, SaveDialect::Shared);
+		if (orbital_evidence || geothermal_evidence) return result(SaveLineageStatus::Corrupt); // Shared history predates every divergent transport meaning.
+		return result(SaveLineageStatus::Accepted, SaveFormat::Base);
 	}
-	if (b_evidence) return result(CompatibleB(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::DonorB);
+	if (geothermal_evidence) return result(CompatibleGeothermal(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveFormat::Geothermal);
 	// Versions435-440 are within A's pinned historical writer range. Their
 	// required content/families still validate; a high number alone is insufficient.
-	if (a_evidence || facts.original_version >= 435) return result(CompatibleA(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::DestinationA);
-	if (!CompatibleA(facts)) return result(SaveLineageStatus::Corrupt);
+	if (orbital_evidence || facts.original_version >= 435) return result(CompatibleOrbital(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveFormat::Orbital);
+	if (!CompatibleOrbital(facts)) return result(SaveLineageStatus::Corrupt);
 	/** @param byte One original SHA256 byte. @return Whether this byte prevents an unbound all-zero identity. */
 	const auto nonzero = [](uint8_t byte) { return byte != 0; };
 	const bool bound = std::ranges::any_of(facts.source_digest, nonzero);
 	// Absent B families never prove A. Only an exact nonzero digest hint can
-	// choose among common-layout legacy originals, and its dialect must still fit.
+	// choose among common-layout legacy originals, and its format must still fit.
 	if (origin && bound && origin->source_digest == facts.source_digest) {
-		if (origin->dialect == SaveDialect::DestinationA) return result(SaveLineageStatus::Accepted, SaveDialect::DestinationA);
-		if (origin->dialect == SaveDialect::DonorB) return result(CompatibleB(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::DonorB);
+		if (origin->format == SaveFormat::Orbital) return result(SaveLineageStatus::Accepted, SaveFormat::Orbital);
+		if (origin->format == SaveFormat::Geothermal) return result(CompatibleGeothermal(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveFormat::Geothermal);
 	}
 	return result(SaveLineageStatus::Ambiguous);
 }
@@ -279,10 +279,10 @@ static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::o
  */
 struct CapabilityRule {
 	SaveCapability capability; ///< The feature this row describes.
-	uint16_t first_a; ///< First historical DestinationA version, or 0.
-	uint16_t first_b; ///< First historical DonorB version, or 0.
-	bool merged441; ///< Carried by merged 441 with MLLN schema 1, whose meaning is frozen.
-	bool merged446; ///< Carried by merged 446 with MLLN schema 2, the combined writer of m2o28 Group 22.
+	uint16_t first_orbital; ///< First historical Orbital version, or 0.
+	uint16_t first_geothermal; ///< First historical Geothermal version, or 0.
+	bool unified441; ///< Carried by merged 441 with MLLN schema 1, whose meaning is frozen.
+	bool unified446; ///< Carried by merged 446 with MLLN schema 2, the combined writer of m2o28 Group 22.
 };
 
 /** Source-defined availability of every capability. Appending a capability requires a row here; the
@@ -304,9 +304,9 @@ static constexpr CapabilityRule CAPABILITY_RULES[] = {
 	{SaveCapability::SpaceCargoDimensions, 437, 0, true, true},
 	{SaveCapability::OrbitalRecipeProcessing, 438, 0, true, true},
 	{SaveCapability::CompanySupplyPackets, 439, 0, true, true},
-	{SaveCapability::SurfaceSupplyOrdersA, 440, 0, true, true},
+	{SaveCapability::SurfaceSupplyOrdersFixed, 440, 0, true, true},
 	{SaveCapability::TBMFaceTransfer, 0, 425, true, true},
-	{SaveCapability::SurfaceSupplyOrdersB, 0, 426, true, true},
+	{SaveCapability::SurfaceSupplyOrdersTable, 0, 426, true, true},
 	{SaveCapability::GeothermalGenerators, 0, 427, true, true},
 	{SaveCapability::UtilityHeatConversion, 0, 428, true, true},
 	{SaveCapability::GeothermalGeneratorOperation, 0, 429, true, true},
@@ -338,40 +338,40 @@ static_assert(std::size(CAPABILITY_RULES) == static_cast<size_t>(SaveCapability:
 static_assert(EveryCapabilityHasOneRule());
 
 /** Check that a writer really produced an envelope version before any rule is consulted.
- * @param dialect Accepted original writer.
+ * @param format Accepted original writer.
  * @param version Unchanged original envelope version.
  * @return True only inside that writer's closed range; Shared history has no post-fork capability.
  */
-static bool WriterProducedVersion(SaveDialect dialect, uint16_t version)
+static bool WriterProducedVersion(SaveFormat format, uint16_t version)
 {
-	switch (dialect) {
-		case SaveDialect::DestinationA: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DESTINATION_A_VERSION;
-		case SaveDialect::DonorB: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DONOR_B_VERSION;
+	switch (format) {
+		case SaveFormat::Orbital: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_ORBITAL_VERSION;
+		case SaveFormat::Geothermal: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_GEOTHERMAL_VERSION;
 		// The merged writer has exactly two allocations; 442-445 were a development build's numbers, never merged ones.
-		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION || version == CURRENT_MERGED_SAVE_VERSION;
-		case SaveDialect::Shared: return false;
+		case SaveFormat::Unified: return version == MERGED_SAVE_LINEAGE_VERSION || version == CURRENT_MERGED_SAVE_VERSION;
+		case SaveFormat::Base: return false;
 	}
-	return false; // A value outside the declared dialects names no writer.
+	return false; // A value outside the declared formats names no writer.
 }
 
 /** @copydoc HasSaveCapability */
 bool HasSaveCapability(const SaveLineageResult &result, SaveCapability capability)
 {
 	// Refusals grant nothing, even if a caller retained a previous successful
-	// dialect alongside this rejected attempt's version. A version outside the
+	// format alongside this rejected attempt's version. A version outside the
 	// writer's own range would otherwise borrow another writer's meaning.
-	if (result.status != SaveLineageStatus::Accepted || !WriterProducedVersion(result.dialect, result.original_version)) return false;
+	if (result.status != SaveLineageStatus::Accepted || !WriterProducedVersion(result.format, result.original_version)) return false;
 	const auto rule = std::ranges::find(CAPABILITY_RULES, capability, &CapabilityRule::capability);
 	if (rule == std::end(CAPABILITY_RULES)) return false; // A future enum value has no rule yet and grants nothing.
 	const auto version = result.original_version;
-	switch (result.dialect) {
+	switch (result.format) {
 		// Historical writers gained features in order: a nonzero introduction at or
 		// below this file's version means the file carries the feature's wire.
-		case SaveDialect::DestinationA: return rule->first_a != 0 && version >= rule->first_a;
-		case SaveDialect::DonorB: return rule->first_b != 0 && version >= rule->first_b;
+		case SaveFormat::Orbital: return rule->first_orbital != 0 && version >= rule->first_orbital;
+		case SaveFormat::Geothermal: return rule->first_geothermal != 0 && version >= rule->first_geothermal;
 		// Merged membership is a fixed set per allocation, not a numeric threshold.
-		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION ? rule->merged441 : rule->merged446;
-		case SaveDialect::Shared: return false;
+		case SaveFormat::Unified: return version == MERGED_SAVE_LINEAGE_VERSION ? rule->unified441 : rule->unified446;
+		case SaveFormat::Base: return false;
 	}
 	return false;
 }

@@ -32,13 +32,13 @@ static bool ObserveMergedGallery(std::span<std::string_view> args)
     REQUIRE(args.size() == 1); REQUIRE(gallery_observer != nullptr); (*gallery_observer)(); return true;
 }
 
-/** @param dialect Explicit A/B original lineage, or merged. @param digest Independent whole original SHA256. @return Same-attempt original hint; merged files need none. */
-static std::optional<SaveOriginHint> GalleryOrigin(std::string_view dialect, std::string_view digest)
+/** @param format Explicit A/B original lineage, or merged. @param digest Independent whole original SHA256. @return Same-attempt original hint; merged files need none. */
+static std::optional<SaveOriginHint> GalleryOrigin(std::string_view format, std::string_view digest)
 {
-    if (dialect == "merged") return std::nullopt;
-    REQUIRE((dialect == "A" || dialect == "B")); REQUIRE(digest.size() == 64);
-    SaveOriginHint hint{dialect == "A" ? SaveDialect::DestinationA : SaveDialect::DonorB, {}};
-    // Bind every original digest byte; a filename cannot choose a collision dialect.
+    if (format == "merged") return std::nullopt;
+    REQUIRE((format == "A" || format == "B")); REQUIRE(digest.size() == 64);
+    SaveOriginHint hint{format == "A" ? SaveFormat::Orbital : SaveFormat::Geothermal, {}};
+    // Bind every original digest byte; a filename cannot choose a collision format.
     for (size_t index = 0; index < hint.source_digest.size(); ++index) {
         unsigned value = 0; const auto *begin = digest.data() + 2 * index;
         const auto parsed = std::from_chars(begin, begin + 2, value, 16);

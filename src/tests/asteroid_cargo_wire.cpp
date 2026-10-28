@@ -20,10 +20,10 @@
 #include <fstream>
 #include "../safeguards.h"
 
-/** @param dialect Original writer. @param version Unchanged envelope version. @return That accepted source's cargo format. */
-static CargoSourceFormat AcceptedFormat(SaveDialect dialect, uint16_t version)
+/** @param format Original writer. @param version Unchanged envelope version. @return That accepted source's cargo format. */
+static CargoSourceFormat AcceptedFormat(SaveFormat format, uint16_t version)
 {
-	return CargoSourceFormat::FromLineage({SaveLineageStatus::Accepted, dialect, version});
+	return CargoSourceFormat::FromLineage({SaveLineageStatus::Accepted, format, version});
 }
 
 /** Mandatory payload keys cannot silently default or cross the genuine source-version boundary. */
@@ -32,16 +32,16 @@ TEST_CASE("CAPA asteroid source schema requires exact era fields", "[asteroid-ca
 	const std::vector<std::string_view> old{"count", "source_type", "source_id", "feeder_share", "source", "source_xy"};
 	auto modern = old; modern.push_back("asteroid_body"); modern.push_back("asteroid_mineral");
 	CHECK(ValidateCargoPacketSourceSchema(old, SaveLoadVersion::SurfaceSupplyOrders));
-	CHECK(ValidateCargoPacketSourceSchema(modern, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
-	CHECK_FALSE(ValidateCargoPacketSourceSchema(old, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK(ValidateCargoPacketSourceSchema(modern, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(ValidateCargoPacketSourceSchema(old, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 	CHECK_FALSE(ValidateCargoPacketSourceSchema(modern, SaveLoadVersion::SurfaceSupplyOrders));
 	// Every authority key independently remains mandatory; a duplicate key also
 	// cannot impersonate the absent scalar/payload identity or original credit.
 	for (size_t index = 0; index < modern.size(); ++index) {
 		auto missing = modern; missing.erase(missing.begin() + index);
-		CHECK_FALSE(ValidateCargoPacketSourceSchema(missing, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+		CHECK_FALSE(ValidateCargoPacketSourceSchema(missing, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 		auto duplicate = modern; duplicate.push_back(modern[index]);
-		CHECK_FALSE(ValidateCargoPacketSourceSchema(duplicate, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+		CHECK_FALSE(ValidateCargoPacketSourceSchema(duplicate, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 	}
 }
 
@@ -51,17 +51,17 @@ TEST_CASE("CAPA natural origin codec preserves full IDs and rejects dual or wron
 	for (const uint32_t body : {0U, 65'534U, 65'535U, 65'536U, 131'072U, UINT32_MAX - 1}) {
 		for (const CargoLabel mineral : {CargoLabel{"NORE"}, CargoLabel{"WICE"}, CargoLabel{"RARE"}}) {
 			const auto source = Source::FromAsteroid(body, mineral); const auto wire = EncodeCargoSourceAsteroid(source);
-			const auto decoded = DecodeCargoPacketSource(Source{Source::Invalid, SourceType::Asteroid}, wire, Money{17}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION));
-			REQUIRE(decoded); CHECK(*decoded == source); CHECK(IsValidCargoPacketSource(*decoded, Money{17}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
-			CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{0}, SourceType::Asteroid}, wire, Money{17}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+			const auto decoded = DecodeCargoPacketSource(Source{Source::Invalid, SourceType::Asteroid}, wire, Money{17}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION));
+			REQUIRE(decoded); CHECK(*decoded == source); CHECK(IsValidCargoPacketSource(*decoded, Money{17}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
+			CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{0}, SourceType::Asteroid}, wire, Money{17}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 			CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{0}, SourceType::Asteroid}, wire, Money{17}, SaveLoadVersion::SurfaceSupplyOrders));
 		}
 	}
 	CHECK(EncodeCargoSourceAsteroid(Source::FromAsteroid(0, CargoLabel{"NORE"})).mineral == 0x4E4F5245U);
 	const Source scalar{Source::Invalid, SourceType::Asteroid};
-	CHECK_FALSE(DecodeCargoPacketSource(scalar, {}, Money{0}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
-	CHECK_FALSE(DecodeCargoPacketSource(scalar, {0, 0}, Money{0}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
-	CHECK_FALSE(DecodeCargoPacketSource(scalar, EncodeCargoSourceAsteroid(Source::FromAsteroid(0, CargoLabel{"COAL"})), Money{0}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(DecodeCargoPacketSource(scalar, {}, Money{0}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(DecodeCargoPacketSource(scalar, {0, 0}, Money{0}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(DecodeCargoPacketSource(scalar, EncodeCargoSourceAsteroid(Source::FromAsteroid(0, CargoLabel{"COAL"})), Money{0}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 	const auto legacy = DecodeCargoPacketSource(Source{SourceID{0}, SourceType::Asteroid}, {}, Money{9}, SaveLoadVersion::SurfaceSupplyOrders);
 	REQUIRE(legacy); CHECK(legacy->id == 0); CHECK_FALSE(legacy->GetAsteroidOrigin());
 }
@@ -73,13 +73,13 @@ TEST_CASE("CAPA asteroid fields leave original ordinary source and payment purpo
 		for (const SourceID id : {SourceID{0}, SourceID{1}, Source::Invalid}) {
 			const Source source{id, type}; const Money credit = type == SourceType::CompanySupply ? Money{0} : Money{123};
 			const auto wire = EncodeCargoSourceAsteroid(source); CHECK(wire.body == UINT32_MAX); CHECK(wire.mineral == 0);
-			const auto decoded = DecodeCargoPacketSource(source, wire, credit, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION));
+			const auto decoded = DecodeCargoPacketSource(source, wire, credit, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION));
 			REQUIRE(decoded); CHECK(*decoded == source); CHECK(decoded->IsCompanySupply() == source.IsCompanySupply());
-			CHECK_FALSE(DecodeCargoPacketSource(source, {0, 0x4E4F5245U}, credit, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+			CHECK_FALSE(DecodeCargoPacketSource(source, {0, 0x4E4F5245U}, credit, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 		}
 	}
-	CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{1}, SourceType::CompanySupply}, {}, Money{1}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
-	CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{MAX_COMPANIES}, SourceType::CompanySupply}, {}, Money{0}, AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{1}, SourceType::CompanySupply}, {}, Money{1}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
+	CHECK_FALSE(DecodeCargoPacketSource(Source{SourceID{MAX_COMPANIES}, SourceType::CompanySupply}, {}, Money{0}, AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)));
 }
 
 /** Genuine legacy qualification changes original packet values in their existing vehicle, station and contained descent owners after a whole-family preflight. */
@@ -114,7 +114,7 @@ TEST_CASE("Legacy CAPA qualification preserves original containers and refuses m
 		const auto *original = packets[index]; CHECK(original->index == identities[index]);
 		CHECK(original->GetSource() == Source::FromAsteroid(0, CargoLabel{"NORE"})); CHECK(original->GetSourceTile() == *production);
 		CHECK(original->GetFeederShare() == 11); CHECK(original->GetFirstStation() == StationID::Invalid());
-		CHECK(DecodeCargoPacketSource(Source{original->GetSource().id, original->GetSource().type}, EncodeCargoSourceAsteroid(original->GetSource()), original->GetFeederShare(), AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION)) == original->GetSource());
+		CHECK(DecodeCargoPacketSource(Source{original->GetSource().id, original->GetSource().type}, EncodeCargoSourceAsteroid(original->GetSource()), original->GetFeederShare(), AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION)) == original->GetSource());
 	}
 	CHECK(craft.cargo.TotalCount() == 6); CHECK(station->goods[craft.cargo_type].TotalCount() == 4); CHECK(pod->descent->packets.TotalCount() == 2);
 	REQUIRE(HubCargoTransfer::Move(craft.cargo, station->goods[craft.cargo_type].GetData().cargo, 2, craft.tile));
@@ -153,16 +153,16 @@ TEST_CASE("CAPA source format follows the accepted writer, never the number", "[
 	const std::vector<std::string_view> plain{"count", "source_type", "source_id", "feeder_share", "source", "source_xy"};
 	auto typed = plain; typed.push_back("asteroid_body"); typed.push_back("asteroid_mineral");
 	auto half = plain; half.push_back("asteroid_body");
-	const auto merged441 = AcceptedFormat(SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION);
-	const auto donor434 = AcceptedFormat(SaveDialect::DonorB, 434);
-	const auto merged446 = AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION);
-	CHECK_FALSE(merged441.typed_asteroid_origins); CHECK_FALSE(donor434.typed_asteroid_origins);
-	CHECK(merged446.typed_asteroid_origins);
+	const auto unified441 = AcceptedFormat(SaveFormat::Unified, MERGED_SAVE_LINEAGE_VERSION);
+	const auto donor434 = AcceptedFormat(SaveFormat::Geothermal, 434);
+	const auto unified446 = AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION);
+	CHECK_FALSE(unified441.typed_asteroid_origins); CHECK_FALSE(donor434.typed_asteroid_origins);
+	CHECK(unified446.typed_asteroid_origins);
 	// The typed source needs both keys exactly once; every untyped source forbids them.
-	CHECK(ValidateCargoPacketSourceSchema(typed, merged446));
-	CHECK_FALSE(ValidateCargoPacketSourceSchema(plain, merged446));
-	CHECK_FALSE(ValidateCargoPacketSourceSchema(half, merged446));
-	for (const auto &untyped : {merged441, donor434}) {
+	CHECK(ValidateCargoPacketSourceSchema(typed, unified446));
+	CHECK_FALSE(ValidateCargoPacketSourceSchema(plain, unified446));
+	CHECK_FALSE(ValidateCargoPacketSourceSchema(half, unified446));
+	for (const auto &untyped : {unified441, donor434}) {
 		CHECK(ValidateCargoPacketSourceSchema(plain, untyped));
 		CHECK_FALSE(ValidateCargoPacketSourceSchema(typed, untyped));
 		CHECK_FALSE(ValidateCargoPacketSourceSchema(half, untyped));
@@ -171,20 +171,20 @@ TEST_CASE("CAPA source format follows the accepted writer, never the number", "[
 	// legacy scalar for the later same-file upgrade, and refuses any typed payload.
 	const auto high = Source::FromAsteroid(UINT32_MAX - 1, CargoLabel{"NORE"});
 	const Source unqualified{Source::Invalid, SourceType::Asteroid};
-	CHECK(DecodeCargoPacketSource(unqualified, EncodeCargoSourceAsteroid(high), Money{0}, merged446) == high);
-	CHECK_FALSE(DecodeCargoPacketSource(unqualified, EncodeCargoSourceAsteroid(high), Money{0}, merged441));
+	CHECK(DecodeCargoPacketSource(unqualified, EncodeCargoSourceAsteroid(high), Money{0}, unified446) == high);
+	CHECK_FALSE(DecodeCargoPacketSource(unqualified, EncodeCargoSourceAsteroid(high), Money{0}, unified441));
 	const Source legacy{SourceID{3}, SourceType::Asteroid};
-	CHECK(DecodeCargoPacketSource(legacy, {}, Money{0}, merged441) == legacy);
-	CHECK_FALSE(DecodeCargoPacketSource(legacy, {}, Money{0}, merged446)); // A typed source never carries an unqualified scalar.
+	CHECK(DecodeCargoPacketSource(legacy, {}, Money{0}, unified441) == legacy);
+	CHECK_FALSE(DecodeCargoPacketSource(legacy, {}, Money{0}, unified446)); // A typed source never carries an unqualified scalar.
 	// An ordinary source with an illicit asteroid payload refuses in every format.
 	const Source town{TownID{2}, SourceType::Town};
-	for (const auto &format : {merged441, donor434, merged446}) {
+	for (const auto &format : {unified441, donor434, unified446}) {
 		CHECK(DecodeCargoPacketSource(town, {}, Money{5}, format) == town);
 		CHECK_FALSE(DecodeCargoPacketSource(town, {7, 0x4E4F5245U}, Money{5}, format));
 	}
 	// Bought supplies belong to A's era onwards; historical B never wrote that purpose.
 	const Source bought{CompanyID{1}, SourceType::CompanySupply};
-	CHECK(DecodeCargoPacketSource(bought, {}, Money{0}, merged441) == bought);
+	CHECK(DecodeCargoPacketSource(bought, {}, Money{0}, unified441) == bought);
 	CHECK_FALSE(DecodeCargoPacketSource(bought, {}, Money{0}, donor434));
 }
 
@@ -197,8 +197,8 @@ TEST_CASE("CAPA rows of real typed-origin saves decode through the merged 446 fo
 	WARN("The typed-origin originals are OTTX; this build has no LZMA decoder"); return;
 #else
 	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
-	const auto space = AcceptedFormat(SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION); // The typed-origin CAPA shape.
-	const auto merged441 = AcceptedFormat(SaveDialect::Merged, MERGED_SAVE_LINEAGE_VERSION);
+	const auto space = AcceptedFormat(SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION); // The typed-origin CAPA shape.
+	const auto unified441 = AcceptedFormat(SaveFormat::Unified, MERGED_SAVE_LINEAGE_VERSION);
 	size_t typed_rows = 0;
 	// Each committed original is decompressed by a fresh codec and its CAPA table
 	// read field by field from its own descriptor; no native handler runs.
@@ -224,7 +224,7 @@ TEST_CASE("CAPA rows of real typed-origin saves decode through the merged 446 fo
 		std::vector<std::string_view> names;
 		for (const auto &column : columns) names.push_back(column.first);
 		CHECK(ValidateCargoPacketSourceSchema(names, space));
-		CHECK_FALSE(ValidateCargoPacketSourceSchema(names, merged441));
+		CHECK_FALSE(ValidateCargoPacketSourceSchema(names, unified441));
 		// Every real packet row carries flat scalars in descriptor order; empty rows are pool holes.
 		for (size_t index = 1; index < cargo.rows.size(); ++index) {
 			const auto &row = cargo.rows[index];
@@ -248,7 +248,7 @@ TEST_CASE("CAPA rows of real typed-origin saves decode through the merged 446 fo
 			REQUIRE(source.has_value());
 			if (!source->GetAsteroidOrigin()) continue;
 			++typed_rows;
-			CHECK_FALSE(DecodeCargoPacketSource(scalar, wire, credit, merged441));
+			CHECK_FALSE(DecodeCargoPacketSource(scalar, wire, credit, unified441));
 		}
 	}
 	CHECK(typed_rows > 0); // The typed-origin fixture carries natural packets.

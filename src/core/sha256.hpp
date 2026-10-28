@@ -3,7 +3,7 @@
  * @file sha256.hpp Bounded incremental identity for original byte streams, shared with immutable input verification.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc-file-cleanup3.md.
- * Byte identity does not select a dialect or grant gameplay/content authority.
+ * Byte identity does not select a format or grant gameplay/content authority.
  */
 #ifndef CORE_SHA256_HPP
 #define CORE_SHA256_HPP

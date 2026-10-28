@@ -129,7 +129,7 @@ struct MLMDChunkHandler : ChunkHandler {
 		if (IsSavegameVersionBefore(SaveLoadVersion::GeothermalHeatRoutes) && (schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_HEAT_ROUTES) != 0) SlErrorCorrupt("Unexpected geothermal heat routes in old save version"); // Legacy absence creates neither physical ports nor a reconstructed grant path.
 		// Original B supply history has an independent capability and complete
 		// header/TABLE family; A's colliding numeric versions cannot claim that bit.
-		if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0 && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) SlErrorCorrupt("Unexpected legacy supply metadata for original lineage");
+		if ((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0 && !SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable)) SlErrorCorrupt("Unexpected supply metadata for this save format");
 		// Original donor machinery bits require their actual lineage capabilities;
 		// colliding A versions cannot acquire generators, conversion or inlet rights.
 		if ((schema.feature_flags & MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS) != 0 && !SlHasSaveCapability(SaveCapability::GeothermalGenerators)) SlErrorCorrupt("Unexpected original generator metadata");
@@ -149,8 +149,8 @@ struct MLMDChunkHandler : ChunkHandler {
 		const auto source = GetLoadCapabilities();
 		// Original B's paid-history declaration joins its own complete book,
 		// including empty/closed history, before any canonical right is adopted.
-		if (source && source->dialect == SaveDialect::DonorB && SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) {
-			if (!ObserveLoadedLegacyBSupplyHistory((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0)) SlErrorCorrupt("Repeated native legacy supply metadata");
+		if (source && source->format == SaveFormat::Geothermal && SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable)) {
+			if (!ObserveLoadedTableSupplyHistory((schema.feature_flags & MULTILAYER_FEATURE_SURFACE_SUPPLIES) != 0)) SlErrorCorrupt("Repeated native legacy supply metadata");
 		}
 		StageLoadedMultiLayerStateSchema(schema);
 	}

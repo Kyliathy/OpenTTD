@@ -89,7 +89,7 @@ inline constexpr uint32_t MULTILAYER_FEATURE_LAUNCH_HUBS = 2097152; ///< Explici
 inline constexpr uint32_t MULTILAYER_FEATURE_SURFACE_HANDLING = 4194304; ///< Saved handling jobs and retired job identity, version409.
 
 /** Reserved imported history identities; declaration alone neither publishes these bits nor admits a legacy version.
- * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Group7; save_lineage.h owns dialect-specific capabilities.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space.md Group7; save_lineage.h owns format-specific capabilities.
  */
 inline constexpr uint32_t MULTILAYER_FEATURE_SURFACE_SUPPLIES = 8388608; ///< Complete canonical supply history; original B bit23 keeps its original meaning.
 inline constexpr uint32_t MULTILAYER_FEATURE_GEOTHERMAL_GENERATORS = 16777216; ///< Original generator construction/operation history, donor bit24.

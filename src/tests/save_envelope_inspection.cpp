@@ -18,7 +18,7 @@ TEST_CASE("Save envelope inspector bounds actual RIFF table and sparse framing",
 	auto reader = std::make_shared<EnvelopeTestReader>(EnvelopeStream(payload), 1);
 	const auto facts = InspectSaveWireFacts(reader);
 	CHECK(facts.framing_complete); CHECK(facts.common_transport_valid); CHECK(facts.original_version == 1);
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted); CHECK(reader->position == 0);
+	CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Accepted); CHECK(reader->position == 0);
 	// Every original truncation, including missing terminator bytes, must fail
 	// and rewind without borrowing the next row or allocating a native object.
 	for (size_t length = 0; length < reader->input.size(); ++length) {
@@ -91,7 +91,7 @@ TEST_CASE("Save envelope rejects duplicate owners malformed headers and work ove
 	// as a Malformed family, which the classifier refuses with no legacy fallback.
 	const auto contradiction = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EnvelopeStream(EnvelopeHex("4d4c4c4e000000084d4c4e310001000100000000"))));
 	CHECK(contradiction.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Malformed);
-	CHECK(ClassifySaveDialect(contradiction).status == SaveLineageStatus::Corrupt);
+	CHECK(ClassifySaveFormat(contradiction).status == SaveLineageStatus::Corrupt);
 	const auto input = EnvelopeStream(EnvelopeHex("544553540000000310203000000000"));
 	SaveInspectionLimits limits;
 	limits.raw_bytes = input.size() - 1; CHECK_THROWS_AS(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(input), limits), SaveFramingError);

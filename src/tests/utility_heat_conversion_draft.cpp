@@ -2,7 +2,7 @@
 /** @file utility_heat_conversion_draft.cpp Pure conversion admission and detached-history limits over the original shared owner.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-2-come-space.md Group27.
- * Declared restored history is explicit component input, never paid machinery, a current save dialect or committed conversion proof.
+ * Declared restored history is explicit component input, never paid machinery, a current save format or committed conversion proof.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"

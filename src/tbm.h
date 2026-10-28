@@ -40,7 +40,7 @@ enum class TBMPhase : uint8_t {
 	TravelToHangar, ///< Empty actual consist follows its ordinary depot order; cutting remains suspended.
 	ParkedHangar, ///< Whole empty consist arrived at its selected actual hangar; explicit Resume retains the job.
 	FollowOrders, ///< Native station/waypoint/depot list owns travel until an explicit work resume or hangar action.
-	AwaitFaceTransfer, ///< Appended identity20: native face-exchange wait; original-file dialect admission remains separate.
+	AwaitFaceTransfer, ///< Appended identity20: native face-exchange wait; original-file format admission remains separate.
 };
 
 /** @param phase Actual controller phase. @return Whether native travel returns to the exchange/hangar bay. */

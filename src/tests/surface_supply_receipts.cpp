@@ -21,7 +21,7 @@ static SurfaceSupplyOrderRecord LegacyRecord(SurfaceSupplyOrderID id = 1)
 	SurfaceSupplyOrderRecord record;
 	record.id = id; record.owner = CompanyID{0}; record.origin = StationID{3};
 	record.label = CargoLabel{"RFMT"}; record.quantity = 100; record.purchase_day = TimerGameEconomy::Date{100};
-	record.receipt = LegacyBSupplyReceipt{Money{25}, TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), 0, 0, false};
+	record.receipt = TableSupplyReceipt{Money{25}, TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), 0, 0, false};
 	return record;
 }
 

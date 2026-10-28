@@ -223,7 +223,7 @@ void RequireColumns(const Columns &columns, std::initializer_list<std::pair<std:
 	// Even an empty table must carry every original required field with its
 	// exact type; otherwise absence could manufacture default paid authority.
 	for (const auto &[name, type] : required) {
-		if (!HasColumn(columns, name, type)) throw SaveFramingError("Missing or changed lineage table field");
+		if (!HasColumn(columns, name, type)) throw SaveFramingError("Missing or changed format table field");
 	}
 }
 
@@ -247,10 +247,10 @@ void ReadSelectedRow(InspectionBytes &bytes, const Columns &columns, uint64_t en
 	for (const auto &column : columns) {
 		const auto framing = DecodeSaveTableField(column.type);
 		const auto width = ScalarWidth(framing.primitive);
-		if (width == 0) throw SaveFramingError("Unexpected nested lineage field");
+		if (width == 0) throw SaveFramingError("Unexpected nested format field");
 		if (framing.has_length) {
 			const uint64_t count = bytes.Gamma(end);
-			if (count > (end - bytes.position) / width) throw SaveFramingError("Invalid lineage array length");
+			if (count > (end - bytes.position) / width) throw SaveFramingError("Invalid format array length");
 			// The mandatory metadata digest is exactly sixteen original bytes;
 			// a changed length cannot be replaced with the current package hash.
 			if (metadata != nullptr && column.name == "required_content.md5sum" && count != 16) throw SaveFramingError("Invalid metadata digest extent");
@@ -264,7 +264,7 @@ void ReadSelectedRow(InspectionBytes &bytes, const Columns &columns, uint64_t en
 		if (column.name == "policy_flags" && value > 3) throw SaveFramingError("Unknown metadata policy"); // Unknown policy cannot suppress original feature admission.
 		if (column.name == "profile_id" && value > 1) throw SaveFramingError("Unknown metadata profile"); // A future profile cannot inherit Classic or Space defaults.
 	}
-	if (bytes.position != end) throw SaveFramingError("Invalid lineage row length");
+	if (bytes.position != end) throw SaveFramingError("Invalid format row length");
 }
 
 /** Map only the fixed classifier-selected families, independently of the gameplay handler registry.
@@ -388,7 +388,7 @@ void ReadRiff(std::string_view id, InspectionBytes &bytes, uint64_t end, SaveWir
 {
 	const uint64_t length = end - bytes.position;
 	/** @param expected Exact historical extent. */
-	auto exact = [length](uint64_t expected) { if (length != expected) throw SaveFramingError("Invalid lineage RIFF extent"); };
+	auto exact = [length](uint64_t expected) { if (length != expected) throw SaveFramingError("Invalid format RIFF extent"); };
 	if (id == "SDEF") { exact(10); facts.space_content_version = static_cast<uint16_t>(bytes.Integer(2, end)); }
 	if (id == "SPST") {
 		const uint64_t header = facts.original_version >= 422 ? 42 : 10;
@@ -441,7 +441,7 @@ void ReadRiff(std::string_view id, InspectionBytes &bytes, uint64_t end, SaveWir
 				if (facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || !(first_allocation || current_allocation) || facts.marker_writer_version != facts.original_version) evidence->state = SaveEvidenceState::Malformed;
 				break;
 			}
-			default: throw SaveFramingError("Lineage table encoded as RIFF");
+			default: throw SaveFramingError("Format table encoded as RIFF");
 		}
 	}
 	bytes.SkipTo(end);

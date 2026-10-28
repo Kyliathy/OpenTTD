@@ -1,10 +1,11 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
-/** @file save_lineage.h Detached compatibility evidence for parallel save histories.
+/** @file save_lineage.h Detached evidence that names a file's format family and its capabilities.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10 and 17B; the Space eras as merged-446 capabilities, dev-build files refused.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA column encodings observed from the file's own descriptor.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; the RIFF SSOR book shape observed from its own bytes.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 22B; format families are named by content.
  * This boundary neither parses bytes nor initializes a world. The actual reader
  * must supply bounded same-file facts; filenames and live owners are not inputs.
  */
@@ -15,15 +16,15 @@
 #include <cstdint>
 #include <optional>
 
-/** Original wire interpretation; a merged result does not rewrite legacy versions.
- * Values are appended only: each one names a writer whose version numbers mean
- * something different from every other writer's same numbers.
+/** The historical format family a file's own bytes belong to; classification never rewrites a file's version.
+ * Values are appended only. Orbital and Geothermal both used 425-434 for different layouts, so a version
+ * number alone never names a format (m2o28 Group 22B names each family by what it holds).
  */
-enum class SaveDialect : uint8_t {
-	Shared, ///< Common history up to 424, before the branches diverged.
-	DestinationA, ///< The destination's own historical writer, 425-440.
-	DonorB, ///< The historical underground donor writer, 425-434.
-	Merged, ///< The combined writer that emits MLLN: 441 with schema 1, later 446 with schema 2.
+enum class SaveFormat : uint8_t {
+	Base, ///< The common format up to 424.
+	Orbital, ///< 425-440: orbital and Space manufacturing, with the fixed RIFF supply book.
+	Geothermal, ///< 425-434: geothermal and Tube machinery, with the TABLE supply book.
+	Unified, ///< One format holding everything, marked by MLLN: 441 with schema 1, 446 with schema 2.
 };
 
 /** Explicit admission result; refused/ambiguous files have no capabilities. */
@@ -36,7 +37,7 @@ enum class SaveEvidenceState : uint8_t { Absent, Valid, Malformed };
 enum class SaveEvidenceKind : uint8_t { Riff, Table };
 
 /** Variable-layout evidence is usable only after an exact detached owner decoder. */
-enum class SavePayloadDialect : uint8_t { Common, DestinationA, DonorB, Malformed };
+enum class SavePayloadFormat : uint8_t { Common, Orbital, Geothermal, Malformed };
 
 /** The two legacy CAPA extension columns are one complete, type-checked contract.
  * Kept for the existing classifier rules; `SupplyColumnEncoding` is the full observation.
@@ -46,7 +47,7 @@ enum class SaveSupplyColumns : uint8_t { Absent, Complete, Malformed };
 /** The CAPA supply-column pair as the file's own table descriptor declares it, never inferred from its version. */
 enum class SupplyColumnEncoding : uint8_t {
 	Absent, ///< Neither `company_supply_order` nor `company_supply_shipped`: shared, A or pre-426 B packets.
-	LegacyU32Bool, ///< U32 order with Bool (I8) shipped: the historical donor B writer, 426-434.
+	LegacyU32Bool, ///< U32 order with Bool (I8) shipped: the Geothermal format, 426-434.
 	CanonicalU64U8, ///< U64 order with U8 shipped: the merged writer's canonical receipt link.
 	Malformed, ///< Half a pair, or a pair with any other widths; the classifier refuses it.
 };
@@ -105,7 +106,7 @@ struct SaveWireFacts {
 	SupplyColumnEncoding cargo_supply_encoding = SupplyColumnEncoding::Absent; ///< Actual CAPA supply pair encoding, recorded even when CAPA has zero rows.
 	SaveEvidenceState asteroid_origin_columns = SaveEvidenceState::Absent; ///< Valid only for exactly `asteroid_body` and `asteroid_mineral`, both U32; any other shape is Malformed.
 	SupplyBookShape supply_book_shape = SupplyBookShape::Absent; ///< Actual RIFF SSOR shape; independent of the version and of chunk order.
-	SavePayloadDialect payload_dialect = SavePayloadDialect::Common; ///< Optional positive evidence from a bounded versioned owner-layout decoder.
+	SavePayloadFormat payload_format = SavePayloadFormat::Common; ///< Optional positive evidence from a bounded versioned owner-layout decoder.
 	std::array<SaveChunkEvidence, static_cast<uint8_t>(SaveLineageFamily::Count)> families{}; ///< Fixed-size inspector results, independent of native pools.
 	uint32_t marker_magic = 0; ///< Original MLLN payload magic, never supplied by the running build's identity.
 	uint16_t marker_schema = 0; ///< Original MLLN payload schema.
@@ -123,14 +124,14 @@ struct SaveWireFacts {
 
 /** An explicitly selected ambiguous origin, bound to all bytes of one original save. */
 struct SaveOriginHint {
-	SaveDialect dialect = SaveDialect::Shared; ///< Only DestinationA or DonorB may disambiguate legacy transport.
+	SaveFormat format = SaveFormat::Base; ///< Only Orbital or Geothermal may disambiguate legacy transport.
 	std::array<uint8_t, 32> source_digest{}; ///< Exact original SHA256; zero is never a wildcard.
 };
 
-/** Pure classification result; callers must inspect status before using the dialect. */
+/** Pure classification result; callers must inspect status before using the format. */
 struct SaveLineageResult {
 	SaveLineageStatus status = SaveLineageStatus::Corrupt;
-	SaveDialect dialect = SaveDialect::Shared; ///< Inert unless status is Accepted.
+	SaveFormat format = SaveFormat::Base; ///< Inert unless status is Accepted.
 	uint16_t original_version = 0; ///< Always the input envelope version, including refusals.
 };
 
@@ -143,15 +144,15 @@ enum class SaveCapability : uint8_t {
 	OrbitalManufacturingClones, SpaceReplacementSettlement, SpaceOrderedActions,
 	SpaceHeavyMinerCommissioning, SpaceHeavyMinerMissions, SpaceHeavyMinerSupplies,
 	SpaceHeavyMinerDescents, SpaceHeavyMinerOnboardServices, SpaceHeavyMinerContainedServices,
-	SpaceCargoDimensions, OrbitalRecipeProcessing, CompanySupplyPackets, SurfaceSupplyOrdersA,
-	TBMFaceTransfer, SurfaceSupplyOrdersB, GeothermalGenerators, UtilityHeatConversion,
+	SpaceCargoDimensions, OrbitalRecipeProcessing, CompanySupplyPackets, SurfaceSupplyOrdersFixed,
+	TBMFaceTransfer, SurfaceSupplyOrdersTable, GeothermalGenerators, UtilityHeatConversion,
 	GeothermalGeneratorOperation, GeothermalMagmaLoop, UtilityTownService,
 	UtilityLocalElectricalFeed, TubeGeothermalSources, TubeGeothermalBindings,
-	AsteroidCargoOrigins, ///< Merged 446: CAPA packets carry the full asteroid body ID and mineral label.
-	AsteroidFieldLifecycle, ///< Merged 446: ASTR/SPKN sparse issuance, lifecycle revision and renewal state.
-	SpaceMiningContinuation, ///< Merged 446: SPOR mining policy and VEHS contained mining intent.
-	SpaceLegacyDeparture, ///< Merged 446: an unordered legacy miner's local departure.
-	SpaceSurveyDeparture, ///< Merged 446: an ownerless survey's Return/Waiting after release.
+	AsteroidCargoOrigins, ///< Unified 446: CAPA packets carry the full asteroid body ID and mineral label.
+	AsteroidFieldLifecycle, ///< Unified 446: ASTR/SPKN sparse issuance, lifecycle revision and renewal state.
+	SpaceMiningContinuation, ///< Unified 446: SPOR mining policy and VEHS contained mining intent.
+	SpaceLegacyDeparture, ///< Unified 446: an unordered legacy miner's local departure.
+	SpaceSurveyDeparture, ///< Unified 446: an ownerless survey's Return/Waiting after release.
 	Count,
 };
 
@@ -162,14 +163,14 @@ enum class SaveCapability : uint8_t {
  * below use the legacy rules.
  * @param facts Evidence extracted from the original stream by a bounded inspector.
  * @param origin Optional exact-digest hint; consulted only when wire evidence is ambiguous.
- * @return Accepted dialect or explicit ambiguity/corruption/unsupported-version refusal.
+ * @return Accepted format or explicit ambiguity/corruption/unsupported-version refusal.
  */
-SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin = std::nullopt);
+SaveLineageResult ClassifySaveFormat(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin = std::nullopt);
 
-/** Query a divergent feature without applying the other branch's numeric enum.
+/** Query a feature by the file's own format family, never by another family's numeric enum.
  * @param result Accepted classification retaining the original envelope version.
  * @param capability Exact known feature; unknown future enum values always refuse.
- * @return Whether this dialect/version supports the feature, never a grant of gameplay ownership.
+ * @return Whether this format/version supports the feature, never a grant of gameplay ownership.
  */
 bool HasSaveCapability(const SaveLineageResult &result, SaveCapability capability);
 

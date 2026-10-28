@@ -43,13 +43,13 @@ static bool ObserveOriginalMachinery(std::span<std::string_view> args)
 }
 
 /** Bind an explicitly selected donor original to its independent whole-file digest.
- * @param digest Exact64-character SHA256 from the retained input catalogue, never a filename-derived dialect.
+ * @param digest Exact64-character SHA256 from the retained input catalogue, never a filename-derived format.
  * @return Per-attempt B hint, with no persistent load-context override.
  */
 static SaveOriginHint OriginalMachineryHint(const char *digest)
 {
 	REQUIRE(digest != nullptr); const std::string_view hex{digest}; REQUIRE(hex.size() == 64);
-	SaveOriginHint hint{SaveDialect::DonorB, {}};
+	SaveOriginHint hint{SaveFormat::Geothermal, {}};
 	// Every digest byte is mandatory: an origin declaration cannot authorize
 	// reinterpretation of another original or an altered negative copy.
 	for (size_t index = 0; index < hint.source_digest.size(); ++index) {
@@ -181,7 +181,7 @@ static void CheckNativeCandidateLifecycle(const char *merged, const char *origin
 {
 	REQUIRE(merged != nullptr); const auto baseline = CaptureCandidateLiveState(); REQUIRE_FALSE(baseline.camera.empty());
 	const char *a_path = std::getenv("OTTD_MACHINERY_LIFECYCLE_A"); REQUIRE(a_path != nullptr);
-	auto a_hint = OriginalMachineryHint(std::getenv("OTTD_MACHINERY_LIFECYCLE_A_DIGEST")); a_hint.dialect = SaveDialect::DestinationA;
+	auto a_hint = OriginalMachineryHint(std::getenv("OTTD_MACHINERY_LIFECYCLE_A_DIGEST")); a_hint.format = SaveFormat::Orbital;
 	const std::array paths{std::string{a_path}, std::string{original}, std::string{merged}};
 	// Each actual world replacement must accept its own original family set;
 	// copied selections between them cannot mutate the installed world's real view,

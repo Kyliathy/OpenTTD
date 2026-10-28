@@ -154,14 +154,14 @@ struct DATEChunkHandler : ChunkHandler {
 	/** Decode actual original clock fields without borrowing previous-file values.
 	 * @param slt Native or copied-preview field descriptors.
 	 * @param slct Existing older-format compatibility table.
-	 * @param preview Select copied tick/economy-date evidence for construction and either admitted paid-supply dialect; full mode observes only the independently decoded native economy date.
+	 * @param preview Select copied tick/economy-date evidence for construction and either admitted paid-supply format; full mode observes only the independently decoded native economy date.
 	 */
 	void LoadCommon(const SaveLoadTable &slt, const SaveLoadCompatTable &slct, bool preview = false) const
 	{
 		const std::vector<SaveLoad> oslt = SlCompatTableHeader(slt, slct);
 		const bool economy_present = std::ranges::find(oslt, "economy_date", &SaveLoad::name) != oslt.end();
 		// Current order caps require this candidate's original economy day; missing date fields cannot borrow calendar time or a preceding full/copy reader's value.
-		if ((SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersA) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersB)) && !economy_present) SlErrorCorrupt("Missing native supply economy date field");
+		if ((SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersFixed) || SlHasSaveCapability(SaveCapability::SurfaceSupplyOrdersTable)) && !economy_present) SlErrorCorrupt("Missing native supply economy date field");
 		if (preview) _load_check_data.native_tick_present = std::ranges::find(oslt, "tick_counter", &SaveLoad::name) != oslt.end(); // Exact same-file clock presence, never a live TimerGameTick read.
 
 		if (!IsSavegameVersionBefore(SaveLoadVersion::RiffToArray) && SlIterateArray() == -1) return;

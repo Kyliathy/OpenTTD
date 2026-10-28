@@ -62,7 +62,7 @@ static std::optional<SaveOriginHint> OriginalSpaceOriginHint(const char *digest)
 {
 	if (digest == nullptr) return std::nullopt;
 	const std::string_view hex{digest}; REQUIRE(hex.size() == 64);
-	SaveOriginHint hint{SaveDialect::DestinationA, {}};
+	SaveOriginHint hint{SaveFormat::Orbital, {}};
 	// Every original digest byte is explicit. The test cannot turn a partial
 	// origin declaration into permission to reinterpret an unrelated raw file.
 	for (size_t index = 0; index < hint.source_digest.size(); ++index) {

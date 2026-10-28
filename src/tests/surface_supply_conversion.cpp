@@ -18,7 +18,7 @@
  * @param id Original dense row identity; no packet or current-company lookup supplies it.
  * @return Raw historical fields, including distinct calendar and economy dates and a checked0/1 closure byte.
  */
-static LegacyBSupplyOrderWire OriginalLegacyRow(uint32_t id)
+static TableSupplyOrderWire OriginalLegacyRow(uint32_t id)
 {
 	return {id, 0, 3, CargoLabel{"RFMT"}, 100,
 		TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), 100, 0, 0, 25, 0};
@@ -57,7 +57,7 @@ struct ConversionWitness {
 TEST_CASE("Legacy B conversion preserves exact finite history without inventing native purchase facts", "[surface-supply-conversion]")
 {
 	SurfaceSupplyRecordRig rig;
-	LegacyBSupplyTransport original{1, 7, 8, {}};
+	TableSupplyTransport original{1, 7, 8, {}};
 	// These seven independent histories cover the saved refund/loss examples;
 	// their shared old day may exceed today's cap after history combines.
 	for (uint32_t id = 1; id <= 7; ++id) original.orders.push_back(OriginalLegacyRow(id));
@@ -69,7 +69,7 @@ TEST_CASE("Legacy B conversion preserves exact finite history without inventing 
 	original.orders[6].owner = UINT8_MAX; original.orders[6].station = UINT16_MAX; original.orders[6].closed = 1;
 	rig.context.companies[2] = true; rig.stations[2].owner = CompanyID{2}; rig.stations[0].freight_facility = false;
 	const auto before = original; const ConversionWitness witness;
-	const auto converted = ConvertLegacyBSupply(original, rig.context);
+	const auto converted = ConvertTableSupply(original, rig.context);
 	REQUIRE(converted.has_value()); CHECK(converted->next_id == 8); REQUIRE(converted->records.size() == 7);
 	// Compare each preserved scalar to its original row, including loss
 	// sentinels. There is no expected-data round trip through the converter.
@@ -91,7 +91,7 @@ TEST_CASE("Legacy B conversion preserves exact finite history without inventing 
 /** Missing or contradictory original structure refuses without partial candidates or repairs. */
 TEST_CASE("Legacy B conversion refuses malformed headers dense identities and raw closure", "[surface-supply-conversion]")
 {
-	SurfaceSupplyRecordRig rig; LegacyBSupplyTransport original{1, 2, 3, {OriginalLegacyRow(1), OriginalLegacyRow(2)}};
+	SurfaceSupplyRecordRig rig; TableSupplyTransport original{1, 2, 3, {OriginalLegacyRow(1), OriginalLegacyRow(2)}};
 	const auto fault = GENERATE(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
 	switch (fault) {
 		case 0: original.schema = 0; break;
@@ -108,13 +108,13 @@ TEST_CASE("Legacy B conversion refuses malformed headers dense identities and ra
 		case 11: original.orders[1] = {}; break;
 	}
 	const auto before = original; const ConversionWitness witness;
-	CHECK_FALSE(ConvertLegacyBSupply(original, rig.context)); CHECK(original == before); witness.CheckUnchanged();
+	CHECK_FALSE(ConvertTableSupply(original, rig.context)); CHECK(original == before); witness.CheckUnchanged();
 }
 
 /** Candidate-owned references, not a live world or convenient replacement source, decide admission. */
 TEST_CASE("Legacy B conversion refuses missing foreign or contradictory same-file evidence", "[surface-supply-conversion]")
 {
-	SurfaceSupplyRecordRig rig; LegacyBSupplyTransport original{1, 1, 2, {OriginalLegacyRow(1)}};
+	SurfaceSupplyRecordRig rig; TableSupplyTransport original{1, 1, 2, {OriginalLegacyRow(1)}};
 	const auto fault = GENERATE(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 	switch (fault) {
 		case 0: rig.context.stations = {}; break;
@@ -129,21 +129,21 @@ TEST_CASE("Legacy B conversion refuses missing foreign or contradictory same-fil
 		case 9: rig.context.profile = MultiLayerGameplayProfileID::Classic; break;
 	}
 	const auto before = original; const ConversionWitness witness;
-	CHECK_FALSE(ConvertLegacyBSupply(original, rig.context)); CHECK(original == before); witness.CheckUnchanged();
+	CHECK_FALSE(ConvertTableSupply(original, rig.context)); CHECK(original == before); witness.CheckUnchanged();
 }
 
 /** All65535 original rows and the never-issued65536 frontier survive; absent transport is not empty history. */
 TEST_CASE("Legacy B conversion keeps the full original bound and admits only explicit empty history", "[surface-supply-conversion]")
 {
 	SurfaceSupplyRecordRig rig; const ConversionWitness witness;
-	CHECK_FALSE(ConvertLegacyBSupply({}, rig.context));
-	const auto empty = ConvertLegacyBSupply({1, 0, 1, {}}, rig.context);
+	CHECK_FALSE(ConvertTableSupply({}, rig.context));
+	const auto empty = ConvertTableSupply({1, 0, 1, {}}, rig.context);
 	REQUIRE(empty.has_value()); CHECK(empty->records.empty()); CHECK(empty->next_id == 1);
-	LegacyBSupplyTransport original{1, 65535, 65536, {}}; original.orders.reserve(65535);
+	TableSupplyTransport original{1, 65535, 65536, {}}; original.orders.reserve(65535);
 	// Exercise the real maximum historical cardinality, not a reduced
 	// substitute that could conceal uint16 truncation or id-minus-one lookup.
 	for (uint32_t id = 1; id <= 65535; ++id) original.orders.push_back(OriginalLegacyRow(id));
-	const auto converted = ConvertLegacyBSupply(original, rig.context);
+	const auto converted = ConvertTableSupply(original, rig.context);
 	REQUIRE(converted.has_value()); CHECK(converted->next_id == 65536); REQUIRE(converted->records.size() == 65535);
 	CHECK(FindSurfaceSupplyOrderRecord(*converted, 65535)->Legacy()->unit_price == 25);
 	CHECK(CountSurfaceSupplyDayUsage(*converted, CompanyID{0}, CargoLabel{"RFMT"}, TimerGameEconomy::Date{100}) == 6553500);
@@ -156,7 +156,7 @@ TEST_CASE("Legacy A conversion preserves native Pending and fulfilled receipts e
 	SurfaceSupplyRecordRig rig; const auto high = uint64_t{1} << 40;
 	SurfaceSupplyOrderTransport original{{high + 1, {rig.Record(1), rig.Record(high, StationID{3}, CompanyID{0}, CargoLabel{"RFMT"}, 2, SurfaceSupplyOrderState::Fulfilled)}}, TimerGameEconomy::Date{100}};
 	const auto before = original.snapshot; const ConversionWitness witness;
-	const auto converted = ConvertLegacyASupply(original, rig.context);
+	const auto converted = ConvertFixedSupply(original, rig.context);
 	REQUIRE(converted.has_value()); CHECK(*converted == before); CHECK(original.snapshot == before);
 	CHECK(original.saved_day == TimerGameEconomy::Date{100}); CHECK(converted->records[0].Native()->state == SurfaceSupplyOrderState::Pending);
 	CHECK(converted->records[1].Native()->issued_packet == CargoPacketID{17}); CHECK(converted->records[1].Legacy() == nullptr);
@@ -170,7 +170,7 @@ TEST_CASE("Legacy A conversion refuses nonnative and invalid native purchase evi
 	SurfaceSupplyRecordRig rig; SurfaceSupplyOrderTransport original{{2, {rig.Record(1)}}, TimerGameEconomy::Date{100}};
 	const auto fault = GENERATE(0, 1, 2, 3, 4, 5);
 	switch (fault) {
-		case 0: original.snapshot.records[0].receipt = LegacyBSupplyReceipt{}; break;
+		case 0: original.snapshot.records[0].receipt = TableSupplyReceipt{}; break;
 		case 1: original.snapshot.records[0].receipt = std::monostate{}; break;
 		case 2: original.snapshot.records[0].Native()->cost += Money{1}; break;
 		case 3: original.snapshot.records[0].Native()->origin_x += 1; break;
@@ -178,21 +178,21 @@ TEST_CASE("Legacy A conversion refuses nonnative and invalid native purchase evi
 		case 5: original.snapshot.records.resize(MAX_SURFACE_SUPPLY_RECORDS + 1); break;
 	}
 	const auto before = original.snapshot; const ConversionWitness witness;
-	CHECK_FALSE(ConvertLegacyASupply(original, rig.context)); CHECK(original.snapshot == before); witness.CheckUnchanged();
+	CHECK_FALSE(ConvertFixedSupply(original, rig.context)); CHECK(original.snapshot == before); witness.CheckUnchanged();
 }
 
 /** Only original invalid-Industry linked facts project to non-paying purpose; no active-world buyer or same-label inference is permitted. */
 TEST_CASE("Legacy B packet projection preserves original paid evidence and ordinary cargo", "[surface-supply-conversion]")
 {
 	SurfaceSupplyRecordRig rig;
-	const auto snapshot = ConvertLegacyBSupply({1, 1, 2, {OriginalLegacyRow(1)}}, rig.context); REQUIRE(snapshot.has_value());
+	const auto snapshot = ConvertTableSupply({1, 1, 2, {OriginalLegacyRow(1)}}, rig.context); REQUIRE(snapshot.has_value());
 	const SurfaceSupplyPacketFacts raw{CargoPacketID{17}, 40, {Source::Invalid, SourceType::Industry}, Money{0}, 1, true};
 	const ConversionWitness witness;
-	const auto projected = ProjectLegacyBSupplyPacket(raw, *snapshot); REQUIRE(projected.has_value());
+	const auto projected = ProjectTableSupplyPacket(raw, *snapshot); REQUIRE(projected.has_value());
 	CHECK(projected->source == (Source{Source::Invalid, SourceType::CompanySupply}));
 	CHECK(projected->order == 1); CHECK(projected->shipped); CHECK(projected->quantity == 40); CHECK(projected->feeder_share == Money{0});
 	auto ordinary = raw; ordinary.order = 0; ordinary.shipped = false;
-	CHECK(ProjectLegacyBSupplyPacket(ordinary, *snapshot) == ordinary);
+	CHECK(ProjectTableSupplyPacket(ordinary, *snapshot) == ordinary);
 	const auto fault = GENERATE(0, 1, 2, 3, 4, 5);
 	auto malformed = raw;
 	switch (fault) {
@@ -203,6 +203,6 @@ TEST_CASE("Legacy B packet projection preserves original paid evidence and ordin
 		case 4: malformed.order = 2; break; // The exact unissued identity supplies no receipt.
 		case 5: malformed.order = 0; break; // Shipped-without-link cannot become ordinary or bought cargo.
 	}
-	CHECK_FALSE(ProjectLegacyBSupplyPacket(malformed, *snapshot));
+	CHECK_FALSE(ProjectTableSupplyPacket(malformed, *snapshot));
 	witness.CheckUnchanged();
 }

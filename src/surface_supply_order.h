@@ -44,14 +44,14 @@ struct NativeSupplyReceipt {
 };
 
 /** Imported B evidence; original payer, inflation, lost anchor and issuance packet are structurally unavailable. */
-struct LegacyBSupplyReceipt {
+struct TableSupplyReceipt {
 	Money unit_price{0}; ///< Exact saved positive tariff, never reverse-engineered into native Q16 inflation.
 	int32_t calendar_date = -1; ///< Actual original calendar date, independent of economy-day allowance.
 	uint16_t refunded = 0; ///< Units already removed and credited; never usable cargo or renewed cap.
 	uint16_t dispatched = 0; ///< Units whose first departure ended legacy refund rights permanently.
 	bool closed = false; ///< Original cancellation/source/company loss; an open legacy receipt is never native Pending.
 	/** @param other Exact original counters/tariff/date. @return Equality without consulting today's price or stock. */
-	bool operator==(const LegacyBSupplyReceipt &other) const = default;
+	bool operator==(const TableSupplyReceipt &other) const = default;
 };
 
 /** One identity in the sole sorted book; the tagged receipt is history, never another inventory. */
@@ -62,16 +62,16 @@ struct SurfaceSupplyOrderRecord {
 	CargoLabel label{}; ///< Stable canonical material, independent of a runtime cargo slot.
 	uint16_t quantity = 0; ///< Whole original purchase, never remaining physical stock.
 	TimerGameEconomy::Date purchase_day{0}; ///< Original economy cap day.
-	std::variant<std::monostate, NativeSupplyReceipt, LegacyBSupplyReceipt> receipt{NativeSupplyReceipt{}}; ///< Unknown transport tags become invalid monostate, never an inferred native receipt.
+	std::variant<std::monostate, NativeSupplyReceipt, TableSupplyReceipt> receipt{NativeSupplyReceipt{}}; ///< Unknown transport tags become invalid monostate, never an inferred native receipt.
 
 	/** @return Native evidence only, or nullptr; callers must never fabricate it for a legacy receipt. */
 	NativeSupplyReceipt *Native() { return std::get_if<NativeSupplyReceipt>(&this->receipt); }
 	/** @return Read-only native evidence, or nullptr for legacy/invalid provenance. */
 	const NativeSupplyReceipt *Native() const { return std::get_if<NativeSupplyReceipt>(&this->receipt); }
 	/** @return Original legacy evidence only, or nullptr; reading confers no refund or stock permission. */
-	LegacyBSupplyReceipt *Legacy() { return std::get_if<LegacyBSupplyReceipt>(&this->receipt); }
+	TableSupplyReceipt *Legacy() { return std::get_if<TableSupplyReceipt>(&this->receipt); }
 	/** @return Read-only legacy evidence, or nullptr for native/invalid provenance. */
-	const LegacyBSupplyReceipt *Legacy() const { return std::get_if<LegacyBSupplyReceipt>(&this->receipt); }
+	const TableSupplyReceipt *Legacy() const { return std::get_if<TableSupplyReceipt>(&this->receipt); }
 	/** @param other Complete tagged receipt. @return Equality of identity/provenance/history, not live custody. */
 	bool operator==(const SurfaceSupplyOrderRecord &other) const = default;
 };

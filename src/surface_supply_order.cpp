@@ -62,7 +62,7 @@ static SurfaceSupplyRecordError ValidateNativeReceipt(const SurfaceSupplyOrderRe
  * @param definition Existing immutable supply terms, not a second tariff catalogue.
  * @return Complete original B scalar/reference agreement; no stock or refund is created.
  */
-static SurfaceSupplyRecordError ValidateLegacyReceipt(const SurfaceSupplyOrderRecord &record, const LegacyBSupplyReceipt &legacy,
+static SurfaceSupplyRecordError ValidateLegacyReceipt(const SurfaceSupplyOrderRecord &record, const TableSupplyReceipt &legacy,
 	const SurfaceSupplyRecordContext &context, const MultiLayerSurfaceSupply *definition)
 {
 	// A refunded quantity was physically removed already; it cannot remain open,
@@ -237,7 +237,7 @@ std::optional<SurfaceSupplyPacketFacts> SurfaceSupplyCustodyCheck::LookupPacket(
 		case SourceType::Headquarters:
 		case SourceType::Asteroid:
 			// Canonical legacy links cannot relabel ordinary/natural cargo into a
-			// paid entitlement. Original dialect conversion must occur beforehand.
+			// paid entitlement. Original format conversion must occur beforehand.
 			if (facts->order != 0 || facts->shipped) { this->Refuse(); return std::nullopt; }
 			break;
 		case SourceType::CompanySupply:

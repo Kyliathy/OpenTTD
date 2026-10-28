@@ -106,7 +106,7 @@ TEST_CASE("Two driven source haulers save an occupied FIFO turn and its next leg
 				const auto directory = cache == nullptr ? GetTestCaseArtifactPaths("tbm", "logistics").saves :
 					RequireTestArtifactWithin(cache, FindTestRepositoryRoot() / "test-cache/merge-supply");
 				REQUIRE(std::filesystem::is_directory(directory));
-				// This ordinary-file regression must never smuggle the later phase20 dialect through its current reader.
+				// This ordinary-file regression must never smuggle the later phase20 format through its current reader.
 				REQUIRE(to_underlying(work->phase) <= to_underlying(TBMPhase::FollowOrders));
 				const auto path = directory / (std::string(record_prefix) + "-occupied-bay.sav");
 				REQUIRE_FALSE(std::filesystem::exists(path));

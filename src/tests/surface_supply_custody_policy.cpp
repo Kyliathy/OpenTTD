@@ -19,9 +19,9 @@ struct SupplyCustodyPolicyRig : SurfaceSupplyRecordRig {
 	/** Declare60 never-shipped source units and40 previously shipped units at an original25-unit tariff. */
 	SupplyCustodyPolicyRig()
 	{
-		LegacyBSupplyOrderWire row{1, 0, 3, CargoLabel{"RFMT"}, 100,
+		TableSupplyOrderWire row{1, 0, 3, CargoLabel{"RFMT"}, 100,
 			TimerGameCalendar::ConvertYMDToDate(TimerGameCalendar::Year{1980}, 0, 1).base(), 100, 0, 40, 25, 0};
-		const auto converted = ConvertLegacyBSupply({1, 1, 2, {row}}, this->context); REQUIRE(converted.has_value()); this->snapshot = *converted;
+		const auto converted = ConvertTableSupply({1, 1, 2, {row}}, this->context); REQUIRE(converted.has_value()); this->snapshot = *converted;
 		this->packets.emplace(CargoPacketID{10}, SurfaceSupplyPacketFacts{CargoPacketID{10}, 60, {Source::Invalid, SourceType::CompanySupply}, Money{0}, 1, false});
 		this->packets.emplace(CargoPacketID{20}, SurfaceSupplyPacketFacts{CargoPacketID{20}, 40, {Source::Invalid, SourceType::CompanySupply}, Money{0}, 1, true});
 	}

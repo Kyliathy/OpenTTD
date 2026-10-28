@@ -85,10 +85,10 @@ def legacy_receipt(price, calendar, refunded, dispatched, closed):
     @param refunded Already removed/refunded units.
     @param dispatched Irreversible first-departure history.
     @param closed Literal original0/1closed flag.
-    @return Exact LegacyBevidence with structurally unavailable Native facts omitted.
+    @return Exact TABLE-book receipt evidence with structurally unavailable Native facts omitted.
     """
     assert closed in (0, 1)
-    return dict(kind="LegacyB", price=price, calendar=calendar, refunded=refunded, dispatched=dispatched, closed=bool(closed))
+    return dict(kind="Table", price=price, calendar=calendar, refunded=refunded, dispatched=dispatched, closed=bool(closed))
 
 
 def original_book(path, origin):

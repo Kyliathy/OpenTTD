@@ -75,10 +75,10 @@ TEST_CASE("Save envelope observes each writer's CAPA columns and marker tuple", 
 	const auto canonical = Fields({&BASE_CARGO_FIELDS, &CANONICAL_SUPPLY});
 	const auto typed = Fields({&BASE_CARGO_FIELDS, &ASTEROID_ORIGIN});
 	const auto combined = Fields({&BASE_CARGO_FIELDS, &CANONICAL_SUPPLY, &ASTEROID_ORIGIN});
-	const auto merged441 = MarkerChunk(MERGED_SAVE_LINEAGE_MAGIC, MERGED_SAVE_LINEAGE_SCHEMA, MERGED_SAVE_LINEAGE_VERSION);
-	const auto merged446 = MarkerChunk(MERGED_SAVE_LINEAGE_MAGIC, CURRENT_MERGED_SAVE_LINEAGE_SCHEMA, CURRENT_MERGED_SAVE_VERSION);
+	const auto unified441 = MarkerChunk(MERGED_SAVE_LINEAGE_MAGIC, MERGED_SAVE_LINEAGE_SCHEMA, MERGED_SAVE_LINEAGE_VERSION);
+	const auto unified446 = MarkerChunk(MERGED_SAVE_LINEAGE_MAGIC, CURRENT_MERGED_SAVE_LINEAGE_SCHEMA, CURRENT_MERGED_SAVE_VERSION);
 
-	const auto d441 = Observe(Stream(441, {CargoChunk(canonical, 1), merged441}));
+	const auto d441 = Observe(Stream(441, {CargoChunk(canonical, 1), unified441}));
 	CHECK(d441 == ColumnObservation{SupplyColumnEncoding::CanonicalU64U8, SaveEvidenceState::Absent, SaveSupplyColumns::Absent, true,
 		SaveEvidenceState::Valid, MERGED_SAVE_LINEAGE_MAGIC, MERGED_SAVE_LINEAGE_SCHEMA, MERGED_SAVE_LINEAGE_VERSION});
 
@@ -89,18 +89,18 @@ TEST_CASE("Save envelope observes each writer's CAPA columns and marker tuple", 
 			SaveSupplyColumns::Absent, false, SaveEvidenceState::Absent, 0, 0, 0});
 	}
 
-	const auto c446 = Observe(Stream(446, {CargoChunk(combined, 1), merged446}));
+	const auto c446 = Observe(Stream(446, {CargoChunk(combined, 1), unified446}));
 	CHECK(c446 == ColumnObservation{SupplyColumnEncoding::CanonicalU64U8, SaveEvidenceState::Valid, SaveSupplyColumns::Absent, true,
 		SaveEvidenceState::Valid, MERGED_SAVE_LINEAGE_MAGIC, CURRENT_MERGED_SAVE_LINEAGE_SCHEMA, CURRENT_MERGED_SAVE_VERSION});
 
 	// Column facts come from the descriptor, so an empty CAPA gives the same answer as one with packets.
-	CHECK(Observe(Stream(441, {CargoChunk(canonical), merged441})) == d441);
-	CHECK(Observe(Stream(446, {CargoChunk(combined), merged446})) == c446);
+	CHECK(Observe(Stream(441, {CargoChunk(canonical), unified441})) == d441);
+	CHECK(Observe(Stream(446, {CargoChunk(combined), unified446})) == c446);
 	CHECK(Observe(Stream(445, {CargoChunk(typed)})).asteroid == SaveEvidenceState::Valid);
 
 	// Marker first or last: the envelope version is known before any chunk, so order changes nothing.
-	CHECK(Observe(Stream(441, {merged441, CargoChunk(canonical, 1)})) == d441);
-	CHECK(Observe(Stream(446, {merged446, CargoChunk(combined, 1)})) == c446);
+	CHECK(Observe(Stream(441, {unified441, CargoChunk(canonical, 1)})) == d441);
+	CHECK(Observe(Stream(446, {unified446, CargoChunk(combined, 1)})) == c446);
 
 	// Historical B's pair keeps its legacy meaning, independently of the outer number.
 	const auto legacy = Observe(Stream(434, {CargoChunk(Fields({&BASE_CARGO_FIELDS, &LEGACY_SUPPLY}))}));
@@ -195,7 +195,7 @@ TEST_CASE("Save envelope observes typed CAPA columns in real donor 445 saves", "
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Absent);
 		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed); // Group 12: the A440-derived fixed book, read by shape.
-		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported); // Group 17B: a development build's file, never read.
+		CHECK(ClassifySaveFormat(facts).status == SaveLineageStatus::Unsupported); // Group 17B: a development build's file, never read.
 		CHECK(reader->position == 0);
 		++scanned;
 	}

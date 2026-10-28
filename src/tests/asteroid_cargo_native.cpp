@@ -88,7 +88,7 @@ static void CheckCopiedCargoOrigins(std::span<const NativeCargoOriginObservation
 static bool SaveFileCarries(const std::string &path, SaveCapability capability)
 {
 	auto file = FileHandle::Open(path, "rb"); REQUIRE(file.has_value());
-	return HasSaveCapability(ClassifySaveDialect(InspectSaveWireFacts(CreateSaveFileReader(std::move(*file)))), capability);
+	return HasSaveCapability(ClassifySaveFormat(InspectSaveWireFacts(CreateSaveFileReader(std::move(*file)))), capability);
 }
 
 /** @param field Original accepted field. @param copied The file that was just copied (LoadCheck). Require candidate-only identity, issuance and disclosure metadata to match its original owner. */
@@ -227,7 +227,7 @@ void VerifyAsteroidCargoNative(const char *source, const char *output)
 	// Natural packets now have complete origins; ordinary/supply fields retain
 	// their own original purpose, invalid sentinels and credit rules. They must be
 	// valid for the combined writer that carries typed origins (m2o28 Group 15).
-	const auto combined = CargoSourceFormat::FromLineage({SaveLineageStatus::Accepted, SaveDialect::Merged, CURRENT_MERGED_SAVE_VERSION});
+	const auto combined = CargoSourceFormat::FromLineage({SaveLineageStatus::Accepted, SaveFormat::Unified, CURRENT_MERGED_SAVE_VERSION});
 	for (const auto &row : before) {
 		CHECK(IsValidCargoPacketSource(row.source, row.feeder, combined));
 		if (row.source.type == SourceType::Asteroid) { REQUIRE(row.source.GetAsteroidOrigin()); ++natural; }

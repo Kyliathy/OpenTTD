@@ -5351,7 +5351,7 @@ STR_ERROR_GAME_LOAD_FAILED                                      :Game load faile
 STR_GAME_SAVELOAD_ERROR_BROKEN_INTERNAL_ERROR                   :Internal error: {RAW_STRING}
 STR_GAME_SAVELOAD_ERROR_BROKEN_SAVEGAME                         :Broken savegame - {RAW_STRING}
 STR_GAME_SAVELOAD_ERROR_AMBIGUOUS_LINEAGE                       :Save lineage is ambiguous. An explicit origin bound to this file is required.
-STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE                         :Inconsistent save lineage - {RAW_STRING}
+STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE                         :Unrecognised savegame format - {RAW_STRING}
 STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME                        :Savegame is made with newer version
 STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME                    :Savegame was written by a development build whose format this version does not read
 STR_GAME_SAVELOAD_ERROR_FILE_NOT_READABLE                       :File not readable

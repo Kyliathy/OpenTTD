@@ -21,9 +21,9 @@
 struct SurfaceSupplyLoadCandidate {
 	SurfaceSupplyOrderSnapshot snapshot; ///< Candidate's bounded commitment/history transport, not usable stock.
 	TimerGameEconomy::Date saved_day{0}; ///< Family's original stamp, independent of reconstructed native time.
-	std::optional<LegacyBSupplyTransport> legacy_b; ///< Original B scalars; the one candidate cannot also contain an A/canonical wire family.
-	bool legacy_b_rows_present = false; ///< Empty TABLE presence remains distinct from no rows component at all.
-	bool legacy_a_wire = false; ///< Original A440 bytes require their detached adapter; canonical tagged staging retains its existing contract.
+	std::optional<TableSupplyTransport> table_book; ///< Original B scalars; the one candidate cannot also contain an A/canonical wire family.
+	bool table_rows_present = false; ///< Empty TABLE presence remains distinct from no rows component at all.
+	bool fixed_wire = false; ///< Original A440 bytes require their detached adapter; canonical tagged staging retains its existing contract.
 };
 
 /** Independent original MAPS evidence; this is transport provenance, not another map/geometry authority. */
@@ -85,10 +85,10 @@ static SurfaceSupplyRecordContext CaptureNativeSurfaceSupplyRecordContext(std::v
 
 /** Join a complete candidate book to the currently reconstructed original native owners without publishing or repairing anything.
  * @param snapshot Whole admitted transport or current installed native metadata.
- * @param legacy_b True only for an admitted original B candidate; project raw paid purpose read-only before complete custody validation.
+ * @param table_book True only for an admitted original B candidate; project raw paid purpose read-only before complete custody validation.
  * @return Complete actual-reference agreement; a missing/foreign/wrong-layer receiver supplies no pending right.
  */
-static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot &snapshot, bool legacy_b = false)
+static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot &snapshot, bool table_book = false)
 {
 	std::vector<SurfaceSupplyStationView> stations;
 	const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
@@ -96,7 +96,7 @@ static bool ValidateNativeSurfaceSupplySnapshot(const SurfaceSupplyOrderSnapshot
 	const auto lookup = [&](CargoPacketID id) -> std::optional<SurfaceSupplyPacketFacts> {
 		auto facts = NativeSurfaceSupplyPacketFacts(id);
 		if (!facts) return std::nullopt;
-		return legacy_b ? ProjectLegacyBSupplyPacket(*facts, snapshot) : facts;
+		return table_book ? ProjectTableSupplyPacket(*facts, snapshot) : facts;
 	};
 	SurfaceSupplyCustodyCheck check(snapshot, context, lookup, CargoPacket::GetNumItems());
 	/** Bind actual physical owner facts to the same original packet lookup.
@@ -276,7 +276,7 @@ void ChangeSurfaceSupplyOrderCompanyOwnership(CompanyID old_owner, CompanyID new
 }
 
 /** @copydoc StageLoadedSurfaceSupplyOrders */
-bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day, bool legacy_a_wire)
+bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGameEconomy::Date saved_day, bool fixed_wire)
 {
 	// Duplicate, oversized or identity-less transport cannot replace the installed owner or hide a previously staged native family.
 	if (supply_candidate || snapshot.records.size() > MAX_LEGACY_SURFACE_SUPPLY_RECORDS || snapshot.next_id == 0) return false;
@@ -286,50 +286,50 @@ bool StageLoadedSurfaceSupplyOrders(SurfaceSupplyOrderSnapshot snapshot, TimerGa
 	for (const auto &record : snapshot.records) {
 		if (record.Native() != nullptr && ++native_records > MAX_SURFACE_SUPPLY_RECORDS) return false;
 	}
-	supply_candidate = SurfaceSupplyLoadCandidate{std::move(snapshot), saved_day, std::nullopt, false, legacy_a_wire};
+	supply_candidate = SurfaceSupplyLoadCandidate{std::move(snapshot), saved_day, std::nullopt, false, fixed_wire};
 	return true;
 }
 
-/** @copydoc StageLoadedLegacyBSupplyHeader */
-bool StageLoadedLegacyBSupplyHeader(uint32_t schema, uint32_t count, uint32_t next_order)
+/** @copydoc StageLoadedTableSupplyHeader */
+bool StageLoadedTableSupplyHeader(uint32_t schema, uint32_t count, uint32_t next_order)
 {
 	// The original dense frontier bounds both retained history and future IDs;
-	// neither a malformed header nor a second wire dialect can replace it.
+	// neither a malformed header nor a second wire format can replace it.
 	if (schema != 1 || count > MAX_LEGACY_SURFACE_SUPPLY_RECORDS || next_order != count + 1) return false;
-	if (supply_candidate && (!supply_candidate->legacy_b || supply_candidate->legacy_b->schema != 0)) return false;
+	if (supply_candidate && (!supply_candidate->table_book || supply_candidate->table_book->schema != 0)) return false;
 	// A reversed component order is safe only when its independently staged
 	// complete TABLE cardinality agrees with this original header.
-	if (supply_candidate && supply_candidate->legacy_b_rows_present && supply_candidate->legacy_b->orders.size() != count) return false;
-	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->legacy_b.emplace(); }
-	auto &original = *supply_candidate->legacy_b;
+	if (supply_candidate && supply_candidate->table_rows_present && supply_candidate->table_book->orders.size() != count) return false;
+	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->table_book.emplace(); }
+	auto &original = *supply_candidate->table_book;
 	original.schema = schema; original.count = count; original.next_order = next_order;
 	return true;
 }
 
-/** @copydoc StageLoadedLegacyBSupplyRows */
-bool StageLoadedLegacyBSupplyRows(std::vector<LegacyBSupplyOrderWire> rows)
+/** @copydoc StageLoadedTableSupplyRows */
+bool StageLoadedTableSupplyRows(std::vector<TableSupplyOrderWire> rows)
 {
 	if (rows.size() > MAX_LEGACY_SURFACE_SUPPLY_RECORDS) return false;
 	// Even an empty TABLE is one unique source component; mixing it with A or
 	// accepting duplicate rows could replace historical refund/cap evidence.
-	if (supply_candidate && (!supply_candidate->legacy_b || supply_candidate->legacy_b_rows_present)) return false;
-	if (supply_candidate && supply_candidate->legacy_b->schema != 0 && supply_candidate->legacy_b->count != rows.size()) return false; // Independently decoded counts must agree before moving any unpublished rows.
-	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->legacy_b.emplace(); }
-	supply_candidate->legacy_b->orders = std::move(rows);
-	supply_candidate->legacy_b_rows_present = true;
+	if (supply_candidate && (!supply_candidate->table_book || supply_candidate->table_rows_present)) return false;
+	if (supply_candidate && supply_candidate->table_book->schema != 0 && supply_candidate->table_book->count != rows.size()) return false; // Independently decoded counts must agree before moving any unpublished rows.
+	if (!supply_candidate) { supply_candidate.emplace(); supply_candidate->table_book.emplace(); }
+	supply_candidate->table_book->orders = std::move(rows);
+	supply_candidate->table_rows_present = true;
 	return true;
 }
 
-/** @copydoc ObserveLoadedLegacyBSupplyPacketFields */
-bool ObserveLoadedLegacyBSupplyPacketFields()
+/** @copydoc ObserveLoadedTableSupplyPacketFields */
+bool ObserveLoadedTableSupplyPacketFields()
 {
 	if (supply_loaded_legacy_b_packet_fields) return false;
 	supply_loaded_legacy_b_packet_fields = true;
 	return true;
 }
 
-/** @copydoc ObserveLoadedLegacyBSupplyHistory */
-bool ObserveLoadedLegacyBSupplyHistory(bool present)
+/** @copydoc ObserveLoadedTableSupplyHistory */
+bool ObserveLoadedTableSupplyHistory(bool present)
 {
 	if (supply_loaded_legacy_b_history.has_value()) return false;
 	supply_loaded_legacy_b_history = present;
@@ -363,27 +363,27 @@ bool AcceptLoadedSurfaceSupplyOrders(bool family_required)
 		// Genuine older files gain no procurement history, reservation, expense or seed packet; migration installs only the empty private book.
 		supply_orders = {}; ResetSurfaceSupplyOrderLoadStaging(); return true;
 	}
-	// Both legacy dialects require actual DATE and MAPS evidence before any
+	// Both legacy formats require actual DATE and MAPS evidence before any
 	// reconstructed owner or initialized clock may participate in conversion.
 	if (!supply_loaded_day || *supply_loaded_day != TimerGameEconomy::date) return false;
 	if (!supply_loaded_map || supply_loaded_map->width != Map::SizeX() || supply_loaded_map->height != Map::SizeY() || supply_loaded_map->layers > Map::LayerCount()) return false;
-	if (supply_candidate->legacy_b) {
+	if (supply_candidate->table_book) {
 		// B has no serialized family clock stamp. Its exact original header and
 		// TABLE join the independently read DATE, never a guessed live-world day.
-		if (supply_candidate->legacy_b->schema != 1 || !supply_candidate->legacy_b_rows_present) return false;
+		if (supply_candidate->table_book->schema != 1 || !supply_candidate->table_rows_present) return false;
 		// Retained closed history still counts. An absent/changed original
 		// metadata bit cannot erase a complete paid book or invent a fresh one.
-		if (!supply_loaded_legacy_b_history || *supply_loaded_legacy_b_history != (supply_candidate->legacy_b->next_order != 1)) return false;
+		if (!supply_loaded_legacy_b_history || *supply_loaded_legacy_b_history != (supply_candidate->table_book->next_order != 1)) return false;
 		std::vector<SurfaceSupplyStationView> stations;
 		const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
-		auto converted = ConvertLegacyBSupply(*supply_candidate->legacy_b, context);
+		auto converted = ConvertTableSupply(*supply_candidate->table_book, context);
 		if (!converted) return false;
 		supply_candidate->snapshot = std::move(*converted);
 		supply_candidate->saved_day = *supply_loaded_day;
-	} else if (supply_candidate->legacy_a_wire) {
+	} else if (supply_candidate->fixed_wire) {
 		std::vector<SurfaceSupplyStationView> stations;
 		const auto context = CaptureNativeSurfaceSupplyRecordContext(stations);
-		auto converted = ConvertLegacyASupply({supply_candidate->snapshot, supply_candidate->saved_day}, context);
+		auto converted = ConvertFixedSupply({supply_candidate->snapshot, supply_candidate->saved_day}, context);
 		if (!converted) return false;
 		supply_candidate->snapshot = std::move(*converted);
 	}
@@ -392,10 +392,10 @@ bool AcceptLoadedSurfaceSupplyOrders(bool family_required)
 	if (*supply_loaded_day != supply_candidate->saved_day) return false;
 	// Even a fully dispatched/empty legacy book cannot drop CAPA's permanent
 	// non-paying purpose or its exact optional original order/shipped fields.
-	if (supply_candidate->legacy_b && !supply_loaded_legacy_b_packet_fields) return false;
+	if (supply_candidate->table_book && !supply_loaded_legacy_b_packet_fields) return false;
 	// Native MAPS reconstruction may initialize missing planes up to MAX_MAP_LAYERS; this preserves the original Surface and never treats new empty planes as serialized receiving stations.
-	if (!ValidateNativeSurfaceSupplySnapshot(supply_candidate->snapshot, supply_candidate->legacy_b.has_value())) return false;
-	if (supply_candidate->legacy_b) {
+	if (!ValidateNativeSurfaceSupplySnapshot(supply_candidate->snapshot, supply_candidate->table_book.has_value())) return false;
+	if (supply_candidate->table_book) {
 		// Every raw purpose, exact legacy link, actual owner/label and finite
 		// quantity has passed the WHOLE shared join. Only now perform no-fail
 		// scalar normalization; ordinary same-label stock remains unchanged and
