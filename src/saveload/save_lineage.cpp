@@ -146,6 +146,9 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	// Any malformed observation refuses before an origin hint or numeric range
 	// can reinterpret it. Whole-envelope and common transport checks are mandatory.
 	if (!facts.framing_complete || !facts.common_transport_valid || facts.supply_columns == SaveSupplyColumns::Malformed || facts.payload_dialect == SavePayloadDialect::Malformed) return result(SaveLineageStatus::Corrupt);
+	// The descriptor-level CAPA observations (m2o28 Group 11) are malformed evidence
+	// too: a half supply pair or a narrowed asteroid key refuses whatever the version says.
+	if (facts.cargo_supply_encoding == SupplyColumnEncoding::Malformed || facts.asteroid_origin_columns == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
 	// Every observed selected family participates, even one whose feature is
 	// inactive: a malformed empty family cannot silently become an absent owner.
 	for (const auto &family : facts.families) {

@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file save_envelope_inspection.cpp Independent framing, malformed input, codec and genuine raw-reader replay cases.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; a contradictory marker is a recorded Malformed family.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -84,9 +85,13 @@ TEST_CASE("Save envelope rejects duplicate owners malformed headers and work ove
 		"5441424c03071b0178000000000000", // Missing child struct-header terminator.
 		"535052530202800000000000", // Sparse index escapes its own row.
 		"544553540000000000000000ff", // Bytes after the decoded chunk terminator.
-		"4d4c4c4e000000084d4c4e310001000100000000", // Merged marker contradicts legacy envelope.
 	};
 	for (const auto hex : malformed) CHECK_THROWS_AS(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EnvelopeStream(EnvelopeHex(hex)))), SaveFramingError);
+	// A merged marker inside a legacy envelope frames correctly, so it is recorded
+	// as a Malformed family, which the classifier refuses with no legacy fallback.
+	const auto contradiction = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EnvelopeStream(EnvelopeHex("4d4c4c4e000000084d4c4e310001000100000000"))));
+	CHECK(contradiction.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Malformed);
+	CHECK(ClassifySaveDialect(contradiction).status == SaveLineageStatus::Corrupt);
 	const auto input = EnvelopeStream(EnvelopeHex("544553540000000310203000000000"));
 	SaveInspectionLimits limits;
 	limits.raw_bytes = input.size() - 1; CHECK_THROWS_AS(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(input), limits), SaveFramingError);

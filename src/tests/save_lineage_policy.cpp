@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the closed Space fixes capability matrix.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; descriptor-level CAPA observations refuse when malformed.
  * SAVE_LINEAGE_STANDALONE builds this pure Catch leaf without native game pools.
  * The ordinary native test target registers this leaf through src/tests/CMakeLists.txt.
  */
@@ -296,6 +297,13 @@ TEST_CASE("Save lineage rejects malformed A transport and future capability gues
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Destination(440); facts.original_version = 442;
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	// Malformed CAPA descriptor observations win over every version or hint rule.
+	facts = Destination(440); facts.cargo_supply_encoding = SupplyColumnEncoding::Malformed;
+	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	facts = Destination(440); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
+	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Common(425)), SaveCapability::TBMFaceTransfer));
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Destination(440)), static_cast<SaveCapability>(255)));
 }

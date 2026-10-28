@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file save_envelope_adversarial.cpp Empty paid-history headers, nested schemas and changing raw-byte identity refusals.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; malformed CAPA pairs are recorded facts that the classifier refuses.
  */
 #include "../stdafx.h"
 #include "save_envelope_fixture.h"
@@ -53,13 +54,19 @@ TEST_CASE("Save envelope empty CAPA requires whole exact supply signatures", "[s
 	const auto absent = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
 	CHECK(absent.supply_columns == SaveSupplyColumns::Absent); CHECK_FALSE(absent.common_transport_valid);
 	fields.push_back({"company_supply_order", 6});
-	CHECK_THROWS_AS(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields))), SaveFramingError);
+	// A half pair is recorded as malformed in both views and refuses before any
+	// other rule; it never reads as the historical absence of supply columns.
+	const auto half = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
+	CHECK(half.cargo_supply_encoding == SupplyColumnEncoding::Malformed); CHECK(half.supply_columns == SaveSupplyColumns::Malformed);
+	CHECK(ClassifySaveDialect(half).status == SaveLineageStatus::Corrupt);
 	fields.push_back({"company_supply_shipped", 1});
 	const auto complete = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
-	CHECK(complete.supply_columns == SaveSupplyColumns::Complete);
+	CHECK(complete.supply_columns == SaveSupplyColumns::Complete); CHECK(complete.cargo_supply_encoding == SupplyColumnEncoding::LegacyU32Bool);
 	CHECK(ClassifySaveDialect(complete).status == SaveLineageStatus::Corrupt); // Typed CAPA alone cannot invent the other common owners or a required B family.
 	fields.back().second = 2;
-	CHECK_THROWS_AS(InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields))), SaveFramingError);
+	// A U32 link with a U8 flag belongs to no writer: recorded malformed, never narrowed or widened.
+	const auto mixed = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(EmptyPacketTable(fields)));
+	CHECK(mixed.cargo_supply_encoding == SupplyColumnEncoding::Malformed); CHECK(mixed.supply_columns == SaveSupplyColumns::Malformed);
 }
 
 /** Nested schemas and sparse tables retain original header/index ownership, while depth/count budgets are checked before descending. */

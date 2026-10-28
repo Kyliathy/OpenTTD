@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the incoming Space fixes eras as capability rules.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA column encodings observed from the file's own descriptor.
  * This boundary neither parses bytes nor initializes a world. The actual reader
  * must supply bounded same-file facts; filenames and live owners are not inputs.
  */
@@ -37,8 +38,18 @@ enum class SaveEvidenceKind : uint8_t { Riff, Table };
 /** Variable-layout evidence is usable only after an exact detached owner decoder. */
 enum class SavePayloadDialect : uint8_t { Common, DestinationA, DonorB, Malformed };
 
-/** The two legacy CAPA extension columns are one complete, type-checked contract. */
+/** The two legacy CAPA extension columns are one complete, type-checked contract.
+ * Kept for the existing classifier rules; `SupplyColumnEncoding` is the full observation.
+ */
 enum class SaveSupplyColumns : uint8_t { Absent, Complete, Malformed };
+
+/** The CAPA supply-column pair as the file's own table descriptor declares it, never inferred from its version. */
+enum class SupplyColumnEncoding : uint8_t {
+	Absent, ///< Neither `company_supply_order` nor `company_supply_shipped`: shared, A, Space fixes or pre-426 B packets.
+	LegacyU32Bool, ///< U32 order with Bool (I8) shipped: the historical donor B writer, 426-434.
+	CanonicalU64U8, ///< U64 order with U8 shipped: the merged writer's canonical receipt link.
+	Malformed, ///< Half a pair, or a pair with any other widths; the classifier refuses it.
+};
 
 /** Lineage-relevant families; the normal native loader still validates other owners. */
 enum class SaveLineageFamily : uint8_t {
@@ -81,6 +92,8 @@ struct SaveWireFacts {
 	uint32_t feature_flags = 0; ///< Actual MLMD flags; zero for genuine older metadata absence.
 	uint16_t space_content_version = 0; ///< Actual SDEF0/2/3, validated against its source-era common transport.
 	SaveSupplyColumns supply_columns = SaveSupplyColumns::Absent; ///< Actual legacy B extension names and types, including empty CAPA.
+	SupplyColumnEncoding cargo_supply_encoding = SupplyColumnEncoding::Absent; ///< Actual CAPA supply pair encoding, recorded even when CAPA has zero rows.
+	SaveEvidenceState asteroid_origin_columns = SaveEvidenceState::Absent; ///< Valid only for exactly `asteroid_body` and `asteroid_mineral`, both U32; any other shape is Malformed.
 	SavePayloadDialect payload_dialect = SavePayloadDialect::Common; ///< Optional positive evidence from a bounded versioned owner-layout decoder.
 	std::array<SaveChunkEvidence, static_cast<uint8_t>(SaveLineageFamily::Count)> families{}; ///< Fixed-size inspector results, independent of native pools.
 	uint32_t marker_magic = 0; ///< Original MLLN payload magic, never supplied by the running build's identity.

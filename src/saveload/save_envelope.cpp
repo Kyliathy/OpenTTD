@@ -2,6 +2,7 @@
 /** @file save_envelope.cpp Bounded original-byte inspection without native chunk dispatch.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA columns and the MLLN tuple observed without a version guess.
  */
 #include "../stdafx.h"
 #include "save_envelope.h"
@@ -152,6 +153,59 @@ Columns ReadColumns(InspectionBytes &bytes, uint64_t end, const SaveInspectionLi
 	return columns;
 }
 
+/** Native table field codes used by the observed CAPA column contracts (the file's own descriptor bytes). */
+constexpr uint8_t FIELD_I8 = 1; ///< Signed byte; the historical B writer stored its Bool shipped flag this way.
+constexpr uint8_t FIELD_U8 = 2; ///< Unsigned byte; the merged shipped flag.
+constexpr uint8_t FIELD_U32 = 6; ///< Unsigned 32-bit; the legacy B receipt link and both typed asteroid keys.
+constexpr uint8_t FIELD_U64 = 8; ///< Unsigned 64-bit; the merged canonical receipt link.
+
+/** Find one field by its exact original name.
+ * @param columns Actual bounded schema; names are already unique.
+ * @param name Exact source field name.
+ * @return The field, or nullptr when the file does not declare it.
+ */
+const InspectionColumn *FindColumn(const Columns &columns, std::string_view name)
+{
+	/** @param column Original field. @return Whether it has the requested name. */
+	const auto found = std::ranges::find_if(columns, [name](const auto &column) { return column.name == name; });
+	return found == columns.end() ? nullptr : &*found;
+}
+
+/** Observe the CAPA supply pair from the descriptor alone, so an empty CAPA and chunk order both give the same answer.
+ * @param columns Original bounded CAPA schema.
+ * @return The declared encoding; a half pair or mixed widths is Malformed.
+ */
+SupplyColumnEncoding ObserveSupplyColumns(const Columns &columns)
+{
+	const auto order = FindColumn(columns, "company_supply_order");
+	const auto shipped = FindColumn(columns, "company_supply_shipped");
+	if (order == nullptr && shipped == nullptr) return SupplyColumnEncoding::Absent;
+	// The receipt link and the shipped flag are one paid-stock contract. A half
+	// pair would let a packet claim a receipt without shipment state, or the reverse.
+	if (order == nullptr || shipped == nullptr) return SupplyColumnEncoding::Malformed;
+	// Each writer used one exact width pair. A mixed pair belongs to no writer, so
+	// it can neither narrow a merged U64 receipt nor widen a legacy B one.
+	if (order->type == FIELD_U32 && shipped->type == FIELD_I8) return SupplyColumnEncoding::LegacyU32Bool;
+	if (order->type == FIELD_U64 && shipped->type == FIELD_U8) return SupplyColumnEncoding::CanonicalU64U8;
+	return SupplyColumnEncoding::Malformed;
+}
+
+/** Observe the typed asteroid origin key from the descriptor alone.
+ * @param columns Original bounded CAPA schema.
+ * @return Absent, Valid for exactly two U32 keys, or Malformed for any other shape.
+ */
+SaveEvidenceState ObserveAsteroidOriginColumns(const Columns &columns)
+{
+	const auto body = FindColumn(columns, "asteroid_body");
+	const auto mineral = FindColumn(columns, "asteroid_mineral");
+	if (body == nullptr && mineral == nullptr) return SaveEvidenceState::Absent;
+	// A typed origin is one (body, mineral) key. Both halves must be present at
+	// full U32 width: a lone or narrowed half would truncate a body ID or lose
+	// the immutable mineral label that the packet's custody check relies on.
+	if (body != nullptr && mineral != nullptr && body->type == FIELD_U32 && mineral->type == FIELD_U32) return SaveEvidenceState::Valid;
+	return SaveEvidenceState::Malformed;
+}
+
 /** @param columns Actual schema. @param name Exact source field name. @param type Exact native descriptor. @return Matching mandatory field. */
 bool HasColumn(const Columns &columns, std::string_view name, uint8_t type)
 {
@@ -229,6 +283,7 @@ SaveLineageFamily Family(std::string_view id)
 }
 
 /** Enforce historical selected flat-table descriptors before any rows, including empty tables.
+ * CAPA facts come from the descriptor, never from `original_version == 441`, so they do not depend on chunk order.
  * @param id Original selected family name.
  * @param columns Actual original field names/types.
  * @param facts Same-file version and collected CAPA extension evidence.
@@ -240,22 +295,21 @@ void CheckSelectedColumns(std::string_view id, const Columns &columns, SaveWireF
 		if (columns.size() != 10) throw SaveFramingError("Changed metadata field count");
 	} else if (id == "CAPA") {
 		if (facts.original_version >= 424) RequireColumns(columns, {{"source", 4}, {"source_xy", 6}, {"loaded_at_xy", 4}, {"count", 4}, {"periods_in_transit", 4}, {"feeder_share", 7}, {"source_type", 2}, {"source_id", 4}, {"travelled.x", 3}, {"travelled.y", 3}});
-		const bool merged = facts.original_version == MERGED_SAVE_LINEAGE_VERSION;
-		bool order = false, shipped = false;
-		// Presence with the wrong type is corruption, not historical absence;
-		// both B extension fields must be complete even with zero packets.
-		for (const auto &column : columns) {
-			if (column.name == "company_supply_order") { if (column.type != (merged ? 8 : 6)) throw SaveFramingError("Changed supply order column"); order = true; }
-			if (column.name == "company_supply_shipped") { if (column.type != (merged ? 2 : 1)) throw SaveFramingError("Changed supply shipment column"); shipped = true; }
+		// Presence with the wrong type is corruption, not historical absence. Both
+		// observations are recorded even with zero packets; the classifier refuses Malformed.
+		facts.cargo_supply_encoding = ObserveSupplyColumns(columns);
+		facts.asteroid_origin_columns = ObserveAsteroidOriginColumns(columns);
+		// Legacy view for the existing classifier rules: only B's U32/Bool pair is
+		// "Complete". The merged U64/U8 pair never counts as B evidence or narrows its IDs.
+		switch (facts.cargo_supply_encoding) {
+			case SupplyColumnEncoding::LegacyU32Bool: facts.supply_columns = SaveSupplyColumns::Complete; break;
+			case SupplyColumnEncoding::Malformed: facts.supply_columns = SaveSupplyColumns::Malformed; break;
+			case SupplyColumnEncoding::Absent: case SupplyColumnEncoding::CanonicalU64U8: facts.supply_columns = SaveSupplyColumns::Absent; break;
 		}
-		if (order != shipped) throw SaveFramingError("Partial supply packet columns");
-		// Merged fields are a distinct U64/U8contract. Legacy B's U32/Bool
-		// pair never supplies the merged descriptor proof or narrows its IDs.
-		facts.supply_columns = !merged && order ? SaveSupplyColumns::Complete : SaveSupplyColumns::Absent;
-		if (merged) {
-			RequireColumns(columns, {{"count", 4}, {"source_type", 2}, {"source_id", 4}, {"feeder_share", 7}});
-			facts.merged_cargo_valid = order && shipped;
-		}
+		// The canonical pair is the merged descriptor proof, and it travels with the
+		// merged packet columns; a file that declares it must carry those too.
+		if (facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8) RequireColumns(columns, {{"count", 4}, {"source_type", 2}, {"source_id", 4}, {"feeder_share", 7}});
+		facts.merged_cargo_valid = facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8;
 	} else if (id == "SSOR") {
 		RequireColumns(columns, {{"id", 6}, {"owner", 2}, {"station", 4}, {"label", 6}, {"economy_day", 5}, {"calendar_date", 5}, {"quantity", 4}, {"unit_price", 7}, {"refunded", 4}, {"dispatched", 4}, {"closed", 2}});
 	} else if (id == "GPGD") {
@@ -334,10 +388,19 @@ void ReadRiff(std::string_view id, InspectionBytes &bytes, uint64_t end, SaveWir
 				if (evidence->records > 16384 || length != 14 + 53 * evidence->records) throw SaveFramingError("Invalid original order count/length"); // A's little-endian exact count cannot hide appended or missing paid receipts.
 				break;
 			}
-			case F::Marker:
-				exact(8); facts.marker_magic = static_cast<uint32_t>(bytes.Integer(4, end)); facts.marker_schema = static_cast<uint16_t>(bytes.Integer(2, end)); facts.marker_writer_version = static_cast<uint16_t>(bytes.Integer(2, end));
-				if (facts.original_version != MERGED_SAVE_LINEAGE_VERSION || facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || facts.marker_schema != MERGED_SAVE_LINEAGE_SCHEMA || facts.marker_writer_version != facts.original_version) throw SaveFramingError("Contradictory merged save marker"); // Explicit writer identity cannot downgrade to legacy decoding.
+			case F::Marker: {
+				exact(8); // The tuple is recorded only after exact eight-byte framing.
+				facts.marker_magic = static_cast<uint32_t>(bytes.Integer(4, end)); facts.marker_schema = static_cast<uint16_t>(bytes.Integer(2, end)); facts.marker_writer_version = static_cast<uint16_t>(bytes.Integer(2, end));
+				const bool first_allocation = facts.marker_writer_version == MERGED_SAVE_LINEAGE_VERSION && facts.marker_schema == MERGED_SAVE_LINEAGE_SCHEMA;
+				const bool current_allocation = facts.marker_writer_version == CURRENT_MERGED_SAVE_VERSION && facts.marker_schema == CURRENT_MERGED_SAVE_LINEAGE_SCHEMA;
+				// A marker names exactly one merged allocation (441/schema 1 or 446/schema 2),
+				// and its writer is the outer envelope's own version. Any other tuple is a
+				// contradiction: the family is Malformed, which the classifier refuses before
+				// any legacy rule could reinterpret the file. The envelope version is read
+				// before any chunk, so MLLN before or after CAPA and SSOR gives the same answer.
+				if (facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || !(first_allocation || current_allocation) || facts.marker_writer_version != facts.original_version) evidence->state = SaveEvidenceState::Malformed;
 				break;
+			}
 			default: throw SaveFramingError("Lineage table encoded as RIFF");
 		}
 	}

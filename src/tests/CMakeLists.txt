@@ -517,6 +517,8 @@ add_test_files(
     save_envelope_inspection.cpp
     save_envelope_originals.cpp
     save_envelope_adversarial.cpp
+    # Descriptor-level CAPA columns and MLLN tuples for every merged-era writer: archi-savegame.md; m2o28-1 Group 11.
+    save_envelope_cargo_columns.cpp
     save_lineage_preflight.cpp
     # Original native Space branch/receipt qualification: archi-savegame.md; m2o23-3 Group42.
     space_lineage_native.cpp
