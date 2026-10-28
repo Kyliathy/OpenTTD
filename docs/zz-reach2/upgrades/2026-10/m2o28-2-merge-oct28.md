@@ -1,5 +1,7 @@
 # October 28 merge, part 2: runtime integration and qualification
 
+> **Plan change, 2026-10-28 (from Part 1 Group 17):** saves written by the incoming dev build (S 441-445) are not loaded; they refuse with their own message. Wherever this part asks to load, admit or classify "S441-445" or "Group 3's fresh donor 445 saves", read that as: assert the clean refusal, and use the same files only as examples of the typed-origin CAPA shape. Lineage vocabulary is renamed to format names in Part 1 Group 22B, so names such as `SpaceFixes`, `DestinationA` and `DonorB` below may appear under their new names.
+
 ## Global Mandatory Reading
 
 > **Execution protocol**

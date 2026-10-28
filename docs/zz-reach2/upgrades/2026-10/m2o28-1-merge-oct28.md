@@ -768,6 +768,52 @@ return SlHasSaveCapability(SaveCapability::SpaceSurveyDeparture) ? AsteroidField
 
 Execution evidence: see **Group 17** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). The writer now emits its own ASTR layout and proves it lossless. That fixed a real interim defect: a merged-441 resave of a Space world could not be reloaded. GCC and Clang both pass 376/376.
 
+### Plan change, 2026-10-28: one save system, no dev-build reader
+
+User decisions taken during Group 17:
+
+- **Scope.** The game is one multi-layer map with one coherent save system for Space and underground. No branch is visible in the game. New saves use the single current writer (446 from Group 22).
+- **Dev-build saves.** Saves written by the incoming dev build (S 441-445) need not load. They refuse cleanly with their own message. Group 3's donor 445 saves stay, as refusal fixtures and as real examples of the typed-origin CAPA shape that 446 also writes.
+- **Rename.** Lineage vocabulary that names branches (`DestinationA`, `DonorB`, `Merged`, and the retired `SpaceFixes`) becomes format names after Group 22, including any user-visible message (Group 22B).
+- **Still loaded.** Shared history, historical A425-440, B425-434 and merged 441 keep loading, as D already delivered.
+
+Consequences for the remaining groups:
+
+- The five appended capabilities exist only in merged 446.
+- Group 17's Lifecycle-only era is never read or written.
+- Groups 18-21 gate on capabilities that 446 alone grants.
+- Every writer-era mismatch found on the way (ASTR in Group 17, SPOR in Group 18) is fixed the same way: the writer emits its own layout, proves an older layout lossless, and otherwise refuses.
+
+### Area Mandatory Reading - Retire the dev-build reader
+
+_Applies to Group 17B._
+
+**Entry gate:** Group 17 is committed, and the Plan change above is recorded. Forbidden: deleting Group 3's evidence, or weakening any refusal of A, B or merged 441 originals.
+
+| File name | Line Ranges | Description |
+| --- | --- | --- |
+| [src/saveload/save_lineage.h](../../../../src/saveload/save_lineage.h) | Live definitions (`SaveDialect`, `CURRENT_MERGED_*`, `SaveCapability`) | Remove `SaveDialect::SpaceFixes`; the five capabilities stay as merged-446 features. |
+| [src/saveload/save_lineage.cpp](../../../../src/saveload/save_lineage.cpp) | `CapabilityRule`, `WriterProducedVersion`, `CompatibleSpaceFixes`, `ClassifySaveDialect` | Drop the `first_space` column and the Space fixes path. A markerless 441-445 becomes Unsupported. |
+| [src/saveload/saveload.cpp](../../../../src/saveload/saveload.cpp) | `DoLoad` preflight (the Group 13 pending refusal) | Replace the pending refusal with the dev-build refusal message. |
+| [src/tests/save_lineage_policy.cpp](../../../../src/tests/save_lineage_policy.cpp), [src/tests/save_lineage_preflight.cpp](../../../../src/tests/save_lineage_preflight.cpp), [src/tests/asteroid_cargo_wire.cpp](../../../../src/tests/asteroid_cargo_wire.cpp), [src/tests/save_envelope_cargo_columns.cpp](../../../../src/tests/save_envelope_cargo_columns.cpp) | Cases naming `SpaceFixes` | Convert them to merged 446 or to refusal. |
+
+### Group 17B - Retire the dev-build Space fixes reader
+
+{{MEDIUM}}
+
+- [ ] **17B.1** Remove `SaveDialect::SpaceFixes`, `CompatibleSpaceFixes`, the `first_space` rule column and the 441-445 range in `WriterProducedVersion`. The five capabilities are granted only to merged 446. Any markerless 441-445 classifies as Unsupported before any legacy rule; a hint never changes that.
+
+- [ ] **17B.2** In `DoLoad`, refuse Unsupported files at or below 446 with a new message saying a development build wrote them, keep "too new" for later versions, and remove the Group 13 pending refusal (tick its burn-down row as retired).
+
+- [ ] **17B.3** Convert the tests:
+  - the capability matrix becomes D441 against 446;
+  - the S441-445 policy cases become refusals;
+  - the real S445 fixtures refuse through every native entry with the world unchanged;
+  - their CAPA rows decode with the merged-446 format, since they have the same column shape;
+  - the optional donor scan expects refusal.
+
+- [ ] **17B.4** Build GCC and Clang, and run the lineage, envelope and save/load subsets.
+
 ### Group 18 - Adapt SPOR, VEHS and departure references as one mission contract
 
 Group 17 supplies sparse field and knowledge semantics; Group 15 supplies packet records.
@@ -777,10 +823,12 @@ Group 17 supplies sparse field and knowledge semantics; Group 15 supplies packet
 - [ ] **18.1** Keep the `SpaceMiningContinuationWire` scalar encoding, and replace the pending gates in the VEHS native and copied descriptors and in `ValidateSpaceMiningContinuationSchema` with `SaveCapability::SpaceMiningContinuation`. Require the complete fourteen-key group when supported and none in older sources; reset the per-row scratch.
 
 - [ ] **18.2** Adapt SPOR policy reading, writing and validation (`space_order_sl.cpp` lines 48, 60-61 and 177) to capabilities, keeping one order queue. A legacy policy defaults to `LegacyReturn`; the original Visit order, cursor and generation-qualified references survive.
+  - _Plan change (Group 17):_ the writer emits its own row layout, 14 bytes without the policy byte at 441 and 15 bytes at 446. A non-default policy refuses at 441 instead of being dropped. Evidence that this is needed: a fresh resave of `space-factory-440.sav` reloads past ASTR but fails with "Invalid Space order count".
 
 - [ ] **18.3** Gate unordered local miner departure with `SpaceLegacyDeparture`, and ownerless released survey Return/Waiting with `SpaceSurveyDeparture`, separately. A source without them must refuse non-empty new state instead of adding a Mine queue, target or service entitlement.
 
 - [ ] **18.4** Add wire cases: unknown phase or policy, contradictory presence flags, stale generations or leases, wrong role, missing or duplicate keys, a source without the newer fields, and every boundary era. Convert the pending cases in `src/tests/space_mining_wire.cpp` and tick the SPOR/VEHS burn-down rows.
+  - _Plan change:_ "every boundary era" now means merged 441 (none of the fields) against 446 (all of them); no dev-build era is read. Close with the resave and reload of `space-factory-440.sav` and `space-heavy-440.sav` through `space_ordinary_checks.py`.
 
 ### Area Mandatory Reading - Copied candidate facts and admission
 
@@ -889,6 +937,20 @@ Groups 15-21 are done and the burn-down holds only the `saveload.h` definitions.
 
 - [ ] **22.6** Commit, and update the notes with the Part 1 handoff state. Do not push.
 
+### Group 22B - Rename the lineage vocabulary to format names
+
+The user agreed to do this after Group 22. The goal: no branch concept in the code or in front of players. Historical file layouts are named by what they contain, not by who wrote them.
+
+{{MEDIUM}}
+
+- [ ] **22B.1** Propose the names in the notes before renaming, for example a name per historical format family for `Shared`, `DestinationA`, `DonorB` and `Merged`, and per capability where needed. Keep each identifier's meaning exact.
+
+- [ ] **22B.2** Rename across `save_lineage.*`, `saveload.cpp`, the codecs, `surface_supply_order_sl.cpp`, `multilayer_sl.cpp` and the tests, mechanically and in one commit. Include user-visible refusal details (for example "Required original branch transport is missing or inconsistent").
+
+- [ ] **22B.3** Update `docs/zz-reach2/architecture/savegame/archi-savegame.md` to describe one save system: one writer, one schema and one loader, with a bounded table of historical formats it can import.
+
+- [ ] **22B.4** Build GCC and Clang and run the lineage and save/load subsets.
+
 ## Part 1 handoff to Part 2
 
 Before Part 2 starts, verify these outputs on `merge-2sp-oct28`. Missing outputs stop the dependent Part 2 task at its Area entry gate.
@@ -943,7 +1005,7 @@ Part 1 is complete when Groups 1-22 have their outputs and the handoff above is 
 
 - All Part 1 tasks are resolved in order. Blocked tasks stay open with their exact blocker.
 - The merge commit exists locally with D's line as first parent and S `66713bdf` as second, no conflict markers, no duplicate settings, strings, commands or CMake registrations, and one hotkey dispatcher and one layer entry.
-- The classifier, capabilities and codecs keep the shared, historical, D441 and S441-445 meanings, and 446/schema 2 is unambiguous. No pending `SaveLoadVersion` enumerator remains.
+- The classifier, capabilities and codecs keep the shared, historical A/B and D441 meanings, and 446/schema 2 is unambiguous. Dev-build S441-445 files refuse with their own message (plan change after Group 17). No pending `SaveLoadVersion` enumerator remains, and no branch name remains after Group 22B.
 - Native and copied cargo, field and mission transport keep full asteroid identity, the permanent supply purpose, receipt and departure, quantities and one-time settlement.
 - Full GCC and Clang CTest and the ten focused executables pass, with any S-reference exceptions justified in the notes.
 - Nothing was pushed; `mlm-mlv-2sp`, original saves, configs and retained archives are unchanged.
