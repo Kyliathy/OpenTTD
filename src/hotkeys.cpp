@@ -5,7 +5,9 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file hotkeys.cpp Implementation of hotkey related functions. */
+/** @file hotkeys.cpp Implementation of hotkey related functions.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ */
 
 #include "stdafx.h"
 #include "core/backup_type.hpp"
@@ -272,11 +274,24 @@ void HotkeyList::Load(const IniFile &ini)
 {
 	const IniGroup *group = ini.GetGroup(this->ini_group);
 	if (group == nullptr) return;
+	// Missing keys retain native defaults. Present keys replace only their own
+	// action, including explicit empty bindings, before the narrow legacy fix.
 	for (Hotkey &hotkey : this->items) {
 		const IniItem *item = group->GetItem(hotkey.name);
 		if (item != nullptr) {
 			hotkey.keycodes.clear();
 			if (item->value.has_value()) ParseHotkeys(hotkey, *item->value);
+			// Migrate only the three obsolete single-key Debug defaults. Explicit
+			// empty, alternate or multiple bindings remain the player's choices;
+			// the in-memory result is persisted by the ordinary config writer.
+			if (this->ini_group == "global") {
+				const char digit = hotkey.name == "crash_game" ? '0' : hotkey.name == "money" ? '1' : hotkey.name == "update_coordinates" ? '2' : 0;
+				const uint16_t legacy = WKC_ALT | digit;
+				// A matching name alone cannot authorize replacing a custom binding.
+				if (digit != 0 && hotkey.keycodes.size() == 1 && hotkey.keycodes.contains(legacy)) {
+					hotkey.keycodes = {static_cast<uint16_t>(legacy | WKC_CTRL)};
+				}
+			}
 		}
 	}
 }

@@ -8,6 +8,7 @@
 /** @file station_sl.cpp Native station reconstruction and detached saved authority for launch targets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8B; independent service preview reads native STNN authority without constructing a station or borrowing live ownership.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs6-mines-and-resource-chains.md Group13CCC; candidate-owned original coordinates/facilities qualify pending Surface supply references.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 4; one copied owner-row record serves supply and asteroid-origin checks.
  */
 
 #include "../stdafx.h"
@@ -913,11 +914,15 @@ struct STNNChunkHandler : ChunkHandler {
 			// The whole copied station family may reference at most the actual packet pool bound; metadata never creates stock for missing native owners.
 			if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - cargo.size()) SlErrorCorrupt("Excessive native station-family cargo preview references");
 			cargo.insert(cargo.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+			auto &owners = _load_check_data.native_cargo_owner_rows;
+			// Ordinary stations and carriers together can own at most one row per
+			// native packet; bound this shared copied evidence before extending it.
+			if (row.cargo_owners.size() > CargoPacketID::End().base() - owners.size()) SlErrorCorrupt("Excessive native cargo meaning references");
 			// Only this actual normal station's original index supplies queue
 			// identity. Waypoints and the active world's matching IDs lend nothing.
 			for (auto &owner : row.cargo_owners) {
 				owner.station = id;
-				_load_check_data.native_cargo_owner_rows.push_back(owner);
+				owners.push_back(owner);
 			}
 		}
 		_load_check_data.native_station_cargo_present = true;

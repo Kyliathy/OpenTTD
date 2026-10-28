@@ -522,6 +522,16 @@ enum class SaveLoadVersion : uint16_t {
 	SurfaceSupplyOrders, ///< Saveload version: 440\n Sole bounded paid-order commitment/history family with same-file economy-day/company/Surface-station admission; r2mlvs6-mines-and-resource-chains.md Group13CCC. Native packets remain the physical stock owner.
 	MergedLineage = MERGED_SAVE_LINEAGE_VERSION, ///< Saveload version: 441. Explicit MLLN and complete tagged canonical supply/machinery contract; archi-savegame.md and m2o23-3 Group44.
 	MaxVersion, ///< Highest possible saveload version.
+	/* Merge interim, m2o28-1-merge-oct28.md Group 4: the incoming r2sff1 branch numbered these five eras 441-445, which
+	 * collides with MergedLineage = 441. Until m2o28 Groups 9-22 replace every gate below with HasSaveCapability(), each
+	 * name equals MaxVersion, so it compares as never present: its fields are neither read nor written, markerless
+	 * 441 files keep refusing through the MLLN rule and 442-445 exceed the maximum. A build in this state must not
+	 * save real games with incoming Space state. Group 22 deletes these names. */
+	AsteroidCargoOrigins = MaxVersion, ///< Pending, incoming 441: CAPA packets retain full 32-bit asteroid IDs and immutable mineral labels; r2sff1-space-fixes-features-1.md Group21.
+	AsteroidFieldLifecycle = MaxVersion, ///< Pending, incoming 442: ASTR/SPKN sparse issuance, lifecycle revision, size credits and renewal RNG/timer state; r2sff1 Group22.
+	SpaceMiningContinuation = MaxVersion, ///< Pending, incoming 443: SPOR policy and VEHS contained mining intent; r2sff1 Group23.
+	SpaceLegacyDeparture = MaxVersion, ///< Pending, incoming 444: local departure of an actual unordered legacy miner; r2sff1 Group25.
+	SpaceSurveyDeparture = MaxVersion, ///< Pending, incoming 445: ownerless survey Return/Waiting after release; r2sff1 Group26.
 };
 
 /** Types of save games. */

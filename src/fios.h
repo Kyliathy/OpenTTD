@@ -44,6 +44,7 @@
 #include "surface_supply_order_wire.h"
 #include "space_transition.h"
 #include "asteroid.h"
+#include "space_mining_state.h"
 
 
 /** Special values for save-load window for the data parameter of #InvalidateWindowData. */
@@ -83,6 +84,7 @@ struct NativeSpaceVehiclePreview {
 	uint32_t extracted_units = 0; ///< Actual hull's lifetime finite extraction receipt.
 	uint16_t mining_work_ticks = 0; ///< Native partial extraction, separate from service and typed survey work.
 	uint8_t mining_phase = 0; ///< Serialized SpaceMissionPhase; role/version validation precedes its use.
+	SpaceMiningContinuationState mining_continuation; ///< Same-file contained intent; copied transport grants no native lease or movement.
 	bool cargo_complete = false; ///< Decoder-only proof that this row's actual common cargo fields were read; an omitted variant cannot impersonate an empty carrier.
 	CargoType freight_cargo = INVALID_CARGO; ///< Original common cargo_type; interpreted only through this file's CDIM meanings.
 	uint16_t freight_capacity = 0; ///< Original common cargo_cap; a reported refit cannot override the physical role/mass bound.
@@ -94,6 +96,10 @@ struct NativeCargoPacketPreview {
 	uint16_t quantity = 0; ///< Original positive whole units; native containers retain the sole gameplay ownership.
 	Source source{Source::Invalid, SourceType::Industry}; ///< Candidate file's original provenance/purpose; never inherited from the open world.
 	Money feeder_share{0}; ///< Original virtual transfer credit; bought company supplies must retain zero.
+	// Positional initializers in the asteroid-origin tests rely on the origin fields following feeder_share (m2o28 Group 4).
+	TileIndex source_tile = INVALID_TILE; ///< Original same-file production tile; candidate checks never call the open world's tile lookup.
+	StationID first_station = StationID::Invalid(); ///< Original CAPA source station, distinct from natural resource provenance.
+	bool legacy_asteroid_origin = false; ///< Copied migration receipt set only after same-file legacy qualification; preserves genuine pre-CDIM fallback without lending it to modern sources.
 	uint64_t company_supply_order = 0; ///< Original optional order link, widened exactly; allocation alone supplies no refund authority.
 	uint8_t company_supply_shipped = 0; ///< Literal original departure byte, checked before any boolean interpretation.
 };
@@ -145,7 +151,7 @@ struct LoadCheckData {
 	bool native_vehicle_cargo_present = false, native_station_cargo_present = false; ///< Complete same-file native family reads, including legitimate empty tables; never inherited from a previous preview.
 	std::vector<uint32_t> native_ordinary_vehicle_cargo_refs; ///< Original ordinary carrier references encoded as native ID+1; copied metadata creates no hull, cargo or reservation.
 	std::vector<uint32_t> native_station_cargo_refs; ///< Original normal-station stock references encoded as native ID+1, across all cargo and next-hop buckets.
-	std::vector<NativeCargoOwnerPreview> native_cargo_owner_rows; ///< Complete ordinary station/vehicle references with original slot/queue evidence, separate from aggregate exclusivity views.
+	std::vector<NativeCargoOwnerPreview> native_cargo_owner_rows; ///< Complete ordinary station/vehicle references with original slot/queue evidence, separate from aggregate exclusivity views; also the same-file cargo meanings for copied asteroid-origin checks (m2o28 Group 4 folded the incoming reference-only rows in here).
 	bool space_transitions_present = false;
 	std::vector<SpaceTransitionRecord> space_transition_rows;
 	bool space_pods_present = false;
@@ -160,8 +166,12 @@ struct LoadCheckData {
 	std::vector<SpaceOrderRecord> space_order_preview_rows;
 	bool asteroid_knowledge_present = false;
 	uint32_t asteroid_body_count = 0;
+	uint32_t asteroid_next_body_id = 0; ///< Same-file lifetime issuance, independent of live count; never borrowed from the open world.
+	std::vector<AsteroidIdentityRecord> asteroid_body_rows; ///< Sorted same-file IDs/classes, not another resource registry; r2sff1-space-fixes-features-1.md Group14B.
+	std::vector<std::pair<OrbitalBodyID, VehicleID>> asteroid_mining_leases; ///< Same-file ASTR leases for bidirectional VEHS joins; no native reservation is created. Group23.
 	std::vector<AsteroidKnowledgeRecord> asteroid_knowledge_rows;
 	std::vector<LaunchCenterRef> launch_center_preview_refs;
+	uint64_t next_launch_center_generation = 1; ///< Same-file issuance including retired centers; continuation cannot borrow the open world's generation bound.
 	std::vector<LaunchCenterRecord> launch_center_preview_rows;
 	bool space_descents_present = false;
 	uint64_t next_space_descent_id = 1;

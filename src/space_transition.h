@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_transition.h Native saved rocket preparation, layer transition and recovery.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group14C; issued body intent is distinct from live navigation admission.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups10B/11.
  */
 #ifndef SPACE_TRANSITION_H
@@ -54,9 +55,10 @@ void ForgetSpaceTransitionStructure(SpaceVehicle &craft, SpaceStructureRef site)
 /** @return Detached records for every existing native flight, retaining the original hull identity. */
 std::vector<SpaceTransitionRecord> CaptureSpaceTransitions();
 /** @param records Detached bounded flights. @param width Actual plane width. @param height Actual plane height.
+ * @param next_body_id Same-owner issuance cursor; default validates only the 32-bit transport domain, while live/candidate joins supply their actual cursor.
  * @return Whether phase, identity, timers, layer and once-only payload receipts are structurally consistent.
  */
-bool ValidateSpaceTransitionRecords(std::span<const SpaceTransitionRecord> records, uint32_t width = 4096, uint32_t height = 4096);
+bool ValidateSpaceTransitionRecords(std::span<const SpaceTransitionRecord> records, uint32_t width = 4096, uint32_t height = 4096, uint32_t next_body_id = UINT32_MAX);
 /** @param flight Same-file flights. @param craft Same-file paid hull states. @param operations Same-file physical pad owners.
  * @return Whether every active flight is the same paid in-transit rocket with its original recovery reservation.
  */

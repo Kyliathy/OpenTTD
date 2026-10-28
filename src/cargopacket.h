@@ -70,6 +70,8 @@ private:
 	 * @return Whole original-book admission; a refusal performs no packet-purpose normalization.
 	 */
 	friend bool AcceptLoadedSurfaceSupplyOrders(bool family_required);
+	/** Only the original native transport installs a fully decoded version-admitted source; packet identity and all other fields remain original. */
+	friend struct CAPAChunkHandler;
 public:
 	/** @return Portable digest of every actual saved packet scalar, including permanent purpose, U64receipt link and literal departure; excludes pointers and debug-only custody caches. */
 	static uint64_t ComputePoolDigest();
@@ -122,6 +124,8 @@ public:
 
 	/** Split native quantity and credit while preserving all evidence. @param new_size Whole units to split. @return New fragment, or nullptr on pool exhaustion with the original unchanged. */
 	CargoPacket *Split(uint new_size);
+	/** @param mineral Original same-file/live-body mineral validated before retirement. @return Whether this packet's exact legacy asteroid ID was upgraded in place, or an already typed origin agrees. Quantity, pool identity, credit, travel and ownership stay unchanged; ordinary/unknown/malformed sources refuse. Called by controlled migration tests now, by the matching loader in Group21. */
+	bool UpgradeLegacyAsteroidSource(CargoLabel mineral);
 	/** Merge an already eligible native fragment. @param cp Fragment consumed after the owning list's provenance/state and MAX_COUNT checks. */
 	void Merge(CargoPacket *cp);
 	/** Consume part of this native fragment. @param count Whole units to remove, strictly less than the packet count; remaining purpose/history is unchanged. */

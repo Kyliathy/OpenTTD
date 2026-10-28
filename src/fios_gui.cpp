@@ -91,14 +91,17 @@ void LoadCheckData::Clear()
 	// Ordinary freight and hub handling must come entirely from this next file; stale copied references could otherwise conceal shared ownership or fabricate a missing packet.
 	this->native_vehicle_cargo_present = this->native_station_cargo_present = false;
 	this->native_ordinary_vehicle_cargo_refs.clear(); this->native_station_cargo_refs.clear(); this->surface_handling_rows.clear();
-	this->native_cargo_owner_rows.clear(); // No preceding file may lend a label or refundable source queue to this candidate's packets.
+	this->native_cargo_owner_rows.clear(); // No preceding file may lend a label, cargo slot or refundable source queue to this candidate's packets.
 	this->space_production_present = this->launch_operations_present = false;
 	this->space_manifests_present = false; this->space_manifest_rows.clear();
 	this->space_pods_present = false; this->next_space_pod_generation = 1; this->space_pod_rows.clear();
 	this->space_transitions_present = false; this->space_transition_rows.clear();
 	this->space_production_rows.clear(); this->launch_operations_rows.clear();
-	this->space_order_preview_refs.clear(); this->launch_center_preview_refs.clear();
+	this->space_order_preview_refs.clear(); this->launch_center_preview_refs.clear(); this->next_launch_center_generation = 1;
 	this->space_order_preview_rows.clear(); this->asteroid_knowledge_present = false; this->asteroid_body_count = 0; this->asteroid_knowledge_rows.clear();
+	// Every candidate supplies its own surviving IDs/classes and issuance; stale
+	// preview rows must not legitimize references in the next selected file.
+	this->asteroid_next_body_id = 0; this->asteroid_body_rows.clear(); this->asteroid_mining_leases.clear();
 	this->launch_center_preview_rows.clear(); this->space_descents_present = false; this->next_space_descent_id = 1; this->space_descent_rows.clear();
 	// Packet counts belong only to the currently checked file; a later preview must never inherit an earlier file's physical ownership evidence.
 	this->native_cargo_packets_present = false; this->native_cargo_packet_rows.clear();

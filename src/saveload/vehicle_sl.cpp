@@ -6,11 +6,13 @@
  */
 
 /** @file vehicle_sl.cpp Code handling saving and loading of vehicles.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group23; explicit contained continuation in native/copied rows.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Group11 independent native freight preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C same-file mining role/work preview.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; refuse missing Space companies before generic unit-number reconstruction.
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 3 (explicit preview handler instantiations for Clang)
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group12; copied hauler refits retain original common cargo/capacity fields.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 4; one copied owner-row record serves supply and asteroid-origin checks.
  */
 
 #include "../stdafx.h"
@@ -25,6 +27,8 @@
 #include "../roadveh.h"
 #include "../ship.h"
 #include "../space_vehicle.h"
+#include "../space_mining_continuation.h"
+#include "space_mining_sl.h"
 #include "../fios.h"
 #include "../aircraft.h"
 #include "../timetable.h"
@@ -1121,9 +1125,46 @@ public:
 	}
 };
 
+extern SaveLoadVersion _sl_version; ///< Genuine current candidate era, owned by the original save/load framework.
+static SpaceMiningContinuationWire _space_mining_wire; ///< Explicit per-row adaptation, reset before every native or copied load.
+
+/** @param base Original native or copied Space scalar description. @return The same original schema plus explicit version443 continuation scalars. */
+static std::vector<SaveLoad> WithSpaceMiningContinuation(std::initializer_list<SaveLoad> base)
+{
+	std::vector<SaveLoad> result(base);
+	static const SaveLoad continuation[] = {
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.phase", SLE_GLOBAL_ADDRESS(_space_mining_wire.phase), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.mineral", SLE_GLOBAL_ADDRESS(_space_mining_wire.mineral), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.previous_body", SLE_GLOBAL_ADDRESS(_space_mining_wire.previous_body), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_present), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_kind", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_kind), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.effective_id", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_id), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U64>("mission.continuation.effective_generation", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_generation), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.departure_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_present), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_x", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_x), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_y", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_y), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U16>("mission.continuation.retry_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.retry_ticks), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.waiting", SLE_GLOBAL_ADDRESS(_space_mining_wire.waiting), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.route_cursor", SLE_GLOBAL_ADDRESS(_space_mining_wire.route_cursor), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.travel_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.travel_ticks), SaveLoadVersion::SpaceMiningContinuation),
+	};
+	result.insert(result.end(), std::begin(continuation), std::end(continuation)); return result;
+}
+
+/** @param description Actual original source table. Require complete current fields or genuine old absence before accepting default mission intent. */
+static void CheckSpaceMiningContinuationFields(SaveLoadTable description)
+{
+	std::vector<std::string_view> keys;
+	// Preserve actual skipped keys too: source-era checks must reject future
+	// payloads in old files and missing/renamed current required fields.
+	for (const auto &field : description) keys.push_back(field.name);
+	if (!ValidateSpaceMiningContinuationSchema(keys, _sl_version)) SlErrorCorrupt("Missing or wrong-era native mining continuation fields");
+}
+
+/** Original native Space VEHS family, with explicit per-row contained mission adaptation. */
 class SlVehicleSpace : public DefaultSaveLoadHandler<SlVehicleSpace, Vehicle> {
 public:
-	static inline const SaveLoad description[] = {
+	static inline const std::vector<SaveLoad> description = WithSpaceMiningContinuation({
 		SaveLoad::Struct<SlVehicleCommon>("common"),
 		SaveLoad::Variable<VarFileType::I32>("position.x", SLE_OBJECT_ADDRESS(SpaceVehicle, position.x)),
 		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(SpaceVehicle, position.y)),
@@ -1138,10 +1179,26 @@ public:
 		SaveLoad::Variable<VarFileType::U8>("mission.travel_remainder", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.travel_remainder)),
 		SaveLoad::Variable<VarFileType::U8>("mission.cost_remainder", SLE_OBJECT_ADDRESS(SpaceVehicle, mission.cost_remainder)),
 		SaveLoad::Variable<VarFileType::U32>("extracted_units", SLE_OBJECT_ADDRESS(SpaceVehicle, extracted_units)),
-	};
+	});
 	static inline const SaveLoadCompatTable compat_description = {};
-	void Save(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetDescription()); }
-	void Load(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetLoadDescription()); }
+	/** @param v Actual original native hull; no mission state is copied as host optional memory. */
+	void Save(Vehicle *v) const override
+	{
+		if (v->type != VehicleType::Space) return;
+		const auto &craft = *static_cast<SpaceVehicle *>(v);
+		if (!ValidateNativeSpaceMiningContinuation(craft)) SlErrorCorrupt("Invalid mining continuation on save");
+		_space_mining_wire = EncodeSpaceMiningContinuation(craft.mission.continuation); SlObject(v, this->GetDescription());
+	}
+	/** @param v Original native hull being reconstructed; missing old intent remains inert without sampling or starting work. */
+	void Load(Vehicle *v) const override
+	{
+		if (v->type != VehicleType::Space) return;
+		CheckSpaceMiningContinuationFields(this->GetLoadDescription()); _space_mining_wire = {};
+		SlObject(v, this->GetLoadDescription()); const auto state = DecodeSpaceMiningContinuation(_space_mining_wire);
+		if (!state) SlErrorCorrupt("Invalid native mining continuation scalars");
+		static_cast<SpaceVehicle *>(v)->mission.continuation = *state;
+	}
+	/** @param v Original native hull; continuation contains no pointer or physical ownership to fix. */
 	void FixPointers(Vehicle *v) const override { if (v->type == VehicleType::Space) SlObject(v, this->GetDescription()); }
 };
 
@@ -1178,7 +1235,7 @@ public:
 /** Decode same-file Space hull geometry without constructing another fleet or consulting the active world. */
 class SlSpaceVehiclePreview : public DefaultSaveLoadHandler<SlSpaceVehiclePreview, NativeSpaceVehiclePreview> {
 public:
-	static inline const SaveLoad description[] = {
+	static inline const std::vector<SaveLoad> description = WithSpaceMiningContinuation({
 		SaveLoad::Struct<SlSpaceOwnerPreview>("common"),
 		SaveLoad::Variable<VarFileType::I32>("position.x", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.x)),
 		SaveLoad::Variable<VarFileType::I32>("position.y", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, position.y)),
@@ -1186,15 +1243,23 @@ public:
 		SaveLoad::Variable<VarFileType::U8>("mission.phase", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, mining_phase)),
 		SaveLoad::Variable<VarFileType::U16>("mission.work_ticks", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, mining_work_ticks)),
 		SaveLoad::Variable<VarFileType::U32>("extracted_units", SLE_OBJECT_ADDRESS(NativeSpaceVehiclePreview, extracted_units)),
-	};
+	});
 	static inline const SaveLoadCompatTable compat_description = {};
 	/** @param row Detached native type/identity, filled only for the actual Space vehicle family. */
 	void LoadCheck(NativeSpaceVehiclePreview *row) const override
 	{
 		if (row->type != VehicleType::Space) return;
 		// Every mining field already exists in the native source schema; preview must inspect its actual bytes rather than accepting a default idle state for a forged heavy mission.
-		for (const auto &field : description) if (std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
+		for (const auto &field : description) {
+			// Require exactly the original era's fields; genuine older hulls must
+			// not be rejected for continuation columns introduced later.
+			if (_sl_version >= field.version_from && _sl_version < field.version_to && std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
+		}
+		CheckSpaceMiningContinuationFields(this->GetLoadDescription()); _space_mining_wire = {};
 		SlObject(row, this->GetLoadDescription());
+		const auto state = DecodeSpaceMiningContinuation(_space_mining_wire);
+		if (!state) SlErrorCorrupt("Invalid copied mining continuation scalars");
+		row->mining_continuation = *state;
 	}
 };
 
@@ -1222,6 +1287,20 @@ template class SlOrdinaryCargoPreview<VehicleType::Road>;
 template class SlOrdinaryCargoPreview<VehicleType::Ship>;
 template class SlOrdinaryCargoPreview<VehicleType::Aircraft>;
 
+/** @param table Actual whole VEHS table header. Validate required continuation schema even when this candidate has no Space rows. */
+static void CheckSpaceMiningContinuationHeader(SaveLoadTable table)
+{
+	const auto space = std::ranges::find(table, "space", &SaveLoad::name);
+	if (space == table.end()) {
+		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation)) SlErrorCorrupt("Missing current native Space schema");
+		return;
+	}
+	if (!space->handler) SlErrorCorrupt("Invalid native Space schema");
+	// Schema ownership is independent of population: an empty family cannot
+	// hide missing current keys or smuggle future intent in a genuine old file.
+	CheckSpaceMiningContinuationFields(space->handler->GetLoadDescription());
+}
+
 /** Original native vehicle transport; independent copied Space rows grant no physical hull, company, packet or progress. */
 struct VEHSChunkHandler : ChunkHandler {
 	/** Register the original sparse native vehicle family without allocating a runtime hull. */
@@ -1243,6 +1322,7 @@ struct VEHSChunkHandler : ChunkHandler {
 	void Load() const override
 	{
 		const std::vector<SaveLoad> slt = SlCompatTableHeader(_vehicle_desc, _vehicle_sl_compat);
+		CheckSpaceMiningContinuationHeader(slt);
 
 		int index;
 
@@ -1319,6 +1399,7 @@ struct VEHSChunkHandler : ChunkHandler {
 			SaveLoad::Struct<SlSpaceVehiclePreview>("space"),
 		};
 		const auto desc = SlTableHeader(preview);
+		CheckSpaceMiningContinuationHeader(desc);
 		// Required original field definitions cannot be omitted to substitute a default idle or empty hull in independent preview.
 		for (const auto &field : preview) if (std::ranges::find(desc, field.name, &SaveLoad::name) == desc.end()) SlErrorCorrupt("Missing native Space vehicle preview field");
 		auto &rows = _load_check_data.native_space_vehicle_rows;
@@ -1334,9 +1415,13 @@ struct VEHSChunkHandler : ChunkHandler {
 				// A valid world has at most one actual container per native packet; cap copied references before extending the unpublished metadata.
 				if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - ordinary.size()) SlErrorCorrupt("Excessive ordinary cargo preview references");
 				ordinary.insert(ordinary.end(), row.cargo_packet_refs.begin(), row.cargo_packet_refs.end());
+				auto &owners = _load_check_data.native_cargo_owner_rows;
+				// Bound the shared copied evidence before extending it: stations and carriers together own at most one
+				// row per native packet.
+				if (row.cargo_packet_refs.size() > CargoPacketID::End().base() - owners.size()) SlErrorCorrupt("Excessive native cargo meaning references");
 				// Each original carrier supplies its own cargo_type; no packet
 				// source, receipt label or active-world refit supplies that meaning.
-				for (const auto reference : row.cargo_packet_refs) _load_check_data.native_cargo_owner_rows.push_back({reference, row.freight_cargo, StationID::Invalid()});
+				for (const auto reference : row.cargo_packet_refs) owners.push_back({reference, row.freight_cargo, StationID::Invalid()});
 			}
 			if (row.type != VehicleType::Space) continue;
 			if (rows.size() >= MAX_SPACE_VEHICLES || (!rows.empty() && row.vehicle <= rows.back().vehicle)) SlErrorCorrupt("Invalid native Space preview count");

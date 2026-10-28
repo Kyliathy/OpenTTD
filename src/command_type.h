@@ -458,6 +458,7 @@ enum class Commands : uint8_t {
 	ConnectTubeGeothermalPower, ///< original native generator/output to paid inlet; revision2append220
 	CloseTubeGeothermalPower, ///< close original native inlet and unused forwarding rights
 	SetTubeVehicleGeothermalPower, ///< initial native bind or explicit held-capsule provider switch
+	SetSpaceMiningPolicy, ///< m2o28 append 223 (was 211 in the incoming r2sff1 branch): generation-checked policy for one original Mine; r2sff1-space-fixes-features-1.md Group23.
 	End, ///< @important Must ALWAYS be on the end of this list!! (period)
 };
 

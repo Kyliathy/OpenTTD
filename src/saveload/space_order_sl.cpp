@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_order_sl.cpp Bounded generation/order/approach transport beside native VEHS.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group23; per-Mine policy preserves original queue targets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C heavy native role/version admission.
  */
@@ -11,6 +12,7 @@
 #include "../space_approach.h"
 #include "../space_structure.h"
 #include "../space_transition.h"
+#include "space_mining_sl.h"
 #include "../timer/timer_game_tick.h"
 #include "../multilayer_state.h"
 #include "../fios.h"
@@ -41,6 +43,9 @@ bool AcceptLoadedSpaceOrders()
 	// Native reconstruction and copied preview enforce the same source boundary: a431 paid hull cannot arrive with future mining progress or future Mine instructions.
 	for (const auto *craft : SpaceVehicle::Iterate()) {
 		const auto model = GetSpaceVehicleModel(*craft);
+		// Source443's fields describe configured Mine intent only. A genuinely
+		// older file cannot forge newly supported unqueued legacy departure.
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceLegacyDeparture) && craft->space_orders.entries.empty() && craft->mission.continuation != SpaceMiningContinuationState{}) return false;
 		if (!IsSpaceMiningStateSupported(model, craft->mission.phase, craft->mission.work_ticks, craft->extracted_units, heavy_runtime)) return false;
 		// Retained queue history is gameplay capability too;431 admitted no typed21 actions, so even an unstarted Visit must refuse in that commissioning-only source.
 		if (model == SPACE_HEAVY_MINER_MODEL && !heavy_runtime && !craft->space_orders.entries.empty()) return false;
@@ -50,6 +55,10 @@ bool AcceptLoadedSpaceOrders()
 /** @copydoc ValidateSpaceOrderLoadPreview */
 void ValidateSpaceOrderLoadPreview()
 {
+	// Current VEHS intent, ASTR leases and SPOR history must agree using only
+	// this candidate. Older files retain their inert migrated continuation.
+	if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation) && !ValidateSpaceMiningContinuationPreview(_load_check_data,
+		!IsSavegameVersionBefore(SaveLoadVersion::SpaceLegacyDeparture))) SlErrorCorrupt("Invalid same-file mining continuation or lease preview");
 	if (!_load_check_data.space_orders_present && !IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders)) SlErrorCorrupt("Missing Space order family");
 	if (_load_check_data.space_orders_active && (_load_check_data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry) || _load_check_data.map_layers < 3)) SlErrorCorrupt("Space order preview requires selected Space geometry");
 	if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply) && _load_check_data.native_space_vehicle_rows.size() != _load_check_data.space_order_preview_refs.size()) SlErrorCorrupt("Native Space preview identity count mismatch");
@@ -64,7 +73,7 @@ void ValidateSpaceOrderLoadPreview()
 			if (r.queue.approach) {
 				const auto &a = *r.queue.approach;
 				if (a.target.kind == SpaceOrderTargetKind::Body) {
-					if (a.target.id >= _load_check_data.asteroid_body_count) SlErrorCorrupt("Missing Space approach body preview");
+					if (FindAsteroidIdentity(_load_check_data.asteroid_body_rows, OrbitalBodyID{a.target.id}) == nullptr) SlErrorCorrupt("Missing Space approach body preview");
 				} else {
 					const auto &sites = _load_check_data.space_structure_rows;
 					const auto site = std::ranges::find_if(sites, [&](const auto &s) { return s.ref.structure.base() == a.target.id && s.ref.generation == a.target.generation; });
@@ -93,14 +102,24 @@ void ValidateSpaceOrderLoadPreview()
 			const auto phase = static_cast<SpaceMissionPhase>(native->mining_phase);
 			if (!IsSpaceMiningStateSupported(model, phase, native->mining_work_ticks, native->extracted_units, heavy_runtime)) SlErrorCorrupt("Invalid native mining role or source version preview");
 			// Active pursuit/extraction must name a body actually present in this candidate file, not a matching body in the open world.
-			if ((phase == SpaceMissionPhase::Approach || phase == SpaceMissionPhase::Mining) && native->mining_target >= _load_check_data.asteroid_body_count) SlErrorCorrupt("Missing native mining body preview");
+			if ((phase == SpaceMissionPhase::Approach || phase == SpaceMissionPhase::Mining) &&
+				FindAsteroidIdentity(_load_check_data.asteroid_body_rows, OrbitalBodyID{native->mining_target}) == nullptr) SlErrorCorrupt("Missing native mining body preview");
 			// A started Mine owns this exact native target; copied queue progress cannot point extraction at a different natural resource.
-			if (r.queue.started && r.queue.cursor < r.queue.entries.size() && r.queue.entries[r.queue.cursor].action == SpaceOrderAction::Mine && native->mining_target != r.queue.entries[r.queue.cursor].target.id) SlErrorCorrupt("Changed native mining target preview");
+			if (r.queue.started && r.queue.cursor < r.queue.entries.size() && r.queue.entries[r.queue.cursor].action == SpaceOrderAction::Mine) {
+				const auto &order = r.queue.entries[r.queue.cursor];
+				// Configured replacement mining already passed its effective-target
+				// join above; legacy work still owns the exact original body.
+				const bool configured = order.mining_policy != SpaceMiningPolicy::LegacyReturn || native->mining_continuation.phase != MiningContinuationPhase::None;
+				if (!configured && native->mining_target != order.target.id) SlErrorCorrupt("Changed native mining target preview");
+			}
 		}
 		// Source431 introduced commissioning only; any typed21 history, including Visit without extraction, would smuggle later runtime admission into that older file.
 		if (model == SPACE_HEAVY_MINER_MODEL && !heavy_runtime && !r.queue.entries.empty()) SlErrorCorrupt("Future heavy orders in commissioning-only save");
 		for (const auto &o : r.queue.entries) if (!IsSpaceOrderAllowed(model, o)) SlErrorCorrupt("Invalid Space order role preview");
-		if (r.queue.work_ticks != 0 && r.queue.entries[r.queue.cursor].target.id >= _load_check_data.asteroid_body_count) SlErrorCorrupt("Missing partial survey target preview");
+		// Partial scan work belongs to an actual same-file body, regardless of
+		// whether that ID is numerically above the remaining live population.
+		if (r.queue.work_ticks != 0 && FindAsteroidIdentity(_load_check_data.asteroid_body_rows,
+			OrbitalBodyID{r.queue.entries[r.queue.cursor].target.id}) == nullptr) SlErrorCorrupt("Missing partial survey target preview");
 		if (found != _load_check_data.space_production_rows.end() && found->state.placement != SpacePlacement::Orbital) {
 			// Dormant/native rocket orders remain empty. Only its exact same-file unresolved module flight may own a shared in-Space request while InTransit.
 			if (!r.queue.entries.empty()) SlErrorCorrupt("Dormant hull has active Space orders preview");
@@ -131,14 +150,17 @@ struct SPORChunkHandler : ChunkHandler {
 		if (!ValidateSpaceOrderRecords(records, next) || !ValidateNativeSpaceApproaches()) SlErrorCorrupt("Invalid Space order ownership on save");
 		size_t length = 9;
 		// Bound optional request bytes along with existing orders before declaring the exact family length.
-		for (const auto &r : records) length += 23 + 14 * r.queue.entries.size() + (r.queue.approach ? SPACE_APPROACH_REQUEST_BYTES : 0);
+		for (const auto &r : records) length += 23 + 15 * r.queue.entries.size() + (r.queue.approach ? SPACE_APPROACH_REQUEST_BYTES : 0);
 		SlSetLength(length); Write(next, 8); Write(records.size(), 1);
 		// Native pool order provides stable row serialization; admission priority is explicitly saved rather than inferred from row order.
 		for (const auto &r : records) {
 			const auto &q = r.queue;
 			Write(r.vehicle.base(), 4); Write(r.generation, 8); Write(q.cursor, 1); Write(q.started, 1); Write(to_underlying(q.blocked), 1);
 			Write(q.timer_ticks, 4); Write(q.work_ticks, 2); Write(q.entries.size(), 1);
-			for (const auto &o : q.entries) { Write(to_underlying(o.action), 1); Write(to_underlying(o.target.kind), 1); Write(o.target.id, 4); Write(o.target.generation, 8); }
+			for (const auto &o : q.entries) {
+				Write(to_underlying(o.action), 1); Write(to_underlying(o.target.kind), 1); Write(o.target.id, 4); Write(o.target.generation, 8);
+				Write(to_underlying(o.mining_policy), 1);
+			}
 			Write(q.approach.has_value(), 1);
 			if (q.approach) {
 				const auto &a = *q.approach;
@@ -152,7 +174,11 @@ struct SPORChunkHandler : ChunkHandler {
 	{
 		const auto length = SlGetFieldLength();
 		const bool approaches = !IsSavegameVersionBefore(SaveLoadVersion::SpaceApproachReservations);
-		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders) || length < 9 || length > 9 + MAX_SPACE_VEHICLES * (22 + 14 * MAX_SPACE_ORDERS + (approaches ? 1 + SPACE_APPROACH_REQUEST_BYTES : 0))) SlErrorCorrupt("Invalid Space order length");
+		const bool policies = !IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation);
+		const size_t order_bytes = policies ? 15 : 14;
+		// Genuine older rows retain their original14-byte order formula. Current
+		// policy bytes cannot cross the bounded queue or optional approach owner.
+		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders) || length < 9 || length > 9 + MAX_SPACE_VEHICLES * (22 + order_bytes * MAX_SPACE_ORDERS + (approaches ? 1 + SPACE_APPROACH_REQUEST_BYTES : 0))) SlErrorCorrupt("Invalid Space order length");
 		SpaceOrderTransport data;
 		data.next = ReadInt(8); const auto count = ReadInt(1);
 		if (count > MAX_SPACE_VEHICLES) SlErrorCorrupt("Invalid Space vehicle identity count");
@@ -170,12 +196,14 @@ struct SPORChunkHandler : ChunkHandler {
 			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply) && q.blocked >= SpaceOrderBlock::ReturnsPending) SlErrorCorrupt("Unexpected mining budget wait in old Space orders");
 			q.timer_ticks = static_cast<uint32_t>(ReadInt(4)); q.work_ticks = static_cast<uint16_t>(ReadInt(2)); const auto orders = ReadInt(1);
 			if (IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge) && q.work_ticks != 0) SlErrorCorrupt("Unexpected partial scan in old Space orders");
-			consumed += 22 + 14 * orders;
+			consumed += 22 + order_bytes * orders;
 			if (orders > MAX_SPACE_ORDERS || consumed > length) SlErrorCorrupt("Invalid Space order count");
 			for (size_t j = 0; j < orders; ++j) {
 				SpaceOrder o; o.action = static_cast<SpaceOrderAction>(ReadInt(1)); o.target.kind = static_cast<SpaceOrderTargetKind>(ReadInt(1));
 				if (IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply) && o.target.kind == SpaceOrderTargetKind::Craft) SlErrorCorrupt("Unexpected craft target in old Space orders");
-				o.target.id = static_cast<uint32_t>(ReadInt(4)); o.target.generation = ReadInt(8); q.entries.push_back(o);
+				o.target.id = static_cast<uint32_t>(ReadInt(4)); o.target.generation = ReadInt(8);
+				if (policies) o.mining_policy = static_cast<SpaceMiningPolicy>(ReadInt(1));
+				q.entries.push_back(o);
 			}
 			if (approaches) {
 				if (++consumed > length) SlErrorCorrupt("Truncated Space approach presence");

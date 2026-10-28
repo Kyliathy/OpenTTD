@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file window_func.h %Window functions not directly related to making/drawing windows. @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 */
+/** @file window_func.h %Window functions not directly related to making/drawing windows.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; consolidated layer hotkeys, window toggle and settings.
+ */
 
 #ifndef WINDOW_FUNC_H
 #define WINDOW_FUNC_H
@@ -49,6 +53,7 @@ template <typename T> requires is_scoped_enum_v<T>
 void InvalidateWindowClassesData(WindowClass cls, T data, bool gui_scope = false) { InvalidateWindowClassesData(cls, to_underlying(data), gui_scope); }
 
 void CloseNonVitalWindows();
+
 void CloseAllNonVitalWindows();
 
 /**

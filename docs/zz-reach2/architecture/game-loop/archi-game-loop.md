@@ -363,6 +363,21 @@ Declared in `src/timer/timer_game_economy.h`. Static state is `year`, `month`, `
 
 `Ticks::DAY_TICKS` is 74. The comment records the historical reason: `date_fract` used to be a `uint16_t` incremented by 885, and `65535 / 885 = 74`. One tick is `MILLISECONDS_PER_TICK` (27) on the video driver's normal interval, so a day is about two seconds when the machine keeps up.
 
+Space lifecycle work uses completed normal `StateGameLoop` opportunities,
+independent of machine wall time. After `TimerGameTick` and the tile loop,
+`TickAsteroidField` publishes straight body motion, safety release, sorted
+terminal exits, live index/attachment changes and any single due renewal before
+`CallVehicleTicks` performs ordinary craft decisions. Pause/editor paths do not
+advance this lifecycle. A newly funded ledger arms 741-2222 ticks (20-60 seconds
+at the driver's normal 27ms interval); later exits retain that deadline. A due
+attempt creates at most one affordable body of a different size from the latest
+exit, then rearms only while credit remains. Load/resume grants no catch-up
+attempts. Fast-forward supplies more ordinary opportunities when the host can
+keep up; calendar length and viewport visibility supply none. The native
+[scheduler and lifecycle checks](../../upgrades/2026-10/r2sff1-z-j-native-lifecycle.md)
+exercise the actual driver and saved next decisions under
+[R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md).
+
 ### `TimerGameRealtime`
 
 `TimerGameRealtime` is the wall clock (`src/timer/timer_game_realtime.h`). `GameLoop` feeds it the steady-clock delta, in `GameMode::Normal` only, and only when that delta is non-zero (lines 1344–1351). Its triggers are `Always`, `Unpaused`, and `Autosave`. The autosave interval next to `StateGameLoop` (`src/openttd.cpp` lines 1278–1293) is an `IntervalTimer<TimerGameRealtime>` with `Trigger::Autosave`. On fire it clears `PauseMode::CommandDuringPause`, sets `_do_autosave`, and calls `DoAutoOrNetsave`.

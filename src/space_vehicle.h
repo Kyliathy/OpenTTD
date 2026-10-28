@@ -3,6 +3,7 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 /** @file space_vehicle.h Canonical native orbital fleet and finite mining missions.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group17; contained mining policy intent, with live continuation gated on persistence.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group8
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md; the paid carried hull remains the sole native unit.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C; heavy mining uses the same mission and packet owners.
@@ -13,14 +14,13 @@
 #include "space.h"
 #include "space_orders.h"
 #include "space_production.h"
+#include "space_mining_state.h"
 
 inline constexpr uint16_t SPACE_PROBE_MODEL = 15;
 inline constexpr uint32_t MAX_SPACE_VEHICLES = 64;
 struct SpaceManifest;
 struct SpaceTransition;
 
-/** Saved native mission phases; a missing initial target remains Idle until an explicit assignment. */
-enum class SpaceMissionPhase : uint8_t { Idle, Approach, Mining, Return, Holding };
 /** Body IDs are monotonic field identities; no station-order destination aliasing. */
 struct SpaceMission {
 	OrbitalBodyID target = INVALID_ORBITAL_BODY;
@@ -30,6 +30,7 @@ struct SpaceMission {
 	uint16_t work_ticks = 0;
 	uint8_t travel_remainder = 0;
 	uint8_t cost_remainder = 0;
+	SpaceMiningContinuationState continuation;
 };
 
 /** One ordinary Vehicle pool owner of company identity, packets, costs and orbital mission. */
@@ -85,9 +86,12 @@ void ReleaseSpaceMiningSlot(SpaceVehicle &vehicle);
 /** @param position Actual start point. @param approach Current authorized attachment point. @return Frozen upward-rounded model15 pursuit allowance in synchronized ticks. */
 uint32_t GetSpaceMiningApproachTicks(SpacePoint position, SpacePoint approach);
 /** @param vehicle Actual deployed miner. @param body Stable body ID, or the explicit recall sentinel.
- * @param execute False estimates without mutation. @return Admission or refusal preserving cargo and funds.
+ * @param execute False estimates without mutation. @param policy Current Mine instruction's explicit policy; old/manual callers keep LegacyReturn.
+ * @return Admission or refusal preserving cargo and funds. Configured assignments pin mineral before the source can disappear.
  */
-CommandCost AssignSpaceMiningMission(SpaceVehicle &vehicle, uint32_t body, bool execute);
+CommandCost AssignSpaceMiningMission(SpaceVehicle &vehicle, uint32_t body, bool execute, SpaceMiningPolicy policy = SpaceMiningPolicy::LegacyReturn);
+/** @param policy Explicit Mine policy. @param full_hold Whether original freight reaches its physical capacity. @param requires_service Whether the actual service/return owner prevents further mining. @return Pure next intent: service takes precedence; legacy remains with its existing route controller. Destination admission and safe departure happen separately. */
+MiningContinuationPhase SelectSpaceMiningContinuationPhase(SpaceMiningPolicy policy, bool full_hold, bool requires_service);
 
 /** Validate role/work and source-version admission without consulting any active-world owner.
  * @param model Actual native or same-file paid model.

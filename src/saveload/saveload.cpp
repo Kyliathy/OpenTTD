@@ -7,6 +7,7 @@
 
 /**
  * @file saveload.cpp All actions handling saving and loading goes on in this file.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; historical natural freight retains a joined preview even after all Space hulls/sites disappear.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  *
  * The general actions are as follows for saving a game (loading is analogous):
@@ -101,6 +102,9 @@
 #include "../safeguards.h"
 
 extern const SaveLoadVersion SAVEGAME_VERSION{to_underlying(SaveLoadVersion::MaxVersion) - 1}; ///< Current savegame version of OpenTTD.
+/* m2o28-1-merge-oct28.md Group 4: the writer is the last real enumerator before MaxVersion. The incoming eras now sit
+ * after MaxVersion as pending names; this check fails the build if a reorder ever makes one of them the writer. */
+static_assert(SAVEGAME_VERSION == SaveLoadVersion::MergedLineage);
 
 SavegameType _savegame_type; ///< type of savegame we are loading
 FileToSaveLoad _file_to_saveload; ///< File to save or load in the openttd loop.
@@ -3610,12 +3614,21 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceCargoDimensions)) {
 			if (!ValidateSpaceCargoPreviewDimensions(_load_check_data)) SlErrorCorrupt("Changed or missing configured cargo dimension preview");
 		}
-		// Modern Space worlds must join all actual same-file cargo containers after their family readers finish; ordinary stock or hub handling cannot finance another physical copy in orbit.
+		/** @param row Original candidate packet. @return Whether historical natural provenance still needs field/mineral/custody validation, even without any surviving Space owner. */
+		const auto has_natural_source = [](const auto &row) { return row.source.type == SourceType::Asteroid; };
+		// Modern Space worlds and retained natural freight must join all actual
+		// same-file containers after their readers finish. Removing the last Space
+		// hull/site cannot bypass historical cargo validation on ordinary carriers.
 		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceHeavyMinerCommissioning) &&
-			(!_load_check_data.native_space_vehicle_rows.empty() || !_load_check_data.space_structure_rows.empty() || !_load_check_data.space_descent_rows.empty())) {
+			(!_load_check_data.native_space_vehicle_rows.empty() || !_load_check_data.space_structure_rows.empty() || !_load_check_data.space_descent_rows.empty() ||
+			std::ranges::any_of(_load_check_data.native_cargo_packet_rows, has_natural_source))) {
 			if (!ValidateSpaceCargoPreviewOwners(_load_check_data)) SlErrorCorrupt("Shared or missing native/Space cargo ownership preview");
 		}
 		ValidateLayerPortalWorkLoadPreview();
+		// Old CAPA sources gain full meaning only after this file's own field
+		// and existing custody/mineral joins have admitted their original rows.
+		// Preview changes detached metadata alone, never the accepted world.
+		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPreview(_load_check_data)) SlErrorCorrupt("Invalid copied legacy asteroid cargo origin");
 		ValidateTBMProjectLoadPreview();
 		ValidateSpoilReceiverLoadPreview();
 		ValidateLayerMineLoadPreview();

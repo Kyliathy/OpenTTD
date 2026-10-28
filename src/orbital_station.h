@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file orbital_station.h Native construction and completed Core inventory.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group6; read-only construction readiness.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only original builder work presentation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-8BB.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CCC; immutable contained service roles preserve actual bills after sender loss.
@@ -23,6 +24,38 @@
 struct SpaceStructure;
 struct SpaceStructureState;
 struct SpaceVehicle;
+/** Presentation-only construction prerequisites; these values are neither saved orders nor work grants. */
+enum class OrbitalConstructionBlock : uint8_t {
+	NoOrder, ///< The current action does not construct a blueprint.
+	TargetRemoved, ///< The exact owned blueprint incarnation is unavailable.
+	Completed, ///< The target already contains its completed physical frame.
+	Timeout, ///< The current travel deadline needs an explicit order edit.
+	UnavailableBuilder, ///< The hull lacks a supported deployed construction role.
+	Stopped, ///< The native running flag prevents work.
+	ServiceHeld, ///< An actual service owner retains control of the hull.
+	Paused, ///< The simulation cannot advance construction in its current mode.
+	ApproachBusy, ///< Shared approach admission has not assigned this hull a slot.
+	Travelling, ///< The admitted hull has not reached its exact site approach.
+	MaterialsMissing, ///< The actual job does not hold every required input.
+	CoreUnavailable, ///< An extension lacks its operational adjacent owned Core.
+	BuilderBusy, ///< Another eligible native builder owns the site's/Core's slot.
+	PowerUnavailable, ///< The panel or current shared power allocation cannot supply work.
+	Ready, ///< Physical prerequisites hold; native tick admission remains authoritative.
+	Working, ///< This exact native worker has a current committed work receipt.
+	End, ///< Sentinel for presentation tables.
+};
+/** Read-only readiness tied to the current or last completed Construct, never whichever site the UI happens to select. */
+struct OrbitalConstructionReadiness {
+	OrbitalConstructionBlock block = OrbitalConstructionBlock::NoOrder; ///< First current prerequisite or real work receipt.
+	SpaceStructureRef target; ///< Exact current construction incarnation or last completed frame, including unresolved current history.
+};
+/**
+ * Explain existing construction prerequisites without reserving stock, allocating power or advancing work.
+ * @param probe Actual native hull whose current instruction is inspected.
+ * @return Read-only reason and exact configured target; Ready is not permission to commit work.
+ * IsSpaceConstructionWorkTick remains the sole ordinary work/upkeep admission query.
+ */
+OrbitalConstructionReadiness GetOrbitalConstructionReadiness(const SpaceVehicle &probe);
 /** Sole private recipe-progress metadata; native module stock remains the only physical processing cargo owner. */
 struct OrbitalRecipeState;
 /** Saved physical assembly progress, expressed in whole and fractional canonical work ticks.

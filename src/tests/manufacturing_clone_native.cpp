@@ -4,6 +4,7 @@
  * Independent scenarios declare initial Surface content before real traffic; no orbital packet, capital, hull, receipt or pose is granted.
  */
 #include "../stdafx.h"
+#include "../cargo_source_digest.h"
 #include "assembly_native_fixture.h"
 #include "../space_clone.h"
 #include "../space_manifest.h"
@@ -70,7 +71,7 @@ static uint64_t CloneSourceAssets(const SpaceVehicle &source)
 	/** @param packet Actual accountable original packet; age is deliberately left to normal elapsed-time aging. */
 	auto packet = [&](const CargoPacket &packet) {
 		add(packet.index.base()); add(packet.Count()); add(static_cast<uint64_t>(static_cast<int64_t>(packet.GetFeederShare())));
-		add(packet.GetSourceTile().base()); add(packet.GetFirstStation().base()); add(to_underlying(packet.GetSource().type)); add(packet.GetSource().id);
+		add(packet.GetSourceTile().base()); add(packet.GetFirstStation().base()); AppendCargoSourceDigest(packet.GetSource(), add);
 	};
 	add(source.construction.capital_paid); add(source.cargo_type); add(source.cargo.TotalCount());
 	// Every existing original freight packet retains its identity/provenance; a clone cannot consume it as a recipe input or recreate it in another hull.

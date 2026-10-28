@@ -4,6 +4,7 @@
  * @file transport_tube_provider_switch.cpp Whole held-capsule provider switching with real original generation, native service and scoped unused rights.
  * @see docs/zz-reach2/architecture/map-layers/archi-map-layers.md.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs17-underground-transport-tubes.md Groups6BC/6BDB.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 7; the command table now ends after the appended Mine policy (223).
  * Prepared floor/portal approaches, real packet inputs and a valid saved demand fraction are explicit component inputs; production scheduler and driven-route proof remain34-35.
  */
 #include "../stdafx.h"
@@ -262,7 +263,9 @@ TEST_CASE("Native provider commands retain frozen typed network arguments", "[tu
 	static_assert(to_underlying(Commands::ConnectTubeGeothermalPower) == 220);
 	static_assert(to_underlying(Commands::CloseTubeGeothermalPower) == 221);
 	static_assert(to_underlying(Commands::SetTubeVehicleGeothermalPower) == 222);
-	static_assert(to_underlying(Commands::End) == 223);
+	// m2o28 Group 5 appended the incoming Mine policy command at 223, after these frozen Tube identities.
+	static_assert(to_underlying(Commands::SetSpaceMiningPolicy) == 223);
+	static_assert(to_underlying(Commands::End) == 224);
 	static_assert(!std::is_same_v<TubeGeothermalSourceID, UtilityProducerID>);
 	using Connect = CommandTraits<Commands::ConnectTubeGeothermalPower>::Args;
 	const Connect connect{IndustryID{3}, TileIndex{400}, UtilityProducerID{7}};

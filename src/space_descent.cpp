@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_descent.cpp One paid pod owns each saved cargo descent and recovery reservation.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19; distant queries share every original release gate except current drop-circle arrival.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs9-launch-centers-and-rockets.md Groups12-14.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1/1B; exclusive Core stock and service berth.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CBB; saved sender/mass receipts and original paid heavy returns.
@@ -77,9 +78,10 @@ bool HasSpaceDescentForCenter(LaunchCenterRef center) { return center.generation
 /** Admit the complete existing descent owner only when no Core retains this hull's paid service berth.
  * @param craft_ref Exact native sender incarnation. @param center_ref Explicit receiving center incarnation.
  * @param pod_ref Actual paid recoverable shell. @param quantity Positive physical cargo units.
- * @return Whether geometry, ownership, packet movement, receiver capacity and exclusive service state all permit release.
+ * @param require_arrival True includes the actual drop-circle check; false supplies navigation-only admission without changing a hull's pose.
+ * @return Whether original ownership, packet movement, capacity and service state admit this actual batch, plus arrival when requested.
  */
-bool CanReleaseOrbitalCargo(SpaceCraftRef craft_ref, LaunchCenterRef center_ref, SpacePodRef pod_ref, uint16_t quantity)
+static bool CheckOrbitalCargoRelease(SpaceCraftRef craft_ref, LaunchCenterRef center_ref, SpacePodRef pod_ref, uint16_t quantity, bool require_arrival)
 {
 	const auto *v = ResolveSpaceCraft(craft_ref); const auto *center = ResolveLaunchCenter(center_ref); const auto *pod = ResolveSpacePod(pod_ref);
 	// The Core's single service berth cannot simultaneously authorize a cargo return that changes this manifest's allowance.
@@ -91,11 +93,24 @@ bool CanReleaseOrbitalCargo(SpaceCraftRef craft_ref, LaunchCenterRef center_ref,
 		v->manifest->service_ticks != 0 || v->manifest->returns_remaining <= v->manifest->pending_returns || pod->descent ||
 		pod->state.custody != SpacePodCustody::Craft || pod->state.craft != craft_ref || std::count(v->manifest->pods.begin(), v->manifest->pods.end(), pod_ref) != 1 ||
 		!ReturnCargo(v->cargo_type) || quantity == 0 || quantity > 40 || CargoSpec::Get(v->cargo_type)->weight == 0 || uint64_t{quantity} * CargoSpec::Get(v->cargo_type)->weight > mass_limit ||
-		next_descent_id == UINT64_MAX || RecoveryJobs(center_ref) >= GetMultiLayerSpaceBudget().launch_pod_cap || quantity > GetLaunchStockHeadroom(*center, v->cargo_type) ||
-		!IsInsideLaunchCenterDropZone(v->position, *GetLaunchCenterPlaneReference(center->launch_center->tile))) return false;
+		next_descent_id == UINT64_MAX || RecoveryJobs(center_ref) >= GetMultiLayerSpaceBudget().launch_pod_cap || quantity > GetLaunchStockHeadroom(*center, v->cargo_type)) return false;
+	const auto anchor = GetLaunchCenterPlaneReference(center->launch_center->tile);
+	// Both navigation and release require a real receiver geometry. Only the
+	// distant query omits current arrival; no temporary craft position is used.
+	if (!anchor || (require_arrival && !IsInsideLaunchCenterDropZone(v->position, *anchor))) return false;
 	// The appended miner retains its immutable mineral refits even through a manual release; broad old passive-shell cargo admission grants it no construction/general freight role.
 	if (model == SPACE_HEAVY_MINER_MODEL && quantity > GetSpaceFreightCapacity(model, v->cargo_type)) return false;
 	return HubCargoTransfer::CanMove(v->cargo, quantity);
+}
+/** @copydoc CanReleaseOrbitalCargo */
+bool CanReleaseOrbitalCargo(SpaceCraftRef craft, LaunchCenterRef center, SpacePodRef pod, uint16_t quantity)
+{
+	return CheckOrbitalCargoRelease(craft, center, pod, quantity, true);
+}
+/** @copydoc CanNavigateOrbitalCargoRelease */
+bool CanNavigateOrbitalCargoRelease(SpaceCraftRef craft, LaunchCenterRef center, SpacePodRef pod, uint16_t quantity)
+{
+	return CheckOrbitalCargoRelease(craft, center, pod, quantity, false);
 }
 /** @copydoc CommitOrbitalCargoRelease */
 bool CommitOrbitalCargoRelease(SpaceCraftRef craft_ref, LaunchCenterRef center_ref, SpacePodRef pod_ref, uint16_t quantity)

@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_approach.cpp Stable shared approach admission over actual native hulls and targets.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups10-10C/25B; shared clearance, native departure and contained endpoint occupancy.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group21; opt-in operation diagnostics never govern simulation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group4B.
@@ -11,6 +12,7 @@
 #include "space_approach.h"
 #include "space_departure.h"
 #include "space_vehicle.h"
+#include "space_mining_continuation.h"
 #include "space_transition.h"
 #include "space_structure.h"
 #include "space_manifest.h"
@@ -25,6 +27,134 @@
 #include "safeguards.h"
 
 static constexpr int32_t BODY_APPROACH_CLEARANCE = 2 * SPACE_Q16; ///< Original shared body/attachment waiting envelope, also governing mining departure.
+
+/** @copydoc GetSpaceBodyApproachClearance */
+int32_t GetSpaceBodyApproachClearance() { return BODY_APPROACH_CLEARANCE; }
+
+/** @param obstacle Detached footprint or exact approach point. @return Whether its inclusive geometry has the declared original meaning. */
+static bool ValidAttachmentObstacle(const SpaceAttachmentObstacle &obstacle)
+{
+	// An inverted footprint or non-point berth must not quietly disappear from
+	// a safety query and authorize passage through an accountable static owner.
+	return obstacle.kind < SpaceAttachmentObstacleKind::End && obstacle.min.x <= obstacle.max.x && obstacle.min.y <= obstacle.max.y &&
+		(obstacle.kind != SpaceAttachmentObstacleKind::Approach || obstacle.min == obstacle.max);
+}
+
+/** @copydoc IsSpaceAttachmentPointClear */
+bool IsSpaceAttachmentPointClear(SpacePoint point, const SpacePlaneBounds &bounds, std::span<const SpaceAttachmentObstacle> obstacles)
+{
+	// Both the plane definition and proposed point must be valid; a malformed
+	// copied boundary cannot authorize a staging or attachment slot.
+	if (!bounds.IsValid() || !bounds.Contains(point)) return false;
+	// Static clearance includes all original owners, not just the craft's company;
+	// a projected body overlap cannot displace or borrow a module's paid berth.
+	for (const auto &obstacle : obstacles) {
+		if (!ValidAttachmentObstacle(obstacle)) return false;
+		if (point.x >= obstacle.min.x && point.x <= obstacle.max.x && point.y >= obstacle.min.y && point.y <= obstacle.max.y) return false;
+	}
+	return true;
+}
+
+/** @copydoc GetSafeSpaceBodyApproachPoint */
+std::optional<SpacePoint> GetSafeSpaceBodyApproachPoint(SpacePoint body_position, const SpacePlaneBounds &bounds,
+	std::span<const SpaceAttachmentObstacle> obstacles)
+{
+	// A retired/outside body cannot supply a new approach, even if its translated
+	// point happens to lie inside the map. Validate before adding the fixed offset.
+	if (!bounds.IsValid() || !bounds.Contains(body_position)) return std::nullopt;
+	const SpacePoint point{body_position.x + SPACE_Q16, body_position.y - SPACE_Q16 / 2};
+	if (!IsSpaceAttachmentPointClear(point, bounds, obstacles)) return std::nullopt;
+	return point;
+}
+
+/**
+ * Solve the inclusive time interval during which one signed integer axis occupies an obstacle range.
+ * @param position Original craft coordinate.
+ * @param velocity Original signed body component; inequalities are mirrored without changing its value.
+ * @param remainder Canonical unsigned fractional travel.
+ * @param low Inclusive obstacle minimum.
+ * @param high Inclusive obstacle maximum.
+ * @param horizon Last opportunity worth inspecting, bounded by the body's first exit.
+ * @return Intersection interval, or absence when this axis never reaches the range in time.
+ */
+static std::optional<std::pair<uint64_t, uint64_t>> AttachmentAxisInterval(int32_t position, int32_t velocity, uint8_t remainder,
+	int32_t low, int32_t high, uint64_t horizon)
+{
+	if (velocity == 0) {
+		// A stationary component either overlaps for the entire horizon or can
+		// never enter; it does not create a fictitious zero-speed arrival time.
+		if (position < low || position > high) return std::nullopt;
+		return std::pair<uint64_t, uint64_t>{0, horizon};
+	}
+	const int64_t start = velocity < 0 ? -int64_t{position} : position;
+	const int64_t minimum = velocity < 0 ? -int64_t{high} : low;
+	const int64_t maximum = velocity < 0 ? -int64_t{low} : high;
+	if (maximum < start) return std::nullopt;
+	const uint64_t magnitude = static_cast<uint64_t>(std::abs(int64_t{velocity}));
+	const uint64_t day = GetMultiLayerSpaceTuning().ticks_per_economy_day;
+	uint64_t first = 0;
+	if (minimum > start) {
+		const uint64_t numerator = static_cast<uint64_t>(minimum - start) * day - remainder;
+		first = numerator / magnitude + (numerator % magnitude != 0);
+	}
+	const uint64_t numerator = static_cast<uint64_t>(maximum - start + 1) * day - 1 - remainder;
+	const uint64_t last = std::min(horizon, numerator / magnitude);
+	if (first > last) return std::nullopt;
+	return std::pair{first, last};
+}
+
+/** @copydoc ForecastSpaceAttachmentSafety */
+std::optional<SpaceAttachmentSafety> ForecastSpaceAttachmentSafety(const SpaceMotion &motion, const SpaceMotionExitForecast &body_forecast,
+	SpacePoint offset, const SpacePlaneBounds &bounds, std::span<const SpaceAttachmentObstacle> obstacles)
+{
+	const auto original = ForecastSpaceMotionExit(motion, bounds);
+	// The copied forecast must describe this exact body/plane. A stale forecast
+	// from another candidate cannot extend attachment rights past its own exit.
+	if (!original || original->ticks_until_exit != body_forecast.ticks_until_exit || original->last_safe_motion != body_forecast.last_safe_motion ||
+		original->crossed_edges != body_forecast.crossed_edges) return std::nullopt;
+	// Reject the whole copied obstacle set before reporting a usable forecast;
+	// a later malformed berth must not be hidden by an earlier easy hazard.
+	for (const auto &obstacle : obstacles) if (!ValidAttachmentObstacle(obstacle)) return std::nullopt;
+	const int64_t x = int64_t{motion.position.x} + offset.x, y = int64_t{motion.position.y} + offset.y;
+	// Widen before adding the offset. An already unsafe point has no invented
+	// last-safe position and cannot be repaired by clamping or teleportation.
+	if (x < 0 || y < 0 || x > bounds.max.x || y > bounds.max.y) return SpaceAttachmentSafety{uint64_t{0}, std::nullopt, SpaceAttachmentHazard::MapEdge};
+	auto craft = motion;
+	craft.position = {static_cast<int32_t>(x), static_cast<int32_t>(y)};
+	const auto craft_exit = ForecastSpaceMotionExit(craft, bounds);
+	assert(craft_exit.has_value());
+	SpaceAttachmentSafety result{body_forecast.ticks_until_exit, craft.position,
+		body_forecast.ticks_until_exit ? SpaceAttachmentHazard::BodyExit : SpaceAttachmentHazard::None};
+	// An outward attachment offset can become unsafe before its body leaves.
+	// Equal times prefer the concrete craft edge over the body's retirement.
+	if (craft_exit->ticks_until_exit && (!result.first_unsafe_tick || *craft_exit->ticks_until_exit <= *result.first_unsafe_tick)) {
+		result.first_unsafe_tick = craft_exit->ticks_until_exit;
+		result.hazard = SpaceAttachmentHazard::MapEdge;
+	}
+	const uint64_t horizon = body_forecast.ticks_until_exit.value_or(UINT64_MAX);
+	// Solve each static rectangle/point analytically; runtime scales with actual
+	// geometry, never with a slow body's millions of future simulation ticks.
+	for (const auto &obstacle : obstacles) {
+		const auto tx = AttachmentAxisInterval(craft.position.x, craft.velocity_x, craft.remainder_x, obstacle.min.x, obstacle.max.x, horizon);
+		const auto ty = AttachmentAxisInterval(craft.position.y, craft.velocity_y, craft.remainder_y, obstacle.min.y, obstacle.max.y, horizon);
+		if (!tx || !ty) continue;
+		const uint64_t first = std::max(tx->first, ty->first), last = std::min(tx->second, ty->second);
+		const auto hazard = obstacle.kind == SpaceAttachmentObstacleKind::Footprint ? SpaceAttachmentHazard::Footprint : SpaceAttachmentHazard::Approach;
+		// Both axes must occupy the obstacle on the same native opportunity;
+		// crossing its X and Y ranges at unrelated times is not a collision. Equal
+		// static hazards prefer the same enum rank regardless of input enumeration.
+		if (first > last || (result.first_unsafe_tick && (first > *result.first_unsafe_tick ||
+			(first == *result.first_unsafe_tick && to_underlying(hazard) >= to_underlying(result.hazard))))) continue;
+		result.first_unsafe_tick = first;
+		result.hazard = hazard;
+	}
+	if (!result.first_unsafe_tick) return result;
+	if (*result.first_unsafe_tick == 0) { result.last_safe_point.reset(); return result; }
+	const auto last = ProjectSpaceMotionStraight(craft, bounds, *result.first_unsafe_tick - 1);
+	assert(last.has_value() && last->crossed_edges.None());
+	result.last_safe_point = last->proposed.position;
+	return result;
+}
 
 /** @param target Typed requested destination. @return Its shared physical approach domain. */
 static SpaceOrderTarget NormalizeApproachTarget(SpaceOrderTarget target)
@@ -139,6 +269,120 @@ std::optional<SpacePoint> GetSpaceStructureApproachSlot(const SpaceStructure &si
 	return point;
 }
 
+/** @copydoc GetSpaceAttachmentObstacles */
+std::optional<std::vector<SpaceAttachmentObstacle>> GetSpaceAttachmentObstacles()
+{
+	std::vector<SpaceAttachmentObstacle> result;
+	// Copy the original physical footprint and each actual paid approach slot;
+	// cancelled retained records keep the same clearance as IsSafeStaging until
+	// their native owner is removed. This vector owns no occupancy or reservation.
+	for (const auto *site : SpaceStructure::Iterate()) {
+		const auto *definition = GetSpaceConstructionDefinition(site->state.kind);
+		// Refuse impossible native footprints before signed Q16 conversion;
+		// clearance must not wrap malformed coordinates into the current plane.
+		if (definition == nullptr || definition->width == 0 || definition->height == 0 ||
+			uint32_t{site->state.x} + definition->width > Map::SizeX() || uint32_t{site->state.y} + definition->height >= Map::SizeY()) return std::nullopt;
+		const SpacePoint minimum{int32_t{site->state.x} * SPACE_Q16, int32_t{site->state.y} * SPACE_Q16};
+		const SpacePoint maximum{minimum.x + definition->width * SPACE_Q16 - 1, minimum.y + definition->height * SPACE_Q16 - 1};
+		result.push_back({minimum, maximum, SpaceAttachmentObstacleKind::Footprint});
+		for (uint8_t slot = 0; slot < GetSpaceStructureApproachCapacity(*site); ++slot) {
+			const auto point = GetSpaceStructureApproachSlot(*site, slot);
+			if (!point) return std::nullopt;
+			result.push_back({*point, *point, SpaceAttachmentObstacleKind::Approach});
+		}
+	}
+	return result;
+}
+
+/** Exact bounded segment parameter; denominators are positive native step magnitudes. */
+struct DepartureRatio {
+	int64_t numerator = 0, denominator = 1;
+	/** @param other Segment bound to compare. @return Strict order without floating-point rounding of a berth intersection. */
+	bool operator<(const DepartureRatio &other) const { return this->numerator * other.denominator < other.numerator * this->denominator; }
+};
+
+/** @param from Current proposed path point. @param to Next native movement point. @param obstacle Original static rectangle or exact berth. @return Whether the swept segment touches that original geometry. */
+static bool DepartureSegmentTouches(SpacePoint from, SpacePoint to, const SpaceAttachmentObstacle &obstacle)
+{
+	DepartureRatio enter{0, 1}, leave{1, 1};
+	// Clip the segment against each inclusive static axis. Cross products remain
+	// bounded by native step magnitudes and 32-bit coordinates, protecting even
+	// an exact berth that lies between two rendered/ticked craft positions.
+	for (const auto [start, finish, low, high] : std::array<std::array<int32_t, 4>, 2>{{
+		{from.x, to.x, obstacle.min.x, obstacle.max.x}, {from.y, to.y, obstacle.min.y, obstacle.max.y}}}) {
+		const int64_t delta = int64_t{finish} - start;
+		if (delta == 0) {
+			if (start < low || start > high) return false;
+			continue;
+		}
+		const DepartureRatio first{delta > 0 ? int64_t{low} - start : int64_t{start} - high, std::abs(delta)};
+		const DepartureRatio last{delta > 0 ? int64_t{high} - start : int64_t{start} - low, std::abs(delta)};
+		if (enter < first) enter = first;
+		if (last < leave) leave = last;
+		if (leave < enter) return false;
+	}
+	return true;
+}
+
+/** @copydoc IsSpaceMovementSegmentClear */
+bool IsSpaceMovementSegmentClear(SpacePoint from, SpacePoint to, const SpacePlaneBounds &bounds, std::span<const SpaceAttachmentObstacle> obstacles, std::optional<SpacePoint> allowed_start_berth)
+{
+	// Copied malformed geometry cannot grant a path. Convex plane bounds make
+	// both endpoints sufficient for the plane, but every static segment is swept.
+	if (!bounds.IsValid() || !bounds.Contains(from) || !bounds.Contains(to) || (allowed_start_berth && *allowed_start_berth != from)) return false;
+	for (const auto &obstacle : obstacles) {
+		if (!ValidAttachmentObstacle(obstacle)) return false;
+		// Leaving one's independently admitted precise berth is legal. This
+		// exception belongs only to the starting endpoint and grants no passage
+		// through its module footprint or any other berth along the segment.
+		if (allowed_start_berth && obstacle.kind == SpaceAttachmentObstacleKind::Approach && obstacle.min == from) continue;
+		if (DepartureSegmentTouches(from, to, obstacle)) return false;
+	}
+	return true;
+}
+
+/** @copydoc GetSpaceDepartureTravelTicks */
+std::optional<uint32_t> GetSpaceDepartureTravelTicks(SpacePoint origin, SpacePoint destination, uint8_t remainder,
+	const SpacePlaneBounds &bounds, std::span<const SpaceAttachmentObstacle> obstacles)
+{
+	const auto day = GetMultiLayerSpaceTuning().ticks_per_economy_day;
+	const uint64_t dx = static_cast<uint64_t>(std::abs(int64_t{destination.x} - origin.x));
+	const uint64_t dy = static_cast<uint64_t>(std::abs(int64_t{destination.y} - origin.y));
+	// Departure is a local bounded route, not a second long-distance pathfinder.
+	// Both endpoints and every static definition must be valid before any walk.
+	if (remainder >= day || dx > SPACE_STAGING_MAX_RADIUS * SPACE_Q16 || dy > SPACE_STAGING_MAX_RADIUS * SPACE_Q16 ||
+		!IsSpaceAttachmentPointClear(origin, bounds, obstacles) || !IsSpaceAttachmentPointClear(destination, bounds, obstacles)) return std::nullopt;
+	if (origin == destination) return 0;
+	const uint32_t minimum_step = GetMultiLayerMiningProbeTuning().travel_tiles_per_day * SPACE_Q16 / day;
+	if (minimum_step <= 2) return std::nullopt;
+	// Each integer component can lose less than one Q16 unit to truncation.
+	// Manhattan distance bounds Euclidean distance, so this conservative budget
+	// contains every local native route without a wall-clock timeout or long loop.
+	const uint64_t guaranteed_progress = minimum_step - 2;
+	const uint64_t limit = (dx + dy + guaranteed_progress - 1) / guaranteed_progress + 1;
+	auto point = origin;
+	for (uint32_t tick = 1; tick <= limit; ++tick) {
+		const auto previous = point;
+		const bool arrived = MoveSpaceSurveyTowards(point, destination, remainder);
+		// A safe endpoint alone cannot admit a route through a paid footprint or
+		// another static berth; no blocker or claimant is moved to make it clear.
+		if (!IsSpaceMovementSegmentClear(previous, point, bounds, obstacles)) return std::nullopt;
+		if (arrived) return tick;
+	}
+	return std::nullopt;
+}
+
+/** @copydoc GetSpaceDepartureReleaseDelay */
+std::optional<uint64_t> GetSpaceDepartureReleaseDelay(const SpaceAttachmentSafety &safety, std::optional<uint32_t> travel_ticks)
+{
+	if (!safety.first_unsafe_tick) return std::nullopt;
+	// One extra opportunity releases before body translation. With no admitted
+	// route, retain the original valid point and release just before it becomes
+	// unsafe; a failed route never permits teleportation or a delayed edge step.
+	const uint64_t lead = travel_ticks ? uint64_t{*travel_ticks} + 1 : 1;
+	return *safety.first_unsafe_tick > lead ? *safety.first_unsafe_tick - lead : 0;
+}
+
 /** Resolve target ownership without allocating a proxy station or changing an asteroid attachment lease.
  * @param craft Actual asking hull. @param target Normalized destination.
  * @return Whether the native target still belongs to this request's physical domain and owner.
@@ -164,6 +408,10 @@ static bool IsSafeStaging(SpacePoint point, const SpaceVehicle &craft)
 		if (GetSpaceVehicleLayer(*other) != MapLayer::Space || other->construction.placement == SpacePlacement::Carried) continue;
 		if (SpaceDistanceSquared(point, other->position) < uint64_t{SPACE_Q16} * SPACE_Q16) return false;
 		if (other->space_orders.approach && other->space_orders.approach->staging == point) return false;
+		// A saved local departure is already owned by its original mission.
+		// Include it in common occupancy so sequential safety release cannot send
+		// simultaneous miners to one endpoint without another berth registry.
+		if (other->mission.continuation.departure_point && SpaceDistanceSquared(point, *other->mission.continuation.departure_point) < uint64_t{SPACE_Q16} * SPACE_Q16) return false;
 	}
 	// Static footprints and both reserved Dock approach cells remain unavailable for waiting craft.
 	for (const auto *site : SpaceStructure::Iterate()) {
@@ -185,23 +433,76 @@ static bool IsSafeStaging(SpacePoint point, const SpaceVehicle &craft)
 /** Find a real waiting/departure destination without changing position or saved priority.
  * @param craft Actual asking hull.
  * @param onward Optional actual onward route; only departing miners prefer its nearest clear candidate.
+ * @param path_allowed Optional read-only additional route admission; absence preserves existing waiting/return behavior.
+ * @param examined Optional count of bounded candidates inspected by this query; no gameplay counter is updated.
  * @return Safe current position or a bounded local alternative, if one exists.
  */
-static std::optional<SpacePoint> FindSafeStaging(const SpaceVehicle &craft, std::optional<SpacePoint> onward = std::nullopt)
+static std::optional<SpacePoint> FindSafeStaging(const SpaceVehicle &craft, std::optional<SpacePoint> onward = std::nullopt,
+	const std::function<bool(SpacePoint)> &path_allowed = {}, uint8_t *examined = nullptr)
 {
-	if (IsSafeStaging(craft.position, craft)) return craft.position;
+	if (examined != nullptr) *examined = 1;
+	// An already clear point still needs any caller-specific route admission;
+	// legacy callers provide no filter and retain their original immediate result.
+	if (IsSafeStaging(craft.position, craft) && (!path_allowed || path_allowed(craft.position))) return craft.position;
 	std::optional<SpacePoint> best;
 	// The fixed local ring order bounds work and makes simultaneous staging choices independent of rendering or RNG.
-	for (int radius = 1; radius <= 8; ++radius) {
-		for (const auto [dx, dy] : std::array<std::pair<int, int>, 8>{{{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}}) {
+	for (int radius = 1; radius <= SPACE_STAGING_MAX_RADIUS; ++radius) {
+		for (const auto [dx, dy] : SPACE_STAGING_DIRECTIONS) {
+			if (examined != nullptr) ++*examined;
 			const SpacePoint point{craft.position.x + dx * radius * SPACE_Q16, craft.position.y + dy * radius * SPACE_Q16};
 			if (!IsSafeStaging(point, craft)) continue;
+			// Additional path checks may reject a geometrically clear endpoint;
+			// they do not change priority, position or the fixed candidate order.
+			if (path_allowed && !path_allowed(point)) continue;
 			if (!onward) return point;
 			// Original waiting requests retain their canonical first candidate. A mining departure instead prefers the homeward clear point so the next direct return step does not reverse into the body envelope.
 			if (!best || SpaceDistanceSquared(point, *onward) < SpaceDistanceSquared(*best, *onward)) best = point;
 		}
 	}
 	return best;
+}
+
+/** @copydoc IsSpaceDeparturePointAvailable */
+bool IsSpaceDeparturePointAvailable(const SpaceVehicle &craft, SpacePoint point) { return IsSafeStaging(point, craft); }
+
+/** @copydoc PlanSpaceDeparture */
+SpaceDeparturePlan PlanSpaceDeparture(const SpaceVehicle &craft, std::optional<SpacePoint> onward)
+{
+	SpaceDeparturePlan plan;
+	plan.retained_position = craft.position;
+	const auto bounds = GetSpacePlaneBounds(Map::SizeX(), Map::SizeY());
+	const auto obstacles = GetSpaceAttachmentObstacles();
+	// A fallback must already be a valid clear point. Neither a malformed route
+	// nor a selected off-map destination may manufacture a corrected position.
+	if (!bounds || !obstacles || !IsSpaceAttachmentPointClear(craft.position, *bounds, *obstacles) ||
+		(onward && !bounds->Contains(*onward)) || craft.mission.travel_remainder >= GetMultiLayerSpaceTuning().ticks_per_economy_day) return plan;
+	const auto *body = GetMutableAsteroidBody(craft.mission.target);
+	// Only this exact original live lease supplies attachment safety. A recalled
+	// craft may still keep a historical target, but no longer needs lease release.
+	if (body != nullptr && body->mining_slot == craft.index) {
+		const auto forecast = ForecastAsteroidExit(*body, *bounds);
+		if (!forecast) return plan;
+		const auto offset = craft.mission.attachment_offset;
+		// The actual hull must be at its saved attachment; a stale lease cannot
+		// move it to the expected point or lend another mission a release deadline.
+		if (craft.mission.phase != SpaceMissionPhase::Mining || int64_t{body->motion.position.x} + offset.x != craft.position.x ||
+			int64_t{body->motion.position.y} + offset.y != craft.position.y) return plan;
+		plan.attachment = ForecastSpaceAttachmentSafety(body->motion, *forecast, offset, *bounds, *obstacles);
+		if (!plan.attachment) return plan;
+	}
+	/** @param point Bounded original staging candidate. @return Whether native movement can reach it without crossing original static/approach geometry. */
+	const auto path_allowed = [&](SpacePoint point) { return GetSpaceDepartureTravelTicks(craft.position, point, craft.mission.travel_remainder, *bounds, *obstacles).has_value(); };
+	plan.destination = FindSafeStaging(craft, onward, path_allowed, &plan.candidates_examined);
+	if (plan.destination) {
+		const auto ticks = GetSpaceDepartureTravelTicks(craft.position, *plan.destination, craft.mission.travel_remainder, *bounds, *obstacles);
+		assert(ticks.has_value());
+		plan.travel_ticks = *ticks;
+		plan.status = SpaceDepartureStatus::Ready;
+	} else {
+		plan.status = SpaceDepartureStatus::NoClearPoint;
+	}
+	if (plan.attachment) plan.release_after_ticks = GetSpaceDepartureReleaseDelay(*plan.attachment, plan.destination ? std::optional{plan.travel_ticks} : std::nullopt);
+	return plan;
 }
 
 /** @copydoc GetSpaceMiningDepartureDestination */
@@ -240,12 +541,30 @@ static std::vector<SpaceApproachSlot> GetTargetSlots(const SpaceVehicle &craft, 
 	if (!HasApproachTarget(craft, target)) return slots;
 	if (target.kind == SpaceOrderTargetKind::Body) {
 		const auto &body = *GetMutableAsteroidBody(OrbitalBodyID{target.id});
-		slots.push_back({target, 0, {body.motion.position.x + SPACE_Q16, body.motion.position.y - SPACE_Q16 / 2}, body.mining_slot, body.survey_slot != INVALID_SPACE_SURVEY});
+		const auto bounds = GetSpacePlaneBounds(Map::SizeX(), Map::SizeY());
+		const auto obstacles = GetSpaceAttachmentObstacles();
+		// A drifting body's slot may disappear without moving the body or an
+		// existing static occupant. Both arbitration and destination queries use
+		// this same boundary, so a retained request cannot bypass new geometry.
+		if (!bounds || !obstacles) return slots;
+		const auto point = GetSafeSpaceBodyApproachPoint(body.motion.position, *bounds, *obstacles);
+		if (!point) return slots;
+		slots.push_back({target, 0, *point, body.mining_slot, body.survey_slot != INVALID_SPACE_SURVEY});
 	} else {
 		const auto &site = *ResolveSpaceStructure({SpaceStructureID{static_cast<uint16_t>(target.id)}, target.generation});
 		for (uint8_t i = 0; i < GetSpaceStructureApproachCapacity(site); ++i) slots.push_back({target, i, *GetSpaceStructureApproachSlot(site, i)});
 		// A native manufacturing job reserves its planned output berth through this same authority; incoming craft wait without fake VehicleIDs or a parallel occupancy table.
 		if (site.module && site.module->manufacture && site.module->manufacture->phase != OrbitalManufacturePhase::Complete) for (auto &slot : slots) slot.blocked = true;
+		// Retained service jobs own their exact physical berth even when paused
+		// or their hull is lost. A recycled pool ID cannot inherit the old job's
+		// admission; a surviving exact owner remains the original occupant.
+		if (site.module) for (auto &slot : slots) {
+			const auto &job = *site.module->GetServiceJobs()[slot.slot];
+			if (job.remaining_ticks == 0 && job.craft == SpaceCraftRef{}) continue;
+			const auto *owner = ResolveSpaceCraft(job.craft);
+			if (owner == nullptr) slot.blocked = true;
+			else slot.occupant = owner->index;
+		}
 	}
 	// Physical occupants and legacy body leases constrain reservations; admission never rewrites either physical authority.
 	for (auto &slot : slots) {
@@ -258,6 +577,33 @@ static std::vector<SpaceApproachSlot> GetTargetSlots(const SpaceVehicle &craft, 
 		}
 	}
 	return slots;
+}
+
+/** @copydoc CanAcquireSpaceApproach */
+bool CanAcquireSpaceApproach(const SpaceVehicle &craft, SpaceOrderTarget target)
+{
+	target = NormalizeApproachTarget(target);
+	// Automatic destinations require an actual owned physical target and a free
+	// craft. A retained service job or a crashed/invalid hull grants no new slot.
+	if (!Company::IsValidID(craft.owner) || !CanOwnSpaceApproach(craft, target) || craft.generation == 0 ||
+		craft.vehstatus.Test(VehState::Crashed) || HasOrbitalServiceAssignment(craft) || !HasApproachTarget(craft, target)) return false;
+	const bool retained = craft.space_orders.approach && craft.space_orders.approach->target == target;
+	const auto staging = retained ? std::optional{craft.space_orders.approach->staging} : FindSafeStaging(craft);
+	if (!staging) return false;
+	std::vector<SpaceApproachRecord> requests;
+	// Only the considered target competes for these derived slots. Existing
+	// requests keep their native priority/incarnation; the asking hull replaces
+	// only its own copied request, never a live request belonging to another hull.
+	for (const auto *other : SpaceVehicle::Iterate()) {
+		if (other->index == craft.index || !other->space_orders.approach || other->space_orders.approach->target != target) continue;
+		requests.push_back({other->index, other->generation, *other->space_orders.approach});
+	}
+	requests.push_back({craft.index, craft.generation, retained ? *craft.space_orders.approach :
+		SpaceApproachRequest{target, TimerGameTick::counter, UINT8_MAX, *staging}});
+	const auto plan = PlanSpaceApproaches(requests, GetTargetSlots(craft, target));
+	if (!plan) return false;
+	const auto found = std::ranges::find(*plan, craft.index, &SpaceApproachRecord::craft);
+	return found != plan->end() && found->request.slot != UINT8_MAX;
 }
 
 /** @copydoc PrepareSpaceApproachTick */
@@ -278,6 +624,22 @@ void PrepareSpaceApproachTick()
 		}
 		if (craft->construction.placement != SpacePlacement::Orbital || craft->vehstatus.Test(VehState::Stopped) || craft->vehstatus.Test(VehState::Crashed) || HasOrbitalServiceAssignment(*craft)) continue;
 		if (q.blocked == SpaceOrderBlock::Timeout) { ReleaseSpaceApproach(*craft); continue; }
+		if (HasSpaceMiningContinuationOrder(*craft)) {
+			const auto effective = ResolveEffectiveSpaceOrderTarget(*craft);
+			// Detached/waiting miners acquire no historical body slot. A real
+			// reached static berth remains held until departure selection uses its
+			// original admission; remote failed requests confer no such right.
+			if (!effective) {
+				SpacePoint admitted;
+				if (GetSpaceApproachDestination(*craft, admitted) != SpaceOrderBlock::None || admitted != craft->position) ReleaseSpaceApproach(*craft);
+				continue;
+			}
+			// Initial or replacement body work still needs original service/pod
+			// admission. Its receiver/service continuation keeps a separate target.
+			if (effective->kind == SpaceOrderTargetKind::Body && GetSpaceMiningBlock(*craft) != SpaceOrderBlock::None) continue;
+			if (effective->kind == SpaceOrderTargetKind::Body || effective->kind == SpaceOrderTargetKind::Structure || effective->kind == SpaceOrderTargetKind::Blueprint) RequestSpaceApproach(*craft, *effective, true);
+			continue;
+		}
 		if (q.cursor < q.entries.size()) {
 			const auto &o = q.entries[q.cursor];
 			// Unsupported/finalized actions acquire no slot; live explicit static/body navigation uses this one shared producer.

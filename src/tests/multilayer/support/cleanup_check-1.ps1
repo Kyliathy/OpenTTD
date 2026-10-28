@@ -1,6 +1,6 @@
 #requires -Version 5.1
 <#
- * @file cleanup_check-1.ps1 Save/writer/ownership races and partial-removal refusals.
+ * @file cleanup_check-1.ps1 Disposable saves, writer/ownership races and partial failures.
  * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group27.
  * @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
  * Companion to cleanup_check.ps1; each runner remains a focused bounded burst.
@@ -8,7 +8,6 @@
 [CmdletBinding()]
 param()
 . (Join-Path $PSScriptRoot 'cleanup_fixture.ps1')
-$originalPreservation = (Get-Item Function:Invoke-CleanupPreservation).ScriptBlock
 $originalRemoval = (Get-Item Function:Remove-CleanupTarget).ScriptBlock
 try {
     $fixture = New-CleanupFixture 'ownership'
@@ -36,7 +35,7 @@ try {
     Assert-Refused { Invoke-DevelopmentCleanup -Repository $fixture -Apply } 'Stop this checkout' 'active relevant writer blocks apply'
     $script:CleanupWriterProcesses = @()
     $null = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-    $null = Assert-Exported $fixture 'logs/new.sav' 'unsupported new original'
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'logs/new.sav'))) 'stopped writer allows deletion of disposable saves'
 
     $fixture = New-CleanupFixture 'type-swap'
     Write-CheckFile (Join-Path $fixture 'logs/old.log') 'old output'
@@ -49,72 +48,62 @@ try {
     Assert-Refused { Assert-CleanupEntryCurrent $entry $fixture } 'file/directory type' 'directory-to-file swap refuses removal'
     Remove-Item -LiteralPath $logs
 
-    $fixture = New-CleanupFixture 'source-refusal'
+    $fixture = New-CleanupFixture 'disposable-source'
     Write-CheckFile (Join-Path $fixture 'logs/unique.py') '"""@file unique.py @see r2fc2-file-cleanup3.md; previously unclassified source."""'
-    Assert-Refused { Invoke-DevelopmentCleanup -Repository $fixture -Apply } 'Resolve required retained inputs' 'unique source cannot be discarded as a log'
-    Assert-Check (Test-Path -LiteralPath (Join-Path $fixture 'logs/unique.py')) 'unclassified source remains present'
+    $null = Invoke-DevelopmentCleanup -Repository $fixture -Apply
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'logs/unique.py'))) 'unclassified source inside a disposable output owner is deleted'
+    Assert-Check (Test-Path -LiteralPath (Join-Path $fixture 'src/source.cpp')) 'authored source outside output owners survives'
 
-    $fixture = New-CleanupFixture 'destination-conflict'
+    $fixture = New-CleanupFixture 'irrelevant-retention-state'
     $original = 'OTTD deliberately unsupported old LZO original'
     Write-CheckFile (Join-Path $fixture 'logs/current.sav') $original
     Write-CheckFile (Join-Path $fixture 'savegames/retained/logs/current.sav') 'distinct earlier save'
-    $digest = (Get-FileHash -LiteralPath (Join-Path $fixture 'logs/current.sav') -Algorithm SHA256).Hash.ToLowerInvariant()
-    $collision = Join-Path $fixture ('savegames/retained/by-hash/' + $digest.Substring(0,16) + '/current.sav')
-    Write-CheckFile $collision 'conflicting hash owner'
-    Assert-Refused { Invoke-DevelopmentCleanup -Repository $fixture -Apply } 'conflicting retained' 'both conflicting destinations block deletion'
-    Assert-Check (Test-Path -LiteralPath (Join-Path $fixture 'logs/current.sav')) 'failed export preserves source save'
-    Remove-Item -LiteralPath $collision
+    $catalogue = Join-Path $fixture 'src/tests/fixtures/cleanup/source-epochs.json'
+    Write-CheckFile $catalogue 'deliberately invalid, stale preservation catalogue'
     $null = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-    $null = Assert-Exported $fixture 'logs/current.sav' $original
+    Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'logs/current.sav'))) 'unsupported disposable save is deleted despite stale preservation state'
+    Assert-Check ([IO.File]::ReadAllText($catalogue) -eq 'deliberately invalid, stale preservation catalogue') 'cleanup does not read or repair source history catalogues'
     Assert-Check ([IO.File]::ReadAllText((Join-Path $fixture 'savegames/retained/logs/current.sav')) -eq 'distinct earlier save') 'distinct previous save was never overwritten'
 
-    $fixture = New-CleanupFixture 'interrupted-publication'
+    $fixture = New-CleanupFixture 'locked-unrelated-journal'
     Write-CheckFile (Join-Path $fixture 'logs/current.sav') 'unsupported exact original'
     $pending = Join-Path $fixture 'src/tests/fixtures/cleanup/save-exports.json.pending'
     Write-CheckFile $pending 'injected incomplete journal'
     $handle = [IO.File]::Open($pending, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
     try {
-        # The real exporter has copied its payload before this exclusive handle
-        # interrupts its commit. The cleaner must keep the source target intact.
-        Assert-Refused { Invoke-DevelopmentCleanup -Repository $fixture -Apply } 'Preservation apply refused' 'interrupted publication grants no deletion authority'
-        Assert-Check (Test-Path -LiteralPath (Join-Path $fixture 'logs/current.sav')) 'interruption leaves original save intact'
+        # An unrelated backup journal is outside the deletion owners. Cleanup
+        # must not open it or depend on a backup process finishing publication.
+        $null = Invoke-DevelopmentCleanup -Repository $fixture -Apply
+        Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'logs/current.sav'))) 'locked retention journal cannot block disposable output deletion'
     } finally { $handle.Dispose() }
-    $null = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-    $null = Assert-Exported $fixture 'logs/current.sav' 'unsupported exact original'
+    Assert-Check ([IO.File]::ReadAllText($pending) -eq 'injected incomplete journal') 'unrelated locked journal remains unchanged'
 
-    # Inject changes after the actual export, using the real final snapshot/save
-    # checks to refuse. Restore the real adapter before each recovery invocation.
+    # Simulate a writer just before removal. Actual snapshot checks must refuse
+    # the changed target, and a fresh invocation can delete its new contents.
     foreach ($mode in @('changed', 'new')) {
         $fixture = New-CleanupFixture $mode
         Write-CheckFile (Join-Path $fixture 'logs/current.sav') 'first exact original'
         $script:MutationMode = $mode
         <#
-         * Add a deterministic writer race after the actual export completed.
-         * @param Operation Actual plan/apply/verify request.
-         * @param Request Unchanged structured preservation proposal.
+         * Add a deterministic writer race immediately before actual removal.
+         * @param Entry Snapshot planned before the injected writer changes.
          * @param Repository Exact fixture checkout.
-         * @return Actual preservation result; mutation is the only test injection.
+         * @return None; the real removal's final snapshot check must refuse.
         #>
-        function Invoke-CleanupPreservation([string]$Operation, [object]$Request, [string]$Repository) {
-            $result = & $originalPreservation $Operation $Request $Repository
-            if ($Operation -eq 'apply') {
-                if ($script:MutationMode -eq 'changed') {
-                    Write-CheckFile (Join-Path $Repository 'logs/current.sav') 'second exact original'
-                } else { Write-CheckFile (Join-Path $Repository 'logs/new.sav') 'new independent original' }
-            }
-            return $result
+        function Remove-CleanupTarget([object]$Entry, [string]$Repository) {
+            if ($script:MutationMode -eq 'changed') {
+                Write-CheckFile (Join-Path $Repository 'logs/current.sav') 'second exact original'
+            } else { Write-CheckFile (Join-Path $Repository 'logs/new.sav') 'new independent original' }
+            & $originalRemoval $Entry $Repository
         }
         $refusal = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-        Assert-Check ($refusal.Failed.Count -eq 1) "$mode save after export blocks target removal"
+        Assert-Check ($refusal.Failed.Count -eq 1) "$mode save during cleanup blocks target removal"
         Assert-Check (Test-Path -LiteralPath (Join-Path $fixture 'logs/current.sav')) "$mode save survives refused target"
-        Set-Item Function:Invoke-CleanupPreservation -Value $originalPreservation
+        Set-Item Function:Remove-CleanupTarget -Value $originalRemoval
         $recovered = Invoke-DevelopmentCleanup -Repository $fixture -Apply
-        Assert-Check ($recovered.Failed.Count -eq 0) "$mode save replan/export recovers safely"
-        if ($mode -eq 'changed') {
-            $null = Assert-Exported $fixture 'logs/current.sav' 'second exact original'
-            $first = Join-Path $fixture 'savegames/retained/logs/current.sav'
-            Assert-Check ([IO.File]::ReadAllText($first) -eq 'first exact original') 'changed-save recovery retains both original versions'
-        } else { $null = Assert-Exported $fixture 'logs/new.sav' 'new independent original' }
+        Assert-Check ($recovered.Failed.Count -eq 0) "$mode save rerun deletes the newly planned disposable output"
+        Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'logs'))) "$mode save recovery removes the output owner"
+        Assert-Check (-not (Test-Path -LiteralPath (Join-Path $fixture 'savegames'))) "$mode save recovery creates no backup copies"
     }
 
     $fixture = New-CleanupFixture 'partial-removal'
@@ -141,7 +130,6 @@ try {
     Assert-Check ($recovered.Failed.Count -eq 0) 'rerun after resolved partial failure completes'
     Write-Host "Passed $checks cleanup refusal/recovery checks; real workspace output was untouched."
 } finally {
-    Set-Item Function:Invoke-CleanupPreservation -Value $originalPreservation
     Set-Item Function:Remove-CleanupTarget -Value $originalRemoval
     Complete-CleanupChecks
 }

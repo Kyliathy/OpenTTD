@@ -3,6 +3,8 @@
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 /** @file space_vehicle.cpp Native orbital probe ownership, deterministic pursuit and conserved extraction.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group14C; canonical starter and legacy cargo source lookup.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 5; asteroid custody runs on the single VisitNativeCargoPackets traversal.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BG; read-only source-authored probe presentation.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62J; original cargo-rocket flight graphics.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original heavy/retained/hauler art ownership.
@@ -21,6 +23,10 @@
 #include "space_departure.h"
 #include "space_mining_tuning.h"
 #include "space_vehicle.h"
+#include "asteroid_cargo.h"
+#include "cargo_source_digest.h"
+#include "space_mining_target.h"
+#include "space_mining_continuation.h"
 #include "space_sprite.h"
 #include "launch_sprite.h"
 #include "orbital_sprite.h"
@@ -155,7 +161,10 @@ void ReleaseSpaceMiningSlot(SpaceVehicle &vehicle)
 {
 	auto *body = GetMutableAsteroidBody(vehicle.mission.target);
 	// Releasing one hull must never revoke another hull's real extraction lease.
-	if (body != nullptr && body->mining_slot == vehicle.index) body->mining_slot = VehicleID::Invalid();
+	if (body != nullptr && body->mining_slot == vehicle.index) {
+		body->mining_slot = VehicleID::Invalid();
+		NotifySpaceMiningTargetChange(GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo);
+	}
 	vehicle.mission.work_ticks = 0;
 	// Releasing an actual body attachment also releases its approach; a distinct static berth must remain owned until departure.
 	if (vehicle.space_orders.approach && vehicle.space_orders.approach->target.kind == SpaceOrderTargetKind::Body) ReleaseSpaceApproach(vehicle);
@@ -188,12 +197,27 @@ uint32_t GetSpaceMiningApproachTicks(SpacePoint position, SpacePoint target)
 		(lo * GetMultiLayerSpaceTuning().ticks_per_economy_day + closing - 1) / closing + tuning.approach_margin_ticks));
 }
 
+/** @copydoc SelectSpaceMiningContinuationPhase */
+MiningContinuationPhase SelectSpaceMiningContinuationPhase(SpaceMiningPolicy policy, bool full_hold, bool requires_service)
+{
+	// Invalid policies grant no intent, and legacy instructions retain their
+	// explicit route/home controller rather than silently choosing a new receiver.
+	if (policy >= SpaceMiningPolicy::End || policy == SpaceMiningPolicy::LegacyReturn) return MiningContinuationPhase::None;
+	if (requires_service) return MiningContinuationPhase::NeedService;
+	// Both an explicit return choice and a genuinely full hold require receiving
+	// capacity. Only a partial FullLoadNearest instruction may seek more mineral.
+	if (policy == SpaceMiningPolicy::ReturnNearest || full_hold) return MiningContinuationPhase::ReturnCargo;
+	return MiningContinuationPhase::SeekMineral;
+}
+
 /** Assign the native mining/recall controller only when no paid Core berth retains this craft.
  * @param craft Actual orbital hull. @param target Monotonic body ID, or invalid for recall.
- * @param execute False estimates without changing work or target. @return Mission admission or unchanged refusal.
+ * @param execute False estimates without changing work or target. @param policy Current Mine policy; old/manual callers retain inert defaults.
+ * @return Mission admission or unchanged refusal.
  */
-CommandCost AssignSpaceMiningMission(SpaceVehicle &craft, uint32_t target, bool execute)
+CommandCost AssignSpaceMiningMission(SpaceVehicle &craft, uint32_t target, bool execute, SpaceMiningPolicy policy)
 {
+	if (policy >= SpaceMiningPolicy::End) return CMD_ERROR;
 	// Explicit Core service holds this hull's physical berth; mining/recall cannot move it out during reserved work.
 	if (HasOrbitalServiceAssignment(craft)) return CMD_ERROR;
 	auto *vehicle = &craft;
@@ -207,6 +231,12 @@ CommandCost AssignSpaceMiningMission(SpaceVehicle &craft, uint32_t target, bool 
 	// A new extraction needs a surviving finite body and real hold space; recall must remain available with a full load or depleted target.
 	if (!recall && (body == nullptr || body->remaining_reserve == 0)) return CMD_ERROR;
 	const CargoType cargo = body == nullptr ? vehicle->cargo_type : GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo);
+	const CargoLabel mineral = body == nullptr ? CargoLabel{} : GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo;
+	// Configured continuation cannot switch mineral after its first admission,
+	// even when the hold is empty. Explicit old/manual replacement uses its own
+	// LegacyReturn path and clears the prior associated intent on real execution.
+	if (!recall && policy != SpaceMiningPolicy::LegacyReturn && !craft.mission.continuation.mineral.Empty() &&
+		craft.mission.continuation.mineral != mineral) return CMD_ERROR;
 	// Existing loaded packets cannot be relabelled by assigning a different asteroid resource; recall preserves the current cargo type.
 	if (!IsValidCargoType(cargo) || (!recall && vehicle->cargo.TotalCount() != 0 && vehicle->cargo_type != cargo)) return CMD_ERROR;
 	const auto capacity = GetSpaceFreightCapacity(model, cargo);
@@ -214,7 +244,19 @@ CommandCost AssignSpaceMiningMission(SpaceVehicle &craft, uint32_t target, bool 
 	if (!recall && (capacity == 0 || vehicle->cargo.TotalCount() >= capacity)) return CMD_ERROR;
 	// Querying a new pursuit must prove the shared approach can admit this hull before replacing any current lease.
 	if (!recall && !RequestSpaceApproach(craft, {SpaceOrderTargetKind::Body, target, 0}, false)) return CMD_ERROR;
+	// Configured automatic choices must still be immediately eligible when
+	// assignment executes. Legacy/manual requests keep their existing ability to
+	// queue for an occupied target; neither path steals the original mining lease.
+	if (!recall && policy != SpaceMiningPolicy::LegacyReturn && !CanAcquireSpaceApproach(craft, {SpaceOrderTargetKind::Body, target, 0})) return CMD_ERROR;
 	if (execute) {
+		// Recall/manual replacement cancels only continuation intent. A configured
+		// first assignment records its actual source meaning before any exit; later
+		// continuation assignments retain that original pinned mineral and history.
+		if (recall || policy == SpaceMiningPolicy::LegacyReturn) vehicle->mission.continuation = {};
+		else if (vehicle->mission.continuation.mineral.Empty()) {
+			vehicle->mission.continuation.mineral = mineral;
+			vehicle->mission.continuation.previous_body = body->id;
+		}
 		const auto previous = vehicle->space_orders.approach;
 		ReleaseSpaceMiningSlot(*vehicle);
 		ReleaseSpaceApproach(*vehicle);
@@ -480,6 +522,17 @@ bool PrepareNativeSpaceMiningDemo()
 {
 	// Historical explicit P2 preparation needs its own empty fleet and three actual bodies; ordinary loading cannot bootstrap this demonstration.
 	if (!Company::IsValidID(_local_company) || GetAsteroidField().bodies.size() < 3 || GetSpaceVehicleCount() != 0) return false;
+	std::array<SpacePoint, 3> homes;
+	const auto bounds = GetSpacePlaneBounds(GetAsteroidField().width, GetAsteroidField().height);
+	if (!bounds) return false;
+	// The historical three-body tour requires its original starter identities
+	// and safe home coordinates before any paid hull or preview is changed.
+	for (uint32_t id = 0; id < homes.size(); ++id) {
+		const auto *body = FindAsteroidBody(GetAsteroidField(), OrbitalBodyID{id});
+		if (body == nullptr || to_underlying(body->resource_class) != id) return false;
+		homes[id] = {body->motion.position.x - static_cast<int32_t>(4 + id) * SPACE_Q16, body->motion.position.y - 6 * SPACE_Q16};
+		if (!bounds->Contains(homes[id])) return false;
+	}
 	const EngineID engine = GetSpaceProbeEngine();
 	// Catalogue, pool and generation capacity must admit the entire historical purchase before any demonstration hull is created.
 	if (!Engine::IsValidID(engine) || !Vehicle::CanAllocateItem(3) || UINT64_MAX - GetNextSpaceVehicleGeneration() < 3) return false;
@@ -502,8 +555,7 @@ bool PrepareNativeSpaceMiningDemo()
 		vehicle->build_year = TimerGameCalendar::year;
 		vehicle->max_age = Engine::Get(engine)->GetLifeLengthInDays();
 		vehicle->reliability = 0xFFFF;
-		const auto target = GetAsteroidField().bodies[i].motion.position;
-		vehicle->home = vehicle->position = {target.x - static_cast<int32_t>(4 + i) * SPACE_Q16, target.y - 6 * SPACE_Q16};
+		vehicle->home = vehicle->position = homes[i];
 		vehicle->UpdateSpacePosition();
 		GroupStatistics::CountEngine(vehicle, 1);
 		GroupStatistics::CountVehicle(vehicle, 1);
@@ -513,31 +565,36 @@ bool PrepareNativeSpaceMiningDemo()
 	return ValidateSpaceVehicles();
 }
 
-/** Audit asteroid provenance through the shared complete physical-owner traversal.
- * @return Whether each extracted packet retains its original body/cargo identity in exactly one physical container.
- */
-static bool ValidateAsteroidPacketCustody()
+/** @copydoc ValidateAsteroidPacketCustody */
+bool ValidateAsteroidPacketCustody(const AsteroidField &field)
 {
-	const auto &field = GetAsteroidField(); std::set<CargoPacketID> owned;
+	std::set<CargoPacketID> owned;
 	/** Check original natural provenance without taking ownership or granting a material receipt.
 	 * @param packet Actual packet in one visited physical container.
 	 * @param cargo That container's resolved cargo meaning.
 	 * @param station Actual goods queue, unused by natural provenance; no receipt/source queue is invented here.
-	 * @return Whether asteroid identity, physical origin and unique custody remain valid.
+	 * @return Whether the source is canonical and any asteroid identity, physical origin and unique custody remain valid.
 	 */
 	const auto add = [&](const CargoPacket &packet, CargoType cargo, [[maybe_unused]] StationID station) {
-		const auto source = packet.GetSource(); if (source.type != SourceType::Asteroid) return true;
-		// No duplicate container, missing natural body, wrong extraction plane or
-		// invented pickup station may legitimize an originally mined packet.
-		if (!owned.insert(packet.index).second || source.id >= field.bodies.size() || !IsValidTile(packet.GetSourceTile()) ||
+		const auto source = packet.GetSource();
+		if (!source.IsCanonical()) return false;
+		if (source.type != SourceType::Asteroid) return true;
+		// A typed origin keeps its full body ID and mineral; a legacy one resolves through its surviving body.
+		const auto origin = ResolveAsteroidCargoOrigin(source, field);
+		// Historical provenance may outlive the body, but a second container,
+		// unissued/wrong origin, wrong production plane or invented pickup cannot.
+		if (!owned.insert(packet.index).second || !origin || !IsValidCargoType(cargo) || !IsValidTile(packet.GetSourceTile()) ||
 			GetTileLayer(packet.GetSourceTile()) != MapLayer::Space || packet.GetFirstStation() != StationID::Invalid()) return false;
-		return cargo == GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(field.bodies[source.id].resource_class)].cargo);
+		return cargo == GetCargoTypeByLabel(origin->mineral);
 	};
 	if (!VisitNativeCargoPackets(add)) return false;
 	// Only after actual owners have supplied references may the pool reveal a
 	// missing extracted fragment. Pool membership never supplies its container.
 	for (const auto *packet : CargoPacket::Iterate()) {
-		if (packet->GetSource().type == SourceType::Asteroid && !owned.contains(packet->index)) return false;
+		// Every allocated packet needs a canonical source, and every asteroid packet exactly one inspected owner;
+		// an unreferenced remainder is lost custody, not new reserve.
+		const auto source = packet->GetSource();
+		if (!source.IsCanonical() || (source.type == SourceType::Asteroid && !owned.contains(packet->index))) return false;
 	}
 	return true;
 }
@@ -582,11 +639,13 @@ bool ValidateSpaceVehicles()
 			if (!CanRetainSpaceCargoPacket(vehicle->construction, *packet)) return false;
 			if (source.type != SourceType::Asteroid) continue; // Paid construction freight keeps its real Surface source; only actual asteroid packets enter the native resource checks below.
 			if (!packet_owners.insert(packet->index).second) return false;
-			// The source remains a valid natural body identity before its resource label can authorize held inventory.
-			if (source.type != SourceType::Asteroid || source.id >= field.bodies.size()) return false;
+			// Cargo history remains meaningful after retirement, independently of
+			// the live body/lease still required for active pursuit and extraction.
+			const auto origin = ResolveAsteroidCargoOrigin(source, field);
+			if (!origin) return false;
 			// Extraction keeps its actual Space production tile and never invents a first pickup station during descent or handling.
 			if (!IsValidTile(packet->GetSourceTile()) || GetTileLayer(packet->GetSourceTile()) != MapLayer::Space || packet->GetFirstStation() != StationID::Invalid()) return false;
-			if (vehicle->cargo_type != GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(field.bodies[source.id].resource_class)].cargo)) return false;
+			if (vehicle->cargo_type != GetCargoTypeByLabel(origin->mineral)) return false;
 		}
 		// A body lease cannot remain assigned after its hull exits Mining; recall/release must relinquish extraction separately from cargo custody.
 		if (body != nullptr && body->mining_slot == vehicle->index && vehicle->mission.phase != SpaceMissionPhase::Mining) return false;
@@ -597,7 +656,7 @@ bool ValidateSpaceVehicles()
 		// Missing hulls, inactive extraction or a different target cannot leave an actionable slot behind.
 		if (vehicle == nullptr || vehicle->mission.phase != SpaceMissionPhase::Mining || vehicle->mission.target != body.id) return false;
 	}
-	return ValidateOrbitalManufacturingProductionLinks(CaptureSpaceStructures(), CaptureSpaceProduction(), GetNextSpaceStructureGeneration(), GetNextSpaceVehicleGeneration()) && ValidateAsteroidPacketCustody();
+	return ValidateOrbitalManufacturingProductionLinks(CaptureSpaceStructures(), CaptureSpaceProduction(), GetNextSpaceStructureGeneration(), GetNextSpaceVehicleGeneration()) && ValidateAsteroidPacketCustody(field);
 }
 
 /** @return Deterministic current native fleet/accounting digest for interrupted replay and pure-quote validation; rendering grants no ownership. */
@@ -618,9 +677,22 @@ uint64_t ComputeSpaceVehicleDigest()
 		hash(static_cast<int64_t>(vehicle->profit_this_year)); hash(static_cast<int64_t>(Company::Get(vehicle->owner)->money));
 		// Packet identity, age and feeder/source history make cloned/reset cargo visible even when the hold quantity matches.
 		for (const auto *packet : *vehicle->cargo.Packets()) {
-			hash(packet->index.base()); hash(packet->Count()); hash(packet->GetPeriodsInTransit()); hash(to_underlying(packet->GetSource().type)); hash(packet->GetSource().id);
+			hash(packet->index.base()); hash(packet->Count()); hash(packet->GetPeriodsInTransit()); AppendCargoSourceDigest(packet->GetSource(), hash);
 			hash(packet->GetFirstStation().base()); hash(static_cast<int64_t>(packet->GetFeederShare()));
 			hash(packet->GetSourceTile().base());
+		}
+		const auto &intent = vehicle->mission.continuation;
+		// Old inert missions keep their diagnostic stream. Configured intent adds
+		// every saved discriminator and optional field, so quote/replay checks
+		// cannot miss a changed mineral, destination or delayed retry.
+		if (intent != SpaceMiningContinuationState{}) {
+			hash(0x4D494E45494E5431ULL); hash(to_underlying(intent.phase)); hash(intent.previous_body.base());
+			for (const auto byte : intent.mineral) hash(byte);
+			hash(intent.effective_target.has_value());
+			if (intent.effective_target) { hash(to_underlying(intent.effective_target->kind)); hash(intent.effective_target->id); hash(intent.effective_target->generation); }
+			hash(intent.departure_point.has_value()); if (intent.departure_point) point(*intent.departure_point);
+			hash(intent.retry_ticks); hash(to_underlying(intent.waiting));
+			hash(intent.route_cursor); hash(intent.travel_ticks);
 		}
 	}
 	hash(ComputeSpaceOrdersDigest());

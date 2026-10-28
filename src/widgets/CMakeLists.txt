@@ -1,4 +1,5 @@
 # Underground controls: docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md.
+# Space policy controls: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group30.
 add_files(
     ai_widget.h
     airport_widget.h
@@ -48,6 +49,7 @@ add_files(
     settings_widget.h
     sign_widget.h
     smallmap_widget.h
+    space_survey_widget.h
     station_widget.h
     statusbar_widget.h
     story_widget.h

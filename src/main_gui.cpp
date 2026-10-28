@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file main_gui.cpp Handling of the main viewport. @see docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (Debug keys moved to Ctrl+Alt) */
+/** @file main_gui.cpp Handling of the main viewport.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (Debug keys moved to Ctrl+Alt)
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; consolidated layer hotkeys, window toggle and settings.
+ */
 
 #include "stdafx.h"
 #include "spritecache.h"

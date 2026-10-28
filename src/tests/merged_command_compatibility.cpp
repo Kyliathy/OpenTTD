@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/commands/archi-commands.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  * @see docs/zz-reach2/upgrades/2026-10/r2lbf-linux-build-fixes.md Group 16 (the alias check follows this build's debug flavour)
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 5; the incoming Mine policy command is appended at 223.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -12,6 +13,11 @@
 #include "../network/core/config.h"
 #include "../rev.h"
 #include "../safeguards.h"
+
+/* m2o28 Group 5: the destination's delivered command IDs stay fixed through 222, and the incoming Mine policy
+ * command is appended after them; it was ID 211 in the incoming branch, which the destination already uses. */
+static_assert(to_underlying(Commands::SetTubeVehicleGeothermalPower) == 222);
+static_assert(to_underlying(Commands::SetSpaceMiningPolicy) == 223);
 
 /** Native U64 intents and donor raw-label transport retain their distinct exact bytes. */
 TEST_CASE("Merged supply codecs retain U64 intents and original raw cargo labels", "[merged-command-codec]")
@@ -44,7 +50,7 @@ TEST_CASE("Merged native network identity refuses original and stale protocol pe
 {
 	const std::string current(GetNetworkRevisionString());
 	REQUIRE(current.size() < NETWORK_REVISION_LENGTH); REQUIRE(IsNetworkCompatibleVersion(current));
-	const auto marker = current.find("+m441c223p"); REQUIRE(marker != std::string::npos);
+	const auto marker = current.find("+m441c224p"); REQUIRE(marker != std::string::npos);
 	CHECK_FALSE(IsNetworkCompatibleVersion(current.substr(0, marker))); // Same actual hash, original protocol.
 	std::string stale = current; stale[marker + 2] = '0'; CHECK_FALSE(IsNetworkCompatibleVersion(stale));
 	stale = current; stale[marker + 6] = '0'; CHECK_FALSE(IsNetworkCompatibleVersion(stale));

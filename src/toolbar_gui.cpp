@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file toolbar_gui.cpp Main toolbar and underground entry routing. @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (per-layer hotkeys) */
+/** @file toolbar_gui.cpp Main toolbar and underground entry routing.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs7-underground-construction-and-fleet.md, docs/zz-reach2/architecture/gui/archi-gui.md and docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 2 (per-layer hotkeys)
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; consolidated layer hotkeys, window toggle and settings.
+ */
 
 #include "stdafx.h"
 #include "core/geometry_func.hpp"
@@ -14,6 +18,7 @@
 #include "multilayer_sprite.h"
 #include "window_gui.h"
 #include "window_func.h"
+#include "progress.h"
 #include "viewport_func.h"
 #include "command_func.h"
 #include "dropdown_type.h"
@@ -2153,18 +2158,40 @@ using HotkeyWindow = std::pair<WindowClass, WindowNumber>;
  * D10 toggle: when the window a toolbar hotkey opens is already as far in front as it can go, the hotkey closes it
  * instead of raising it again. A window covered by one it can be raised above is raised as before; windows that
  * always stay above it (the game options over the small map, for instance) do not stop the toggle.
+ * The incoming Space-fixes safeguards (m2o28 Group 6, r2sff1 Group3) apply to every window-opening key: a modal
+ * progress or modal window owns keyboard input exactly as it owns mouse input, and pinned or non-closable windows
+ * keep their content, so a repeated key raises them instead of closing them.
  * @param target Window the hotkey opens or raises; nothing for an action that never closes a window.
- * @return Whether the window was closed, which replaces the hotkey's usual action.
+ * @return Whether the hotkey is fully handled here (closed, or blocked by a modal state), which replaces its usual action.
  */
 static bool ToggleHotkeyWindow(const std::optional<HotkeyWindow> &target)
 {
-	// Only enabled user preferences and actions with a specific existing window may replace raising with closing.
-	if (!_settings_client.gui.hotkey_toggles_window || !target.has_value()) return false;
+	// Build palettes, placement tools, zoom and screenshots have no target window and keep their own behavior.
+	if (!target.has_value()) return false;
+	// A world-generation or other modal progress blocks the key entirely, as it blocks clicks.
+	if (HasModalProgress()) return true;
+	// A modal window anywhere in the stack keeps the focus; raise it so the player sees what blocks the key.
+	for (const Window *window : Window::IterateFromFront()) {
+		if (!window->window_desc.flags.Test(WindowDefaultFlag::Modal)) continue;
+		BringWindowToFrontById(window->window_class, window->window_number);
+		return true;
+	}
+	// Only the enabled user preference may replace raising with closing.
+	if (!_settings_client.gui.hotkey_toggles_window) return false;
 	Window *w = FindWindowById(target->first, target->second);
 	// A window that is not open yet opens, and one that can still come further forward is raised, as before.
-	if (w == nullptr || !IsWindowRaisedAsFarAsPossible(w)) return false;
+	// Pinned and non-closable windows are never closed by their key: they are raised (a no-op when already in front).
+	if (w == nullptr || !IsWindowRaisedAsFarAsPossible(w) || w->flags.Test(WindowFlag::Sticky) ||
+			w->window_desc.flags.Test(WindowDefaultFlag::NoClose)) return false;
 	w->Close();
 	return true;
+}
+
+/** Open Game Options, or raise the existing window without recreating it, which would lose its open tab and scroll
+ * position. Called once ToggleHotkeyWindow has declined to close it (r2sff1 Group3 repeat-F2 behavior). */
+static void ShowOrRaiseGameOptions()
+{
+	if (BringWindowToFrontById(WindowClass::GameOptions, GameOptionsWindowNumber::GameOptions) == nullptr) ShowGameOptions();
 }
 
 /**
@@ -2284,7 +2311,6 @@ struct MainToolbarWindow : Window {
 		if (cbf != CallBackFunction::None) _last_started_action = cbf;
 	}
 
-	/** @param hotkey Configured main-toolbar action. @return Whether this toolbar handled the shortcut. */
 	/** @param hotkey Native toolbar action selected by the key dispatcher. @return Whether this toolbar handled the action. */
 	EventState OnHotkey(int hotkey) override
 	{
@@ -2294,7 +2320,8 @@ struct MainToolbarWindow : Window {
 		switch (hotkey) {
 			case MTHK_PAUSE: ToolbarPauseClick(this); break;
 			case MTHK_FASTFORWARD: ToolbarFastForwardClick(this); break;
-			case MTHK_SETTINGS: ShowGameOptions(); break;
+			// ToggleHotkeyWindow above closed a front-most Game Options; otherwise open it or raise it intact.
+			case MTHK_SETTINGS: ShowOrRaiseGameOptions(); break;
 			case MTHK_SAVEGAME: MenuClickSaveLoad(); break;
 			case MTHK_LOADGAME: ShowSaveLoadDialog(AbstractFileType::Savegame, SaveLoadOperation::Load); break;
 			case MTHK_SMALLMAP: ShowSmallMap(); break;
@@ -2767,7 +2794,8 @@ struct ScenarioEditorToolbarWindow : Window {
 		if (IsSpecialHotkey(hotkey)) {
 			CallBackFunction cbf = CallBackFunction::None;
 			switch (MainToolbarEditorHotkeys(hotkey)) {
-				case MainToolbarEditorHotkeys::Settings: ShowGameOptions(); break;
+				// ToggleHotkeyWindow above closed a front-most Game Options; otherwise open it or raise it intact.
+				case MainToolbarEditorHotkeys::Settings: ShowOrRaiseGameOptions(); break;
 				case MainToolbarEditorHotkeys::SaveGame: MenuClickSaveLoad(); break;
 				case MainToolbarEditorHotkeys::Music: ShowMusicWindow(); break;
 				case MainToolbarEditorHotkeys::LandInfo: cbf = PlaceLandBlockInfo(); break;

@@ -46,6 +46,42 @@ Owner: this plan, following [R2FC](r2fc-file-cleanup.md) and [R2FC-2](r2fc-file-
 
 ## Status and transfer objective
 
+### Current cleanup policy — user correction, 2026-10-26
+
+`clean.ps1 -Apply` means the caller has already backed up anything needed and
+authorizes deletion of everything inside the declared disposable output owners,
+including saves, configs and source copies. Cleanup does not validate source
+epochs, hash retained inputs, export files, repair manifests or create backups.
+Default preview, `-DryRun`/`-WhatIf`, `-KeepBuild`, containment, tracked-file,
+reparse-point, nested-repository, stopped-writer and mutation checks remain.
+Unknown siblings and durable source/media/fixture/save owners remain outside
+the target selection. Preservation and transfer tools are separate operations.
+
+Safety review: run from the repository root containing `clean.ps1`; invoking
+its path from a parent, child or another checkout refuses. Apply requires a
+clean Git working tree (no staged/unstaged changes or non-ignored untracked
+files), checked again before each removal. Ignored output is expected, and
+preview remains available while source changes are pending. Git ownership/index
+environment overrides refuse. Tracked paths protect their containing targets
+even when the tracked entry is missing or is an empty submodule directory.
+
+This instruction supersedes the automatic preservation/export entry gates in
+the completed tasks and dated storage tables below and in the continuation.
+Their checked results remain historical records. The rejected hash-gate repair
+was undone, including all 1,891 added source copies and its manifest/helper edits.
+Focused verification after the safety review: `cleanup_check.ps1` passed 74
+scope/disposal checks, `cleanup_check-1.ps1` passed 29 refusal/recovery checks,
+and `cleanup_check-2.ps1` passed 26 directory/Git checks; each finished under
+four seconds. Run each with `powershell -NoProfile -File` using its path under
+`src/tests/multilayer/support/`. Rebuildable logs belong in
+`test-cache/cleanup/cleanup-safety-{scope,races,directory}.log`, respectively.
+The actual checkout's `clean.ps1 -DryRun` passed with 11 selected targets and
+no preservation refusal; its rebuildable output is
+`test-cache/cleanup/cleanup-safety-preview.log`. The real read-only
+`Assert-CleanupCleanWorktree` guard correctly refused the current pending edits;
+its observation is `test-cache/cleanup/cleanup-safety-live-git.log`. Real cleanup
+is left to the caller's explicit `-Apply` invocation after resolving Git changes.
+
 **Completed predecessor; continuation current as of2026-10-23.** Groups1-20BB
 and12B remain complete here. The original pause after20BB is recorded in its
 [historical checkpoint](r2fc-file-cleanup3-a-execution.md#checkpoint-paused-after-group20bb).

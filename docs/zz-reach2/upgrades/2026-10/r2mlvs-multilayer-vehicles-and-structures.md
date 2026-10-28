@@ -37,7 +37,12 @@ Underground work remains paused.
 
 ## Development artifact layout
 
-Owner: this parent; active lifecycle implementation: [R2FC2](r2fc2-file-cleanup3.md), following [completed preservation](r2fc-file-cleanup3.md). The [shared architecture](../../architecture/archi-historical-debug.md) is the sole storage/rebuild reference. Save/history promotion, selected producer adapters and durable Space foundation export are delivered; automatic export, broad cleanup and cold transfer gates follow R2FC2 order. [R2FC cleanup](r2fc-file-cleanup.md) records the earlier layout migration. This contract supersedes the former docs `assets/`, `assets/reviews/`, `tools/` and assisting-script placement rules for all children. It does not change gameplay, save formats or ordinary OpenTTD/Classic user paths.
+Cleanup invocation contract: run `clean.ps1` from its repository root. `-Apply`
+requires a clean Git working tree (ignored generated output is allowed); preview
+permits pending edits. A script launched from another current directory refuses.
+Durable inputs and reconstruction tools remain outside its declared output owners.
+
+Owner: this parent; lifecycle implementation history: [R2FC2](r2fc2-file-cleanup3.md), following [completed preservation](r2fc-file-cleanup3.md). The [shared architecture](../../architecture/archi-historical-debug.md) is the sole storage/rebuild reference. Save/history promotion, selected producer adapters and durable Space foundation export are delivered. **User correction, 2026-10-26:** `clean.ps1 -Apply` treats selected output as disposable, including saves/configs/source copies; backups are the caller's responsibility. Cleanup has no source-hash/catalogue checks, automatic export or backup creation. Filesystem ownership, tracked-file and stopped-writer guards remain. Preservation and transfer tools are separate operations. [R2FC cleanup](r2fc-file-cleanup.md) records the earlier layout migration. This contract supersedes the former docs `assets/`, `assets/reviews/`, `tools/` and assisting-script placement rules for all children. It does not change gameplay, save formats or ordinary OpenTTD/Classic user paths.
 
 The earlier rule kept binaries in subdirectories beside plans for local authoring/review and kept fixtures beside tests. A separate [diagnostic incident](../../../zz-rhr/upgrades/2026-10/r2mlvs6-a-industry-lifecycle.md) records that a config beside docs accidentally redirected native content/language lookup there. The surviving empty trees' exact creating invocation is unknown. The subsequent build-local config workaround preserved Windows baseset discovery; relocation must preserve that property, not the fixed directory name.
 

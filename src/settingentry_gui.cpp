@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settingentry_gui.cpp Definitions of classes for handling display of individual configuration settings.  @see docs/zz-reach2/architecture/gui/archi-gui.md native user window preferences. */
+/** @file settingentry_gui.cpp Definitions of classes for handling display of individual configuration settings.
+ * @see docs/zz-reach2/architecture/gui/archi-gui.md native user window preferences.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; consolidated layer hotkeys, window toggle and settings.
+ */
 
 #include "stdafx.h"
 #include "company_base.h"

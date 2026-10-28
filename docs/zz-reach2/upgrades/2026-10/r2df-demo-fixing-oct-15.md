@@ -151,11 +151,19 @@ _Applies to Groups 2-3._
 
 ### Group 2 - Make the map window follow layers and shrink
 
+Scoped overlap: [R2SFF1](r2sff1-space-fixes-features-1.md) Group3 and its
+[shortcut evidence](r2sff1-c-shortcut-notes.md) deliver2.4, the runtime/conflict
+portion of2.5, the hotkey-toggle setting portion of3.1, and F2 behavior/tests
+within3.4/3.6. The original user's configuration was preserved; no manual
+backup/edit of `build/hotkeys.cfg` is claimed for2.5. Small-map following/legend,
+the Escape setting/dispatch, other popup mappings and frame-rate tooltips remain
+pending here. Partially delivered tasks remain unchecked.
+
 {{SIMPLE}}
 - [ ] 2.1 Make `GetNumberRowsLegend`, `GetMinLegendWidth` and `OnInit` depend on the shown `map_type`. LinkStats reserve the link-colour column; Industries/Owners use their counts; other types use their own fixed rows. Keep `GetPositionOnLegend` and `DrawWidget` consistent and the column count at least 2.
 - [ ] 2.2 Confirm the contour legend lists the correct height entries on each layer (the "0 ft" observation from 1.7). Fix the legend source if a rock layer shows a misleading single entry; leave simulation untouched.
 - [ ] 2.3 In `SetViewportLayer`, notify `WindowClass::SmallMap` with a new invalidation code when the main window changes layer. In `SmallMapWindow::OnInvalidateData`, adopt the main view's layer through one shared helper that updates the layer button sprite and marks the link overlay dirty. Reuse that helper in `SmallMapCenterOnCurrentPos` and `OnDropdownSelect`.
-- [ ] 2.4 Add per-layer hotkeys Alt+1..4 in display order (D2) to the game toolbar (`MTHK_*` after `MTHK_CYCLE_MAP_LAYER`) and the editor toolbar (special hotkeys). Each selects through one helper in `map_layer_gui.cpp` that ignores unallocated layers. Mention the keys in the layer button tooltips.
+- [X] 2.4 Add per-layer hotkeys Alt+1..4 in display order (D2) to the game toolbar (`MTHK_*` after `MTHK_CYCLE_MAP_LAYER`) and the editor toolbar (special hotkeys). Each selects through one helper in `map_layer_gui.cpp` that ignores unallocated layers. Mention the keys in the layer button tooltips. Verified by R2SFF1 Group3 in both configurations.
 - [ ] 2.5 Move the Debug `crash_game`/`money`/`update_coordinates` defaults to Ctrl+Alt+0/1/2 and check for conflicts. Back up the repo-local `build/hotkeys.cfg`, then update its stored Alt+1/Alt+2 entries so the new defaults take effect. Record the change in the 2.7 documentation.
 - [ ] 2.6 Add `src/tests/smallmap_layer.cpp`: the legend minimum per map type, the layer following after `N`/dropdown/Alt+N, extra viewports not moving the small map, and unallocated layers ignored. Use the hotkey pattern of `src/tests/underground_window.cpp`. Capture the small map at the screenshot size for each layer.
 - [ ] 2.7 Update the map-layer architecture **Layer dropdowns and view state** paragraph and the review-map M-7 note to say the small map now follows the main view. List the new hotkeys.

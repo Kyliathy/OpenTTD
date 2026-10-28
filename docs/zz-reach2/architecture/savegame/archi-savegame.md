@@ -294,7 +294,7 @@ changed/unknown content and missing new-version families refuse load/preview.
 
 `space_order_sl.cpp` owns mandatory `SPOR`, with a9-byte next-generation/count
 header, at most64 native Vehicle rows,22 fixed bytes per row and14 bytes per
-typed order, capped at32 orders per craft. Rows store VehicleID/generation,
+typed order in the410 era (15 from443, adding the per-Mine policy), capped at32 orders per craft. Rows store VehicleID/generation,
 queue/index, started/block reason and timer/work. Body targets retain32-bit IDs
 with generation0; pool targets carry nonzero generations. `SpaceVehicle` owns
 the sole live queue. Existing `VEHS` and `CAPA` retain mission/packet ownership;
@@ -310,6 +310,40 @@ native diagnostic digest. Both configurations pass exact native continuation,
 ordinary resave, malformed full loads and valid/corrupt/valid previews; evidence
 is in `logs/space-content-orders-verification.json`. Whole-plan network/art and
 all unfinished business-action acceptance remain pending in Plans8-16.
+
+## Current asteroid origins, lifecycle and continuation (441-445)
+
+[R2SFF1](../../upgrades/2026-10/r2sff1-space-fixes-features-1.md) keeps the original
+ASTR/SPKN, CAPA, VEHS and SPOR owners.441 adds full32-bit immutable asteroid
+origin/mineral columns to native packets. Older natural sources qualify from
+their same-file body, independently in preview; unrelated station/Industry
+sources retain their domains. Body0 is valid, UINT32_MAX is invalid, and retired
+origins remain history rather than resolving to a new live body.
+
+442 adds ASTR lifecycle revision1, sparse monotonic issuance, cumulative exits,
+weighted credit/latest metadata, countdown and both complete timer/candidate RNG
+streams. Wire rows sort by stable body ID rather than compact-vector position.
+Live disclosures reference surviving bodies; no retired-body catalogue is saved.
+Genuine older fields adopt zero exit history and seeded independent streams
+without changing their original IDs, signed velocities, finite stock or paid
+owners. Loading never regenerates from density or refills a field. Classic's
+absent field/renewal remains absent, preserving its original stored map layers.
+
+443 adds per-Mine policy to SPOR and contained intent to native VEHS: mineral,
+previous body, effective typed target, departure, retry and bounded travel state.
+Old instructions adopt LegacyReturn/inert defaults.444 admits explicit local
+departure for an actual unordered legacy miner;445 admits ownerless survey
+Return/Waiting with no live target. Existing ASTR body/survey row widths remain
+unchanged by445. These additions do not create another Vehicle/cargo registry.
+
+Preview validates complete same-file identities and cross-owner joins before
+publication, retaining the open world on refusal. Full load additionally checks
+actual paid native hulls, leases, cargo custody and target incarnations. No-op
+transport compares complete owner rows; elapsed replay compares recorded actual
+next decisions. [Current compatibility](../../upgrades/2026-10/r2sff1-z-k-native-compatibility.md)
+and [lifecycle continuation](../../upgrades/2026-10/r2sff1-z-j-native-lifecycle.md)
+cover ordinary older/current loads, both full private streams and current445
+saves. Paid permits, service parts, descent work and company costs remain native.
 
 ## Paid Surface hull assembly (411)
 

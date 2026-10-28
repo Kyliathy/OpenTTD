@@ -5,7 +5,10 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file openttd.cpp Functions related to starting OpenTTD. @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, bounded native failure reporting */
+/** @file openttd.cpp Functions related to starting OpenTTD.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs3mp-master-plan.md, bounded native failure reporting.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group29; normal unpaused field publication precedes original vehicle arbitration.
+ */
 
 #include "stdafx.h"
 #include "asteroid.h"
@@ -1244,7 +1247,7 @@ void StateGameLoop()
 	if (_game_mode == GameMode::Editor) {
 		BasePersistentStorageArray::SwitchMode(PSM_ENTER_GAMELOOP);
 		RunTileLoop();
-		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
+		// Editor callbacks cannot earn asteroid motion, exits or renewal time.
 		CallVehicleTicks();
 		RefreshSpaceViewports();
 		TickSurfaceHandling();
@@ -1281,7 +1284,7 @@ void StateGameLoop()
 		TimerManager<TimerGameEconomy>::Elapsed({});
 		TimerManager<TimerGameTick>::Elapsed(1);
 		RunTileLoop();
-		TickAsteroidField(); // Publish current moving targets before native Space vehicle decisions.
+		TickAsteroidField(); // Complete field/index/attachment publication before the existing vehicle-owned arbitration and movement.
 		CallVehicleTicks();
 		RefreshSpaceViewports();
 		TickSurfaceHandling();

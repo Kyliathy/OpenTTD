@@ -3,7 +3,8 @@
  * OpenTTD is free software under the GNU General Public License, version 2.
  * See <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
-/** @file asteroid_sl.cpp Bounded asteroid/survey transport and424 frozen initial starter input; independent read-only preview.
+/** @file asteroid_sl.cpp Bounded lifecycle field and sparse disclosure transport with independent read-only preview.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups12/22/26; ID-ordered bodies, complete renewal, same-file disclosure and source-qualified ownerless departure.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group2
  */
@@ -11,6 +12,7 @@
 #include "saveload.h"
 #include "saveload_error.hpp"
 #include "../asteroid.h"
+#include "asteroid_field_sl.h"
 #include "../multilayer_state.h"
 #include "../map_func.h"
 #include "../fios.h"
@@ -34,11 +36,6 @@ static uint64_t ReadUnsigned(uint8_t width)
 {
 	uint64_t value = 0; while (width-- != 0) value = (value << 8) | SlReadByte(); return value;
 }
-/** @param point Signed projected Q16 coordinate; it never stores camera or stacked-world Y. */
-static void WritePoint(SpacePoint point) { WriteUnsigned(static_cast<uint32_t>(point.x), 4); WriteUnsigned(static_cast<uint32_t>(point.y), 4); }
-/** @return Signed projected Q16 coordinate; gameplay/preview validators subsequently check its saved plane bounds. */
-static SpacePoint ReadPoint() { return {static_cast<int32_t>(ReadUnsigned(4)), static_cast<int32_t>(ReadUnsigned(4))}; }
-
 /**
  * Validate field and saved world authority together before publishing orbital state.
  * @param field Staged complete field, or nullptr for an older schema with no asteroid owner.
@@ -76,78 +73,46 @@ void ValidateAsteroidLoadPreview()
 	if (_load_check_data.asteroid_active != ((_load_check_data.multilayer_feature_flags & MULTILAYER_FEATURE_ASTEROIDS) != 0)) SlErrorCorrupt("Asteroid preview feature mismatch");
 	// An active field must belong to this candidate world's saved seed, never to the running world's previous generation.
 	if (_load_check_data.asteroid_active && _load_check_data.asteroid_seed != _load_check_data.orbital_seed) SlErrorCorrupt("Asteroid preview seed mismatch");
+	// Count is only framing. Exact candidate IDs/classes and its own issuance
+	// supply membership; an inactive family cannot smuggle retained body metadata.
+	if (_load_check_data.asteroid_body_count != _load_check_data.asteroid_body_rows.size() ||
+		!ValidateAsteroidIdentityRecords(_load_check_data.asteroid_body_rows, _load_check_data.asteroid_next_body_id) ||
+		(!_load_check_data.asteroid_active && (!_load_check_data.asteroid_body_rows.empty() || _load_check_data.asteroid_next_body_id != 0))) SlErrorCorrupt("Invalid asteroid preview identities");
 }
 
 /** Sole asteroid field chunk owner; generated records and original access evidence load without rerolling terrain or RNG. */
 struct ASTRChunkHandler : ChunkHandler {
 	/** Bind the existing bounded RIFF owner; starter inputs extend its payload rather than creating a duplicate registry. */
 	ASTRChunkHandler() : ChunkHandler("ASTR", ChunkType::Riff) {}
-	/** Save authoritative records and frozen initial inputs, preserving the established header/body/survey offsets. */
+	/** Save the current original field through its canonical bounded payload adapter. */
 	void Save() const override
 	{
 		const auto &field = GetAsteroidField();
 		CheckField(&field, Map::SizeX(), Map::SizeY(), CaptureMultiLayerStateSchema().feature_flags, CaptureMultiLayerStateSchema().orbital_seed);
-		SlSetLength(51 + 40 * field.bodies.size() + 34 * field.surveys.size() + 26);
-		WriteUnsigned(field.generation_version, 2); WriteUnsigned(field.width, 4); WriteUnsigned(field.height, 4);
-		WriteUnsigned(field.seed, 8); WriteUnsigned(field.elapsed_ticks, 8); WriteUnsigned(to_underlying(field.density), 1);
-		WriteUnsigned(field.bodies.size(), 4); WriteUnsigned(field.surveys.size(), 4);
-		WritePoint(field.band.min); WritePoint(field.band.max);
-		// Stable body order saves finite resource custody and motion exactly once; spatial buckets remain disposable.
-		for (const auto &body : field.bodies) {
-			WriteUnsigned(body.id.base(), 4); WriteUnsigned(to_underlying(body.resource_class), 1); WriteUnsigned(to_underlying(body.size), 1);
-			WritePoint(body.motion.position); WriteUnsigned(static_cast<uint32_t>(body.motion.velocity_x), 4); WriteUnsigned(static_cast<uint32_t>(body.motion.velocity_y), 4);
-			WriteUnsigned(body.motion.remainder_x, 1); WriteUnsigned(body.motion.remainder_y, 1);
-			WriteUnsigned(body.initial_reserve, 4); WriteUnsigned(body.remaining_reserve, 4); WriteUnsigned(body.survey_slot.base(), 4); WriteUnsigned(body.mining_slot.base(), 4);
-		}
-		// Preview leases/timers continue from their actual saved phase and never synthesize native mining cargo.
-		for (const auto &survey : field.surveys) {
-			WriteUnsigned(survey.id.base(), 4); WriteUnsigned(survey.model, 2); WritePoint(survey.position); WritePoint(survey.home);
-			WriteUnsigned(survey.target.base(), 4); WriteUnsigned(to_underlying(survey.phase), 1); WriteUnsigned(survey.remaining_ticks, 2);
-			WriteUnsigned(survey.travel_remainder, 1); WriteUnsigned(survey.completed_surveys, 4);
-		}
-		const auto &input = field.starter_input;
-		WriteUnsigned(to_underlying(input.kind), 1); WriteUnsigned(input.site_x, 4); WriteUnsigned(input.site_y, 4);
-		WriteUnsigned(input.rotation, 1); WritePoint(input.preference); WriteUnsigned(input.initial_approach_distance_squared, 8);
+		const auto encoded = EncodeAsteroidField(field);
+		if (!encoded) SlErrorCorrupt("Invalid current asteroid field on save");
+		SlSetLength(encoded->size());
+		// The complete field was validated before writing. Original scalar byte
+		// order is retained; no derived lookup, host struct or optional is copied.
+		for (const auto byte : *encoded) SlWriteByte(byte);
 	}
-	/** @return Bounded validated field; pre424 records retain explicit unknown initial history without reconstruction. */
+	/** @return Complete validated original field; genuinely older layouts upgrade only their absent lifecycle fields. */
 	AsteroidField Read() const
 	{
 		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidField)) SlErrorCorrupt("Unexpected asteroid family in old save");
+		const auto era = IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles) ? AsteroidFieldWireEra::Preview :
+			IsSavegameVersionBefore(SaveLoadVersion::AsteroidStarterInputs) ? AsteroidFieldWireEra::NativeMining :
+			IsSavegameVersionBefore(SaveLoadVersion::AsteroidFieldLifecycle) ? AsteroidFieldWireEra::StarterInputs :
+			IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyDeparture) ? AsteroidFieldWireEra::Lifecycle : AsteroidFieldWireEra::SurveyDeparture;
 		const auto length = SlGetFieldLength();
-		const uint32_t body_size = IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles) ? 36 : 40;
-		const uint32_t input_size = IsSavegameVersionBefore(SaveLoadVersion::AsteroidStarterInputs) ? 0 : 26;
-		// Bound the complete payload before allocation; a new schema cannot omit or append arbitrary initial-input bytes.
-		if (length < 51 + input_size || length > 51 + body_size * MAX_ORBITAL_BODIES + 34 * MAX_SPACE_SURVEY_PREVIEWS + input_size) SlErrorCorrupt("Invalid asteroid family length");
-		AsteroidField field;
-		field.generation_version = ReadUnsigned(2); field.width = ReadUnsigned(4); field.height = ReadUnsigned(4);
-		field.seed = ReadUnsigned(8); field.elapsed_ticks = ReadUnsigned(8); field.density = static_cast<AsteroidDensity>(ReadUnsigned(1));
-		const auto bodies = ReadUnsigned(4), surveys = ReadUnsigned(4);
-		// Declared counts must account for every retained row and the schema-qualified fixed input trailer.
-		if (bodies > MAX_ORBITAL_BODIES || surveys > MAX_SPACE_SURVEY_PREVIEWS || length != 51 + bodies * body_size + surveys * 34 + input_size) SlErrorCorrupt("Invalid asteroid record count");
-		field.band.min = ReadPoint(); field.band.max = ReadPoint();
-		field.bodies.resize(static_cast<size_t>(bodies)); field.surveys.resize(static_cast<size_t>(surveys));
-		// Decode the sole stable-ID body records; old native lease formats migrate only their missing lease field.
-		for (auto &body : field.bodies) {
-			body.id = OrbitalBodyID{static_cast<uint32_t>(ReadUnsigned(4))}; body.resource_class = static_cast<AsteroidClass>(ReadUnsigned(1)); body.size = static_cast<AsteroidSize>(ReadUnsigned(1));
-			body.motion.position = ReadPoint(); body.motion.velocity_x = static_cast<int32_t>(ReadUnsigned(4)); body.motion.velocity_y = static_cast<int32_t>(ReadUnsigned(4));
-			body.motion.remainder_x = ReadUnsigned(1); body.motion.remainder_y = ReadUnsigned(1);
-			body.initial_reserve = ReadUnsigned(4); body.remaining_reserve = ReadUnsigned(4); body.survey_slot = SpaceSurveyID{static_cast<uint32_t>(ReadUnsigned(4))};
-			if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningVehicles)) body.mining_slot = VehicleID{static_cast<uint32_t>(ReadUnsigned(4))};
-		}
-		// Decode actual preview phases; field validation subsequently cross-checks both sides of every lease.
-		for (auto &survey : field.surveys) {
-			survey.id = SpaceSurveyID{static_cast<uint32_t>(ReadUnsigned(4))}; survey.model = ReadUnsigned(2); survey.position = ReadPoint(); survey.home = ReadPoint();
-			survey.target = OrbitalBodyID{static_cast<uint32_t>(ReadUnsigned(4))}; survey.phase = static_cast<SpaceSurveyPhase>(ReadUnsigned(1)); survey.remaining_ticks = ReadUnsigned(2);
-			survey.travel_remainder = ReadUnsigned(1); survey.completed_surveys = ReadUnsigned(4);
-		}
-		if (input_size != 0) {
-			auto &input = field.starter_input;
-			input.kind = static_cast<AsteroidStarterKind>(ReadUnsigned(1));
-			input.site_x = ReadUnsigned(4); input.site_y = ReadUnsigned(4); input.rotation = ReadUnsigned(1);
-			input.preference = ReadPoint(); input.initial_approach_distance_squared = ReadUnsigned(8);
-		}
-		if (!ValidateAsteroidField(field)) SlErrorCorrupt("Invalid asteroid/survey record");
-		return field;
+		// Bound transport allocation first; the pure decoder then validates exact
+		// counts and every row before allocating any body/survey records.
+		if (length < 51 || length > GetAsteroidFieldWireMaximum(era)) SlErrorCorrupt("Invalid asteroid family length");
+		std::vector<uint8_t> bytes(length);
+		for (auto &byte : bytes) byte = SlReadByte();
+		auto decoded = DecodeAsteroidField(bytes, era);
+		if (!decoded) SlErrorCorrupt("Invalid asteroid field lifecycle or record");
+		return std::move(*decoded);
 	}
 	/** Stage one complete validated field; repeated authority cannot overwrite an earlier family during loading. */
 	void Load() const override { if (_staged_asteroids) SlErrorCorrupt("Repeated asteroid field"); StageLoadedAsteroidField(this->Read()); }
@@ -167,6 +132,13 @@ struct ASTRChunkHandler : ChunkHandler {
 		if (field.generation_version != 0 && (field.width != _load_check_data.map_size_x || field.height != _load_check_data.map_size_y || _load_check_data.map_layers < 3)) SlErrorCorrupt("Asteroid preview geometry mismatch");
 		_load_check_data.asteroid_present = true; _load_check_data.asteroid_active = field.generation_version != 0; _load_check_data.asteroid_seed = field.seed;
 		_load_check_data.asteroid_body_count = static_cast<uint32_t>(field.bodies.size());
+		_load_check_data.asteroid_next_body_id = field.next_body_id;
+		_load_check_data.asteroid_body_rows = GetAsteroidIdentityRecords(field);
+		// Preserve only original occupied leases for the later bidirectional
+		// VEHS/SPOR join. Copied identity alone cannot prove active extraction.
+		for (const auto *body : GetAsteroidBodiesInIDOrder(field)) {
+			if (body->mining_slot != VehicleID::Invalid()) _load_check_data.asteroid_mining_leases.emplace_back(body->id, body->mining_slot);
+		}
 	}
 };
 /** @return Whether staged knowledge could be published after native-company/reference validation. */
@@ -184,7 +156,7 @@ void ValidateAsteroidKnowledgeLoadPreview()
 		return;
 	}
 	const auto &rows = _load_check_data.asteroid_knowledge_rows;
-	if (!ValidateAsteroidKnowledgeRecords(rows, _load_check_data.asteroid_body_count) || (!rows.empty() &&
+	if (!ValidateAsteroidKnowledgeRecords(rows, _load_check_data.asteroid_body_rows) || (!rows.empty() &&
 		(!_load_check_data.asteroid_active || _load_check_data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry)))) SlErrorCorrupt("Invalid asteroid survey knowledge preview");
 	for (const auto &r : rows) for (uint company = 0; company < MAX_COMPANIES; ++company)
 		if ((r.surveyed_companies & (uint64_t{1} << company)) != 0 && !_load_check_data.companies.contains(company)) SlErrorCorrupt("Missing company in asteroid survey knowledge preview");
@@ -203,12 +175,17 @@ struct SPKNChunkHandler : ChunkHandler {
 	/** @return Bounded structural disclosure rows; missing native company ownership is checked before publication. */
 	std::vector<AsteroidKnowledgeRecord> Read() const
 	{
-		const auto length = SlGetFieldLength(); const uint32_t maximum = GetMultiLayerAsteroidPopulation(4096, 4096, 2);
+		const auto length = SlGetFieldLength();
+		const bool lifecycle = !IsSavegameVersionBefore(SaveLoadVersion::AsteroidFieldLifecycle);
+		const uint32_t maximum = lifecycle ? MAX_ORBITAL_BODIES : GetMultiLayerAsteroidPopulation(4096, 4096, 2);
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge) || length < 2 || length > 2 + 12 * maximum) SlErrorCorrupt("Invalid asteroid survey knowledge length");
 		const auto count = ReadUnsigned(2); if (length != 2 + 12 * count || count > maximum) SlErrorCorrupt("Invalid asteroid survey knowledge count");
-		std::vector<AsteroidKnowledgeRecord> rows;
+		std::vector<AsteroidKnowledgeRecord> rows; rows.reserve(static_cast<size_t>(count));
 		for (uint i = 0; i < count; ++i) rows.push_back({OrbitalBodyID{static_cast<uint32_t>(ReadUnsigned(4))}, ReadUnsigned(8)});
-		if (!ValidateAsteroidKnowledgeRecords(rows, maximum)) SlErrorCorrupt("Invalid asteroid survey knowledge transport");
+		// Modern structural admission accepts sorted full-width issued domains;
+		// subsequent native/copied joins require each actual same-file live body.
+		// Genuine older files retain their original dense transport bound.
+		if (lifecycle ? !ValidateAsteroidKnowledgeShape(rows) : !ValidateAsteroidKnowledgeRecords(rows, maximum)) SlErrorCorrupt("Invalid asteroid survey knowledge transport");
 		return rows;
 	}
 	/** Stage one disclosure owner; a repeated family cannot replace earlier loaded authority. */
@@ -220,7 +197,7 @@ struct SPKNChunkHandler : ChunkHandler {
 		if (!_staged_knowledge) { if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge)) SlErrorCorrupt("Missing asteroid survey knowledge family"); return; }
 		const auto *schema = GetPendingMultiLayerStateSchema();
 		if (!_staged_knowledge->empty() && (schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry || !_staged_asteroids ||
-			!ValidateAsteroidKnowledgeRecords(*_staged_knowledge, static_cast<uint32_t>(_staged_asteroids->bodies.size())))) SlErrorCorrupt("Invalid asteroid survey knowledge authority");
+			!ValidateAsteroidKnowledgeRecords(*_staged_knowledge, *_staged_asteroids))) SlErrorCorrupt("Invalid asteroid survey knowledge authority");
 	}
 	/** @param length Dispatcher framing; Read validates exact bounded row counts before preview publication. */
 	void LoadCheck([[maybe_unused]] size_t length) const override

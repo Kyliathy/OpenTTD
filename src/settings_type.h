@@ -5,7 +5,11 @@
  * See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with OpenTTD. If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0>.
  */
 
-/** @file settings_type.h Types related to global configuration settings. @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 (window-close settings) */
+/** @file settings_type.h Types related to global configuration settings.
+ * @see docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, docs/zz-reach2/upgrades/2026-10/r2df-demo-fixes-interface-movement-and-planning.md Group 3 (window-close settings)
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; consolidated layer hotkeys, window toggle and settings.
+ */
 
 #ifndef SETTINGS_TYPE_H
 #define SETTINGS_TYPE_H
@@ -265,7 +269,7 @@ struct GUISettings {
 	uint8_t scrollwheel_multiplier; ///< how much 'wheel' per incoming event from the OS?
 	bool timetable_arrival_departure; ///< show arrivals and departures in vehicle timetables
 	RightClickClose right_click_wnd_close; ///< close window with right click
-	bool hotkey_toggles_window; ///< pressing a window's hotkey again closes it when it is the front-most closable window (r2df D10)
+	bool hotkey_toggles_window; ///< pressing a window's hotkey again closes it when it is the front-most closable window; pinned and non-closable windows are raised instead (r2df D10, r2sff1 Group3)
 	EscapeCloseWindow escape_closes_window; ///< what Escape closes when no placement is active (r2df D10)
 	bool toolbar_dropdown_autoselect; ///< should toolbar dropdown buttons autoselect when releasing the mouse button
 	bool pause_on_newgame; ///< whether to start new games paused or not

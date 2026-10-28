@@ -8,6 +8,8 @@
 /** @file window.cpp Windowing system, widgets and events.
  * @see docs/zz-reach2/architecture/gui/archi-gui.md native close/toggle and placement precedence.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group62JB; disposable native facility cue observations invalidate actual map cells.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group3.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 6; repeated window keys are handled only by the toolbar's ToggleHotkeyWindow.
  */
 
 #include "stdafx.h"
@@ -3376,12 +3378,7 @@ void CallWindowGameTickEvent()
 	}
 }
 
-/**
- * Try to close a non-vital window.
- * Non-vital windows are windows other than the game selection, main toolbar,
- * status bar, toolbar menu, and tooltip windows. Stickied windows are also
- * considered vital.
- */
+/** Close ordinary unpinned windows, retaining each owner's close contract. */
 void CloseNonVitalWindows()
 {
 	/* Note: the container remains stable, even when deleting windows. */

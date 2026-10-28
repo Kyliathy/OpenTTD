@@ -1,4 +1,5 @@
 # Focused content/geology/portal/TBM/mine/toolbar fixtures: docs/zz-reach2/upgrades/2026-10/r2mlvs1-gameplay-contracts-and-content.md, r2mlvs2-geology-and-excavation.md, r2mlvs3-sealed-portals-and-deep-rail.md, r2mlvs4-tunnel-boring-machines.md, r2mlvs5-spoil-wagons-and-haulage.md, r2mlvs6-mines-and-resource-chains.md and r2mlvs7-underground-construction-and-fleet.md.
+# Pure Space terminal/attachment geometry: docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups9-10.
 # Passive generator/site source boundaries: docs/zz-reach2/upgrades/2026-10/r2mlvs18-geothermal-energy-and-industry.md Group8B.
 # Actual collector rendering: docs/zz-reach2/upgrades/2026-10/r2mlvs14-remaining-assets-and-runtime-integration.md Group79C.
 # Orbital Core activation and sole packet stock: docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group1.
@@ -48,6 +49,38 @@ add_test_files(
     asteroid_generation_native.cpp
     # Integer trajectory, envelope and numerical budget fixtures: r2mlvs10-asteroids-and-mining-probes.md Group3.
     asteroid_motion.cpp
+    space_straight_motion.cpp
+    space_attachment_safety.cpp
+    space_departure_plan.cpp
+    space_body_approach_safety.cpp
+    asteroid_renewal.cpp
+    asteroid_identity.cpp
+    space_spatial_membership.cpp
+    asteroid_live_validation.cpp
+    asteroid_preview_identity.cpp
+    space_identity_consumers.cpp
+    asteroid_cargo_origin.cpp
+    asteroid_cargo_wire.cpp
+    asteroid_field_wire.cpp
+    asteroid_cargo_native.cpp
+    asteroid_cargo_validation.cpp
+    asteroid_cargo_custody.cpp
+    space_mining_policy.cpp
+    space_mining_wire.cpp
+    space_mining_target.cpp
+    space_mining_continuation.cpp
+    space_mining_departure.cpp
+    space_survey_departure.cpp
+    asteroid_renewal_proposal.cpp
+    asteroid_retirement.cpp
+    asteroid_creation.cpp
+    asteroid_lifecycle_tick.cpp
+    asteroid_lifecycle_native.cpp
+    allocation_failure_fixture.cpp
+    space_mining_intercept_native.cpp
+    space_return_target.cpp
+    space_return_surface.cpp
+    space_return_service.cpp
     asteroid_motion_native.cpp
     # Persistent depletion/invalid-target boundaries: r2mlvs10-asteroids-and-mining-probes.md Group5.
     asteroid_depletion.cpp
@@ -123,6 +156,10 @@ add_test_files(
     # Original paid product command dispatch: r2mlvs10-asteroids-and-mining-probes.md task8C.4.
     probe_product_replay_native.cpp
     probe_replay_native.cpp
+    # r2sff1-space-fixes-features-1.md Group32: actual late join and complete private-renewal replay.
+    space_lifecycle_peer_native.cpp
+    # r2sff1-space-fixes-features-1.md Group33: live storage and native event work at exact population fixtures.
+    asteroid_lifecycle_work.cpp
     # Moving-target pursuit and station-free paid deployment: r2mlvs10-asteroids-and-mining-probes.md Group9.
     probe_pursuit.cpp
     probe_pursuit_native.cpp

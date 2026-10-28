@@ -52,6 +52,14 @@ struct SpaceStructureRecord : OrbitalConstructionState {
 	std::array<std::vector<std::pair<CargoPacketID, StationID>>, 2> inputs;
 	std::optional<OrbitalModuleRecord> module;
 };
+/** Query an actual positive freight unload before navigation, through the original module exchange admission.
+ * @param craft Exact native hull carrying the offered units.
+ * @param site Exact owned operational candidate module.
+ * @param quantity Positive original freight quantity, subject to stock/fragment capacity and original heavy return allowance.
+ * @return Whether the original unload can be planned except for current arrival/Holding. Shared slot eligibility is checked but reserves nothing; CmdMoveOrbitalFreight must still admit the real arrival.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group19.
+ */
+bool CanNavigateOrbitalFreightUnload(SpaceCraftRef craft, SpaceStructureRef site, uint16_t quantity);
 /** Bounded spent receipts retained by the same native structure authority after an empty pool owner is demolished.
  * These aggregates own no packets, energy, berth or replacement object identity.
  */

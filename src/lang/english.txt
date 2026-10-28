@@ -6,6 +6,7 @@
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original processor quantities and typed admission reasons.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13L; completed physical frames do not promise unsupported activation.
 # @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14; native composition/trajectory and retained descent presentation.
+# @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups2-3/8; bounded actions, shortcuts and construction readiness.
 ##ownname English (UK)
 ##isocode en_GB
 ##plural 0
@@ -544,6 +545,24 @@ STR_SPACE_ORDER_TIMED_OUT                                       :Approach timed 
 STR_SPACE_ORDER_PROGRESS                                        :Order {NUM}/{NUM}: {STRING}
 STR_SPACE_SCAN_PROGRESS                                         :Scan: {NUM}/148 working ticks
 STR_SPACE_ORDER_ROW                                             :{NUM}: {STRING} {STRING} #{NUM}
+# r2sff1-space-fixes-features-1.md Group30: native per-Mine continuation and actual destination disclosure.
+STR_SPACE_POLICY_LEGACY                                         :Follow route / home
+STR_SPACE_POLICY_RETURN                                         :Nearest receiver
+STR_SPACE_POLICY_FULL                                           :Wait until full
+STR_SPACE_POLICY_TIP                                            :{BLACK}Choose the selected Mine instruction's continuation. Wait until full seeks the same mineral. Nearest receiver returns earned cargo. Changing this choice preserves current cargo and work.
+STR_SPACE_POLICY_DETAIL                                         :Mine order {NUM} continuation: {STRING}
+STR_SPACE_POLICY_MANUAL                                         :Add or select a Mine order to choose its continuation.
+STR_SPACE_EFFECTIVE_TARGET                                      :Current destination: {STRING} #{NUM}
+STR_SPACE_EFFECTIVE_NONE                                        :No current destination
+STR_SPACE_CONT_STATUS                                           :Mining continuation: {STRING}
+STR_SPACE_CONT_DETACHING                                         :Detaching safely
+STR_SPACE_CONT_SEEK_MINERAL                                      :Seeking the same mineral
+STR_SPACE_CONT_RETURNING                                        :Returning cargo
+STR_SPACE_CONT_SERVICE                                          :Travelling for service
+STR_SPACE_CONT_WAIT_MINERAL                                      :Waiting for a same-mineral asteroid
+STR_SPACE_CONT_WAIT_RECEIVER                                     :Waiting for a compatible receiver
+STR_SPACE_CONT_WAIT_SERVICE                                      :Waiting for service
+STR_SPACE_CONT_WAIT_DEPARTURE                                    :Waiting for safe departure
 STR_SPACE_BODY_LOCATION                                         :Current plane position: {NUM}, {NUM}
 STR_SPACE_BODY_COMPOSITION                                      :Primary resource: {STRING}
 STR_SPACE_BODY_TRAJECTORY                                       :Trajectory: X {RAW_STRING}{DECIMAL}, Y {RAW_STRING}{DECIMAL}; speed {DECIMAL} plane tiles/day
@@ -1858,7 +1877,7 @@ STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_NO                     :No
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_YES                    :Yes
 STR_CONFIG_SETTING_RIGHT_MOUSE_WND_CLOSE_YES_EXCEPT_STICKY      :Yes, except sticky
 STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW                       :Pressing a window's hotkey again closes it: {STRING2}
-STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW_HELPTEXT              :When the window a toolbar hotkey opens (for example F2 for Game Options) is already the front-most window, pressing that hotkey again closes it. Otherwise the hotkey opens or raises it as before
+STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW_HELPTEXT              :When the window a toolbar hotkey opens (for example F2 for Game Options) is already the front-most window, pressing that hotkey again closes it. Otherwise the hotkey opens it, or raises it without losing its state. Pinned and non-closable windows are only raised, never closed
 STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW                         :Close window with Escape: {STRING2}
 STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_HELPTEXT                :Escape always cancels a tool that is being placed first. Without one, Escape closes the front-most window that has a close button, except the main toolbar, status bar and news
 STR_CONFIG_SETTING_ESCAPE_CLOSES_WINDOW_NO                      :No
@@ -6063,8 +6082,30 @@ STR_SPACE_CONSTRUCTION_SITE                                     :{COMMA}. {STRIN
 STR_SPACE_CONSTRUCTION_BLUEPRINT                                :Awaiting deliveries / construction
 STR_SPACE_CONSTRUCTION_FRAME                                    :Frame construction complete
 STR_SPACE_CONSTRUCTION_CANCELLED                                :Cancelled; collect remaining inputs here
-STR_SPACE_CONSTRUCTION_STOCK                                    :Delivered: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
+STR_SPACE_CONSTRUCTION_STOCK                                    :Held at site / required: {COMMA}/{COMMA} Steel tonnes, {COMMA}/{COMMA} Goods crates. Work: {COMMA}/{COMMA}
 STR_SPACE_CONSTRUCTION_CONSUMED                                 :Consumed: {COMMA} Steel tonnes, {COMMA} Goods crates
+STR_SPACE_BUILD_STATUS                                          :{VEHICLE}: {STRING}
+STR_SPACE_BUILD_CURRENT_ORDER                                   :Current order {NUM}: {STRING} {STRING} #{NUM}
+STR_SPACE_BUILD_QUEUE_EMPTY                                     :The builder has no orders.
+STR_SPACE_BUILD_QUEUE_FINISHED                                  :The builder has finished its orders.
+STR_SPACE_BUILD_QUEUE_TARGET                                    :Queue construction appends a job for {VEHICLE} at {STRING} #{NUM}; editing restarts its orders from the beginning.
+STR_SPACE_BUILD_CARRIED                                         :Still on the builder: {COMMA} {STRING}; delivery requires arrival at its ordered site.
+STR_SPACE_BUILD_NO_ORDER                                        :No construction instruction is current. Select the intended site and Queue construction; clear or reorder earlier instructions if needed.
+STR_SPACE_BUILD_TARGET_LOST                                     :Construction target unavailable. Choose a surviving blueprint and edit the builder's orders.
+STR_SPACE_BUILD_COMPLETE                                        :Frame construction complete.
+STR_SPACE_BUILD_TIMEOUT                                         :The approach timed out. Check the route and edit the order to retry.
+STR_SPACE_BUILD_UNAVAILABLE                                     :This hull cannot construct here. Select an owned construction probe deployed in Space.
+STR_SPACE_BUILD_STOPPED                                         :Stopped. Start the builder in its vehicle window, or explicitly edit its orders to restart it.
+STR_SPACE_BUILD_SERVICE                                         :Servicing. Finish or cancel its actual service job before changing construction orders.
+STR_SPACE_BUILD_PAUSED                                          :Paused. Resume the game to advance construction.
+STR_SPACE_BUILD_APPROACH                                        :Waiting for the site's approach. Let its occupant leave; the builder will approach when admitted.
+STR_SPACE_BUILD_TRAVEL                                          :Travelling to its ordered construction site.
+STR_SPACE_BUILD_MATERIALS                                       :Waiting for materials. Reserve the recipe from the adjacent Core, or visit the Core, load the missing cargo and queue construction.
+STR_SPACE_BUILD_CORE                                            :Waiting for an operational adjacent Core. Complete and activate the owned Core first.
+STR_SPACE_BUILD_WORKER                                          :Waiting for the Core's construction slot. Another eligible builder is working; this job keeps its materials and progress.
+STR_SPACE_BUILD_POWER                                           :Waiting for Core power. Resume its panel or wait for competing powered work to finish.
+STR_SPACE_BUILD_READY                                           :Ready to build on the next construction opportunity.
+STR_SPACE_BUILD_WORKING                                         :Constructing at its ordered site.
 STR_SPACE_CONSTRUCTION_HINT                                     :Place outside the asteroid strip. Select a site and an orbital builder, then queue construction. Cancellation retains cargo here; collect it with a nearby builder. Capital is not refunded.
 STR_SPACE_CONSTRUCTION_MISSING                                  :Waiting for construction materials
 STR_SPACE_CONSTRUCTION_BUSY                                     :Another builder has the work slot
@@ -6078,6 +6119,12 @@ STR_SPACE_CONSTRUCTION_NO_PROBE                                 :No owned orbita
 STR_SPACE_CONSTRUCTION_LOCATE                                   :Go to site
 STR_SPACE_CONSTRUCTION_CLEAR                                    :Clear builder orders
 STR_SPACE_CONSTRUCTION_SELECT                                   :Select station / module
+STR_SPACE_ACTION_CONSTRUCTION                                   :Actions: Construction
+STR_SPACE_ACTION_INVENTORY                                      :Actions: Inventory
+STR_SPACE_ACTION_SERVICE                                        :Actions: Service
+STR_SPACE_ACTION_CONNECTIONS                                    :Actions: Connections
+STR_SPACE_ACTION_MANUFACTURE                                    :Actions: Manufacture
+STR_SPACE_ACTION_BUILDER                                        :Next builder: {VEHICLE}
 STR_SPACE_MODULE_CORE                                           :Station Core
 STR_SPACE_MODULE_DOCK                                           :Dock
 STR_SPACE_MODULE_STORAGE                                        :Storage

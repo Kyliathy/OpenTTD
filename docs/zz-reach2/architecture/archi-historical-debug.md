@@ -31,6 +31,27 @@ human/useful-route gates remain open. This page is the storage/rebuild owner.
 
 ## Storage ownership
 
+**Cleanup policy, corrected by the user on 2026-10-26:** `clean.ps1 -Apply`
+declares all selected output disposable. The caller arranges backups beforehand.
+Cleanup never hashes source/retained inputs, reads preservation catalogues,
+exports saves/configs, copies source epochs or creates backups. It retains exact
+target containment, tracked-file/reparse/nested-repository protection,
+stopped-writer checks, file-change detection and partial-failure reporting.
+Default preview, `-DryRun`/`-WhatIf` and `-KeepBuild` remain supported.
+This replaces automatic retention/export gates described in historical plans.
+
+Run cleanup from the repository root containing `clean.ps1`. The script requires
+that current directory, script directory and discovered Git root to agree, and
+refuses Git environment overrides selecting a different working tree/index.
+Apply requires no staged/unstaged changes or non-ignored untracked files; ignored
+generated output is expected. Preview works while changes are pending. Git
+queries disable optional index writes. Tracked entries and their containing
+targets remain protected, including missing files and empty submodule roots.
+Current-directory/Git state and filesystem ownership are rechecked before each
+removal. These checks establish the deletion boundary; readiness of disposable
+tests/artifacts and any desired backup remains the caller's decision. Retained
+fixtures, source, authored media and reconstruction tools stay outside it.
+
 Paths below are relative to the repository root. Durable inputs travel with the
 source tree. Generated artifacts can be discarded only after every unique save,
 source epoch and required semantic input has a verified durable owner.
@@ -43,15 +64,15 @@ source epoch and required semantic input has a verified durable owner.
 | `src/tests/fixtures/checkpoints/space/` | Exact Space continuation save pair, compact state/closed-policy contract and historical facts. | Durable checkpoint; current qualification is generated separately. |
 | `src/tests/fixtures/checkpoints/underground/` | Original Apaused Tube checkpoint plus separately selected imported paid originals, runtime-gallery and genuine wait contracts. | Durable; retain each world's actual original/component qualification. Imported acceptance does not promote A's unrelated provisional source world. |
 | `savegames/retained/` | Other discovered saves, scenarios, backups and aliases of exported review/runtime saves. | Preserve every payload; equal bytes may share storage with complete aliases. |
-| `src/tests/fixtures/cleanup/` | Save migration map, source-epoch inventory, dependency dispositions and compact historical facts. Unique source versions use `source-epochs/`. | Durable preservation contracts, not a second image/EXE cache. Refresh live-source references before deleting their original snapshots. |
+| `src/tests/fixtures/cleanup/` | Save migration map, source-epoch inventory, dependency dispositions and compact historical facts. Unique source versions use `source-epochs/`. | Durable inputs for explicit history/preservation tools. Cleanup neither consults nor repairs these records. |
 | `src/tests/fixtures/config/multilayer/` | Runtime templates, portable native build profile and pinned dependency recipe sources. | Durable configuration/tool contract; machine CMake caches are disposable. |
 | `src/tests/fixtures/baseset/original-dos/` | Exact user-provided original DOS graphics, sound and music inputs selected by native observers. | Preserve immutable bytes; the portable build profile pins each source hash and distribution destination. |
 | `mlm/review-producers.json` | Sole producer/recipe catalogue: dependencies, retained roles, targets, tags, outputs and implementation status. | Durable routing authority; inspect it instead of inventing a second asset catalogue. |
-| `mlm/reviews/<feature>/<scenario>/<run-id>/` | Current generated images, saves, payloads, reports and required transcripts. | Generated; export unique saves/checkpoints before removal. Keep the routing README. |
-| `mlm/runtime/<profile>/<run-id>/<process>/` | Mutable runtime configuration/scripts, distribution copies, autosaves and process-local files. | Generated; separate host/client homes, export saves before retirement. |
-| `logs/` | Optional process/build/test diagnostics. | Payloads are disposable after migration; preserve any `.gitignore` routing marker. Never the sole checkpoint or authorization authority. |
-| `test-cache/` | Unit-test output, scratch, temporary scripts, verification artifacts and temporary console images. | Payloads are disposable after preservation gates; preserve `.gitignore` routing metadata. Test tooling needed long term stays beside tests. |
-| Declared `build/` products | Configured native/dependency builds and current executable images. | Rebuild from source/profile; preserve meaningful configuration and saves first. |
+| `mlm/reviews/<feature>/<scenario>/<run-id>/` | Current generated images, saves, payloads, reports and required transcripts. | Disposable on explicit cleanup, including saves; keep the routing README. Back up selected results separately if needed. |
+| `mlm/runtime/<profile>/<run-id>/<process>/` | Mutable runtime configuration/scripts, distribution copies, autosaves and process-local files. | Disposable on explicit cleanup, including saves/configs; preserve separate host/client homes while running. |
+| `logs/` | Optional process/build/test diagnostics. | Disposable payloads; preserve any `.gitignore` routing marker. Never the sole checkpoint or authorization authority. |
+| `test-cache/` | Unit-test output, scratch, temporary scripts, verification artifacts and temporary console images. | Disposable payloads; preserve `.gitignore` routing metadata. Test tooling needed long term stays beside tests. |
+| Declared `build/`, `build-probe/`, `build-probe-tree/` roots | Configured native/dependency builds and current executable images. | Entire roots disposable, including saves/configs/source copies; `-KeepBuild` retains them. Rebuild from source/profile. |
 | `docs/zz-reach2/` | Architecture, plans and handovers. | Documentation; assisting R2FC-3 Markdown stays beside its plan. |
 
 ### Parallel-repository originals
@@ -183,8 +204,9 @@ Group9 migration/catalogue keys remain frozen; later mutable save versions keep
 their own payload identities and complete historical aliases. Decoder support
 is never a preservation gate. CLI preview:
 `python -B src/tests/multilayer/support/save_retention.py`; explicit `--apply`
-exports saves without deleting sources. The cleaner must still enforce its
-independent ownership, source-preservation and stopped-writer gates.
+exports saves without deleting sources. This is an explicit backup operation,
+independent of cleanup. The cleaner enforces ownership and stopped-writer checks
+without invoking this exporter or reading its journals.
 
 Within each export boundary, watched owner ancestry is validated once and every
 retained destination is checked against that canonical set. The next
@@ -202,8 +224,8 @@ Recipe native verification has a300-second supervisor cap for bounded execution
 plus complete provenance checks; preparation/pure stages retain120seconds and
 the native subprocess's own smaller cap remains in force.
 There is no shared writable cache or junction. Current recipes retain current
-run/build images only; completed homes remain subject to verified save export
-and the cleaner's independent guards before removal.
+run/build images only; completed homes are disposable on explicit cleanup,
+subject to the cleaner's independent filesystem and writer guards.
 
 ```mermaid
 flowchart LR
@@ -228,7 +250,7 @@ flowchart LR
     Saves --> Runtime
     Runtime --> Review
     Runtime --> Scratch
-    Review -->|"Export unique saves and compact checkpoint state"| Saves
+    Review -->|"Optional explicit export before choosing cleanup"| Saves
 ```
 
 ### A generated review run
@@ -559,12 +581,8 @@ unqualified Group10 five-model source edits. Cleanup does not resume that featur
 
 ```mermaid
 flowchart TD
-    Stop["Stop owned writers"] --> Inventory["Refresh source and save inventory"]
-    Inventory --> Preserve["Verify retained aliases, unique epochs and checkpoints"]
-    Preserve --> Migrate["Close remaining required historical-output readers"]
-    Migrate --> Rehearse["Cold build and cleanup rehearsal in staged project"]
-    Rehearse --> Preview["Read-only cleanup preview"]
-    Preview --> Apply["Explicit guarded apply with rechecks and save export"]
+    Preview["Read-only cleanup preview"] --> Stop["Stop owned writers"]
+    Stop --> Apply["Explicit -Apply: ownership rechecks and output deletion"]
     Apply --> Package["Package durable working files and required Git metadata"]
     Package --> Recover["Fresh destination qualification before continuation"]
     Recover --> Task["Actual bounded source-plan task"]
@@ -572,14 +590,14 @@ flowchart TD
     Successor --> Next["Next source-plan gate"]
 ```
 
-Current read-only preservation checks are
+Separate read-only preservation checks are
 `artifact_preservation.py --retained-only --verify-catalogue` and
 `artifact_source_epochs.py` under `src/tests/multilayer/support/`.
 Their explicit `--export` operations preserve inventoried saves/source epochs;
-they are not the incremental save exporter. Refresh source epochs while original
-ignored snapshots still exist, before real deletion. Group24 delivers incremental
-save export; Groups26–28 deliver and test the broad cleaner and dependency guard.
-Cold acceptance, real cleanup and the final package remain gated by Groups30–34.
+they are not the incremental save exporter. Use preservation tools separately
+while original snapshots exist when that history is wanted. Cleanup never calls
+these checks or requires their success. Groups24–34 below refer to the completed
+historical preservation, cleanup and transfer work, not current cleanup gates.
 
 `src/tests/multilayer/support/package_transfer.py` enumerates all preserved
 working files and local Git metadata, independently of ignore/tracking status.

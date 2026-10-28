@@ -4,10 +4,12 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2fc2-file-cleanup3.md Group27.
  * @see docs/zz-reach2/architecture/archi-historical-debug.md Storage ownership.
  * Git and writer discovery are explicit fixture doubles. File discovery,
- * preservation, export, identity checks and removal use the actual owners.
+ * identity checks and removal use the actual owners. No preservation tooling is
+ * installed: cleanup must work without source histories or backup catalogues.
 #>
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$script:CleanupStartingLocation = Get-Location
 $repository = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../../..')).TrimEnd('\', '/')
 . (Join-Path $repository 'clean.ps1')
 $scratchOwner = Join-Path $repository 'test-cache/cleanup/cleaner-checks'
@@ -16,6 +18,8 @@ Assert-CleanupNoLinks $scratch
 $null = [IO.Directory]::CreateDirectory($scratch)
 $script:checks = 0
 $script:CleanupTracked = @()
+$script:CleanupGitChanges = @()
+$script:CleanupGitRoot = $null
 $script:CleanupWriterProcesses = @()
 $script:CleanupFakeGitFiles = New-Object 'System.Collections.Generic.List[string]'
 $script:CleanupJunctions = New-Object 'System.Collections.Generic.List[string]'
@@ -60,31 +64,36 @@ function Write-CheckFile([string]$Path, [string]$Text = 'independent fixture byt
 }
 
 <#
- * Build a minimal independent source/preservation shape for the real pipeline.
+ * Build a minimal source shape without preservation inputs for the real pipeline.
  * @param Name Unique case name inside this test runner's scratch.
- * @return Canonical fixture root; no Git repository is initialized or mutated.
+ * @return Canonical fixture root, also made current; no Git repository is mutated.
 #>
 function New-CleanupFixture([string]$Name) {
     $root = Join-Path $scratch $Name
     Write-CheckFile (Join-Path $root 'CMakeLists.txt') '# @see r2fc2-file-cleanup3.md; isolated source marker.'
     Write-CheckFile (Join-Path $root 'src/source.cpp') '// @file source.cpp @see r2fc2-file-cleanup3.md; independent source bytes.'
-    Write-CheckFile (Join-Path $root 'src/tests/fixtures/cleanup/migration.json') '{"_documentation":"r2fc2-file-cleanup3.md27 fixture","schema_version":1,"original_path_count":0,"payloads":[]}'
-    Write-CheckFile (Join-Path $root 'src/tests/fixtures/cleanup/source-epochs.json') '{"_documentation":"r2fc2-file-cleanup3.md27 fixture","payloads":[],"generated":[],"original_candidates":0}'
-    Write-CheckFile (Join-Path $root 'src/tests/fixtures/multilayer-inputs.json') '{"_documentation":"r2fc2-file-cleanup3.md27 fixture","schema_version":2,"inputs":{}}'
     Write-CheckFile (Join-Path $root '.git') 'fixture git marker'
+    Set-Location -LiteralPath $root
+    $script:CleanupGitChanges = @()
+    $script:CleanupGitRoot = $null
     return $root
 }
 
 <#
- * Supply only this fixture's declared tracking state, with no Git commands.
+ * Supply this fixture's declared Git ownership/tracking state, without Git commands.
  * @param Repository Fixture root whose containment must still be explicit.
  * @param Arguments Structured read-only request made by the actual cleaner.
- * @return Declared fixture-relative tracked paths; never real repository mutations.
+ * @return Declared root, pending changes or tracked paths; no Git mutations.
 #>
 function Invoke-CleanupGit([string]$Repository, [string[]]$Arguments) {
     $null = Assert-CleanupContainment $Repository $scratch
-    if ($Arguments[-1] -ne 'ls-files') { throw 'Unexpected fixture Git request.' }
-    return $script:CleanupTracked
+    if ($Arguments -contains 'rev-parse') {
+        if ($script:CleanupGitRoot) { return $script:CleanupGitRoot }
+        return $Repository
+    }
+    if ($Arguments -contains 'status') { return $script:CleanupGitChanges }
+    if ($Arguments -contains 'ls-files') { return $script:CleanupTracked }
+    throw 'Unexpected fixture Git request.'
 }
 
 <#
@@ -108,26 +117,11 @@ function Get-CheckSnapshot([string]$Root) {
 }
 
 <#
- * Verify an exported alias against independently authored original fixture bytes.
- * @param Root Exact fixture checkout.
- * @param Original Original relative save/config path that cleanup removed.
- * @param Expected Independent original text, never taken from current export output.
- * @return Retained destination after matching both its bytes and recorded hash.
-#>
-function Assert-Exported([string]$Root, [string]$Original, [string]$Expected) {
-    $journal = Get-Content -LiteralPath (Join-Path $Root 'src/tests/fixtures/cleanup/save-exports.json') -Raw | ConvertFrom-Json
-    $reference = $journal.aliases.PSObject.Properties[$Original].Value
-    $target = Join-Path $Root $reference.path
-    Assert-Check ([IO.File]::ReadAllText($target) -eq $Expected) "exported original bytes: $Original"
-    Assert-Check ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -eq $reference.sha256) "exported exact alias hash: $Original"
-    return $target
-}
-
-<#
  * Remove only this runner's known synthetic markers, junction entries and scratch.
  * @return None; genuine repository/worktree metadata is never traversed or deleted.
 #>
 function Complete-CleanupChecks {
+    Set-Location -LiteralPath $script:CleanupStartingLocation.Path
     # Junctions are known test-created entries. Delete each entry without following
     # its target, then recheck the whole ordinary scratch tree before recursion.
     foreach ($junction in $script:CleanupJunctions) {

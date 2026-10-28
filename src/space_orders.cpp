@@ -1,5 +1,6 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_orders.cpp Typed queue execution over the canonical Vehicle, mining and construction owners.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups17/23/26; checked policy edits, intent cancellation and current natural Survey/Visit loss.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Group6.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group3.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group8BC; genuine Visit arrivals feed the native automatic replacement queue.
@@ -14,6 +15,8 @@
 #include "space_approach.h"
 #include "space_vehicle.h"
 #include "space_mining_tuning.h"
+#include "space_mining_continuation.h"
+#include "space_return_target.h"
 #include "space_manifest.h"
 #include "space_pod.h"
 #include "space_structure.h"
@@ -50,6 +53,9 @@ static bool ValidOrder(const SpaceOrder &order)
 {
 	// Reject unknown roles/domains and absent identities before consulting any physical producer.
 	if (order.action >= SpaceOrderAction::End || order.target.kind >= SpaceOrderTargetKind::End || order.target.id == UINT32_MAX) return false;
+	// Only Mine instructions may carry a configured continuation choice; unknown
+	// policies and policy payloads on navigation/work actions cannot acquire mining.
+	if (order.mining_policy >= SpaceMiningPolicy::End || (order.action != SpaceOrderAction::Mine && order.mining_policy != SpaceMiningPolicy::LegacyReturn)) return false;
 	if (order.target.kind == SpaceOrderTargetKind::Body ? order.target.generation != 0 : order.target.generation == 0) return false;
 	// Launch destinations use actual station IDs; another domain cannot bypass that bounded pool.
 	if (order.target.kind == SpaceOrderTargetKind::LaunchCenter && order.target.id >= StationID::Invalid().base()) return false;
@@ -130,9 +136,13 @@ bool ValidateNativeSpaceOrders()
 		// Queue ownership requires an actual Space engine; an ordinary vehicle cannot inherit these orbital controls.
 		if (!Engine::IsValidID(v->engine_type) || v->GetEngine()->type != VehicleType::Space) return false;
 		const auto &q = v->space_orders;
+		if (!ValidateNativeSpaceMiningContinuation(*v)) return false;
 		const auto model = v->GetEngine()->VehInfo<SpaceVehicleInfo>().model;
 		// Revalidate each instruction against the actual hull role after content and engine reconstruction.
 		for (const auto &o : q.entries) if (!IsSpaceOrderAllowed(model, o)) return false;
+		// Original natural targets may outlive retirement as inert history, but
+		// no instruction may reserve a body identity that has never been issued.
+		for (const auto &o : q.entries) if (o.target.kind == SpaceOrderTargetKind::Body && o.target.id >= GetAsteroidField().next_body_id) return false;
 		// Resolve only structure-domain incarnations here; other target families keep their own native authority.
 		for (const auto &o : q.entries) if (o.target.kind == SpaceOrderTargetKind::Structure || o.target.kind == SpaceOrderTargetKind::Blueprint) {
 			if (o.target.generation >= GetNextSpaceStructureGeneration()) return false;
@@ -152,7 +162,15 @@ bool ValidateNativeSpaceOrders()
 		if (q.work_ticks != 0 && GetMutableAsteroidBody(OrbitalBodyID{q.entries[q.cursor].target.id}) == nullptr) return false;
 		// An active Mine queue must retain the same native mission target/lease instead of acquiring extraction through another action.
 		if (q.started && q.cursor < q.entries.size() && q.entries[q.cursor].action == SpaceOrderAction::Mine) {
-			if (v->mission.target != OrbitalBodyID{q.entries[q.cursor].target.id}) return false;
+			const auto effective = ResolveEffectiveSpaceOrderTarget(*v);
+			// A native completion publishes Return after queue dispatch. The next
+			// continuation tick owns departure; no historical body request should
+			// be required during this real between-opportunity checkpoint.
+			const bool completing = HasSpaceMiningContinuationOrder(*v) &&
+				(v->mission.phase == SpaceMissionPhase::Return || v->mission.phase == SpaceMissionPhase::Holding);
+			// Replacement mining retains the player's original Mine target as
+			// history; only the effective current body may own active native work.
+			if (!completing && (!effective || effective->kind != SpaceOrderTargetKind::Body || v->mission.target != OrbitalBodyID{effective->id})) return false;
 		} else if (v->mission.phase != SpaceMissionPhase::Holding) return false;
 	}
 	return ValidateNativeSpaceApproaches();
@@ -183,7 +201,25 @@ bool InstallLoadedSpaceOrders(std::span<const SpaceOrderRecord> records, uint64_
 void CancelSpaceOrders(SpaceVehicle &vehicle)
 {
 	ReleaseSpaceMiningSlot(vehicle); vehicle.space_orders = {};
+	vehicle.mission.continuation = {}; // This queue owns the sole active intent; cancelling it never disposes the original freight.
 	vehicle.mission.target = INVALID_ORBITAL_BODY; vehicle.mission.phase = SpaceMissionPhase::Holding; vehicle.mission.approach_ticks_left = 0;
+}
+
+/** @copydoc ForgetSpaceBodySurveyOrders */
+void ForgetSpaceBodySurveyOrders(std::span<const OrbitalBodyID> bodies)
+{
+	// Native capacity bounds this pass. Only a current affected natural Survey
+	// or Visit loses its own approach/work; future orders and paid static jobs
+	// retain their exact original owners and completed company disclosure.
+	for (auto *craft : SpaceVehicle::Iterate()) {
+		auto &q = craft->space_orders;
+		if (q.cursor >= q.entries.size()) continue;
+		const auto &order = q.entries[q.cursor];
+		if ((order.action != SpaceOrderAction::Survey && order.action != SpaceOrderAction::Visit) || order.target.kind != SpaceOrderTargetKind::Body ||
+			order.target.generation != 0 || std::ranges::find(bodies, OrbitalBodyID{order.target.id}) == bodies.end()) continue;
+		ReleaseSpaceApproach(*craft); q.started = false; q.timer_ticks = 0; q.work_ticks = 0; q.blocked = SpaceOrderBlock::TargetRemoved;
+		craft->mission.phase = SpaceMissionPhase::Holding; craft->mission.approach_ticks_left = 0;
+	}
 }
 
 /** @copydoc ResolveSpaceNavigationTarget */
@@ -277,6 +313,46 @@ CommandCost CmdEditSpaceOrder(DoCommandFlags flags, VehicleID id, uint64_t gener
 	return CommandCost{};
 }
 
+/** @copydoc CmdSetSpaceMiningPolicy */
+CommandCost CmdSetSpaceMiningPolicy(DoCommandFlags flags, VehicleID id, uint64_t generation, uint8_t index, SpaceMiningPolicy policy)
+{
+	auto *craft = SpaceVehicle::GetIfValid(id);
+	// Only the exact owned deployed miner may change its Mine intent. Actual
+	// onboard/module service retains physical control even when it is paused.
+	if (craft == nullptr || generation == 0 || craft->generation != generation || craft->owner != _current_company ||
+		craft->construction.placement != SpacePlacement::Orbital || craft->vehstatus.Test(VehState::Crashed) ||
+		(craft->manifest && craft->manifest->service_ticks != 0) || HasOrbitalServiceAssignment(*craft) ||
+		GetSpaceMiningTuning(GetSpaceVehicleModel(*craft)) == nullptr || policy >= SpaceMiningPolicy::End ||
+		GetCurrentMultiLayerProfileSelection().id != MultiLayerGameplayProfileID::MultilayerIndustry) return CMD_ERROR;
+	auto &queue = craft->space_orders;
+	// This command configures one existing Mine; it cannot insert work, select a
+	// different body or attach mining behavior to another role's instruction.
+	if (index >= queue.entries.size() || queue.entries[index].action != SpaceOrderAction::Mine) return CMD_ERROR;
+	const bool current = index == queue.cursor;
+	auto intent = craft->mission.continuation;
+	// Opting an already active legacy Mine into a new policy pins its actual
+	// admitted body now, including an empty hold. A missing source is never
+	// reconstructed from a cargo slot or from the original GUI selection.
+	if (current && queue.started && policy != SpaceMiningPolicy::LegacyReturn && intent.mineral.Empty()) {
+		const auto *body = FindAsteroidBody(GetAsteroidField(), craft->mission.target);
+		if (body == nullptr) return CMD_ERROR;
+		intent.mineral = GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo;
+		intent.previous_body = body->id;
+	}
+	// A live safe-departure/service action keeps its physical progress when the
+	// player changes preference. An inactive legacy choice needs no pinned intent.
+	if (current && policy == SpaceMiningPolicy::LegacyReturn && intent.phase == MiningContinuationPhase::None) intent = {};
+	if (current && intent.phase == MiningContinuationPhase::Waiting) intent.retry_ticks = 0;
+	// Estimates, including mixed flags, cannot change policy, mineral, wait or
+	// ongoing work. Registration/UI exposure remains gated on Group23's reader.
+	if (flags.Test(DoCommandFlag::Execute) && !flags.Test(DoCommandFlag::QueryCost)) {
+		queue.entries[index].mining_policy = policy;
+		if (current) craft->mission.continuation = intent;
+		craft->MarkDirty();
+	}
+	return CommandCost{};
+}
+
 /** @copydoc IsSpaceSurveyWorkTick */
 bool IsSpaceSurveyWorkTick(const SpaceVehicle &vehicle)
 {
@@ -311,9 +387,28 @@ static bool HasHeavyMiningModuleReturn(const SpaceVehicle &craft)
 	const auto &queue = craft.space_orders;
 	// Only the appended station-built miner may replace a shell requirement with its own explicit module route; old15 and legacy unordered missions retain their delivered pod rule.
 	if (GetSpaceVehicleModel(craft) != SPACE_HEAVY_MINER_MODEL || queue.cursor >= queue.entries.size() || queue.entries[queue.cursor].action != SpaceOrderAction::Mine) return false;
-	const auto *body = GetMutableAsteroidBody(OrbitalBodyID{queue.entries[queue.cursor].target.id});
-	if (body == nullptr) return false;
-	const auto cargo = GetCargoTypeByLabel(GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo);
+	CargoLabel mineral = craft.mission.continuation.mineral;
+	// Configured continuation retains its originally admitted mineral after body
+	// retirement. Legacy/unpinned instructions still require their actual source;
+	// an empty label or current cargo slot cannot invent a module return route.
+	if ((queue.entries[queue.cursor].mining_policy == SpaceMiningPolicy::LegacyReturn && craft.mission.continuation.phase == MiningContinuationPhase::None) || mineral.Empty()) {
+		const auto *body = GetMutableAsteroidBody(OrbitalBodyID{queue.entries[queue.cursor].target.id});
+		if (body == nullptr) return false;
+		mineral = GetMultiLayerAsteroidDefinitions()[to_underlying(body->resource_class)].cargo;
+	}
+	const auto cargo = GetCargoTypeByLabel(mineral);
+	if (!IsValidCargoType(cargo)) return false;
+	// Configured nearest returns retain their allowed module domain after the
+	// originally specified site disappears. Another real owned compatible module
+	// supplies the return function; no shell, capacity or unload is granted here.
+	if (queue.entries[queue.cursor].mining_policy != SpaceMiningPolicy::LegacyReturn) {
+		const auto route = GetSpaceReturnRoute(craft);
+		if (!route || route->domain != SpaceOrderTargetKind::Structure || route->declared_action != SpaceOrderAction::Unload) return false;
+		for (const auto *site : SpaceStructure::Iterate()) {
+			if (site->state.owner == craft.owner && IsOrbitalModuleOperational(*site) && GetOrbitalModuleCargoCapacity(*site, cargo) != 0) return true;
+		}
+		return false;
+	}
 	// Visits may navigate between the mine and receiver. Another work/handling action cannot hide an Earth return, unavailable processor or intervening mining trip behind a later valid module.
 	for (size_t index = queue.cursor + 1; index < queue.entries.size(); ++index) {
 		const auto &order = queue.entries[index];
@@ -352,6 +447,9 @@ bool IsSpaceMiningWorkTick(const SpaceVehicle &v)
 bool TickSpaceOrders(SpaceVehicle &vehicle)
 {
 	auto &queue = vehicle.space_orders;
+	// Mission-owned legacy local departure has no order to index. Configured
+	// Mine continuation also runs before missing-original-target completion.
+	if (HasSpaceMiningContinuationOrder(vehicle)) return TickSpaceMiningContinuation(vehicle);
 	if (queue.entries.empty()) return false;
 	if (queue.cursor == queue.entries.size()) { queue.blocked = SpaceOrderBlock::Completed; return true; }
 	const auto &order = queue.entries[queue.cursor];
@@ -364,6 +462,7 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 	/** Finish only the current action, releasing its actual lease and clearing its action-owned partial timers. */
 	auto complete = [&] {
 		ReleaseSpaceMiningSlot(vehicle); vehicle.mission.phase = SpaceMissionPhase::Holding; vehicle.mission.approach_ticks_left = 0;
+		vehicle.mission.continuation = {}; // The completed instruction cannot lend its pinned mineral or pending destination to the next action.
 		++queue.cursor; queue.started = false; queue.timer_ticks = 0; queue.work_ticks = 0;
 		queue.blocked = queue.cursor == queue.entries.size() ? SpaceOrderBlock::Completed : SpaceOrderBlock::None;
 	};
@@ -375,7 +474,7 @@ bool TickSpaceOrders(SpaceVehicle &vehicle)
 			queue.started = false; queue.timer_ticks = 0; queue.work_ticks = 0; queue.blocked = block; return true;
 		}
 		if (!queue.started) {
-			if (AssignSpaceMiningMission(vehicle, order.target.id, true).Failed()) { queue.blocked = SpaceOrderBlock::HoldIncompatible; return true; }
+			if (AssignSpaceMiningMission(vehicle, order.target.id, true, order.mining_policy).Failed()) { queue.blocked = SpaceOrderBlock::HoldIncompatible; return true; }
 			queue.started = true;
 		}
 		return false; // Existing native lease/reserve/packet implementation is the only extraction owner.
@@ -484,7 +583,12 @@ uint64_t ComputeSpaceOrdersDigest()
 			hash(static_cast<uint32_t>(a.staging.x)); hash(static_cast<uint32_t>(a.staging.y));
 		}
 		// Include each ordered typed target and incarnation; coincident numeric IDs in different domains remain distinct.
-		for (const auto &o : r.queue.entries) { hash(to_underlying(o.action)); hash(to_underlying(o.target.kind)); hash(o.target.id); hash(o.target.generation); }
+		for (const auto &o : r.queue.entries) {
+			hash(to_underlying(o.action)); hash(to_underlying(o.target.kind)); hash(o.target.id); hash(o.target.generation);
+			// Preserve old/default queue digests while including every explicitly
+			// configured policy in modern intent and quote-purity comparisons.
+			if (o.mining_policy != SpaceMiningPolicy::LegacyReturn) { hash(0x4D494E504F4C31ULL); hash(to_underlying(o.mining_policy)); }
+		}
 	}
 	return digest;
 }

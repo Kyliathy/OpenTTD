@@ -1,13 +1,15 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_depletion.cpp Finite-zero persistence and monotonic body reference boundaries.
+ * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group31F; depletion alone preserves a contained body, while authoritative terminal retirement remains supported.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group5
  */
 #include "../stdafx.h"
+#include "asteroid_snapshot_fixture.h"
 #include "../3rdparty/catch2/catch.hpp"
 #include "../asteroid.h"
 #include "../safeguards.h"
 
-/** Keep exhausted natural identities, generated composition and movement without respawning their reserve. */
+/** Keep exhausted natural identities, generated composition and finite stock during contained travel; terminal retirement is a separate lifecycle event. */
 TEST_CASE("Depleted asteroid records retain identity resources and motion", "[asteroid-depletion]")
 {
 	const auto generated = GenerateAsteroidField(64, 64, 12345, AsteroidDensity::Normal); REQUIRE(generated);
@@ -17,9 +19,11 @@ TEST_CASE("Depleted asteroid records retain identity resources and motion", "[as
 	const auto id = field.bodies[0].id;
 	const auto initial = field.bodies[0].initial_reserve;
 	const auto position = field.bodies[0].motion.position;
-	// Exhaustion changes extraction eligibility only: repeated motion must never refill, replace or drop the natural target.
+	// These148 contained opportunities prove exhaustion alone changes extraction
+	// eligibility without refill or replacement. Actual map exit has its separate
+	// authoritative retirement/credit contract; this test does not forbid it.
 	for (uint32_t tick = 0; tick < 148; ++tick) {
-		AdvanceAsteroidField(field);
+		AdvanceContainedAsteroidSnapshot(field);
 		CHECK(field.bodies.size() == generated->bodies.size()); CHECK(field.bodies[0].id == id);
 		CHECK(field.bodies[0].remaining_reserve == 0); CHECK(field.bodies[0].initial_reserve == initial);
 		CHECK(field.bodies[0].resource_class == generated->bodies[0].resource_class);
@@ -32,8 +36,8 @@ TEST_CASE("Depleted asteroid records retain identity resources and motion", "[as
 	field.bodies[0].mining_slot = VehicleID::Invalid(); REQUIRE(ValidateAsteroidField(field));
 }
 
-/** Reject erased/renumbered bodies and keep invalid references distinct from the surviving exhausted body. */
-TEST_CASE("Asteroid removal is unsupported and invalid identities never alias depleted targets", "[asteroid-depletion]")
+/** Reject direct unaccounted erasure/duplicate IDs and keep invalid references distinct from a surviving exhausted body. */
+TEST_CASE("Unaccounted asteroid erasure is refused and invalid identities never alias depleted targets", "[asteroid-depletion]")
 {
 	const auto generated = GenerateAsteroidField(64, 64, 12345, AsteroidDensity::Normal); REQUIRE(generated);
 	auto removed = *generated; removed.bodies.erase(removed.bodies.begin()); CHECK_FALSE(ValidateAsteroidField(removed));
