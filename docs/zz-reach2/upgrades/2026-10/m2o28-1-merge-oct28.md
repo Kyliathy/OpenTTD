@@ -165,23 +165,25 @@ _Applies to Group 1._
 
 Produces the integration branch, the disposition inventory, the forecast record and the execution-notes file that every later group writes into.
 
+Execution evidence: [Group 1 record](m2o28-a-execution-notes.md#group-1). Pins held; inventory and forecast match the plan.
+
 {{SIMPLE}}
 
-- [ ] **1.1** Run `git fetch origin mlm-mlv-2sp mlm-mlv` (read-only) and recheck the pins: `git rev-parse mlm-mlv origin/mlm-mlv origin/mlm-mlv-2sp`, `git merge-base mlm-mlv origin/mlm-mlv-2sp` and `git status --short`. Record the values. On drift, follow the entry gate.
+- [X] **1.1** Run `git fetch origin mlm-mlv-2sp mlm-mlv` (read-only) and recheck the pins: `git rev-parse mlm-mlv origin/mlm-mlv origin/mlm-mlv-2sp`, `git merge-base mlm-mlv origin/mlm-mlv-2sp` and `git status --short`. Record the values. On drift, follow the entry gate.
 
-- [ ] **1.2** Create the local integration branch: `git switch -c merge-2sp-oct28 mlm-mlv`. If planning Markdown changes (this plan pair, the deletion of the October 26 plans) are not committed yet, commit exactly those as the branch's first commit. Record that the branch has no upstream, and do not set one.
+- [X] **1.2** Create the local integration branch: `git switch -c merge-2sp-oct28 mlm-mlv`. If planning Markdown changes (this plan pair, the deletion of the October 26 plans) are not committed yet, commit exactly those as the branch's first commit. Record that the branch has no upstream, and do not set one.
 
-- [ ] **1.3** Write the path inventory to `test-cache/merge-oct28/dispositions.tsv` from `git diff --name-status -M <base> mlm-mlv` and `git diff --name-status -M <base> origin/mlm-mlv-2sp`. Each path gets one category: `shared-conflict` (23), `shared-clean-review` (17), `S-only` (182) or `D-only` (5,286). Flag six S-only paths as `policy` for Part 2 Group 30: `src/tests/multilayer/support/cleanup_check.ps1`, `cleanup_check-1.ps1`, `cleanup_check-2.ps1`, `cleanup_fixture.ps1` and the two `r2fc*-file-cleanup3.md` plans. Confirm 0 renames and 0 deletions on S.
+- [X] **1.3** Write the path inventory to `test-cache/merge-oct28/dispositions.tsv` from `git diff --name-status -M <base> mlm-mlv` and `git diff --name-status -M <base> origin/mlm-mlv-2sp`. Each path gets one category: `shared-conflict` (23), `shared-clean-review` (17), `S-only` (182) or `D-only` (5,286). Flag six S-only paths as `policy` for Part 2 Group 30: `src/tests/multilayer/support/cleanup_check.ps1`, `cleanup_check-1.ps1`, `cleanup_check-2.ps1`, `cleanup_fixture.ps1` and the two `r2fc*-file-cleanup3.md` plans. Confirm 0 renames and 0 deletions on S.
 
-- [ ] **1.4** Record the forecast in `logs/merge-oct28/merge-tree.txt` with `git merge-tree --write-tree --name-only mlm-mlv origin/mlm-mlv-2sp`, and per-file block counts from the conflicted blobs. Expect tree `d0486387…`, 23 paths and 42 blocks; any difference updates **Conflict inventory** first.
+- [X] **1.4** Record the forecast in `logs/merge-oct28/merge-tree.txt` with `git merge-tree --write-tree --name-only mlm-mlv origin/mlm-mlv-2sp`, and per-file block counts from the conflicted blobs. Expect tree `d0486387…`, 23 paths and 42 blocks; any difference updates **Conflict inventory** first.
 
-- [ ] **1.5** Run the duplicate scans the textual forecast cannot show, and record each hit with the group that resolves it:
+- [X] **1.5** Run the duplicate scans the textual forecast cannot show, and record each hit with the group that resolves it:
   - symbols both sides declare: `GetSpaceSupplyLabel`, `NativeCargoReferencePreview`/`NativeCargoOwnerPreview`, `HandleWindowOpeningHotkey`/`ToggleHotkeyWindow`, `SelectMainViewportLayer`/`ShowMainViewportLayerInDisplayOrder`, `hotkey_toggles_window`, and command 211;
   - S's own references to names that Group 6 removes: `git grep -nE "MTHK_LAYER_|map_layer_(surface|underground|deep_underground|space)|SelectMainViewportLayer|HandleWindowOpeningHotkey|MainToolbarEditorHotkeys::Layer" origin/mlm-mlv-2sp`. Expect the toolbar sites, `src/tests/space_fixes_native.cpp:202` and `src/tests/multilayer/acceptance/space_fixes_checks.py:78`;
   - CMake: every S test source is registered exactly once per target;
   - duplicates that merge **without** markers, scanned in the forecast tree: repeated `STR_` IDs in `src/lang/english.txt` and repeated `var =` lines in `src/table/settings/*.ini`. Planning found exactly `STR_CONFIG_SETTING_HOTKEY_TOGGLES_WINDOW` (+`_HELPTEXT`) and `gui.hotkey_toggles_window` (Group 6.5); `gui.scroll_mode`, `gui.show_date_in_logs` and the other repeats already exist in D as version-ranged entries.
 
-- [ ] **1.6** Create `m2o28-a-execution-notes.md` beside this plan, with one heading per group and a header that links this plan and says it is a record, not a reading queue. Record the environment (compiler versions, CMake, Ninja, Python, the absence of MSVC and `pwsh`) and the fact that m2o26's Windows outputs (`test-cache/merge-oct26/`, the staged donor build) are not present on this machine. Commit the notes file alone, on the integration branch.
+- [X] **1.6** Create `m2o28-a-execution-notes.md` beside this plan, with one heading per group and a header that links this plan and says it is a record, not a reading queue. Record the environment (compiler versions, CMake, Ninja, Python, the absence of MSVC and `pwsh`) and the fact that m2o26's Windows outputs (`test-cache/merge-oct26/`, the staged donor build) are not present on this machine. Commit the notes file alone, on the integration branch.
 
 ### Area Mandatory Reading - Linux donor reference
 
