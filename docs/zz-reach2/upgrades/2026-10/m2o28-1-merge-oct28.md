@@ -724,13 +724,15 @@ const bool complete = VisitNativeCargoPackets([&](const CargoPacket &packet, Car
 
 {{HARD}}
 
-- [ ] **16.1** Finish the Group 5 function. First reject any non-canonical `Source`. For each asteroid packet, check the container cargo label, the Space production tile and an invalid first station, and collect its identity once. After the traversal, reject allocated asteroid packets that have no owner.
+- [X] **16.1** Finish the Group 5 function. First reject any non-canonical `Source`. For each asteroid packet, check the container cargo label, the Space production tile and an invalid first station, and collect its identity once. After the traversal, reject allocated asteroid packets that have no owner.
 
-- [ ] **16.2** Keep D's visitor coverage: ordinary carriers, station goods and handling, manifests, descent packets, construction and stock, both service berths, and all manufacture/recipe inputs. A pod reference or a diagnostic record is not a second owner. Add a case with an asteroid packet in the fourth manufacture slot.
+- [X] **16.2** Keep D's visitor coverage: ordinary carriers, station goods and handling, manifests, descent packets, construction and stock, both service berths, and all manufacture/recipe inputs. A pod reference or a diagnostic record is not a second owner. Add a case with an asteroid packet in the fourth manufacture slot.
 
-- [ ] **16.3** Gate `NormalizeLegacyAsteroidCargoPackets` in `afterload.cpp` and `NormalizeLegacyAsteroidCargoPreview` in `saveload.cpp` on the absence of `SaveCapability::AsteroidCargoOrigins`, not on the pending enumerator. Preflight every upgrade before applying any. Tick both rows of the 9.1 burn-down.
+- [X] **16.3** Gate `NormalizeLegacyAsteroidCargoPackets` in `afterload.cpp` and `NormalizeLegacyAsteroidCargoPreview` in `saveload.cpp` on the absence of `SaveCapability::AsteroidCargoOrigins`, not on the pending enumerator. Preflight every upgrade before applying any. Tick both rows of the 9.1 burn-down.
 
-- [ ] **16.4** Add native cases: retired issued origins, a missing old body, wrong mineral or plane, duplicate and unowned packets, and ordinary or purchased supplies next to asteroid cargo. Run them in GCC and Clang.
+- [X] **16.4** Add native cases: retired issued origins, a missing old body, wrong mineral or plane, duplicate and unowned packets, and ordinary or purchased supplies next to asteroid cargo. Run them in GCC and Clang.
+
+Execution evidence: see **Group 16** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass the wide subset (519/519).
 
 ### Area Mandatory Reading - Field and mission transport adapters
 

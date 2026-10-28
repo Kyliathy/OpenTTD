@@ -163,14 +163,14 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 | [X] | `src/saveload/cargo_source_sl.h` | 48 | `IsValidCargoPacketSource` typed-origin acceptance | 15 |
 | [X] | `src/tests/asteroid_cargo_wire.cpp` | 25-107 (15 sites) | Pure codec cases that pass `AsteroidCargoOrigins` straight to the codec | 15 |
 | [X] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
-| [ ] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
+| [X] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
 | [ ] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
 | [ ] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
 | [ ] | `src/saveload/space_mining_sl.cpp` | 62 | Continuation schema decoder | 18 |
 | [ ] | `src/saveload/vehicle_sl.cpp` | 1136-1149, 1295 | VEHS `mission.continuation.*` columns and the missing-schema refusal | 18 |
 | [ ] | `src/tests/asteroid_cargo_native.cpp` | 87 | Copied mission decision check at `SpaceMiningContinuation` | 18 |
 | [ ] | `src/tests/space_mining_wire.cpp` | 157-162 | Continuation-schema absence case (the pending CTest failure) | 18 |
-| [ ] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
+| [X] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
 | [ ] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
 | [ ] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
 | [ ] | `src/saveload/saveload.cpp` | `DoLoad` preflight (added in Group 13) | Pending refusal of admitted `SaveDialect::SpaceFixes` files (`TOO_NEW_SAVEGAME`, "admitted but not yet readable") | 21 (lift once 15-20 read every era; 442-445 also need 22's MaxVersion) |
@@ -469,3 +469,59 @@ GCC (`logs/merge-oct28/group15/`): `ctest -R "[Aa]steroid|[Ss]ource|[Ss]upply|[C
 The first build caught a real `-Wdangling-reference` in the new real-file case: `SupplyWireFind` returns a reference into the chunk vector, so that vector is now kept in a local.
 
 Clang: incremental `ninja -C build-clang openttd_test` (10 steps) exit 0 with no warnings; the same subset passed 320/320 (`ctest-clang.log`).
+
+## Group 16
+
+**16.1** The Group 5 function `ValidateAsteroidPacketCustody(const AsteroidField &)` (`space_vehicle.cpp:569`) was already complete in the merge. It runs on `VisitNativeCargoPackets` and checks, in order:
+
+1. it refuses a non-canonical source;
+2. for an asteroid packet, it resolves the origin, collects the identity once, and requires the container cargo label to equal the mineral, the source tile to be on the Space plane, and the first station to be Invalid;
+3. after the traversal, it refuses any allocated packet that is non-canonical, and any asteroid packet that has no owner.
+
+It is still called at the end of `ValidateSpaceVehicles` (`space_vehicle.cpp:659`), as in both S and D. No code change was needed.
+
+**16.2** `cargo_custody.cpp` visits each of these once:
+
+- station goods and launch-hub handling;
+- every vehicle's cargo, including Space freight;
+- the three manifest compartments;
+- pod descent jobs;
+- construction inputs;
+- module stock;
+- every service-job berth;
+- manufacture inputs, all four slots, with unused slots required to be empty.
+
+New case `Asteroid custody visits the fourth manufacture input slot`:
+
+- It puts mined ore into slot 4 of a heavy-miner job. That recipe (STEL, GOOD, RBPT, ELEC) is the only one with four inputs.
+- Recording the shared visitor's own callbacks shows the packet visited exactly once, with that slot's ELEC cargo and an Invalid station. Because slot 4 holds ELEC, refusal alone could not tell "visited and relabelled" from "not visited".
+- Custody refuses the packet there, and accepts it again once it moves to module stock of its own cargo.
+
+**16.3** Commit (this group) changes two gates:
+
+- `afterload.cpp` calls `NormalizeLegacyAsteroidCargoPackets` when `!SlHasSaveCapability(SaveCapability::AsteroidCargoOrigins)`.
+- `saveload.cpp`'s LoadCheck calls `NormalizeLegacyAsteroidCargoPreview` under the same condition.
+
+Both run inside the `ScopedLoadLineage` scope, so the source's own capability answers. Shared, A, B and merged 441 sources normalize. Space fixes and merged 446 sources already carry typed origins, so they skip it, and their codec refuses unqualified scalars. Both functions already preflight every upgrade before applying any.
+
+The burn-down rows for both are ticked. `git grep "SaveLoadVersion::AsteroidCargoOrigins" src` now finds only the `saveload.h` definition.
+
+**16.4** New case `Asteroid custody refuses every unsupported origin and keeps ordinary and bought cargo alongside`:
+
+- An Industry packet and a CompanySupply packet next to mined ore keep custody valid.
+- Each of these refuses on its own:
+  - a never-issued origin (`next_body_id`);
+  - a wrong mineral for a live body;
+  - a legacy ID with no surviving body;
+  - a correct origin with a Surface pickup tile;
+  - an allocated asteroid packet in no container.
+- Added packets are raw list references, as in the existing duplicate-alias check, so `Append` cannot merge and delete them.
+
+The retired-origin and duplicate cases already exist in the six-owner case, and the atomic missing-body normalization in `asteroid_cargo_wire.cpp`.
+
+Results (`logs/merge-oct28/group16/`):
+
+- The `[asteroid-cargo-custody]` tag: 3 cases, 999 assertions.
+- Wide subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid|[Ss]ource|[Cc]argo|[Pp]acket|[Cc]ustody"`: GCC 519/519 (`ctest-gcc.{log,xml}`), Clang 519/519 (`ctest-clang.log`), no new warnings.
+- The first builds had three compile errors in the new test: a missing `space_mining_tuning.h`, a brace-initialized comparison, and the station-to-station `Move` taking no tile. All are fixed.
+

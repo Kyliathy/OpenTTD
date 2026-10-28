@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_cargo_custody.cpp Original mined packets across six actual native containers after copied source retirement.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups16/21; emitted packets now enter native custody with their complete typed origin.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 16; one visitor reaches every manufacture slot, and each refusal reason is separate.
  * Declared unit owners prove provenance/custody only, not paid commissioning or timed descent/service.
  */
 #include "../stdafx.h"
@@ -13,6 +14,9 @@
 #include "../space_structure.h"
 #include "../orbital_station.h"
 #include "../roadveh.h"
+#include "../cargo_custody.h"
+#include "../multilayer_space_content.h"
+#include "../space_mining_tuning.h"
 #include "../station_base.h"
 #include "../safeguards.h"
 
@@ -90,3 +94,101 @@ TEST_CASE("Mined cargo retains original historical provenance through six native
 	CHECK_FALSE(ValidateAsteroidPacketCustody(retired));
 	alias.pop_back(); audit();
 }
+
+/** The single native visitor reaches the fourth manufacture slot; custody judges an asteroid packet there by that slot's own label. */
+TEST_CASE("Asteroid custody visits the fourth manufacture input slot", "[asteroid-cargo-custody]")
+{
+	ProbeExtractionRig rig;
+	auto &craft = rig.Probe(); rig.Attach(craft);
+	for (uint tick = 0; tick < 74; ++tick) rig.Step();
+	REQUIRE(craft.cargo.TotalCount() == 2);
+	REQUIRE(CmdSetSpaceMission(DoCommandFlag::Execute, craft.index, UINT32_MAX).Succeeded());
+	const auto *packet = craft.cargo.Packets()->front();
+	const auto packet_id = packet->index;
+	// The heavy recipe is the one four-input recipe: STEL, GOOD, RBPT, ELEC.
+	const auto *recipe = GetSpaceVehicleConstruction(SPACE_HEAVY_MINER_MODEL);
+	REQUIRE(recipe != nullptr); REQUIRE(recipe->inputs.size() == MAX_ORBITAL_MANUFACTURE_INPUTS);
+	const auto fourth = GetCargoTypeByLabel(recipe->inputs[3].label);
+	REQUIRE(IsValidCargoType(fourth));
+	REQUIRE(SpaceStructure::CanAllocateItem());
+	auto module = std::unique_ptr<SpaceStructure>(SpaceStructure::Create());
+	module->state.kind = SpaceBuildKind::Core; module->module = std::make_unique<OrbitalModule>();
+	module->module->manufacture = std::make_unique<OrbitalManufactureJob>();
+	module->module->manufacture->model = SPACE_HEAVY_MINER_MODEL;
+	auto &slot = module->module->manufacture->inputs[3];
+	REQUIRE(ValidateAsteroidPacketCustody(GetAsteroidField()));
+	REQUIRE(HubCargoTransfer::Move(craft.cargo, slot, 2, craft.tile));
+	// Record what the shared visitor itself reports for this packet: exactly one
+	// visit, from the fourth slot, with that slot's ELEC meaning.
+	std::vector<CargoType> visits;
+	REQUIRE(VisitNativeCargoPackets([&](const CargoPacket &visited, CargoType cargo, StationID station) {
+		if (visited.index == packet_id) { visits.push_back(cargo); CHECK(station == StationID::Invalid()); }
+		return true;
+	}));
+	REQUIRE(visits.size() == 1); CHECK(visits.front() == fourth);
+	// Mined ore in an ELEC slot is a relabelled packet, not lost custody.
+	CHECK_FALSE(ValidateAsteroidPacketCustody(GetAsteroidField()));
+	auto &stock = module->module->stock[craft.cargo_type];
+	REQUIRE(HubCargoTransfer::Move(slot, stock, 2));
+	CHECK(ValidateAsteroidPacketCustody(GetAsteroidField()));
+	REQUIRE(HubCargoTransfer::Move(stock, craft.cargo, 2, craft.tile));
+	module->module->manufacture.reset();
+}
+
+/** Each refusal reason is independent: unissued or wrong-mineral origins, a missing legacy body, the wrong plane and an unowned packet. */
+TEST_CASE("Asteroid custody refuses every unsupported origin and keeps ordinary and bought cargo alongside", "[asteroid-cargo-custody]")
+{
+	ProbeExtractionRig rig;
+	auto &craft = rig.Probe(); auto &body = rig.Attach(craft);
+	for (uint tick = 0; tick < 74; ++tick) rig.Step();
+	REQUIRE(craft.cargo.TotalCount() == 2);
+	REQUIRE(CmdSetSpaceMission(DoCommandFlag::Execute, craft.index, UINT32_MAX).Succeeded());
+	const auto &field = GetAsteroidField();
+	const auto production = GetSpaceMiningProductionTile(body); REQUIRE(production);
+	const auto mineral = craft.cargo.Packets()->front()->GetSource().GetAsteroidOrigin()->mineral;
+	REQUIRE(ValidateAsteroidPacketCustody(field));
+	// Raw list entries, as in the case above: Append could merge a new packet
+	// into an existing one and delete it. Custody reads references, not caches.
+	auto &list = *const_cast<CargoPacketList *>(craft.cargo.Packets());
+	/** @param source Packet source. @param tile Original pickup tile. @return One real packet referenced by the craft's own cargo list. */
+	const auto add = [&](Source source, TileIndex tile) {
+		REQUIRE(CargoPacket::CanAllocateItem());
+		auto *made = CargoPacket::Create(StationID::Invalid(), uint16_t{1}, source);
+		made->UpdateLoadingTile(tile);
+		list.push_back(made);
+		return made;
+	};
+	/** Drop the reference again and free the packet, leaving the rest unchanged. @param made Packet added by add(). */
+	const auto remove = [&](CargoPacket *made) {
+		REQUIRE(list.back() == made);
+		list.pop_back(); delete made;
+	};
+	// Ordinary and bought cargo next to asteroid cargo is outside this policy.
+	auto *ordinary = add(Source{IndustryID{0}, SourceType::Industry}, *production);
+	auto *bought = add(Source{CompanyID{0}, SourceType::CompanySupply}, *production);
+	CHECK(ValidateAsteroidPacketCustody(field));
+	remove(bought); remove(ordinary);
+	// Each malformed natural origin refuses on its own, and the field is untouched.
+	const Source refused[]{
+		Source::FromAsteroid(field.next_body_id, mineral), // Never issued.
+		Source::FromAsteroid(body.id.base(), mineral == CargoLabel{"NORE"} ? CargoLabel{"WICE"} : CargoLabel{"NORE"}), // Wrong mineral for a live body.
+		Source{SourceID{MAX_ORBITAL_BODIES - 1}, SourceType::Asteroid}, // Legacy ID with no surviving body.
+	};
+	for (const auto &source : refused) {
+		auto *made = add(source, *production);
+		CHECK_FALSE(ValidateAsteroidPacketCustody(field));
+		remove(made);
+	}
+	// A correct origin picked up on the Surface plane is not natural production.
+	auto *surface = add(Source::FromAsteroid(body.id.base(), mineral), TileXYL(20, 20, MapLayer::Surface));
+	CHECK_FALSE(ValidateAsteroidPacketCustody(field));
+	remove(surface);
+	// An allocated asteroid packet in no container is lost custody, not reserve.
+	REQUIRE(CargoPacket::CanAllocateItem());
+	auto loose = std::unique_ptr<CargoPacket>(CargoPacket::Create(StationID::Invalid(), uint16_t{1}, Source::FromAsteroid(body.id.base(), mineral)));
+	loose->UpdateLoadingTile(*production);
+	CHECK_FALSE(ValidateAsteroidPacketCustody(field));
+	loose.reset();
+	CHECK(ValidateAsteroidPacketCustody(field));
+}
+

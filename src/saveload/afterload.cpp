@@ -7,6 +7,7 @@
 
 /** @file afterload.cpp Code updating data after game load. @see docs/zz-reach2/architecture/savegame/archi-savegame.md, docs/zz-reach2/architecture/map-layers/archi-map-layers.md
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group14BH: final render caches resolve only after the native gameplay owners finish restoring.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 16: legacy asteroid cargo normalization is gated by the accepted source's capability.
  */
 
 #include "../stdafx.h"
@@ -3522,10 +3523,12 @@ bool AfterLoadGame()
 	if (!AcceptLoadedLayerMines()) SlErrorCorrupt("Invalid finite mine state");
 	if (!AcceptLoadedLayerProcessors()) SlErrorCorrupt("Invalid native processor state");
 	if (!AcceptLoadedAsteroidField()) SlErrorCorrupt("Invalid asteroid field state");
-	// Only genuine older files infer mineral from their own original body.
-	// Qualify the same packets before native manifest/fleet/custody joins; load
-	// issues no replacement cargo and cannot infer a missing retired source.
-	if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPackets(GetAsteroidField())) SlErrorCorrupt("Invalid legacy asteroid cargo origin");
+	// Only a source without typed origins (shared, A, B, merged 441) infers the
+	// mineral from its own original body; Space fixes and merged 446 files already
+	// carry it (m2o28 Group 16). Qualify the same packets before native
+	// manifest/fleet/custody joins; load issues no replacement cargo and cannot
+	// infer a missing retired source.
+	if (!SlHasSaveCapability(SaveCapability::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPackets(GetAsteroidField())) SlErrorCorrupt("Invalid legacy asteroid cargo origin");
 	if (!AcceptLoadedLaunchCenters()) SlErrorCorrupt("Invalid native launch-center state");
 	if (!AcceptLoadedLaunchHubs()) SlErrorCorrupt("Invalid native launch-hub membership");
 	if (!AcceptLoadedSurfaceHandling()) SlErrorCorrupt("Invalid native Surface handling state");

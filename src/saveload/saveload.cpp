@@ -3635,10 +3635,11 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 			if (!ValidateSpaceCargoPreviewOwners(_load_check_data)) SlErrorCorrupt("Shared or missing native/Space cargo ownership preview");
 		}
 		ValidateLayerPortalWorkLoadPreview();
-		// Old CAPA sources gain full meaning only after this file's own field
-		// and existing custody/mineral joins have admitted their original rows.
-		// Preview changes detached metadata alone, never the accepted world.
-		if (IsSavegameVersionBefore(SaveLoadVersion::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPreview(_load_check_data)) SlErrorCorrupt("Invalid copied legacy asteroid cargo origin");
+		// CAPA sources without typed origins gain full meaning only after this
+		// file's own field and existing custody/mineral joins have admitted their
+		// original rows (gated by capability, m2o28 Group 16). Preview changes
+		// detached metadata alone, never the accepted world.
+		if (!SlHasSaveCapability(SaveCapability::AsteroidCargoOrigins) && !NormalizeLegacyAsteroidCargoPreview(_load_check_data)) SlErrorCorrupt("Invalid copied legacy asteroid cargo origin");
 		ValidateTBMProjectLoadPreview();
 		ValidateSpoilReceiverLoadPreview();
 		ValidateLayerMineLoadPreview();
