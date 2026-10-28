@@ -4,6 +4,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C heavy native role/version admission.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 18; policy bytes and departure admission follow capabilities, and the writer emits its own row layout.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 21; a failed load's null pass revokes staged and installed state.
  */
 #include "../stdafx.h"
 #include "saveload.h"
@@ -238,10 +239,13 @@ struct SPORChunkHandler : ChunkHandler {
 	}
 	/** Decode detached requests without mutating native hulls, positions or target slots. */
 	void Load() const override { if (_candidate) SlErrorCorrupt("Repeated Space order family"); _candidate = this->Read(); }
-	/** Check required same-file family/profile presence before installation. */
+	/** Check required same-file family/profile presence before installation.
+	 * A failed load's null pass drops the candidate queues and the generation issuer, so a late refusal
+	 * cannot lend them to the next load (m2o28 Group 21).
+	 */
 	void FixPointers() const override
 	{
-		if (!SlIsFixingPointers()) return;
+		if (!SlIsFixingPointers()) { ResetSpaceOrders(); return; }
 		if (!_candidate && !IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders)) SlErrorCorrupt("Missing Space order family");
 		const auto *schema = GetPendingMultiLayerStateSchema();
 		if (_candidate && (_candidate->next != 1 || !_candidate->records.empty()) && (schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry)) SlErrorCorrupt("Space orders require selected profile");

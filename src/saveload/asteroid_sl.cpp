@@ -8,6 +8,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md GroupP1
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group2
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 17; one capability-based era selector for Read, LoadCheck, Save and SPKN.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 21; a failed load's null pass revokes staged and installed state.
  */
 #include "../stdafx.h"
 #include "saveload.h"
@@ -133,10 +134,13 @@ struct ASTRChunkHandler : ChunkHandler {
 	}
 	/** Stage one complete validated field; repeated authority cannot overwrite an earlier family during loading. */
 	void Load() const override { if (_staged_asteroids) SlErrorCorrupt("Repeated asteroid field"); StageLoadedAsteroidField(this->Read()); }
-	/** Check staged field against saved world metadata before any resource authority is published. */
+	/** Check staged field against saved world metadata before any resource authority is published.
+	 * A failed load's null pass instead revokes the staged and any installed field, as the other feature owners
+	 * do, so a late refusal leaves no field, lifecycle or lease behind (m2o28 Group 21).
+	 */
 	void FixPointers() const override
 	{
-		if (!SlIsFixingPointers()) return;
+		if (!SlIsFixingPointers()) { ResetAsteroidField(); return; }
 		const auto *metadata = GetPendingMultiLayerStateSchema();
 		CheckField(_staged_asteroids ? &*_staged_asteroids : nullptr, Map::SizeX(), Map::SizeY(), metadata == nullptr ? 0 : metadata->feature_flags, metadata == nullptr ? 0 : metadata->orbital_seed);
 	}
@@ -207,10 +211,12 @@ struct SPKNChunkHandler : ChunkHandler {
 	}
 	/** Stage one disclosure owner; a repeated family cannot replace earlier loaded authority. */
 	void Load() const override { if (_staged_knowledge) SlErrorCorrupt("Repeated asteroid survey knowledge family"); _staged_knowledge = this->Read(); }
-	/** Validate disclosure references against the staged field/profile rather than creating missing companies or body records. */
+	/** Validate disclosure references against the staged field/profile rather than creating missing companies or body records.
+	 * A failed load's null pass drops the staged disclosure; the installed knowledge goes with ASTR's field (m2o28 Group 21).
+	 */
 	void FixPointers() const override
 	{
-		if (!SlIsFixingPointers()) return;
+		if (!SlIsFixingPointers()) { ResetAsteroidLoadStaging(); return; }
 		if (!_staged_knowledge) { if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceSurveyKnowledge)) SlErrorCorrupt("Missing asteroid survey knowledge family"); return; }
 		const auto *schema = GetPendingMultiLayerStateSchema();
 		if (!_staged_knowledge->empty() && (schema == nullptr || schema->profile.id != MultiLayerGameplayProfileID::MultilayerIndustry || !_staged_asteroids ||
