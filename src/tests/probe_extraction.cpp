@@ -6,6 +6,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group15; native offset/budget and simultaneous request coverage.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group16; earned final-unit exit and retained body identity.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs10-asteroids-and-mining-probes.md Group20; generation-bound synchronized mission admission.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8; extracted packets carry the incoming typed asteroid origin.
  * Unit hulls, package descriptors, ready-work and refusal inputs are explicit; separate paid native saves prove earned gameplay extraction.
  */
 #include "../stdafx.h"
@@ -168,7 +169,10 @@ TEST_CASE("Finite extraction preserves small tails full holds and original packe
 	const auto tile = TileXYL((body.motion.position.x + SPACE_Q16 / 2) / SPACE_Q16, (body.motion.position.y + SPACE_Q16 / 2) / SPACE_Q16, MapLayer::Space);
 	REQUIRE(CommitSpaceMiningExtraction(craft, body)); CHECK(craft.cargo.TotalCount() == expected); CHECK(body.remaining_reserve == offered - expected);
 	const auto *packet = craft.cargo.Packets()->front(); const auto id = packet->index; const auto source_tile = packet->GetSourceTile();
-	CHECK(packet->GetSource().type == SourceType::Asteroid); CHECK(packet->GetSource().id == body.id.base()); CHECK(source_tile == tile); CHECK(packet->GetFirstStation() == StationID::Invalid()); CHECK(packet->GetPeriodsInTransit() == 0);
+	CHECK(packet->GetSource().type == SourceType::Asteroid);
+	// Extraction now emits a typed full-width origin (r2sff1 Group15): the body ID and mineral live in the origin, not in the 16-bit source ID.
+	const auto origin = packet->GetSource().GetAsteroidOrigin(); REQUIRE(origin.has_value()); CHECK(origin->body == body.id.base());
+	 CHECK(source_tile == tile); CHECK(packet->GetFirstStation() == StationID::Invalid()); CHECK(packet->GetPeriodsInTransit() == 0);
 	CHECK(body.mining_slot == VehicleID::Invalid()); CHECK(craft.mission.phase == SpaceMissionPhase::Return); CHECK(craft.mission.work_ticks == 0);
 	// Later body motion and native cargo return cannot rewrite the already emitted packet's production coordinates or debit another finite unit.
 	for (uint elapsed = 0; elapsed < 74; ++elapsed) rig.Step();

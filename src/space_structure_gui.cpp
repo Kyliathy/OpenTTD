@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_structure_gui.cpp Native module selection, paid activation and precise Core/Dock service controls.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups2/8.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 8; default-size box for the persisted window size.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Groups1-4C/6B/7.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9CD; shared heavy selection and immutable original reserved bills.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group13K; original recipe/input/output/work and blocked disclosures.
@@ -41,6 +42,8 @@ static constexpr std::initializer_list<NWidgetPart> widgets = {
 	NWidget(NWID_HORIZONTAL),
 		NWidget(WWT_CLOSEBOX, Colours::DarkBlue),
 		NWidget(WWT_CAPTION, Colours::DarkBlue), SetStringTip(STR_SPACE_CONSTRUCTION_CAPTION),
+		// The window remembers its size under the "space_construction" INI key, so upstream's WindowDesc rule needs a default-size box.
+		NWidget(WWT_DEFSIZEBOX, Colours::DarkBlue),
 	EndContainer(),
 	NWidget(WWT_DROPDOWN, Colours::DarkBlue, WID_SC_SITE), SetStringTip(STR_SPACE_CONSTRUCTION_SELECT), SetFill(1, 0), SetResize(1, 0),
 	NWidget(WWT_DROPDOWN, Colours::DarkBlue, WID_SC_RECIPE), SetStringTip(STR_SPACE_CONSTRUCTION_SELECT), SetFill(1, 0), SetResize(1, 0),
