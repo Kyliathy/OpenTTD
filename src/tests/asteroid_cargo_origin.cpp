@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file asteroid_cargo_origin.cpp Full-width natural provenance, native packet copies and gated extraction inputs.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group15.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 14; merged source values, the legacy upgrade hook and packet operations.
  */
 #include "../stdafx.h"
 #include "../3rdparty/catch2/catch.hpp"
@@ -148,3 +149,121 @@ TEST_CASE("Asteroid extraction prepares wide origins and commits only its origin
 	CHECK(emitted.GetAsteroidOrigin() == AsteroidCargoOrigin{body.id.base(), CargoLabel{"NORE"}});
 	CHECK(ValidateSpaceVehicles());
 }
+
+/** Source values keep full identity next to ordinary and non-paying sources, and no generic rewrite reaches an asteroid origin. */
+TEST_CASE("Merged source values keep asteroid identity beside ordinary and company-supply sources", "[asteroid-cargo-origin]")
+{
+	ProbeExtractionRig rig;
+	const auto high = Source::FromAsteroid(65'536, CargoLabel{"NORE"});
+	const auto low = Source::FromAsteroid(0, CargoLabel{"NORE"});
+	// Body 65536 must never wrap onto body 0, and body 0 is a real origin.
+	CHECK(high != low);
+	CHECK(high.GetAsteroidOrigin()->body == 65'536); CHECK(low.GetAsteroidOrigin()->body == 0);
+	CHECK(low.IsValid()); CHECK(low.id == Source::Invalid);
+	// The mineral is part of the identity and the invalid sentinel is no origin.
+	CHECK(Source::FromAsteroid(0, CargoLabel{"COAL"}) != low);
+	CHECK(Source::FromAsteroid(UINT32_MAX, CargoLabel{"NORE"}) == Source(Source::Invalid, SourceType::Asteroid));
+	CHECK_FALSE(Source::FromAsteroid(UINT32_MAX, CargoLabel{"NORE"}).GetAsteroidOrigin());
+	// Ordinary equality is unchanged: same domain and index compare equal, the
+	// same index in another domain does not.
+	CHECK(Source{} == Source(Source::Invalid, SourceType::Industry));
+	CHECK(Source(IndustryID{3}, SourceType::Industry) == Source(IndustryID{3}, SourceType::Industry));
+	CHECK(Source(IndustryID{3}, SourceType::Industry) != Source(TownID{3}, SourceType::Town));
+	// A bought supply keeps its non-paying purpose and carries no asteroid payload.
+	const Source supply{CompanyID{1}, SourceType::CompanySupply};
+	CHECK(supply.IsCompanySupply()); CHECK_FALSE(supply.GetAsteroidOrigin());
+	CHECK(supply != Source::FromAsteroid(1, CargoLabel{"NORE"}));
+	CHECK(supply != Source(Source::Invalid, SourceType::Asteroid));
+	// Generic rewrites: the 16-bit setter cannot touch a legacy or typed asteroid
+	// source, and company invalidation never matches asteroid cargo.
+	Source legacy{SourceID{5}, SourceType::Asteroid};
+	legacy.SetIndex(SourceID{9}); CHECK(legacy.id == 5);
+	auto typed = high; typed.SetIndex(SourceID{9}); CHECK(typed == high);
+	REQUIRE(CargoPacket::CanAllocateItem(3));
+	std::unique_ptr<CargoPacket> mined{CargoPacket::Create(StationID::Invalid(), uint16_t{5}, high)};
+	std::unique_ptr<CargoPacket> bought{CargoPacket::Create(StationID::Invalid(), uint16_t{5}, supply)};
+	std::unique_ptr<CargoPacket> old_mined{CargoPacket::Create(StationID::Invalid(), uint16_t{5}, legacy)};
+	CHECK_FALSE(VehicleCargoList::AreMergable(mined.get(), bought.get()));
+	CHECK_FALSE(StationCargoList::AreMergable(mined.get(), bought.get()));
+	CargoPacket::InvalidateAllFrom(supply);
+	CHECK(mined->GetSource() == high); CHECK(old_mined->GetSource() == legacy);
+	CHECK(bought->GetSource().IsCompanySupply()); CHECK_FALSE(bought->GetSource().IsValid());
+}
+
+/** The legacy upgrade hook qualifies one exact old origin and refuses everything else unchanged. */
+TEST_CASE("Legacy asteroid upgrade refuses invalid, ordinary and already-typed mismatches", "[asteroid-cargo-origin]")
+{
+	ProbeExtractionRig rig;
+	REQUIRE(CargoPacket::CanAllocateItem(6));
+	/** @param source Exact packet source. @return One owned real native packet for this case only. */
+	auto packet = [](Source source) { return std::unique_ptr<CargoPacket>{CargoPacket::Create(StationID::Invalid(), uint16_t{7}, source)}; };
+	const auto nore = CargoLabel{"NORE"};
+	// Each refusal leaves the source exactly as it was.
+	const Source refused[]{
+		Source(Source::Invalid, SourceType::Asteroid), // No identity to qualify.
+		Source(IndustryID{7}, SourceType::Industry), // Ordinary freight is never natural provenance.
+		Source(CompanyID{0}, SourceType::CompanySupply), // Bought supplies keep their purpose.
+		Source::FromAsteroid(7, CargoLabel{"COAL"}), // Already typed with another mineral.
+	};
+	for (const auto &source : refused) {
+		auto candidate = packet(source);
+		CHECK_FALSE(candidate->UpgradeLegacyAsteroidSource(nore));
+		CHECK(candidate->GetSource() == source);
+	}
+	auto empty_mineral = packet(Source{SourceID{7}, SourceType::Asteroid});
+	CHECK_FALSE(empty_mineral->UpgradeLegacyAsteroidSource(CargoLabel{}));
+	CHECK(empty_mineral->GetSource() == Source(SourceID{7}, SourceType::Asteroid));
+	// A real legacy origin is qualified in place once; repeating it agrees, and
+	// quantity and credit are untouched.
+	auto old = packet(Source{SourceID{7}, SourceType::Asteroid}); old->AddFeederShare(Money{21});
+	REQUIRE(old->UpgradeLegacyAsteroidSource(nore));
+	CHECK(old->GetSource() == Source::FromAsteroid(7, nore));
+	CHECK(old->UpgradeLegacyAsteroidSource(nore));
+	CHECK(old->Count() == 7); CHECK(old->GetFeederShare() == Money{21});
+}
+
+/** Split, Merge and Reduce keep the source, receipt link, raw departure, age and proportional credit. */
+TEST_CASE("Native packet split, merge and reduce keep every merged packet fact", "[asteroid-cargo-origin]")
+{
+	ProbeExtractionRig rig;
+	REQUIRE(CargoPacket::CanAllocateItem(6));
+	// Age and credit come from the historical-restore constructor; it carries no
+	// source, so this packet checks the ordinary scalar facts.
+	std::unique_ptr<CargoPacket> aged{CargoPacket::Create(uint16_t{10}, uint16_t{7}, StationID::Invalid(), INVALID_TILE, Money{100})};
+	std::unique_ptr<CargoPacket> part{aged->Split(4)};
+	REQUIRE(part);
+	CHECK(aged->Count() == 6); CHECK(part->Count() == 4);
+	CHECK(aged->GetFeederShare() + part->GetFeederShare() == Money{100});
+	CHECK(part->GetPeriodsInTransit() == 7); CHECK(part->GetSource() == aged->GetSource());
+	aged->Merge(part.release());
+	CHECK(aged->Count() == 10); CHECK(aged->GetFeederShare() == Money{100}); CHECK(aged->GetPeriodsInTransit() == 7);
+	aged->Reduce(3);
+	CHECK(aged->Count() == 7); CHECK(aged->GetFeederShare() == Money{70}); CHECK(aged->GetPeriodsInTransit() == 7);
+	// A bought supply with a receipt above UINT32_MAX and its departure flag, and a
+	// typed asteroid origin: every operation keeps the exact facts on every part.
+	const uint64_t receipt = (uint64_t{1} << 32) + 5;
+	std::unique_ptr<CargoPacket> linked{CargoPacket::Create(StationID::Invalid(), uint16_t{9}, Source{CompanyID{0}, SourceType::CompanySupply})};
+	REQUIRE(linked->RestoreCompanySupplyOrder(receipt, true));
+	std::unique_ptr<CargoPacket> mined{CargoPacket::Create(StationID::Invalid(), uint16_t{9}, Source::FromAsteroid(65'536, CargoLabel{"NORE"}))};
+	for (auto *original : {linked.get(), mined.get()}) {
+		const auto source = original->GetSource();
+		const auto order = original->GetCompanySupplyOrder();
+		const auto departure = original->GetCompanySupplyShippedWire();
+		std::unique_ptr<CargoPacket> split{original->Split(2)};
+		REQUIRE(split);
+		// Both parts are the same packet facts with different quantities.
+		for (const auto *fragment : {original, split.get()}) {
+			CHECK(fragment->GetSource() == source);
+			CHECK(fragment->GetCompanySupplyOrder() == order);
+			CHECK(fragment->GetCompanySupplyShippedWire() == departure);
+		}
+		original->Merge(split.release());
+		original->Reduce(4);
+		CHECK(original->Count() == 5);
+		CHECK(original->GetSource() == source);
+		CHECK(original->GetCompanySupplyOrder() == order);
+		CHECK(original->GetCompanySupplyShippedWire() == departure);
+	}
+	CHECK(linked->GetCompanySupplyOrder() == receipt); CHECK(linked->GetCompanySupplyShippedWire() == 1);
+}
+
