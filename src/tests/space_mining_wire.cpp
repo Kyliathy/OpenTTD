@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_mining_wire.cpp Contained mission scalar and same-file queue/lease checkpoints.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Groups23/25.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 18; the continuation schema follows the source's capability.
  * These are declared transport components, not newly paid hulls, earned cargo or executed departure evidence.
  */
 #include "../stdafx.h"
@@ -146,7 +147,7 @@ TEST_CASE("Mining continuation candidate joins distinguish history from active r
 	}
 }
 
-/** Modern tables require all explicit fields once; genuine old tables preserve inert absence and reject future skipped keys. */
+/** Merged 446 tables require all fourteen fields once; merged 441 and older tables keep inert absence and reject skipped keys. */
 TEST_CASE("Mining continuation schema distinguishes genuine legacy absence", "[space-mining-wire]")
 {
 	std::vector<std::string> names;
@@ -154,11 +155,16 @@ TEST_CASE("Mining continuation schema distinguishes genuine legacy absence", "[s
 		"departure_present", "departure_x", "departure_y", "retry_ticks", "waiting", "route_cursor", "travel_ticks"}) names.push_back(std::string{"mission.continuation."} + key);
 	std::vector<std::string_view> keys;
 	for (const auto &name : names) keys.push_back(name);
-	CHECK(ValidateSpaceMiningContinuationSchema(keys, SaveLoadVersion::SpaceMiningContinuation));
-	CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, SaveLoadVersion::AsteroidFieldLifecycle));
-	CHECK(ValidateSpaceMiningContinuationSchema({}, SaveLoadVersion::AsteroidFieldLifecycle));
-	CHECK_FALSE(ValidateSpaceMiningContinuationSchema({}, SaveLoadVersion::SpaceMiningContinuation));
-	keys.pop_back(); CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, SaveLoadVersion::SpaceMiningContinuation));
-	keys.push_back(names.back()); keys.push_back(names.front()); CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, SaveLoadVersion::SpaceMiningContinuation));
+	// Supported means the source carries SaveCapability::SpaceMiningContinuation (merged 446);
+	// merged 441 and every older source must have none of the keys (m2o28 Group 18).
+	CHECK(ValidateSpaceMiningContinuationSchema(keys, true));
+	CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, false));
+	CHECK(ValidateSpaceMiningContinuationSchema({}, false));
+	CHECK_FALSE(ValidateSpaceMiningContinuationSchema({}, true));
+	const std::string unrelated{"mission.continuation.unknown"};
+	auto foreign = std::vector<std::string_view>{unrelated};
+	CHECK_FALSE(ValidateSpaceMiningContinuationSchema(foreign, false)); // A skipped future key in an older source.
+	keys.pop_back(); CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, true));
+	keys.push_back(names.back()); keys.push_back(names.front()); CHECK_FALSE(ValidateSpaceMiningContinuationSchema(keys, true));
 	LoadCheckData data; SetupMiningWireCandidate(data); data.Clear(); CHECK(data.asteroid_mining_leases.empty()); CHECK(data.next_launch_center_generation == 1);
 }

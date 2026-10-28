@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group23; per-Mine policy preserves original queue targets.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs8-space-world-and-construction.md Groups6/11.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs11-orbital-stations-and-manufacturing.md Group9C heavy native role/version admission.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 18; policy bytes and departure admission follow capabilities, and the writer emits its own row layout.
  */
 #include "../stdafx.h"
 #include "saveload.h"
@@ -45,7 +46,7 @@ bool AcceptLoadedSpaceOrders()
 		const auto model = GetSpaceVehicleModel(*craft);
 		// Source443's fields describe configured Mine intent only. A genuinely
 		// older file cannot forge newly supported unqueued legacy departure.
-		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceLegacyDeparture) && craft->space_orders.entries.empty() && craft->mission.continuation != SpaceMiningContinuationState{}) return false;
+		if (!SlHasSaveCapability(SaveCapability::SpaceLegacyDeparture) && craft->space_orders.entries.empty() && craft->mission.continuation != SpaceMiningContinuationState{}) return false;
 		if (!IsSpaceMiningStateSupported(model, craft->mission.phase, craft->mission.work_ticks, craft->extracted_units, heavy_runtime)) return false;
 		// Retained queue history is gameplay capability too;431 admitted no typed21 actions, so even an unstarted Visit must refuse in that commissioning-only source.
 		if (model == SPACE_HEAVY_MINER_MODEL && !heavy_runtime && !craft->space_orders.entries.empty()) return false;
@@ -57,8 +58,8 @@ void ValidateSpaceOrderLoadPreview()
 {
 	// Current VEHS intent, ASTR leases and SPOR history must agree using only
 	// this candidate. Older files retain their inert migrated continuation.
-	if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation) && !ValidateSpaceMiningContinuationPreview(_load_check_data,
-		!IsSavegameVersionBefore(SaveLoadVersion::SpaceLegacyDeparture))) SlErrorCorrupt("Invalid same-file mining continuation or lease preview");
+	if (SlHasSaveCapability(SaveCapability::SpaceMiningContinuation) && !ValidateSpaceMiningContinuationPreview(_load_check_data,
+		SlHasSaveCapability(SaveCapability::SpaceLegacyDeparture))) SlErrorCorrupt("Invalid same-file mining continuation or lease preview");
 	if (!_load_check_data.space_orders_present && !IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders)) SlErrorCorrupt("Missing Space order family");
 	if (_load_check_data.space_orders_active && (_load_check_data.gameplay_profile_id != to_underlying(MultiLayerGameplayProfileID::MultilayerIndustry) || _load_check_data.map_layers < 3)) SlErrorCorrupt("Space order preview requires selected Space geometry");
 	if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceOrbitalResupply) && _load_check_data.native_space_vehicle_rows.size() != _load_check_data.space_order_preview_refs.size()) SlErrorCorrupt("Native Space preview identity count mismatch");
@@ -148,9 +149,19 @@ struct SPORChunkHandler : ChunkHandler {
 		const auto records = CaptureSpaceOrders();
 		const auto next = GetNextSpaceVehicleGeneration();
 		if (!ValidateSpaceOrderRecords(records, next) || !ValidateNativeSpaceApproaches()) SlErrorCorrupt("Invalid Space order ownership on save");
+		// The writer's own row layout: merged 446 carries the policy byte, merged 441
+		// does not (m2o28 Group 18). A 441 writer cannot hold a non-legacy policy, so it
+		// refuses rather than write a file that silently drops the player's choice.
+		const bool policies = SlHasSaveCapability(SaveCapability::SpaceMiningContinuation);
+		const size_t order_bytes = policies ? 15 : 14;
 		size_t length = 9;
 		// Bound optional request bytes along with existing orders before declaring the exact family length.
-		for (const auto &r : records) length += 23 + 15 * r.queue.entries.size() + (r.queue.approach ? SPACE_APPROACH_REQUEST_BYTES : 0);
+		for (const auto &r : records) {
+			length += 23 + order_bytes * r.queue.entries.size() + (r.queue.approach ? SPACE_APPROACH_REQUEST_BYTES : 0);
+			for (const auto &o : r.queue.entries) {
+				if (!policies && o.mining_policy != SpaceMiningPolicy::LegacyReturn) SlErrorCorrupt("Space mining policy needs the combined writer");
+			}
+		}
 		SlSetLength(length); Write(next, 8); Write(records.size(), 1);
 		// Native pool order provides stable row serialization; admission priority is explicitly saved rather than inferred from row order.
 		for (const auto &r : records) {
@@ -159,7 +170,7 @@ struct SPORChunkHandler : ChunkHandler {
 			Write(q.timer_ticks, 4); Write(q.work_ticks, 2); Write(q.entries.size(), 1);
 			for (const auto &o : q.entries) {
 				Write(to_underlying(o.action), 1); Write(to_underlying(o.target.kind), 1); Write(o.target.id, 4); Write(o.target.generation, 8);
-				Write(to_underlying(o.mining_policy), 1);
+				if (policies) Write(to_underlying(o.mining_policy), 1);
 			}
 			Write(q.approach.has_value(), 1);
 			if (q.approach) {
@@ -174,10 +185,11 @@ struct SPORChunkHandler : ChunkHandler {
 	{
 		const auto length = SlGetFieldLength();
 		const bool approaches = !IsSavegameVersionBefore(SaveLoadVersion::SpaceApproachReservations);
-		const bool policies = !IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation);
+		const bool policies = SlHasSaveCapability(SaveCapability::SpaceMiningContinuation);
 		const size_t order_bytes = policies ? 15 : 14;
-		// Genuine older rows retain their original14-byte order formula. Current
-		// policy bytes cannot cross the bounded queue or optional approach owner.
+		// Sources without the capability keep their original 14-byte order formula,
+		// and their policy stays LegacyReturn. Policy bytes cannot cross the bounded
+		// queue or optional approach owner.
 		if (IsSavegameVersionBefore(SaveLoadVersion::SpaceContentAndOrders) || length < 9 || length > 9 + MAX_SPACE_VEHICLES * (22 + order_bytes * MAX_SPACE_ORDERS + (approaches ? 1 + SPACE_APPROACH_REQUEST_BYTES : 0))) SlErrorCorrupt("Invalid Space order length");
 		SpaceOrderTransport data;
 		data.next = ReadInt(8); const auto count = ReadInt(1);

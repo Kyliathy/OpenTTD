@@ -145,7 +145,7 @@ All producers ran headless on Linux with the null video driver, from the export 
 
 | Pending item | Evidence | Owner |
 | --- | --- | --- |
-| `Mining continuation schema distinguishes genuine legacy absence` | CTest (GCC, Clang) and `openttd_space_fixes_test` | Group 18 |
+| ~~`Mining continuation schema distinguishes genuine legacy absence`~~ **Cleared in Group 18** (passes in GCC and Clang) | CTest (GCC, Clang) and `openttd_space_fixes_test` | Group 18 |
 | Re-saving any world whose packets carry a typed asteroid origin refuses with "Invalid native cargo source for saving". Loading normalizes legacy asteroid cargo to typed origins, so every Space world with asteroid cargo is affected. | 8.8 `space-heavy-440.sav` load and advance | Groups 15 and 22 (writer 446 carries the typed-origin columns) |
 
 The pure codec cases that pass a pending enumerator straight to a codec pass under the gate, as the plan expected.
@@ -165,11 +165,11 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 | [X] | `src/tests/asteroid_cargo_native.cpp` | 215 | Copied-row source check at `AsteroidCargoOrigins` | 15 |
 | [X] | `src/saveload/afterload.cpp` | 3528 | Native legacy asteroid cargo normalization | 16 |
 | [X] | `src/saveload/asteroid_sl.cpp` | 105-106, 179 | ASTR wire era and SPKN lifecycle state | 17 |
-| [ ] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
-| [ ] | `src/saveload/space_mining_sl.cpp` | 62 | Continuation schema decoder | 18 |
-| [ ] | `src/saveload/vehicle_sl.cpp` | 1136-1149, 1295 | VEHS `mission.continuation.*` columns and the missing-schema refusal | 18 |
-| [ ] | `src/tests/asteroid_cargo_native.cpp` | 87 | Copied mission decision check at `SpaceMiningContinuation` | 18 |
-| [ ] | `src/tests/space_mining_wire.cpp` | 157-162 | Continuation-schema absence case (the pending CTest failure) | 18 |
+| [X] | `src/saveload/space_order_sl.cpp` | 48, 60-61, 177 | SPOR legacy departure, copied continuation and mining policies | 18 |
+| [X] | `src/saveload/space_mining_sl.cpp` | 62 | Continuation schema decoder | 18 |
+| [X] | `src/saveload/vehicle_sl.cpp` | 1136-1149, 1295 | VEHS `mission.continuation.*` columns and the missing-schema refusal | 18 |
+| [X] | `src/tests/asteroid_cargo_native.cpp` | 87 | Copied mission decision check at `SpaceMiningContinuation` | 18 |
+| [X] | `src/tests/space_mining_wire.cpp` | 157-162 | Continuation-schema absence case (the pending CTest failure) | 18 |
 | [X] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
 | [ ] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
 | [ ] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
@@ -616,4 +616,43 @@ Comments that still said "Space fixes" were updated in `save_lineage.*`, `savelo
 - Wide subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Rr]etained|[Cc]opied|[Rr]eload|[Ss]pace fixes|[Aa]steroid|[Ss]ource|[Cc]argo|[Pp]acket|[Cc]ustody|ASTR|[Mm]erged"`: GCC 524/524, Clang 524/524 (616 steps).
 - `OTTD_DONOR445_DIR` scan: all 28 donor saves refuse as Unsupported (225 assertions).
 - Warnings seen in the build (`asteroid_gui.cpp`, `space_resupply.cpp`, `cargo_return_native.cpp`) are in files this group did not touch.
+
+## Group 18
+
+**18.1** `ValidateSpaceMiningContinuationSchema(fields, bool supported)` replaces the version argument. `supported` is `SlHasSaveCapability(SpaceMiningContinuation)`, which only merged 446 has. All fourteen keys are required once where supported and forbidden otherwise, including a skipped unknown `mission.continuation.*` key.
+
+The fourteen VEHS `mission.continuation.*` descriptors use the default version range plus `.WithCapability(SaveCapability::SpaceMiningContinuation)`. The per-row scratch is still reset before every native and copied row.
+
+Two VEHS checks needed more than a renamed gate:
+
+- The copied preview's field-presence check compared `_sl_version` with each field's raw version range. With capability-gated fields that test would have demanded the keys in every file, so it now calls `SlIsObjectValidInSavegame`, which covers both the range and the capability.
+- `CheckSpaceMiningContinuationHeader`'s "missing Space schema" refusal uses the capability.
+- VEHS Save refuses non-default continuation intent when the writer lacks the capability (merged 441), rather than dropping it.
+
+**18.2** SPOR's Read and Save both take `policies` from `SlHasSaveCapability(SpaceMiningContinuation)`:
+
+- the writer emits 14-byte rows at 441 and 15-byte rows at 446;
+- a 441 writer refuses any order whose policy is not `LegacyReturn`;
+- the reader keeps `LegacyReturn` as the default for 14-byte rows.
+
+This fixed the interim defect Group 17 exposed: a resaved Space world failed to reload with "Invalid Space order count".
+
+**18.3** The two departure gates are separate capabilities:
+
+- `AcceptLoadedSpaceOrders` refuses unqueued continuation unless the source has `SpaceLegacyDeparture`.
+- The copied preview runs `ValidateSpaceMiningContinuationPreview` only for sources with `SpaceMiningContinuation`, passing `SpaceLegacyDeparture` as its flag.
+- Ownerless released survey Return/Waiting follows the ASTR era (Group 17): only SurveyDeparture admits it, and the 441 writer's lossless proof refuses it.
+
+**18.4** Tests:
+
+- `space_mining_wire.cpp`'s schema case uses `true`/`false`, plus a skipped foreign key in an older source. It is the pending-ledger case and now passes.
+- S's existing wire cases already cover unknown phases, contradictory presence flags, stale generations and leases, and wrong roles; they run in the subset below.
+- S's native harness (`asteroid_cargo_native.cpp`) previously read the last file's version. `SaveFileCarries` now classifies the copied file through the public boundary (`InspectSaveWireFacts`, `ClassifySaveDialect`, `HasSaveCapability`).
+- All five burn-down rows are ticked. `git grep` finds no pending enumerator outside `saveload.h`.
+
+Results (`logs/merge-oct28/group18/`):
+
+- Subset `-R "[Ss]ave|[Ll]oad|[Pp]review|[Ll]ineage|[Oo]riginal|[Cc]opied|[Rr]eload|[Ss]pace|[Aa]steroid|[Mm]ining|[Oo]rder|[Mm]ission|[Dd]eparture|[Ss]urvey|VEHS|SPOR|[Cc]ontinuation"`: GCC 540/540, Clang 540/540.
+- `space-factory-440.sav` resaves and reloads (exit 0 both).
+- `space-heavy-440.sav` still refuses on save with "Invalid native cargo source for saving". That is the pending typed-origin item for Group 22, and the engine leaves a 0-byte file, as it already did before this group.
 

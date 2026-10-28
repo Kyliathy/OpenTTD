@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file space_mining_sl.h Explicit native mission continuation scalar adaptation; no independent mission owner.
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group23.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 18; the continuation group is present exactly when the source has the capability.
  */
 #ifndef SAVELOAD_SPACE_MINING_SL_H
 #define SAVELOAD_SPACE_MINING_SL_H
@@ -24,8 +25,8 @@ struct SpaceMiningContinuationWire {
 SpaceMiningContinuationWire EncodeSpaceMiningContinuation(const SpaceMiningContinuationState &state);
 /** @param wire Complete original scalar row. @return Canonical bounded intent or refusal, before native/same-file queue/lease joins. */
 std::optional<SpaceMiningContinuationState> DecodeSpaceMiningContinuation(const SpaceMiningContinuationWire &wire);
-/** @param fields Actual native/copied Space table keys. @param version Genuine file version. @return Whether current fields are complete/unique, or genuinely absent in older files. */
-bool ValidateSpaceMiningContinuationSchema(std::span<const std::string_view> fields, SaveLoadVersion version);
+/** @param fields Actual native/copied Space table keys. @param supported Whether the source carries SaveCapability::SpaceMiningContinuation (merged 446). @return Whether the fourteen keys are complete and unique where supported, and entirely absent otherwise. */
+bool ValidateSpaceMiningContinuationSchema(std::span<const std::string_view> fields, bool supported);
 struct LoadCheckData;
 /** @param data Complete current same-file candidate owners. @param legacy_departure_supported Whether the genuine source era permits contained unqueued local departure. @return Whether intent, queues and both directions of actual mining leases agree without reading any open-world owner. */
 bool ValidateSpaceMiningContinuationPreview(const LoadCheckData &data, bool legacy_departure_supported = true);

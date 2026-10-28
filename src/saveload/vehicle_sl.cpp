@@ -1128,25 +1128,25 @@ public:
 extern SaveLoadVersion _sl_version; ///< Genuine current candidate era, owned by the original save/load framework.
 static SpaceMiningContinuationWire _space_mining_wire; ///< Explicit per-row adaptation, reset before every native or copied load.
 
-/** @param base Original native or copied Space scalar description. @return The same original schema plus explicit version443 continuation scalars. */
+/** @param base Original native or copied Space scalar description. @return The same original schema plus the continuation scalars that merged 446 carries (m2o28 Group 18). */
 static std::vector<SaveLoad> WithSpaceMiningContinuation(std::initializer_list<SaveLoad> base)
 {
 	std::vector<SaveLoad> result(base);
 	static const SaveLoad continuation[] = {
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.phase", SLE_GLOBAL_ADDRESS(_space_mining_wire.phase), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U32>("mission.continuation.mineral", SLE_GLOBAL_ADDRESS(_space_mining_wire.mineral), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U32>("mission.continuation.previous_body", SLE_GLOBAL_ADDRESS(_space_mining_wire.previous_body), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_present), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_kind", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_kind), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U32>("mission.continuation.effective_id", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_id), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U64>("mission.continuation.effective_generation", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_generation), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.departure_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_present), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_x", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_x), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_y", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_y), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U16>("mission.continuation.retry_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.retry_ticks), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.waiting", SLE_GLOBAL_ADDRESS(_space_mining_wire.waiting), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U8>("mission.continuation.route_cursor", SLE_GLOBAL_ADDRESS(_space_mining_wire.route_cursor), SaveLoadVersion::SpaceMiningContinuation),
-		SaveLoad::Variable<VarFileType::U32>("mission.continuation.travel_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.travel_ticks), SaveLoadVersion::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.phase", SLE_GLOBAL_ADDRESS(_space_mining_wire.phase)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.mineral", SLE_GLOBAL_ADDRESS(_space_mining_wire.mineral)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.previous_body", SLE_GLOBAL_ADDRESS(_space_mining_wire.previous_body)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_present)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.effective_kind", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_kind)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.effective_id", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_id)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U64>("mission.continuation.effective_generation", SLE_GLOBAL_ADDRESS(_space_mining_wire.effective_generation)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.departure_present", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_present)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_x", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_x)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::I32>("mission.continuation.departure_y", SLE_GLOBAL_ADDRESS(_space_mining_wire.departure_y)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U16>("mission.continuation.retry_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.retry_ticks)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.waiting", SLE_GLOBAL_ADDRESS(_space_mining_wire.waiting)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U8>("mission.continuation.route_cursor", SLE_GLOBAL_ADDRESS(_space_mining_wire.route_cursor)).WithCapability(SaveCapability::SpaceMiningContinuation),
+		SaveLoad::Variable<VarFileType::U32>("mission.continuation.travel_ticks", SLE_GLOBAL_ADDRESS(_space_mining_wire.travel_ticks)).WithCapability(SaveCapability::SpaceMiningContinuation),
 	};
 	result.insert(result.end(), std::begin(continuation), std::end(continuation)); return result;
 }
@@ -1158,7 +1158,7 @@ static void CheckSpaceMiningContinuationFields(SaveLoadTable description)
 	// Preserve actual skipped keys too: source-era checks must reject future
 	// payloads in old files and missing/renamed current required fields.
 	for (const auto &field : description) keys.push_back(field.name);
-	if (!ValidateSpaceMiningContinuationSchema(keys, _sl_version)) SlErrorCorrupt("Missing or wrong-era native mining continuation fields");
+	if (!ValidateSpaceMiningContinuationSchema(keys, SlHasSaveCapability(SaveCapability::SpaceMiningContinuation))) SlErrorCorrupt("Missing or wrong-era native mining continuation fields");
 }
 
 /** Original native Space VEHS family, with explicit per-row contained mission adaptation. */
@@ -1187,6 +1187,9 @@ public:
 		if (v->type != VehicleType::Space) return;
 		const auto &craft = *static_cast<SpaceVehicle *>(v);
 		if (!ValidateNativeSpaceMiningContinuation(craft)) SlErrorCorrupt("Invalid mining continuation on save");
+		// A writer without the continuation fields (merged 441, until m2o28 Group 22)
+		// cannot hold this intent; refuse rather than write a file that drops it.
+		if (!SlHasSaveCapability(SaveCapability::SpaceMiningContinuation) && craft.mission.continuation != SpaceMiningContinuationState{}) SlErrorCorrupt("Mining continuation needs the combined writer");
 		_space_mining_wire = EncodeSpaceMiningContinuation(craft.mission.continuation); SlObject(v, this->GetDescription());
 	}
 	/** @param v Original native hull being reconstructed; missing old intent remains inert without sampling or starting work. */
@@ -1253,7 +1256,8 @@ public:
 		for (const auto &field : description) {
 			// Require exactly the original era's fields; genuine older hulls must
 			// not be rejected for continuation columns introduced later.
-			if (_sl_version >= field.version_from && _sl_version < field.version_to && std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
+			// The framework's own validity rule covers both version ranges and capabilities.
+			if (SlIsObjectValidInSavegame(field) && std::ranges::find(this->GetLoadDescription(), field.name, &SaveLoad::name) == this->GetLoadDescription().end()) SlErrorCorrupt("Missing native Space position preview field");
 		}
 		CheckSpaceMiningContinuationFields(this->GetLoadDescription()); _space_mining_wire = {};
 		SlObject(row, this->GetLoadDescription());
@@ -1292,7 +1296,7 @@ static void CheckSpaceMiningContinuationHeader(SaveLoadTable table)
 {
 	const auto space = std::ranges::find(table, "space", &SaveLoad::name);
 	if (space == table.end()) {
-		if (!IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation)) SlErrorCorrupt("Missing current native Space schema");
+		if (SlHasSaveCapability(SaveCapability::SpaceMiningContinuation)) SlErrorCorrupt("Missing current native Space schema");
 		return;
 	}
 	if (!space->handler) SlErrorCorrupt("Invalid native Space schema");

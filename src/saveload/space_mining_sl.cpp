@@ -55,11 +55,11 @@ std::optional<SpaceMiningContinuationState> DecodeSpaceMiningContinuation(const 
 }
 
 /** @copydoc ValidateSpaceMiningContinuationSchema */
-bool ValidateSpaceMiningContinuationSchema(std::span<const std::string_view> fields, SaveLoadVersion version)
+bool ValidateSpaceMiningContinuationSchema(std::span<const std::string_view> fields, bool supported)
 {
 	static constexpr std::string_view keys[]{"phase", "mineral", "previous_body", "effective_present", "effective_kind", "effective_id", "effective_generation",
 		"departure_present", "departure_x", "departure_y", "retry_ticks", "waiting", "route_cursor", "travel_ticks"};
-	const bool modern = version >= SaveLoadVersion::SpaceMiningContinuation;
+	const bool modern = supported;
 	std::array<uint8_t, std::size(keys)> counts{};
 	// Require every explicit current field once. Genuine older tables cannot
 	// smuggle future intent through the framework's unknown-field skip behavior.

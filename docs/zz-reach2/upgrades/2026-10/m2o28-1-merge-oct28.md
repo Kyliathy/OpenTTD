@@ -822,15 +822,17 @@ Group 17 supplies sparse field and knowledge semantics; Group 15 supplies packet
 
 {{HARD}}
 
-- [ ] **18.1** Keep the `SpaceMiningContinuationWire` scalar encoding, and replace the pending gates in the VEHS native and copied descriptors and in `ValidateSpaceMiningContinuationSchema` with `SaveCapability::SpaceMiningContinuation`. Require the complete fourteen-key group when supported and none in older sources; reset the per-row scratch.
+- [X] **18.1** Keep the `SpaceMiningContinuationWire` scalar encoding, and replace the pending gates in the VEHS native and copied descriptors and in `ValidateSpaceMiningContinuationSchema` with `SaveCapability::SpaceMiningContinuation`. Require the complete fourteen-key group when supported and none in older sources; reset the per-row scratch.
 
-- [ ] **18.2** Adapt SPOR policy reading, writing and validation (`space_order_sl.cpp` lines 48, 60-61 and 177) to capabilities, keeping one order queue. A legacy policy defaults to `LegacyReturn`; the original Visit order, cursor and generation-qualified references survive.
+- [X] **18.2** Adapt SPOR policy reading, writing and validation (`space_order_sl.cpp` lines 48, 60-61 and 177) to capabilities, keeping one order queue. A legacy policy defaults to `LegacyReturn`; the original Visit order, cursor and generation-qualified references survive.
   - _Plan change (Group 17):_ the writer emits its own row layout, 14 bytes without the policy byte at 441 and 15 bytes at 446. A non-default policy refuses at 441 instead of being dropped. Evidence that this is needed: a fresh resave of `space-factory-440.sav` reloads past ASTR but fails with "Invalid Space order count".
 
-- [ ] **18.3** Gate unordered local miner departure with `SpaceLegacyDeparture`, and ownerless released survey Return/Waiting with `SpaceSurveyDeparture`, separately. A source without them must refuse non-empty new state instead of adding a Mine queue, target or service entitlement.
+- [X] **18.3** Gate unordered local miner departure with `SpaceLegacyDeparture`, and ownerless released survey Return/Waiting with `SpaceSurveyDeparture`, separately. A source without them must refuse non-empty new state instead of adding a Mine queue, target or service entitlement.
 
-- [ ] **18.4** Add wire cases: unknown phase or policy, contradictory presence flags, stale generations or leases, wrong role, missing or duplicate keys, a source without the newer fields, and every boundary era. Convert the pending cases in `src/tests/space_mining_wire.cpp` and tick the SPOR/VEHS burn-down rows.
+- [X] **18.4** Add wire cases: unknown phase or policy, contradictory presence flags, stale generations or leases, wrong role, missing or duplicate keys, a source without the newer fields, and every boundary era. Convert the pending cases in `src/tests/space_mining_wire.cpp` and tick the SPOR/VEHS burn-down rows.
   - _Plan change:_ "every boundary era" now means merged 441 (none of the fields) against 446 (all of them); no dev-build era is read. Close with the resave and reload of `space-factory-440.sav` and `space-heavy-440.sav` through `space_ordinary_checks.py`.
+
+Execution evidence: see **Group 18** in [m2o28-a-execution-notes.md](m2o28-a-execution-notes.md). GCC and Clang both pass 540/540, including the pending `Mining continuation schema` case. `space-factory-440.sav` now resaves and reloads. `space-heavy-440.sav` still refuses at CAPA (typed origins), which is pending for Group 22.
 
 ### Area Mandatory Reading - Copied candidate facts and admission
 

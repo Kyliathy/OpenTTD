@@ -26,6 +26,8 @@
 #include "../orbital_recipe.h"
 #include "../saveload/saveload_func.h"
 #include "../saveload/cargo_source_sl.h"
+#include "../saveload/save_envelope.h"
+#include "../fileio_type.h"
 #include "../core/random_func.hpp"
 #include "../core/backup_type.hpp"
 #include "../core/format.hpp"
@@ -78,14 +80,26 @@ static void CheckCopiedCargoOrigins(std::span<const NativeCargoOriginObservation
 	}
 }
 
-/** @param field Original accepted field. Require candidate-only identity, issuance and disclosure metadata to match its original owner. */
-static void CheckCopiedAsteroidField(const AsteroidField &field)
+/** Ask the classifier, not a version number, whether a save file carries one capability.
+ * @param path Save file to inspect; it is read, never changed.
+ * @param capability Feature in question.
+ * @return Whether the file is accepted and its own writer carries the feature.
+ */
+static bool SaveFileCarries(const std::string &path, SaveCapability capability)
+{
+	auto file = FileHandle::Open(path, "rb"); REQUIRE(file.has_value());
+	return HasSaveCapability(ClassifySaveDialect(InspectSaveWireFacts(CreateSaveFileReader(std::move(*file)))), capability);
+}
+
+/** @param field Original accepted field. @param copied The file that was just copied (LoadCheck). Require candidate-only identity, issuance and disclosure metadata to match its original owner. */
+static void CheckCopiedAsteroidField(const AsteroidField &field, const std::string &copied)
 {
 	CHECK(_load_check_data.asteroid_active == (field.generation_version != 0));
 	CHECK(_load_check_data.asteroid_body_rows == GetAsteroidIdentityRecords(field));
 	CHECK(_load_check_data.asteroid_next_body_id == field.next_body_id);
 	CHECK(_load_check_data.asteroid_knowledge_rows == field.knowledge);
-	if (IsSavegameVersionBefore(SaveLoadVersion::SpaceMiningContinuation)) return;
+	// Only a file that carries mission continuation has copied decisions to compare (m2o28 Group 18).
+	if (!SaveFileCarries(copied, SaveCapability::SpaceMiningContinuation)) return;
 	// Current saved mission/queue decisions must independently decode exactly;
 	// comparing only fleet counts could hide a lost pin or replacement target.
 	for (const auto *craft : SpaceVehicle::Iterate()) {
@@ -220,7 +234,7 @@ void VerifyAsteroidCargoNative(const char *source, const char *output)
 	}
 	REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 	CheckCopiedCargoOrigins(before);
-	CheckCopiedAsteroidField(field);
+	CheckCopiedAsteroidField(field, source);
 	if (const char *bad = std::getenv("OTTD_SPACE_FIXES_CARGO_BAD")) {
 		if (std::getenv("OTTD_SPACE_FIXES_CARGO_FULL") != nullptr) {
 			// This deliberately rejected destructive load belongs only to this
@@ -232,7 +246,7 @@ void VerifyAsteroidCargoNative(const char *source, const char *output)
 		CHECK(SaveOrLoad(bad, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
 		REQUIRE(SaveOrLoad(source, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 		CheckCopiedCargoOrigins(before);
-		CheckCopiedAsteroidField(field);
+		CheckCopiedAsteroidField(field, source);
 	} else {
 		if (std::getenv("OTTD_SPACE_FIXES_ASTEROID_RETIREMENT") != nullptr) { CheckNativeAsteroidRetirement(); field = GetAsteroidField(); }
 		if (std::getenv("OTTD_SPACE_FIXES_ASTEROID_CREATION") != nullptr) { CheckNativeAsteroidCreation(); field = GetAsteroidField(); }
@@ -248,7 +262,7 @@ void VerifyAsteroidCargoNative(const char *source, const char *output)
 		REQUIRE(SaveOrLoad(saved, SaveLoadOperation::Save, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 		REQUIRE(SaveOrLoad(saved, SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Ok);
 		CheckCopiedCargoOrigins(before);
-		CheckCopiedAsteroidField(field);
+		CheckCopiedAsteroidField(field, saved);
 	}
 	CheckOriginalCargoOrigins(before); CHECK(GetAsteroidField() == field); CHECK(TimerGameTick::counter == clock);
 	CHECK(ComputeSpaceVehicleDigest() == fleet); CHECK(ComputeSpaceStructureDigest() == structures);
