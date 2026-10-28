@@ -119,3 +119,35 @@ All producers ran headless on Linux with the null video driver, from the export 
 **7.4** No conflict markers anywhere; `git diff --cached --check` clean; `check_swallowed_code.py HEAD` found 0 suspicious lines across the whole merge diff.
 
 **7.5** Merge commit `aa91b303`: first parent `a500f8ea` (descends from `d49c3596`), second parent `66713bdf`. Not pushed.
+
+## Group 8
+
+**8.1** Commit `14a17b91`: the R6 footprint copy in `src/tests/space_return_surface.cpp`, and `native_executable(configuration, name)` in `space_fixes_checks.py` (multi-configuration `build/<config>/<name>.exe` first, else single-configuration `build/<name>`), now used by `space_fixes_checks.py`, `asteroid_lifecycle_work_checks.py`, `space_lifecycle_peer_checks.py` and `space_ordinary_checks.py`. Those harnesses import from `space_fixes_checks`, so run them with `python3 -B` (isolated `-I` mode drops the script directory from `sys.path`).
+
+**8.2** GCC: `ninja -C build -j4 -k 0` (default target) 0 failed; `ctest -N` **1,496** tests (D's 1,361 plus 135 incoming `openttd_test` cases); `ctest -j4 --timeout 600` in 35 s: 1,493 passed, 3 failed (`logs/merge-oct28/baseline/ctest-gcc.{log,xml}`).
+
+**8.3** Clang: `build-clang/` rebuilt with 0 failed in 25.4 min; no `-Wdangling-gsl`. CTest 1,496 tests: 1,495 passed, 1 failed in 32 s; it already included the 8.6 fixes. There are no GCC/Clang differences.
+
+**8.4** `test-cache/linux-baseline/run_focused.sh build logs/merge-oct28/baseline/focused` (its list now includes `openttd_space_fixes_test`): all ten built; nine returned 0. `openttd_space_fixes_test` had 245 cases and 510,652 assertions; one case (2 assertions) failed, the class (b) case below. `openttd_tube_test` now passes as a whole executable. The runner deletes each executable after its run, so rebuild `openttd_space_fixes_test` before using the Space harnesses.
+
+**8.5** Classification of every failure:
+
+| Case | Class | Cause and owner |
+| --- | --- | --- |
+| `Mining continuation schema distinguishes genuine legacy absence` (`space_mining_wire.cpp:158-159`) | (b) pending-gate | Uses `SaveLoadVersion::AsteroidFieldLifecycle` as an "older than 443" era; under the gate both names equal `MaxVersion`. Group 18. |
+| `Finite extraction preserves small tails full holds and original packet provenance` (`probe_extraction.cpp:171`) | (a) S-reference | S's typed origins (r2sff1 Group15) made the test's 16-bit `source.id` check stale; it failed in the S export too (Group 2 had wrongly put it among the D-fixed failures; the ledger is corrected). Fixed in 8.6. |
+| `WindowDesc - ini_key validity` (`space_structure_gui.cpp:150`) | (a) S-reference | S gave the construction window the INI key `space_construction` with no sticky or default-size box. Fixed in 8.6. |
+| Build failure `transport_tube_provider_switch.cpp:265` | (c) merge | D froze `Commands::End == 223`; fixed in Group 7 (now 224, with `SetSpaceMiningPolicy == 223`). |
+
+**8.6** Commit `8635bd02`: `probe_extraction.cpp` checks `GetAsteroidOrigin()->body`; the construction window gains `WWT_DEFSIZEBOX`. `ctest -R "Finite extraction preserves|WindowDesc - ini_key validity|probe"`: 11/11 passed.
+
+**8.7** **Pending ledger** (class (b); Part 1 must clear all of it by Group 22):
+
+| Pending item | Evidence | Owner |
+| --- | --- | --- |
+| `Mining continuation schema distinguishes genuine legacy absence` | CTest (GCC, Clang) and `openttd_space_fixes_test` | Group 18 |
+| Re-saving any world whose packets carry a typed asteroid origin refuses with "Invalid native cargo source for saving". Loading normalizes legacy asteroid cargo to typed origins, so every Space world with asteroid cargo is affected. | 8.8 `space-heavy-440.sav` load and advance | Groups 15 and 22 (writer 446 carries the typed-origin columns) |
+
+The pure codec cases that pass a pending enumerator straight to a codec pass under the gate, as the plan expected.
+
+**8.8** `python3 -B src/tests/multilayer/acceptance/space_ordinary_checks.py --source <save> --mode <load|advance> --run <id>` (real `build/openttd` with the null video driver, paused save, `quit`). Results: `underground/mine-haulage-403.sav` load: exit 0, saved. `space/space-factory-440.sav` load: exit 0, saved. `space/space-heavy-440.sav` load and advance: both load, then saving refuses (the pending item above), with no crash and no corrupt file. The first attempt exposed an S harness defect: `space_ordinary_checks.py` wrote its log without creating `logs/space-fixes/`. It now creates the directory, as its sibling does (commit `31cc118d`).

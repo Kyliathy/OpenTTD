@@ -430,31 +430,33 @@ _Applies to Group 8._
 
 Produces the first merged test ledger and the **pending ledger**, the list of failures the pending gate is expected to cause. The pending ledger is Part 1's burn-down metric.
 
+Execution evidence: [Group 8 record](m2o28-a-execution-notes.md#group-8). GCC 1,493/1,496 then fixed to 1,495; Clang 1,495/1,496; class (c) empty; two pending items (one schema case, and re-saving worlds with typed asteroid origins).
+
 {{HARD}}
 
-- [ ] **8.1** Commit the S-only Linux fixes from Group 2 (2.2, 2.6 S-Linux) and 3.1 as their own commit:
+- [X] **8.1** Commit the S-only Linux fixes from Group 2 (2.2, 2.6 S-Linux) and 3.1 as their own commit:
   - the R6 footprint binding in `src/tests/space_return_surface.cpp`;
   - the platform-aware executable path in `space_fixes_checks.py` and in any other S harness that hard-codes `.exe` or `build/<Configuration>` (`git grep -n "openttd_space_fixes_test.exe\|args.configuration" -- src/tests/multilayer`);
   - anything else the ledger marked S-Linux.
 
   Each fix stays valid for MSVC.
 
-- [ ] **8.2** Build `build/` (GCC, default target) and run CTest: `ctest -N | tail -1`, then `ctest --test-dir build -j4 --timeout 600 --output-junit ../logs/merge-oct28/baseline/ctest-gcc.xml`. Record the counts against the expectation: D's 1,361 plus the S tests registered in `openttd_test`.
+- [X] **8.2** Build `build/` (GCC, default target) and run CTest: `ctest -N | tail -1`, then `ctest --test-dir build -j4 --timeout 600 --output-junit ../logs/merge-oct28/baseline/ctest-gcc.xml`. Record the counts against the expectation: D's 1,361 plus the S tests registered in `openttd_test`.
 
-- [ ] **8.3** Configure and build `build-clang/` (`CC=clang CXX=clang++`, RelWithDebInfo) and run its CTest the same way. Record every GCC/Clang difference.
+- [X] **8.3** Configure and build `build-clang/` (`CC=clang CXX=clang++`, RelWithDebInfo) and run its CTest the same way. Record every GCC/Clang difference.
 
-- [ ] **8.4** Run the ten focused executables with `run_focused.sh build logs/merge-oct28/baseline/focused`, after adding `openttd_space_fixes_test` to its list. Clang focused runs are optional here and mandatory in Part 2 Group 31.
+- [X] **8.4** Run the ten focused executables with `run_focused.sh build logs/merge-oct28/baseline/focused`, after adding `openttd_space_fixes_test` to its list. Clang focused runs are optional here and mandatory in Part 2 Group 31.
 
-- [ ] **8.5** Classify every failure into exactly one class, in `test-cache/merge-oct28/baseline-ledger.tsv` and the notes:
+- [X] **8.5** Classify every failure into exactly one class, in `test-cache/merge-oct28/baseline-ledger.tsv` and the notes:
   - **(a) S-reference:** present in the Group 2 ledger and not r2lbf-known;
   - **(b) pending-gate:** expected while the five eras are disabled, such as a save/load round trip of typed origins, renewal history or continuation. Name the owning Group from 14-22;
   - **(c) merge regression:** passed on D at `d49c3596` and on S, and fails now.
 
-- [ ] **8.6** Fix each class (c) case at its root, one commit per cause, and rerun the affected cases plus their whole source file through CTest. If more than five distinct causes appear, split this group per the protocol (8B, 8C…). Never fix a class (b) case by moving its owning group's work forward without that group's tests.
+- [X] **8.6** Fix each class (c) case at its root, one commit per cause, and rerun the affected cases plus their whole source file through CTest. If more than five distinct causes appear, split this group per the protocol (8B, 8C…). Never fix a class (b) case by moving its owning group's work forward without that group's tests.
 
-- [ ] **8.7** Publish the pending ledger in the notes. For each class (b) case give its tag, file and owning group. Pure codec cases that pass a pending enumerator straight to a codec (for example `DecodeCargoPacketSource(…, SaveLoadVersion::AsteroidCargoOrigins)`) should pass under the gate; a failure there is class (c).
+- [X] **8.7** Publish the pending ledger in the notes. For each class (b) case give its tag, file and owning group. Pure codec cases that pass a pending enumerator straight to a codec (for example `DecodeCargoPacketSource(…, SaveLoadVersion::AsteroidCargoOrigins)`) should pass under the gate; a failure there is class (c).
 
-- [ ] **8.8** Smoke-test the game: load D's retained `underground-mines` demo and one retained S Space save (`space-heavy-440.sav`) in the null-video build, run one paused save, and confirm both load.
+- [X] **8.8** Smoke-test the game: load D's retained `underground-mines` demo and one retained S Space save (`space-heavy-440.sav`) in the null-video build, run one paused save, and confirm both load.
 
 ### Area Mandatory Reading - Wire identities and pure capability policy
 
