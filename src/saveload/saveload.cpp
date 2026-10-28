@@ -10,6 +10,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/r2sff1-space-fixes-features-1.md Group16; historical natural freight retains a joined preview even after all Space hulls/sites disappear.
  * @see docs/zz-reach2/upgrades/2026-10/r2mlvs15-savegame-determinism-and-lifecycle.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 4 and 10; the interim writer and its capability context.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; the pending refusal of admitted Space fixes files.
  *
  * The general actions are as follows for saving a game (loading is analogous):
  * <ol>
@@ -3520,6 +3521,13 @@ static SaveLoadResult DoLoad(std::shared_ptr<LoadFilter> reader, bool load_check
 		if (capabilities.status == SaveLineageStatus::Ambiguous) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_AMBIGUOUS_LINEAGE);
 		if (capabilities.status == SaveLineageStatus::Unsupported) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
 		if (capabilities.status != SaveLineageStatus::Accepted) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_INVALID_LINEAGE, "Required original branch transport is missing or inconsistent");
+		// Merge interim (m2o28-1-merge-oct28.md Group 13): the classifier admits the
+		// incoming Space fixes writer, but its eras still decode through the pending
+		// SaveLoadVersion names, and 442-445 exceed this build's MaxVersion. Loading
+		// would silently drop typed origins and mission fields, so refuse before any
+		// world state is touched. Group 21 removes this refusal once Groups 15-20 read
+		// every era by capability and Group 22's writer 446 raises MaxVersion.
+		if (capabilities.dialect == SaveDialect::SpaceFixes) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME, "Space fixes saves (441-445) are admitted but not yet readable in this build");
 		if (facts.original_version > to_underlying(SAVEGAME_VERSION)) return ReportSavePreflightRefusal(load_check, STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
 		// Native patchpack reservations remain unsupported even if their outer
 		// framing is readable; preflight refusal must not null the running world's pointers.

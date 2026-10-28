@@ -158,6 +158,9 @@ enum class SaveCapability : uint8_t {
 };
 
 /** Classify one complete set of detached transport facts without parsing or mutation.
+ * Malformed evidence refuses first. A present marker then selects only its own merged
+ * allocation (441/schema 1 or 446/schema 2); a markerless 441-445 is judged as Space fixes;
+ * an unmarked 446 refuses; anything later is Unsupported; 440 and below use the legacy rules.
  * @param facts Evidence extracted from the original stream by a bounded inspector.
  * @param origin Optional exact-digest hint; consulted only when wire evidence is ambiguous.
  * @return Accepted dialect or explicit ambiguity/corruption/unsupported-version refusal.

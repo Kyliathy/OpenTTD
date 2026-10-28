@@ -1,6 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file save_lineage_preflight.cpp Native load-entry refusals, copied replay and per-attempt branch lifetime.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; real Space fixes 445 originals are admitted and refused as pending.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -50,6 +51,34 @@ static PreflightOriginal OriginalForPreflight(std::string_view origin, uint16_t 
 	}
 	FAIL("Required original is absent from the immutable input catalogue");
 	return {};
+}
+
+/** One committed Space fixes original with its catalogued identity; the path is provenance, never classifier evidence. */
+struct SpaceFixesOriginal {
+	std::filesystem::path path; ///< Location only.
+	std::vector<uint8_t> bytes; ///< Original compressed bytes, exactly as the incoming writer wrote them.
+	std::string sha256; ///< Independently recorded digest from the catalogue.
+};
+
+/** Load every original listed in src/tests/fixtures/saveload/space-fixes-445/catalogue.json.
+ * @return Each original with bytes checked against the catalogued size.
+ */
+static std::vector<SpaceFixesOriginal> SpaceFixesOriginals()
+{
+	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
+	std::ifstream input(root / "src/tests/fixtures/saveload/space-fixes-445/catalogue.json"); REQUIRE(input.good());
+	const auto catalogue = nlohmann::json::parse(input);
+	std::vector<SpaceFixesOriginal> originals;
+	// Read each catalogued original byte for byte; nothing is regenerated.
+	for (const auto &row : catalogue.at("originals")) {
+		SpaceFixesOriginal original{root / row.at("path").get<std::string>(), {}, row.at("sha256").get<std::string>()};
+		std::ifstream file(original.path, std::ios::binary); REQUIRE(file.good());
+		original.bytes.assign(std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{});
+		REQUIRE(original.bytes.size() == row.at("bytes").get<size_t>());
+		originals.push_back(std::move(original));
+	}
+	REQUIRE_FALSE(originals.empty());
+	return originals;
 }
 
 /** Observe actual native reads after admission; inspection and refused attempts expose no chosen capabilities. */
@@ -665,3 +694,46 @@ TEST_CASE("Candidate previews discard failed transport across original lineages"
 	REQUIRE(LoadWithFilter(EnvelopeNetworkReader(original.bytes), original.hint, true) == SaveLoadResult::Ok);
 	CHECK(CaptureCandidateLiveState() == installed);
 }
+
+/** Real S445 files classify as Space fixes from their own bytes, then refuse before any native read while their eras are pending. */
+TEST_CASE("Native preflight admits Space fixes originals and keeps them pending", "[save-lineage-preflight]")
+{
+	TubePrototypeRig rig; auto *capsule = rig.BuyCapsule();
+	PreflightFileSearch search;
+	const auto cash = Company::Get(_current_company)->money;
+	const auto id = capsule->index;
+	const auto tile = capsule->tile;
+	const auto map = Map::Size();
+	const auto tick = TimerGameTick::counter;
+	const std::array<uint32_t, 2> rng{_random.state[0], _random.state[1]};
+	// Each original: identity, detached classification and capabilities first,
+	// then every native entry refuses without binding a lineage or reading a chunk.
+	for (const auto &original : SpaceFixesOriginals()) {
+		INFO(original.path.string());
+		const auto facts = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(original.bytes));
+		CHECK(EnvelopeDigest(facts.source_digest) == original.sha256);
+		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
+		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed);
+		const auto result = ClassifySaveDialect(facts);
+		REQUIRE(result.status == SaveLineageStatus::Accepted);
+		CHECK(result.dialect == SaveDialect::SpaceFixes); CHECK(result.original_version == 445);
+		CHECK(HasSaveCapability(result, SaveCapability::AsteroidCargoOrigins));
+		CHECK(HasSaveCapability(result, SaveCapability::SpaceSurveyDeparture));
+		CHECK(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersA));
+		CHECK_FALSE(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersB));
+		// A legacy hint naming another writer changes nothing for a modern number.
+		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).dialect == SaveDialect::SpaceFixes);
+		auto network = std::make_shared<ObservePreflightReader>(EnvelopeNetworkReader(original.bytes));
+		CHECK(LoadWithFilter(network) == SaveLoadResult::Error);
+		CHECK(network->observed.empty()); CHECK_FALSE(GetLoadCapabilities().has_value());
+		CHECK(SaveOrLoad(original.path.string(), SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
+		CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
+		CHECK(SaveOrLoad(original.path.string(), SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
+		CHECK_FALSE(GetLoadCapabilities().has_value());
+	}
+	// The open world is exactly as it was: vehicle, money, map, tick and RNG.
+	CHECK(Vehicle::GetIfValid(id) == capsule); CHECK(capsule->tile == tile); CHECK(capsule->IsInDepot());
+	CHECK(Company::Get(_current_company)->money == cash); CHECK(Map::Size() == map);
+	CHECK(TimerGameTick::counter == tick); CHECK(_random.state[0] == rng[0]); CHECK(_random.state[1] == rng[1]);
+}
+

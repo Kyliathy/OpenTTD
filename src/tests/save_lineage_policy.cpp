@@ -5,6 +5,7 @@
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the closed Space fixes capability matrix.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; descriptor-level CAPA observations refuse when malformed.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; malformed or ambiguous SSOR book shapes refuse.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; both 441 classifications, Space fixes 441-445 and merged 446.
  * SAVE_LINEAGE_STANDALONE builds this pure Catch leaf without native game pools.
  * The ordinary native test target registers this leaf through src/tests/CMakeLists.txt.
  */
@@ -64,7 +65,10 @@ static SaveWireFacts Destination(uint16_t version)
 	if (version >= 431) facts.space_content_version = 3;
 	if (version >= 437) AddChunk(facts, SaveLineageFamily::CargoDimensions, SaveEvidenceKind::Riff, 1);
 	if (version >= 438) AddChunk(facts, SaveLineageFamily::OrbitalRecipes, SaveEvidenceKind::Riff, 11);
-	if (version >= 440) AddChunk(facts, SaveLineageFamily::SupplyOrders, SaveEvidenceKind::Riff, 14);
+	if (version >= 440) {
+		AddChunk(facts, SaveLineageFamily::SupplyOrders, SaveEvidenceKind::Riff, 14);
+		facts.supply_book_shape = SupplyBookShape::Fixed; // The scanner reads A's empty fixed book by its own shape.
+	}
 	return facts;
 }
 
@@ -107,6 +111,7 @@ static SaveWireFacts Merged()
 	facts.supply_columns = SaveSupplyColumns::Absent;
 	Evidence(facts, SaveLineageFamily::SupplyHeader) = {};
 	AddChunk(facts, SaveLineageFamily::SupplyOrders, SaveEvidenceKind::Riff, 1);
+	facts.supply_book_shape = SupplyBookShape::Tagged;
 	AddChunk(facts, SaveLineageFamily::CargoDimensions, SaveEvidenceKind::Riff, 1);
 	AddChunk(facts, SaveLineageFamily::OrbitalRecipes, SaveEvidenceKind::Riff, 11);
 	AddChunk(facts, SaveLineageFamily::Marker, SaveEvidenceKind::Riff, 8);
@@ -115,6 +120,30 @@ static SaveWireFacts Merged()
 	facts.marker_writer_version = MERGED_SAVE_LINEAGE_VERSION;
 	facts.merged_supply_valid = facts.merged_cargo_valid = true;
 	facts.merged_supply_next_id = 1;
+	return facts;
+}
+
+/** Build the reserved combined writer's facts: merged 441 plus its marker schema 2 and typed CAPA origins.
+ * @return Complete merged 446 facts, independent of any serializer.
+ */
+static SaveWireFacts Merged446()
+{
+	auto facts = Merged();
+	facts.original_version = facts.marker_writer_version = CURRENT_MERGED_SAVE_VERSION;
+	facts.marker_schema = CURRENT_MERGED_SAVE_LINEAGE_SCHEMA;
+	facts.asteroid_origin_columns = SaveEvidenceState::Valid;
+	return facts;
+}
+
+/** Build a markerless Space fixes file: A440's transport plus typed CAPA origins.
+ * @param version Original Space fixes era, 441-445.
+ * @return Detached facts with the A440-derived fixed book and no B or merged evidence.
+ */
+static SaveWireFacts SpaceFixes(uint16_t version)
+{
+	auto facts = Destination(440);
+	facts.original_version = version;
+	facts.asteroid_origin_columns = SaveEvidenceState::Valid;
 	return facts;
 }
 
@@ -296,8 +325,11 @@ TEST_CASE("Save lineage rejects malformed A transport and future capability gues
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	facts = Common(425); facts.space_content_version = 3;
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	facts = Destination(440); facts.original_version = 442;
+	facts = Destination(440); facts.original_version = 447;
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	// A442 is no writer's number: without typed origins it is not Space fixes either.
+	facts = Destination(440); facts.original_version = 442;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
 	// Malformed CAPA descriptor observations win over every version or hint rule.
 	facts = Destination(440); facts.cargo_supply_encoding = SupplyColumnEncoding::Malformed;
 	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
@@ -305,18 +337,23 @@ TEST_CASE("Save lineage rejects malformed A transport and future capability gues
 	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
 	facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Malformed;
 	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-	// An SSOR that fits no book, or both books, refuses even where the rest is
-	// complete; a single fitting shape leaves the existing rules in charge.
-	for (const auto shape : {SupplyBookShape::Malformed, SupplyBookShape::Ambiguous}) {
-		facts = Merged(); facts.supply_book_shape = shape;
-		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
-		facts = Destination(440); facts.supply_book_shape = shape;
-		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	// An SSOR that fits no book refuses even where the rest is complete. An
+	// overlap of both books is settled by the writer: the marker selects the
+	// tagged book, while no markerless writer ever wrote the SSM1 signature.
+	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Malformed;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Malformed;
+	CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DestinationA, facts.source_digest}).status == SaveLineageStatus::Corrupt);
+	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Ambiguous;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
+	for (auto unmarked : {Destination(440), SpaceFixes(441), SpaceFixes(445)}) {
+		unmarked.supply_book_shape = SupplyBookShape::Ambiguous;
+		CHECK(ClassifySaveDialect(unmarked).status == SaveLineageStatus::Corrupt);
 	}
-	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Tagged;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
-	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Fixed;
-	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Accepted);
+	facts = Merged(); facts.supply_book_shape = SupplyBookShape::Fixed;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // The marked writer needs its tagged book.
+	facts = Destination(440); facts.supply_book_shape = SupplyBookShape::Tagged;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // A440 never wrote SSM1.
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Common(425)), SaveCapability::TBMFaceTransfer));
 	CHECK_FALSE(HasSaveCapability(ClassifySaveDialect(Destination(440)), static_cast<SaveCapability>(255)));
 }
@@ -416,3 +453,92 @@ TEST_CASE("Save lineage bounds every Space fixes introduction and refuses foreig
 		CHECK_FALSE(HasSaveCapability(AcceptedSource(SaveDialect::SpaceFixes, 445), unknown));
 	}
 }
+
+/** One number, two writers: merged 441 needs its marker and canonical proofs; S441 needs typed origins and none of them. */
+TEST_CASE("Save lineage classifies both 441 writers from their own evidence", "[save-lineage]")
+{
+	const auto merged = ClassifySaveDialect(Merged());
+	REQUIRE(merged.status == SaveLineageStatus::Accepted);
+	CHECK(merged.dialect == SaveDialect::Merged); CHECK(merged.original_version == 441);
+	CHECK_FALSE(HasSaveCapability(merged, SaveCapability::AsteroidCargoOrigins));
+	const auto space = ClassifySaveDialect(SpaceFixes(441));
+	REQUIRE(space.status == SaveLineageStatus::Accepted);
+	CHECK(space.dialect == SaveDialect::SpaceFixes); CHECK(space.original_version == 441);
+	CHECK(HasSaveCapability(space, SaveCapability::AsteroidCargoOrigins));
+	CHECK_FALSE(HasSaveCapability(space, SaveCapability::SurfaceSupplyOrdersB));
+	// Each writer's proof in the other writer's file is a contradiction, not a hint.
+	auto facts = Merged(); facts.asteroid_origin_columns = SaveEvidenceState::Valid;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Frozen 441 never declared typed origins.
+	facts = Merged(); Evidence(facts, SaveLineageFamily::Marker) = {};
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Unmarked, the merged transport is no S file.
+	facts = SpaceFixes(441); AddChunk(facts, SaveLineageFamily::Marker, SaveEvidenceKind::Riff, 8);
+	facts.marker_magic = MERGED_SAVE_LINEAGE_MAGIC; facts.marker_schema = MERGED_SAVE_LINEAGE_SCHEMA; facts.marker_writer_version = 441;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // A marker cannot adopt S's fixed book.
+}
+
+/** S441-445 are accepted only with typed origins, the A440-derived transport and nothing B-only or merged-only. */
+TEST_CASE("Save lineage admits Space fixes 441-445 and refuses foreign evidence", "[save-lineage]")
+{
+	for (uint16_t version = 441; version <= 445; ++version) {
+		INFO(version);
+		const auto result = ClassifySaveDialect(SpaceFixes(version));
+		REQUIRE(result.status == SaveLineageStatus::Accepted);
+		CHECK(result.dialect == SaveDialect::SpaceFixes); CHECK(result.original_version == version);
+		// A Classic-profile S file has no Space content revision but the same transport.
+		auto classic = SpaceFixes(version); classic.space_content_version = 0;
+		CHECK(ClassifySaveDialect(classic).dialect == SaveDialect::SpaceFixes);
+		// A legacy origin hint is never consulted for these numbers.
+		auto hinted = SpaceFixes(version);
+		CHECK(ClassifySaveDialect(hinted, SaveOriginHint{SaveDialect::DonorB, hinted.source_digest}).dialect == SaveDialect::SpaceFixes);
+		hinted.asteroid_origin_columns = SaveEvidenceState::Absent;
+		CHECK(ClassifySaveDialect(hinted, SaveOriginHint{SaveDialect::DestinationA, hinted.source_digest}).status == SaveLineageStatus::Corrupt);
+	}
+	// Each case removes S's positive evidence or adds another writer's.
+	auto facts = SpaceFixes(443); facts.asteroid_origin_columns = SaveEvidenceState::Absent;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); Evidence(facts, SaveLineageFamily::SupplyOrders) = {}; facts.supply_book_shape = SupplyBookShape::Absent;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); facts.supply_book_shape = SupplyBookShape::Tagged; facts.merged_supply_valid = true;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); facts.cargo_supply_encoding = SupplyColumnEncoding::CanonicalU64U8; facts.merged_cargo_valid = true;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); facts.cargo_supply_encoding = SupplyColumnEncoding::LegacyU32Bool; facts.supply_columns = SaveSupplyColumns::Complete;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); facts.feature_flags |= 0x00800000;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); AddChunk(facts, SaveLineageFamily::GeneratorHeader, SaveEvidenceKind::Riff, 8, 2);
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); Evidence(facts, SaveLineageFamily::CargoDimensions) = {};
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	facts = SpaceFixes(443); facts.space_content_version = 2;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	// A legacy file at 440 or below cannot carry the incoming writer's columns.
+	facts = Destination(440); facts.asteroid_origin_columns = SaveEvidenceState::Valid;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+}
+
+/** The reserved combined writer is accepted only with its own marker tuple and typed origins; nothing unmarked or later. */
+TEST_CASE("Save lineage admits marked 446 and refuses every other modern tuple", "[save-lineage]")
+{
+	const auto current = ClassifySaveDialect(Merged446());
+	REQUIRE(current.status == SaveLineageStatus::Accepted);
+	CHECK(current.dialect == SaveDialect::Merged); CHECK(current.original_version == CURRENT_MERGED_SAVE_VERSION);
+	CHECK(HasSaveCapability(current, SaveCapability::SpaceSurveyDeparture));
+	CHECK(HasSaveCapability(current, SaveCapability::TubeGeothermalBindings));
+	auto facts = Merged446(); facts.asteroid_origin_columns = SaveEvidenceState::Absent;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // 446 always declares typed origins.
+	facts = Merged446(); facts.marker_schema = MERGED_SAVE_LINEAGE_SCHEMA;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Schema 1 belongs to 441.
+	facts = Merged446(); Evidence(facts, SaveLineageFamily::Marker) = {};
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt); // Unmarked 446.
+	// A marker on any Space fixes era belongs to no writer, whatever it claims.
+	for (uint16_t version = 442; version <= 445; ++version) {
+		facts = Merged446(); facts.original_version = facts.marker_writer_version = version;
+		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Corrupt);
+	}
+	facts = Merged446(); facts.original_version = facts.marker_writer_version = 447;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+	facts = SpaceFixes(445); facts.original_version = 447;
+	CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported);
+}
+

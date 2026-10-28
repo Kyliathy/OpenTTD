@@ -1,0 +1,37 @@
+{
+  "_documentation": "Owner: docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13 (produced by Group 3); architecture: docs/zz-reach2/architecture/savegame/archi-savegame.md. Three real saves written by the incoming Space fixes writer (origin/mlm-mlv-2sp 66713bdf, tree 079181de) at outer version 445, copied byte for byte from test-cache/merge-oct28/donor445. They are contemporary reconstructions from retained 405 and 440 originals, not historical 441-444 files. Paths and labels are provenance only; classification reads the bytes. Rebuild the source set with test-cache/merge-oct28/collect_donor445.py as recorded in m2o28-a-execution-notes.md Group 3.",
+  "schema_version": 1,
+  "writer": {
+    "branch": "origin/mlm-mlv-2sp",
+    "commit": "66713bdf",
+    "tree": "079181de",
+    "executable": "build/openttd_space_fixes_test",
+    "executable_sha256": "d49e28c278abdfa86ed96d4fa5fd11770e8364e079f0449a6ff472fb0696d7c6"
+  },
+  "originals": [
+    {
+      "path": "src/tests/fixtures/saveload/space-fixes-445/typed-origin-packets-445.sav",
+      "version": 445,
+      "bytes": 14764,
+      "sha256": "e2490bc2e97c6a077529e5f1a33fac35080010be8a4a48d3578db5cc6f493c0a",
+      "producer": {"run": "m28-origin-405", "save": "cargo-origins-current.sav", "input": "src/tests/fixtures/demos/space/space-mining-working-405.sav"},
+      "purpose": "CAPA packets with typed asteroid origins (three packets, two natural)."
+    },
+    {
+      "path": "src/tests/fixtures/saveload/space-fixes-445/mining-continuation-445.sav",
+      "version": 445,
+      "bytes": 16428,
+      "sha256": "e865c4595d2252477c0ed15f231d029cb3f9900975ea8f5576a7df12adc0f468",
+      "producer": {"run": "m28-continue-heavy", "save": "policy-before-departure.sav", "input": "m28-edit-heavy/policy-current.sav from savegames retained space-heavy-440.sav"},
+      "purpose": "SPOR mining policy and VEHS contained mining intent before departure."
+    },
+    {
+      "path": "src/tests/fixtures/saveload/space-fixes-445/field-lifecycle-445.sav",
+      "version": 445,
+      "bytes": 16436,
+      "sha256": "daadb8031bf4f3806f3527d625216264008c916b5d95e114ae0fd87b04e06ab3",
+      "producer": {"run": "m28-lifecycle-visible", "save": "policy-lifecycle-after-birth.sav", "input": "m28-continue-heavy/policy-before-departure.sav"},
+      "purpose": "ASTR/SPKN field lifecycle state after one native body birth."
+    }
+  ]
+}

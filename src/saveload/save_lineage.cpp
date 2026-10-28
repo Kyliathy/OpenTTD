@@ -3,6 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 10; explicit per-capability rules for every writer.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; marked merged, markerless Space fixes and the legacy path.
  */
 #ifndef SAVE_LINEAGE_STANDALONE
 #include "../stdafx.h"
@@ -14,6 +15,13 @@
 
 static constexpr uint32_t SHARED_FEATURE_FLAGS = 0x007FFFFF;
 static constexpr uint32_t DONOR_FEATURE_FLAGS = 0x07FFFFFF;
+
+/** First post-fork envelope version of both historical branches; 424 and older is shared history. */
+static constexpr uint16_t FIRST_DIVERGENT_VERSION = 425;
+static constexpr uint16_t LAST_DESTINATION_A_VERSION = 440; ///< Last version the historical destination writer produced.
+static constexpr uint16_t LAST_DONOR_B_VERSION = 434; ///< Last version the historical donor writer produced.
+static constexpr uint16_t FIRST_SPACE_FIXES_VERSION = 441; ///< First Space fixes era; that writer descends from A440.
+static constexpr uint16_t LAST_SPACE_FIXES_VERSION = 445; ///< Last version the Space fixes writer produced.
 
 /** Check whether the original stream supplied a complete selected chunk.
  * @param facts Detached source facts.
@@ -100,6 +108,9 @@ static bool CompatibleA(const SaveWireFacts &facts)
 		// A's fixed little-endian book shape has neither a B header nor TABLE
 		// rows. Bound multiplication before accepting a claimed record count.
 		if (version != 440 || supply.kind != SaveEvidenceKind::Riff || supply.records > 16384 || supply.length != 14 + 53 * supply.records) return false;
+		// The bytes themselves must read as the fixed book (m2o28 Group 12); a
+		// payload carrying the SSM1 signature was never written by this writer.
+		if (facts.supply_book_shape != SupplyBookShape::Fixed) return false;
 	} else if (version >= 440) {
 		return false;
 	}
@@ -136,6 +147,71 @@ static bool CompatibleB(const SaveWireFacts &facts)
 	return ConsistentHistoryFlags(facts, true);
 }
 
+/** Validate the complete transport of one marked merged allocation.
+ * @param facts Exact detached original facts with a present marker.
+ * @return Whether the marker names exactly this envelope's allocation and every merged proof and retained family agrees.
+ */
+static bool CompatibleMerged(const SaveWireFacts &facts)
+{
+	const auto version = facts.original_version;
+	const auto &marker = facts.Get(SaveLineageFamily::Marker);
+	const bool first_allocation = version == MERGED_SAVE_LINEAGE_VERSION && facts.marker_schema == MERGED_SAVE_LINEAGE_SCHEMA;
+	const bool current_allocation = version == CURRENT_MERGED_SAVE_VERSION && facts.marker_schema == CURRENT_MERGED_SAVE_LINEAGE_SCHEMA;
+	// The marker names exactly one allocation and is written by this envelope. A
+	// marker on any other number, including a Space fixes era, belongs to no writer.
+	if (!(first_allocation || current_allocation) || marker.state != SaveEvidenceState::Valid || marker.kind != SaveEvidenceKind::Riff || marker.length != 8 ||
+		facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || facts.marker_writer_version != version) return false;
+	// The canonical supply book and the canonical CAPA pair are the merged
+	// writer's proofs. The marker selects the tagged book, so a coincidental fit
+	// of the fixed shape on the same bytes (Ambiguous) does not matter here.
+	if (!facts.merged_supply_valid || !facts.merged_cargo_valid || (facts.supply_book_shape != SupplyBookShape::Tagged && facts.supply_book_shape != SupplyBookShape::Ambiguous)) return false;
+	// Typed asteroid origins are what 446 adds: frozen 441 never declares them,
+	// and 446 always does, even with zero packets.
+	if (facts.asteroid_origin_columns != (current_allocation ? SaveEvidenceState::Valid : SaveEvidenceState::Absent)) return false;
+	// New supply/cargo validators do not replace the other complete retained
+	// families. A marker cannot erase geothermal or Space processing history.
+	if ((facts.space_content_version != 0 && facts.space_content_version != 3) || !ValidSpaceFamilies(facts) ||
+		!Present(facts, SaveLineageFamily::CargoDimensions) || !Present(facts, SaveLineageFamily::OrbitalRecipes) ||
+		!Present(facts, SaveLineageFamily::SupplyOrders) || facts.Get(SaveLineageFamily::SupplyOrders).kind != SaveEvidenceKind::Riff || Present(facts, SaveLineageFamily::SupplyHeader) ||
+		!CompletePair(facts, SaveLineageFamily::GeneratorHeader, SaveLineageFamily::GeneratorRows, 8, 2) ||
+		!CompletePair(facts, SaveLineageFamily::ConversionHeader, SaveLineageFamily::ConversionRows, 32, 1) ||
+		!CompletePair(facts, SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows, 20, 1) || !ConsistentHistoryFlags(facts, false)) return false;
+	// The sole canonical issuer retains paid history even after terminal rows
+	// are pruned; row cardinality cannot clear or invent its metadata marker.
+	return facts.merged_supply_next_id != 0 && ((facts.feature_flags & (1U << 23)) != 0) == (facts.merged_supply_next_id != 1);
+}
+
+/** Validate a markerless Space fixes file (441-445) from its own positive evidence.
+ * That writer began from A440, so it keeps A's content and fixed supply book; it never
+ * wrote B's families, the merged proofs or a marker. `CompatibleA` is not reused because
+ * it admits the fixed book only at exactly 440; the shared checks are reused explicitly.
+ * @param facts Exact detached original facts without a marker.
+ * @return Whether the file carries typed CAPA origins, the A440-derived transport and nothing foreign.
+ */
+static bool CompatibleSpaceFixes(const SaveWireFacts &facts)
+{
+	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);
+	// Positive evidence: typed asteroid origins declared by CAPA (even when empty),
+	// and the fixed book read from its own bytes as a RIFF family.
+	if (facts.asteroid_origin_columns != SaveEvidenceState::Valid || facts.supply_book_shape != SupplyBookShape::Fixed ||
+		supply.state != SaveEvidenceState::Valid || supply.kind != SaveEvidenceKind::Riff) return false;
+	// B-only and merged-only evidence belongs to other writers: B's metadata bits,
+	// either CAPA supply pair, positive B layout, or the merged tagged book.
+	if ((facts.feature_flags & ~SHARED_FEATURE_FLAGS) != 0 || facts.supply_columns != SaveSupplyColumns::Absent ||
+		facts.cargo_supply_encoding != SupplyColumnEncoding::Absent || facts.payload_dialect == SavePayloadDialect::DonorB || facts.merged_supply_valid) return false;
+	// None of B's machinery or supply-header families may appear, even empty.
+	for (const auto family : {SaveLineageFamily::SupplyHeader, SaveLineageFamily::GeneratorHeader, SaveLineageFamily::GeneratorRows,
+		SaveLineageFamily::ConversionHeader, SaveLineageFamily::ConversionRows, SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows}) {
+		if (Present(facts, family)) return false;
+	}
+	// A440's content: content revision 3 when Space is selected (0 for Classic),
+	// and the cargo-dimension and recipe-processing families with valid framing.
+	if (facts.space_content_version != 0 && facts.space_content_version != 3) return false;
+	return Present(facts, SaveLineageFamily::CargoDimensions) && Present(facts, SaveLineageFamily::OrbitalRecipes) && ValidSpaceFamilies(facts);
+}
+
+static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin);
+
 /** @copydoc ClassifySaveDialect */
 SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin)
 {
@@ -149,36 +225,42 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	// The descriptor-level CAPA observations (m2o28 Group 11) are malformed evidence
 	// too: a half supply pair or a narrowed asteroid key refuses whatever the version says.
 	if (facts.cargo_supply_encoding == SupplyColumnEncoding::Malformed || facts.asteroid_origin_columns == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
-	// An SSOR whose own bytes fit no book, or fit both the fixed and the tagged
-	// book (m2o28 Group 12), cannot be given to either decoder.
-	if (facts.supply_book_shape == SupplyBookShape::Malformed || facts.supply_book_shape == SupplyBookShape::Ambiguous) return result(SaveLineageStatus::Corrupt);
+	// An SSOR whose own bytes fit no book cannot be given to either decoder
+	// (m2o28 Group 12). An Ambiguous book is judged below by its writer's marker.
+	if (facts.supply_book_shape == SupplyBookShape::Malformed) return result(SaveLineageStatus::Corrupt);
 	// Every observed selected family participates, even one whose feature is
 	// inactive: a malformed empty family cannot silently become an absent owner.
 	for (const auto &family : facts.families) {
 		if (family.state == SaveEvidenceState::Malformed) return result(SaveLineageStatus::Corrupt);
 	}
-	if (facts.original_version > MERGED_SAVE_LINEAGE_VERSION) return result(SaveLineageStatus::Unsupported);
+	if (facts.original_version > CURRENT_MERGED_SAVE_VERSION) return result(SaveLineageStatus::Unsupported);
 	if ((facts.feature_flags & ~DONOR_FEATURE_FLAGS) != 0) return result(SaveLineageStatus::Corrupt);
-	const auto &marker = facts.Get(SaveLineageFamily::Marker);
-	// A marker is an explicit writer contract. Neither a wrong legacy placement
-	// nor a partially assembled future family may fall back to old decoding.
-	if (marker.state != SaveEvidenceState::Absent || facts.original_version == MERGED_SAVE_LINEAGE_VERSION) {
-		if (facts.original_version != MERGED_SAVE_LINEAGE_VERSION || marker.state != SaveEvidenceState::Valid || marker.kind != SaveEvidenceKind::Riff || marker.length != 8 ||
-			facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || facts.marker_schema != MERGED_SAVE_LINEAGE_SCHEMA || facts.marker_writer_version != facts.original_version ||
-			!facts.merged_supply_valid || !facts.merged_cargo_valid) return result(SaveLineageStatus::Corrupt);
-		// New supply/cargo validators do not replace the other complete retained
-		// families. A marker cannot erase geothermal or Space processing history.
-		if ((facts.space_content_version != 0 && facts.space_content_version != 3) || !ValidSpaceFamilies(facts) ||
-			!Present(facts, SaveLineageFamily::CargoDimensions) || !Present(facts, SaveLineageFamily::OrbitalRecipes) ||
-			!Present(facts, SaveLineageFamily::SupplyOrders) || facts.Get(SaveLineageFamily::SupplyOrders).kind != SaveEvidenceKind::Riff || Present(facts, SaveLineageFamily::SupplyHeader) ||
-			!CompletePair(facts, SaveLineageFamily::GeneratorHeader, SaveLineageFamily::GeneratorRows, 8, 2) ||
-			!CompletePair(facts, SaveLineageFamily::ConversionHeader, SaveLineageFamily::ConversionRows, 32, 1) ||
-			!CompletePair(facts, SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows, 20, 1) || !ConsistentHistoryFlags(facts, false)) return result(SaveLineageStatus::Corrupt);
-		// The sole canonical issuer retains paid history even after terminal rows
-		// are pruned; row cardinality cannot clear or invent its metadata marker.
-		if (facts.merged_supply_next_id == 0 || ((facts.feature_flags & (1U << 23)) != 0) != (facts.merged_supply_next_id != 1)) return result(SaveLineageStatus::Corrupt);
-		return result(SaveLineageStatus::Accepted, SaveDialect::Merged);
-	}
+	// A marker is an explicit writer contract. It selects only its own merged
+	// allocation; a wrong placement never falls back to another writer's rules.
+	if (facts.Get(SaveLineageFamily::Marker).state != SaveEvidenceState::Absent) return result(CompatibleMerged(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::Merged);
+	// The combined writer always marks 446; an unmarked 446 is no writer's file.
+	if (facts.original_version == CURRENT_MERGED_SAVE_VERSION) return result(SaveLineageStatus::Corrupt);
+	// Markerless 441-445 can only be the Space fixes writer. Its own positive
+	// evidence decides; a legacy origin hint is never consulted for these numbers.
+	if (facts.original_version >= FIRST_SPACE_FIXES_VERSION) return result(CompatibleSpaceFixes(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::SpaceFixes);
+	return ClassifyLegacy(facts, origin);
+}
+
+/** Classify a markerless file at 440 or below: shared history, historical A or historical B.
+ * @param facts Exact detached original facts, already past the malformed-first checks.
+ * @param origin Optional exact-digest hint; consulted only for common-layout ambiguity.
+ * @return Accepted dialect, Ambiguous, or Corrupt; the version is kept unchanged.
+ */
+static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin)
+{
+	/** @param status Admission/refusal outcome. @param dialect Accepted interpretation, otherwise inert. @return Result retaining the unchanged original version. */
+	const auto result = [&](SaveLineageStatus status, SaveDialect dialect = SaveDialect::Shared) {
+		return SaveLineageResult{status, dialect, facts.original_version};
+	};
+	// No historical writer at or below 440 declared typed asteroid origins, the
+	// canonical U64/U8 supply pair or an SSM1 book. Any of them here is a forgery.
+	if (facts.asteroid_origin_columns != SaveEvidenceState::Absent || facts.cargo_supply_encoding == SupplyColumnEncoding::CanonicalU64U8 ||
+		facts.supply_book_shape == SupplyBookShape::Tagged || facts.supply_book_shape == SupplyBookShape::Ambiguous) return result(SaveLineageStatus::Corrupt);
 	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);
 	const bool a_evidence = facts.payload_dialect == SavePayloadDialect::DestinationA || facts.space_content_version == 3 ||
 		Present(facts, SaveLineageFamily::CargoDimensions) || Present(facts, SaveLineageFamily::OrbitalRecipes) ||
@@ -219,13 +301,6 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	}
 	return result(SaveLineageStatus::Ambiguous);
 }
-
-/** First post-fork envelope version of both historical branches; 424 and older is shared history. */
-static constexpr uint16_t FIRST_DIVERGENT_VERSION = 425;
-static constexpr uint16_t LAST_DESTINATION_A_VERSION = 440; ///< Last version the historical destination writer produced.
-static constexpr uint16_t LAST_DONOR_B_VERSION = 434; ///< Last version the historical donor writer produced.
-static constexpr uint16_t FIRST_SPACE_FIXES_VERSION = 441; ///< First Space fixes era; that writer descends from A440.
-static constexpr uint16_t LAST_SPACE_FIXES_VERSION = 445; ///< Last version the Space fixes writer produced.
 
 /** One capability's availability in every writer, looked up by capability and never by enum position.
  * A first version of zero means that writer never had the feature at any version.

@@ -173,6 +173,7 @@ The pure codec cases that pass a pending enumerator straight to a codec pass und
 | [ ] | `src/saveload/saveload.cpp` | 3631 | Copied legacy asteroid cargo normalization during load-check | 21 (custody checks in 20) |
 | [ ] | `src/saveload/saveload.h` | 525-535 | The five pending enumerators and their interim comment | 22 |
 | [ ] | `src/saveload/saveload.cpp` | 105-107 | `static_assert(SAVEGAME_VERSION == MergedLineage)` becomes the 446 writer check | 22 |
+| [ ] | `src/saveload/saveload.cpp` | `DoLoad` preflight (added in Group 13) | Pending refusal of admitted `SaveDialect::SpaceFixes` files (`TOO_NEW_SAVEGAME`, "admitted but not yet readable") | 21 (lift once 15-20 read every era; 442-445 also need 22's MaxVersion) |
 
 These sites read the accepted dialect directly instead of a pending enumerator. Once the classifier admits S files, `SaveDialect::SpaceFixes` must reach them as the A-fixed supply wire:
 

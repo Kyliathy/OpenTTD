@@ -632,6 +632,8 @@ flowchart TD
   - future versions are Unsupported;
   - legacy filename or digest hints never resolve modern ambiguity.
 
+  - _Plan change during execution (Group 13):_ an SSOR overlap (Group 12's `Ambiguous`) is settled by the writer instead of always refused. A marked merged file takes its tagged book, because the marker selects that decoder. A markerless file refuses, because no markerless writer wrote the SSM1 signature. Always refusing would make a genuine D441 save unloadable whenever its issuer frontier is a multiple of 256 and its row count also fits the fixed equation, for example frontier 1536 with exactly 8 legacy rows. That is a regression from D. The fixture `OverlappingBook()` in `save_envelope_supply_book.cpp` is such a book.
+
 - [ ] **13.4** Wire the result into `DoLoad` preflight without moving world initialization earlier. Add both 441 classifications, S442-445 (Group 3 outputs where available), synthetic 446, and Classic/no-field cases, plus an unchanged-open-world refusal test. At this point S445 files classify as accepted, but their eras still decode as pending until Groups 15-21.
 
 ### Area Mandatory Reading - Native source values and physical packet custody

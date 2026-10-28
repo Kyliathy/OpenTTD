@@ -195,6 +195,8 @@ TEST_CASE("Save envelope observes typed CAPA columns in real donor 445 saves", "
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Absent);
 		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed); // Group 12: the A440-derived fixed book, read by shape.
+		const auto result = ClassifySaveDialect(facts); // Group 13: the whole file is the incoming writer's.
+		CHECK(result.status == SaveLineageStatus::Accepted); CHECK(result.dialect == SaveDialect::SpaceFixes);
 		CHECK(reader->position == 0);
 		++scanned;
 	}
