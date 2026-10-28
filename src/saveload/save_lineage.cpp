@@ -3,7 +3,7 @@
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 10; explicit per-capability rules for every writer.
- * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; marked merged, markerless Space fixes and the legacy path.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 13 and 17B; marked merged files, the legacy path, and dev-build refusal.
  */
 #ifndef SAVE_LINEAGE_STANDALONE
 #include "../stdafx.h"
@@ -20,8 +20,8 @@ static constexpr uint32_t DONOR_FEATURE_FLAGS = 0x07FFFFFF;
 static constexpr uint16_t FIRST_DIVERGENT_VERSION = 425;
 static constexpr uint16_t LAST_DESTINATION_A_VERSION = 440; ///< Last version the historical destination writer produced.
 static constexpr uint16_t LAST_DONOR_B_VERSION = 434; ///< Last version the historical donor writer produced.
-static constexpr uint16_t FIRST_SPACE_FIXES_VERSION = 441; ///< First Space fixes era; that writer descends from A440.
-static constexpr uint16_t LAST_SPACE_FIXES_VERSION = 445; ///< Last version the Space fixes writer produced.
+static constexpr uint16_t FIRST_UNMARKED_DEVELOPMENT_VERSION = 441; ///< A development build wrote markerless files from here...
+static constexpr uint16_t LAST_UNMARKED_DEVELOPMENT_VERSION = 445; ///< ...to here; this build does not read them (m2o28 Group 17B).
 
 /** Check whether the original stream supplied a complete selected chunk.
  * @param facts Detached source facts.
@@ -158,7 +158,7 @@ static bool CompatibleMerged(const SaveWireFacts &facts)
 	const bool first_allocation = version == MERGED_SAVE_LINEAGE_VERSION && facts.marker_schema == MERGED_SAVE_LINEAGE_SCHEMA;
 	const bool current_allocation = version == CURRENT_MERGED_SAVE_VERSION && facts.marker_schema == CURRENT_MERGED_SAVE_LINEAGE_SCHEMA;
 	// The marker names exactly one allocation and is written by this envelope. A
-	// marker on any other number, including a Space fixes era, belongs to no writer.
+	// marker on any other number, including a development build's 442-445, belongs to no writer.
 	if (!(first_allocation || current_allocation) || marker.state != SaveEvidenceState::Valid || marker.kind != SaveEvidenceKind::Riff || marker.length != 8 ||
 		facts.marker_magic != MERGED_SAVE_LINEAGE_MAGIC || facts.marker_writer_version != version) return false;
 	// The canonical supply book and the canonical CAPA pair are the merged
@@ -179,35 +179,6 @@ static bool CompatibleMerged(const SaveWireFacts &facts)
 	// The sole canonical issuer retains paid history even after terminal rows
 	// are pruned; row cardinality cannot clear or invent its metadata marker.
 	return facts.merged_supply_next_id != 0 && ((facts.feature_flags & (1U << 23)) != 0) == (facts.merged_supply_next_id != 1);
-}
-
-/** Validate a markerless Space fixes file (441-445) from its own positive evidence.
- * That writer began from A440, so it keeps A's content and fixed supply book; it never
- * wrote B's families, the merged proofs or a marker. `CompatibleA` is not reused because
- * it admits the fixed book only at exactly 440; the shared checks are reused explicitly.
- * @param facts Exact detached original facts without a marker.
- * @return Whether the file carries typed CAPA origins, the A440-derived transport and nothing foreign.
- */
-static bool CompatibleSpaceFixes(const SaveWireFacts &facts)
-{
-	const auto &supply = facts.Get(SaveLineageFamily::SupplyOrders);
-	// Positive evidence: typed asteroid origins declared by CAPA (even when empty),
-	// and the fixed book read from its own bytes as a RIFF family.
-	if (facts.asteroid_origin_columns != SaveEvidenceState::Valid || facts.supply_book_shape != SupplyBookShape::Fixed ||
-		supply.state != SaveEvidenceState::Valid || supply.kind != SaveEvidenceKind::Riff) return false;
-	// B-only and merged-only evidence belongs to other writers: B's metadata bits,
-	// either CAPA supply pair, positive B layout, or the merged tagged book.
-	if ((facts.feature_flags & ~SHARED_FEATURE_FLAGS) != 0 || facts.supply_columns != SaveSupplyColumns::Absent ||
-		facts.cargo_supply_encoding != SupplyColumnEncoding::Absent || facts.payload_dialect == SavePayloadDialect::DonorB || facts.merged_supply_valid) return false;
-	// None of B's machinery or supply-header families may appear, even empty.
-	for (const auto family : {SaveLineageFamily::SupplyHeader, SaveLineageFamily::GeneratorHeader, SaveLineageFamily::GeneratorRows,
-		SaveLineageFamily::ConversionHeader, SaveLineageFamily::ConversionRows, SaveLineageFamily::TubeSourceHeader, SaveLineageFamily::TubeSourceRows}) {
-		if (Present(facts, family)) return false;
-	}
-	// A440's content: content revision 3 when Space is selected (0 for Classic),
-	// and the cargo-dimension and recipe-processing families with valid framing.
-	if (facts.space_content_version != 0 && facts.space_content_version != 3) return false;
-	return Present(facts, SaveLineageFamily::CargoDimensions) && Present(facts, SaveLineageFamily::OrbitalRecipes) && ValidSpaceFamilies(facts);
 }
 
 static SaveLineageResult ClassifyLegacy(const SaveWireFacts &facts, const std::optional<SaveOriginHint> &origin);
@@ -240,9 +211,10 @@ SaveLineageResult ClassifySaveDialect(const SaveWireFacts &facts, const std::opt
 	if (facts.Get(SaveLineageFamily::Marker).state != SaveEvidenceState::Absent) return result(CompatibleMerged(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::Merged);
 	// The combined writer always marks 446; an unmarked 446 is no writer's file.
 	if (facts.original_version == CURRENT_MERGED_SAVE_VERSION) return result(SaveLineageStatus::Corrupt);
-	// Markerless 441-445 can only be the Space fixes writer. Its own positive
-	// evidence decides; a legacy origin hint is never consulted for these numbers.
-	if (facts.original_version >= FIRST_SPACE_FIXES_VERSION) return result(CompatibleSpaceFixes(facts) ? SaveLineageStatus::Accepted : SaveLineageStatus::Corrupt, SaveDialect::SpaceFixes);
+	// A development build wrote markerless 441-445 files. One save system reads
+	// only released formats, so these are Unsupported whatever they contain, and
+	// a legacy origin hint is never consulted for these numbers.
+	if (facts.original_version >= FIRST_UNMARKED_DEVELOPMENT_VERSION && facts.original_version <= LAST_UNMARKED_DEVELOPMENT_VERSION) return result(SaveLineageStatus::Unsupported);
 	return ClassifyLegacy(facts, origin);
 }
 
@@ -309,7 +281,6 @@ struct CapabilityRule {
 	SaveCapability capability; ///< The feature this row describes.
 	uint16_t first_a; ///< First historical DestinationA version, or 0.
 	uint16_t first_b; ///< First historical DonorB version, or 0.
-	uint16_t first_space; ///< First SpaceFixes version, or 0. A features start at 441 because that writer began from A440.
 	bool merged441; ///< Carried by merged 441 with MLLN schema 1, whose meaning is frozen.
 	bool merged446; ///< Carried by merged 446 with MLLN schema 2, the combined writer of m2o28 Group 22.
 };
@@ -318,37 +289,37 @@ struct CapabilityRule {
  * static_asserts below reject a missing or duplicated row, and each row chooses its merged 441 value explicitly.
  */
 static constexpr CapabilityRule CAPABILITY_RULES[] = {
-	{SaveCapability::OrbitalAssemblyFacilities, 425, 0, 441, true, true},
-	{SaveCapability::OrbitalManufacturingReservations, 426, 0, 441, true, true},
-	{SaveCapability::OrbitalManufacturingMaterialization, 427, 0, 441, true, true},
-	{SaveCapability::OrbitalManufacturingClones, 428, 0, 441, true, true},
-	{SaveCapability::SpaceReplacementSettlement, 429, 0, 441, true, true},
-	{SaveCapability::SpaceOrderedActions, 430, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerCommissioning, 431, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerMissions, 432, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerSupplies, 433, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerDescents, 434, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerOnboardServices, 435, 0, 441, true, true},
-	{SaveCapability::SpaceHeavyMinerContainedServices, 436, 0, 441, true, true},
-	{SaveCapability::SpaceCargoDimensions, 437, 0, 441, true, true},
-	{SaveCapability::OrbitalRecipeProcessing, 438, 0, 441, true, true},
-	{SaveCapability::CompanySupplyPackets, 439, 0, 441, true, true},
-	{SaveCapability::SurfaceSupplyOrdersA, 440, 0, 441, true, true},
-	{SaveCapability::TBMFaceTransfer, 0, 425, 0, true, true},
-	{SaveCapability::SurfaceSupplyOrdersB, 0, 426, 0, true, true},
-	{SaveCapability::GeothermalGenerators, 0, 427, 0, true, true},
-	{SaveCapability::UtilityHeatConversion, 0, 428, 0, true, true},
-	{SaveCapability::GeothermalGeneratorOperation, 0, 429, 0, true, true},
-	{SaveCapability::GeothermalMagmaLoop, 0, 430, 0, true, true},
-	{SaveCapability::UtilityTownService, 0, 431, 0, true, true},
-	{SaveCapability::UtilityLocalElectricalFeed, 0, 432, 0, true, true},
-	{SaveCapability::TubeGeothermalSources, 0, 433, 0, true, true},
-	{SaveCapability::TubeGeothermalBindings, 0, 434, 0, true, true},
-	{SaveCapability::AsteroidCargoOrigins, 0, 0, 441, false, true},
-	{SaveCapability::AsteroidFieldLifecycle, 0, 0, 442, false, true},
-	{SaveCapability::SpaceMiningContinuation, 0, 0, 443, false, true},
-	{SaveCapability::SpaceLegacyDeparture, 0, 0, 444, false, true},
-	{SaveCapability::SpaceSurveyDeparture, 0, 0, 445, false, true},
+	{SaveCapability::OrbitalAssemblyFacilities, 425, 0, true, true},
+	{SaveCapability::OrbitalManufacturingReservations, 426, 0, true, true},
+	{SaveCapability::OrbitalManufacturingMaterialization, 427, 0, true, true},
+	{SaveCapability::OrbitalManufacturingClones, 428, 0, true, true},
+	{SaveCapability::SpaceReplacementSettlement, 429, 0, true, true},
+	{SaveCapability::SpaceOrderedActions, 430, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerCommissioning, 431, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerMissions, 432, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerSupplies, 433, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerDescents, 434, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerOnboardServices, 435, 0, true, true},
+	{SaveCapability::SpaceHeavyMinerContainedServices, 436, 0, true, true},
+	{SaveCapability::SpaceCargoDimensions, 437, 0, true, true},
+	{SaveCapability::OrbitalRecipeProcessing, 438, 0, true, true},
+	{SaveCapability::CompanySupplyPackets, 439, 0, true, true},
+	{SaveCapability::SurfaceSupplyOrdersA, 440, 0, true, true},
+	{SaveCapability::TBMFaceTransfer, 0, 425, true, true},
+	{SaveCapability::SurfaceSupplyOrdersB, 0, 426, true, true},
+	{SaveCapability::GeothermalGenerators, 0, 427, true, true},
+	{SaveCapability::UtilityHeatConversion, 0, 428, true, true},
+	{SaveCapability::GeothermalGeneratorOperation, 0, 429, true, true},
+	{SaveCapability::GeothermalMagmaLoop, 0, 430, true, true},
+	{SaveCapability::UtilityTownService, 0, 431, true, true},
+	{SaveCapability::UtilityLocalElectricalFeed, 0, 432, true, true},
+	{SaveCapability::TubeGeothermalSources, 0, 433, true, true},
+	{SaveCapability::TubeGeothermalBindings, 0, 434, true, true},
+	{SaveCapability::AsteroidCargoOrigins, 0, 0, false, true},
+	{SaveCapability::AsteroidFieldLifecycle, 0, 0, false, true},
+	{SaveCapability::SpaceMiningContinuation, 0, 0, false, true},
+	{SaveCapability::SpaceLegacyDeparture, 0, 0, false, true},
+	{SaveCapability::SpaceSurveyDeparture, 0, 0, false, true},
 };
 
 /** Check at compile time that every declared capability has exactly one rule.
@@ -376,8 +347,7 @@ static bool WriterProducedVersion(SaveDialect dialect, uint16_t version)
 	switch (dialect) {
 		case SaveDialect::DestinationA: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DESTINATION_A_VERSION;
 		case SaveDialect::DonorB: return version >= FIRST_DIVERGENT_VERSION && version <= LAST_DONOR_B_VERSION;
-		case SaveDialect::SpaceFixes: return version >= FIRST_SPACE_FIXES_VERSION && version <= LAST_SPACE_FIXES_VERSION;
-		// The merged writer has exactly two allocations; 442-445 are Space fixes numbers, never merged ones.
+		// The merged writer has exactly two allocations; 442-445 were a development build's numbers, never merged ones.
 		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION || version == CURRENT_MERGED_SAVE_VERSION;
 		case SaveDialect::Shared: return false;
 	}
@@ -399,7 +369,6 @@ bool HasSaveCapability(const SaveLineageResult &result, SaveCapability capabilit
 		// below this file's version means the file carries the feature's wire.
 		case SaveDialect::DestinationA: return rule->first_a != 0 && version >= rule->first_a;
 		case SaveDialect::DonorB: return rule->first_b != 0 && version >= rule->first_b;
-		case SaveDialect::SpaceFixes: return rule->first_space != 0 && version >= rule->first_space;
 		// Merged membership is a fixed set per allocation, not a numeric threshold.
 		case SaveDialect::Merged: return version == MERGED_SAVE_LINEAGE_VERSION ? rule->merged441 : rule->merged446;
 		case SaveDialect::Shared: return false;

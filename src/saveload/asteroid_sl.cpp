@@ -22,10 +22,11 @@
 static std::optional<AsteroidField> _staged_asteroids;
 
 /** Choose the ASTR layout of the file being loaded, or of the current writer while saving.
- * The shared pre-fork eras keep their numeric gates. The two Space fixes eras need their capabilities:
- * 441 is StarterInputs for both merged 441 and S441, S442-444 add the lifecycle trailer, and S445 and
- * merged 446 also admit ownerless surveys. While saving, the numeric gates see the writer version and
- * the capabilities the writer context, so the writer emits exactly its own layout.
+ * The shared pre-fork eras keep their numeric gates. The later eras need their capabilities: merged 441
+ * is StarterInputs, and merged 446 carries the lifecycle trailer and admits ownerless surveys
+ * (SurveyDeparture). The Lifecycle-only layout of a development build is never chosen. While saving, the
+ * numeric gates see the writer version and the capabilities the writer context, so the writer emits
+ * exactly its own layout.
  * @return The single layout that decoding or encoding must use.
  */
 static AsteroidFieldWireEra SelectAsteroidFieldWireEra()

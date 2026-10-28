@@ -157,7 +157,7 @@ SaveLoadTable GetCargoPacketDesc()
 		SaveLoad::Variable<VarFileType::U64>("company_supply_order", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_order), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
 		SaveLoad::Variable<VarFileType::U8>("company_supply_shipped", SLE_OBJECT_ADDRESS(CargoPacket, company_supply_shipped), SaveLoadVersion::MergedLineage).WithCapability(SaveCapability::SurfaceSupplyOrdersB),
 		// Typed asteroid origin (body, mineral) through per-row scratch. Only sources with the
-		// capability carry it: Space fixes 441-445 and merged 446, never merged 441 (m2o28 Group 15).
+		// capability carry it: merged 446, never merged 441 (m2o28 Groups 15 and 17B).
 		SaveLoad::Variable<VarFileType::U32>("asteroid_body", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.body)).WithCapability(SaveCapability::AsteroidCargoOrigins),
 		SaveLoad::Variable<VarFileType::U32>("asteroid_mineral", SLE_GLOBAL_ADDRESS(_cargo_source_asteroid_wire.mineral)).WithCapability(SaveCapability::AsteroidCargoOrigins),
 		SaveLoad::Variable<VarFileType::I16>("travelled.x", SLE_OBJECT_ADDRESS(CargoPacket, travelled.x), SaveLoadVersion::CargoTravelled),

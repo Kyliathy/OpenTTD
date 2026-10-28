@@ -22,7 +22,7 @@ const CargoFields BASE_CARGO_FIELDS{
 };
 const CargoFields CANONICAL_SUPPLY{{"company_supply_order", 8}, {"company_supply_shipped", 2}}; ///< Merged writer: U64 receipt link, U8 flag.
 const CargoFields LEGACY_SUPPLY{{"company_supply_order", 6}, {"company_supply_shipped", 1}}; ///< Historical B: U32 link, Bool flag.
-const CargoFields ASTEROID_ORIGIN{{"asteroid_body", 6}, {"asteroid_mineral", 6}}; ///< Space fixes typed origin: two U32 keys.
+const CargoFields ASTEROID_ORIGIN{{"asteroid_body", 6}, {"asteroid_mineral", 6}}; ///< Typed asteroid origin (merged 446; also written by the development build): two U32 keys.
 
 /** @param parts Field groups in order. @return One CAPA descriptor. */
 CargoFields Fields(std::initializer_list<const CargoFields *> parts) { return JoinEnvelopeFields(parts); }
@@ -133,7 +133,7 @@ TEST_CASE("Save envelope records malformed CAPA columns and marker tuples", "[sa
 		{446, MERGED_SAVE_LINEAGE_MAGIC, 1, 446}, // Schema 1 belongs to 441.
 		{446, MERGED_SAVE_LINEAGE_MAGIC, 1, 441}, // A 441 marker inside a 446 envelope.
 		{441, MERGED_SAVE_LINEAGE_MAGIC ^ 1, 1, 441}, // Wrong magic.
-		{445, MERGED_SAVE_LINEAGE_MAGIC, 2, 445}, // A Space fixes version is never a merged allocation.
+		{445, MERGED_SAVE_LINEAGE_MAGIC, 2, 445}, // A development-build number is never a merged allocation.
 		{1, MERGED_SAVE_LINEAGE_MAGIC, 1, 441}, // A legacy envelope cannot carry a merged marker.
 	};
 	for (const auto &[version, magic, schema, writer] : tuples) {
@@ -195,8 +195,7 @@ TEST_CASE("Save envelope observes typed CAPA columns in real donor 445 saves", "
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.Get(SaveLineageFamily::Marker).state == SaveEvidenceState::Absent);
 		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed); // Group 12: the A440-derived fixed book, read by shape.
-		const auto result = ClassifySaveDialect(facts); // Group 13: the whole file is the incoming writer's.
-		CHECK(result.status == SaveLineageStatus::Accepted); CHECK(result.dialect == SaveDialect::SpaceFixes);
+		CHECK(ClassifySaveDialect(facts).status == SaveLineageStatus::Unsupported); // Group 17B: a development build's file, never read.
 		CHECK(reader->position == 0);
 		++scanned;
 	}

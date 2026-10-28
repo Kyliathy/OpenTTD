@@ -27,7 +27,7 @@ struct CargoSourceFormat {
 	bool typed_asteroid_origins = false; ///< Whether the source carries SaveCapability::AsteroidCargoOrigins (CAPA `asteroid_body`/`asteroid_mineral`).
 
 	/** Describe a shared-era source, which never carries typed asteroid origins. Implicit on purpose, so the
-	 * shared-gate callers keep naming their era; a pending Space fixes name (equal to MaxVersion) is a misuse.
+	 * shared-gate callers keep naming their era; a pending Space era name (equal to MaxVersion) is a misuse.
 	 * @param version Original shared-era version.
 	 */
 	CargoSourceFormat(SaveLoadVersion version) : version(version) { assert(version != SaveLoadVersion::MaxVersion); }

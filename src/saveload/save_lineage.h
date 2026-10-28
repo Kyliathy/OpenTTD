@@ -2,7 +2,7 @@
 /** @file save_lineage.h Detached compatibility evidence for parallel save histories.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
  * @see docs/zz-reach2/upgrades/2026-10/m2o23-1-come-space-b-save-lineage.md
- * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10; the incoming Space fixes eras as capability rules.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 9-10 and 17B; the Space eras as merged-446 capabilities, dev-build files refused.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 11; CAPA column encodings observed from the file's own descriptor.
  * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 12; the RIFF SSOR book shape observed from its own bytes.
  * This boundary neither parses bytes nor initializes a world. The actual reader
@@ -24,7 +24,6 @@ enum class SaveDialect : uint8_t {
 	DestinationA, ///< The destination's own historical writer, 425-440.
 	DonorB, ///< The historical underground donor writer, 425-434.
 	Merged, ///< The combined writer that emits MLLN: 441 with schema 1, later 446 with schema 2.
-	SpaceFixes, ///< The incoming Space fixes writer, 441-445 without MLLN; A440 plus its own five eras.
 };
 
 /** Explicit admission result; refused/ambiguous files have no capabilities. */
@@ -46,7 +45,7 @@ enum class SaveSupplyColumns : uint8_t { Absent, Complete, Malformed };
 
 /** The CAPA supply-column pair as the file's own table descriptor declares it, never inferred from its version. */
 enum class SupplyColumnEncoding : uint8_t {
-	Absent, ///< Neither `company_supply_order` nor `company_supply_shipped`: shared, A, Space fixes or pre-426 B packets.
+	Absent, ///< Neither `company_supply_order` nor `company_supply_shipped`: shared, A or pre-426 B packets.
 	LegacyU32Bool, ///< U32 order with Bool (I8) shipped: the historical donor B writer, 426-434.
 	CanonicalU64U8, ///< U64 order with U8 shipped: the merged writer's canonical receipt link.
 	Malformed, ///< Half a pair, or a pair with any other widths; the classifier refuses it.
@@ -80,17 +79,17 @@ struct SaveChunkEvidence {
 };
 
 /** Frozen first merged allocation: the combined A+B writer, also `SaveLoadVersion::MergedLineage`.
- * Its meaning never changes. It has every A and B capability and none of the Space fixes eras.
+ * Its meaning never changes. It has every A and B capability and none of the five Space eras that 446 adds.
  */
 inline constexpr uint16_t MERGED_SAVE_LINEAGE_VERSION = 441;
 inline constexpr uint32_t MERGED_SAVE_LINEAGE_MAGIC = 0x4D4C4E31; ///< Network-order MLN1 payload marker inside MLLN; shared by every merged schema.
 inline constexpr uint16_t MERGED_SAVE_LINEAGE_SCHEMA = 1; ///< MLLN schema written by merged 441.
 
-/** Reserved combined writer that adds the Space fixes eras; m2o28-1-merge-oct28.md Group 22 activates it.
- * Until then nothing writes 446, the classifier refuses it, and the writer context stays at merged 441.
- * The incoming branch's eras 441-445 are capability rules of `SaveDialect::SpaceFixes`, never
- * `SaveLoadVersion` values: `MergedLineage = 441` keeps its meaning, and Group 22 deletes the pending
- * enumerators that `saveload.h` keeps after `MaxVersion` in the meantime.
+/** Reserved combined writer that adds the five Space eras; m2o28-1-merge-oct28.md Group 22 activates it.
+ * Until then nothing writes 446 and the writer context stays at merged 441. The Space eras are capabilities
+ * of merged 446, never `SaveLoadVersion` values: `MergedLineage = 441` keeps its meaning, and Group 22
+ * deletes the pending enumerators that `saveload.h` keeps after `MaxVersion` in the meantime. Files that a
+ * development build wrote at 441-445 without a marker are not read (m2o28 Group 17B).
  */
 inline constexpr uint16_t CURRENT_MERGED_SAVE_VERSION = 446;
 inline constexpr uint16_t CURRENT_MERGED_SAVE_LINEAGE_SCHEMA = 2; ///< MLLN schema reserved for merged 446; schema 1 stays bound to 441.
@@ -149,18 +148,19 @@ enum class SaveCapability : uint8_t {
 	TBMFaceTransfer, SurfaceSupplyOrdersB, GeothermalGenerators, UtilityHeatConversion,
 	GeothermalGeneratorOperation, GeothermalMagmaLoop, UtilityTownService,
 	UtilityLocalElectricalFeed, TubeGeothermalSources, TubeGeothermalBindings,
-	AsteroidCargoOrigins, ///< Space fixes 441: CAPA packets carry the full asteroid body ID and mineral label.
-	AsteroidFieldLifecycle, ///< Space fixes 442: ASTR/SPKN sparse issuance, lifecycle revision and renewal state.
-	SpaceMiningContinuation, ///< Space fixes 443: SPOR mining policy and VEHS contained mining intent.
-	SpaceLegacyDeparture, ///< Space fixes 444: an unordered legacy miner's local departure.
-	SpaceSurveyDeparture, ///< Space fixes 445: an ownerless survey's Return/Waiting after release.
+	AsteroidCargoOrigins, ///< Merged 446: CAPA packets carry the full asteroid body ID and mineral label.
+	AsteroidFieldLifecycle, ///< Merged 446: ASTR/SPKN sparse issuance, lifecycle revision and renewal state.
+	SpaceMiningContinuation, ///< Merged 446: SPOR mining policy and VEHS contained mining intent.
+	SpaceLegacyDeparture, ///< Merged 446: an unordered legacy miner's local departure.
+	SpaceSurveyDeparture, ///< Merged 446: an ownerless survey's Return/Waiting after release.
 	Count,
 };
 
 /** Classify one complete set of detached transport facts without parsing or mutation.
  * Malformed evidence refuses first. A present marker then selects only its own merged
- * allocation (441/schema 1 or 446/schema 2); a markerless 441-445 is judged as Space fixes;
- * an unmarked 446 refuses; anything later is Unsupported; 440 and below use the legacy rules.
+ * allocation (441/schema 1 or 446/schema 2); a markerless 441-445 was written by a development
+ * build and is Unsupported; an unmarked 446 refuses; anything later is Unsupported; 440 and
+ * below use the legacy rules.
  * @param facts Evidence extracted from the original stream by a bounded inspector.
  * @param origin Optional exact-digest hint; consulted only when wire evidence is ambiguous.
  * @return Accepted dialect or explicit ambiguity/corruption/unsupported-version refusal.

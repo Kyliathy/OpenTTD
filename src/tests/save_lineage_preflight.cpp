@@ -1,7 +1,7 @@
 /* This file is part of OpenTTD, licensed under the GNU GPL version 2. */
 /** @file save_lineage_preflight.cpp Native load-entry refusals, copied replay and per-attempt branch lifetime.
  * @see docs/zz-reach2/architecture/savegame/archi-savegame.md
- * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Group 13; real Space fixes 445 originals are admitted and refused as pending.
+ * @see docs/zz-reach2/upgrades/2026-10/m2o28-1-merge-oct28.md Groups 13 and 17B; real development-build 445 originals refuse without touching the world.
  */
 #include "../stdafx.h"
 #include <filesystem>
@@ -53,8 +53,8 @@ static PreflightOriginal OriginalForPreflight(std::string_view origin, uint16_t 
 	return {};
 }
 
-/** One committed Space fixes original with its catalogued identity; the path is provenance, never classifier evidence. */
-struct SpaceFixesOriginal {
+/** One committed development-build original with its catalogued identity; the path is provenance, never classifier evidence. */
+struct DevelopmentBuildOriginal {
 	std::filesystem::path path; ///< Location only.
 	std::vector<uint8_t> bytes; ///< Original compressed bytes, exactly as the incoming writer wrote them.
 	std::string sha256; ///< Independently recorded digest from the catalogue.
@@ -63,15 +63,15 @@ struct SpaceFixesOriginal {
 /** Load every original listed in src/tests/fixtures/saveload/space-fixes-445/catalogue.json.
  * @return Each original with bytes checked against the catalogued size.
  */
-static std::vector<SpaceFixesOriginal> SpaceFixesOriginals()
+static std::vector<DevelopmentBuildOriginal> DevelopmentBuildOriginals()
 {
 	const auto root = std::filesystem::absolute(std::filesystem::path(__FILE__)).parent_path().parent_path().parent_path();
 	std::ifstream input(root / "src/tests/fixtures/saveload/space-fixes-445/catalogue.json"); REQUIRE(input.good());
 	const auto catalogue = nlohmann::json::parse(input);
-	std::vector<SpaceFixesOriginal> originals;
+	std::vector<DevelopmentBuildOriginal> originals;
 	// Read each catalogued original byte for byte; nothing is regenerated.
 	for (const auto &row : catalogue.at("originals")) {
-		SpaceFixesOriginal original{root / row.at("path").get<std::string>(), {}, row.at("sha256").get<std::string>()};
+		DevelopmentBuildOriginal original{root / row.at("path").get<std::string>(), {}, row.at("sha256").get<std::string>()};
 		std::ifstream file(original.path, std::ios::binary); REQUIRE(file.good());
 		original.bytes.assign(std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{});
 		REQUIRE(original.bytes.size() == row.at("bytes").get<size_t>());
@@ -695,8 +695,8 @@ TEST_CASE("Candidate previews discard failed transport across original lineages"
 	CHECK(CaptureCandidateLiveState() == installed);
 }
 
-/** Real S445 files classify as Space fixes from their own bytes, then refuse before any native read while their eras are pending. */
-TEST_CASE("Native preflight admits Space fixes originals and keeps them pending", "[save-lineage-preflight]")
+/** Real files a development build wrote at 445 are Unsupported from their own bytes and refuse before any native read. */
+TEST_CASE("Native preflight refuses development-build originals without touching the world", "[save-lineage-preflight]")
 {
 	TubePrototypeRig rig; auto *capsule = rig.BuyCapsule();
 	PreflightFileSearch search;
@@ -708,26 +708,23 @@ TEST_CASE("Native preflight admits Space fixes originals and keeps them pending"
 	const std::array<uint32_t, 2> rng{_random.state[0], _random.state[1]};
 	// Each original: identity, detached classification and capabilities first,
 	// then every native entry refuses without binding a lineage or reading a chunk.
-	for (const auto &original : SpaceFixesOriginals()) {
+	for (const auto &original : DevelopmentBuildOriginals()) {
 		INFO(original.path.string());
 		const auto facts = InspectSaveWireFacts(std::make_shared<EnvelopeTestReader>(original.bytes));
 		CHECK(EnvelopeDigest(facts.source_digest) == original.sha256);
 		CHECK(facts.asteroid_origin_columns == SaveEvidenceState::Valid);
 		CHECK(facts.supply_book_shape == SupplyBookShape::Fixed);
 		const auto result = ClassifySaveDialect(facts);
-		REQUIRE(result.status == SaveLineageStatus::Accepted);
-		CHECK(result.dialect == SaveDialect::SpaceFixes); CHECK(result.original_version == 445);
-		CHECK(HasSaveCapability(result, SaveCapability::AsteroidCargoOrigins));
-		CHECK(HasSaveCapability(result, SaveCapability::SpaceSurveyDeparture));
-		CHECK(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersA));
-		CHECK_FALSE(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersB));
-		// A legacy hint naming another writer changes nothing for a modern number.
-		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).dialect == SaveDialect::SpaceFixes);
+		CHECK(result.status == SaveLineageStatus::Unsupported); CHECK(result.original_version == 445);
+		CHECK_FALSE(HasSaveCapability(result, SaveCapability::AsteroidCargoOrigins));
+		CHECK_FALSE(HasSaveCapability(result, SaveCapability::SurfaceSupplyOrdersA));
+		// A legacy hint naming a historical writer changes nothing for this number.
+		CHECK(ClassifySaveDialect(facts, SaveOriginHint{SaveDialect::DonorB, facts.source_digest}).status == SaveLineageStatus::Unsupported);
 		auto network = std::make_shared<ObservePreflightReader>(EnvelopeNetworkReader(original.bytes));
 		CHECK(LoadWithFilter(network) == SaveLoadResult::Error);
 		CHECK(network->observed.empty()); CHECK_FALSE(GetLoadCapabilities().has_value());
 		CHECK(SaveOrLoad(original.path.string(), SaveLoadOperation::Check, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
-		CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_TOO_NEW_SAVEGAME);
+		CHECK(_load_check_data.error == STR_GAME_SAVELOAD_ERROR_DEVELOPMENT_SAVEGAME);
 		CHECK(SaveOrLoad(original.path.string(), SaveLoadOperation::Load, DetailedFileType::GameFile, Subdirectory::None, false) == SaveLoadResult::Error);
 		CHECK_FALSE(GetLoadCapabilities().has_value());
 	}
