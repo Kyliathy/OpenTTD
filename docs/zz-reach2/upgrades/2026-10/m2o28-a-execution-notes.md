@@ -33,3 +33,19 @@ Short facts that later groups need, so a resumed session does not have to redisc
 | CMake | No source repeated inside one target; every S-added test `.cpp` is registered. | — |
 
 **1.6** This file. Environment: CMake 3.28.3, Ninja 1.11.1, GCC 13.3.0, Clang 18.1.3, Python 3.13.17; no MSVC, no `pwsh`/`powershell`. m2o26's Windows outputs (`test-cache/merge-oct26/`, the staged donor build under `test-cache/m26s/`) do not exist on this machine; Group 2 rebuilds the reference here instead.
+
+## Group 2
+
+**2.1** `git archive origin/mlm-mlv-2sp | tar -x -C test-cache/merge-oct28/s-reference` (commit `66713bdf`, tree `079181de`). The export sits inside this checkout, so every build, test and harness command for it runs with `GIT_CEILING_DIRECTORIES=<repo>/test-cache/merge-oct28`; otherwise Git and CMake's version detection would read this repository's history and stamp the reference with the wrong revision.
+
+**2.2** The r2lbf source hunks were applied in commit order (patches kept in `logs/merge-oct28/s-reference/port-<commit>.patch`). Four hunks were rejected, each for a reason that makes it unnecessary in S: `saveload.h` (S has no `SaveLoad::required_capability`), `surface_supply_order.cpp` twice (S's file has no `std::as_const`, so it needs no `<utility>`), and `tests/surface_supply_order_owner.cpp` (S's file has no `CargoPacket::MAX_COUNT` use). Two `68d0ef40` files do not exist in S. One harmless side effect: the `58c21e51` header hunk added an r2lbf `@see` to S's `surface_supply_order_owner.cpp` in the export only. The S-only R6 site `src/tests/space_return_surface.cpp:39` now copies the footprint before the range-for; Group 8 applies the same fix to the merged tree.
+
+**2.3** GCC 13.3 RelWithDebInfo, `ninja -j4 -k 0 all openttd_space_fixes_test`: 1,542 edges, **0 failed**, 27 min 24 s (`logs/merge-oct28/s-reference/build-gcc.log`). Warnings: 344 `-Wmissing-field-initializers`, 306 `-Wrange-loop-construct`, 76 `-Wunused-function`, 29 `-Wsign-compare`, 13 `-Wmisleading-indentation`, 5 `-Wstringop-overflow`, 5 `-Wredundant-decls`, 1 `-Wmaybe-uninitialized`, 1 `-Wenum-compare`. No `-Wdangling-pointer` remains after the R6 fix.
+
+**2.4** The export's own `native_build.prepare_runtime_assets` filled `build/baseset/` (all five `trg*.grf` present). `ctest -N`: 1,137 tests. `ctest -j4 --timeout 600`: **1,091 passed, 46 failed** in 15 s (`ctest-gcc.log`, `ctest-gcc.xml`). The four `regression_*` tests pass now that the default target is built.
+
+**2.5** `openttd_space_fixes_test`: 245 cases, 510,652 assertions, **0 failures**, about 1 s (`space-fixes.xml`).
+
+**2.6** Ledger: `test-cache/merge-oct28/s-reference-ledger.tsv`. All 46 failures are class **D-fixed**: each one's test file or fixture (`underground_depot_fixture.h`, `tbm_fixture.h`, the Tube environment) was changed on D after the base, by M2O23 (`99d8aa5a`, `0119308a`) or r2lbf, and S never touched any of them. No failure is in an S-only case; there are no S-Linux and no S-behavior failures. A fourth class, D-fixed, was needed beside the plan's three: the failures are base-era defects D already repaired, so for Group 8 they mean "expected to pass once merged".
+
+**Disk:** after 2.3 only 2.3 GiB were free (the reference `build/` is 6.5 GiB). `build-dedicated/` (6.1 GiB of build outputs, only a generated `regression/regression.cfg` copy inside) was deleted; Part 2 Group 31 rebuilds it from scratch anyway. 8.3 GiB free afterwards.

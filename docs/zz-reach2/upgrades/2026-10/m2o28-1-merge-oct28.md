@@ -202,11 +202,13 @@ _Applies to Groups 2-3._
 
 Produces an S-only Linux reference ledger. Group 8 uses it to tell S's own Linux failures from merge regressions.
 
+Execution evidence: [Group 2 record](m2o28-a-execution-notes.md#group-2). Build 0 failed; Space fixes 245/245; the 46 CTest failures are all base-era defects D already fixed (class D-fixed).
+
 {{MEDIUM}}
 
-- [ ] **2.1** Export S read-only: `mkdir -p test-cache/merge-oct28/s-reference && git archive origin/mlm-mlv-2sp | tar -x -C test-cache/merge-oct28/s-reference`. Record the commit and `git rev-parse origin/mlm-mlv-2sp^{tree}`. The export is a reference input only: never commit it, merge from it or copy files back from it.
+- [X] **2.1** Export S read-only: `mkdir -p test-cache/merge-oct28/s-reference && git archive origin/mlm-mlv-2sp | tar -x -C test-cache/merge-oct28/s-reference`. Record the commit and `git rev-parse origin/mlm-mlv-2sp^{tree}`. The export is a reference input only: never commit it, merge from it or copy files back from it.
 
-- [ ] **2.2** Apply the portability fixes the export lacks, and record each one in the notes as a candidate for Group 8:
+- [X] **2.2** Apply the portability fixes the export lacks, and record each one in the notes as a candidate for Group 8:
   - the r2lbf source hunks that apply (`git show 48ef3858 42865ce5 68d0ef40 0ce50dab 58c21e51 -- src | patch -p1 --dry-run`, then for real), where the rejected hunks are D-only files;
   - the S-only R6 site at `src/tests/space_return_surface.cpp:39`, by binding the optional first (sketch below).
 
@@ -218,13 +220,13 @@ Produces an S-only Linux reference ledger. Group 8 uses it to tell S's own Linux
   for (const auto cell : *footprint) {
   ```
 
-- [ ] **2.3** Configure `-G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo` in the export's own `build/` (the `build_content.py` guard accepts it there). Build the default target plus `openttd_space_fixes_test` with `ninja -j4 -k 0`. Log to `logs/merge-oct28/s-reference/build-gcc.log`, and record the wall time, `FAILED:` count (0 expected) and warning counts per flag.
+- [X] **2.3** Configure `-G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo` in the export's own `build/` (the `build_content.py` guard accepts it there). Build the default target plus `openttd_space_fixes_test` with `ninja -j4 -k 0`. Log to `logs/merge-oct28/s-reference/build-gcc.log`, and record the wall time, `FAILED:` count (0 expected) and warning counts per flag.
 
-- [ ] **2.4** Put the base set into the export's `build/baseset/` with the export's own `prepare_runtime_assets`, as in r2lbf 6.1. Then run `ctest --test-dir build -N | tail -1` (planning research: 1,137) and `ctest --test-dir build -j4 --timeout 600 --output-junit …/ctest-gcc.xml`.
+- [X] **2.4** Put the base set into the export's `build/baseset/` with the export's own `prepare_runtime_assets`, as in r2lbf 6.1. Then run `ctest --test-dir build -N | tail -1` (planning research: 1,137) and `ctest --test-dir build -j4 --timeout 600 --output-junit …/ctest-gcc.xml`.
 
-- [ ] **2.5** Run `openttd_space_fixes_test -r junit -o …/space-fixes.xml` from `build/`. Planning research: 245 cases and 510,652 assertions, all passing.
+- [X] **2.5** Run `openttd_space_fixes_test -r junit -o …/space-fixes.xml` from `build/`. Planning research: 245 cases and 510,652 assertions, all passing.
 
-- [ ] **2.6** Classify every failing case in `test-cache/merge-oct28/s-reference-ledger.tsv` (case, file, first failing expansion, class) and summarize the counts in the notes. The classes are:
+- [X] **2.6** Classify every failing case in `test-cache/merge-oct28/s-reference-ledger.tsv` (case, file, first failing expansion, class) and summarize the counts in the notes. The classes are:
   - **r2lbf-known:** the same case is fixed in D by r2lbf Groups 9-13 or 13.1;
   - **environment:** for example the regression files missing in a partial build;
   - **S-Linux:** a new portability defect, fixed in Group 8;
